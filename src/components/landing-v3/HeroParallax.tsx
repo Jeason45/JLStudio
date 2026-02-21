@@ -255,7 +255,7 @@ export default function HeroParallax() {
             src="/images/hero-bg.jpg"
             alt=""
             fill
-            className={`object-cover ${isMobile ? 'object-[center_35%]' : ''}`}
+            className={isMobile ? 'object-contain' : 'object-cover'}
             sizes="(max-width: 768px) 100vw, 120vw"
             priority
           />
