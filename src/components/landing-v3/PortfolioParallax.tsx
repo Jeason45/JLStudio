@@ -5,8 +5,6 @@ import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
-import SplitTextReveal from './shared/SplitTextReveal';
-import ScrollReveal from './shared/ScrollReveal';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -54,7 +52,7 @@ export default function PortfolioParallax() {
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    if (isMobile || !sectionRef.current) return;
+    if (!sectionRef.current) return;
 
     const section = sectionRef.current;
     const items = section.querySelectorAll<HTMLElement>('[data-project]');
@@ -84,13 +82,12 @@ export default function PortfolioParallax() {
         const tags = tagWrap?.querySelectorAll('[data-tag]');
 
         // ═══════════════════════════════════════════════
-        //  LAYER 1 — Image (slowest: ~30% of scroll speed)
-        //  The image barely moves. This is what creates the "fixed" feel.
+        //  LAYER 1 — Image parallax (slowest layer)
         // ═══════════════════════════════════════════════
         gsap.fromTo(innerImage, {
-          yPercent: 25,
+          yPercent: isMobile ? 12 : 25,
         }, {
-          yPercent: -25,
+          yPercent: isMobile ? -12 : -25,
           ease: 'none',
           scrollTrigger: {
             trigger: imageWrapper,
@@ -101,12 +98,10 @@ export default function PortfolioParallax() {
         });
 
         // ═══════════════════════════════════════════════
-        //  LAYER 2 — Title (medium: ~60% of scroll speed)
-        //  Moves faster than image, slower than page.
-        //  This is what makes the title "float" between layers.
+        //  LAYER 2 — Text block parallax (medium speed)
         // ═══════════════════════════════════════════════
         gsap.to(textBlock, {
-          yPercent: -70,
+          yPercent: isMobile ? -30 : -70,
           ease: 'none',
           scrollTrigger: {
             trigger: item,
@@ -116,13 +111,8 @@ export default function PortfolioParallax() {
           },
         });
 
-        // ═══════════════════════════════════════════════
-        //  LAYER 3 — Normal page scroll (100%)
-        //  The browser handles this natively.
-        // ═══════════════════════════════════════════════
-
         // ── Text reveal animations ──
-        gsap.set(split.chars, { opacity: 0, y: 100, rotateX: -90 });
+        gsap.set(split.chars, { opacity: 0, y: isMobile ? 50 : 100, rotateX: isMobile ? -45 : -90 });
         gsap.set(category, { opacity: 0, y: 20 });
         gsap.set(desc, { opacity: 0, y: 30 });
         if (tags) gsap.set(tags, { opacity: 0, y: 15 });
@@ -131,18 +121,18 @@ export default function PortfolioParallax() {
           opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
           scrollTrigger: {
             trigger: textBlock,
-            start: 'top 85%',
+            start: 'top 88%',
             toggleActions: 'play none none reverse',
           },
         });
 
         gsap.to(split.chars, {
           opacity: 1, y: 0, rotateX: 0,
-          stagger: i % 2 === 0 ? 0.04 : -0.04,
+          stagger: isMobile ? 0.03 : (i % 2 === 0 ? 0.04 : -0.04),
           duration: 1, ease: 'power3.out',
           scrollTrigger: {
             trigger: textBlock,
-            start: 'top 82%',
+            start: 'top 85%',
             toggleActions: 'play none none reverse',
           },
         });
@@ -151,7 +141,7 @@ export default function PortfolioParallax() {
           opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
           scrollTrigger: {
             trigger: textBlock,
-            start: 'top 75%',
+            start: 'top 80%',
             toggleActions: 'play none none reverse',
           },
         });
@@ -161,7 +151,7 @@ export default function PortfolioParallax() {
             opacity: 1, y: 0, stagger: 0.07, duration: 0.5, ease: 'power2.out',
             scrollTrigger: {
               trigger: textBlock,
-              start: 'top 70%',
+              start: 'top 75%',
               toggleActions: 'play none none reverse',
             },
           });
@@ -175,160 +165,119 @@ export default function PortfolioParallax() {
   }, [isMobile]);
 
   return (
-    <>
-      {/* ── Desktop: editorial parallax ── */}
-      <section
-        ref={sectionRef}
-        id="projets"
-        className={`relative bg-black ${isMobile ? 'hidden' : 'block'}`}
-      >
-        {/* Section header */}
-        <div className="relative z-10 pt-32 pb-24 text-center">
-          <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">Portfolio</p>
-          <h2 className="font-[family-name:var(--font-outfit)] text-4xl md:text-5xl font-black text-white">
-            Nos realisations
-          </h2>
-        </div>
+    <section
+      ref={sectionRef}
+      id="projets"
+      className="relative bg-black"
+    >
+      {/* Section header */}
+      <div className="relative z-10 pt-20 pb-12 md:pt-32 md:pb-24 text-center">
+        <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">Portfolio</p>
+        <h2 className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-5xl font-black text-white">
+          Nos realisations
+        </h2>
+      </div>
 
-        {/* Projects */}
-        {projects.map((project, i) => {
-          const isEven = i % 2 === 0;
+      {/* Projects */}
+      {projects.map((project, i) => {
+        const isEven = i % 2 === 0;
 
-          return (
-            <article key={i} data-project className="relative pb-8">
-              {/* ── Image ── */}
+        return (
+          <article key={i} data-project className="relative pb-8">
+            {/* ── Image ── */}
+            <div
+              data-image-wrapper
+              className="relative overflow-hidden mx-4 sm:mx-6 lg:mx-12 rounded-xl"
+              style={{ height: isMobile ? '50vh' : '80vh' }}
+            >
               <div
-                data-image-wrapper
-                className="relative overflow-hidden mx-6 lg:mx-12 rounded-xl"
-                style={{ height: '80vh' }}
+                data-inner-image
+                className="absolute will-change-transform"
+                style={{ inset: isMobile ? '-15%' : '-30%' }}
               >
-                <div
-                  data-inner-image
-                  className="absolute inset-[-30%] will-change-transform"
-                >
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover"
-                    sizes="100vw"
-                    priority={i === 0}
-                  />
-                </div>
-
-                {/* Minimal vignette only */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background: 'radial-gradient(ellipse 80% 70% at center, transparent 30%, rgba(0,0,0,0.35) 100%)',
-                  }}
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                  priority={i === 0}
                 />
               </div>
 
-              {/* ── Text: overlaps the image bottom edge ── */}
+              {/* Vignette */}
               <div
-                data-text-block
-                className={`relative z-10 px-8 lg:px-20 max-w-7xl mx-auto will-change-transform ${
-                  isEven ? '' : 'text-right'
-                }`}
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  marginTop: '-18vh',
-                  perspective: 700,
+                  background: 'radial-gradient(ellipse 80% 70% at center, transparent 30%, rgba(0,0,0,0.35) 100%)',
                 }}
+              />
+            </div>
+
+            {/* ── Text: overlaps the image bottom edge ── */}
+            <div
+              data-text-block
+              className={`relative z-10 px-6 sm:px-8 lg:px-20 max-w-7xl mx-auto will-change-transform ${
+                isMobile ? '' : (isEven ? '' : 'text-right')
+              }`}
+              style={{
+                marginTop: isMobile ? '-10vh' : '-18vh',
+                perspective: 700,
+              }}
+            >
+              {/* Category */}
+              <p
+                data-category
+                className="text-[#638BFF] text-xs font-medium tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-3 sm:mb-4"
               >
-                {/* Category */}
-                <p
-                  data-category
-                  className="text-[#638BFF] text-xs font-medium tracking-[0.4em] uppercase mb-4"
-                >
-                  {project.category}
-                </p>
+                {project.category}
+              </p>
 
-                {/* Title — the design element */}
-                <h3
-                  data-title
-                  className="font-[family-name:var(--font-outfit)] font-black text-white leading-[0.9] tracking-tighter mb-6 lg:whitespace-nowrap"
-                  style={{ fontSize: 'clamp(2.5rem, 7vw, 8rem)' }}
-                >
-                  {project.title}
-                </h3>
+              {/* Title */}
+              <h3
+                data-title
+                className="font-[family-name:var(--font-outfit)] font-black text-white leading-[0.9] tracking-tighter mb-4 sm:mb-6 lg:whitespace-nowrap"
+                style={{ fontSize: isMobile ? 'clamp(2rem, 10vw, 3.5rem)' : 'clamp(2.5rem, 7vw, 8rem)' }}
+              >
+                {project.title}
+              </h3>
 
-                {/* Description */}
-                <p
-                  data-desc
-                  className={`text-white/55 text-base lg:text-lg leading-relaxed mb-6 ${
-                    isEven ? 'max-w-lg' : 'max-w-lg ml-auto'
-                  }`}
-                >
-                  {project.description}
-                </p>
+              {/* Description */}
+              <p
+                data-desc
+                className={`text-white/55 text-sm sm:text-base lg:text-lg leading-relaxed mb-4 sm:mb-6 ${
+                  isMobile ? 'max-w-lg' : (isEven ? 'max-w-lg' : 'max-w-lg ml-auto')
+                }`}
+              >
+                {project.description}
+              </p>
 
-                {/* Tags */}
-                <div
-                  data-tags
-                  className={`flex flex-wrap gap-3 ${isEven ? '' : 'justify-end'}`}
-                >
-                  {project.tags.map((tag, j) => (
-                    <span
-                      key={j}
-                      data-tag
-                      className="text-xs text-white/50 border border-white/[0.12] px-4 py-1.5 rounded-full"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+              {/* Tags */}
+              <div
+                data-tags
+                className={`flex flex-wrap gap-2 sm:gap-3 ${
+                  isMobile ? '' : (isEven ? '' : 'justify-end')
+                }`}
+              >
+                {project.tags.map((tag, j) => (
+                  <span
+                    key={j}
+                    data-tag
+                    className="text-xs text-white/50 border border-white/[0.12] px-3 sm:px-4 py-1 sm:py-1.5 rounded-full"
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
+            </div>
 
-              {/* Spacer between projects */}
-              <div style={{ height: '15vh' }} />
-            </article>
-          );
-        })}
+            {/* Spacer between projects */}
+            <div style={{ height: isMobile ? '6vh' : '15vh' }} />
+          </article>
+        );
+      })}
 
-        <div className="h-16" />
-      </section>
-
-      {/* ── Mobile: stacked cards ── */}
-      <section
-        id={isMobile ? 'projets' : undefined}
-        className={`py-20 bg-black ${isMobile ? 'block' : 'hidden'}`}
-      >
-        <div className="px-6 mb-16 text-center">
-          <p className="text-[#638BFF]/80 text-xs font-semibold tracking-[0.4em] uppercase mb-4">Portfolio</p>
-          <SplitTextReveal
-            tag="h2"
-            type="words"
-            className="font-[family-name:var(--font-outfit)] text-3xl font-black text-white leading-tight"
-          >
-            Nos realisations
-          </SplitTextReveal>
-        </div>
-
-        <div className="space-y-6 px-6">
-          {projects.map((project, i) => (
-            <ScrollReveal key={i} delay={i * 0.05} direction={i % 2 === 0 ? 'left' : 'right'}>
-              <div className="relative rounded-2xl overflow-hidden aspect-[16/10]">
-                <Image src={project.image} alt={project.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                <div className="absolute bottom-0 inset-x-0 p-6">
-                  <p className="text-[#638BFF] text-xs tracking-[0.2em] uppercase mb-2">{project.category}</p>
-                  <h3 className="font-[family-name:var(--font-outfit)] text-xl font-bold text-white mb-2">
-                    {project.title}
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag, j) => (
-                      <span key={j} className="text-xs text-white/50 border border-white/[0.12] px-2.5 py-0.5 rounded-full">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-      </section>
-    </>
+      <div className="h-8 sm:h-16" />
+    </section>
   );
 }

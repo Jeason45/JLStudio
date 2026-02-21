@@ -5,8 +5,6 @@ import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
-import SplitTextReveal from './shared/SplitTextReveal';
-import ScrollReveal from './shared/ScrollReveal';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -57,7 +55,7 @@ export default function ProcessJourney() {
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    if (isMobile || !sectionRef.current) return;
+    if (!sectionRef.current) return;
 
     const section = sectionRef.current;
     const line = lineRef.current;
@@ -82,7 +80,7 @@ export default function ProcessJourney() {
       // ── Background parallax — moves slower than scroll ──
       if (bg) {
         gsap.to(bg, {
-          yPercent: -20,
+          yPercent: isMobile ? -10 : -20,
           ease: 'none',
           scrollTrigger: {
             trigger: section,
@@ -120,7 +118,7 @@ export default function ProcessJourney() {
         const isLeft = i % 2 === 0;
 
         // Initial states
-        gsap.set(split.chars, { opacity: 0, y: 50, rotateX: -60 });
+        gsap.set(split.chars, { opacity: 0, y: isMobile ? 30 : 50, rotateX: isMobile ? -30 : -60 });
         gsap.set(desc, { opacity: 0, y: 30 });
         gsap.set(detail, { opacity: 0, y: 20 });
         gsap.set(number, { opacity: 0, y: 20 });
@@ -128,7 +126,7 @@ export default function ProcessJourney() {
 
         // ── Parallax: number moves slower (depth effect) ──
         gsap.to(number, {
-          yPercent: -25,
+          yPercent: isMobile ? -10 : -25,
           ease: 'none',
           scrollTrigger: {
             trigger: stepEl,
@@ -140,7 +138,7 @@ export default function ProcessJourney() {
 
         // ── Parallax: title moves at medium speed ──
         gsap.to(title, {
-          yPercent: -15,
+          yPercent: isMobile ? -8 : -15,
           ease: 'none',
           scrollTrigger: {
             trigger: stepEl,
@@ -152,7 +150,7 @@ export default function ProcessJourney() {
 
         // ── Parallax: description/detail at slight speed ──
         gsap.to(desc, {
-          yPercent: -5,
+          yPercent: isMobile ? -3 : -5,
           ease: 'none',
           scrollTrigger: {
             trigger: stepEl,
@@ -205,7 +203,7 @@ export default function ProcessJourney() {
           opacity: 1,
           y: 0,
           rotateX: 0,
-          stagger: isLeft ? 0.04 : -0.04,
+          stagger: isMobile ? 0.03 : (isLeft ? 0.04 : -0.04),
           duration: 0.8,
           ease: 'power3.out',
           scrollTrigger: {
@@ -249,86 +247,131 @@ export default function ProcessJourney() {
   }, [isMobile]);
 
   return (
-    <>
-      {/* ── Desktop: vertical timeline with parallax ── */}
-      <section
-        ref={sectionRef}
-        id="methode"
-        className={`relative bg-black overflow-hidden ${isMobile ? 'hidden' : 'block'}`}
-      >
-        {/* Background image — parallax */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div ref={bgRef} className="absolute inset-[-20%] will-change-transform">
-            <Image
-              src="/images/process-bg.jpg"
-              alt=""
-              fill
-              className="object-cover opacity-15"
-              sizes="100vw"
-            />
-          </div>
+    <section
+      ref={sectionRef}
+      id="methode"
+      className="relative bg-black overflow-hidden"
+    >
+      {/* Background image — parallax */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div ref={bgRef} className="absolute inset-[-20%] will-change-transform">
+          <Image
+            src="/images/process-bg.jpg"
+            alt=""
+            fill
+            className="object-cover opacity-15"
+            sizes="100vw"
+          />
         </div>
+      </div>
 
-        {/* Overlay */}
+      {/* Overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 15%, rgba(0,0,0,0.2) 85%, rgba(0,0,0,0.8) 100%)',
+        }}
+      />
+
+      {/* Section header */}
+      <div className="relative z-10 pt-20 pb-10 md:pt-32 md:pb-16 text-center">
+        <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">Methode</p>
+        <h2 className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-5xl font-black text-white">
+          Notre processus
+        </h2>
+      </div>
+
+      {/* Timeline container */}
+      <div className="relative z-10 pb-20 md:pb-32">
+        {/* Vertical line — left on mobile, center on desktop */}
         <div
-          className="absolute inset-0"
+          ref={lineRef}
+          className="absolute top-0 bottom-0 w-[1px]"
           style={{
-            background: 'linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 15%, rgba(0,0,0,0.2) 85%, rgba(0,0,0,0.8) 100%)',
+            left: isMobile ? '24px' : '50%',
+            transform: isMobile ? 'none' : 'translateX(-50%)',
           }}
-        />
-
-        {/* Section header */}
-        <div className="relative z-10 pt-32 pb-16 text-center">
-          <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">Methode</p>
-          <h2 className="font-[family-name:var(--font-outfit)] text-4xl md:text-5xl font-black text-white">
-            Notre processus
-          </h2>
+        >
+          {/* Background line */}
+          <div className="w-full h-full bg-white/[0.06]" />
+          {/* Animated progress line */}
+          <div
+            ref={lineProgressRef}
+            className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#638BFF]/60 via-[#638BFF]/40 to-[#638BFF]/60"
+          />
         </div>
 
-        {/* Timeline container */}
-        <div className="relative z-10 pb-32">
-          {/* Central vertical line */}
-          <div
-            ref={lineRef}
-            className="absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2"
-          >
-            {/* Background line */}
-            <div className="w-full h-full bg-white/[0.06]" />
-            {/* Animated progress line */}
+        {/* Steps */}
+        {steps.map((step, i) => {
+          const isLeft = i % 2 === 0;
+
+          return (
             <div
-              ref={lineProgressRef}
-              className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#638BFF]/60 via-[#638BFF]/40 to-[#638BFF]/60"
-            />
-          </div>
-
-          {/* Steps */}
-          {steps.map((step, i) => {
-            const isLeft = i % 2 === 0;
-
-            return (
+              key={i}
+              data-step
+              className="relative py-16 md:py-24 lg:py-32 xl:py-40"
+            >
+              {/* Node on the line */}
               <div
-                key={i}
-                data-step
-                className="relative py-24 md:py-32 lg:py-40"
+                data-node
+                className="absolute top-1/2 z-20"
+                style={{
+                  left: isMobile ? '24px' : '50%',
+                  opacity: 0,
+                  transform: 'translate(-50%, -50%) scale(0)',
+                }}
               >
-                {/* Node on the center line */}
                 <div
-                  data-node
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
-                  style={{ opacity: 0, transform: 'translate(-50%, -50%) scale(0)' }}
-                >
-                  <div
-                    data-node-inner
-                    className="w-4 h-4 rounded-full bg-[#638BFF] border-2 border-[#638BFF]"
-                    style={{ boxShadow: '0 0 0 rgba(99,139,255,0)' }}
-                  />
-                </div>
+                  data-node-inner
+                  className="w-4 h-4 rounded-full bg-[#638BFF] border-2 border-[#638BFF]"
+                  style={{ boxShadow: '0 0 0 rgba(99,139,255,0)' }}
+                />
+              </div>
 
-                {/* Content — alternates left/right */}
+              {/* Content */}
+              {isMobile ? (
+                /* Mobile: single column, content to the right of the timeline */
                 <div
-                  className={`relative max-w-7xl mx-auto px-8 grid grid-cols-2 gap-16 items-center ${
-                    isLeft ? '' : 'direction-rtl'
-                  }`}
+                  className="relative pl-14 pr-6"
+                  style={{ perspective: 600 }}
+                >
+                  {/* Step number */}
+                  <span
+                    data-number
+                    className="font-[family-name:var(--font-outfit)] text-5xl font-black text-[#638BFF]/20 block mb-2 leading-none will-change-transform"
+                    style={{ opacity: 0 }}
+                  >
+                    {step.number}
+                  </span>
+
+                  {/* Title */}
+                  <h3
+                    data-title
+                    className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl font-black text-white mb-4 leading-[0.95] tracking-tight relative will-change-transform"
+                  >
+                    {step.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p
+                    data-desc
+                    className="text-white/60 text-sm sm:text-base leading-relaxed mb-3 relative will-change-transform"
+                  >
+                    {step.description}
+                  </p>
+
+                  {/* Detail */}
+                  <p
+                    data-detail
+                    className="text-[#638BFF]/55 text-xs sm:text-sm tracking-wide relative"
+                  >
+                    {step.detail}
+                  </p>
+                </div>
+              ) : (
+                /* Desktop: 2-column grid, alternating left/right */
+                <div
+                  className="relative max-w-7xl mx-auto px-8 grid grid-cols-2 gap-16 items-center"
                   style={{ direction: isLeft ? 'ltr' : 'rtl' }}
                 >
                   {/* Text side */}
@@ -336,7 +379,7 @@ export default function ProcessJourney() {
                     className={`relative ${isLeft ? 'text-right pr-16' : 'text-left pl-16'}`}
                     style={{ direction: 'ltr', perspective: 600 }}
                   >
-                    {/* Step number — visible, styled */}
+                    {/* Step number */}
                     <span
                       data-number
                       className="font-[family-name:var(--font-outfit)] text-6xl lg:text-7xl font-black text-[#638BFF]/20 block mb-3 leading-none will-change-transform"
@@ -373,60 +416,11 @@ export default function ProcessJourney() {
                   {/* Empty side (opposite of text, for balance) */}
                   <div />
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ── Mobile: vertical timeline ── */}
-      <section
-        id={isMobile ? 'methode' : undefined}
-        className={`py-20 bg-black relative overflow-hidden ${isMobile ? 'block' : 'hidden'}`}
-      >
-        <div className="absolute inset-0 opacity-20">
-          <Image src="/images/process-bg.jpg" alt="" fill className="object-cover" sizes="100vw" />
-        </div>
-
-        <div className="relative z-10 px-6">
-          <div className="text-center mb-16">
-            <p className="text-[#638BFF]/80 text-xs font-semibold tracking-[0.4em] uppercase mb-4">Methode</p>
-            <SplitTextReveal
-              tag="h2"
-              type="words"
-              className="font-[family-name:var(--font-outfit)] text-3xl font-black text-white leading-tight"
-            >
-              Notre processus
-            </SplitTextReveal>
-          </div>
-
-          <div className="relative">
-            <div className="absolute left-6 top-0 bottom-0 w-[1px] bg-white/[0.06]" />
-            <div className="space-y-12">
-              {steps.map((step, i) => (
-                <ScrollReveal key={i} delay={i * 0.05} direction={i % 2 === 0 ? 'right' : 'left'}>
-                  <div className="flex gap-6 pl-2">
-                    <div className="relative flex-shrink-0">
-                      <div className="w-10 h-10 rounded-full bg-[#638BFF]/10 border border-[#638BFF]/30 flex items-center justify-center">
-                        <span className="font-[family-name:var(--font-outfit)] text-xs font-bold text-[#638BFF]">
-                          {step.number}
-                        </span>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="font-[family-name:var(--font-outfit)] text-lg font-bold text-white mb-2">
-                        {step.title}
-                      </h3>
-                      <p className="text-white/55 text-sm leading-relaxed mb-1">{step.description}</p>
-                      <p className="text-white/40 text-xs">{step.detail}</p>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              ))}
+              )}
             </div>
-          </div>
-        </div>
-      </section>
-    </>
+          );
+        })}
+      </div>
+    </section>
   );
 }

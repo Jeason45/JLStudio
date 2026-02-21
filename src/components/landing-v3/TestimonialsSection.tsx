@@ -6,7 +6,6 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import SplitTextReveal from './shared/SplitTextReveal';
-import ScrollReveal from './shared/ScrollReveal';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -54,9 +53,9 @@ export default function TestimonialsSection() {
 
     const ctx = gsap.context(() => {
       // ── Background parallax ──
-      if (!isMobile && bgRef.current) {
+      if (bgRef.current) {
         gsap.to(bgRef.current, {
-          yPercent: -15,
+          yPercent: isMobile ? -8 : -15,
           ease: 'none',
           scrollTrigger: {
             trigger: section,
@@ -88,20 +87,19 @@ export default function TestimonialsSection() {
           },
         });
 
-        // ── Parallax: alternating speeds on desktop ──
-        // Even cards move slower, odd cards move faster → creates depth within the grid
-        if (!isMobile) {
-          gsap.to(card, {
-            yPercent: i % 2 === 0 ? -15 : -35,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: true,
-            },
-          });
-        }
+        // ── Parallax: alternating speeds → creates depth within the grid ──
+        gsap.to(card, {
+          yPercent: isMobile
+            ? (i % 2 === 0 ? -8 : -18)
+            : (i % 2 === 0 ? -15 : -35),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
       });
 
       // Quote text reveals
