@@ -249,7 +249,7 @@ export default function HeroParallax() {
         <div
           ref={bgRef}
           className="absolute will-change-transform"
-          style={{ inset: isMobile ? '-5%' : '-10%' }}
+          style={{ inset: isMobile ? '0' : '-10%' }}
         >
           <Image
             src="/images/hero-bg.jpg"
