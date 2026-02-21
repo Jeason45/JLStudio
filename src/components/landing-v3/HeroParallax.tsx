@@ -68,60 +68,78 @@ export default function HeroParallax() {
       });
 
       if (isMobile) {
-        // ── Mobile (220vh) ──────────────────────────────
-        // ONE tween per property — no gaps, no conflicts
+        // ── Mobile (250vh) ──────────────────────────────
+        // Scroll hint fades quickly
         tl.fromTo(scrollHintRef.current,
           { opacity: 1 },
           { opacity: 0, duration: 4 },
           0
         );
+
+        // JL STUDIO text zooms in
         tl.fromTo(textRef.current,
           { scale: 1, transformOrigin: '50% 75%' },
-          { scale: 8, ease: 'power4.in', duration: 28 },
+          { scale: 8, ease: 'power4.in', duration: 26 },
           0
         );
+
+        // Black mask fades away
         tl.fromTo(maskRef.current,
           { opacity: 1 },
-          { opacity: 0, ease: 'power4.in', duration: 34 },
+          { opacity: 0, ease: 'power3.in', duration: 28 },
           0
         );
+
+        // Dark overlay fades in for text readability
         tl.fromTo(overlayRef.current,
           { opacity: 0 },
-          { opacity: 1, ease: 'power3.in', duration: 40 },
-          0
+          { opacity: 1, duration: 10, ease: 'power2.inOut', immediateRender: false },
+          22
         );
+
+        // Content wrapper snaps visible (like desktop)
         tl.fromTo(contentRef.current,
           { opacity: 0 },
-          { opacity: 1, ease: 'power4.in', duration: 50 },
-          0
+          { opacity: 1, duration: 2, immediateRender: false },
+          30
         );
+
+        // "Votre Vision" — chars cascade
         tl.fromTo(splitH1.chars,
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, stagger: 0.4, duration: 6, ease: 'power3.out', immediateRender: false },
+          { opacity: 0, y: 40, rotateX: -60 },
+          { opacity: 1, y: 0, rotateX: 0, stagger: 0.4, duration: 5, ease: 'power3.out', immediateRender: false },
+          31
+        );
+
+        // "Notre Expertise" — chars cascade
+        tl.fromTo(splitH2.chars,
+          { opacity: 0, y: 40, rotateX: -60 },
+          { opacity: 1, y: 0, rotateX: 0, stagger: 0.3, duration: 5, ease: 'power3.out', immediateRender: false },
           35
         );
-        tl.fromTo(splitH2.chars,
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, stagger: 0.3, duration: 6, ease: 'power3.out', immediateRender: false },
-          39
-        );
+
+        // Paragraph
         tl.fromTo(paraRef.current,
           { opacity: 0, y: 20 },
           { opacity: 1, y: 0, duration: 5, ease: 'power2.out', immediateRender: false },
-          44
+          39
         );
+
+        // CTA buttons
         tl.fromTo(ctaRef.current,
           { opacity: 0, y: 15 },
           { opacity: 1, y: 0, duration: 4, ease: 'power2.out', immediateRender: false },
-          47
+          42
         );
+
+        // Parallax exit
         tl.to(contentRef.current,
           { yPercent: -60, opacity: 0, ease: 'none', duration: 25 },
-          65
+          60
         );
         tl.to(overlayRef.current,
           { opacity: 0, duration: 23 },
-          65
+          60
         );
       } else {
         // ── Desktop (300vh) ─────────────────────────────
@@ -224,16 +242,20 @@ export default function HeroParallax() {
     <section
       ref={sectionRef}
       className="relative bg-black"
-      style={{ height: isMobile ? '220vh' : '300vh' }}
+      style={{ height: isMobile ? '250vh' : '300vh' }}
     >
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Background Image */}
-        <div ref={bgRef} className="absolute inset-[-10%] will-change-transform">
+        <div
+          ref={bgRef}
+          className="absolute will-change-transform"
+          style={{ inset: isMobile ? '-5%' : '-10%' }}
+        >
           <Image
             src="/images/hero-bg.jpg"
             alt=""
             fill
-            className="object-cover"
+            className={`object-cover ${isMobile ? 'object-[center_35%]' : ''}`}
             sizes="(max-width: 768px) 100vw, 120vw"
             priority
           />
