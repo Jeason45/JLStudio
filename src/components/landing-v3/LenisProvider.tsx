@@ -11,10 +11,11 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    const isMobile = window.innerWidth <= 768;
     const lenis = new Lenis({
-      duration: 1.4,
+      duration: isMobile ? 1.0 : 1.4,
       wheelMultiplier: 0.8,
-      touchMultiplier: 1.5,
+      touchMultiplier: 1.0,
       infinite: false,
     });
     lenisRef.current = lenis;

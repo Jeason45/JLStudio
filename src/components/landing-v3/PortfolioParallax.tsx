@@ -247,7 +247,7 @@ export default function PortfolioParallax() {
                 {/* Title — the design element */}
                 <h3
                   data-title
-                  className="font-[family-name:var(--font-outfit)] font-black text-white leading-[0.9] tracking-tighter mb-6 whitespace-nowrap"
+                  className="font-[family-name:var(--font-outfit)] font-black text-white leading-[0.9] tracking-tighter mb-6 lg:whitespace-nowrap"
                   style={{ fontSize: 'clamp(2.5rem, 7vw, 8rem)' }}
                 >
                   {project.title}
@@ -307,9 +307,9 @@ export default function PortfolioParallax() {
 
         <div className="space-y-6 px-6">
           {projects.map((project, i) => (
-            <ScrollReveal key={i} delay={i * 0.1}>
+            <ScrollReveal key={i} delay={i * 0.05} direction={i % 2 === 0 ? 'left' : 'right'}>
               <div className="relative rounded-2xl overflow-hidden aspect-[16/10]">
-                <Image src={project.image} alt={project.title} fill className="object-cover" sizes="100vw" />
+                <Image src={project.image} alt={project.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 <div className="absolute bottom-0 inset-x-0 p-6">
                   <p className="text-[#638BFF] text-xs tracking-[0.2em] uppercase mb-2">{project.category}</p>

@@ -348,7 +348,7 @@ export default function ProcessJourney() {
                     {/* Title */}
                     <h3
                       data-title
-                      className="font-[family-name:var(--font-outfit)] text-4xl md:text-5xl lg:text-7xl font-black text-white mb-5 leading-[0.95] tracking-tight relative will-change-transform whitespace-nowrap"
+                      className="font-[family-name:var(--font-outfit)] text-4xl md:text-5xl lg:text-7xl font-black text-white mb-5 leading-[0.95] tracking-tight relative will-change-transform lg:whitespace-nowrap"
                     >
                       {step.title}
                     </h3>
@@ -404,7 +404,7 @@ export default function ProcessJourney() {
             <div className="absolute left-6 top-0 bottom-0 w-[1px] bg-white/[0.06]" />
             <div className="space-y-12">
               {steps.map((step, i) => (
-                <ScrollReveal key={i} delay={i * 0.1} direction="right">
+                <ScrollReveal key={i} delay={i * 0.05} direction={i % 2 === 0 ? 'right' : 'left'}>
                   <div className="flex gap-6 pl-2">
                     <div className="relative flex-shrink-0">
                       <div className="w-10 h-10 rounded-full bg-[#638BFF]/10 border border-[#638BFF]/30 flex items-center justify-center">

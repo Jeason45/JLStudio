@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
@@ -228,11 +229,13 @@ export default function HeroParallax() {
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Background Image */}
         <div ref={bgRef} className="absolute inset-[-10%] will-change-transform">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/images/hero-bg.jpg"
             alt=""
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 120vw"
+            priority
           />
           {/* Color grading — warm shadows, cool highlights */}
           <div

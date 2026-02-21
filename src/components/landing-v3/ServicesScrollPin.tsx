@@ -344,10 +344,10 @@ export default function ServicesScrollPin() {
         </div>
         <div className="space-y-8 px-6">
           {services.map((service, i) => (
-            <ScrollReveal key={i} delay={i * 0.1}>
+            <ScrollReveal key={i} delay={i * 0.05} direction={i % 2 === 0 ? 'left' : 'right'}>
               <div className="bg-white/[0.03] border border-white/[0.05] rounded-2xl overflow-hidden">
                 <div className="relative h-48">
-                  <Image src={service.image} alt={service.title} fill className="object-cover" sizes="100vw" />
+                  <Image src={service.image} alt={service.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
                   <span className="absolute bottom-4 left-4 font-[family-name:var(--font-outfit)] text-5xl font-black text-white/[0.08]">
                     {service.number}
