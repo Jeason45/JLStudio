@@ -323,13 +323,13 @@ export default function HeroParallax() {
           <div className="text-center px-6 max-w-4xl mx-auto" style={{ perspective: 600 }}>
             <h1
               ref={h1Ref}
-              className="font-[family-name:var(--font-outfit)] text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-[0.95] tracking-tight mb-4"
+              className="font-[family-name:var(--font-outfit)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-white leading-[0.95] tracking-tight mb-4"
             >
               Votre Vision
             </h1>
             <h2
               ref={h2Ref}
-              className="font-[family-name:var(--font-outfit)] text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[0.95] tracking-tight mb-6 sm:mb-8 text-[#638BFF]"
+              className="font-[family-name:var(--font-outfit)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.95] tracking-tight mb-6 sm:mb-8 text-[#638BFF]"
             >
               Notre Expertise
             </h2>
