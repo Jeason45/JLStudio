@@ -342,17 +342,17 @@ export default function HeroParallax() {
             </p>
             <div
               ref={ctaRef}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              className="flex flex-row items-center justify-center gap-3"
             >
               <a
                 href="#contact"
-                className="group relative bg-[#638BFF] text-white font-semibold px-6 py-3.5 sm:px-8 sm:py-4 rounded-full text-sm overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]"
+                className="group relative bg-[#638BFF] text-white font-semibold px-4 py-2.5 sm:px-6 sm:py-3 rounded-full text-xs sm:text-sm overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]"
               >
                 <span className="relative z-10">Demarrer un projet</span>
               </a>
               <a
                 href="#projets"
-                className="border border-white/20 text-white/80 font-medium px-6 py-3.5 sm:px-8 sm:py-4 rounded-full text-sm hover:border-white/40 hover:text-white transition-all duration-300"
+                className="border border-white/20 text-white/80 font-medium px-4 py-2.5 sm:px-6 sm:py-3 rounded-full text-xs sm:text-sm hover:border-white/40 hover:text-white transition-all duration-300"
               >
                 Voir nos realisations
               </a>
