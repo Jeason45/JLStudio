@@ -94,52 +94,52 @@ export default function HeroParallax() {
         tl.fromTo(overlayRef.current,
           { opacity: 0 },
           { opacity: 1, duration: 10, ease: 'power2.inOut', immediateRender: false },
-          22
+          32
         );
 
         // Content wrapper snaps visible (like desktop)
         tl.fromTo(contentRef.current,
           { opacity: 0 },
           { opacity: 1, duration: 2, immediateRender: false },
-          30
+          40
         );
 
         // "Votre Vision" — chars cascade
         tl.fromTo(splitH1.chars,
           { opacity: 0, y: 40, rotateX: -60 },
           { opacity: 1, y: 0, rotateX: 0, stagger: 0.4, duration: 5, ease: 'power3.out', immediateRender: false },
-          31
+          41
         );
 
         // "Notre Expertise" — chars cascade
         tl.fromTo(splitH2.chars,
           { opacity: 0, y: 40, rotateX: -60 },
           { opacity: 1, y: 0, rotateX: 0, stagger: 0.3, duration: 5, ease: 'power3.out', immediateRender: false },
-          35
+          45
         );
 
         // Paragraph
         tl.fromTo(paraRef.current,
           { opacity: 0, y: 20 },
           { opacity: 1, y: 0, duration: 5, ease: 'power2.out', immediateRender: false },
-          39
+          49
         );
 
         // CTA buttons
         tl.fromTo(ctaRef.current,
           { opacity: 0, y: 15 },
           { opacity: 1, y: 0, duration: 4, ease: 'power2.out', immediateRender: false },
-          42
+          52
         );
 
         // Parallax exit
         tl.to(contentRef.current,
           { yPercent: -60, opacity: 0, ease: 'none', duration: 25 },
-          60
+          68
         );
         tl.to(overlayRef.current,
           { opacity: 0, duration: 23 },
-          60
+          68
         );
       } else {
         // ── Desktop (300vh) ─────────────────────────────
