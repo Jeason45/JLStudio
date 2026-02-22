@@ -86,7 +86,7 @@ export default function HeroParallax() {
         // Black mask fades away
         tl.fromTo(maskRef.current,
           { opacity: 1 },
-          { opacity: 0, ease: 'power4.in', duration: 32 },
+          { opacity: 0, ease: 'power4.in', duration: 40 },
           0
         );
 
