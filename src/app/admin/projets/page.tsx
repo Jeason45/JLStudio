@@ -301,7 +301,7 @@ export default function ProjectsPage() {
             {/* Stats Cards */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+              gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(auto-fit, minmax(140px, 1fr))',
               gap: '16px'
             }}>
               {(Object.keys(STATUS_CONFIG) as ProjectStatus[]).map(status => {
@@ -356,7 +356,7 @@ export default function ProjectsPage() {
           {clientFilter && (
             <div style={{
               background: 'linear-gradient(to right, rgba(99,139,255,0.1), rgba(99,139,255,0.05))',
-              padding: '16px 40px',
+              padding: isMobile ? '16px' : '16px 40px',
               borderBottom: '1px solid rgba(99,139,255,0.2)',
               display: 'flex',
               alignItems: 'center',
@@ -655,6 +655,52 @@ function TableView({
   getProgressColor: (progress: number) => string;
   isMobile: boolean;
 }) {
+  if (isMobile) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {projects.map((project) => (
+          <div key={project.id} onClick={() => onSelectProject(project)}
+            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '16px', cursor: 'pointer' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '14px', fontWeight: 600, color: 'white', flex: 1 }}>{project.name}</span>
+              <span style={{
+                padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600,
+                color: STATUS_CONFIG[project.status]?.color || '#94a3b8',
+                backgroundColor: STATUS_CONFIG[project.status]?.bgColor || 'rgba(148,163,184,0.15)',
+              }}>
+                {STATUS_CONFIG[project.status]?.label || project.status}
+              </span>
+            </div>
+            {project.contact && (
+              <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', marginBottom: '8px' }}>
+                {project.contact.name}
+              </div>
+            )}
+            <div style={{ marginBottom: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>Progression</span>
+                <span style={{ fontSize: '11px', fontWeight: 700, color: getProgressColor(project.progress) }}>{project.progress}%</span>
+              </div>
+              <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden', position: 'relative' as const }}>
+                <div style={{ position: 'absolute' as const, top: 0, left: 0, height: '100%', width: `${project.progress}%`, background: getProgressColor(project.progress), borderRadius: '3px' }} />
+              </div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{
+                padding: '3px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: 600,
+                color: PRIORITY_CONFIG[project.priority]?.color || '#94a3b8',
+                backgroundColor: PRIORITY_CONFIG[project.priority]?.bgColor || 'rgba(148,163,184,0.15)',
+              }}>
+                {PRIORITY_CONFIG[project.priority]?.label || project.priority}
+              </span>
+              <span style={{ fontSize: '12px', fontWeight: 600, color: 'white' }}>{formatBudget(project.estimatedBudget)}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div style={{
       border: '1px solid rgba(255,255,255,0.1)',
@@ -1502,6 +1548,7 @@ function ProjectDetailModal({
   onUpdate: () => void;
   onDelete: (id: string) => void;
 }) {
+  const { isMobile } = useSidebar();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<DetailTab>('overview');
@@ -1821,7 +1868,7 @@ function ProjectDetailModal({
         <div style={{ padding: '24px 28px' }}>
           {isEditing ? (
             /* ── Edit Mode ── */
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px' }}>
               <div style={{ gridColumn: '1 / -1' }}>
                 <label style={labelStyle}>Description</label>
                 <textarea
@@ -2010,7 +2057,7 @@ function ProjectDetailModal({
               </div>
 
               {/* Info Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
                 {/* Description */}
                 {project.description && (
                   <div style={{ gridColumn: '1 / -1' }}>

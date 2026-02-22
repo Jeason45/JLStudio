@@ -380,7 +380,7 @@ export default function CalendarPage() {
 
   // ─── Day names ────────────────────────────────────────────────────────
 
-  const dayNames = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+  const dayNames = isMobile ? ['D', 'L', 'M', 'M', 'J', 'V', 'S'] : ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
   // ─── Reusable style helpers ───────────────────────────────────────────
 
@@ -468,13 +468,13 @@ export default function CalendarPage() {
                 gap: '16px',
               }}>
                 <div style={{
-                  width: '48px', height: '48px', borderRadius: '12px',
+                  width: isMobile ? '40px' : '48px', height: isMobile ? '40px' : '48px', borderRadius: '12px',
                   background: `${s.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
                   {s.icon}
                 </div>
                 <div>
-                  <div style={{ fontSize: '28px', fontWeight: 700, color: 'white' }}>{s.value}</div>
+                  <div style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 700, color: 'white' }}>{s.value}</div>
                   <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{s.label}</div>
                 </div>
               </div>
@@ -516,7 +516,7 @@ export default function CalendarPage() {
               </button>
 
               <span style={{
-                fontSize: '15px', fontWeight: 600, minWidth: '180px',
+                fontSize: '15px', fontWeight: 600, minWidth: isMobile ? '140px' : '180px',
                 textAlign: 'center', color: 'white', textTransform: 'capitalize',
               }}>
                 {format(currentDate, 'MMMM yyyy', { locale: fr })}
@@ -626,7 +626,7 @@ export default function CalendarPage() {
                       }}
                       style={{
                         minHeight: isMobile ? '70px' : '100px',
-                        padding: '6px',
+                        padding: isMobile ? '4px' : '6px',
                         borderRight: (index + 1) % 7 !== 0 ? '1px solid rgba(255,255,255,0.05)' : 'none',
                         borderBottom: '1px solid rgba(255,255,255,0.05)',
                         cursor: date ? 'pointer' : 'default',
@@ -654,8 +654,8 @@ export default function CalendarPage() {
                             marginBottom: '4px',
                           }}>
                             <div style={{
-                              width: '28px',
-                              height: '28px',
+                              width: isMobile ? '24px' : '28px',
+                              height: isMobile ? '24px' : '28px',
                               borderRadius: '50%',
                               display: 'flex',
                               alignItems: 'center',
@@ -680,8 +680,8 @@ export default function CalendarPage() {
                                 openViewModal(apt);
                               }}
                               style={{
-                                fontSize: '10px',
-                                padding: '2px 6px',
+                                fontSize: isMobile ? '9px' : '10px',
+                                padding: isMobile ? '1px 4px' : '2px 6px',
                                 borderRadius: '4px',
                                 marginBottom: '2px',
                                 overflow: 'hidden',

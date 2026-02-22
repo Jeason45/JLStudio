@@ -339,7 +339,7 @@ export default function DashboardPage() {
           {heroCards.map((card) => (
             <div key={card.label} onClick={() => card.href && (window.location.href = card.href)} style={{
               background: `linear-gradient(135deg, ${card.color}26 0%, ${card.color}0d 100%)`,
-              padding: '32px', borderRadius: '16px', backdropFilter: 'blur(10px)',
+              padding: isMobile ? '20px' : '32px', borderRadius: '16px', backdropFilter: 'blur(10px)',
               border: `2px solid ${card.color}66`, transition: 'all 0.3s',
               cursor: card.href ? 'pointer' : 'default', position: 'relative', overflow: 'hidden'
             }}>
@@ -348,7 +348,7 @@ export default function DashboardPage() {
                 <div style={{ color: card.color }}>{card.icon}</div>
                 <span style={{ fontSize: '13px', color: card.color, textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>{card.label}</span>
               </div>
-              <div style={{ fontSize: '42px', fontWeight: 800, marginBottom: '12px', color: card.color, lineHeight: 1 }}>
+              <div style={{ fontSize: isMobile ? '28px' : '42px', fontWeight: 800, marginBottom: '12px', color: card.color, lineHeight: 1 }}>
                 {loading ? '...' : card.value}
               </div>
               <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -372,7 +372,7 @@ export default function DashboardPage() {
                     <div style={{ color: kpi.color }}>{kpi.icon}</div>
                     <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{kpi.label}</span>
                   </div>
-                  <div style={{ fontSize: '28px', fontWeight: 700, color: typeof kpi.value === 'string' ? kpi.color : 'white' }}>
+                  <div style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 700, color: typeof kpi.value === 'string' ? kpi.color : 'white' }}>
                     {loading ? '...' : kpi.value}
                   </div>
                 </div>
@@ -386,7 +386,7 @@ export default function DashboardPage() {
           {/* Revenue Chart */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {!loading && stats?.evolutionMensuelle && (
-              <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', padding: isMobile ? '16px' : '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <h3 style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '24px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Evolution des revenus</h3>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', height: '200px' }}>
                   {stats.evolutionMensuelle.map((m, i) => {
@@ -394,7 +394,7 @@ export default function DashboardPage() {
                     const height = (m.revenue / maxRevenue) * 180;
                     return (
                       <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '10px', color: '#638BFF', fontWeight: 600 }}>
+                        <span style={{ fontSize: isMobile ? '8px' : '10px', color: '#638BFF', fontWeight: 600 }}>
                           {m.revenue > 0 ? formatCurrency(m.revenue) : ''}
                         </span>
                         <div style={{
@@ -402,7 +402,7 @@ export default function DashboardPage() {
                           background: `linear-gradient(180deg, #638BFF 0%, #4a6fd4 100%)`,
                           borderRadius: '4px 4px 0 0', transition: 'height 0.5s ease'
                         }} />
-                        <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>{m.month}</span>
+                        <span style={{ fontSize: isMobile ? '8px' : '11px', color: 'rgba(255,255,255,0.5)' }}>{m.month}</span>
                       </div>
                     );
                   })}
@@ -412,7 +412,7 @@ export default function DashboardPage() {
 
             {/* Leads/Clients Chart */}
             {!loading && stats?.evolutionMensuelle && (
-              <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', padding: isMobile ? '16px' : '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <h3 style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '24px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Leads & Clients</h3>
                 <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -435,7 +435,7 @@ export default function DashboardPage() {
                           <div style={{ width: '45%', height: `${Math.max(leadsH, 2)}px`, background: '#f59e0b', borderRadius: '2px 2px 0 0' }} />
                           <div style={{ width: '45%', height: `${Math.max(clientsH, 2)}px`, background: '#10b981', borderRadius: '2px 2px 0 0' }} />
                         </div>
-                        <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>{m.month}</span>
+                        <span style={{ fontSize: isMobile ? '8px' : '11px', color: 'rgba(255,255,255,0.5)' }}>{m.month}</span>
                       </div>
                     );
                   })}

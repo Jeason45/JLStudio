@@ -223,7 +223,7 @@ export default function ParametresPage() {
     background: 'rgba(255,255,255,0.03)',
     border: '1px solid rgba(255,255,255,0.06)',
     borderRadius: '16px',
-    padding: '28px',
+    padding: isMobile ? '20px' : '28px',
     marginBottom: '24px',
   };
 
@@ -299,7 +299,7 @@ export default function ParametresPage() {
               <Settings size={28} />
             </div>
             <div>
-              <h1 style={{ fontSize: '28px', fontWeight: 700, color: 'white', margin: 0 }}>Parametres</h1>
+              <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 700, color: 'white', margin: 0 }}>Parametres</h1>
               <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', margin: '4px 0 0 0' }}>
                 Configurez les informations de votre entreprise
               </p>

@@ -182,8 +182,16 @@ export default function GanttPage() {
   const [newTaskDuration, setNewTaskDuration] = useState('');
   const [newTaskEstimatedHours, setNewTaskEstimatedHours] = useState('');
 
+  const rowHeight = isMobile ? 32 : ROW_HEIGHT;
+  const taskListWidth = isMobile ? 200 : TASK_LIST_WIDTH;
+
   const timelineRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
+
+  // ─── Default zoom on mobile ───
+  useEffect(() => {
+    if (isMobile) setZoomLevel('month');
+  }, []);
 
   // ─── Track if came from projects page ───
   const [fromProject, setFromProject] = useState<string | null>(null);
@@ -566,9 +574,9 @@ export default function GanttPage() {
         if (!predEnd || !taskStart) continue;
 
         const x1 = getDatePosition(predEnd) + timelineConfig.dayWidth;
-        const y1 = predIdx * ROW_HEIGHT + ROW_HEIGHT / 2;
+        const y1 = predIdx * rowHeight + rowHeight / 2;
         const x2 = getDatePosition(taskStart);
-        const y2 = taskIdx * ROW_HEIGHT + ROW_HEIGHT / 2;
+        const y2 = taskIdx * rowHeight + rowHeight / 2;
 
         const isCritical = task.isCriticalPath && predTask.isCriticalPath;
 
@@ -622,7 +630,7 @@ export default function GanttPage() {
         {/* ─── Header ─── */}
         <div style={{
           background: `linear-gradient(to right, ${BG_DARK}, #101d30)`,
-          padding: isMobile ? '20px 16px' : '24px 32px',
+          padding: isMobile ? '80px 16px 16px 16px' : '24px 32px',
           color: 'white',
           borderBottom: `1px solid ${BORDER_COLOR}`,
           flexShrink: 0,
@@ -868,7 +876,7 @@ export default function GanttPage() {
               ref={taskListRef}
               onScroll={handleTaskListScroll}
               style={{
-                width: `${TASK_LIST_WIDTH}px`, minWidth: `${TASK_LIST_WIDTH}px`,
+                width: `${taskListWidth}px`, minWidth: `${taskListWidth}px`,
                 borderRight: `1px solid ${BORDER_COLOR}`,
                 overflowY: 'auto', overflowX: 'hidden',
                 background: BG_CARD, flexShrink: 0,
@@ -896,7 +904,7 @@ export default function GanttPage() {
                       key={`section-${section.id}`}
                       onClick={() => toggleSection(section.id)}
                       style={{
-                        height: `${ROW_HEIGHT}px`, display: 'flex', alignItems: 'center',
+                        height: `${rowHeight}px`, display: 'flex', alignItems: 'center',
                         padding: '0 12px', cursor: 'pointer',
                         background: `${section.color || PRIMARY}0d`,
                         borderBottom: `1px solid ${BORDER_COLOR}`,
@@ -930,7 +938,7 @@ export default function GanttPage() {
                     <div
                       key={`ms-${ms.id}`}
                       style={{
-                        height: `${ROW_HEIGHT}px`, display: 'flex', alignItems: 'center',
+                        height: `${rowHeight}px`, display: 'flex', alignItems: 'center',
                         padding: '0 12px 0 28px', gap: '8px',
                         borderBottom: `1px solid ${BORDER_COLOR}`,
                         background: 'rgba(255,255,255,0.02)',
@@ -958,7 +966,7 @@ export default function GanttPage() {
                     key={`task-${task.id}`}
                     onClick={() => openTaskForEdit(task)}
                     style={{
-                      height: `${ROW_HEIGHT}px`, display: 'flex', alignItems: 'center',
+                      height: `${rowHeight}px`, display: 'flex', alignItems: 'center',
                       padding: '0 12px 0 28px', gap: '8px', cursor: 'pointer',
                       borderBottom: `1px solid ${BORDER_COLOR}`,
                       background: task.isCriticalPath ? 'rgba(239, 68, 68, 0.05)' : 'transparent',
@@ -1009,11 +1017,11 @@ export default function GanttPage() {
             <div
               ref={timelineRef}
               onScroll={handleTimelineScroll}
-              style={{ flex: 1, overflow: 'auto', position: 'relative' }}
+              style={{ flex: 1, overflow: 'auto', position: 'relative', ...(isMobile ? { WebkitOverflowScrolling: 'touch' as const } : {}) }}
             >
               <div style={{
                 width: `${timelineConfig.totalWidth}px`,
-                minHeight: `${HEADER_HEIGHT + organizedRows.length * ROW_HEIGHT}px`,
+                minHeight: `${HEADER_HEIGHT + organizedRows.length * rowHeight}px`,
                 position: 'relative',
               }}>
                 {/* ─── Timeline Header ─── */}
@@ -1133,7 +1141,7 @@ export default function GanttPage() {
                   {organizedRows.map((_, idx) => (
                     <div key={`grid-${idx}`} style={{
                       position: 'absolute', left: 0, right: 0,
-                      top: `${idx * ROW_HEIGHT}px`, height: `${ROW_HEIGHT}px`,
+                      top: `${idx * rowHeight}px`, height: `${rowHeight}px`,
                       borderBottom: `1px solid rgba(255,255,255,0.04)`,
                     }} />
                   ))}
@@ -1166,7 +1174,7 @@ export default function GanttPage() {
                       style={{
                         position: 'absolute', top: 0, left: 0,
                         width: `${timelineConfig.totalWidth}px`,
-                        height: `${organizedRows.length * ROW_HEIGHT + HEADER_HEIGHT}px`,
+                        height: `${organizedRows.length * rowHeight + HEADER_HEIGHT}px`,
                         pointerEvents: 'none', zIndex: 2,
                       }}
                     >
@@ -1201,7 +1209,7 @@ export default function GanttPage() {
 
                   {/* ─── Task Bars and Milestones ─── */}
                   {organizedRows.map((row, idx) => {
-                    const top = idx * ROW_HEIGHT;
+                    const top = idx * rowHeight;
 
                     if (row.type === 'section') {
                       const section = row.data as TaskSection;
@@ -1209,7 +1217,7 @@ export default function GanttPage() {
                       return (
                         <div key={`sec-bar-${section.id}`} style={{
                           position: 'absolute', left: 0, top: `${top}px`,
-                          width: '100%', height: `${ROW_HEIGHT}px`,
+                          width: '100%', height: `${rowHeight}px`,
                           background: `${section.color || PRIMARY}08`,
                           borderBottom: `1px solid ${BORDER_COLOR}`,
                         }} />
@@ -1228,7 +1236,7 @@ export default function GanttPage() {
                         <div key={`ms-bar-${ms.id}`} style={{
                           position: 'absolute',
                           left: `${left - 10}px`,
-                          top: `${top + ROW_HEIGHT / 2 - 10}px`,
+                          top: `${top + rowHeight / 2 - 10}px`,
                           width: '20px', height: '20px',
                           zIndex: 4,
                         }}>
@@ -1272,7 +1280,7 @@ export default function GanttPage() {
                     const barColor = getBarColor(task);
                     const progress = getTaskProgress(task);
                     const barHeight = 24;
-                    const barTop = top + (ROW_HEIGHT - barHeight) / 2;
+                    const barTop = top + (rowHeight - barHeight) / 2;
 
                     return (
                       <div

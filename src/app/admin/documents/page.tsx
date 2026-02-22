@@ -314,11 +314,11 @@ export default function DocumentsPage() {
       </div>
 
       {/* Tabs + Action button */}
-      <div className="flex items-center justify-between mb-4">
+      <div className={`flex items-center justify-between mb-4 ${isMobile ? 'flex-col gap-3 items-stretch' : ''}`}>
         <div className="flex items-center bg-[#0d1321] border border-white/[0.06] rounded-xl p-1">
           <button
             onClick={() => handleTabChange('devis')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+            className={`flex items-center gap-2 ${isMobile ? 'px-2.5 py-1.5 text-xs' : 'px-4 py-2 text-sm'} rounded-lg font-medium transition-all ${
               activeTab === 'devis'
                 ? 'bg-white/[0.08] text-white shadow-sm'
                 : 'text-white/40 hover:text-white/60'
@@ -333,7 +333,7 @@ export default function DocumentsPage() {
           </button>
           <button
             onClick={() => handleTabChange('factures')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+            className={`flex items-center gap-2 ${isMobile ? 'px-2.5 py-1.5 text-xs' : 'px-4 py-2 text-sm'} rounded-lg font-medium transition-all ${
               activeTab === 'factures'
                 ? 'bg-white/[0.08] text-white shadow-sm'
                 : 'text-white/40 hover:text-white/60'
@@ -348,7 +348,7 @@ export default function DocumentsPage() {
           </button>
           <button
             onClick={() => handleTabChange('contrats')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+            className={`flex items-center gap-2 ${isMobile ? 'px-2.5 py-1.5 text-xs' : 'px-4 py-2 text-sm'} rounded-lg font-medium transition-all ${
               activeTab === 'contrats'
                 ? 'bg-white/[0.08] text-white shadow-sm'
                 : 'text-white/40 hover:text-white/60'
@@ -363,7 +363,7 @@ export default function DocumentsPage() {
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${isMobile ? 'justify-end' : ''}`}>
           {activeTab === 'factures' && (
             <button
               onClick={() => exportCSV(currentDocs)}
@@ -431,6 +431,99 @@ export default function DocumentsPage() {
           </Link>
         </div>
       ) : (
+        isMobile ? (
+          <div className="flex flex-col gap-3">
+            {currentDocs.map((doc) => {
+              const sc = statusConfig[doc.status] || statusConfig.draft;
+              return (
+                <div key={doc.id} className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold text-white">{doc.documentNumber}</span>
+                    <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${sc.bg} ${sc.text}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${sc.dot}`} />
+                      {sc.label}
+                    </span>
+                  </div>
+                  {doc.contact && (
+                    <div className="text-sm text-white/60 mb-2">{doc.contact.name}</div>
+                  )}
+                  <div className="flex items-center justify-between mb-3">
+                    {doc.amount ? (
+                      <span className="text-sm font-semibold text-white tabular-nums">{fmt(doc.amount)} EUR</span>
+                    ) : (
+                      <span className="text-xs text-white/30">&mdash;</span>
+                    )}
+                    <span className="text-xs text-white/45 tabular-nums">{formatDate(doc.createdAt)}</span>
+                  </div>
+                  <div className="flex items-center gap-1 flex-wrap">
+                    <a href={`/api/storage/documents/${encodeURIComponent(doc.fileName)}`} download={doc.fileName}
+                      className="p-1.5 text-white/50 hover:text-white transition-colors rounded-lg hover:bg-white/[0.04]" title="Telecharger">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                      </svg>
+                    </a>
+                    {doc.signedPdfPath && (
+                      <a href={`/api/storage/documents/signed/${encodeURIComponent(doc.fileName.replace('.pdf', '_SIGNED.pdf'))}`} download
+                        className="p-1.5 text-green-400/60 hover:text-green-400 transition-colors rounded-lg hover:bg-green-500/[0.06]" title="Telecharger signe">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </a>
+                    )}
+                    {doc.status === 'draft' && doc.type !== 'facture' && (
+                      <Link href={doc.type === 'contrat' ? `/admin/documents/create-contrat?id=${doc.id}` : `/admin/documents/create?id=${doc.id}`}
+                        className="p-1.5 text-white/50 hover:text-amber-400 transition-colors rounded-lg hover:bg-amber-500/[0.06]" title="Modifier">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                        </svg>
+                      </Link>
+                    )}
+                    {doc.type === 'devis' && doc.status === 'signed' && (
+                      <Link href={`/admin/documents/create-facture?fromDevis=${doc.id}`}
+                        className="p-1.5 text-white/50 hover:text-purple-400 transition-colors rounded-lg hover:bg-purple-500/[0.06]" title="Creer une facture">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                        </svg>
+                      </Link>
+                    )}
+                    {doc.type === 'devis' && (
+                      <button onClick={() => handleDuplicate(doc)} disabled={duplicating === doc.id}
+                        className="p-1.5 text-white/50 hover:text-cyan-400 transition-colors rounded-lg hover:bg-cyan-500/[0.06] disabled:opacity-30" title="Dupliquer">
+                        {duplicating === doc.id ? (
+                          <div className="w-4 h-4 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin" />
+                        ) : (
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
+                          </svg>
+                        )}
+                      </button>
+                    )}
+                    {doc.type === 'facture' && doc.status === 'sent' && (
+                      <button onClick={() => handleMarkPaid(doc)}
+                        className="p-1.5 text-white/50 hover:text-emerald-400 transition-colors rounded-lg hover:bg-emerald-500/[0.06]" title="Marquer payee">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </button>
+                    )}
+                    <button onClick={() => openSendModal(doc)}
+                      className="p-1.5 text-white/50 hover:text-[#638BFF] transition-colors rounded-lg hover:bg-[#638BFF]/[0.06]" title="Envoyer">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                      </svg>
+                    </button>
+                    <button onClick={() => handleDelete(doc)}
+                      className="p-1.5 text-white/50 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/[0.06]" title="Supprimer">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
         <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -589,6 +682,7 @@ export default function DocumentsPage() {
             </table>
           </div>
         </div>
+        )
       )}
 
       {/* Send Modal */}

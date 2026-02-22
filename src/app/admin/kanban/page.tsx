@@ -330,6 +330,24 @@ export default function KanbanPage() {
     }
   };
 
+  // ─── Move task (touch-friendly) ──────────────────────────────────────────
+  const moveTaskToColumn = async (taskId: string, fromCol: string, toCol: string) => {
+    if (fromCol === toCol) return;
+    const column = columns.find(c => c.id === toCol);
+    if (!column) return;
+    setTasks(prev => prev.map(t =>
+      t.id === taskId ? { ...t, kanbanColumn: toCol, status: column.mappedStatus } : t
+    ));
+    try {
+      const res = await fetch('/api/kanban/tasks', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: taskId, kanbanColumn: toCol, status: column.mappedStatus }),
+      });
+      if (!res.ok) throw new Error('Failed');
+    } catch { await fetchTasks(); }
+  };
+
   // ─── Create task ─────────────────────────────────────────────────────────
   const handleCreateTask = async () => {
     if (!newTask.projectId || !newTask.title.trim()) return;
@@ -619,7 +637,7 @@ export default function KanbanPage() {
         {/* ── HEADER ───────────────────────────────────────────────────────── */}
         <div style={{
           background: 'linear-gradient(to right, #0a1628, #0d1321)',
-          padding: isMobile ? '16px' : '20px 28px',
+          padding: isMobile ? '80px 16px 16px 16px' : '20px 28px',
           borderBottom: '1px solid rgba(255,255,255,0.1)',
           flexShrink: 0,
         }}>
@@ -657,7 +675,7 @@ export default function KanbanPage() {
                 <rect x="17" y="3" width="5" height="8" rx="1" />
               </svg>
               <div>
-                <h1 style={{ fontSize: '28px', fontWeight: 700, margin: 0, color: 'white' }}>Kanban</h1>
+                <h1 style={{ fontSize: isMobile ? '20px' : '28px', fontWeight: 700, margin: 0, color: 'white' }}>Kanban</h1>
               </div>
             </div>
 
@@ -665,19 +683,19 @@ export default function KanbanPage() {
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
               <div style={{
                 background: 'rgba(99, 139, 255, 0.1)', border: '1px solid rgba(99, 139, 255, 0.3)',
-                borderRadius: '8px', padding: '6px 12px', display: 'flex', alignItems: 'center', gap: '8px',
+                borderRadius: '8px', padding: isMobile ? '4px 8px' : '6px 12px', display: 'flex', alignItems: 'center', gap: '8px',
               }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#638BFF', boxShadow: '0 0 8px rgba(99, 139, 255, 0.5)' }} />
-                <span style={{ fontSize: '13px', fontWeight: 600, color: '#93b4ff' }}>{totalTasks} tache{totalTasks !== 1 ? 's' : ''}</span>
+                <span style={{ fontSize: isMobile ? '11px' : '13px', fontWeight: 600, color: '#93b4ff' }}>{totalTasks} tache{totalTasks !== 1 ? 's' : ''}</span>
               </div>
 
               {completedTasks > 0 && (
                 <div style={{
                   background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)',
-                  borderRadius: '8px', padding: '6px 12px', display: 'flex', alignItems: 'center', gap: '8px',
+                  borderRadius: '8px', padding: isMobile ? '4px 8px' : '6px 12px', display: 'flex', alignItems: 'center', gap: '8px',
                 }}>
                   <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981' }} />
-                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#6ee7b7' }}>
+                  <span style={{ fontSize: isMobile ? '11px' : '13px', fontWeight: 600, color: '#6ee7b7' }}>
                     {completedTasks} terminee{completedTasks !== 1 ? 's' : ''}
                   </span>
                 </div>
@@ -686,10 +704,10 @@ export default function KanbanPage() {
               {overdueTasks > 0 && (
                 <div style={{
                   background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)',
-                  borderRadius: '8px', padding: '6px 12px', display: 'flex', alignItems: 'center', gap: '8px',
+                  borderRadius: '8px', padding: isMobile ? '4px 8px' : '6px 12px', display: 'flex', alignItems: 'center', gap: '8px',
                 }}>
                   <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444' }} />
-                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#fca5a5' }}>
+                  <span style={{ fontSize: isMobile ? '11px' : '13px', fontWeight: 600, color: '#fca5a5' }}>
                     {overdueTasks} en retard
                   </span>
                 </div>
@@ -772,7 +790,7 @@ export default function KanbanPage() {
                 padding: '8px 14px', borderRadius: '8px',
                 background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)',
                 color: 'white', fontSize: '13px', fontWeight: 500, cursor: 'pointer', outline: 'none',
-                minWidth: '180px',
+                minWidth: isMobile ? '140px' : '180px',
               }}
             >
               <option value="all" style={{ background: '#0d1321' }}>Tous les projets</option>
@@ -840,6 +858,7 @@ export default function KanbanPage() {
           flex: 1, overflowX: 'auto', overflowY: 'auto',
           padding: isMobile ? '12px' : '20px',
           background: 'linear-gradient(135deg, #0a1628 0%, #0d1321 100%)',
+          ...(isMobile ? { WebkitOverflowScrolling: 'touch' as const, scrollSnapType: 'x mandatory' as const } : {}),
         }}>
           {loading ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '400px', color: 'rgba(255,255,255,0.6)' }}>
@@ -857,7 +876,7 @@ export default function KanbanPage() {
               {/* Columns row */}
               <div style={{
                 display: 'flex', gap: '16px', minHeight: '500px',
-                minWidth: columns.length * 290,
+                ...(isMobile ? {} : { minWidth: columns.length * 290 }),
               }}>
                 {columns.map(column => {
                   const colTasks = getTasksForColumn(column.id);
@@ -869,7 +888,8 @@ export default function KanbanPage() {
                     <div
                       key={column.id}
                       style={{
-                        flex: '1 1 260px', minWidth: '260px', maxWidth: '340px',
+                        flex: isMobile ? '0 0 85vw' : '1 1 260px', minWidth: isMobile ? '85vw' : '260px', maxWidth: isMobile ? '85vw' : '340px',
+                        ...(isMobile ? { scrollSnapAlign: 'start' as const } : {}),
                         display: 'flex', flexDirection: 'column',
                         background: 'rgba(255,255,255,0.03)',
                         borderRadius: '12px',
@@ -1167,6 +1187,29 @@ export default function KanbanPage() {
                                     )}
                                   </div>
                                 </div>
+
+                                {/* Mobile: move to column select */}
+                                {isMobile && (
+                                  <select
+                                    value={getTaskColumn(task)}
+                                    onChange={(e) => {
+                                      e.stopPropagation();
+                                      moveTaskToColumn(task.id, getTaskColumn(task), e.target.value);
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
+                                    style={{
+                                      marginTop: '8px', width: '100%', padding: '6px 10px', borderRadius: '6px',
+                                      background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)',
+                                      color: 'rgba(255,255,255,0.7)', fontSize: '11px', cursor: 'pointer', outline: 'none',
+                                    }}
+                                  >
+                                    {columns.map(col => (
+                                      <option key={col.id} value={col.id} style={{ background: '#0d1321' }}>
+                                        {getTaskColumn(task) === col.id ? `✓ ${col.label}` : `→ ${col.label}`}
+                                      </option>
+                                    ))}
+                                  </select>
+                                )}
                               </div>
                             );
                           })

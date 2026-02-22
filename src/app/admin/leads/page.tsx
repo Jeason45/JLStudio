@@ -122,7 +122,7 @@ export default function LeadsPage() {
           </div>
 
           {/* Stats Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '32px' }}>
             {stats.map(s => (
               <div key={s.label} style={{ background: 'rgba(255,255,255,0.1)', padding: '20px', borderRadius: '12px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{s.label}</span>
@@ -173,17 +173,17 @@ export default function LeadsPage() {
                   style={{ flex: '1 1 300px', padding: '14px 20px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '14px', outline: 'none', backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }} />
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <button onClick={() => setStatusFilter('all')} style={{
-                    padding: '10px 18px', borderRadius: '10px', border: '1px solid',
+                    padding: isMobile ? '8px 12px' : '10px 18px', borderRadius: '10px', border: '1px solid',
                     borderColor: statusFilter === 'all' ? '#638BFF' : 'rgba(255,255,255,0.1)',
-                    fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+                    fontSize: isMobile ? '12px' : '13px', fontWeight: 600, cursor: 'pointer',
                     backgroundColor: statusFilter === 'all' ? 'rgba(99,139,255,0.2)' : 'rgba(255,255,255,0.05)',
                     color: statusFilter === 'all' ? '#638BFF' : 'rgba(255,255,255,0.7)'
                   }}>Tous</button>
                   {Object.entries(STATUS_CONFIG).filter(([k]) => k !== 'client').map(([key, cfg]) => (
                     <button key={key} onClick={() => setStatusFilter(key)} style={{
-                      padding: '10px 18px', borderRadius: '10px', border: '1px solid',
+                      padding: isMobile ? '8px 12px' : '10px 18px', borderRadius: '10px', border: '1px solid',
                       borderColor: statusFilter === key ? cfg.color : 'rgba(255,255,255,0.1)',
-                      fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+                      fontSize: isMobile ? '12px' : '13px', fontWeight: 600, cursor: 'pointer',
                       backgroundColor: statusFilter === key ? `${cfg.color}30` : 'rgba(255,255,255,0.05)',
                       color: statusFilter === key ? cfg.color : 'rgba(255,255,255,0.7)'
                     }}>{cfg.label}</button>
@@ -192,11 +192,45 @@ export default function LeadsPage() {
               </div>
 
               {/* Table */}
-              <div style={{ border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.05)' }}>
+              <div style={{ border: isMobile ? 'none' : '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', overflow: 'hidden', backgroundColor: isMobile ? 'transparent' : 'rgba(255,255,255,0.05)' }}>
                 {loading ? (
                   <div style={{ padding: '60px', textAlign: 'center', color: 'rgba(255,255,255,0.7)' }}>Chargement...</div>
                 ) : filtered.length === 0 ? (
                   <div style={{ padding: '60px', textAlign: 'center', color: 'rgba(255,255,255,0.7)' }}>Aucun lead trouve</div>
+                ) : isMobile ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {filtered.map(contact => (
+                      <div key={contact.id} onClick={() => setSelectedContactId(contact.id)}
+                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '16px', cursor: 'pointer' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                          <span style={{ fontSize: '14px', fontWeight: 600, color: 'white' }}>{contact.companyName || contact.name}</span>
+                          <span style={{
+                            padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600,
+                            color: STATUS_CONFIG[contact.status]?.color || '#94a3b8',
+                            backgroundColor: `${STATUS_CONFIG[contact.status]?.color || '#94a3b8'}20`,
+                          }}>
+                            {STATUS_CONFIG[contact.status]?.label || contact.status}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', marginBottom: '8px' }}>
+                          {contact.email && <span>{contact.email}</span>}
+                          {contact.email && contact.phone && <span style={{ margin: '0 8px' }}>·</span>}
+                          {contact.phone && <span>{contact.phone}</span>}
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            <span style={{
+                              display: 'inline-flex', alignItems: 'center', padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 700,
+                              color: contact.score >= 70 ? '#10b981' : contact.score >= 40 ? '#f59e0b' : '#94a3b8',
+                              background: contact.score >= 70 ? 'rgba(16,185,129,0.15)' : contact.score >= 40 ? 'rgba(245,158,11,0.15)' : 'rgba(148,163,184,0.15)',
+                            }}>{contact.score}</span>
+                            <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>{contact.projectType || '-'}</span>
+                          </div>
+                          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>{new Date(contact.createdAt).toLocaleDateString('fr-FR')}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
@@ -283,7 +317,7 @@ export default function LeadsPage() {
                   style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
               </div>
             ))}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Type de projet</label>
                 <select value={newLead.projectType} onChange={e => setNewLead(prev => ({ ...prev, projectType: e.target.value }))}
@@ -309,7 +343,7 @@ export default function LeadsPage() {
                 </select>
               </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Source</label>
                 <select value={newLead.source} onChange={e => setNewLead(prev => ({ ...prev, source: e.target.value }))}

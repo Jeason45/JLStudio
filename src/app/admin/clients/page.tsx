@@ -127,12 +127,12 @@ export default function ClientsPage() {
             <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Clients</span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
             {stats.map(s => (
-              <div key={s.label} style={{ background: 'rgba(255,255,255,0.05)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div style={{ width: '56px', height: '56px', borderRadius: '12px', background: `${s.color}15`, color: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{s.icon}</div>
+              <div key={s.label} style={{ background: 'rgba(255,255,255,0.05)', padding: isMobile ? '16px' : '24px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: isMobile ? '12px' : '16px' }}>
+                <div style={{ width: isMobile ? '44px' : '56px', height: isMobile ? '44px' : '56px', borderRadius: '12px', background: `${s.color}15`, color: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{s.icon}</div>
                 <div>
-                  <div style={{ fontSize: typeof s.value === 'string' ? '20px' : '28px', fontWeight: 700, color: typeof s.value === 'string' ? s.color : 'white' }}>{s.value}</div>
+                  <div style={{ fontSize: typeof s.value === 'string' ? (isMobile ? '16px' : '20px') : (isMobile ? '22px' : '28px'), fontWeight: 700, color: typeof s.value === 'string' ? s.color : 'white' }}>{s.value}</div>
                   <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{s.label}</div>
                 </div>
               </div>
@@ -141,7 +141,7 @@ export default function ClientsPage() {
         </div>
 
         {/* Filters */}
-        <div style={{ padding: '24px 40px', background: 'linear-gradient(to right, #0a0e1a, #101d30)', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ padding: isMobile ? '16px' : '24px 40px', background: 'linear-gradient(to right, #0a0e1a, #101d30)', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
             <Search size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.5)' }} />
             <input type="text" placeholder="Rechercher un client..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
@@ -168,7 +168,7 @@ export default function ClientsPage() {
               <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px' }}>Les leads convertis apparaitront ici</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px' }}>
               {clients.map(contact => (
                 <div key={contact.id} onClick={() => setSelectedContactId(contact.id)}
                   style={{ background: 'rgba(255,255,255,0.08)', borderRadius: '16px', padding: '24px', cursor: 'pointer', transition: 'all 0.2s', border: '1px solid rgba(255,255,255,0.1)' }}

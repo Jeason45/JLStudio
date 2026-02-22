@@ -112,6 +112,51 @@ export default function EmailsPage() {
               <div style={{ padding: '60px', textAlign: 'center', color: 'rgba(255,255,255,0.7)' }}>Chargement...</div>
             ) : filtered.length === 0 ? (
               <div style={{ padding: '60px', textAlign: 'center', color: 'rgba(255,255,255,0.7)' }}>Aucun email trouve</div>
+            ) : isMobile ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '12px' }}>
+                {filtered.map(email => {
+                  const statusCfg = STATUS_CONFIG[email.status] || { label: email.status, color: '#94a3b8' };
+                  const isExpanded = expandedId === email.id;
+                  return (
+                    <div key={email.id}
+                      onClick={() => email.error ? setExpandedId(isExpanded ? null : email.id) : undefined}
+                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '16px', cursor: email.error ? 'pointer' : 'default', transition: 'all 0.2s' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        <div style={{ overflow: 'hidden', maxWidth: '60%' }}>
+                          <span style={{ fontSize: '13px', fontWeight: 600, color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                            {email.contact?.name || email.to}
+                          </span>
+                          {email.contact?.name && (
+                            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{email.to}</span>
+                          )}
+                        </div>
+                        <span style={{
+                          padding: '4px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: 600,
+                          color: statusCfg.color,
+                          backgroundColor: `${statusCfg.color}20`,
+                          flexShrink: 0,
+                        }}>
+                          {statusCfg.label}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', marginBottom: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {email.subject || '-'}
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>{email.type || '-'}</span>
+                        <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>
+                          {new Date(email.sentAt || email.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                      {isExpanded && email.error && (
+                        <div style={{ marginTop: '8px', padding: '8px', borderRadius: '8px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', fontSize: '11px', color: '#f87171', lineHeight: '1.5' }}>
+                          {email.error}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             ) : (
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>

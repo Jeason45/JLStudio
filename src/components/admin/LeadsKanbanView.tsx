@@ -1,5 +1,7 @@
 'use client';
 
+import { useSidebar } from '@/components/admin/SidebarContext';
+
 const PIPELINE_COLUMNS = [
   { key: 'new', label: 'Nouveau', color: '#6366f1' },
   { key: 'contacted', label: 'Contacte', color: '#f59e0b' },
@@ -27,12 +29,24 @@ export default function LeadsKanbanView({ contacts, onStatusChange, onContactCli
   onStatusChange: (id: string, status: string) => void;
   onContactClick: (id: string) => void;
 }) {
+  const { isMobile } = useSidebar();
   return (
-    <div style={{ display: 'flex', gap: '16px', overflowX: 'auto', paddingBottom: '16px', minHeight: '500px' }}>
+    <div style={{
+      display: 'flex',
+      gap: '16px',
+      overflowX: isMobile ? 'auto' : 'auto',
+      paddingBottom: '16px',
+      minHeight: '500px',
+      ...(isMobile ? { WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory' } : {}),
+    }}>
       {PIPELINE_COLUMNS.map(col => {
         const colContacts = contacts.filter(c => c.status === col.key);
         return (
-          <div key={col.key} style={{ minWidth: '260px', flex: '1 0 260px' }}
+          <div key={col.key} style={{
+              minWidth: isMobile ? '85vw' : '260px',
+              flex: isMobile ? '0 0 85vw' : '1 0 260px',
+              ...(isMobile ? { scrollSnapAlign: 'start' } : {}),
+            }}
             onDragOver={e => { e.preventDefault(); e.currentTarget.style.background = `${col.color}10`; }}
             onDragLeave={e => { e.currentTarget.style.background = 'transparent'; }}
             onDrop={e => {

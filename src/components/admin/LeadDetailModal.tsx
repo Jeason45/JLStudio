@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { X, Mail, Phone, Building2, MapPin, Calendar, FileText, MessageSquare } from 'lucide-react';
+import { useSidebar } from '@/components/admin/SidebarContext';
 
 const STATUS_OPTIONS = [
   { value: 'new', label: 'Nouveau', color: '#6366f1' },
@@ -43,6 +44,7 @@ export default function LeadDetailModal({ contactId, onClose, onUpdate }: {
   onClose: () => void;
   onUpdate: () => void;
 }) {
+  const { isMobile } = useSidebar();
   const [contact, setContact] = useState<ContactDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -123,7 +125,7 @@ export default function LeadDetailModal({ contactId, onClose, onUpdate }: {
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, padding: '20px' }} onClick={onClose}>
-      <div style={{ width: '100%', maxWidth: '700px', maxHeight: '90vh', overflowY: 'auto', background: 'linear-gradient(135deg, #0f1b2e 0%, #0a0e1a 100%)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }} onClick={e => e.stopPropagation()}>
+      <div style={{ width: isMobile ? '100%' : '100%', maxWidth: isMobile ? '100%' : '700px', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : '90vh', overflowY: 'auto', background: 'linear-gradient(135deg, #0f1b2e 0%, #0a0e1a 100%)', borderRadius: isMobile ? '0' : '16px', border: '1px solid rgba(255,255,255,0.1)' }} onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div style={{ padding: '24px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
           <div>
@@ -156,7 +158,7 @@ export default function LeadDetailModal({ contactId, onClose, onUpdate }: {
         </div>
 
         {/* Contact Info */}
-        <div style={{ padding: '24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div style={{ padding: '24px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px' }}>
           {contact.email && <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'rgba(255,255,255,0.8)' }}><Mail size={16} color="#638BFF" />{contact.email}</div>}
           {contact.phone && <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'rgba(255,255,255,0.8)' }}><Phone size={16} color="#638BFF" />{contact.phone}</div>}
           {contact.companyName && <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'rgba(255,255,255,0.8)' }}><Building2 size={16} color="#638BFF" />{contact.companyName}</div>}
