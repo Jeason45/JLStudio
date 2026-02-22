@@ -296,7 +296,7 @@ export default function HeroParallax() {
             ref={textRef}
             className="text-white font-[family-name:var(--font-outfit)] font-black text-center select-none"
             style={{
-              fontSize: 'clamp(5rem, 24vw, 22rem)',
+              fontSize: 'clamp(5rem, 20vw, 16rem)',
               lineHeight: 0.85,
               letterSpacing: '-0.03em',
             }}
