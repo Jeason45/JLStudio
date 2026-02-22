@@ -76,10 +76,10 @@ export default function HeroParallax() {
           0
         );
 
-        // JL STUDIO text zooms in
+        // JL STUDIO text zooms in and flies past
         tl.fromTo(textRef.current,
           { scale: 1, transformOrigin: '50% 75%' },
-          { scale: 8, ease: 'power4.in', duration: 26 },
+          { scale: 35, ease: 'power4.in', duration: 38 },
           0
         );
 
