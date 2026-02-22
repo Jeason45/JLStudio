@@ -135,11 +135,11 @@ export default function HeroParallax() {
         // Parallax exit
         tl.to(contentRef.current,
           { yPercent: -60, opacity: 0, ease: 'none', duration: 25 },
-          68
+          85
         );
         tl.to(overlayRef.current,
           { opacity: 0, duration: 23 },
-          68
+          85
         );
       } else {
         // ── Desktop (300vh) ─────────────────────────────
@@ -242,7 +242,7 @@ export default function HeroParallax() {
     <section
       ref={sectionRef}
       className="relative bg-black"
-      style={{ height: isMobile ? '250vh' : '300vh' }}
+      style={{ height: isMobile ? '350vh' : '300vh' }}
     >
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Background Image */}
@@ -296,7 +296,7 @@ export default function HeroParallax() {
             ref={textRef}
             className="text-white font-[family-name:var(--font-outfit)] font-black text-center select-none"
             style={{
-              fontSize: 'clamp(3.5rem, 18vw, 18rem)',
+              fontSize: 'clamp(5rem, 24vw, 22rem)',
               lineHeight: 0.85,
               letterSpacing: '-0.03em',
             }}
