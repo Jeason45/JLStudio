@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
+import AdminSidebar from '@/components/admin/AdminSidebar';
+import { useSidebar } from '@/components/admin/SidebarContext';
 
 interface Document {
   id: string;
@@ -50,6 +52,7 @@ const statusConfig: Record<string, { label: string; bg: string; text: string; do
 };
 
 export default function DocumentsPage() {
+  const { sidebarWidth, isMobile } = useSidebar();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('devis');
@@ -177,6 +180,9 @@ export default function DocumentsPage() {
   const currentStatuses = activeTab === 'devis' ? devisStatuses : factureStatuses;
 
   return (
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
+      <AdminSidebar />
+      <div style={{ marginLeft: isMobile ? '0' : `${sidebarWidth}px`, transition: 'margin-left 0.3s ease', padding: isMobile ? '80px 16px 24px 16px' : '40px' }}>
     <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
@@ -525,6 +531,8 @@ export default function DocumentsPage() {
           </div>
         </div>
       )}
+    </div>
+      </div>
     </div>
   );
 }

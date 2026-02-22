@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import AdminSidebar from '@/components/admin/AdminSidebar';
+import { useSidebar } from '@/components/admin/SidebarContext';
 
 interface Contact {
   id: string;
@@ -35,16 +37,22 @@ interface CompanySettings {
 }
 
 export default function CreateFacturePage() {
+  const { sidebarWidth, isMobile } = useSidebar();
   return (
-    <Suspense
-      fallback={
-        <div className="flex items-center justify-center h-[60vh]">
-          <div className="w-8 h-8 border-2 border-[#638BFF]/30 border-t-[#638BFF] rounded-full animate-spin" />
-        </div>
-      }
-    >
-      <CreateFactureContent />
-    </Suspense>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
+      <AdminSidebar />
+      <div style={{ marginLeft: isMobile ? '0' : `${sidebarWidth}px`, transition: 'margin-left 0.3s ease', padding: isMobile ? '80px 16px 24px 16px' : '40px' }}>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center h-[60vh]">
+              <div className="w-8 h-8 border-2 border-[#638BFF]/30 border-t-[#638BFF] rounded-full animate-spin" />
+            </div>
+          }
+        >
+          <CreateFactureContent />
+        </Suspense>
+      </div>
+    </div>
   );
 }
 
