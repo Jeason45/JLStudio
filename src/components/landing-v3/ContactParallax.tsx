@@ -429,6 +429,19 @@ export default function ContactParallax() {
                   )}
                 </button>
               </div>
+
+              {/* Pre-qualification link */}
+              <div className="form-field pt-4 text-center sm:text-left" style={{ opacity: 0 }}>
+                <p className="text-white/40 text-xs">
+                  Vous avez deja une idee precise ?{' '}
+                  <a
+                    href="/qualifier"
+                    className="text-[#638BFF] hover:text-[#638BFF]/80 underline underline-offset-2 transition-colors"
+                  >
+                    Obtenez un devis estime en 2 minutes
+                  </a>
+                </p>
+              </div>
             </form>
           </div>
         </div>
