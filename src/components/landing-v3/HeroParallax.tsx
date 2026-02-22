@@ -32,7 +32,7 @@ export default function HeroParallax() {
     gsap.set(overlayRef.current, { opacity: 0 });
     gsap.set(contentRef.current, { opacity: 0 });
     gsap.set(scrollHintRef.current, { opacity: 1 });
-    gsap.set(bgRef.current, { scale: 1 });
+    gsap.set(bgRef.current, { scale: 1, filter: 'brightness(1.4)' });
 
     // Force top state — runs AFTER all GSAP rendering each frame
     const forceTopState = () => {
@@ -68,11 +68,18 @@ export default function HeroParallax() {
       });
 
       if (isMobile) {
-        // ── Mobile (250vh) ──────────────────────────────
+        // ── Mobile (300vh) ──────────────────────────────
         // Scroll hint fades quickly
         tl.fromTo(scrollHintRef.current,
           { opacity: 1 },
           { opacity: 0, duration: 4 },
+          0
+        );
+
+        // Background brightness dims as mask reveals
+        tl.fromTo(bgRef.current,
+          { filter: 'brightness(1.4)' },
+          { filter: 'brightness(1)', ease: 'power2.inOut', duration: 40 },
           0
         );
 
@@ -153,9 +160,15 @@ export default function HeroParallax() {
         );
 
         tl.fromTo(bgRef.current,
-          { scale: 1 },
-          { scale: 1.12, ease: 'none', duration: 100 },
+          { scale: 1, filter: 'brightness(1.4)' },
+          { scale: 1.12, filter: 'brightness(1)', ease: 'none', duration: 40 },
           0
+        );
+
+        // Continue slow zoom after brightness settles
+        tl.to(bgRef.current,
+          { scale: 1.12, ease: 'none', duration: 60 },
+          40
         );
 
         // ── Text zoom: single tween 0→37 ──
