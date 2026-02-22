@@ -87,16 +87,28 @@ export default function HeaderV3() {
               </a>
             </nav>
 
-            {/* Mobile Burger */}
+            {/* Mobile Burger — animates to X */}
             <button
-              onClick={() => setMenuOpen(true)}
-              className="flex h-10 w-10 items-center justify-center md:hidden"
-              aria-label="Menu"
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="relative flex h-10 w-10 items-center justify-center md:hidden z-[60]"
+              aria-label={menuOpen ? 'Fermer' : 'Menu'}
             >
-              <div className="flex flex-col gap-1.5">
-                <span className="block h-[1.5px] w-6 bg-white" />
-                <span className="block h-[1.5px] w-6 bg-white" />
-              </div>
+              <span
+                className="absolute block h-[1.5px] w-6 bg-white transition-all duration-300 ease-in-out"
+                style={{
+                  transform: menuOpen
+                    ? 'translateY(0) rotate(45deg)'
+                    : 'translateY(-4px) rotate(0)',
+                }}
+              />
+              <span
+                className="absolute block h-[1.5px] w-6 bg-white transition-all duration-300 ease-in-out"
+                style={{
+                  transform: menuOpen
+                    ? 'translateY(0) rotate(-45deg)'
+                    : 'translateY(4px) rotate(0)',
+                }}
+              />
             </button>
           </div>
         </div>
@@ -108,18 +120,6 @@ export default function HeaderV3() {
           className="fixed inset-0 z-[55] bg-black md:hidden"
           style={{ height: '100dvh' }}
         >
-          <div className="absolute top-0 right-0 p-5 z-10">
-            <button
-              onClick={() => setMenuOpen(false)}
-              className="flex h-10 w-10 items-center justify-center"
-              aria-label="Fermer"
-            >
-              <svg className="w-6 h-6 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
           <div className="flex flex-col items-center justify-center h-full gap-8">
             <span className="font-[family-name:var(--font-outfit)] text-2xl font-bold text-white mb-6">
               JL <span className="text-white/30 font-light">|</span> Studio
