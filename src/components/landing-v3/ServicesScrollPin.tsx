@@ -288,8 +288,7 @@ export default function ServicesScrollPin() {
               {/* Subtitle */}
               <p
                 data-subtitle
-                className="text-[#638BFF] text-[10px] sm:text-xs font-medium tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-4 sm:mb-6 relative"
-                style={{ textShadow: '0 0 20px rgba(99,139,255,0.3), 0 0 40px rgba(0,0,0,0.8)' }}
+                className="text-[#638BFF] text-[10px] sm:text-xs font-bold tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-4 sm:mb-6 relative"
               >
                 {service.subtitle}
               </p>
@@ -298,7 +297,6 @@ export default function ServicesScrollPin() {
               <h3
                 data-title
                 className="font-[family-name:var(--font-outfit)] text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black text-white mb-4 sm:mb-6 leading-[0.95] tracking-tight relative"
-                style={{ textShadow: '0 0 30px rgba(99,139,255,0.4), 0 0 60px rgba(99,139,255,0.15), 0 2px 15px rgba(0,0,0,0.8)' }}
               >
                 {service.title}
               </h3>
@@ -307,7 +305,6 @@ export default function ServicesScrollPin() {
               <p
                 data-desc
                 className="text-white/60 text-sm sm:text-base lg:text-lg leading-relaxed mb-6 sm:mb-10 max-w-lg mx-auto relative"
-                style={{ textShadow: '0 0 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.6), 0 2px 10px rgba(0,0,0,0.9)' }}
               >
                 {service.description}
               </p>
@@ -319,7 +316,6 @@ export default function ServicesScrollPin() {
                     key={j}
                     data-feature
                     className="text-[10px] sm:text-xs text-white/60 border border-white/[0.15] bg-white/[0.05] px-3 sm:px-5 py-1.5 sm:py-2 rounded-full backdrop-blur-sm"
-                    style={{ textShadow: '0 0 15px rgba(0,0,0,0.9), 0 0 30px rgba(0,0,0,0.5)' }}
                   >
                     {f}
                   </span>

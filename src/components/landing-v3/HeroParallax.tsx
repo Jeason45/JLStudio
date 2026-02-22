@@ -320,7 +320,7 @@ export default function HeroParallax() {
           className="absolute inset-0 z-[10] flex items-center justify-center will-change-transform"
           style={{ opacity: 0 }}
         >
-          <div className="text-center px-6 max-w-4xl mx-auto" style={{ perspective: 600 }}>
+          <div className="text-center px-6 max-w-6xl mx-auto" style={{ perspective: 600 }}>
             <h1
               ref={h1Ref}
               className="font-[family-name:var(--font-outfit)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-white leading-[0.95] tracking-tight mb-4"
@@ -329,30 +329,30 @@ export default function HeroParallax() {
             </h1>
             <h2
               ref={h2Ref}
-              className="font-[family-name:var(--font-outfit)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.95] tracking-tight mb-6 sm:mb-8 text-[#638BFF]"
+              className="font-[family-name:var(--font-outfit)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.95] tracking-tight mb-6 sm:mb-8 text-[#638BFF] md:whitespace-nowrap"
             >
               Notre Expertise
             </h2>
             <p
               ref={paraRef}
-              className="text-base sm:text-lg md:text-xl text-white/60 max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed"
+              className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/60 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed"
             >
               Sites web, e-commerce et applications sur mesure pour propulser
               votre activite
             </p>
             <div
               ref={ctaRef}
-              className="flex flex-row items-center justify-center gap-3"
+              className="flex flex-row items-center justify-center gap-3 md:gap-5"
             >
               <a
                 href="#contact"
-                className="group relative bg-[#638BFF] text-white font-semibold px-4 py-2.5 sm:px-6 sm:py-3 rounded-full text-xs sm:text-sm overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]"
+                className="group relative bg-[#638BFF] text-white font-semibold px-4 py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-xs sm:text-sm md:text-base overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]"
               >
                 <span className="relative z-10">Demarrer un projet</span>
               </a>
               <a
                 href="#projets"
-                className="border border-white/20 text-white/80 font-medium px-4 py-2.5 sm:px-6 sm:py-3 rounded-full text-xs sm:text-sm hover:border-white/40 hover:text-white transition-all duration-300"
+                className="border border-white/20 text-white/80 font-medium px-4 py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-xs sm:text-sm md:text-base hover:border-white/40 hover:text-white transition-all duration-300"
               >
                 Voir nos realisations
               </a>
