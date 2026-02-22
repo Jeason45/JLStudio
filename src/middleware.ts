@@ -21,8 +21,26 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (isApiPath && PUBLIC_API_PATHS.some((p) => pathname.startsWith(p))) {
-    return NextResponse.next();
+  const isPublicApi = isApiPath && PUBLIC_API_PATHS.some((p) => pathname.startsWith(p));
+
+  // CORS for public API routes
+  if (isPublicApi) {
+    const corsHeaders = {
+      'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    };
+
+    // Handle preflight OPTIONS requests
+    if (req.method === 'OPTIONS') {
+      return new NextResponse(null, { status: 200, headers: corsHeaders });
+    }
+
+    const response = NextResponse.next();
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
+    return response;
   }
 
   const token = req.cookies.get('auth-token')?.value;

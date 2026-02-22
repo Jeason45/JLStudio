@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { taskSectionCreateSchema } from '@/lib/validations';
 
 // GET - Récupérer toutes les sections d'un projet
 export async function GET(
@@ -37,14 +38,14 @@ export async function POST(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name, color, order } = body;
-
-    if (!name) {
+    const parsed = taskSectionCreateSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Le nom de la section est requis' },
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const { name, color, order } = parsed.data;
 
     const section = await prisma.taskSection.create({
       data: {

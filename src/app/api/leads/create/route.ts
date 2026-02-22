@@ -1,13 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { leadCreateSchema } from '@/lib/validations';
 import { calculateLeadScore, calculateEstimatedPrice } from '@/lib/scoring/lead-scorer';
+import { rateLimit } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
   try {
-    const data = await req.json();
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    const { allowed } = rateLimit(`leads:${ip}`, 10, 60_000);
+    if (!allowed) {
+      return NextResponse.json({ error: 'Trop de requetes, reessayez plus tard' }, { status: 429 });
+    }
 
-    const score = calculateLeadScore(data);
-    const estimatedPrice = calculateEstimatedPrice(data);
+    const body = await req.json();
+
+    // Honeypot anti-spam: bots fill hidden fields
+    if (body.website) {
+      return NextResponse.json({ success: true }, { status: 201 });
+    }
+
+    const parsed = leadCreateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Validation failed', details: parsed.error.flatten().fieldErrors }, { status: 400 });
+    }
+    const data = parsed.data;
+
+    const score = calculateLeadScore({
+      phone: data.phone || undefined,
+      budget: data.budget || undefined,
+      company: data.company || undefined,
+      projectType: data.projectType || undefined,
+    });
+    const estimatedPrice = calculateEstimatedPrice({
+      projectType: data.projectType || undefined,
+    });
 
     const contact = await prisma.contact.create({
       data: {
@@ -19,7 +45,7 @@ export async function POST(req: NextRequest) {
         projectType: data.projectType || null,
         budget: data.budget || null,
         status: 'new',
-        source: data.source || 'site',
+        source: data.source || 'site_qualifier',
         type: data.company ? 'entreprise' : 'particulier',
         score,
         estimatedPrice,

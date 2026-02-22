@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { settingsUpdateSchema } from '@/lib/validations';
 
 // GET - Récupérer les paramètres de l'entreprise
 export async function GET() {
@@ -27,7 +28,15 @@ export async function GET() {
 // PUT - Mettre à jour les paramètres
 export async function PUT(req: NextRequest) {
   try {
-    const data = await req.json();
+    const body = await req.json();
+    const parsed = settingsUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
+    const data = parsed.data;
 
     const settings = await prisma.companySettings.upsert({
       where: { id: 'default' },
@@ -41,7 +50,7 @@ export async function PUT(req: NextRequest) {
         bic: data.bic,
         tvaNumber: data.tvaNumber,
         defaultPaymentTerms: data.defaultPaymentTerms,
-        penaltyRate: data.penaltyRate !== undefined ? parseFloat(data.penaltyRate) : undefined,
+        penaltyRate: data.penaltyRate !== undefined ? parseFloat(String(data.penaltyRate)) : undefined,
         legalForm: data.legalForm,
         capital: data.capital,
         rcsCity: data.rcsCity,
@@ -59,7 +68,7 @@ export async function PUT(req: NextRequest) {
         bic: data.bic || '',
         tvaNumber: data.tvaNumber || '',
         defaultPaymentTerms: data.defaultPaymentTerms || '30 jours',
-        penaltyRate: data.penaltyRate ? parseFloat(data.penaltyRate) : 3.0,
+        penaltyRate: data.penaltyRate ? parseFloat(String(data.penaltyRate)) : 3.0,
         legalForm: data.legalForm || '',
         capital: data.capital || '',
         rcsCity: data.rcsCity || '',

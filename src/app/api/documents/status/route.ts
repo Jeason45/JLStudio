@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { documentStatusUpdateSchema } from '@/lib/validations';
 
 /**
  * PATCH /api/documents/status
@@ -8,16 +9,11 @@ import { prisma } from '@/lib/prisma';
 export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, status } = body;
-
-    if (!id || !status) {
-      return NextResponse.json({ error: 'id et status requis' }, { status: 400 });
+    const parsed = documentStatusUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Validation failed', details: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
-
-    const validStatuses = ['draft', 'sent', 'pending_signature', 'signed', 'paid', 'cancelled'];
-    if (!validStatuses.includes(status)) {
-      return NextResponse.json({ error: 'Statut invalide' }, { status: 400 });
-    }
+    const { id, status } = parsed.data;
 
     const document = await prisma.document.update({
       where: { id },

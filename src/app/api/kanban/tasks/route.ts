@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { kanbanTaskUpdateSchema } from '@/lib/validations';
 
 // GET /api/kanban/tasks - Récupérer les tâches pour le Kanban avec filtres
 export async function GET(request: NextRequest) {
@@ -72,19 +73,19 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, kanbanColumn, status, order } = body;
-
-    if (!id) {
+    const parsed = kanbanTaskUpdateSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Task ID manquant' },
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const { id, kanbanColumn, status, order } = parsed.data;
 
     const updateData: Record<string, unknown> = {};
     if (kanbanColumn !== undefined) updateData.kanbanColumn = kanbanColumn;
     if (status !== undefined) updateData.status = status;
-    if (order !== undefined) updateData.order = parseInt(order);
+    if (order !== undefined) updateData.order = parseInt(String(order));
 
     const task = await prisma.task.update({
       where: { id },

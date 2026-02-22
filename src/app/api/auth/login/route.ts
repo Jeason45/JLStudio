@@ -1,31 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SignJWT } from 'jose';
+import bcrypt from 'bcryptjs';
+import { prisma } from '@/lib/prisma';
+import { loginSchema } from '@/lib/validations';
+import { rateLimit } from '@/lib/rateLimit';
 
 function getSecret() {
   return new TextEncoder().encode(process.env.AUTH_SECRET);
 }
 
-function getUsers() {
-  return [
-    { email: process.env.AUTH_USER_1_EMAIL, password: process.env.AUTH_USER_1_PASSWORD },
-    { email: process.env.AUTH_USER_2_EMAIL, password: process.env.AUTH_USER_2_PASSWORD },
-  ].filter((u) => u.email && u.password);
-}
-
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
-    const users = getUsers();
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    const { allowed } = rateLimit(`login:${ip}`, 5, 60_000);
+    if (!allowed) {
+      return NextResponse.json({ error: 'Trop de requetes, reessayez plus tard' }, { status: 429 });
+    }
 
-    const user = users.find(
-      (u) => u.email!.toLowerCase() === email?.toLowerCase() && u.password === password
-    );
+    const body = await req.json();
+    const parsed = loginSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Validation failed', details: parsed.error.flatten().fieldErrors }, { status: 400 });
+    }
+    const { email, password } = parsed.data;
 
-    if (!user) {
+    const user = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return NextResponse.json({ error: 'Identifiants invalides' }, { status: 401 });
     }
 
-    const token = await new SignJWT({ email: user.email })
+    const token = await new SignJWT({
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime('7d')

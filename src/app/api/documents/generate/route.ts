@@ -1,20 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generatePDFFromTemplate } from '@/lib/mustachePdfGenerator';
 import { prisma } from '@/lib/prisma';
+import { documentGenerateSchema } from '@/lib/validations';
 import fs from 'fs';
 import path from 'path';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { templateSlug, data, fileName, documentNumber, contactId, amount, type, linkedDocumentId } = body;
-
-    if (!templateSlug || !data) {
+    const parsed = documentGenerateSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'templateSlug et data sont requis' },
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const { templateSlug, data, fileName, documentNumber, contactId, amount, type, linkedDocumentId } = parsed.data;
 
     const result = await generatePDFFromTemplate({
       templateSlug,
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest) {
           documentNumber,
           ...(contactId ? { contact: { connect: { id: contactId } } } : {}),
           formData: JSON.stringify(data || {}),
-          amount: amount ? parseFloat(amount) : null,
+          amount: amount ? parseFloat(String(amount)) : null,
           status: 'draft',
           linkedDocumentId: linkedDocumentId || null,
         },
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
       if (contactId && amount) {
         await prisma.contact.update({
           where: { id: contactId },
-          data: { quoteAmount: parseFloat(amount) },
+          data: { quoteAmount: parseFloat(String(amount)) },
         });
       }
     }

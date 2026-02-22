@@ -1,20 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/emailUtils';
 import { prisma } from '@/lib/prisma';
+import { publicContactSchema } from '@/lib/validations';
 import { calculateLeadScore } from '@/lib/scoring/lead-scorer';
+import { rateLimit } from '@/lib/rateLimit';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { name, email, phone, message, selectedType, wantCallback } = body;
-
-    if (!name || !email) {
-      return NextResponse.json({ error: 'Nom et email requis' }, { status: 400 });
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const { allowed } = rateLimit(`contact:${ip}`, 10, 60_000);
+    if (!allowed) {
+      return NextResponse.json({ error: 'Trop de requetes, reessayez plus tard' }, { status: 429 });
     }
+
+    const body = await request.json();
+
+    // Honeypot anti-spam: bots fill hidden fields
+    if (body.website) {
+      return NextResponse.json({ success: true }, { status: 201 });
+    }
+
+    const parsed = publicContactSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Validation failed', details: parsed.error.flatten().fieldErrors }, { status: 400 });
+    }
+    const { name, email, phone, message, selectedType, wantCallback } = parsed.data;
 
     // Create a lead in the CRM
     const score = calculateLeadScore({
-      phone,
+      phone: phone || undefined,
       projectType: selectedType || undefined,
     });
 
@@ -26,7 +40,7 @@ export async function POST(request: NextRequest) {
         notes: message || null,
         projectType: selectedType || null,
         status: 'new',
-        source: 'site',
+        source: 'site_contact',
         type: 'particulier',
         score,
       },

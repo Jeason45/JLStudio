@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { appointmentUpdateSchema } from '@/lib/validations';
 
 // PATCH - Mettre à jour un rendez-vous
 export async function PATCH(
@@ -8,7 +9,15 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    const data = await req.json();
+    const body = await req.json();
+    const parsed = appointmentUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
+    const data = parsed.data;
 
     const updateData: Record<string, unknown> = {};
     if (data.title !== undefined) updateData.title = data.title;

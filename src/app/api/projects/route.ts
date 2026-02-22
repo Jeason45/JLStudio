@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { projectCreateSchema } from '@/lib/validations';
 
 // GET - Récupérer tous les projets
 export async function GET(req: NextRequest) {
@@ -9,7 +10,7 @@ export async function GET(req: NextRequest) {
     const contactId = searchParams.get('contactId');
     const priority = searchParams.get('priority');
 
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = { deletedAt: null };
     if (status && status !== 'all') where.status = status;
     if (contactId) where.contactId = contactId;
     if (priority && priority !== 'all') where.priority = priority;
@@ -32,13 +33,36 @@ export async function GET(req: NextRequest) {
             documents: true,
           },
         },
+        tasks: {
+          select: {
+            status: true,
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
       },
     });
 
-    return NextResponse.json(projects);
+    // Auto-calculate progress from tasks for each project
+    const projectsWithProgress = projects.map(project => {
+      const { tasks, ...rest } = project;
+      const totalTasks = tasks.length;
+      const completedTasks = tasks.filter(t => t.status === 'completed').length;
+      const calculatedProgress = totalTasks > 0
+        ? Math.round((completedTasks / totalTasks) * 100)
+        : rest.progress;
+      return {
+        ...rest,
+        progress: calculatedProgress,
+        _taskStats: {
+          total: totalTasks,
+          completed: completedTasks,
+        },
+      };
+    });
+
+    return NextResponse.json(projectsWithProgress);
   } catch (error) {
     console.error('Error fetching projects:', error);
     return NextResponse.json(
@@ -51,14 +75,15 @@ export async function GET(req: NextRequest) {
 // POST - Créer un nouveau projet
 export async function POST(req: NextRequest) {
   try {
-    const data = await req.json();
-
-    if (!data.name) {
+    const body = await req.json();
+    const parsed = projectCreateSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Le nom du projet est requis' },
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const data = parsed.data;
 
     const project = await prisma.project.create({
       data: {
@@ -69,8 +94,8 @@ export async function POST(req: NextRequest) {
         priority: data.priority || 'medium',
         projectType: data.projectType || null,
         technologies: data.technologies || null,
-        estimatedBudget: data.estimatedBudget ? parseFloat(data.estimatedBudget) : null,
-        actualBudget: data.actualBudget ? parseFloat(data.actualBudget) : null,
+        estimatedBudget: data.estimatedBudget ? parseFloat(String(data.estimatedBudget)) : null,
+        actualBudget: data.actualBudget ? parseFloat(String(data.actualBudget)) : null,
         notes: data.notes || null,
         contactId: data.contactId || null,
         startDate: data.startDate ? new Date(data.startDate) : null,

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { milestoneCreateSchema } from '@/lib/validations';
 
 // GET - Récupérer tous les jalons d'un projet
 export async function GET(
@@ -32,14 +33,14 @@ export async function POST(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name, date, color } = body;
-
-    if (!name || !date) {
+    const parsed = milestoneCreateSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Le nom et la date sont requis' },
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const { name, date, color } = parsed.data;
 
     const milestone = await prisma.milestone.create({
       data: {

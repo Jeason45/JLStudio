@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { contactCreateSchema } from '@/lib/validations';
 
 export async function GET() {
   try {
     const contacts = await prisma.contact.findMany({
+      where: { deletedAt: null },
       orderBy: { createdAt: 'desc' },
       include: {
         _count: { select: { projects: true, interactions: true } },
@@ -27,7 +29,12 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const data = await req.json();
+    const body = await req.json();
+    const parsed = contactCreateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Validation failed', details: parsed.error.flatten().fieldErrors }, { status: 400 });
+    }
+    const data = parsed.data;
     const contact = await prisma.contact.create({ data });
     return NextResponse.json(contact, { status: 201 });
   } catch (error) {

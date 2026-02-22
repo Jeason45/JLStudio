@@ -80,37 +80,40 @@ export async function POST(request: NextRequest) {
       fs.mkdirSync(proofsDir, { recursive: true });
     }
 
-    // Create signature in DB
-    const signature = await prisma.signature.create({
-      data: {
-        document: { connect: { id: signatureRequest.documentId } },
-        signerName,
-        signerEmail,
-        signatureImage: signatureImagePath,
-        signatureType: 'draw',
-        signedAt,
-        ipAddress,
-        userAgent,
-        documentHash,
-        proofData: JSON.stringify(proofData),
-        isValid: true,
-      },
+    // Create signature, update request and document in a transaction
+    const signature = await prisma.$transaction(async (tx) => {
+      const sig = await tx.signature.create({
+        data: {
+          document: { connect: { id: signatureRequest.documentId } },
+          signerName,
+          signerEmail,
+          signatureImage: signatureImagePath,
+          signatureType: 'draw',
+          signedAt,
+          ipAddress,
+          userAgent,
+          documentHash,
+          proofData: JSON.stringify(proofData),
+          isValid: true,
+        },
+      });
+
+      await tx.signatureRequest.update({
+        where: { id: signatureRequest.id },
+        data: {
+          status: 'completed',
+          signatureId: sig.id,
+        },
+      });
+
+      return sig;
     });
 
     // Save proof JSON file
     const proofFilePath = path.join(proofsDir, `proof_${signatureRequest.documentId}_${signature.id}.json`);
     fs.writeFileSync(proofFilePath, JSON.stringify(proofData, null, 2));
 
-    // Update signature request
-    await prisma.signatureRequest.update({
-      where: { id: signatureRequest.id },
-      data: {
-        status: 'completed',
-        signatureId: signature.id,
-      },
-    });
-
-    // Generate signed PDF
+    // Generate signed PDF and update document/contact in a transaction
     let signedPdfPath: string | null = null;
     try {
       signedPdfPath = await generateSignedPDF(
@@ -125,24 +128,25 @@ export async function POST(request: NextRequest) {
         }
       );
 
-      // Update document
-      await prisma.document.update({
-        where: { id: signatureRequest.documentId },
-        data: {
-          status: 'signed',
-          signedAt,
-          signedBy: signerName,
-          signedPdfPath,
-        },
-      });
-
-      // Auto-update contact status to client
-      if (signatureRequest.document.contactId) {
-        await prisma.contact.update({
-          where: { id: signatureRequest.document.contactId },
-          data: { status: 'client' },
+      // Update document and contact status atomically
+      await prisma.$transaction(async (tx) => {
+        await tx.document.update({
+          where: { id: signatureRequest.documentId },
+          data: {
+            status: 'signed',
+            signedAt,
+            signedBy: signerName,
+            signedPdfPath,
+          },
         });
-      }
+
+        if (signatureRequest.document.contactId) {
+          await tx.contact.update({
+            where: { id: signatureRequest.document.contactId },
+            data: { status: 'client' },
+          });
+        }
+      });
 
       // Send confirmation email to signer
       const confirmHTML = generateSignatureConfirmationHTML({

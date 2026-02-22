@@ -59,6 +59,10 @@ interface Project {
     milestones: number;
     documents: number;
   };
+  _taskStats?: {
+    total: number;
+    completed: number;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -514,48 +518,6 @@ export default function ProjectsPage() {
                     <option key={p} value={p}>{PRIORITY_CONFIG[p].label}</option>
                   ))}
                 </select>
-              </div>
-
-              {/* Quick Links */}
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <Link href="/admin/gantt" style={{ textDecoration: 'none' }}>
-                  <button style={{
-                    padding: '12px 16px',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    background: 'rgba(255,255,255,0.05)',
-                    color: 'rgba(255,255,255,0.7)',
-                    transition: 'all 0.2s'
-                  }}>
-                    <Calendar size={16} />
-                    {!isMobile && 'Gantt'}
-                  </button>
-                </Link>
-                <Link href="/admin/kanban" style={{ textDecoration: 'none' }}>
-                  <button style={{
-                    padding: '12px 16px',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    background: 'rgba(255,255,255,0.05)',
-                    color: 'rgba(255,255,255,0.7)',
-                    transition: 'all 0.2s'
-                  }}>
-                    <LayoutGrid size={16} />
-                    {!isMobile && 'Kanban'}
-                  </button>
-                </Link>
               </div>
 
               {/* Create Button */}
@@ -1525,6 +1487,8 @@ function CreateProjectModal({
 // ══════════════════════════════════════════════
 // Project Detail Modal
 // ══════════════════════════════════════════════
+type DetailTab = 'overview' | 'tasks' | 'planning';
+
 function ProjectDetailModal({
   project,
   contacts,
@@ -1540,6 +1504,8 @@ function ProjectDetailModal({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<DetailTab>('overview');
+  const [taskProgress, setTaskProgress] = useState<{ total: number; completed: number; percent: number } | null>(null);
   const [form, setForm] = useState({
     name: project.name,
     description: project.description || '',
@@ -1555,6 +1521,23 @@ function ProjectDetailModal({
     progress: project.progress,
     notes: project.notes || '',
   });
+
+  // ── Fetch tasks to auto-calculate progress ──
+  useEffect(() => {
+    fetch(`/api/projects/${project.id}/tasks`)
+      .then(res => res.ok ? res.json() : [])
+      .then((tasks: { status: string }[]) => {
+        if (Array.isArray(tasks) && tasks.length > 0) {
+          const total = tasks.length;
+          const completed = tasks.filter(t => t.status === 'completed').length;
+          const percent = Math.round((completed / total) * 100);
+          setTaskProgress({ total, completed, percent });
+        } else {
+          setTaskProgress({ total: 0, completed: 0, percent: 0 });
+        }
+      })
+      .catch(() => setTaskProgress(null));
+  }, [project.id]);
 
   const handleSave = async () => {
     if (!form.name.trim()) return;
@@ -1775,6 +1758,65 @@ function ProjectDetailModal({
           </div>
         </div>
 
+        {/* ── Tab Navigation ── */}
+        {!isEditing && (
+          <div style={{
+            display: 'flex',
+            gap: '0',
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
+            padding: '0 28px',
+          }}>
+            {([
+              { id: 'overview' as DetailTab, label: 'Vue d\'ensemble', icon: (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              ) },
+              { id: 'tasks' as DetailTab, label: 'Taches', icon: (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="8" rx="1"/></svg>
+              ), badge: taskProgress ? `${taskProgress.completed}/${taskProgress.total}` : undefined },
+              { id: 'planning' as DetailTab, label: 'Planning', icon: (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/><rect x="7" y="4" width="6" height="4" fill="currentColor" opacity="0.3"/><rect x="10" y="10" width="8" height="4" fill="currentColor" opacity="0.3"/></svg>
+              ) },
+            ]).map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  padding: '12px 20px',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: activeTab === tab.id ? '2px solid #638BFF' : '2px solid transparent',
+                  color: activeTab === tab.id ? '#638BFF' : 'rgba(255,255,255,0.5)',
+                  fontSize: '13px',
+                  fontWeight: activeTab === tab.id ? 700 : 500,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  transition: 'all 0.2s',
+                  marginBottom: '-1px',
+                }}
+                onMouseOver={(e) => { if (activeTab !== tab.id) e.currentTarget.style.color = 'rgba(255,255,255,0.8)'; }}
+                onMouseOut={(e) => { if (activeTab !== tab.id) e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center' }}>{tab.icon}</span>
+                {tab.label}
+                {tab.badge && (
+                  <span style={{
+                    padding: '2px 8px',
+                    borderRadius: '10px',
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    color: '#638BFF',
+                    background: 'rgba(99,139,255,0.15)',
+                  }}>
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Body */}
         <div style={{ padding: '24px 28px' }}>
           {isEditing ? (
@@ -1923,7 +1965,10 @@ function ProjectDetailModal({
           ) : (
             /* ── View Mode ── */
             <div>
-              {/* Progress Bar (prominent) */}
+              {/* ── Overview Tab ── */}
+              {activeTab === 'overview' && (
+              <>
+              {/* Progress Bar (prominent) - auto-calculated from tasks */}
               <div style={{
                 marginBottom: '24px',
                 padding: '20px',
@@ -1932,9 +1977,16 @@ function ProjectDetailModal({
                 border: '1px solid rgba(255,255,255,0.06)'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>Progression du projet</span>
-                  <span style={{ fontSize: '16px', fontWeight: 700, color: getProgressColor(project.progress) }}>
-                    {project.progress}%
+                  <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>
+                    Progression du projet
+                    {taskProgress && taskProgress.total > 0 && (
+                      <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginLeft: '8px', fontWeight: 400 }}>
+                        ({taskProgress.completed}/{taskProgress.total} taches terminees)
+                      </span>
+                    )}
+                  </span>
+                  <span style={{ fontSize: '16px', fontWeight: 700, color: getProgressColor(taskProgress && taskProgress.total > 0 ? taskProgress.percent : project.progress) }}>
+                    {taskProgress && taskProgress.total > 0 ? taskProgress.percent : project.progress}%
                   </span>
                 </div>
                 <div style={{
@@ -1949,8 +2001,8 @@ function ProjectDetailModal({
                     top: 0,
                     left: 0,
                     height: '100%',
-                    width: `${project.progress}%`,
-                    background: `linear-gradient(90deg, ${getProgressColor(project.progress)}80, ${getProgressColor(project.progress)})`,
+                    width: `${taskProgress && taskProgress.total > 0 ? taskProgress.percent : project.progress}%`,
+                    background: `linear-gradient(90deg, ${getProgressColor(taskProgress && taskProgress.total > 0 ? taskProgress.percent : project.progress)}80, ${getProgressColor(taskProgress && taskProgress.total > 0 ? taskProgress.percent : project.progress)})`,
                     transition: 'width 0.5s ease',
                     borderRadius: '6px'
                   }} />
@@ -2134,56 +2186,6 @@ function ProjectDetailModal({
                 )}
               </div>
 
-              {/* Quick Links */}
-              <div style={{
-                display: 'flex',
-                gap: '10px',
-                paddingTop: '20px',
-                borderTop: '1px solid rgba(255,255,255,0.06)',
-                flexWrap: 'wrap'
-              }}>
-                <Link href="/admin/gantt" style={{ textDecoration: 'none' }}>
-                  <button style={{
-                    padding: '10px 16px',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    background: 'rgba(255,255,255,0.05)',
-                    color: 'rgba(255,255,255,0.7)',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    transition: 'all 0.2s'
-                  }}>
-                    <Calendar size={14} />
-                    Voir dans Gantt
-                    <ArrowUpRight size={12} />
-                  </button>
-                </Link>
-                <Link href="/admin/kanban" style={{ textDecoration: 'none' }}>
-                  <button style={{
-                    padding: '10px 16px',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    background: 'rgba(255,255,255,0.05)',
-                    color: 'rgba(255,255,255,0.7)',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    transition: 'all 0.2s'
-                  }}>
-                    <LayoutGrid size={14} />
-                    Voir dans Kanban
-                    <ArrowUpRight size={12} />
-                  </button>
-                </Link>
-              </div>
-
               {/* Meta */}
               <div style={{
                 marginTop: '20px',
@@ -2197,6 +2199,101 @@ function ProjectDetailModal({
                 <span>Cree le {new Date(project.createdAt).toLocaleDateString('fr-FR')}</span>
                 <span>Mis a jour le {new Date(project.updatedAt).toLocaleDateString('fr-FR')}</span>
               </div>
+              </>
+              )}
+
+              {/* ── Tasks Tab ── */}
+              {activeTab === 'tasks' && (
+                <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                  <div style={{
+                    width: '64px', height: '64px', borderRadius: '16px',
+                    background: 'rgba(99,139,255,0.1)', border: '1px solid rgba(99,139,255,0.2)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    margin: '0 auto 20px auto',
+                  }}>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#638BFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="8" rx="1"/>
+                    </svg>
+                  </div>
+                  <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'white', margin: '0 0 8px 0' }}>
+                    Tableau Kanban
+                  </h3>
+                  <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', margin: '0 0 24px 0', lineHeight: '1.5' }}>
+                    Gerez les taches de ce projet avec le tableau Kanban.
+                    {taskProgress && taskProgress.total > 0 && (
+                      <><br /><span style={{ color: '#638BFF', fontWeight: 600 }}>{taskProgress.completed}/{taskProgress.total} taches terminees ({taskProgress.percent}%)</span></>
+                    )}
+                  </p>
+                  <Link href={`/admin/kanban?project=${project.id}`} style={{ textDecoration: 'none' }}>
+                    <button style={{
+                      padding: '12px 28px',
+                      borderRadius: '10px',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #638BFF 0%, #4a6fd4 100%)',
+                      color: 'white',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      boxShadow: '0 4px 12px rgba(99,139,255,0.3)',
+                      transition: 'all 0.2s',
+                    }}>
+                      <LayoutGrid size={16} />
+                      Ouvrir le Kanban
+                      <ArrowUpRight size={14} />
+                    </button>
+                  </Link>
+                </div>
+              )}
+
+              {/* ── Planning Tab ── */}
+              {activeTab === 'planning' && (
+                <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                  <div style={{
+                    width: '64px', height: '64px', borderRadius: '16px',
+                    background: 'rgba(236,72,153,0.1)', border: '1px solid rgba(236,72,153,0.2)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    margin: '0 auto 20px auto',
+                  }}>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="2">
+                      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                      <rect x="7" y="4" width="6" height="4" fill="#ec4899" opacity="0.3"/><rect x="10" y="10" width="8" height="4" fill="#ec4899" opacity="0.3"/>
+                    </svg>
+                  </div>
+                  <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'white', margin: '0 0 8px 0' }}>
+                    Diagramme de Gantt
+                  </h3>
+                  <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', margin: '0 0 24px 0', lineHeight: '1.5' }}>
+                    Visualisez le planning du projet avec le diagramme de Gantt.
+                    {project._count && project._count.milestones > 0 && (
+                      <><br /><span style={{ color: '#a78bfa', fontWeight: 600 }}>{project._count.milestones} jalons definis</span></>
+                    )}
+                  </p>
+                  <Link href={`/admin/gantt?project=${project.id}`} style={{ textDecoration: 'none' }}>
+                    <button style={{
+                      padding: '12px 28px',
+                      borderRadius: '10px',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
+                      color: 'white',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      boxShadow: '0 4px 12px rgba(236,72,153,0.3)',
+                      transition: 'all 0.2s',
+                    }}>
+                      <Calendar size={16} />
+                      Ouvrir le Gantt
+                      <ArrowUpRight size={14} />
+                    </button>
+                  </Link>
+                </div>
+              )}
             </div>
           )}
         </div>

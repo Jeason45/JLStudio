@@ -110,7 +110,7 @@ function CreateDevisContent() {
     objet_devis: '',
     tva_pourcentage: '20',
     validite_jours: '30',
-    acompte_pourcentage: '',
+    acompte_pourcentage: '0',
     conditions_reglement: '',
     mode_reglement: '',
   });
@@ -200,7 +200,7 @@ function CreateDevisContent() {
           objet_devis: data.objet_devis || '',
           tva_pourcentage: data.tva_pourcentage || '20',
           validite_jours: data.validite_jours || '30',
-          acompte_pourcentage: data.acompte_pourcentage || '',
+          acompte_pourcentage: data.acompte_pourcentage || data.depositPercent?.toString() || '0',
           conditions_reglement: data.conditions_reglement || '',
           mode_reglement: data.mode_reglement || '',
         }));
@@ -358,7 +358,12 @@ function CreateDevisContent() {
   const tvaPct = parseFloat(devisInfo.tva_pourcentage) || 0;
   const tvaMontant = sousTotal * (tvaPct / 100);
   const totalTTC = sousTotal + tvaMontant;
+  const depositPercent = parseFloat(devisInfo.acompte_pourcentage) || 0;
+  const depositAmount = totalTTC * (depositPercent / 100);
+  const balanceAmount = totalTTC - depositAmount;
   const fmt = (n: number) => n.toFixed(2);
+  const fmtDisplay = (n: number) =>
+    n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   // Generate PDF
   const handleGenerate = async () => {
@@ -405,6 +410,9 @@ function CreateDevisContent() {
         sous_total_ht: fmt(sousTotal),
         tva_montant: fmt(tvaMontant),
         total_ttc: fmt(totalTTC),
+        depositPercent,
+        depositAmount: parseFloat(fmt(depositAmount)),
+        balanceAmount: parseFloat(fmt(balanceAmount)),
       };
 
       // If editing, delete old document first
@@ -950,10 +958,8 @@ function CreateDevisContent() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className={labelClass}>Acompte (%)</label>
-              <input
+              <select
                 className={inputClass}
-                type="number"
-                placeholder="30"
                 value={devisInfo.acompte_pourcentage}
                 onChange={(e) =>
                   setDevisInfo({
@@ -961,7 +967,12 @@ function CreateDevisContent() {
                     acompte_pourcentage: e.target.value,
                   })
                 }
-              />
+              >
+                <option value="0">Pas d&apos;acompte</option>
+                <option value="30">30%</option>
+                <option value="50">50%</option>
+                <option value="100">Paiement integral</option>
+              </select>
             </div>
             <div>
               <label className={labelClass}>Conditions de reglement</label>
@@ -1012,6 +1023,24 @@ function CreateDevisContent() {
             <div className="text-lg font-bold text-white">
               Total TTC : {fmt(totalTTC)} EUR
             </div>
+            {depositPercent > 0 && (
+              <div className="mt-3 pt-3 border-t border-white/[0.06] space-y-1">
+                <div className="text-sm text-[#638BFF]/80">
+                  Acompte ({depositPercent}%) :{' '}
+                  <span className="text-[#638BFF] font-semibold">
+                    {fmtDisplay(depositAmount)} EUR
+                  </span>
+                </div>
+                {depositPercent < 100 && (
+                  <div className="text-sm text-white/40">
+                    Solde a la livraison :{' '}
+                    <span className="text-white/70 font-medium">
+                      {fmtDisplay(balanceAmount)} EUR
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <button

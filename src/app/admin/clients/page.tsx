@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import { useSidebar } from '@/components/admin/SidebarContext';
 import LeadDetailModal from '@/components/admin/LeadDetailModal';
-import { Search, UserPlus, Building2, User, Mail, Phone, FolderKanban, Filter } from 'lucide-react';
+import { Search, UserPlus, Building2, User, Mail, Phone, FolderKanban, Filter, DollarSign, ShoppingCart } from 'lucide-react';
 
 interface Contact {
   id: string;
@@ -24,6 +24,14 @@ interface Contact {
   projects?: { id: string; name: string; status: string; progress: number; estimatedBudget: number | null }[];
 }
 
+interface DocumentData {
+  id: string;
+  type: string;
+  status: string;
+  amount: number | null;
+  contactId: string | null;
+}
+
 const STATUS_COLORS: Record<string, string> = {
   planification: '#94a3b8',
   en_cours: '#10b981',
@@ -36,6 +44,7 @@ const STATUS_COLORS: Record<string, string> = {
 export default function ClientsPage() {
   const { sidebarWidth, isMobile } = useSidebar();
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [documents, setDocuments] = useState<DocumentData[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<'all' | 'entreprise' | 'particulier'>('all');
@@ -48,7 +57,27 @@ export default function ClientsPage() {
       .catch(() => setLoading(false));
   };
 
-  useEffect(() => { fetchContacts(); }, []);
+  const fetchDocuments = () => {
+    fetch('/api/documents')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => { setDocuments(Array.isArray(data) ? data : []); })
+      .catch(() => {});
+  };
+
+  useEffect(() => { fetchContacts(); fetchDocuments(); }, []);
+
+  // Calculate CA per client from paid invoices
+  const caParClient = useMemo(() => {
+    const map: Record<string, number> = {};
+    documents
+      .filter(d => d.type === 'facture' && (d.status === 'paid' || d.status === 'signed'))
+      .forEach(d => {
+        if (d.contactId && d.amount) {
+          map[d.contactId] = (map[d.contactId] || 0) + d.amount;
+        }
+      });
+    return map;
+  }, [documents]);
 
   const clients = useMemo(() => {
     let list = contacts.filter(c => c.status === 'client');
@@ -61,16 +90,30 @@ export default function ClientsPage() {
   }, [contacts, typeFilter, searchQuery]);
 
   const allClients = contacts.filter(c => c.status === 'client');
+
+  const formatCurrency = (amount: number | null) => {
+    if (amount === null || amount === undefined) return '-';
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
+  };
+
+  // Total CA across all clients
+  const caTotal = useMemo(() => {
+    return Object.values(caParClient).reduce((sum, v) => sum + v, 0);
+  }, [caParClient]);
+
+  // Panier moyen = CA total / nombre de clients ayant au moins une facture payee
+  const panierMoyen = useMemo(() => {
+    const clientsAvecCA = Object.keys(caParClient).length;
+    return clientsAvecCA > 0 ? caTotal / clientsAvecCA : 0;
+  }, [caParClient, caTotal]);
+
   const stats = [
     { label: 'Total Clients', value: allClients.length, icon: <User size={24} />, color: '#638BFF' },
     { label: 'Entreprises', value: allClients.filter(c => c.type === 'entreprise').length, icon: <Building2 size={24} />, color: '#10b981' },
     { label: 'Particuliers', value: allClients.filter(c => c.type === 'particulier').length, icon: <User size={24} />, color: '#f59e0b' },
+    { label: 'CA Total', value: formatCurrency(caTotal), icon: <DollarSign size={24} />, color: '#6366f1' },
+    { label: 'Panier Moyen', value: formatCurrency(panierMoyen), icon: <ShoppingCart size={24} />, color: '#ec4899' },
   ];
-
-  const formatCurrency = (amount: number | null) => {
-    if (!amount) return '-';
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
-  };
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
@@ -89,7 +132,7 @@ export default function ClientsPage() {
               <div key={s.label} style={{ background: 'rgba(255,255,255,0.05)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <div style={{ width: '56px', height: '56px', borderRadius: '12px', background: `${s.color}15`, color: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{s.icon}</div>
                 <div>
-                  <div style={{ fontSize: '28px', fontWeight: 700, color: 'white' }}>{s.value}</div>
+                  <div style={{ fontSize: typeof s.value === 'string' ? '20px' : '28px', fontWeight: 700, color: typeof s.value === 'string' ? s.color : 'white' }}>{s.value}</div>
                   <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{s.label}</div>
                 </div>
               </div>
@@ -177,7 +220,18 @@ export default function ClientsPage() {
                     </div>
                   )}
 
-                  <div style={{ paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: contact.projects?.length ? '0' : '8px', fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>
+                  {/* CA client */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <DollarSign size={16} style={{ color: '#6366f1' }} />
+                      <span style={{ fontSize: '12px', fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>CA Client</span>
+                    </div>
+                    <span style={{ fontSize: '16px', fontWeight: 700, color: caParClient[contact.id] ? '#6366f1' : 'rgba(255,255,255,0.4)' }}>
+                      {caParClient[contact.id] ? formatCurrency(caParClient[contact.id]) : '0,00 €'}
+                    </span>
+                  </div>
+
+                  <div style={{ paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '12px', fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>
                     Client depuis le {new Date(contact.createdAt).toLocaleDateString('fr-FR')}
                   </div>
                 </div>

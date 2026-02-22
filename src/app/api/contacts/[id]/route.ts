@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { contactUpdateSchema } from '@/lib/validations';
 
 export async function GET(
   req: NextRequest,
@@ -34,7 +35,12 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    const data = await req.json();
+    const body = await req.json();
+    const parsed = contactUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Validation failed', details: parsed.error.flatten().fieldErrors }, { status: 400 });
+    }
+    const data = parsed.data;
     const contact = await prisma.contact.update({ where: { id }, data });
     return NextResponse.json(contact);
   } catch (error) {
@@ -49,7 +55,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    await prisma.contact.delete({ where: { id } });
+    await prisma.contact.update({ where: { id }, data: { deletedAt: new Date() } });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting contact:', error);

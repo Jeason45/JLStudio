@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendDocumentSchema } from '@/lib/validations';
 import crypto from 'crypto';
 import { sendEmail, generateDocumentEmailHTML } from '@/lib/emailUtils';
 
@@ -7,14 +8,14 @@ import { sendEmail, generateDocumentEmailHTML } from '@/lib/emailUtils';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { documentId, to, recipientName, message, requiresSignature } = body;
-
-    if (!documentId || !to) {
+    const parsed = sendDocumentSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'documentId et to sont requis' },
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const { documentId, to, recipientName, message, requiresSignature } = parsed.data;
 
     const document = await prisma.document.findUnique({
       where: { id: documentId },
@@ -28,59 +29,58 @@ export async function POST(request: NextRequest) {
     const name = recipientName || document.contact?.name || to;
     let signatureLink: string | undefined;
 
-    // If signature is required, create a SignatureRequest with a secure token
-    if (requiresSignature) {
-      const token = crypto.randomBytes(32).toString('hex');
-      const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 30); // 30 days
+    // Wrap all DB mutations in a transaction
+    await prisma.$transaction(async (tx) => {
+      if (requiresSignature) {
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 30); // 30 days
 
-      await prisma.signatureRequest.create({
-        data: {
-          document: { connect: { id: document.id } },
-          token,
-          recipientEmail: to,
-          recipientName: name,
-          expiresAt,
-          status: 'pending',
-        },
-      });
-
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3004';
-      signatureLink = `${baseUrl}/sign/${token}`;
-
-      // Update document status
-      await prisma.document.update({
-        where: { id: documentId },
-        data: { status: 'pending_signature', sentAt: new Date() },
-      });
-
-      // Auto-update contact status
-      if (document.contactId) {
-        await prisma.contact.update({
-          where: { id: document.contactId },
-          data: { status: 'pending_signature' },
+        await tx.signatureRequest.create({
+          data: {
+            document: { connect: { id: document.id } },
+            token,
+            recipientEmail: to,
+            recipientName: name,
+            expiresAt,
+            status: 'pending',
+          },
         });
-      }
-    } else {
-      await prisma.document.update({
-        where: { id: documentId },
-        data: { status: 'sent', sentAt: new Date() },
-      });
 
-      // Auto-update contact status
-      if (document.contactId) {
-        await prisma.contact.update({
-          where: { id: document.contactId },
-          data: { status: 'quote_sent' },
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3004';
+        signatureLink = `${baseUrl}/sign/${token}`;
+
+        await tx.document.update({
+          where: { id: documentId },
+          data: { status: 'pending_signature', sentAt: new Date() },
         });
+
+        if (document.contactId) {
+          await tx.contact.update({
+            where: { id: document.contactId },
+            data: { status: 'pending_signature' },
+          });
+        }
+      } else {
+        await tx.document.update({
+          where: { id: documentId },
+          data: { status: 'sent', sentAt: new Date() },
+        });
+
+        if (document.contactId) {
+          await tx.contact.update({
+            where: { id: document.contactId },
+            data: { status: 'quote_sent' },
+          });
+        }
       }
-    }
+    });
 
     // Build email
     const htmlContent = generateDocumentEmailHTML({
       recipientName: name,
       documentName: document.fileName || 'document.pdf',
-      message,
+      message: message || undefined,
       signatureLink,
     });
 

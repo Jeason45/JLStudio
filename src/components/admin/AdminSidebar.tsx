@@ -82,32 +82,6 @@ export default function AdminSidebar() {
       color: '#a78bfa'
     },
     {
-      href: '/admin/gantt',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="3" y1="18" x2="21" y2="18"/>
-          <rect x="7" y="4" width="6" height="4" fill="currentColor" opacity="0.3"/>
-          <rect x="10" y="10" width="8" height="4" fill="currentColor" opacity="0.3"/>
-          <rect x="5" y="16" width="10" height="4" fill="currentColor" opacity="0.3"/>
-        </svg>
-      ),
-      label: 'Gantt',
-      color: '#ec4899'
-    },
-    {
-      href: '/admin/kanban',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="3" y="3" width="7" height="18" rx="1" ry="1"/>
-          <rect x="13" y="3" width="7" height="10" rx="1" ry="1"/>
-          <rect x="13" y="16" width="7" height="5" rx="1" ry="1"/>
-        </svg>
-      ),
-      label: 'Kanban',
-      color: '#10b981'
-    },
-    {
       href: '/admin/documents',
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -143,6 +117,17 @@ export default function AdminSidebar() {
       ),
       label: 'Briefs',
       color: '#f472b6'
+    },
+    {
+      href: '/admin/emails',
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      ),
+      label: 'Emails',
+      color: '#60a5fa'
     },
   ];
 

@@ -5,7 +5,7 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 import { useSidebar } from '@/components/admin/SidebarContext';
 import LeadDetailModal from '@/components/admin/LeadDetailModal';
 import LeadsKanbanView from '@/components/admin/LeadsKanbanView';
-import { LayoutGrid, Table as TableIcon } from 'lucide-react';
+import { LayoutGrid, Table as TableIcon, Plus, X } from 'lucide-react';
 
 type ContactStatus = 'new' | 'contacted' | 'qualified' | 'rdv_planned' | 'quote_sent' | 'pending_signature' | 'client' | 'lost';
 type ViewMode = 'table' | 'kanban';
@@ -45,6 +45,27 @@ export default function LeadsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('table');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [newLead, setNewLead] = useState({ name: '', email: '', phone: '', companyName: '', projectType: '', budget: '', source: 'manual', notes: '' });
+
+  const handleCreateLead = async () => {
+    if (!newLead.name.trim()) return;
+    setCreating(true);
+    try {
+      const res = await fetch('/api/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...newLead, status: 'new', type: newLead.companyName ? 'entreprise' : 'particulier' }),
+      });
+      if (res.ok) {
+        setShowCreateModal(false);
+        setNewLead({ name: '', email: '', phone: '', companyName: '', projectType: '', budget: '', source: 'manual', notes: '' });
+        fetchContacts();
+      }
+    } catch (e) { console.error(e); }
+    setCreating(false);
+  };
 
   const fetchContacts = () => {
     fetch('/api/contacts')
@@ -93,6 +114,11 @@ export default function LeadsPage() {
             <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'linear-gradient(135deg, #638BFF 0%, #4a6fd4 100%)', boxShadow: '0 0 12px rgba(99,139,255,0.4)' }} />
             <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(99,139,255,0.3) 0%, transparent 100%)' }} />
             <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Leads</span>
+            <button onClick={() => setShowCreateModal(true)} style={{
+              display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px',
+              borderRadius: '10px', border: 'none', background: 'linear-gradient(135deg, #638BFF, #4a6fd4)',
+              color: 'white', fontSize: '13px', fontWeight: 600, cursor: 'pointer', marginLeft: '12px'
+            }}><Plus size={16} />Ajouter un lead</button>
           </div>
 
           {/* Stats Cards */}
@@ -235,6 +261,82 @@ export default function LeadsPage() {
           onClose={() => setSelectedContactId(null)}
           onUpdate={fetchContacts}
         />
+      )}
+
+      {showCreateModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }} onClick={() => setShowCreateModal(false)} />
+          <div style={{ position: 'relative', background: '#0d1321', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', padding: '32px', width: '100%', maxWidth: '520px', maxHeight: '90vh', overflowY: 'auto', color: 'white' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 700 }}>Nouveau lead</h2>
+              <button onClick={() => setShowCreateModal(false)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}><X size={20} /></button>
+            </div>
+            {[
+              { key: 'name', label: 'Nom *', type: 'text', placeholder: 'Nom du contact' },
+              { key: 'email', label: 'Email', type: 'email', placeholder: 'email@exemple.com' },
+              { key: 'phone', label: 'Telephone', type: 'tel', placeholder: '06 12 34 56 78' },
+              { key: 'companyName', label: 'Entreprise', type: 'text', placeholder: 'Nom de l\'entreprise' },
+            ].map(f => (
+              <div key={f.key} style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{f.label}</label>
+                <input type={f.type} placeholder={f.placeholder} value={(newLead as Record<string, string>)[f.key]} onChange={e => setNewLead(prev => ({ ...prev, [f.key]: e.target.value }))}
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
+              </div>
+            ))}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Type de projet</label>
+                <select value={newLead.projectType} onChange={e => setNewLead(prev => ({ ...prev, projectType: e.target.value }))}
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none' }}>
+                  <option value="">Selectionner</option>
+                  <option value="vitrine">Site vitrine</option>
+                  <option value="ecommerce">E-commerce</option>
+                  <option value="webapp">Application web</option>
+                  <option value="refonte">Refonte</option>
+                  <option value="landing">Landing page</option>
+                  <option value="autre">Autre</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Budget</label>
+                <select value={newLead.budget} onChange={e => setNewLead(prev => ({ ...prev, budget: e.target.value }))}
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none' }}>
+                  <option value="">Selectionner</option>
+                  <option value="<2000">&lt; 2 000 EUR</option>
+                  <option value="2000-5000">2 000 - 5 000 EUR</option>
+                  <option value="5000-10000">5 000 - 10 000 EUR</option>
+                  <option value=">10000">&gt; 10 000 EUR</option>
+                </select>
+              </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Source</label>
+                <select value={newLead.source} onChange={e => setNewLead(prev => ({ ...prev, source: e.target.value }))}
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none' }}>
+                  <option value="manual">Ajout manuel</option>
+                  <option value="site">Site web</option>
+                  <option value="recommandation">Recommandation</option>
+                  <option value="linkedin">LinkedIn</option>
+                  <option value="autre">Autre</option>
+                </select>
+              </div>
+            </div>
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Notes</label>
+              <textarea placeholder="Notes..." value={newLead.notes} onChange={e => setNewLead(prev => ({ ...prev, notes: e.target.value }))} rows={3}
+                style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }} />
+            </div>
+            <button onClick={handleCreateLead} disabled={creating || !newLead.name.trim()}
+              style={{
+                width: '100%', padding: '14px', borderRadius: '10px', border: 'none',
+                background: !newLead.name.trim() ? 'rgba(255,255,255,0.1)' : 'linear-gradient(135deg, #638BFF, #4a6fd4)',
+                color: 'white', fontSize: '14px', fontWeight: 600, cursor: newLead.name.trim() ? 'pointer' : 'not-allowed'
+              }}>
+              {creating ? 'Creation...' : 'Creer le lead'}
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

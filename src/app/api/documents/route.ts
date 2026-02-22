@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status');
     const contactId = searchParams.get('contactId');
 
-    const where: Record<string, string> = {};
+    const where: Record<string, string | null> = { deletedAt: null };
     if (status) where.status = status;
     if (contactId) where.contactId = contactId;
 
@@ -54,7 +54,7 @@ export async function DELETE(request: NextRequest) {
       fs.unlinkSync(document.signedPdfPath);
     }
 
-    await prisma.document.delete({ where: { id } });
+    await prisma.document.update({ where: { id }, data: { deletedAt: new Date() } });
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { projectUpdateSchema } from '@/lib/validations';
 
 // GET - Récupérer un projet spécifique
 export async function GET(
@@ -70,24 +71,32 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    const data = await req.json();
+    const body = await req.json();
+    const parsed = projectUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
+    const data = parsed.data;
 
     const updateData: Record<string, unknown> = {};
 
     if (data.name !== undefined) updateData.name = data.name;
     if (data.description !== undefined) updateData.description = data.description;
     if (data.status !== undefined) updateData.status = data.status;
-    if (data.progress !== undefined) updateData.progress = parseInt(data.progress);
+    if (data.progress !== undefined) updateData.progress = parseInt(String(data.progress));
     if (data.priority !== undefined) updateData.priority = data.priority;
     if (data.projectType !== undefined) updateData.projectType = data.projectType;
     if (data.notes !== undefined) updateData.notes = data.notes;
     if (data.technologies !== undefined) updateData.technologies = data.technologies;
 
     if (data.estimatedBudget !== undefined) {
-      updateData.estimatedBudget = data.estimatedBudget ? parseFloat(data.estimatedBudget) : null;
+      updateData.estimatedBudget = data.estimatedBudget ? parseFloat(String(data.estimatedBudget)) : null;
     }
     if (data.actualBudget !== undefined) {
-      updateData.actualBudget = data.actualBudget ? parseFloat(data.actualBudget) : null;
+      updateData.actualBudget = data.actualBudget ? parseFloat(String(data.actualBudget)) : null;
     }
 
     if (data.contactId !== undefined) {
@@ -135,8 +144,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    await prisma.project.delete({
+    await prisma.project.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
 
     return NextResponse.json({ message: 'Projet supprime avec succes' });

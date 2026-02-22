@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef, DragEvent } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import { useSidebar } from '@/components/admin/SidebarContext';
+import Link from 'next/link';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -31,6 +32,12 @@ interface Task {
       email?: string;
     } | null;
   };
+}
+
+interface TimeData {
+  totalMinutes: number;
+  totalHours: number;
+  runningEntry: { id: string; startedAt: string } | null;
 }
 
 interface Column {
@@ -166,6 +173,23 @@ export default function KanbanPage() {
   // Drag & drop
   const dragTaskId = useRef<string | null>(null);
   const dragSourceCol = useRef<string | null>(null);
+
+  // Time tracking
+  const [timeDataMap, setTimeDataMap] = useState<Record<string, TimeData>>({});
+  const [elapsedMap, setElapsedMap] = useState<Record<string, number>>({});
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // ─── Read URL params to pre-select project ──────────────────────────────
+  const [fromProject, setFromProject] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const projectParam = params.get('project');
+    if (projectParam) {
+      setFromProject(projectParam);
+      setSelectedProjectId(projectParam);
+    }
+  }, []);
 
   // ─── Load columns from localStorage ──────────────────────────────────────
   useEffect(() => {
@@ -470,6 +494,105 @@ export default function KanbanPage() {
     setSearchQuery('');
   };
 
+  // ─── Time Tracking ──────────────────────────────────────────────────────
+
+  const fetchTimeData = useCallback(async (taskId: string) => {
+    try {
+      const res = await fetch(`/api/tasks/${taskId}/time`);
+      if (!res.ok) return;
+      const data = await res.json();
+      setTimeDataMap(prev => ({ ...prev, [taskId]: data }));
+    } catch (err) {
+      console.error('Error fetching time data:', err);
+    }
+  }, []);
+
+  // Fetch time data for all tasks on load
+  useEffect(() => {
+    if (tasks.length > 0) {
+      tasks.forEach(task => fetchTimeData(task.id));
+    }
+  }, [tasks.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Tick interval for running timers
+  useEffect(() => {
+    const hasRunning = Object.values(timeDataMap).some(td => td.runningEntry !== null);
+
+    if (hasRunning) {
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = setInterval(() => {
+        const newElapsed: Record<string, number> = {};
+        for (const [taskId, td] of Object.entries(timeDataMap)) {
+          if (td.runningEntry) {
+            const startMs = new Date(td.runningEntry.startedAt).getTime();
+            const elapsedSec = Math.floor((Date.now() - startMs) / 1000);
+            newElapsed[taskId] = elapsedSec;
+          }
+        }
+        setElapsedMap(newElapsed);
+      }, 1000);
+    } else {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+      setElapsedMap({});
+    }
+
+    return () => {
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    };
+  }, [timeDataMap]);
+
+  const handleStartTimer = async (e: React.MouseEvent, taskId: string) => {
+    e.stopPropagation();
+    try {
+      const res = await fetch(`/api/tasks/${taskId}/time`, { method: 'POST' });
+      if (!res.ok) {
+        const err = await res.json();
+        console.error('Start timer error:', err);
+        return;
+      }
+      await fetchTimeData(taskId);
+    } catch (err) {
+      console.error('Error starting timer:', err);
+    }
+  };
+
+  const handleStopTimer = async (e: React.MouseEvent, taskId: string) => {
+    e.stopPropagation();
+    try {
+      const res = await fetch(`/api/tasks/${taskId}/time`, { method: 'PATCH' });
+      if (!res.ok) {
+        const err = await res.json();
+        console.error('Stop timer error:', err);
+        return;
+      }
+      await fetchTimeData(taskId);
+      // Refresh tasks to update actualHours
+      await fetchTasks();
+    } catch (err) {
+      console.error('Error stopping timer:', err);
+    }
+  };
+
+  const formatElapsed = (seconds: number): string => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    if (h > 0) return `${h}h${m.toString().padStart(2, '0')}`;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const formatTotalHours = (minutes: number): string => {
+    if (minutes <= 0) return '';
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    if (h === 0) return `${m}min`;
+    if (m === 0) return `${h}h`;
+    return `${h}h${m.toString().padStart(2, '0')}`;
+  };
+
   // ─── Stats ───────────────────────────────────────────────────────────────
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter(t => t.status === 'completed').length;
@@ -510,6 +633,23 @@ export default function KanbanPage() {
           {/* Title + Actions row */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              {/* Back to projects */}
+              <Link href="/admin/projets" style={{ textDecoration: 'none' }}>
+                <button
+                  style={{
+                    padding: '8px 14px', borderRadius: '8px',
+                    border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)',
+                    color: 'rgba(255,255,255,0.7)', fontSize: '13px', fontWeight: 600,
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                  Projets
+                </button>
+              </Link>
               {/* Kanban icon */}
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#638BFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="3" width="5" height="18" rx="1" />
@@ -900,7 +1040,7 @@ export default function KanbanPage() {
                                   {task.project.name}
                                 </div>
 
-                                {/* Footer: due date + hours */}
+                                {/* Footer: due date + timer + hours */}
                                 <div style={{
                                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                                   gap: '6px', flexWrap: 'wrap',
@@ -921,17 +1061,111 @@ export default function KanbanPage() {
                                     <span />
                                   )}
 
-                                  {task.estimatedHours && (
-                                    <span style={{
-                                      fontSize: '11px', color: 'rgba(255,255,255,0.35)', fontWeight: 500,
-                                      display: 'flex', alignItems: 'center', gap: '3px',
-                                    }}>
-                                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-                                      </svg>
-                                      {task.estimatedHours}h
-                                    </span>
-                                  )}
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    {/* Timer button + running indicator */}
+                                    {(() => {
+                                      const td = timeDataMap[task.id];
+                                      const isRunning = td?.runningEntry !== null && td?.runningEntry !== undefined;
+                                      const elapsed = elapsedMap[task.id];
+                                      const totalMin = td?.totalMinutes || 0;
+
+                                      return (
+                                        <>
+                                          {/* Total logged time */}
+                                          {totalMin > 0 && !isRunning && (
+                                            <span style={{
+                                              fontSize: '10px', fontWeight: 700,
+                                              color: '#10b981',
+                                              background: 'rgba(16, 185, 129, 0.12)',
+                                              border: '1px solid rgba(16, 185, 129, 0.25)',
+                                              borderRadius: '6px', padding: '1px 6px',
+                                              display: 'flex', alignItems: 'center', gap: '3px',
+                                            }}>
+                                              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                                <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                                              </svg>
+                                              {formatTotalHours(totalMin)}
+                                            </span>
+                                          )}
+
+                                          {/* Running timer display */}
+                                          {isRunning && elapsed !== undefined && (
+                                            <span style={{
+                                              fontSize: '10px', fontWeight: 700,
+                                              color: '#f59e0b',
+                                              background: 'rgba(245, 158, 11, 0.12)',
+                                              border: '1px solid rgba(245, 158, 11, 0.3)',
+                                              borderRadius: '6px', padding: '1px 6px',
+                                              display: 'flex', alignItems: 'center', gap: '3px',
+                                              animation: 'timerPulse 2s ease-in-out infinite',
+                                            }}>
+                                              <span style={{
+                                                width: '5px', height: '5px', borderRadius: '50%',
+                                                background: '#f59e0b', display: 'inline-block',
+                                                animation: 'timerDot 1s ease-in-out infinite',
+                                              }} />
+                                              {formatElapsed(elapsed)}
+                                            </span>
+                                          )}
+
+                                          {/* Play / Stop button */}
+                                          <button
+                                            onClick={(e) => isRunning ? handleStopTimer(e, task.id) : handleStartTimer(e, task.id)}
+                                            title={isRunning ? 'Arreter le timer' : 'Demarrer le timer'}
+                                            style={{
+                                              width: '22px', height: '22px', borderRadius: '6px',
+                                              border: isRunning
+                                                ? '1px solid rgba(239, 68, 68, 0.4)'
+                                                : '1px solid rgba(16, 185, 129, 0.3)',
+                                              background: isRunning
+                                                ? 'rgba(239, 68, 68, 0.12)'
+                                                : 'rgba(16, 185, 129, 0.08)',
+                                              cursor: 'pointer',
+                                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                              padding: 0, transition: 'all 0.15s',
+                                              flexShrink: 0,
+                                            }}
+                                            onMouseOver={(e) => {
+                                              e.currentTarget.style.background = isRunning
+                                                ? 'rgba(239, 68, 68, 0.25)'
+                                                : 'rgba(16, 185, 129, 0.2)';
+                                              e.currentTarget.style.transform = 'scale(1.1)';
+                                            }}
+                                            onMouseOut={(e) => {
+                                              e.currentTarget.style.background = isRunning
+                                                ? 'rgba(239, 68, 68, 0.12)'
+                                                : 'rgba(16, 185, 129, 0.08)';
+                                              e.currentTarget.style.transform = 'scale(1)';
+                                            }}
+                                          >
+                                            {isRunning ? (
+                                              /* Stop icon (square) */
+                                              <svg width="10" height="10" viewBox="0 0 24 24" fill="#ef4444" stroke="none">
+                                                <rect x="6" y="6" width="12" height="12" rx="2" />
+                                              </svg>
+                                            ) : (
+                                              /* Play icon (triangle) */
+                                              <svg width="10" height="10" viewBox="0 0 24 24" fill="#10b981" stroke="none">
+                                                <polygon points="8,5 20,12 8,19" />
+                                              </svg>
+                                            )}
+                                          </button>
+                                        </>
+                                      );
+                                    })()}
+
+                                    {task.estimatedHours && (
+                                      <span style={{
+                                        fontSize: '11px', color: 'rgba(255,255,255,0.35)', fontWeight: 500,
+                                        display: 'flex', alignItems: 'center', gap: '3px',
+                                      }}>
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                                        </svg>
+                                        {task.estimatedHours}h
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             );
@@ -1652,6 +1886,16 @@ export default function KanbanPage() {
         @keyframes slideDown {
           0% { opacity: 0; transform: translateY(-16px); }
           100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes timerPulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+
+        @keyframes timerDot {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
         }
 
         input::placeholder, textarea::placeholder {

@@ -102,35 +102,16 @@ const BRIEF_TYPES: BriefType[] = [
     ],
   },
   {
-    id: 'refonte-design',
-    title: 'Refonte Design',
-    description: 'Modernisation du design et de l\'experience utilisateur de votre site existant sans modifier la structure technique.',
-    icon: '🎨',
+    id: 'refonte',
+    title: 'Refonte',
+    description: 'Modernisation de votre site existant : refonte design, technique ou complete selon vos besoins.',
+    icon: '🔄',
     color: '#f59e0b',
     specificFields: [
       { key: 'currentSiteUrl', label: 'URL du site actuel', type: 'url', placeholder: 'https://www.votre-site.fr' },
       { key: 'identifiedProblems', label: 'Problemes identifies avec le design actuel', type: 'textarea', placeholder: 'Decrivez les problemes visuels ou UX que vous souhaitez corriger...' },
-    ],
-  },
-  {
-    id: 'refonte-technique',
-    title: 'Refonte Technique',
-    description: 'Migration ou refactorisation technique pour ameliorer les performances, la securite et la maintenabilite.',
-    icon: '🔧',
-    color: '#ef4444',
-    specificFields: [
       { key: 'currentStack', label: 'Stack technique actuelle', type: 'text', placeholder: 'Ex: WordPress, PHP, MySQL...' },
       { key: 'technicalProblems', label: 'Problemes techniques identifies', type: 'textarea', placeholder: 'Decrivez les problemes techniques (lenteur, securite, bugs, maintenance...)' },
-    ],
-  },
-  {
-    id: 'refonte-complete',
-    title: 'Refonte Complete',
-    description: 'Refonte integrale du site : nouveau design, nouvelle architecture technique et nouveau contenu.',
-    icon: '🔄',
-    color: '#ec4899',
-    specificFields: [
-      { key: 'currentSiteUrl', label: 'URL du site actuel', type: 'url', placeholder: 'https://www.votre-site.fr' },
       { key: 'redesignReasons', label: 'Raisons principales de la refonte', type: 'textarea', placeholder: 'Expliquez pourquoi une refonte complete est necessaire...' },
     ],
   },
@@ -150,6 +131,19 @@ const COMMON_FEATURES = [
   { key: 'responsive', label: 'Design responsive' },
   { key: 'accessibility', label: 'Accessibilite (RGAA/WCAG)' },
 ];
+
+const REFONTE_SCOPES = [
+  { value: 'design', label: 'Design', description: 'Modernisation du design et de l\'experience utilisateur sans modifier la structure technique.', icon: '🎨' },
+  { value: 'technique', label: 'Technique', description: 'Migration ou refactorisation technique pour ameliorer performances, securite et maintenabilite.', icon: '🔧' },
+  { value: 'complete', label: 'Complete', description: 'Refonte integrale : nouveau design, nouvelle architecture technique et nouveau contenu.', icon: '🔄' },
+];
+
+// Fields visible per refonte scope
+const REFONTE_FIELDS_BY_SCOPE: Record<string, string[]> = {
+  design: ['currentSiteUrl', 'identifiedProblems'],
+  technique: ['currentStack', 'technicalProblems'],
+  complete: ['currentSiteUrl', 'redesignReasons'],
+};
 
 const BUDGET_OPTIONS = [
   { value: '<2000', label: 'Moins de 2 000 EUR' },
@@ -259,11 +253,24 @@ export default function BriefPage() {
     setError('');
 
     try {
+      // Build display title (include refonte scope if applicable)
+      const isRefonte = selectedType.id === 'refonte';
+      const refonteScope = (formData.refonteScope as string) || '';
+      const refonteScopeLabel = isRefonte && refonteScope
+        ? REFONTE_SCOPES.find(s => s.value === refonteScope)?.label || ''
+        : '';
+      const displayTitle = isRefonte && refonteScopeLabel
+        ? `${selectedType.title} ${refonteScopeLabel}`
+        : selectedType.title;
+      const projectTypeId = isRefonte && refonteScope
+        ? `refonte-${refonteScope}`
+        : selectedType.id;
+
       // 1. Save brief as interaction (type='brief') on the contact
       if (formData.contactId) {
         const briefContent = JSON.stringify({
-          briefType: selectedType.id,
-          briefTitle: selectedType.title,
+          briefType: projectTypeId,
+          briefTitle: displayTitle,
           ...formData,
           submittedAt: new Date().toISOString(),
         });
@@ -274,7 +281,7 @@ export default function BriefPage() {
           body: JSON.stringify({
             contactId: formData.contactId,
             type: 'brief',
-            subject: `Brief: ${formData.projectName || selectedType.title}`,
+            subject: `Brief: ${formData.projectName || displayTitle}`,
             content: briefContent,
           }),
         });
@@ -285,10 +292,10 @@ export default function BriefPage() {
         const projectData: Record<string, unknown> = {
           name: formData.projectName,
           description: formData.objectives,
-          projectType: selectedType.id,
+          projectType: projectTypeId,
           status: 'planification',
           priority: 'medium',
-          notes: `Brief ${selectedType.title}\n\nPublic cible: ${formData.targetAudience}\nBudget: ${formData.budget}\nInspirations: ${formData.inspirations}\n\nNotes: ${formData.notes}`,
+          notes: `Brief ${displayTitle}\n\nPublic cible: ${formData.targetAudience}\nBudget: ${formData.budget}\nInspirations: ${formData.inspirations}\n\nNotes: ${formData.notes}`,
           estimatedBudget: budgetToNumber(formData.budget),
         };
 
@@ -710,6 +717,20 @@ export default function BriefPage() {
   // ── Render: Step 3 - Type-specific fields ──
   const renderStep3 = () => {
     if (!selectedType) return null;
+
+    const isRefonte = selectedType.id === 'refonte';
+    const refonteScope = (formData.refonteScope as string) || '';
+    const visibleFieldKeys = isRefonte && refonteScope
+      ? REFONTE_FIELDS_BY_SCOPE[refonteScope] || []
+      : null;
+
+    // Filter specific fields: for refonte, only show fields matching the selected scope
+    const fieldsToRender = isRefonte && visibleFieldKeys
+      ? selectedType.specificFields.filter(f => visibleFieldKeys.includes(f.key))
+      : isRefonte
+        ? [] // Refonte with no scope selected: show no specific fields yet
+        : selectedType.specificFields;
+
     return (
       <div>
         <h2 style={{ fontSize: '22px', fontWeight: 700, color: 'white', marginBottom: '8px' }}>
@@ -719,7 +740,61 @@ export default function BriefPage() {
           Informations supplementaires specifiques a ce type de projet.
         </p>
 
-        {selectedType.specificFields.map(field => (
+        {/* Refonte scope selector */}
+        {isRefonte && (
+          <div style={{ marginBottom: '32px' }}>
+            <label style={labelStyle}>Type de refonte</label>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+              gap: '12px',
+            }}>
+              {REFONTE_SCOPES.map(scope => {
+                const isSelected = refonteScope === scope.value;
+                return (
+                  <div
+                    key={scope.value}
+                    onClick={() => updateField('refonteScope', scope.value)}
+                    style={{
+                      padding: '20px',
+                      borderRadius: '14px',
+                      border: `1px solid ${isSelected ? selectedType.color + '80' : 'rgba(255,255,255,0.1)'}`,
+                      background: isSelected ? `${selectedType.color}15` : 'rgba(255,255,255,0.04)',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      textAlign: 'center',
+                    }}
+                    onMouseOver={e => {
+                      if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)';
+                    }}
+                    onMouseOut={e => {
+                      if (!isSelected) e.currentTarget.style.borderColor = isSelected ? `${selectedType.color}80` : 'rgba(255,255,255,0.1)';
+                    }}
+                  >
+                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>{scope.icon}</div>
+                    <div style={{
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      color: isSelected ? 'white' : 'rgba(255,255,255,0.8)',
+                      marginBottom: '6px',
+                    }}>
+                      {scope.label}
+                    </div>
+                    <div style={{
+                      fontSize: '12px',
+                      color: 'rgba(255,255,255,0.5)',
+                      lineHeight: 1.5,
+                    }}>
+                      {scope.description}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {fieldsToRender.map(field => (
           <div key={field.key} style={fieldGroupStyle}>
             <label style={labelStyle}>{field.label}</label>
             {field.type === 'select' && field.options ? (
@@ -906,7 +981,12 @@ export default function BriefPage() {
           marginBottom: '24px',
         }}>
           <span style={{ fontSize: '20px' }}>{selectedType.icon}</span>
-          <span style={{ fontSize: '15px', fontWeight: 700, color: selectedType.color }}>{selectedType.title}</span>
+          <span style={{ fontSize: '15px', fontWeight: 700, color: selectedType.color }}>
+            {selectedType.title}
+            {selectedType.id === 'refonte' && formData.refonteScope && (
+              <> - {REFONTE_SCOPES.find(s => s.value === formData.refonteScope)?.label}</>
+            )}
+          </span>
         </div>
 
         {/* Client & Project */}
@@ -956,25 +1036,34 @@ export default function BriefPage() {
         )}
 
         {/* Specific fields */}
-        {selectedType.specificFields.some(f => formData[f.key]) && (
-          <div style={summaryBlockStyle}>
-            <div style={summaryLabelStyle}>Details specifiques</div>
-            <div style={summaryValueStyle}>
-              {selectedType.specificFields.map(f => {
-                const val = formData[f.key] as string;
-                if (!val) return null;
-                const displayVal = f.type === 'select' && f.options
-                  ? f.options.find(o => o.value === val)?.label || val
-                  : val;
-                return (
-                  <div key={f.key} style={{ marginBottom: '6px' }}>
-                    <strong>{f.label}:</strong> {displayVal}
-                  </div>
-                );
-              })}
+        {(() => {
+          const isRefonte = selectedType.id === 'refonte';
+          const scope = (formData.refonteScope as string) || '';
+          const visibleKeys = isRefonte && scope ? REFONTE_FIELDS_BY_SCOPE[scope] || [] : null;
+          const fieldsForSummary = isRefonte && visibleKeys
+            ? selectedType.specificFields.filter(f => visibleKeys.includes(f.key))
+            : selectedType.specificFields;
+
+          return fieldsForSummary.some(f => formData[f.key]) ? (
+            <div style={summaryBlockStyle}>
+              <div style={summaryLabelStyle}>Details specifiques</div>
+              <div style={summaryValueStyle}>
+                {fieldsForSummary.map(f => {
+                  const val = formData[f.key] as string;
+                  if (!val) return null;
+                  const displayVal = f.type === 'select' && f.options
+                    ? f.options.find(o => o.value === val)?.label || val
+                    : val;
+                  return (
+                    <div key={f.key} style={{ marginBottom: '6px' }}>
+                      <strong>{f.label}:</strong> {displayVal}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        )}
+          ) : null;
+        })()}
 
         {/* Budget & Timeline */}
         <div style={summaryBlockStyle}>

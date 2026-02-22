@@ -3,10 +3,11 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import { useSidebar } from '@/components/admin/SidebarContext';
+import Link from 'next/link';
 import {
   BarChart3, Filter, ChevronDown, ChevronRight, Plus, Trash2, Calendar,
   TrendingUp, Diamond, X, AlertTriangle, Clock,
-  CheckCircle2, Circle, Edit3, Save
+  CheckCircle2, Circle, Edit3, Save, ArrowLeft
 } from 'lucide-react';
 import {
   format, addDays, differenceInDays, startOfWeek, endOfWeek, startOfMonth,
@@ -184,15 +185,24 @@ export default function GanttPage() {
   const timelineRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
 
+  // ─── Track if came from projects page ───
+  const [fromProject, setFromProject] = useState<string | null>(null);
+
   // ─── Data Fetching ─────────────────────────────────────────────────────────
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const projectParam = params.get('project');
+    if (projectParam) setFromProject(projectParam);
+
     fetch('/api/projects')
       .then(res => res.json())
       .then(data => {
         const projs = Array.isArray(data) ? data : [];
         setProjects(projs);
-        if (projs.length > 0 && !selectedProjectId) {
+        if (projectParam && projs.some(p => p.id === projectParam)) {
+          setSelectedProjectId(projectParam);
+        } else if (projs.length > 0 && !selectedProjectId) {
           setSelectedProjectId(projs[0].id);
         }
         setLoading(false);
@@ -632,6 +642,24 @@ export default function GanttPage() {
 
           {/* Controls row */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+            {/* Back to projects */}
+            <Link href="/admin/projets" style={{ textDecoration: 'none' }}>
+              <button
+                style={{
+                  padding: '10px 16px', borderRadius: '10px',
+                  border: `1px solid ${BORDER_COLOR}`, background: 'rgba(255,255,255,0.05)',
+                  color: 'rgba(255,255,255,0.7)', fontSize: '13px', fontWeight: 600,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
+                  transition: 'all 0.2s',
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+              >
+                <ArrowLeft size={16} />
+                Projets
+              </button>
+            </Link>
+
             {/* Project selector */}
             <div style={{ position: 'relative', minWidth: '220px' }}>
               <Filter size={16} style={{

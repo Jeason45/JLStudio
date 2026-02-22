@@ -23,7 +23,7 @@ interface Document {
   createdAt: string;
 }
 
-type Tab = 'devis' | 'factures';
+type Tab = 'devis' | 'factures' | 'contrats';
 
 const devisStatuses: { key: string; label: string }[] = [
   { key: '', label: 'Tous' },
@@ -40,6 +40,15 @@ const factureStatuses: { key: string; label: string }[] = [
   { key: 'sent', label: 'Envoyee' },
   { key: 'paid', label: 'Payee' },
   { key: 'cancelled', label: 'Annulee' },
+];
+
+const contratStatuses: { key: string; label: string }[] = [
+  { key: '', label: 'Tous' },
+  { key: 'draft', label: 'Brouillon' },
+  { key: 'sent', label: 'Envoye' },
+  { key: 'pending_signature', label: 'En attente' },
+  { key: 'signed', label: 'Signe' },
+  { key: 'cancelled', label: 'Annule' },
 ];
 
 const statusConfig: Record<string, { label: string; bg: string; text: string; dot: string }> = {
@@ -61,6 +70,7 @@ export default function DocumentsPage() {
   const [sendForm, setSendForm] = useState({ to: '', recipientName: '', message: '', requiresSignature: false });
   const [sending, setSending] = useState(false);
   const [sendResult, setSendResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [duplicating, setDuplicating] = useState<string | null>(null);
 
   const fetchDocuments = useCallback(async () => {
     try {
@@ -80,12 +90,13 @@ export default function DocumentsPage() {
 
   const allDevis = useMemo(() => documents.filter((d) => d.type === 'devis' || (!['facture', 'contrat'].includes(d.type))), [documents]);
   const allFactures = useMemo(() => documents.filter((d) => d.type === 'facture'), [documents]);
+  const allContrats = useMemo(() => documents.filter((d) => d.type === 'contrat'), [documents]);
 
   const currentDocs = useMemo(() => {
-    const source = activeTab === 'devis' ? allDevis : allFactures;
+    const source = activeTab === 'devis' ? allDevis : activeTab === 'factures' ? allFactures : allContrats;
     if (!filter) return source;
     return source.filter((d) => d.status === filter);
-  }, [activeTab, allDevis, allFactures, filter]);
+  }, [activeTab, allDevis, allFactures, allContrats, filter]);
 
   const kpis = useMemo(() => {
     const devisEnCours = allDevis.filter((d) => ['sent', 'pending_signature'].includes(d.status)).length;
@@ -103,8 +114,14 @@ export default function DocumentsPage() {
       .filter((d) => d.status === 'paid')
       .reduce((sum, d) => sum + (d.amount || 0), 0);
 
-    return { devisEnCours, devisSignes, devisMontantEnCours, facturesImpayees, facturesPayees, montantImpaye, caEncaisse };
-  }, [allDevis, allFactures]);
+    const contratsEnCours = allContrats.filter((d) => ['sent', 'pending_signature'].includes(d.status)).length;
+    const contratsSignes = allContrats.filter((d) => d.status === 'signed').length;
+    const contratsMontantEnCours = allContrats
+      .filter((d) => ['sent', 'pending_signature'].includes(d.status))
+      .reduce((sum, d) => sum + (d.amount || 0), 0);
+
+    return { devisEnCours, devisSignes, devisMontantEnCours, facturesImpayees, facturesPayees, montantImpaye, caEncaisse, contratsEnCours, contratsSignes, contratsMontantEnCours };
+  }, [allDevis, allFactures, allContrats]);
 
   const handleDelete = async (doc: Document) => {
     if (!confirm(`Supprimer "${doc.documentNumber}" ?`)) return;
@@ -127,6 +144,37 @@ export default function DocumentsPage() {
       });
       if (res.ok) fetchDocuments();
     } catch { /* ignore */ }
+  };
+
+  const handleDuplicate = async (doc: Document) => {
+    setDuplicating(doc.id);
+    try {
+      const res = await fetch('/api/documents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: doc.type,
+          templateSlug: doc.templateSlug,
+          formData: doc.formData,
+          contactId: doc.contact?.id || null,
+          amount: doc.amount,
+          status: 'draft',
+        }),
+      });
+      if (res.ok) fetchDocuments();
+    } catch { /* ignore */ } finally {
+      setDuplicating(null);
+    }
+  };
+
+  const exportCSV = (docs: Document[]) => {
+    const header = 'Numero;Date;Client;Montant;Statut\n';
+    const rows = docs.map(d => `${d.documentNumber};${new Date(d.createdAt).toLocaleDateString('fr-FR')};${d.contact?.name || ''};${d.amount || 0};${d.status}`).join('\n');
+    const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `factures-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
   };
 
   const openSendModal = (doc: Document) => {
@@ -177,7 +225,7 @@ export default function DocumentsPage() {
 
   const inputClass = 'w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#638BFF]/50 focus:ring-1 focus:ring-[#638BFF]/25 transition-colors';
 
-  const currentStatuses = activeTab === 'devis' ? devisStatuses : factureStatuses;
+  const currentStatuses = activeTab === 'devis' ? devisStatuses : activeTab === 'factures' ? factureStatuses : contratStatuses;
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
@@ -188,7 +236,7 @@ export default function DocumentsPage() {
       <div className="flex items-center gap-3 mb-6">
         <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#638BFF', boxShadow: '0 0 12px rgba(99,139,255,0.4)' }} />
         <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, rgba(99,139,255,0.3) 0%, transparent 100%)' }} />
-        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase' as const }}>Devis & Factures</span>
+        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase' as const }}>Devis, Factures & Contrats</span>
       </div>
 
       {/* KPI Cards */}
@@ -216,7 +264,7 @@ export default function DocumentsPage() {
               <div className="text-xs text-white/35 mt-0.5">devis crees</div>
             </div>
           </>
-        ) : (
+        ) : activeTab === 'factures' ? (
           <>
             <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Impayees</div>
@@ -237,6 +285,29 @@ export default function DocumentsPage() {
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">CA encaisse</div>
               <div className="text-2xl font-bold text-emerald-400 mt-1">{fmt(kpis.caEncaisse)} EUR</div>
               <div className="text-xs text-white/35 mt-0.5">total paye</div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+              <div className="text-xs text-white/45 font-medium uppercase tracking-wider">En cours</div>
+              <div className="text-2xl font-bold text-white mt-1">{kpis.contratsEnCours}</div>
+              <div className="text-xs text-white/35 mt-0.5">contrats en attente</div>
+            </div>
+            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+              <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Signes</div>
+              <div className="text-2xl font-bold text-green-400 mt-1">{kpis.contratsSignes}</div>
+              <div className="text-xs text-white/35 mt-0.5">contrats valides</div>
+            </div>
+            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+              <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Montant en cours</div>
+              <div className="text-2xl font-bold text-amber-400 mt-1">{fmt(kpis.contratsMontantEnCours)} EUR</div>
+              <div className="text-xs text-white/35 mt-0.5">en attente de signature</div>
+            </div>
+            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+              <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Total</div>
+              <div className="text-2xl font-bold text-white mt-1">{allContrats.length}</div>
+              <div className="text-xs text-white/35 mt-0.5">contrats crees</div>
             </div>
           </>
         )}
@@ -275,23 +346,51 @@ export default function DocumentsPage() {
               {allFactures.length}
             </span>
           </button>
+          <button
+            onClick={() => handleTabChange('contrats')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              activeTab === 'contrats'
+                ? 'bg-white/[0.08] text-white shadow-sm'
+                : 'text-white/40 hover:text-white/60'
+            }`}
+          >
+            Contrats
+            <span className={`px-1.5 py-0.5 rounded-md text-xs font-semibold ${
+              activeTab === 'contrats' ? 'bg-white/[0.08] text-white/70' : 'bg-white/[0.03] text-white/40'
+            }`}>
+              {allContrats.length}
+            </span>
+          </button>
         </div>
 
-        <Link
-          href={activeTab === 'devis' ? '/admin/documents/create' : '/admin/documents/create-facture'}
-          className="flex items-center gap-2 px-4 py-2.5 bg-[#638BFF] text-white text-sm font-semibold rounded-xl hover:bg-[#638BFF]/90 transition-colors"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-          {activeTab === 'devis' ? 'Nouveau devis' : 'Nouvelle facture'}
-        </Link>
+        <div className="flex items-center gap-2">
+          {activeTab === 'factures' && (
+            <button
+              onClick={() => exportCSV(currentDocs)}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] text-white/60 text-sm font-medium rounded-xl hover:bg-white/[0.08] hover:text-white transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+              Exporter CSV
+            </button>
+          )}
+          <Link
+            href={activeTab === 'devis' ? '/admin/documents/create' : activeTab === 'factures' ? '/admin/documents/create-facture' : '/admin/documents/create-contrat'}
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#638BFF] text-white text-sm font-semibold rounded-xl hover:bg-[#638BFF]/90 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            {activeTab === 'devis' ? 'Nouveau devis' : activeTab === 'factures' ? 'Nouvelle facture' : 'Nouveau contrat'}
+          </Link>
+        </div>
       </div>
 
       {/* Status Filters */}
       <div className="flex gap-2 mb-4 flex-wrap">
         {currentStatuses.map((s) => {
-          const count = (activeTab === 'devis' ? allDevis : allFactures).filter(
+          const count = (activeTab === 'devis' ? allDevis : activeTab === 'factures' ? allFactures : allContrats).filter(
             (d) => s.key === '' || d.status === s.key
           ).length;
           return (
@@ -322,13 +421,13 @@ export default function DocumentsPage() {
       ) : currentDocs.length === 0 ? (
         <div className="text-center py-16 bg-[#0d1321] border border-white/[0.06] rounded-xl">
           <p className="text-white/45 text-sm">
-            {filter ? 'Aucun document avec ce statut' : `Aucun ${activeTab === 'devis' ? 'devis' : 'e facture'}`}
+            {filter ? 'Aucun document avec ce statut' : `Aucun ${activeTab === 'devis' ? 'devis' : activeTab === 'factures' ? 'e facture' : 'contrat'}`}
           </p>
           <Link
-            href={activeTab === 'devis' ? '/admin/documents/create' : '/admin/documents/create-facture'}
+            href={activeTab === 'devis' ? '/admin/documents/create' : activeTab === 'factures' ? '/admin/documents/create-facture' : '/admin/documents/create-contrat'}
             className="text-[#638BFF] text-sm mt-2 inline-block hover:underline"
           >
-            Creer {activeTab === 'devis' ? 'un devis' : 'une facture'}
+            Creer {activeTab === 'devis' ? 'un devis' : activeTab === 'factures' ? 'une facture' : 'un contrat'}
           </Link>
         </div>
       ) : (
@@ -431,6 +530,23 @@ export default function DocumentsPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
                               </svg>
                             </Link>
+                          )}
+                          {/* Dupliquer (devis only) */}
+                          {doc.type === 'devis' && (
+                            <button
+                              onClick={() => handleDuplicate(doc)}
+                              disabled={duplicating === doc.id}
+                              className="p-1.5 text-white/50 hover:text-cyan-400 transition-colors rounded-lg hover:bg-cyan-500/[0.06] disabled:opacity-30 disabled:cursor-not-allowed"
+                              title="Dupliquer"
+                            >
+                              {duplicating === doc.id ? (
+                                <div className="w-4 h-4 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin" />
+                              ) : (
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
+                                </svg>
+                              )}
+                            </button>
                           )}
                           {/* Mark as paid (sent facture) */}
                           {doc.type === 'facture' && doc.status === 'sent' && (

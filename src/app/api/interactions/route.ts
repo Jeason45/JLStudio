@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { interactionCreateSchema } from '@/lib/validations';
 
 export async function GET(req: NextRequest) {
   try {
@@ -22,11 +23,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { contactId, type, subject, content, direction, duration } = await req.json();
-
-    if (!contactId || !type) {
-      return NextResponse.json({ error: 'contactId and type are required' }, { status: 400 });
+    const body = await req.json();
+    const parsed = interactionCreateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Validation failed', details: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
+    const { contactId, type, subject, content, direction, duration } = parsed.data;
 
     const interaction = await prisma.interaction.create({
       data: { contactId, type, subject, content, direction, duration },

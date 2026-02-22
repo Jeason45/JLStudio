@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import { useSidebar } from '@/components/admin/SidebarContext';
-import { Calendar, Users, UserCheck, TrendingUp, DollarSign, Percent, Clock, FolderKanban, FileText } from 'lucide-react';
+import { Calendar, Users, UserCheck, TrendingUp, DollarSign, Percent, Clock, FolderKanban, FileText, AlertTriangle, CheckCircle, Zap, ShoppingCart } from 'lucide-react';
 
 interface Stats {
   budgetTotalProjets: number;
@@ -18,19 +18,67 @@ interface Stats {
   totalClients: number;
   totalAppointments: number;
   tauxConversionLeads: number;
+  panierMoyen: number;
   evolutionMensuelle: { month: string; revenue: number; leads: number; clients: number }[];
+}
+
+interface StaleLead {
+  id: string;
+  name: string;
+  email: string | null;
+  createdAt: string;
+  daysSinceCreation: number;
+}
+
+interface UnpaidInvoice {
+  id: string;
+  documentNumber: string | null;
+  amount: number | null;
+  sentAt: string | null;
+  daysOverdue: number;
+  contact: { id: string; name: string } | null;
+}
+
+interface TodayAppointment {
+  id: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  contact: { id: string; name: string } | null;
+}
+
+interface OverdueTask {
+  id: string;
+  title: string;
+  dueDate: string | null;
+  status: string;
+  project: { id: string; name: string };
+}
+
+interface Actions {
+  staleLeads: StaleLead[];
+  unpaidInvoices: UnpaidInvoice[];
+  todayAppointments: TodayAppointment[];
+  overdueTasks: OverdueTask[];
 }
 
 export default function DashboardPage() {
   const { sidebarWidth, isMobile } = useSidebar();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [actions, setActions] = useState<Actions | null>(null);
+  const [actionsLoading, setActionsLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/stats/financials')
       .then(res => res.json())
       .then(data => { setStats(data); setLoading(false); })
       .catch(() => setLoading(false));
+
+    fetch('/api/stats/actions')
+      .then(res => res.json())
+      .then(data => { setActions(data); setActionsLoading(false); })
+      .catch(() => setActionsLoading(false));
   }, []);
 
   const formatCurrency = (amount: number) =>
@@ -57,6 +105,11 @@ export default function DashboardPage() {
       sub: `${stats?.nombreFactures || 0} facture(s) encaissee(s)`, color: '#638BFF',
       icon: <DollarSign size={28} />, href: '/admin/documents'
     },
+    {
+      label: 'Panier Moyen', value: formatCurrency(stats?.panierMoyen || 0),
+      sub: 'CA moyen par client', color: '#ec4899',
+      icon: <ShoppingCart size={28} />, href: '/admin/clients'
+    },
   ];
 
   const secondaryKPIs = [
@@ -80,6 +133,206 @@ export default function DashboardPage() {
           <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(99, 139, 255, 0.3) 0%, transparent 100%)' }} />
           <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Dashboard</span>
         </div>
+
+        {/* Actions du jour */}
+        {!actionsLoading && actions && (() => {
+          const totalActions = (actions.staleLeads?.length || 0)
+            + (actions.unpaidInvoices?.length || 0)
+            + (actions.todayAppointments?.length || 0)
+            + (actions.overdueTasks?.length || 0);
+
+          const unpaidTotal = (actions.unpaidInvoices || []).reduce((sum, inv) => sum + (inv.amount || 0), 0);
+
+          const formatTime = (iso: string) => {
+            const d = new Date(iso);
+            return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+          };
+
+          const formatDate = (iso: string) => {
+            const d = new Date(iso);
+            return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+          };
+
+          if (totalActions === 0) {
+            return (
+              <div style={{
+                background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)',
+                borderRadius: '12px', padding: '20px 24px', marginBottom: isMobile ? '24px' : '40px',
+                display: 'flex', alignItems: 'center', gap: '12px'
+              }}>
+                <CheckCircle size={20} color="#10b981" />
+                <span style={{ color: '#10b981', fontSize: '14px', fontWeight: 600 }}>Tout est a jour !</span>
+              </div>
+            );
+          }
+
+          return (
+            <div style={{
+              background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)',
+              borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)',
+              padding: isMobile ? '20px' : '28px', marginBottom: isMobile ? '24px' : '40px'
+            }}>
+              {/* Section title */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+                <Zap size={18} color="#638BFF" />
+                <h2 style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0 }}>
+                  Actions du jour
+                </h2>
+                <span style={{
+                  background: 'rgba(99, 139, 255, 0.2)', color: '#638BFF', fontSize: '11px', fontWeight: 700,
+                  padding: '2px 8px', borderRadius: '10px'
+                }}>{totalActions}</span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+
+                {/* Leads a relancer */}
+                {actions.staleLeads?.length > 0 && (
+                  <div style={{
+                    background: 'rgba(239, 68, 68, 0.06)', borderRadius: '12px', padding: '18px 20px',
+                    borderLeft: '3px solid #ef4444'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                      <AlertTriangle size={16} color="#ef4444" />
+                      <span style={{ fontSize: '12px', color: '#ef4444', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Leads a relancer
+                      </span>
+                      <span style={{
+                        background: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', fontSize: '11px', fontWeight: 700,
+                        padding: '1px 6px', borderRadius: '8px', marginLeft: 'auto'
+                      }}>{actions.staleLeads.length}</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {actions.staleLeads.map(lead => (
+                        <div key={lead.id} onClick={() => window.location.href = '/admin/leads'} style={{
+                          background: 'rgba(255,255,255,0.04)', borderRadius: '8px', padding: '10px 12px',
+                          cursor: 'pointer', transition: 'background 0.2s'
+                        }}>
+                          <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>{lead.name}</div>
+                          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}>
+                            {lead.email || 'Pas d\'email'} &middot; {lead.daysSinceCreation}j sans relance
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Factures impayees */}
+                {actions.unpaidInvoices?.length > 0 && (
+                  <div style={{
+                    background: 'rgba(249, 115, 22, 0.06)', borderRadius: '12px', padding: '18px 20px',
+                    borderLeft: '3px solid #f97316'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                      <FileText size={16} color="#f97316" />
+                      <span style={{ fontSize: '12px', color: '#f97316', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Factures impayees
+                      </span>
+                      <span style={{
+                        background: 'rgba(249, 115, 22, 0.2)', color: '#f97316', fontSize: '11px', fontWeight: 700,
+                        padding: '1px 6px', borderRadius: '8px', marginLeft: 'auto'
+                      }}>{actions.unpaidInvoices.length}</span>
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#f97316', fontWeight: 600, marginBottom: '12px' }}>
+                      Total : {formatCurrency(unpaidTotal)}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {actions.unpaidInvoices.map(inv => (
+                        <div key={inv.id} onClick={() => window.location.href = '/admin/documents'} style={{
+                          background: 'rgba(255,255,255,0.04)', borderRadius: '8px', padding: '10px 12px',
+                          cursor: 'pointer', transition: 'background 0.2s'
+                        }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>
+                              {inv.documentNumber || 'Sans numero'}
+                            </span>
+                            <span style={{ fontSize: '13px', color: '#f97316', fontWeight: 700 }}>
+                              {formatCurrency(inv.amount || 0)}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}>
+                            {inv.contact?.name || 'Client inconnu'} &middot; {inv.daysOverdue}j de retard
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* RDV aujourd'hui */}
+                {actions.todayAppointments?.length > 0 && (
+                  <div style={{
+                    background: 'rgba(99, 139, 255, 0.06)', borderRadius: '12px', padding: '18px 20px',
+                    borderLeft: '3px solid #638BFF'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                      <Calendar size={16} color="#638BFF" />
+                      <span style={{ fontSize: '12px', color: '#638BFF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        RDV aujourd&apos;hui
+                      </span>
+                      <span style={{
+                        background: 'rgba(99, 139, 255, 0.2)', color: '#638BFF', fontSize: '11px', fontWeight: 700,
+                        padding: '1px 6px', borderRadius: '8px', marginLeft: 'auto'
+                      }}>{actions.todayAppointments.length}</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {actions.todayAppointments.map(appt => (
+                        <div key={appt.id} onClick={() => window.location.href = '/admin/calendar'} style={{
+                          background: 'rgba(255,255,255,0.04)', borderRadius: '8px', padding: '10px 12px',
+                          cursor: 'pointer', transition: 'background 0.2s'
+                        }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>{appt.title}</span>
+                            <span style={{ fontSize: '12px', color: '#638BFF', fontWeight: 600 }}>
+                              {formatTime(appt.startTime)}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}>
+                            {appt.contact?.name || 'Sans contact'}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Taches en retard */}
+                {actions.overdueTasks?.length > 0 && (
+                  <div style={{
+                    background: 'rgba(251, 191, 36, 0.06)', borderRadius: '12px', padding: '18px 20px',
+                    borderLeft: '3px solid #fbbf24'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                      <Zap size={16} color="#fbbf24" />
+                      <span style={{ fontSize: '12px', color: '#fbbf24', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Taches en retard
+                      </span>
+                      <span style={{
+                        background: 'rgba(251, 191, 36, 0.2)', color: '#fbbf24', fontSize: '11px', fontWeight: 700,
+                        padding: '1px 6px', borderRadius: '8px', marginLeft: 'auto'
+                      }}>{actions.overdueTasks.length}</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {actions.overdueTasks.map(task => (
+                        <div key={task.id} onClick={() => window.location.href = '/admin/projets'} style={{
+                          background: 'rgba(255,255,255,0.04)', borderRadius: '8px', padding: '10px 12px',
+                          cursor: 'pointer', transition: 'background 0.2s'
+                        }}>
+                          <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>{task.title}</div>
+                          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}>
+                            {task.project?.name || 'Projet inconnu'} &middot; Echeance : {task.dueDate ? formatDate(task.dueDate) : '—'}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Hero KPIs */}
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))', gap: isMobile ? '16px' : '24px', marginBottom: isMobile ? '24px' : '40px' }}>

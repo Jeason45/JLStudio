@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { appointmentCreateSchema } from '@/lib/validations';
 
 // GET - Récupérer les rendez-vous (avec filtres de date optionnels)
 export async function GET(req: NextRequest) {
@@ -48,14 +49,15 @@ export async function GET(req: NextRequest) {
 // POST - Créer un nouveau rendez-vous
 export async function POST(req: NextRequest) {
   try {
-    const data = await req.json();
-
-    if (!data.title || !data.startTime || !data.endTime) {
+    const body = await req.json();
+    const parsed = appointmentCreateSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Titre, date de debut et date de fin requis' },
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const data = parsed.data;
 
     const appointment = await prisma.appointment.create({
       data: {

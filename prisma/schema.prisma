@@ -41,6 +41,7 @@ model Contact {
   paymentStatus  String    @default("none")
   paidAmount     Float     @default(0)
   paidAt         DateTime?
+  deletedAt      DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -49,6 +50,12 @@ model Contact {
   documents    Document[]
   mailLogs     MailLog[]
   projects     Project[]
+
+  @@index([email])
+  @@index([status, createdAt])
+  @@index([source])
+  @@index([score])
+  @@index([createdAt])
 }
 
 model Interaction {
@@ -74,6 +81,10 @@ model Appointment {
   status      String   @default("scheduled")
   location    String?
   createdAt   DateTime @default(now())
+
+  @@index([startTime])
+  @@index([contactId])
+  @@index([status])
 }
 
 // ── Documents ──
@@ -96,12 +107,17 @@ model Document {
   signedBy         String?
   signedPdfPath    String?
   sentAt           DateTime?
+  deletedAt        DateTime?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
   signatures        Signature[]
   signatureRequests SignatureRequest[]
   mailLogs          MailLog[]
+
+  @@index([status, createdAt])
+  @@index([contactId])
+  @@index([projectId])
 }
 
 model DocumentCounter {
@@ -165,6 +181,9 @@ model MailLog {
   error       String?
   sentAt      DateTime?
   createdAt   DateTime  @default(now())
+
+  @@index([status, createdAt])
+  @@index([createdAt])
 }
 
 // ── Projet Management ──
@@ -184,6 +203,7 @@ model Project {
   actualBudget    Float?
   progress        Int       @default(0)
   notes           String?
+  deletedAt       DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
@@ -227,11 +247,17 @@ model Task {
   blockedReason  String?
   isCriticalPath Boolean      @default(false)
   order          Int          @default(0)
+  deletedAt      DateTime?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
-  dependsOn  TaskDependency[] @relation("dependent")
-  dependedBy TaskDependency[] @relation("predecessor")
+  dependsOn    TaskDependency[] @relation("dependent")
+  dependedBy   TaskDependency[] @relation("predecessor")
+  timeEntries  TimeEntry[]
+
+  @@index([projectId, status])
+  @@index([dueDate])
+  @@index([sectionId])
 }
 
 model TaskDependency {
@@ -257,6 +283,20 @@ model Milestone {
   createdAt DateTime @default(now())
 }
 
+// ── Time Tracking ──
+model TimeEntry {
+  id        String    @id @default(cuid())
+  taskId    String
+  task      Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  startedAt DateTime
+  stoppedAt DateTime?
+  duration  Int?      // minutes
+  notes     String?
+  createdAt DateTime  @default(now())
+
+  @@index([taskId])
+}
+
 // ── Settings ──
 model CompanySettings {
   id                  String   @id @default("default")
@@ -275,5 +315,6 @@ model CompanySettings {
   rcsCity             String   @default("")
   representantName    String   @default("")
   representantRole    String   @default("")
+  logoPath            String   @default("")
   updatedAt           DateTime @updatedAt
 }

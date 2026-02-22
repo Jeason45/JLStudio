@@ -9,6 +9,7 @@ export async function GET() {
         type: true,
         status: true,
         amount: true,
+        contactId: true,
         createdAt: true,
         sentAt: true,
       }
@@ -89,6 +90,15 @@ export async function GET() {
     const tauxConversionLeads = contacts.length > 0
       ? Math.round((clients.length / contacts.length) * 100) : 0;
 
+    // Panier moyen = CA total / nombre de clients avec au moins une facture payee
+    const clientsAvecCA = new Set<string>();
+    facturesSignees.forEach(d => {
+      if (d.contactId) clientsAvecCA.add(d.contactId);
+    });
+    const panierMoyen = clientsAvecCA.size > 0
+      ? Math.round((chiffreAffairesTotal / clientsAvecCA.size) * 100) / 100
+      : 0;
+
     // Evolution mensuelle (6 derniers mois)
     const evolutionMensuelle = [];
     for (let i = 5; i >= 0; i--) {
@@ -138,6 +148,7 @@ export async function GET() {
       totalClients: clients.length,
       totalAppointments: appointments.filter(a => a.status !== 'cancelled').length,
       tauxConversionLeads,
+      panierMoyen,
       evolutionMensuelle,
     });
   } catch (error) {

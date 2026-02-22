@@ -103,6 +103,8 @@ export default function CalendarPage() {
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [createErrors, setCreateErrors] = useState<Record<string, string>>({});
+  const [editErrors, setEditErrors] = useState<Record<string, string>>({});
 
   // Edit form (reuses viewingAppointment with local overrides)
   const [editForm, setEditForm] = useState({
@@ -229,15 +231,26 @@ export default function CalendarPage() {
       location: '',
       status: 'scheduled',
     });
+    setCreateErrors({});
     setShowCreateModal(true);
+  };
+
+  const validateCreate = (): boolean => {
+    const errs: Record<string, string> = {};
+    if (!newAppointment.title.trim()) errs.title = 'Le titre est requis';
+    if (!newAppointment.date) errs.date = 'La date est requise';
+    if (!newAppointment.startTime) errs.startTime = "L'heure de debut est requise";
+    if (!newAppointment.endTime) errs.endTime = "L'heure de fin est requise";
+    if (newAppointment.startTime && newAppointment.endTime && newAppointment.startTime >= newAppointment.endTime) {
+      errs.endTime = "L'heure de fin doit etre apres l'heure de debut";
+    }
+    setCreateErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newAppointment.startTime >= newAppointment.endTime) {
-      alert("L'heure de fin doit etre apres l'heure de debut");
-      return;
-    }
+    if (!validateCreate()) return;
     setCreating(true);
     try {
       const startDateTime = new Date(`${newAppointment.date}T${newAppointment.startTime}`);
@@ -289,12 +302,26 @@ export default function CalendarPage() {
       location: viewingAppointment.location || '',
       status: viewingAppointment.status,
     });
+    setEditErrors({});
     setEditMode(true);
+  };
+
+  const validateEdit = (): boolean => {
+    const errs: Record<string, string> = {};
+    if (!editForm.title.trim()) errs.title = 'Le titre est requis';
+    if (!editForm.startTime) errs.startTime = "L'heure de debut est requise";
+    if (!editForm.endTime) errs.endTime = "L'heure de fin est requise";
+    if (editForm.startTime && editForm.endTime && editForm.startTime >= editForm.endTime) {
+      errs.endTime = "L'heure de fin doit etre apres l'heure de debut";
+    }
+    setEditErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handleSaveEdit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!viewingAppointment) return;
+    if (!validateEdit()) return;
     setSaving(true);
     try {
       const response = await fetch(`/api/appointments/${viewingAppointment.id}`, {
@@ -378,6 +405,15 @@ export default function CalendarPage() {
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
   };
+
+  const errorStyle: React.CSSProperties = {
+    color: '#ef4444',
+    fontSize: '12px',
+    marginTop: '4px',
+    display: 'block',
+  };
+
+  const inputErrorBorder = '1px solid rgba(239,68,68,0.5)';
 
   // ─── Render ───────────────────────────────────────────────────────────
 
@@ -919,14 +955,14 @@ export default function CalendarPage() {
                   <label style={labelStyle}>Titre *</label>
                   <input
                     type="text"
-                    required
                     value={newAppointment.title}
-                    onChange={(e) => setNewAppointment({ ...newAppointment, title: e.target.value })}
+                    onChange={(e) => { setNewAppointment({ ...newAppointment, title: e.target.value }); if (createErrors.title) setCreateErrors(prev => { const { title, ...rest } = prev; return rest; }); }}
                     placeholder="Ex: Reunion projet web"
-                    style={inputStyle}
-                    onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(99,139,255,0.5)'; }}
-                    onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+                    style={{ ...inputStyle, ...(createErrors.title ? { border: inputErrorBorder } : {}) }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = createErrors.title ? 'rgba(239,68,68,0.5)' : 'rgba(99,139,255,0.5)'; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = createErrors.title ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.15)'; }}
                   />
+                  {createErrors.title && <span style={errorStyle}>{createErrors.title}</span>}
                 </div>
 
                 {/* Date */}
@@ -934,11 +970,11 @@ export default function CalendarPage() {
                   <label style={labelStyle}>Date *</label>
                   <input
                     type="date"
-                    required
                     value={newAppointment.date}
-                    onChange={(e) => setNewAppointment({ ...newAppointment, date: e.target.value })}
-                    style={{ ...inputStyle, colorScheme: 'dark' }}
+                    onChange={(e) => { setNewAppointment({ ...newAppointment, date: e.target.value }); if (createErrors.date) setCreateErrors(prev => { const { date, ...rest } = prev; return rest; }); }}
+                    style={{ ...inputStyle, colorScheme: 'dark', ...(createErrors.date ? { border: inputErrorBorder } : {}) }}
                   />
+                  {createErrors.date && <span style={errorStyle}>{createErrors.date}</span>}
                 </div>
 
                 {/* Start / End time */}
@@ -947,21 +983,21 @@ export default function CalendarPage() {
                     <label style={labelStyle}>Debut *</label>
                     <input
                       type="time"
-                      required
                       value={newAppointment.startTime}
-                      onChange={(e) => setNewAppointment({ ...newAppointment, startTime: e.target.value })}
-                      style={{ ...inputStyle, colorScheme: 'dark' }}
+                      onChange={(e) => { setNewAppointment({ ...newAppointment, startTime: e.target.value }); if (createErrors.startTime) setCreateErrors(prev => { const { startTime, ...rest } = prev; return rest; }); }}
+                      style={{ ...inputStyle, colorScheme: 'dark', ...(createErrors.startTime ? { border: inputErrorBorder } : {}) }}
                     />
+                    {createErrors.startTime && <span style={errorStyle}>{createErrors.startTime}</span>}
                   </div>
                   <div>
                     <label style={labelStyle}>Fin *</label>
                     <input
                       type="time"
-                      required
                       value={newAppointment.endTime}
-                      onChange={(e) => setNewAppointment({ ...newAppointment, endTime: e.target.value })}
-                      style={{ ...inputStyle, colorScheme: 'dark' }}
+                      onChange={(e) => { setNewAppointment({ ...newAppointment, endTime: e.target.value }); if (createErrors.endTime) setCreateErrors(prev => { const { endTime, ...rest } = prev; return rest; }); }}
+                      style={{ ...inputStyle, colorScheme: 'dark', ...(createErrors.endTime ? { border: inputErrorBorder } : {}) }}
                     />
+                    {createErrors.endTime && <span style={errorStyle}>{createErrors.endTime}</span>}
                   </div>
                 </div>
 
@@ -1117,13 +1153,13 @@ export default function CalendarPage() {
                     <label style={labelStyle}>Titre *</label>
                     <input
                       type="text"
-                      required
                       value={editForm.title}
-                      onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                      style={inputStyle}
-                      onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(99,139,255,0.5)'; }}
-                      onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+                      onChange={(e) => { setEditForm({ ...editForm, title: e.target.value }); if (editErrors.title) setEditErrors(prev => { const { title, ...rest } = prev; return rest; }); }}
+                      style={{ ...inputStyle, ...(editErrors.title ? { border: inputErrorBorder } : {}) }}
+                      onFocus={(e) => { e.currentTarget.style.borderColor = editErrors.title ? 'rgba(239,68,68,0.5)' : 'rgba(99,139,255,0.5)'; }}
+                      onBlur={(e) => { e.currentTarget.style.borderColor = editErrors.title ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.15)'; }}
                     />
+                    {editErrors.title && <span style={errorStyle}>{editErrors.title}</span>}
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -1131,21 +1167,21 @@ export default function CalendarPage() {
                       <label style={labelStyle}>Debut *</label>
                       <input
                         type="datetime-local"
-                        required
                         value={editForm.startTime}
-                        onChange={(e) => setEditForm({ ...editForm, startTime: e.target.value })}
-                        style={{ ...inputStyle, colorScheme: 'dark' }}
+                        onChange={(e) => { setEditForm({ ...editForm, startTime: e.target.value }); if (editErrors.startTime) setEditErrors(prev => { const { startTime, ...rest } = prev; return rest; }); }}
+                        style={{ ...inputStyle, colorScheme: 'dark', ...(editErrors.startTime ? { border: inputErrorBorder } : {}) }}
                       />
+                      {editErrors.startTime && <span style={errorStyle}>{editErrors.startTime}</span>}
                     </div>
                     <div>
                       <label style={labelStyle}>Fin *</label>
                       <input
                         type="datetime-local"
-                        required
                         value={editForm.endTime}
-                        onChange={(e) => setEditForm({ ...editForm, endTime: e.target.value })}
-                        style={{ ...inputStyle, colorScheme: 'dark' }}
+                        onChange={(e) => { setEditForm({ ...editForm, endTime: e.target.value }); if (editErrors.endTime) setEditErrors(prev => { const { endTime, ...rest } = prev; return rest; }); }}
+                        style={{ ...inputStyle, colorScheme: 'dark', ...(editErrors.endTime ? { border: inputErrorBorder } : {}) }}
                       />
+                      {editErrors.endTime && <span style={errorStyle}>{editErrors.endTime}</span>}
                     </div>
                   </div>
 

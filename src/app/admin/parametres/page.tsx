@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import { useSidebar } from '@/components/admin/SidebarContext';
-import { Settings, Building2, Scale, UserCheck, CreditCard, FileText, Check, Loader2 } from 'lucide-react';
+import { Settings, Building2, Scale, UserCheck, CreditCard, FileText, Check, Loader2, Image, Upload } from 'lucide-react';
 
 interface CompanySettings {
   id: string;
@@ -22,6 +22,7 @@ interface CompanySettings {
   bic: string;
   defaultPaymentTerms: string;
   penaltyRate: number;
+  logoPath: string;
   updatedAt: string;
 }
 
@@ -60,6 +61,7 @@ const DEFAULT_SETTINGS: CompanySettings = {
   bic: '',
   defaultPaymentTerms: '30 jours',
   penaltyRate: 3.0,
+  logoPath: '',
   updatedAt: '',
 };
 
@@ -70,6 +72,11 @@ export default function ParametresPage() {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [logoUploading, setLogoUploading] = useState(false);
+  const [logoSuccess, setLogoSuccess] = useState('');
+  const [logoError, setLogoError] = useState('');
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch('/api/settings')
@@ -89,7 +96,20 @@ export default function ParametresPage() {
       .catch(() => setLoading(false));
   }, []);
 
+  const validateSettings = (): boolean => {
+    const errs: Record<string, string> = {};
+    if (!settings.name.trim()) errs.name = 'Le nom est requis';
+    if (!settings.email.trim()) {
+      errs.email = "L'email est requis";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(settings.email.trim())) {
+      errs.email = "Le format de l'email est invalide";
+    }
+    setFieldErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const handleSave = async () => {
+    if (!validateSettings()) return;
     setSaving(true);
     setError('');
     setSuccess(false);
@@ -123,6 +143,41 @@ export default function ParametresPage() {
     setSettings(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setLogoUploading(true);
+    setLogoError('');
+    setLogoSuccess('');
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/settings/logo', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Erreur lors du telechargement');
+      }
+
+      setSettings(prev => ({ ...prev, logoPath: data.logoPath }));
+      setLogoSuccess('Logo mis a jour avec succes');
+      setTimeout(() => setLogoSuccess(''), 3000);
+    } catch (err) {
+      setLogoError(err instanceof Error ? err.message : 'Erreur lors du telechargement du logo');
+    } finally {
+      setLogoUploading(false);
+      // Reset file input so the same file can be re-selected
+      if (logoInputRef.current) logoInputRef.current.value = '';
+    }
+  };
+
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '12px 16px',
@@ -154,6 +209,15 @@ export default function ParametresPage() {
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
   };
+
+  const fieldErrorStyle: React.CSSProperties = {
+    color: '#ef4444',
+    fontSize: '12px',
+    marginTop: '4px',
+    display: 'block',
+  };
+
+  const inputErrorBorder = '1px solid rgba(239,68,68,0.5)';
 
   const cardStyle: React.CSSProperties = {
     background: 'rgba(255,255,255,0.03)',
@@ -262,7 +326,7 @@ export default function ParametresPage() {
                 <Check size={18} style={{ color: '#10b981' }} />
               </div>
               <div>
-                <p style={{ fontSize: '14px', fontWeight: 600, color: '#10b981', margin: 0 }}>Parametres sauvegardes</p>
+                <p style={{ fontSize: '14px', fontWeight: 600, color: '#10b981', margin: 0 }}>Parametres enregistres</p>
                 <p style={{ fontSize: '12px', color: 'rgba(16,185,129,0.7)', margin: '2px 0 0 0' }}>Les modifications ont ete enregistrees avec succes</p>
               </div>
             </div>
@@ -284,6 +348,135 @@ export default function ParametresPage() {
           )}
 
           <div style={{ maxWidth: '900px' }}>
+            {/* Section 0: Logo de l'entreprise */}
+            <div style={cardStyle}>
+              <div style={sectionHeaderStyle}>
+                <div style={sectionIconStyle('#ec4899')}>
+                  <Image size={20} />
+                </div>
+                <div>
+                  <h2 style={sectionTitleStyle}>Logo de l&apos;entreprise</h2>
+                  <p style={sectionSubtitleStyle}>Apparait sur vos devis, factures et documents</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: isMobile ? 'stretch' : 'center', gap: '24px', flexDirection: isMobile ? 'column' : 'row' }}>
+                {/* Logo preview */}
+                <div style={{
+                  width: '120px',
+                  height: '120px',
+                  borderRadius: '12px',
+                  border: '2px dashed rgba(255,255,255,0.15)',
+                  background: 'rgba(255,255,255,0.03)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  flexShrink: 0,
+                }}>
+                  {settings.logoPath ? (
+                    <img
+                      src={settings.logoPath}
+                      alt="Logo de l'entreprise"
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        objectFit: 'contain',
+                      }}
+                    />
+                  ) : (
+                    <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.25)' }}>
+                      <Image size={32} />
+                      <p style={{ fontSize: '10px', marginTop: '6px', margin: '6px 0 0 0' }}>Aucun logo</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Upload controls */}
+                <div style={{ flex: 1 }}>
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/svg+xml"
+                    onChange={handleLogoUpload}
+                    style={{ display: 'none' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => logoInputRef.current?.click()}
+                    disabled={logoUploading}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '10px 20px',
+                      background: logoUploading ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)',
+                      color: logoUploading ? 'rgba(255,255,255,0.4)' : 'white',
+                      fontSize: '13px',
+                      fontWeight: 500,
+                      borderRadius: '10px',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      cursor: logoUploading ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseOver={e => { if (!logoUploading) { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.borderColor = 'rgba(99,139,255,0.4)'; } }}
+                    onMouseOut={e => { e.currentTarget.style.background = logoUploading ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
+                  >
+                    {logoUploading ? (
+                      <>
+                        <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />
+                        Telechargement...
+                      </>
+                    ) : (
+                      <>
+                        <Upload size={16} />
+                        Choisir un logo
+                      </>
+                    )}
+                  </button>
+                  <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', marginTop: '10px', margin: '10px 0 0 0' }}>
+                    Formats acceptes : PNG, JPG, SVG. Taille maximum : 2 Mo.
+                  </p>
+
+                  {/* Logo success message */}
+                  {logoSuccess && (
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      marginTop: '12px',
+                      padding: '8px 14px',
+                      background: 'rgba(16,185,129,0.1)',
+                      border: '1px solid rgba(16,185,129,0.2)',
+                      borderRadius: '8px',
+                      fontSize: '12px',
+                      color: '#10b981',
+                      animation: 'fadeIn 0.3s ease',
+                    }}>
+                      <Check size={14} />
+                      {logoSuccess}
+                    </div>
+                  )}
+
+                  {/* Logo error message */}
+                  {logoError && (
+                    <div style={{
+                      marginTop: '12px',
+                      padding: '8px 14px',
+                      background: 'rgba(239,68,68,0.1)',
+                      border: '1px solid rgba(239,68,68,0.2)',
+                      borderRadius: '8px',
+                      fontSize: '12px',
+                      color: '#ef4444',
+                      animation: 'fadeIn 0.3s ease',
+                    }}>
+                      {logoError}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
             {/* Section 1: Informations de l'entreprise */}
             <div style={cardStyle}>
               <div style={sectionHeaderStyle}>
@@ -298,27 +491,29 @@ export default function ParametresPage() {
 
               <div style={gridStyle(2)}>
                 <div>
-                  <label style={labelStyle}>Nom</label>
+                  <label style={labelStyle}>Nom *</label>
                   <input
-                    style={inputStyle}
+                    style={{ ...inputStyle, ...(fieldErrors.name ? { border: inputErrorBorder } : {}) }}
                     placeholder="JL Studio"
                     value={settings.name}
-                    onChange={e => update('name', e.target.value)}
-                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,139,255,0.5)'; }}
-                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
+                    onChange={e => { update('name', e.target.value); if (fieldErrors.name) setFieldErrors(prev => { const { name, ...rest } = prev; return rest; }); }}
+                    onFocus={e => { e.currentTarget.style.borderColor = fieldErrors.name ? 'rgba(239,68,68,0.5)' : 'rgba(99,139,255,0.5)'; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = fieldErrors.name ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.1)'; }}
                   />
+                  {fieldErrors.name && <span style={fieldErrorStyle}>{fieldErrors.name}</span>}
                 </div>
                 <div>
-                  <label style={labelStyle}>Email</label>
+                  <label style={labelStyle}>Email *</label>
                   <input
-                    style={inputStyle}
+                    style={{ ...inputStyle, ...(fieldErrors.email ? { border: inputErrorBorder } : {}) }}
                     type="email"
                     placeholder="contact@jlstudio.fr"
                     value={settings.email}
-                    onChange={e => update('email', e.target.value)}
-                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,139,255,0.5)'; }}
-                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
+                    onChange={e => { update('email', e.target.value); if (fieldErrors.email) setFieldErrors(prev => { const { email, ...rest } = prev; return rest; }); }}
+                    onFocus={e => { e.currentTarget.style.borderColor = fieldErrors.email ? 'rgba(239,68,68,0.5)' : 'rgba(99,139,255,0.5)'; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = fieldErrors.email ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.1)'; }}
                   />
+                  {fieldErrors.email && <span style={fieldErrorStyle}>{fieldErrors.email}</span>}
                 </div>
               </div>
 

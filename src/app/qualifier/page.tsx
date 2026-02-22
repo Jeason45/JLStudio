@@ -748,6 +748,9 @@ export default function QualifierPage() {
                     onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
                   />
                 </div>
+
+                {/* Honeypot anti-spam */}
+                <input name="website" autoComplete="off" tabIndex={-1} style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0 }} />
               </div>
             )}
           </div>

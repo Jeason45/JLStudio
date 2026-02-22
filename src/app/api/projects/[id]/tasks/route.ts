@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { taskCreateInProjectSchema } from '@/lib/validations';
 
 // GET /api/projects/[id]/tasks - Récupérer toutes les tâches d'un projet
 export async function GET(
@@ -39,6 +40,13 @@ export async function POST(
   try {
     const { id } = await params;
     const body = await request.json();
+    const parsed = taskCreateInProjectSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
 
     const task = await prisma.task.create({
       data: {

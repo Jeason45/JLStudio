@@ -347,6 +347,9 @@ export default function ContactParallax() {
                 />
               </div>
 
+              {/* Honeypot anti-spam */}
+              <input name="website" autoComplete="off" tabIndex={-1} className="absolute left-[-9999px] opacity-0 h-0 w-0" />
+
               {/* Callback */}
               <div className="form-field" style={{ opacity: 0 }}>
                 <div className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-4">

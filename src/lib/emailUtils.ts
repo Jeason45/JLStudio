@@ -134,7 +134,7 @@ export function generateSignatureConfirmationHTML(params: {
       <p style="margin:0;color:#059669;font-weight:bold;">Signature Certifiee</p>
       <p style="margin:5px 0 0;font-size:12px;color:#64748b;">Document : ${documentName}<br>Date : ${new Date().toLocaleString('fr-FR')}<br>Hash : ${documentHash.substring(0, 16)}...</p>
     </div>
-    <p style="font-size:12px;color:#94a3b8;margin-top:30px;">Signature conforme eIDAS.</p>
+    <p style="font-size:12px;color:#94a3b8;margin-top:30px;">Signature electronique simple avec preuve cryptographique.</p>
   </div>
 </body></html>`;
 }
