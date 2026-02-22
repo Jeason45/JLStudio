@@ -183,7 +183,7 @@ export default function DocumentsPage() {
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
       <AdminSidebar />
       <div style={{ marginLeft: isMobile ? '0' : `${sidebarWidth}px`, transition: 'margin-left 0.3s ease', padding: isMobile ? '80px 16px 24px 16px' : '40px' }}>
-    <div className="max-w-6xl mx-auto">
+    <div>
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#638BFF', boxShadow: '0 0 12px rgba(99,139,255,0.4)' }} />
