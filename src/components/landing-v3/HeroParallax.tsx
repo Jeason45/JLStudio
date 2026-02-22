@@ -242,7 +242,7 @@ export default function HeroParallax() {
     <section
       ref={sectionRef}
       className="relative bg-black"
-      style={{ height: isMobile ? '350vh' : '300vh' }}
+      style={{ height: isMobile ? '300vh' : '300vh' }}
     >
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Background Image */}
@@ -320,22 +320,22 @@ export default function HeroParallax() {
           className="absolute inset-0 z-[10] flex items-center justify-center will-change-transform"
           style={{ opacity: 0 }}
         >
-          <div className="text-center px-6 max-w-6xl mx-auto" style={{ perspective: 600 }}>
+          <div className="text-center px-6 max-w-5xl mx-auto" style={{ perspective: 600 }}>
             <h1
               ref={h1Ref}
-              className="font-[family-name:var(--font-outfit)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-white leading-[0.95] tracking-tight mb-4"
+              className="font-[family-name:var(--font-outfit)] text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-black text-white leading-[0.95] tracking-tight mb-4"
             >
               Votre Vision
             </h1>
             <h2
               ref={h2Ref}
-              className="font-[family-name:var(--font-outfit)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.95] tracking-tight mb-6 sm:mb-8 text-[#638BFF] md:whitespace-nowrap"
+              className="font-[family-name:var(--font-outfit)] text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-black leading-[0.95] tracking-tight mb-6 sm:mb-8 text-[#638BFF] md:whitespace-nowrap"
             >
               Notre Expertise
             </h2>
             <p
               ref={paraRef}
-              className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/60 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed"
+              className="text-base sm:text-lg md:text-xl lg:text-xl text-white/60 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed"
             >
               Sites web, e-commerce et applications sur mesure pour propulser
               votre activite
