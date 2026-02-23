@@ -309,7 +309,7 @@ export default function HeroParallax() {
             ref={textRef}
             className="text-white font-[family-name:var(--font-outfit)] font-black text-center select-none"
             style={{
-              fontSize: 'clamp(5rem, 20vw, 16rem)',
+              fontSize: isMobile ? 'clamp(7rem, 28vw, 12rem)' : 'clamp(5rem, 20vw, 16rem)',
               lineHeight: 0.85,
               letterSpacing: '-0.03em',
             }}
@@ -359,13 +359,13 @@ export default function HeroParallax() {
             >
               <a
                 href="#contact"
-                className="group relative bg-[#638BFF] text-white font-semibold px-4 py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-xs sm:text-sm md:text-base overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]"
+                className="group relative bg-[#638BFF] text-white font-semibold px-3 py-2 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-[0.7rem] sm:text-sm md:text-base overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]"
               >
                 <span className="relative z-10">Demarrer un projet</span>
               </a>
               <a
                 href="#projets"
-                className="border border-white/20 text-white/80 font-medium px-4 py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-xs sm:text-sm md:text-base hover:border-white/40 hover:text-white transition-all duration-300"
+                className="border border-white/20 text-white/80 font-medium px-3 py-2 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-[0.7rem] sm:text-sm md:text-base hover:border-white/40 hover:text-white transition-all duration-300"
               >
                 Voir nos realisations
               </a>
