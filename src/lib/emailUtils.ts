@@ -49,7 +49,7 @@ export async function sendEmail(params: SendEmailParams) {
 
   try {
     const info = await getTransporter().sendMail({
-      from: `"JL Studio" <${SMTP_CONFIG.auth.user}>`,
+      from: `"JL Studio" <${process.env.SMTP_FROM || SMTP_CONFIG.auth.user}>`,
       to, subject,
       html: htmlContent,
       text: textContent,
