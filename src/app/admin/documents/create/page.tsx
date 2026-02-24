@@ -444,22 +444,8 @@ function CreateDevisContent() {
         throw new Error(err.error || 'Erreur de generation');
       }
 
-      // Get document ID from response header
-      const docId = res.headers.get('X-Document-Id');
-      if (docId) {
-        setSavedDocumentId(docId);
-      }
-
-      // Download the PDF
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
+      // Redirect to documents page after successful generation
+      window.location.href = '/admin/documents';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue');
     } finally {

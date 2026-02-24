@@ -208,6 +208,11 @@ export default function DocumentsPage() {
       if (res.ok) {
         setSendResult({ success: true, message: sendForm.requiresSignature ? 'Lien de signature envoye !' : 'Document envoye !' });
         fetchDocuments();
+        // Auto-close modal after 1.5s
+        setTimeout(() => {
+          setSendModal(null);
+          setSendResult(null);
+        }, 1500);
       } else {
         setSendResult({ success: false, message: json.error || 'Erreur envoi' });
       }
