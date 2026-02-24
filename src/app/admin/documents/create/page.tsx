@@ -283,14 +283,14 @@ function CreateDevisContent() {
     setSearchQuery(contact.name);
     setShowDropdown(false);
 
-    // Facturation = entite (societe ou personne) + adresse physique
+    // Facturation = entite (societe ou personne) + adresse physique + coordonnees
     setClientInfo({
       nom_client: contact.companyName || contact.name || '',
       adresse_client: contact.address || '',
       code_postal_client: contact.postalCode || '',
       ville_client: contact.city || '',
-      telephone_client: '',
-      email_client: '',
+      telephone_client: contact.phone || '',
+      email_client: contact.email || '',
     });
 
     // Attention = personne contact + coordonnees

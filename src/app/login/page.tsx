@@ -27,7 +27,10 @@ export default function LoginPage() {
         return;
       }
 
-      window.location.href = '/admin';
+      // Small delay to let the browser detect successful login and prompt to save credentials
+      setTimeout(() => {
+        window.location.href = '/admin';
+      }, 100);
     } catch {
       setError('Erreur de connexion au serveur');
       setLoading(false);
@@ -39,10 +42,8 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="flex justify-center mb-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-white tracking-tight">
-              JL <span className="text-[#638BFF]">Studio</span>
-            </h2>
-            <p className="text-white/40 text-sm mt-1">CRM</p>
+            <img src="/images/logo-jlstudio.png" alt="JL Studio" className="h-10 w-auto mx-auto" />
+            <p className="text-white/40 text-sm mt-2">CRM</p>
           </div>
         </div>
 
@@ -57,20 +58,21 @@ export default function LoginPage() {
             Connexion
           </h1>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" autoComplete="on">
             <div>
               <label htmlFor="email" className="block text-sm text-white/60 mb-1.5">
                 Email
               </label>
               <input
                 id="email"
+                name="email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-lg bg-white/[0.06] border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-[#638BFF]/50 focus:ring-1 focus:ring-[#638BFF]/30 transition-colors text-sm"
                 placeholder="email@exemple.com"
-                autoComplete="email"
+                autoComplete="username"
               />
             </div>
 
@@ -80,6 +82,7 @@ export default function LoginPage() {
               </label>
               <input
                 id="password"
+                name="password"
                 type="password"
                 required
                 value={password}
