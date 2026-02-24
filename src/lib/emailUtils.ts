@@ -1,4 +1,6 @@
 import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
 import { prisma } from './prisma';
 
 const SMTP_CONFIG = {
@@ -47,24 +49,31 @@ export async function sendEmail(params: SendEmailParams) {
     return { success: false, error: 'SMTP not configured' };
   }
 
+  // Write buffer attachments to temp files (Gmail SMTP requires file paths)
+  const tempFiles: string[] = [];
+  const resolvedAttachments = attachments?.map(a => {
+    if (a.content) {
+      const tmpDir = path.join(process.cwd(), 'storage', 'tmp');
+      if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
+      const tmpPath = path.join(tmpDir, `${Date.now()}_${a.filename}`);
+      fs.writeFileSync(tmpPath, Buffer.from(a.content));
+      tempFiles.push(tmpPath);
+      return { filename: a.filename, path: tmpPath };
+    }
+    return { filename: a.filename, path: a.path! };
+  });
+
   try {
     const info = await getTransporter().sendMail({
       from: `"JL Studio" <${process.env.SMTP_FROM || SMTP_CONFIG.auth.user}>`,
       to, subject,
       html: htmlContent,
       text: textContent,
-      attachments: attachments?.map(a => {
-        if (a.content) {
-          // Properly encode buffer for SMTP: use base64 encoding
-          return {
-            filename: a.filename,
-            content: Buffer.from(a.content).toString('base64'),
-            encoding: 'base64' as const,
-          };
-        }
-        return { filename: a.filename, path: a.path };
-      }),
+      attachments: resolvedAttachments,
     });
+
+    // Clean up temp files
+    tempFiles.forEach(f => { try { fs.unlinkSync(f); } catch {} });
 
     await prisma.mailLog.create({
       data: {
@@ -77,6 +86,9 @@ export async function sendEmail(params: SendEmailParams) {
 
     return { success: true, messageId: info.messageId };
   } catch (error) {
+    // Clean up temp files on error too
+    tempFiles.forEach(f => { try { fs.unlinkSync(f); } catch {} });
+
     await prisma.mailLog.create({
       data: {
         type, subject, to, htmlContent, textContent,
