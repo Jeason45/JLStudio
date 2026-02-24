@@ -68,7 +68,7 @@ export async function sendEmail(params: SendEmailParams) {
     console.log('[EMAIL] Sending to:', to, '| Subject:', subject, '| Attachments:', resolvedAttachments?.length || 0);
 
     const mailOptions: nodemailer.SendMailOptions = {
-      from: `"JL Studio" <${SMTP_CONFIG.auth.user}>`,
+      from: `"JL Studio" <${process.env.SMTP_FROM || SMTP_CONFIG.auth.user}>`,
       to: to.trim(),
       subject: subject.replace(/[^\x20-\x7E\u00C0-\u024F]/g, ''),
       html: htmlContent,
