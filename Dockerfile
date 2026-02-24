@@ -31,6 +31,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
+# Create writable storage directory for generated PDFs
+RUN mkdir -p /app/storage/documents && chown -R nextjs:nodejs /app/storage
+
 USER nextjs
 
 EXPOSE 3000
