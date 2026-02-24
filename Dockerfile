@@ -31,7 +31,12 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Create writable storage directory for generated PDFs
+# Prisma: copy schema + engine for db push at startup
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+
+# Create writable storage directory
 RUN mkdir -p /app/storage/documents && chown -R nextjs:nodejs /app/storage
 
 USER nextjs
@@ -41,4 +46,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+# Run prisma db push (sync schema) then start the server
+CMD npx prisma db push --skip-generate && node server.js
