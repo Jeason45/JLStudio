@@ -336,13 +336,13 @@ export default function HeroParallax() {
           <div className="text-center px-6 max-w-5xl mx-auto" style={{ perspective: 600 }}>
             <h1
               ref={h1Ref}
-              className="font-[family-name:var(--font-outfit)] text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-black text-white leading-[0.95] tracking-tight mb-4"
+              className="font-[family-name:var(--font-outfit)] text-[clamp(2.4rem,10vw,3rem)] sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-black text-white leading-[0.95] tracking-tight mb-4 whitespace-nowrap"
             >
               Votre Vision
             </h1>
             <h2
               ref={h2Ref}
-              className="font-[family-name:var(--font-outfit)] text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-black leading-[0.95] tracking-tight mb-6 sm:mb-8 text-[#638BFF] md:whitespace-nowrap"
+              className="font-[family-name:var(--font-outfit)] text-[clamp(2.4rem,10vw,3rem)] sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-black leading-[0.95] tracking-tight mb-6 sm:mb-8 text-[#638BFF] whitespace-nowrap"
             >
               Notre Expertise
             </h2>
@@ -359,13 +359,13 @@ export default function HeroParallax() {
             >
               <a
                 href="#contact"
-                className="group relative bg-[#638BFF] text-white font-semibold px-3 py-2 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-[0.7rem] sm:text-sm md:text-base overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]"
+                className="group relative bg-[#638BFF] text-white font-semibold px-[clamp(0.9rem,4vw,1.5rem)] py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-[clamp(0.65rem,2.8vw,0.8rem)] sm:text-sm md:text-base overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]"
               >
                 <span className="relative z-10">Demarrer un projet</span>
               </a>
               <a
                 href="#projets"
-                className="border border-white/20 text-white/80 font-medium px-3 py-2 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-[0.7rem] sm:text-sm md:text-base hover:border-white/40 hover:text-white transition-all duration-300"
+                className="border border-white/20 text-white/80 font-medium px-[clamp(0.9rem,4vw,1.5rem)] py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-[clamp(0.65rem,2.8vw,0.8rem)] sm:text-sm md:text-base hover:border-white/40 hover:text-white transition-all duration-300"
               >
                 Voir nos realisations
               </a>
