@@ -53,10 +53,17 @@ export async function sendEmail(params: SendEmailParams) {
       to, subject,
       html: htmlContent,
       text: textContent,
-      attachments: attachments?.map(a => ({
-        filename: a.filename,
-        ...(a.content ? { content: a.content } : { path: a.path }),
-      })),
+      attachments: attachments?.map(a => {
+        if (a.content) {
+          // Properly encode buffer for SMTP: use base64 encoding
+          return {
+            filename: a.filename,
+            content: Buffer.from(a.content).toString('base64'),
+            encoding: 'base64' as const,
+          };
+        }
+        return { filename: a.filename, path: a.path };
+      }),
     });
 
     await prisma.mailLog.create({
