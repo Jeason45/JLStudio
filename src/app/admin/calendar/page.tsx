@@ -418,7 +418,7 @@ export default function CalendarPage() {
   // ─── Render ───────────────────────────────────────────────────────────
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#0a0e1a' }}>
       <AdminSidebar />
 
       <div style={{
@@ -429,7 +429,7 @@ export default function CalendarPage() {
       }}>
         {/* ─── Header ────────────────────────────────────────────────── */}
         <div style={{
-          background: 'linear-gradient(to right, #0a0e1a, #101d30)',
+          background: '#0a0e1a',
           padding: isMobile ? '80px 16px 32px 16px' : '40px 40px 32px 40px',
           borderBottom: '1px solid rgba(255,255,255,0.1)',
         }}>
@@ -468,7 +468,7 @@ export default function CalendarPage() {
                 gap: '16px',
               }}>
                 <div style={{
-                  width: isMobile ? '40px' : '48px', height: isMobile ? '40px' : '48px', borderRadius: '12px',
+                  width: isMobile ? '40px' : '48px', height: isMobile ? '40px' : '48px', borderRadius: '8px',
                   background: `${s.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
                   {s.icon}
@@ -499,7 +499,7 @@ export default function CalendarPage() {
               gap: '8px',
               background: 'rgba(255,255,255,0.05)',
               padding: '6px 12px',
-              borderRadius: '10px',
+              borderRadius: '8px',
               border: '1px solid rgba(255,255,255,0.1)',
             }}>
               <button
@@ -556,7 +556,7 @@ export default function CalendarPage() {
           <button
             onClick={() => openCreateModal()}
             style={{
-              padding: '10px 20px', border: 'none', borderRadius: '10px',
+              padding: '10px 20px', border: 'none', borderRadius: '8px',
               cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px',
               fontSize: '14px', fontWeight: 600,
               background: 'linear-gradient(135deg, #638BFF 0%, #4a6fd4 100%)',
@@ -776,7 +776,7 @@ export default function CalendarPage() {
                         style={{
                           padding: '16px',
                           background: 'rgba(255,255,255,0.04)',
-                          borderRadius: '12px',
+                          borderRadius: '8px',
                           border: '1px solid rgba(255,255,255,0.08)',
                           borderLeft: `3px solid ${STATUS_COLORS[apt.status] || '#6366f1'}`,
                           cursor: 'pointer',
@@ -865,7 +865,7 @@ export default function CalendarPage() {
                       style={{
                         padding: '14px',
                         background: 'rgba(255,255,255,0.04)',
-                        borderRadius: '10px',
+                        borderRadius: '8px',
                         border: '1px solid rgba(255,255,255,0.06)',
                         borderLeft: `3px solid ${STATUS_COLORS[apt.status] || '#6366f1'}`,
                         cursor: 'pointer',

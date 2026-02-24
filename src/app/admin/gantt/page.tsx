@@ -654,7 +654,7 @@ export default function GanttPage() {
             <Link href="/admin/projets" style={{ textDecoration: 'none' }}>
               <button
                 style={{
-                  padding: '10px 16px', borderRadius: '10px',
+                  padding: '10px 16px', borderRadius: '8px',
                   border: `1px solid ${BORDER_COLOR}`, background: 'rgba(255,255,255,0.05)',
                   color: 'rgba(255,255,255,0.7)', fontSize: '13px', fontWeight: 600,
                   cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
@@ -678,11 +678,11 @@ export default function GanttPage() {
                 value={selectedProjectId}
                 onChange={(e) => setSelectedProjectId(e.target.value)}
                 style={{
-                  padding: '10px 40px 10px 40px', borderRadius: '10px',
+                  padding: '10px 40px 10px 40px', borderRadius: '8px',
                   border: `1px solid ${BORDER_COLOR}`, background: 'rgba(255,255,255,0.08)',
                   color: 'white', fontSize: '13px', fontWeight: 600,
                   cursor: 'pointer', outline: 'none', appearance: 'none',
-                  width: '100%', backdropFilter: 'blur(10px)',
+                  width: '100%',
                 }}
                 onFocus={(e) => { e.currentTarget.style.borderColor = PRIMARY; }}
                 onBlur={(e) => { e.currentTarget.style.borderColor = BORDER_COLOR; }}
@@ -699,7 +699,7 @@ export default function GanttPage() {
             </div>
 
             {/* Zoom controls */}
-            <div style={{ display: 'flex', gap: '2px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', border: `1px solid ${BORDER_COLOR}`, padding: '3px' }}>
+            <div style={{ display: 'flex', gap: '2px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: `1px solid ${BORDER_COLOR}`, padding: '3px' }}>
               {(['day', 'week', 'month'] as ZoomLevel[]).map(level => (
                 <button
                   key={level}
@@ -722,7 +722,7 @@ export default function GanttPage() {
                 <button
                   onClick={() => setIsAddTaskModalOpen(true)}
                   style={{
-                    padding: '10px 18px', borderRadius: '10px', border: 'none',
+                    padding: '10px 18px', borderRadius: '8px', border: 'none',
                     background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DARK} 100%)`,
                     color: 'white', fontSize: '13px', fontWeight: 700,
                     cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
@@ -737,7 +737,7 @@ export default function GanttPage() {
                 <button
                   onClick={() => setIsSectionModalOpen(true)}
                   style={{
-                    padding: '10px 18px', borderRadius: '10px',
+                    padding: '10px 18px', borderRadius: '8px',
                     border: `1px solid ${PRIMARY}4d`, background: 'rgba(255,255,255,0.05)',
                     color: 'white', fontSize: '13px', fontWeight: 600,
                     cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
@@ -752,7 +752,7 @@ export default function GanttPage() {
                 <button
                   onClick={() => setIsMilestoneModalOpen(true)}
                   style={{
-                    padding: '10px 18px', borderRadius: '10px',
+                    padding: '10px 18px', borderRadius: '8px',
                     border: `1px solid ${PRIMARY}4d`, background: 'rgba(255,255,255,0.05)',
                     color: 'white', fontSize: '13px', fontWeight: 600,
                     cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
@@ -768,7 +768,7 @@ export default function GanttPage() {
                   <button
                     onClick={handleDeleteAllTasks}
                     style={{
-                      padding: '10px 18px', borderRadius: '10px',
+                      padding: '10px 18px', borderRadius: '8px',
                       border: '1px solid rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.1)',
                       color: '#ef4444', fontSize: '13px', fontWeight: 600,
                       cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
@@ -788,7 +788,7 @@ export default function GanttPage() {
           {selectedProjectId && (
             <div style={{ display: 'flex', gap: '16px', marginTop: '16px', flexWrap: 'wrap' }}>
               <div style={{
-                padding: '12px 16px', borderRadius: '10px',
+                padding: '12px 16px', borderRadius: '8px',
                 background: `linear-gradient(135deg, #10b98126 0%, #10b9810d 100%)`,
                 border: '1px solid #10b9814d', minWidth: '120px',
               }}>
@@ -800,7 +800,7 @@ export default function GanttPage() {
               </div>
 
               <div style={{
-                padding: '12px 16px', borderRadius: '10px',
+                padding: '12px 16px', borderRadius: '8px',
                 background: `linear-gradient(135deg, ${PRIMARY}26 0%, ${PRIMARY}0d 100%)`,
                 border: `1px solid ${PRIMARY}4d`, minWidth: '120px',
               }}>
@@ -812,7 +812,7 @@ export default function GanttPage() {
               </div>
 
               <div style={{
-                padding: '12px 16px', borderRadius: '10px',
+                padding: '12px 16px', borderRadius: '8px',
                 background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER_COLOR}`, minWidth: '160px',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
@@ -825,7 +825,7 @@ export default function GanttPage() {
               </div>
 
               <div style={{
-                padding: '12px 16px', borderRadius: '10px',
+                padding: '12px 16px', borderRadius: '8px',
                 background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER_COLOR}`, minWidth: '160px',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
@@ -1621,7 +1621,7 @@ export default function GanttPage() {
                 <button
                   onClick={() => setEditingTask(prev => ({ ...prev, isCriticalPath: !prev.isCriticalPath }))}
                   style={{
-                    width: '44px', height: '24px', borderRadius: '12px', border: 'none',
+                    width: '44px', height: '24px', borderRadius: '8px', border: 'none',
                     background: editingTask.isCriticalPath ? '#ef4444' : 'rgba(255,255,255,0.15)',
                     cursor: 'pointer', position: 'relative', transition: 'background 0.2s', flexShrink: 0,
                   }}

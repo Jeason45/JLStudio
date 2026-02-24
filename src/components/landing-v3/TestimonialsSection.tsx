@@ -142,7 +142,7 @@ export default function TestimonialsSection() {
     <section
       id="temoignages"
       ref={sectionRef}
-      className="relative py-20 sm:py-32 md:py-40 overflow-hidden bg-black"
+      className="relative py-20 sm:py-28 md:py-32 overflow-hidden bg-black"
     >
       {/* Background image — parallax */}
       <div className="absolute inset-0 overflow-hidden">
@@ -174,7 +174,7 @@ export default function TestimonialsSection() {
           <SplitTextReveal
             tag="h2"
             type="words"
-            className="font-[family-name:var(--font-outfit)] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight"
+            className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight"
           >
             Pourquoi Nous
           </SplitTextReveal>

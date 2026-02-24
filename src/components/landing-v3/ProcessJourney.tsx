@@ -309,7 +309,7 @@ export default function ProcessJourney() {
             <div
               key={i}
               data-step
-              className="relative py-16 md:py-24 lg:py-32 xl:py-40"
+              className="relative py-16 md:py-24 lg:py-28 xl:py-32"
             >
               {/* Node on the line */}
               <div
@@ -382,7 +382,7 @@ export default function ProcessJourney() {
                     {/* Step number */}
                     <span
                       data-number
-                      className="font-[family-name:var(--font-outfit)] text-6xl lg:text-7xl font-black text-[#638BFF]/20 block mb-3 leading-none will-change-transform"
+                      className="font-[family-name:var(--font-outfit)] text-5xl lg:text-6xl font-black text-[#638BFF]/20 block mb-3 leading-none will-change-transform"
                       style={{ opacity: 0 }}
                     >
                       {step.number}
@@ -391,7 +391,7 @@ export default function ProcessJourney() {
                     {/* Title */}
                     <h3
                       data-title
-                      className="font-[family-name:var(--font-outfit)] text-4xl md:text-5xl lg:text-7xl font-black text-white mb-5 leading-[0.95] tracking-tight relative will-change-transform lg:whitespace-nowrap"
+                      className="font-[family-name:var(--font-outfit)] text-3xl md:text-4xl lg:text-4xl font-black text-white mb-5 leading-[0.95] tracking-tight relative will-change-transform lg:whitespace-nowrap"
                     >
                       {step.title}
                     </h3>

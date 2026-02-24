@@ -54,11 +54,11 @@ export default function EmailsPage() {
   ];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#0a0e1a' }}>
       <AdminSidebar />
       <div style={{ flex: 1, marginLeft: isMobile ? '0' : `${sidebarWidth}px`, transition: 'margin-left 0.3s ease' }}>
         {/* Header */}
-        <div style={{ background: 'linear-gradient(to right, #0a0e1a, #101d30)', padding: isMobile ? '80px 16px 0 16px' : '32px 40px 0 40px', color: 'white' }}>
+        <div style={{ background: '#0a0e1a', padding: isMobile ? '80px 16px 0 16px' : '32px 40px 0 40px', color: 'white' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
             <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)', boxShadow: '0 0 12px rgba(96,165,250,0.4)' }} />
             <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(96,165,250,0.3) 0%, transparent 100%)' }} />
@@ -68,7 +68,7 @@ export default function EmailsPage() {
           {/* Stats Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '32px' }}>
             {stats.map(s => (
-              <div key={s.label} style={{ background: 'rgba(255,255,255,0.1)', padding: '20px', borderRadius: '12px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div key={s.label} style={{ background: 'rgba(255,255,255,0.1)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{s.label}</span>
                 <div style={{ fontSize: '28px', fontWeight: 700, marginTop: '8px', color: 'white' }}>{s.value}</div>
               </div>
@@ -77,14 +77,14 @@ export default function EmailsPage() {
         </div>
 
         {/* Content */}
-        <div style={{ background: 'linear-gradient(to right, #0a0e1a, #101d30)', minHeight: 'calc(100vh - 280px)', padding: isMobile ? '24px 16px' : '32px 40px' }}>
+        <div style={{ background: '#0a0e1a', minHeight: 'calc(100vh - 280px)', padding: isMobile ? '24px 16px' : '32px 40px' }}>
           {/* Filters */}
           <div style={{ display: 'flex', gap: '16px', marginBottom: '32px', alignItems: 'center', flexWrap: 'wrap' }}>
             <input type="text" placeholder="Rechercher par email ou sujet..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-              style={{ flex: '1 1 300px', padding: '14px 20px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '14px', outline: 'none', backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }} />
+              style={{ flex: '1 1 300px', padding: '14px 20px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '14px', outline: 'none', backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }} />
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               <button onClick={() => setStatusFilter('all')} style={{
-                padding: '10px 18px', borderRadius: '10px', border: '1px solid',
+                padding: '10px 18px', borderRadius: '8px', border: '1px solid',
                 borderColor: statusFilter === 'all' ? '#60a5fa' : 'rgba(255,255,255,0.1)',
                 fontSize: '13px', fontWeight: 600, cursor: 'pointer',
                 backgroundColor: statusFilter === 'all' ? 'rgba(96,165,250,0.2)' : 'rgba(255,255,255,0.05)',
@@ -96,7 +96,7 @@ export default function EmailsPage() {
                 { key: 'pending', label: 'En attente', color: '#f59e0b' },
               ].map(f => (
                 <button key={f.key} onClick={() => setStatusFilter(f.key)} style={{
-                  padding: '10px 18px', borderRadius: '10px', border: '1px solid',
+                  padding: '10px 18px', borderRadius: '8px', border: '1px solid',
                   borderColor: statusFilter === f.key ? f.color : 'rgba(255,255,255,0.1)',
                   fontSize: '13px', fontWeight: 600, cursor: 'pointer',
                   backgroundColor: statusFilter === f.key ? `${f.color}30` : 'rgba(255,255,255,0.05)',
@@ -107,7 +107,7 @@ export default function EmailsPage() {
           </div>
 
           {/* Table */}
-          <div style={{ border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.05)' }}>
+          <div style={{ border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.05)' }}>
             {loading ? (
               <div style={{ padding: '60px', textAlign: 'center', color: 'rgba(255,255,255,0.7)' }}>Chargement...</div>
             ) : filtered.length === 0 ? (
@@ -120,7 +120,7 @@ export default function EmailsPage() {
                   return (
                     <div key={email.id}
                       onClick={() => email.error ? setExpandedId(isExpanded ? null : email.id) : undefined}
-                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '16px', cursor: email.error ? 'pointer' : 'default', transition: 'all 0.2s' }}>
+                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '16px', cursor: email.error ? 'pointer' : 'default', transition: 'all 0.2s' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                         <div style={{ overflow: 'hidden', maxWidth: '60%' }}>
                           <span style={{ fontSize: '13px', fontWeight: 600, color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>

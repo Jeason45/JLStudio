@@ -288,7 +288,7 @@ export default function ServicesScrollPin() {
               {/* Subtitle */}
               <p
                 data-subtitle
-                className="text-[#638BFF] text-[10px] sm:text-xs font-bold tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-4 sm:mb-6 relative"
+                className="text-[#638BFF]/70 text-[10px] sm:text-xs font-bold tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-4 sm:mb-6 relative"
               >
                 {service.subtitle}
               </p>
@@ -296,7 +296,7 @@ export default function ServicesScrollPin() {
               {/* Title */}
               <h3
                 data-title
-                className="font-[family-name:var(--font-outfit)] text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black text-white mb-4 sm:mb-6 leading-[0.95] tracking-tight relative"
+                className="font-[family-name:var(--font-outfit)] text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-black text-white mb-4 sm:mb-6 leading-[0.95] tracking-tight relative"
               >
                 {service.title}
               </h3>

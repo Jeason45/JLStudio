@@ -9,7 +9,7 @@ export default function FooterMinimal() {
             <img
               src="/images/logo-jlstudio.png"
               alt="JL Studio"
-              className="h-7 sm:h-9 w-auto mx-auto"
+              className="h-7 sm:h-8 w-auto mx-auto"
             />
             <p className="text-xs sm:text-sm text-white/35 mt-1.5 sm:mt-2">
               Sites web, e-commerce &amp; applications sur mesure
@@ -44,7 +44,7 @@ export default function FooterMinimal() {
           </div>
 
           {/* Copyright + SIRET */}
-          <p className="text-[0.6rem] sm:text-xs text-white/25">
+          <p className="text-[0.65rem] sm:text-xs text-white/25">
             &copy; {new Date().getFullYear()} JL Studio — SIRET 894 838 317 00044
           </p>
         </div>

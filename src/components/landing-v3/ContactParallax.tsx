@@ -174,13 +174,13 @@ export default function ContactParallax() {
           {/* Title overlay */}
           <div className={`relative z-10 flex items-end h-full ${isMobile ? 'p-5 pb-6' : 'p-12 lg:p-20'}`}>
             <div>
-              <p className="text-[#638BFF]/80 text-xs tracking-[0.4em] uppercase mb-3 sm:mb-4">
+              <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-3 sm:mb-4">
                 Contact
               </p>
               <SplitTextReveal
                 tag="h2"
                 type="chars"
-                className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[0.95]"
+                className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-5xl font-black text-white leading-[0.95]"
               >
                 Votre Projet
               </SplitTextReveal>

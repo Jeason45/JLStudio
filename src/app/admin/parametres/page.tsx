@@ -182,7 +182,7 @@ export default function ParametresPage() {
     width: '100%',
     padding: '12px 16px',
     border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: '10px',
+    borderRadius: '8px',
     fontSize: '14px',
     outline: 'none',
     backgroundColor: 'rgba(255,255,255,0.05)',
@@ -239,7 +239,7 @@ export default function ParametresPage() {
   const sectionIconStyle = (color: string): React.CSSProperties => ({
     width: '40px',
     height: '40px',
-    borderRadius: '10px',
+    borderRadius: '8px',
     background: `${color}15`,
     color: color,
     display: 'flex',
@@ -269,7 +269,7 @@ export default function ParametresPage() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
+      <div style={{ display: 'flex', minHeight: '100vh', background: '#0a0e1a' }}>
         <AdminSidebar />
         <div style={{ flex: 1, marginLeft: isMobile ? '0' : `${sidebarWidth}px`, transition: 'margin-left 0.3s ease', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.7)' }}>
@@ -283,11 +283,11 @@ export default function ParametresPage() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#0a0e1a' }}>
       <AdminSidebar />
       <div style={{ flex: 1, marginLeft: isMobile ? '0' : `${sidebarWidth}px`, transition: 'margin-left 0.3s ease' }}>
         {/* Header */}
-        <div style={{ background: 'linear-gradient(to right, #0a0e1a, #101d30)', padding: isMobile ? '80px 16px 32px 16px' : '40px 40px 32px 40px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+        <div style={{ background: '#0a0e1a', padding: isMobile ? '80px 16px 32px 16px' : '40px 40px 32px 40px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
             <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'linear-gradient(135deg, #638BFF 0%, #4a6fd4 100%)', boxShadow: '0 0 12px rgba(99,139,255,0.4)' }} />
             <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(99,139,255,0.3) 0%, transparent 100%)' }} />
@@ -295,7 +295,7 @@ export default function ParametresPage() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ width: '56px', height: '56px', borderRadius: '12px', background: 'rgba(99,139,255,0.15)', color: '#638BFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '56px', height: '56px', borderRadius: '8px', background: 'rgba(99,139,255,0.15)', color: '#638BFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Settings size={28} />
             </div>
             <div>
@@ -308,7 +308,7 @@ export default function ParametresPage() {
         </div>
 
         {/* Content */}
-        <div style={{ padding: isMobile ? '24px 16px' : '40px', background: 'linear-gradient(to right, #0a0e1a, #101d30)', minHeight: 'calc(100vh - 200px)' }}>
+        <div style={{ padding: isMobile ? '24px 16px' : '40px', background: '#0a0e1a', minHeight: 'calc(100vh - 200px)' }}>
           {/* Success banner */}
           {success && (
             <div style={{
@@ -318,7 +318,7 @@ export default function ParametresPage() {
               padding: '16px 20px',
               background: 'rgba(16,185,129,0.1)',
               border: '1px solid rgba(16,185,129,0.2)',
-              borderRadius: '12px',
+              borderRadius: '8px',
               marginBottom: '24px',
               animation: 'fadeIn 0.3s ease',
             }}>
@@ -338,7 +338,7 @@ export default function ParametresPage() {
               padding: '16px 20px',
               background: 'rgba(239,68,68,0.1)',
               border: '1px solid rgba(239,68,68,0.2)',
-              borderRadius: '12px',
+              borderRadius: '8px',
               marginBottom: '24px',
               fontSize: '14px',
               color: '#ef4444',
@@ -365,7 +365,7 @@ export default function ParametresPage() {
                 <div style={{
                   width: '120px',
                   height: '120px',
-                  borderRadius: '12px',
+                  borderRadius: '8px',
                   border: '2px dashed rgba(255,255,255,0.15)',
                   background: 'rgba(255,255,255,0.03)',
                   display: 'flex',
@@ -414,7 +414,7 @@ export default function ParametresPage() {
                       color: logoUploading ? 'rgba(255,255,255,0.4)' : 'white',
                       fontSize: '13px',
                       fontWeight: 500,
-                      borderRadius: '10px',
+                      borderRadius: '8px',
                       border: '1px solid rgba(255,255,255,0.12)',
                       cursor: logoUploading ? 'not-allowed' : 'pointer',
                       transition: 'all 0.2s',
@@ -762,7 +762,7 @@ export default function ParametresPage() {
                   color: 'white',
                   fontSize: '15px',
                   fontWeight: 600,
-                  borderRadius: '12px',
+                  borderRadius: '8px',
                   border: 'none',
                   cursor: saving ? 'not-allowed' : 'pointer',
                   transition: 'all 0.2s',

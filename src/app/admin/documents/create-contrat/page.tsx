@@ -26,7 +26,7 @@ interface LignePrestation {
 export default function CreateContratPage() {
   const { sidebarWidth, isMobile } = useSidebar();
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
+    <div style={{ minHeight: '100vh', background: '#0a0e1a' }}>
       <AdminSidebar />
       <div style={{ marginLeft: isMobile ? '0' : `${sidebarWidth}px`, transition: 'margin-left 0.3s ease', padding: isMobile ? '80px 16px 24px 16px' : '40px' }}>
         <Suspense fallback={<div className="flex items-center justify-center h-[60vh]"><div className="w-8 h-8 border-2 border-[#638BFF]/30 border-t-[#638BFF] rounded-full animate-spin" /></div>}>
@@ -345,7 +345,7 @@ function CreateContratContent() {
 
       <div className="space-y-6">
         {/* Infos Contrat */}
-        <section className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-5">
+        <section className="bg-[#0d1321] border border-white/[0.06] rounded-lg p-5">
           <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-4">
             Informations du contrat
           </h2>
@@ -375,7 +375,7 @@ function CreateContratContent() {
         </section>
 
         {/* Client */}
-        <section className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-5">
+        <section className="bg-[#0d1321] border border-white/[0.06] rounded-lg p-5">
           <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-4">
             Le Client
           </h2>
@@ -445,7 +445,7 @@ function CreateContratContent() {
         </section>
 
         {/* Description de la prestation */}
-        <section className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-5">
+        <section className="bg-[#0d1321] border border-white/[0.06] rounded-lg p-5">
           <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-4">
             Description de la prestation
           </h2>
@@ -473,7 +473,7 @@ function CreateContratContent() {
         </section>
 
         {/* Lignes de prestations */}
-        <section className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-5">
+        <section className="bg-[#0d1321] border border-white/[0.06] rounded-lg p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider">
               Detail des prestations
@@ -553,7 +553,7 @@ function CreateContratContent() {
         </section>
 
         {/* Conditions financieres */}
-        <section className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-5">
+        <section className="bg-[#0d1321] border border-white/[0.06] rounded-lg p-5">
           <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-4">
             Conditions financieres
           </h2>
@@ -572,7 +572,7 @@ function CreateContratContent() {
         </section>
 
         {/* Recap + Bouton */}
-        <div className="flex items-center justify-between bg-[#0d1321] border border-white/[0.06] rounded-xl p-5">
+        <div className="flex items-center justify-between bg-[#0d1321] border border-white/[0.06] rounded-lg p-5">
           <div className="space-y-1">
             <div className="text-sm text-white/40">
               Sous-total HT : <span className="text-white/70 font-medium">{fmt(sousTotal)} EUR</span>
@@ -595,7 +595,7 @@ function CreateContratContent() {
 
           <button onClick={handleGenerate}
                   disabled={loading || !clientInfo.nom_client || lignes.every((l) => !l.description)}
-                  className="flex items-center gap-2 px-6 py-3 bg-[#638BFF] text-white font-semibold rounded-xl hover:bg-[#638BFF]/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+                  className="flex items-center gap-2 px-6 py-3 bg-[#638BFF] text-white font-semibold rounded-lg hover:bg-[#638BFF]/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
             {loading ? (
               <>
                 <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
@@ -617,7 +617,7 @@ function CreateContratContent() {
 
         {/* Success panel */}
         {savedDocumentId && (
-          <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-5">
+          <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-5">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
                 <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

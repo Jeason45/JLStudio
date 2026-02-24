@@ -105,18 +105,18 @@ export default function LeadsPage() {
   ];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#0a0e1a' }}>
       <AdminSidebar />
       <div style={{ flex: 1, marginLeft: isMobile ? '0' : `${sidebarWidth}px`, transition: 'margin-left 0.3s ease' }}>
         {/* Header */}
-        <div style={{ background: 'linear-gradient(to right, #0a0e1a, #101d30)', padding: isMobile ? '80px 16px 0 16px' : '32px 40px 0 40px', color: 'white' }}>
+        <div style={{ background: '#0a0e1a', padding: isMobile ? '80px 16px 0 16px' : '40px 40px 0 40px', color: 'white' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
             <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'linear-gradient(135deg, #638BFF 0%, #4a6fd4 100%)', boxShadow: '0 0 12px rgba(99,139,255,0.4)' }} />
             <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(99,139,255,0.3) 0%, transparent 100%)' }} />
             <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Leads</span>
             <button onClick={() => setShowCreateModal(true)} style={{
               display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px',
-              borderRadius: '10px', border: 'none', background: 'linear-gradient(135deg, #638BFF, #4a6fd4)',
+              borderRadius: '8px', border: 'none', background: 'linear-gradient(135deg, #638BFF, #4a6fd4)',
               color: 'white', fontSize: '13px', fontWeight: 600, cursor: 'pointer', marginLeft: '12px'
             }}><Plus size={16} />Ajouter un lead</button>
           </div>
@@ -124,7 +124,7 @@ export default function LeadsPage() {
           {/* Stats Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '32px' }}>
             {stats.map(s => (
-              <div key={s.label} style={{ background: 'rgba(255,255,255,0.1)', padding: '20px', borderRadius: '12px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div key={s.label} style={{ background: 'rgba(255,255,255,0.1)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{s.label}</span>
                 <div style={{ fontSize: '28px', fontWeight: 700, marginTop: '8px', color: 'white' }}>{s.value}</div>
               </div>
@@ -139,7 +139,7 @@ export default function LeadsPage() {
             ].map(v => (
               <button key={v.mode} onClick={() => setViewMode(v.mode)} style={{
                 display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 20px',
-                borderRadius: '10px', border: 'none',
+                borderRadius: '8px', border: 'none',
                 background: viewMode === v.mode ? 'rgba(99,139,255,0.2)' : 'rgba(255,255,255,0.05)',
                 color: viewMode === v.mode ? '#638BFF' : 'rgba(255,255,255,0.7)',
                 fontSize: '14px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s'
@@ -151,7 +151,7 @@ export default function LeadsPage() {
         </div>
 
         {/* Content */}
-        <div style={{ background: 'linear-gradient(to right, #0a0e1a, #101d30)', minHeight: 'calc(100vh - 280px)', padding: isMobile ? '24px 16px' : '32px 40px' }}>
+        <div style={{ background: '#0a0e1a', minHeight: 'calc(100vh - 280px)', padding: isMobile ? '24px 16px' : '32px 40px' }}>
           {viewMode === 'kanban' ? (
             <LeadsKanbanView
               contacts={filtered}
@@ -170,10 +170,10 @@ export default function LeadsPage() {
               {/* Filters */}
               <div style={{ display: 'flex', gap: '16px', marginBottom: '32px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input type="text" placeholder="Rechercher..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                  style={{ flex: '1 1 300px', padding: '14px 20px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '14px', outline: 'none', backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }} />
+                  style={{ flex: '1 1 300px', padding: '14px 20px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '14px', outline: 'none', backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }} />
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <button onClick={() => setStatusFilter('all')} style={{
-                    padding: isMobile ? '8px 12px' : '10px 18px', borderRadius: '10px', border: '1px solid',
+                    padding: isMobile ? '8px 12px' : '10px 18px', borderRadius: '8px', border: '1px solid',
                     borderColor: statusFilter === 'all' ? '#638BFF' : 'rgba(255,255,255,0.1)',
                     fontSize: isMobile ? '12px' : '13px', fontWeight: 600, cursor: 'pointer',
                     backgroundColor: statusFilter === 'all' ? 'rgba(99,139,255,0.2)' : 'rgba(255,255,255,0.05)',
@@ -181,7 +181,7 @@ export default function LeadsPage() {
                   }}>Tous</button>
                   {Object.entries(STATUS_CONFIG).filter(([k]) => k !== 'client').map(([key, cfg]) => (
                     <button key={key} onClick={() => setStatusFilter(key)} style={{
-                      padding: isMobile ? '8px 12px' : '10px 18px', borderRadius: '10px', border: '1px solid',
+                      padding: isMobile ? '8px 12px' : '10px 18px', borderRadius: '8px', border: '1px solid',
                       borderColor: statusFilter === key ? cfg.color : 'rgba(255,255,255,0.1)',
                       fontSize: isMobile ? '12px' : '13px', fontWeight: 600, cursor: 'pointer',
                       backgroundColor: statusFilter === key ? `${cfg.color}30` : 'rgba(255,255,255,0.05)',
@@ -192,7 +192,7 @@ export default function LeadsPage() {
               </div>
 
               {/* Table */}
-              <div style={{ border: isMobile ? 'none' : '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', overflow: 'hidden', backgroundColor: isMobile ? 'transparent' : 'rgba(255,255,255,0.05)' }}>
+              <div style={{ border: isMobile ? 'none' : '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', overflow: 'hidden', backgroundColor: isMobile ? 'transparent' : 'rgba(255,255,255,0.05)' }}>
                 {loading ? (
                   <div style={{ padding: '60px', textAlign: 'center', color: 'rgba(255,255,255,0.7)' }}>Chargement...</div>
                 ) : filtered.length === 0 ? (
@@ -201,7 +201,7 @@ export default function LeadsPage() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     {filtered.map(contact => (
                       <div key={contact.id} onClick={() => setSelectedContactId(contact.id)}
-                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '16px', cursor: 'pointer' }}>
+                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '16px', cursor: 'pointer' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                           <span style={{ fontSize: '14px', fontWeight: 600, color: 'white' }}>{contact.companyName || contact.name}</span>
                           <span style={{
@@ -314,14 +314,14 @@ export default function LeadsPage() {
               <div key={f.key} style={{ marginBottom: '16px' }}>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{f.label}</label>
                 <input type={f.type} placeholder={f.placeholder} value={(newLead as Record<string, string>)[f.key]} onChange={e => setNewLead(prev => ({ ...prev, [f.key]: e.target.value }))}
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
               </div>
             ))}
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Type de projet</label>
                 <select value={newLead.projectType} onChange={e => setNewLead(prev => ({ ...prev, projectType: e.target.value }))}
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none' }}>
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none' }}>
                   <option value="">Selectionner</option>
                   <option value="vitrine">Site vitrine</option>
                   <option value="ecommerce">E-commerce</option>
@@ -334,7 +334,7 @@ export default function LeadsPage() {
               <div>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Budget</label>
                 <select value={newLead.budget} onChange={e => setNewLead(prev => ({ ...prev, budget: e.target.value }))}
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none' }}>
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none' }}>
                   <option value="">Selectionner</option>
                   <option value="<2000">&lt; 2 000 EUR</option>
                   <option value="2000-5000">2 000 - 5 000 EUR</option>
@@ -347,7 +347,7 @@ export default function LeadsPage() {
               <div>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Source</label>
                 <select value={newLead.source} onChange={e => setNewLead(prev => ({ ...prev, source: e.target.value }))}
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none' }}>
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none' }}>
                   <option value="manual">Ajout manuel</option>
                   <option value="site">Site web</option>
                   <option value="recommandation">Recommandation</option>
@@ -359,11 +359,11 @@ export default function LeadsPage() {
             <div style={{ marginBottom: '24px' }}>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Notes</label>
               <textarea placeholder="Notes..." value={newLead.notes} onChange={e => setNewLead(prev => ({ ...prev, notes: e.target.value }))} rows={3}
-                style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }} />
+                style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '14px', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }} />
             </div>
             <button onClick={handleCreateLead} disabled={creating || !newLead.name.trim()}
               style={{
-                width: '100%', padding: '14px', borderRadius: '10px', border: 'none',
+                width: '100%', padding: '14px', borderRadius: '8px', border: 'none',
                 background: !newLead.name.trim() ? 'rgba(255,255,255,0.1)' : 'linear-gradient(135deg, #638BFF, #4a6fd4)',
                 color: 'white', fontSize: '14px', fontWeight: 600, cursor: newLead.name.trim() ? 'pointer' : 'not-allowed'
               }}>

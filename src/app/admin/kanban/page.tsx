@@ -621,7 +621,7 @@ export default function KanbanPage() {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#0a0e1a' }}>
       <AdminSidebar />
 
       <div style={{
@@ -725,7 +725,7 @@ export default function KanbanPage() {
                   setShowCreateModal(true);
                 }}
                 style={{
-                  padding: '10px 20px', borderRadius: '10px', border: 'none',
+                  padding: '10px 20px', borderRadius: '8px', border: 'none',
                   background: 'linear-gradient(135deg, #638BFF 0%, #4a6fd4 100%)',
                   color: 'white', fontSize: '14px', fontWeight: 600, cursor: 'pointer',
                   display: 'flex', alignItems: 'center', gap: '8px',
@@ -743,7 +743,7 @@ export default function KanbanPage() {
                 onClick={handleRefresh}
                 disabled={refreshing}
                 style={{
-                  padding: '10px 20px', borderRadius: '10px',
+                  padding: '10px 20px', borderRadius: '8px',
                   border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.08)',
                   color: 'white', fontSize: '14px', fontWeight: 600,
                   cursor: refreshing ? 'not-allowed' : 'pointer',
@@ -762,7 +762,7 @@ export default function KanbanPage() {
               <button
                 onClick={openSettings}
                 style={{
-                  padding: '10px 20px', borderRadius: '10px',
+                  padding: '10px 20px', borderRadius: '8px',
                   border: '1px solid rgba(99, 139, 255, 0.3)', background: 'rgba(255,255,255,0.05)',
                   color: '#638BFF', fontSize: '14px', fontWeight: 600, cursor: 'pointer',
                   display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s',
@@ -892,7 +892,7 @@ export default function KanbanPage() {
                         ...(isMobile ? { scrollSnapAlign: 'start' as const } : {}),
                         display: 'flex', flexDirection: 'column',
                         background: 'rgba(255,255,255,0.03)',
-                        borderRadius: '12px',
+                        borderRadius: '8px',
                         border: isOverLimit
                           ? '1px solid rgba(239, 68, 68, 0.4)'
                           : '1px solid rgba(255,255,255,0.08)',
@@ -930,14 +930,14 @@ export default function KanbanPage() {
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span style={{
-                            padding: '2px 8px', borderRadius: '10px', fontSize: '12px', fontWeight: 700,
+                            padding: '2px 8px', borderRadius: '8px', fontSize: '12px', fontWeight: 700,
                             background: `${column.color}20`, color: column.color,
                           }}>
                             {count}
                           </span>
                           {column.wipLimit !== null && (
                             <span style={{
-                              padding: '2px 6px', borderRadius: '10px', fontSize: '10px', fontWeight: 600,
+                              padding: '2px 6px', borderRadius: '8px', fontSize: '10px', fontWeight: 600,
                               background: isOverLimit ? 'rgba(239, 68, 68, 0.2)' : isAtLimit ? 'rgba(245, 158, 11, 0.15)' : 'rgba(255,255,255,0.06)',
                               color: isOverLimit ? '#ef4444' : isAtLimit ? '#f59e0b' : 'rgba(255,255,255,0.4)',
                               border: isOverLimit ? '1px solid rgba(239, 68, 68, 0.4)' : 'none',
@@ -997,7 +997,7 @@ export default function KanbanPage() {
                                   border: selectedTask?.id === task.id
                                     ? '1px solid rgba(99, 139, 255, 0.4)'
                                     : '1px solid rgba(255,255,255,0.08)',
-                                  borderRadius: '10px',
+                                  borderRadius: '8px',
                                   padding: '12px',
                                   cursor: 'grab',
                                   transition: 'all 0.15s',
@@ -1593,7 +1593,7 @@ export default function KanbanPage() {
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                             {selectedTask.tags.split(',').map((tag, idx) => (
                               <span key={idx} style={{
-                                padding: '3px 10px', borderRadius: '12px',
+                                padding: '3px 10px', borderRadius: '8px',
                                 background: 'rgba(99, 139, 255, 0.1)', border: '1px solid rgba(99, 139, 255, 0.3)',
                                 fontSize: '11px', fontWeight: 600, color: '#638BFF',
                               }}>
@@ -1786,7 +1786,7 @@ export default function KanbanPage() {
               {editColumns.map((col, idx) => (
                 <div key={col.id} style={{
                   background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: '10px', padding: '14px',
+                  borderRadius: '8px', padding: '14px',
                   display: 'grid', gridTemplateColumns: '1fr 80px 80px 100px', gap: '10px', alignItems: 'center',
                 }}>
                   <div>

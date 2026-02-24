@@ -341,7 +341,7 @@ export default function BriefPage() {
     width: '100%',
     padding: '14px 16px',
     border: '1px solid rgba(255,255,255,0.12)',
-    borderRadius: '10px',
+    borderRadius: '8px',
     fontSize: '14px',
     outline: 'none',
     backgroundColor: 'rgba(255,255,255,0.06)',
@@ -666,7 +666,7 @@ export default function BriefPage() {
               onClick={() => toggleFeature(feature.key)}
               style={{
                 padding: '16px 20px',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 border: `1px solid ${isSelected ? (selectedType?.color || '#638BFF') + '80' : 'rgba(255,255,255,0.1)'}`,
                 background: isSelected ? `${selectedType?.color || '#638BFF'}15` : 'rgba(255,255,255,0.04)',
                 cursor: 'pointer',
@@ -869,7 +869,7 @@ export default function BriefPage() {
                 onClick={() => updateField('budget', opt.value)}
                 style={{
                   padding: '18px 20px',
-                  borderRadius: '12px',
+                  borderRadius: '8px',
                   border: `1px solid ${isSelected ? (selectedType?.color || '#638BFF') + '80' : 'rgba(255,255,255,0.1)'}`,
                   background: isSelected ? `${selectedType?.color || '#638BFF'}15` : 'rgba(255,255,255,0.04)',
                   cursor: 'pointer',
@@ -939,7 +939,7 @@ export default function BriefPage() {
 
     const summaryBlockStyle: React.CSSProperties = {
       background: 'rgba(255,255,255,0.04)',
-      borderRadius: '12px',
+      borderRadius: '8px',
       padding: '20px',
       marginBottom: '16px',
       border: '1px solid rgba(255,255,255,0.08)',
@@ -975,7 +975,7 @@ export default function BriefPage() {
           alignItems: 'center',
           gap: '10px',
           padding: '10px 20px',
-          borderRadius: '12px',
+          borderRadius: '8px',
           background: `${selectedType.color}15`,
           border: `1px solid ${selectedType.color}40`,
           marginBottom: '24px',
@@ -1100,7 +1100,7 @@ export default function BriefPage() {
         <div style={{
           marginTop: '24px',
           padding: '20px',
-          borderRadius: '12px',
+          borderRadius: '8px',
           background: 'rgba(255,255,255,0.04)',
           border: '1px solid rgba(255,255,255,0.08)',
         }}>
@@ -1147,7 +1147,7 @@ export default function BriefPage() {
           <div style={{
             marginTop: '16px',
             padding: '14px 20px',
-            borderRadius: '10px',
+            borderRadius: '8px',
             background: 'rgba(239,68,68,0.1)',
             border: '1px solid rgba(239,68,68,0.3)',
             color: '#ef4444',
@@ -1202,7 +1202,7 @@ export default function BriefPage() {
             }}
             style={{
               padding: '14px 28px',
-              borderRadius: '12px',
+              borderRadius: '8px',
               border: '1px solid rgba(255,255,255,0.15)',
               background: 'rgba(255,255,255,0.08)',
               color: 'white',
@@ -1222,7 +1222,7 @@ export default function BriefPage() {
               onClick={() => window.location.href = '/admin/projets'}
               style={{
                 padding: '14px 28px',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 border: 'none',
                 background: `linear-gradient(135deg, ${selectedType.color} 0%, ${selectedType.color}cc 100%)`,
                 color: 'white',
@@ -1261,7 +1261,7 @@ export default function BriefPage() {
     <div style={{
       display: 'flex',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)',
+      background: '#0a0e1a',
     }}>
       <AdminSidebar />
 
@@ -1292,7 +1292,7 @@ export default function BriefPage() {
                   alignItems: 'center',
                   gap: '8px',
                   padding: '10px 16px',
-                  borderRadius: '10px',
+                  borderRadius: '8px',
                   border: '1px solid rgba(255,255,255,0.1)',
                   background: 'rgba(255,255,255,0.06)',
                   color: 'rgba(255,255,255,0.7)',
@@ -1315,7 +1315,7 @@ export default function BriefPage() {
                 alignItems: 'center',
                 gap: '10px',
                 padding: '8px 16px',
-                borderRadius: '10px',
+                borderRadius: '8px',
                 background: `${selectedType.color}12`,
                 border: `1px solid ${selectedType.color}30`,
               }}>
@@ -1354,7 +1354,7 @@ export default function BriefPage() {
                     disabled={!isStepValid(currentStep)}
                     style={{
                       padding: '14px 32px',
-                      borderRadius: '12px',
+                      borderRadius: '8px',
                       border: 'none',
                       background: isStepValid(currentStep)
                         ? `linear-gradient(135deg, ${selectedType.color} 0%, ${selectedType.color}cc 100%)`
@@ -1385,7 +1385,7 @@ export default function BriefPage() {
                     disabled={submitting}
                     style={{
                       padding: '14px 36px',
-                      borderRadius: '12px',
+                      borderRadius: '8px',
                       border: 'none',
                       background: submitting
                         ? 'rgba(255,255,255,0.1)'

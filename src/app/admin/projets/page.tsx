@@ -99,7 +99,7 @@ const PROJECT_TYPES = [
 // ── SVG Status Icons ──
 const StatusIcons: Record<ProjectStatus, () => React.ReactElement> = {
   planification: () => (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
       <rect x="9" y="3" width="6" height="4" rx="1" />
       <path d="M9 12h6" />
@@ -107,7 +107,7 @@ const StatusIcons: Record<ProjectStatus, () => React.ReactElement> = {
     </svg>
   ),
   en_cours: () => (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 2v4" />
       <path d="m16.2 7.8 2.9-2.9" />
       <path d="M18 12h4" />
@@ -119,7 +119,7 @@ const StatusIcons: Record<ProjectStatus, () => React.ReactElement> = {
     </svg>
   ),
   tests: () => (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="m9 11-6 6v3h9l3-3" />
       <path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4" />
       <path d="M18 5v4" />
@@ -127,19 +127,19 @@ const StatusIcons: Record<ProjectStatus, () => React.ReactElement> = {
     </svg>
   ),
   livre: () => (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
       <polyline points="22 4 12 14.01 9 11.01" />
     </svg>
   ),
   en_pause: () => (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="6" y="4" width="4" height="16" />
       <rect x="14" y="4" width="4" height="16" />
     </svg>
   ),
   annule: () => (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10" />
       <line x1="15" y1="9" x2="9" y2="15" />
       <line x1="9" y1="9" x2="15" y2="15" />
@@ -254,7 +254,7 @@ export default function ProjectsPage() {
   return (
     <>
       <style>{inputStyles}</style>
-      <div style={{ display: 'flex', minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
+      <div style={{ display: 'flex', minHeight: '100vh', background: '#0a0e1a' }}>
         <AdminSidebar />
 
         <div style={{
@@ -265,7 +265,7 @@ export default function ProjectsPage() {
         }}>
           {/* ── Header with Stats ── */}
           <div style={{
-            background: 'linear-gradient(to right, #0a0e1a, #101d30)',
+            background: '#0a0e1a',
             padding: isMobile ? '80px 16px 32px 16px' : '40px 40px 32px 40px',
             color: 'white'
           }}>
@@ -313,8 +313,7 @@ export default function ProjectsPage() {
                     style={{
                       background: statusFilter === status ? `${STATUS_CONFIG[status].color}20` : 'rgba(255,255,255,0.05)',
                       padding: '16px',
-                      borderRadius: '12px',
-                      backdropFilter: 'blur(10px)',
+                      borderRadius: '8px',
                       border: statusFilter === status ? `1px solid ${STATUS_CONFIG[status].color}40` : '1px solid rgba(255,255,255,0.1)',
                       cursor: 'pointer',
                       transition: 'all 0.2s',
@@ -333,16 +332,16 @@ export default function ProjectsPage() {
                       fontSize: '24px',
                       fontWeight: 700,
                       marginBottom: '4px',
-                      textAlign: 'center'
+                      textAlign: 'left'
                     }}>
                       {count}
                     </div>
                     <div style={{
-                      fontSize: '11px',
+                      fontSize: '12px',
                       color: 'rgba(255,255,255,0.7)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em',
-                      textAlign: 'center'
+                      textAlign: 'left'
                     }}>
                       {STATUS_CONFIG[status].label}
                     </div>
@@ -396,7 +395,7 @@ export default function ProjectsPage() {
 
           {/* ── Filters Bar ── */}
           <div style={{
-            background: 'linear-gradient(to right, #0a0e1a, #101d30)',
+            background: '#0a0e1a',
             padding: isMobile ? '16px' : '24px 40px',
             borderBottom: '1px solid rgba(255,255,255,0.1)'
           }}>
@@ -426,7 +425,7 @@ export default function ProjectsPage() {
                   style={{
                     width: '100%',
                     padding: '12px 16px 12px 44px',
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     border: '1px solid rgba(255,255,255,0.1)',
                     fontSize: '14px',
                     outline: 'none',
@@ -504,7 +503,7 @@ export default function ProjectsPage() {
                   style={{
                     padding: '12px 16px',
                     border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     fontSize: '14px',
                     fontWeight: 600,
                     cursor: 'pointer',
@@ -526,7 +525,7 @@ export default function ProjectsPage() {
                 style={{
                   padding: '12px 24px',
                   border: 'none',
-                  borderRadius: '10px',
+                  borderRadius: '8px',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -548,7 +547,7 @@ export default function ProjectsPage() {
           {/* ── Content ── */}
           <div style={{
             padding: isMobile ? '24px 16px' : '32px 40px',
-            background: 'linear-gradient(to right, #0a0e1a, #101d30)',
+            background: '#0a0e1a',
             minHeight: 'calc(100vh - 450px)'
           }}>
             {loading ? (
@@ -577,7 +576,7 @@ export default function ProjectsPage() {
                   style={{
                     padding: '12px 24px',
                     border: 'none',
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     cursor: 'pointer',
                     fontSize: '14px',
                     fontWeight: 600,
@@ -660,7 +659,7 @@ function TableView({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {projects.map((project) => (
           <div key={project.id} onClick={() => onSelectProject(project)}
-            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '16px', cursor: 'pointer' }}>
+            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '16px', cursor: 'pointer' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
               <span style={{ fontSize: '14px', fontWeight: 600, color: 'white', flex: 1 }}>{project.name}</span>
               <span style={{
@@ -687,7 +686,7 @@ function TableView({
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{
-                padding: '3px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: 600,
+                padding: '3px 8px', borderRadius: '8px', fontSize: '10px', fontWeight: 600,
                 color: PRIORITY_CONFIG[project.priority]?.color || '#94a3b8',
                 backgroundColor: PRIORITY_CONFIG[project.priority]?.bgColor || 'rgba(148,163,184,0.15)',
               }}>
@@ -704,10 +703,9 @@ function TableView({
   return (
     <div style={{
       border: '1px solid rgba(255,255,255,0.1)',
-      borderRadius: '12px',
+      borderRadius: '8px',
       overflow: 'hidden',
       background: 'rgba(255,255,255,0.03)',
-      backdropFilter: 'blur(10px)'
     }}>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: isMobile ? '800px' : 'auto' }}>
@@ -847,7 +845,7 @@ function TableView({
                 <td style={{ padding: '20px 24px' }}>
                   <span style={{
                     padding: '4px 10px',
-                    borderRadius: '12px',
+                    borderRadius: '8px',
                     fontSize: '11px',
                     fontWeight: 600,
                     color: PRIORITY_CONFIG[project.priority]?.color || '#94a3b8',
@@ -907,8 +905,7 @@ function KanbanView({
             key={status}
             style={{
               background: 'rgba(255,255,255,0.03)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: '12px',
+              borderRadius: '8px',
               padding: '16px',
               minHeight: '400px',
               border: '1px solid rgba(255,255,255,0.08)'
@@ -945,7 +942,7 @@ function KanbanView({
                 background: STATUS_CONFIG[status].bgColor,
                 color: STATUS_CONFIG[status].color,
                 padding: '4px 10px',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 fontSize: '12px',
                 fontWeight: 700
               }}>
@@ -961,7 +958,7 @@ function KanbanView({
                   onClick={() => onSelectProject(project)}
                   style={{
                     background: 'rgba(255,255,255,0.05)',
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     padding: '16px',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
@@ -995,7 +992,7 @@ function KanbanView({
                       </h4>
                       <span style={{
                         padding: '3px 8px',
-                        borderRadius: '10px',
+                        borderRadius: '8px',
                         fontSize: '10px',
                         fontWeight: 600,
                         color: PRIORITY_CONFIG[project.priority]?.color || '#94a3b8',
@@ -1718,7 +1715,7 @@ function ProjectDetailModal({
                   </span>
                   <span style={{
                     padding: '4px 10px',
-                    borderRadius: '12px',
+                    borderRadius: '8px',
                     fontSize: '11px',
                     fontWeight: 600,
                     color: PRIORITY_CONFIG[project.priority]?.color || '#94a3b8',
@@ -1729,7 +1726,7 @@ function ProjectDetailModal({
                   {project.projectType && (
                     <span style={{
                       padding: '4px 10px',
-                      borderRadius: '12px',
+                      borderRadius: '8px',
                       fontSize: '11px',
                       fontWeight: 600,
                       color: '#638BFF',
@@ -1850,7 +1847,7 @@ function ProjectDetailModal({
                 {tab.badge && (
                   <span style={{
                     padding: '2px 8px',
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     fontSize: '10px',
                     fontWeight: 700,
                     color: '#638BFF',
@@ -2020,7 +2017,7 @@ function ProjectDetailModal({
                 marginBottom: '24px',
                 padding: '20px',
                 background: 'rgba(255,255,255,0.03)',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 border: '1px solid rgba(255,255,255,0.06)'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
@@ -2274,7 +2271,7 @@ function ProjectDetailModal({
                   <Link href={`/admin/kanban?project=${project.id}`} style={{ textDecoration: 'none' }}>
                     <button style={{
                       padding: '12px 28px',
-                      borderRadius: '10px',
+                      borderRadius: '8px',
                       border: 'none',
                       background: 'linear-gradient(135deg, #638BFF 0%, #4a6fd4 100%)',
                       color: 'white',
@@ -2321,7 +2318,7 @@ function ProjectDetailModal({
                   <Link href={`/admin/gantt?project=${project.id}`} style={{ textDecoration: 'none' }}>
                     <button style={{
                       padding: '12px 28px',
-                      borderRadius: '10px',
+                      borderRadius: '8px',
                       border: 'none',
                       background: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
                       color: 'white',

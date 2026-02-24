@@ -228,7 +228,7 @@ export default function DocumentsPage() {
   const currentStatuses = activeTab === 'devis' ? devisStatuses : activeTab === 'factures' ? factureStatuses : contratStatuses;
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0e1a 0%, #0f1b2e 100%)' }}>
+    <div style={{ minHeight: '100vh', background: '#0a0e1a' }}>
       <AdminSidebar />
       <div style={{ marginLeft: isMobile ? '0' : `${sidebarWidth}px`, transition: 'margin-left 0.3s ease', padding: isMobile ? '80px 16px 24px 16px' : '40px' }}>
     <div>
@@ -243,22 +243,22 @@ export default function DocumentsPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         {activeTab === 'devis' ? (
           <>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">En cours</div>
               <div className="text-2xl font-bold text-white mt-1">{kpis.devisEnCours}</div>
               <div className="text-xs text-white/35 mt-0.5">devis en attente</div>
             </div>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Signes</div>
               <div className="text-2xl font-bold text-green-400 mt-1">{kpis.devisSignes}</div>
               <div className="text-xs text-white/35 mt-0.5">devis acceptes</div>
             </div>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Montant en cours</div>
               <div className="text-2xl font-bold text-amber-400 mt-1">{fmt(kpis.devisMontantEnCours)} EUR</div>
               <div className="text-xs text-white/35 mt-0.5">en attente de signature</div>
             </div>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Total</div>
               <div className="text-2xl font-bold text-white mt-1">{allDevis.length}</div>
               <div className="text-xs text-white/35 mt-0.5">devis crees</div>
@@ -266,22 +266,22 @@ export default function DocumentsPage() {
           </>
         ) : activeTab === 'factures' ? (
           <>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Impayees</div>
               <div className="text-2xl font-bold text-amber-400 mt-1">{kpis.facturesImpayees}</div>
               <div className="text-xs text-white/35 mt-0.5">factures en attente</div>
             </div>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Payees</div>
               <div className="text-2xl font-bold text-green-400 mt-1">{kpis.facturesPayees}</div>
               <div className="text-xs text-white/35 mt-0.5">factures reglees</div>
             </div>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Montant impaye</div>
               <div className="text-2xl font-bold text-red-400 mt-1">{fmt(kpis.montantImpaye)} EUR</div>
               <div className="text-xs text-white/35 mt-0.5">reste a encaisser</div>
             </div>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">CA encaisse</div>
               <div className="text-2xl font-bold text-emerald-400 mt-1">{fmt(kpis.caEncaisse)} EUR</div>
               <div className="text-xs text-white/35 mt-0.5">total paye</div>
@@ -289,22 +289,22 @@ export default function DocumentsPage() {
           </>
         ) : (
           <>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">En cours</div>
               <div className="text-2xl font-bold text-white mt-1">{kpis.contratsEnCours}</div>
               <div className="text-xs text-white/35 mt-0.5">contrats en attente</div>
             </div>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Signes</div>
               <div className="text-2xl font-bold text-green-400 mt-1">{kpis.contratsSignes}</div>
               <div className="text-xs text-white/35 mt-0.5">contrats valides</div>
             </div>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Montant en cours</div>
               <div className="text-2xl font-bold text-amber-400 mt-1">{fmt(kpis.contratsMontantEnCours)} EUR</div>
               <div className="text-xs text-white/35 mt-0.5">en attente de signature</div>
             </div>
-            <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
               <div className="text-xs text-white/45 font-medium uppercase tracking-wider">Total</div>
               <div className="text-2xl font-bold text-white mt-1">{allContrats.length}</div>
               <div className="text-xs text-white/35 mt-0.5">contrats crees</div>
@@ -315,7 +315,7 @@ export default function DocumentsPage() {
 
       {/* Tabs + Action button */}
       <div className={`flex items-center justify-between mb-4 ${isMobile ? 'flex-col gap-3 items-stretch' : ''}`}>
-        <div className="flex items-center bg-[#0d1321] border border-white/[0.06] rounded-xl p-1">
+        <div className="flex items-center bg-white/[0.05] border border-white/[0.1] rounded-lg p-1">
           <button
             onClick={() => handleTabChange('devis')}
             className={`flex items-center gap-2 ${isMobile ? 'px-2.5 py-1.5 text-xs' : 'px-4 py-2 text-sm'} rounded-lg font-medium transition-all ${
@@ -367,7 +367,7 @@ export default function DocumentsPage() {
           {activeTab === 'factures' && (
             <button
               onClick={() => exportCSV(currentDocs)}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] text-white/60 text-sm font-medium rounded-xl hover:bg-white/[0.08] hover:text-white transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] text-white/60 text-sm font-medium rounded-lg hover:bg-white/[0.08] hover:text-white transition-colors"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -377,7 +377,7 @@ export default function DocumentsPage() {
           )}
           <Link
             href={activeTab === 'devis' ? '/admin/documents/create' : activeTab === 'factures' ? '/admin/documents/create-facture' : '/admin/documents/create-contrat'}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#638BFF] text-white text-sm font-semibold rounded-xl hover:bg-[#638BFF]/90 transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#638BFF] text-white text-sm font-semibold rounded-lg hover:bg-[#638BFF]/90 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -419,7 +419,7 @@ export default function DocumentsPage() {
           <div className="w-8 h-8 border-2 border-[#638BFF]/30 border-t-[#638BFF] rounded-full animate-spin" />
         </div>
       ) : currentDocs.length === 0 ? (
-        <div className="text-center py-16 bg-[#0d1321] border border-white/[0.06] rounded-xl">
+        <div className="text-center py-16 bg-white/[0.05] border border-white/[0.1] rounded-lg">
           <p className="text-white/45 text-sm">
             {filter ? 'Aucun document avec ce statut' : `Aucun ${activeTab === 'devis' ? 'devis' : activeTab === 'factures' ? 'e facture' : 'contrat'}`}
           </p>
@@ -436,7 +436,7 @@ export default function DocumentsPage() {
             {currentDocs.map((doc) => {
               const sc = statusConfig[doc.status] || statusConfig.draft;
               return (
-                <div key={doc.id} className="bg-[#0d1321] border border-white/[0.06] rounded-xl p-4">
+                <div key={doc.id} className="bg-white/[0.05] border border-white/[0.1] rounded-lg p-5">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-semibold text-white">{doc.documentNumber}</span>
                     <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${sc.bg} ${sc.text}`}>
@@ -524,17 +524,17 @@ export default function DocumentsPage() {
             })}
           </div>
         ) : (
-        <div className="bg-[#0d1321] border border-white/[0.06] rounded-xl overflow-hidden">
+        <div className="bg-white/[0.05] border border-white/[0.1] rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/[0.06]">
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/40 uppercase tracking-wider">N</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/40 uppercase tracking-wider">Client</th>
-                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/40 uppercase tracking-wider">Montant</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/40 uppercase tracking-wider">Statut</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/40 uppercase tracking-wider">Date</th>
-                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/40 uppercase tracking-wider">Actions</th>
+                  <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">N</th>
+                  <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Client</th>
+                  <th className="text-right px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Montant</th>
+                  <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Statut</th>
+                  <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Date</th>
+                  <th className="text-right px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>

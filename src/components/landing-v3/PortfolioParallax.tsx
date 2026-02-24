@@ -228,7 +228,7 @@ export default function PortfolioParallax() {
               {/* Category */}
               <p
                 data-category
-                className="text-[#638BFF] text-xs font-medium tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-3 sm:mb-4"
+                className="text-[#638BFF]/70 text-xs font-medium tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-3 sm:mb-4"
               >
                 {project.category}
               </p>
@@ -237,7 +237,7 @@ export default function PortfolioParallax() {
               <h3
                 data-title
                 className="font-[family-name:var(--font-outfit)] font-black text-white leading-[0.9] tracking-tighter mb-4 sm:mb-6 lg:whitespace-nowrap"
-                style={{ fontSize: isMobile ? 'clamp(2rem, 10vw, 3.5rem)' : 'clamp(2.5rem, 7vw, 8rem)' }}
+                style={{ fontSize: isMobile ? 'clamp(2rem, 10vw, 3rem)' : 'clamp(2rem, 4vw, 3.5rem)' }}
               >
                 {project.title}
               </h3>
