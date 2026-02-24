@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { gsap } from 'gsap';
 
 export default function HeaderV3() {
@@ -116,12 +117,15 @@ export default function HeaderV3() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="flex h-16 md:h-20 items-center justify-between">
             {/* Logo */}
-            <a href="#" className="relative z-[61] flex items-center gap-2 group">
-              <span className="font-[family-name:var(--font-outfit)] text-lg font-bold text-white tracking-tight">
-                JL
-              </span>
-              <span className="text-white/20 font-light">|</span>
-              <span className="text-sm text-white/50 tracking-wider">Studio</span>
+            <a href="#" className="relative z-[61] flex items-center group">
+              <Image
+                src="/images/logo-jlstudio.png"
+                alt="JL Studio"
+                width={120}
+                height={34}
+                className="h-7 sm:h-8 w-auto"
+                priority
+              />
             </a>
 
             {/* Desktop Nav */}

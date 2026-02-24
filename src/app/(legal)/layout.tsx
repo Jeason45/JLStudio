@@ -6,10 +6,12 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-xl border-b border-white/[0.04]">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="flex h-16 md:h-20 items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <span className="font-[family-name:var(--font-outfit)] text-lg font-bold text-white tracking-tight">JL</span>
-              <span className="text-white/20 font-light">|</span>
-              <span className="text-sm text-white/50 tracking-wider">Studio</span>
+            <Link href="/" className="flex items-center">
+              <img
+                src="/images/logo-jlstudio.png"
+                alt="JL Studio"
+                className="h-7 sm:h-8 w-auto"
+              />
             </Link>
             <Link
               href="/"

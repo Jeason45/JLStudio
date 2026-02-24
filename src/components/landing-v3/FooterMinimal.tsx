@@ -7,9 +7,11 @@ export default function FooterMinimal() {
         <div className="sm:hidden space-y-6">
           {/* Logo + tagline */}
           <div className="text-center">
-            <p className="font-[family-name:var(--font-outfit)] text-lg font-black text-white/80 tracking-tight">
-              JL <span className="text-white/50">Studio</span>
-            </p>
+            <img
+              src="/images/logo-jlstudio.png"
+              alt="JL Studio"
+              className="h-7 w-auto mx-auto"
+            />
             <p className="text-xs text-white/35 mt-1">
               Sites web, e-commerce &amp; applications sur mesure
             </p>
@@ -48,9 +50,11 @@ export default function FooterMinimal() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Brand */}
             <div className="sm:col-span-2 lg:col-span-1">
-              <p className="font-[family-name:var(--font-outfit)] text-xl font-black text-white/80 tracking-tight mb-3">
-                JL <span className="text-white/50">Studio</span>
-              </p>
+              <img
+                src="/images/logo-jlstudio.png"
+                alt="JL Studio"
+                className="h-8 w-auto mb-3"
+              />
               <p className="text-sm text-white/40 leading-relaxed max-w-xs">
                 Sites web, e-commerce et applications sur mesure pour propulser votre activite.
               </p>
