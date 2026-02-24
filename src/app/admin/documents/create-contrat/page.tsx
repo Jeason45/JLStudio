@@ -313,7 +313,7 @@ function CreateContratContent() {
   const labelClass = 'block text-xs font-medium text-white/40 mb-1';
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div>
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
