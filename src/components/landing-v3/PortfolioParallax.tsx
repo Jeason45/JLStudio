@@ -166,9 +166,9 @@ export default function PortfolioParallax() {
         //  LAYER 1 — Image parallax (slowest layer)
         // ═══════════════════════════════════════════════
         gsap.fromTo(innerImage, {
-          yPercent: isMobile ? 12 : 25,
+          yPercent: isMobile ? 8 : 12,
         }, {
-          yPercent: isMobile ? -12 : -25,
+          yPercent: isMobile ? -8 : -12,
           ease: 'none',
           scrollTrigger: {
             trigger: imageWrapper,
@@ -332,12 +332,12 @@ export default function PortfolioParallax() {
             <div
               data-image-wrapper
               className="relative overflow-hidden mx-4 sm:mx-6 lg:mx-12 rounded-xl"
-              style={{ height: isMobile ? '50vh' : '80vh' }}
+              style={{ height: isMobile ? '45vh' : '65vh' }}
             >
               <div
                 data-inner-image
                 className="absolute will-change-transform"
-                style={{ inset: isMobile ? '-15%' : '-30%' }}
+                style={{ inset: isMobile ? '-10%' : '-15%' }}
               >
                 <Image
                   src={project.image}
