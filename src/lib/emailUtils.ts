@@ -64,13 +64,33 @@ export async function sendEmail(params: SendEmailParams) {
   });
 
   try {
-    const info = await getTransporter().sendMail({
-      from: `"JL Studio" <${process.env.SMTP_FROM || SMTP_CONFIG.auth.user}>`,
-      to, subject,
+    // Log for debugging SMTP issues
+    console.log('[EMAIL] Sending to:', to, '| Subject:', subject, '| Attachments:', resolvedAttachments?.length || 0);
+
+    const mailOptions: nodemailer.SendMailOptions = {
+      from: `"JL Studio" <${SMTP_CONFIG.auth.user}>`,
+      to: to.trim(),
+      subject: subject.replace(/[^\x20-\x7E\u00C0-\u024F]/g, ''),
       html: htmlContent,
       text: textContent,
-      attachments: resolvedAttachments,
-    });
+    };
+
+    // Only add attachments if files exist
+    if (resolvedAttachments && resolvedAttachments.length > 0) {
+      const validAttachments = resolvedAttachments.filter(a => {
+        if (!a.path) return false;
+        if (!fs.existsSync(a.path)) {
+          console.warn('[EMAIL] Attachment file not found:', a.path);
+          return false;
+        }
+        return true;
+      });
+      if (validAttachments.length > 0) {
+        mailOptions.attachments = validAttachments;
+      }
+    }
+
+    const info = await getTransporter().sendMail(mailOptions);
 
     // Clean up temp files
     tempFiles.forEach(f => { try { fs.unlinkSync(f); } catch {} });
