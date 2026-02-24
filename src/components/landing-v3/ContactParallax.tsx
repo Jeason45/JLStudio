@@ -103,7 +103,7 @@ export default function ContactParallax() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (wantCallback && !formData.phone.trim()) {
-      setError('Le numero de telephone est obligatoire pour etre rappele.');
+      setError('Le numéro de téléphone est obligatoire pour être rappelé.');
       return;
     }
 
@@ -131,7 +131,7 @@ export default function ContactParallax() {
       setTimeout(() => setSuccess(false), 8000);
     } catch {
       setError(
-        'Une erreur est survenue. Veuillez reessayer.'
+        'Une erreur est survenue. Veuillez réessayer.'
       );
     } finally {
       setLoading(false);
@@ -185,7 +185,7 @@ export default function ContactParallax() {
                 Votre Projet
               </SplitTextReveal>
               <p className="text-white/50 text-xs sm:text-sm mt-3 sm:mt-4 max-w-xs">
-                Discutons de votre prochaine realisation
+                Discutons de votre prochaine réalisation
               </p>
             </div>
           </div>
@@ -211,7 +211,7 @@ export default function ContactParallax() {
                   />
                 </svg>
                 <p className="text-emerald-400 font-semibold text-lg mb-1">
-                  Message envoye !
+                  Message envoyé !
                 </p>
                 <p className="text-emerald-400/60 text-sm">
                   Nous vous recontacterons rapidement.
@@ -229,9 +229,9 @@ export default function ContactParallax() {
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Project Type */}
               <div className="form-field" style={{ opacity: 0 }}>
-                <label className="block text-sm font-semibold text-white mb-3">
+                <span className="block text-sm font-semibold text-white mb-3">
                   Type de projet
-                </label>
+                </span>
                 {/* Mobile: select */}
                 <select
                   value={projectType || ''}
@@ -244,7 +244,7 @@ export default function ContactParallax() {
                   }}
                 >
                   <option value="" className="bg-black text-white/50">
-                    Selectionner...
+                    Sélectionner...
                   </option>
                   {projectTypes.map((type) => (
                     <option
@@ -262,6 +262,7 @@ export default function ContactParallax() {
                     <button
                       key={type.value}
                       type="button"
+                      aria-pressed={projectType === type.value}
                       onClick={() =>
                         setProjectType(
                           projectType === type.value ? null : type.value
@@ -282,12 +283,14 @@ export default function ContactParallax() {
               {/* Name & Email */}
               <div className="form-field grid sm:grid-cols-2 gap-6 sm:gap-8" style={{ opacity: 0 }}>
                 <div>
-                  <label className="block text-sm font-semibold text-white mb-3">
+                  <label htmlFor="contact-name" className="block text-sm font-semibold text-white mb-3">
                     Nom complet *
                   </label>
                   <input
+                    id="contact-name"
                     type="text"
                     required
+                    autoComplete="name"
                     value={formData.name}
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
@@ -297,12 +300,14 @@ export default function ContactParallax() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-white mb-3">
+                  <label htmlFor="contact-email" className="block text-sm font-semibold text-white mb-3">
                     Email *
                   </label>
                   <input
+                    id="contact-email"
                     type="email"
                     required
+                    autoComplete="email"
                     value={formData.email}
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
@@ -315,11 +320,13 @@ export default function ContactParallax() {
 
               {/* Phone */}
               <div className="form-field" style={{ opacity: 0 }}>
-                <label className="block text-sm font-semibold text-white mb-3">
-                  Telephone
+                <label htmlFor="contact-phone" className="block text-sm font-semibold text-white mb-3">
+                  Téléphone
                 </label>
                 <input
+                  id="contact-phone"
                   type="tel"
+                  autoComplete="tel"
                   value={formData.phone}
                   onChange={(e) =>
                     setFormData({ ...formData, phone: e.target.value })
@@ -331,17 +338,18 @@ export default function ContactParallax() {
 
               {/* Message */}
               <div className="form-field" style={{ opacity: 0 }}>
-                <label className="block text-sm font-semibold text-white mb-3">
+                <label htmlFor="contact-message" className="block text-sm font-semibold text-white mb-3">
                   Message *
                 </label>
                 <textarea
+                  id="contact-message"
                   required
                   rows={4}
                   value={formData.message}
                   onChange={(e) =>
                     setFormData({ ...formData, message: e.target.value })
                   }
-                  placeholder="Decrivez votre projet, vos objectifs, votre budget..."
+                  placeholder="Décrivez votre projet, vos objectifs, votre budget..."
                   className={`${inputClasses} resize-none`}
                   style={{ fontFamily: 'inherit' }}
                 />
@@ -384,13 +392,13 @@ export default function ContactParallax() {
                       )}
                     </div>
                     <span className="text-white/50 text-sm group-hover:text-white/70 transition-colors">
-                      Je souhaite etre rappele pour discuter de mon projet
+                      Je souhaite être rappelé pour discuter de mon projet
                     </span>
                   </label>
                 </div>
                 {wantCallback && !formData.phone.trim() && (
                   <p className="text-xs text-[#638BFF]/60 mt-2 ml-1">
-                    Un numero de telephone est requis pour etre rappele
+                    Un numéro de téléphone est requis pour être rappelé
                   </p>
                 )}
               </div>
@@ -436,12 +444,12 @@ export default function ContactParallax() {
               {/* Pre-qualification link */}
               <div className="form-field pt-4 text-center sm:text-left" style={{ opacity: 0 }}>
                 <p className="text-white/40 text-xs">
-                  Vous avez deja une idee precise ?{' '}
+                  Vous avez déjà une idée précise ?{' '}
                   <a
                     href="/qualifier"
                     className="text-[#638BFF] hover:text-[#638BFF]/80 underline underline-offset-2 transition-colors"
                   >
-                    Obtenez un devis estime en 2 minutes
+                    Obtenez un devis estimé en 2 minutes
                   </a>
                 </p>
               </div>

@@ -3,10 +3,11 @@
 @theme inline {
   --color-background: #0a1628;
   --color-foreground: #ededed;
-  --color-primary: #ef6c00;
-  --color-primary-dark: #c45500;
-  --color-primary-light: #ff9800;
-  --color-accent: #ff9800;
+  --color-primary: #638BFF;
+  --color-primary-dark: #4a6fd4;
+  --color-primary-light: #7da3ff;
+  --color-accent: #7da3ff;
+  --color-landing-accent: #638BFF;
   --color-surface: #0f1f3a;
   --color-surface-light: #1a2d4f;
   --color-muted: #94a3b8;
@@ -56,7 +57,7 @@ body {
 }
 
 ::selection {
-  background: rgba(239, 108, 0, 0.3);
+  background: rgba(99, 139, 255, 0.3);
   color: white;
 }
 
@@ -166,7 +167,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   top: 0;
   left: 0;
   height: 1.5px;
-  background: linear-gradient(90deg, #ef6c00, #ff9800);
+  background: linear-gradient(90deg, #638BFF, #7da3ff);
   z-index: 9999;
   transition: width 0.05s linear;
 }
@@ -177,7 +178,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: radial-gradient(circle, #ef6c00, #ff9800);
+  background: radial-gradient(circle, #638BFF, #7da3ff);
   opacity: 0;
   animation: ember-rise var(--duration, 6s) ease-out var(--delay, 0s) infinite;
 }
@@ -231,8 +232,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 
 .btn-premium:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(239, 108, 0, 0.25),
-              0 4px 12px rgba(239, 108, 0, 0.15);
+  box-shadow: 0 12px 40px rgba(99, 139, 255, 0.25),
+              0 4px 12px rgba(99, 139, 255, 0.15);
 }
 
 .btn-premium:active {
@@ -299,11 +300,24 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   }
 }
 
+/* ─── FOCUS-VISIBLE (keyboard navigation) ── */
+*:focus-visible {
+  outline: 2px solid #638BFF;
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .btn-premium,
   .link-hover::after,
   .divider-animated .divider-line {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* Ensure content is visible if JS/GSAP fails to load */
+@media (scripting: none) {
+  [style*="opacity: 0"] {
+    opacity: 1 !important;
   }
 }

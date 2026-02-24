@@ -12,32 +12,25 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const testimonials = [
   {
-    name: 'Marie Dubois',
-    role: 'Maison Elegance',
+    name: 'Famille Caubet',
+    role: 'Flamme by Caubet',
     quote:
-      'JL Studio a transforme notre vision en realite. Le site est a la fois elegant et performant, avec une attention aux details qui nous a impressionnes.',
-    initials: 'MD',
+      'Jeason a compris notre univers dès le premier échange. Le site reflète parfaitement notre passion du feu et de la convivialité, avec un système de gestion qui nous simplifie le quotidien.',
+    initials: 'FC',
   },
   {
-    name: 'Thomas Mercier',
-    role: 'TechVision SaaS',
+    name: 'Florent',
+    role: 'Florent Food — 500K+ abonnés',
     quote:
-      "Notre taux de conversion a augmente de 40% depuis le lancement du nouveau site. L'expertise technique et le sens du design font vraiment la difference.",
-    initials: 'TM',
+      "Une plateforme à la hauteur de mon image de marque. Le design premium et le système de newsletter intégré m'ont permis de professionnaliser mon activité de créateur de contenu.",
+    initials: 'F',
   },
   {
-    name: 'Sophie Laurent',
-    role: 'Agence Creativa',
+    name: 'Équipe JALP',
+    role: 'Jouons Avec Les Paroles',
     quote:
-      "La qualite du code et l'attention aux details sont remarquables. Un partenaire technique de confiance pour nos projets les plus ambitieux.",
-    initials: 'SL',
-  },
-  {
-    name: 'Alexandre Chen',
-    role: 'Digital Commerce Pro',
-    quote:
-      'Livraison dans les delais, communication fluide et resultat au-dela de nos attentes. Notre e-commerce tourne comme une horloge.',
-    initials: 'AC',
+      "Un projet ambitieux mené de bout en bout : application mobile, API backend et interface web. Jeason a su transformer une idée complexe en produit abouti et fonctionnel.",
+    initials: 'JP',
   },
 ];
 
@@ -169,19 +162,19 @@ export default function TestimonialsSection() {
         {/* Header */}
         <div className="text-center mb-14 sm:mb-20 md:mb-28">
           <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">
-            Temoignages
+            Témoignages
           </p>
           <SplitTextReveal
             tag="h2"
             type="words"
             className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight"
           >
-            Pourquoi Nous
+            Ils nous font confiance
           </SplitTextReveal>
         </div>
 
         {/* Grid — 2 columns desktop, 1 mobile */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8 lg:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8 lg:gap-10">
           {testimonials.map((t, i) => (
             <div
               key={i}
@@ -190,17 +183,17 @@ export default function TestimonialsSection() {
               style={{ opacity: 0 }}
             >
               {/* Quote mark — large, decorative */}
-              <span className="font-[family-name:var(--font-outfit)] text-4xl sm:text-6xl font-black text-[#638BFF]/15 leading-none absolute top-4 sm:top-6 right-6 sm:right-8 select-none">
+              <span className="font-[family-name:var(--font-outfit)] text-4xl sm:text-6xl font-black text-[#638BFF]/15 leading-none absolute top-4 sm:top-6 right-6 sm:right-8 select-none" aria-hidden="true">
                 &ldquo;
               </span>
 
               {/* Quote text */}
-              <p
+              <blockquote
                 data-quote
-                className="text-white/55 text-sm sm:text-base leading-relaxed mb-6 sm:mb-8 relative"
+                className="m-0 p-0 text-white/55 text-sm sm:text-base leading-relaxed mb-6 sm:mb-8 relative"
               >
-                {t.quote}
-              </p>
+                <p>{t.quote}</p>
+              </blockquote>
 
               {/* Author */}
               <div data-author className="flex items-center gap-4 relative">
@@ -210,7 +203,7 @@ export default function TestimonialsSection() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">{t.name}</p>
+                  <cite className="text-sm font-semibold text-white not-italic block">{t.name}</cite>
                   <p className="text-xs text-white/50">{t.role}</p>
                 </div>
               </div>

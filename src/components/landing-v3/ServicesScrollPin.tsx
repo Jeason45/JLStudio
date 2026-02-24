@@ -12,10 +12,10 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 const services = [
   {
     title: 'Site Vitrine',
-    subtitle: 'Votre identite en ligne',
+    subtitle: 'Votre identité en ligne',
     description:
-      'Un site elegant et performant qui reflete votre marque. Design sur mesure, animations fluides, SEO optimise.',
-    features: ['Design responsive', 'Animations premium', 'SEO optimise', 'CMS integre'],
+      'Un site élégant et performant qui reflète votre marque. Design sur mesure, animations fluides, SEO optimisé.',
+    features: ['Design responsive', 'Animations premium', 'SEO optimisé', 'CMS intégré'],
     image: '/images/services-vitrine.jpg',
     number: '01',
   },
@@ -23,8 +23,8 @@ const services = [
     title: 'E-Commerce',
     subtitle: 'Vendez sans limites',
     description:
-      "Boutiques en ligne performantes avec paiement securise, gestion de stock et experience d'achat optimisee.",
-    features: ['Paiement securise', 'Gestion de stock', 'Panier optimise', 'Analytics avances'],
+      "Boutiques en ligne performantes avec paiement sécurisé, gestion de stock et expérience d'achat optimisée.",
+    features: ['Paiement sécurisé', 'Gestion de stock', 'Panier optimisé', 'Analytics avancés'],
     image: '/images/services-ecommerce.jpg',
     number: '02',
   },
@@ -32,16 +32,16 @@ const services = [
     title: 'Application Web',
     subtitle: 'Outils sur mesure',
     description:
-      'Applications metier robustes : dashboards, CRM, plateformes SaaS. Architecture scalable et interfaces intuitives.',
-    features: ['Dashboard temps reel', 'API robuste', 'Architecture scalable', 'UX intuitive'],
+      'Applications métier robustes : dashboards, CRM, plateformes SaaS. Architecture scalable et interfaces intuitives.',
+    features: ['Dashboard temps réel', 'API robuste', 'Architecture scalable', 'UX intuitive'],
     image: '/images/services-webapp.jpg',
     number: '03',
   },
   {
     title: 'Autres Services',
-    subtitle: 'Solutions complementaires',
+    subtitle: 'Solutions complémentaires',
     description:
-      'Landing pages, refonte de sites existants, maintenance, conseil technique et accompagnement strategie digitale.',
+      'Landing pages, refonte de sites existants, maintenance, conseil technique et accompagnement stratégie digitale.',
     features: ['Landing pages', 'Refonte & migration', 'Maintenance', 'Conseil technique'],
     image: '/images/services-other.jpg',
     number: '04',
@@ -49,7 +49,7 @@ const services = [
 ];
 
 export default function ServicesScrollPin() {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -217,9 +217,10 @@ export default function ServicesScrollPin() {
   }, [isMobile]);
 
   return (
-    <div
+    <section
       ref={sectionRef}
       id="services"
+      aria-label="Services"
       className="relative h-screen overflow-hidden bg-black"
     >
       {/* Progress dots */}
@@ -288,7 +289,7 @@ export default function ServicesScrollPin() {
               {/* Subtitle */}
               <p
                 data-subtitle
-                className="text-[#638BFF]/70 text-[10px] sm:text-xs font-bold tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-4 sm:mb-6 relative"
+                className="text-[#638BFF]/70 text-[10px] sm:text-xs tracking-[0.4em] uppercase mb-4 sm:mb-6 relative"
               >
                 {service.subtitle}
               </p>
@@ -325,6 +326,6 @@ export default function ServicesScrollPin() {
           </div>
         </div>
       ))}
-    </div>
+    </section>
   );
 }

@@ -255,7 +255,7 @@ export default function HeroParallax() {
     <section
       ref={sectionRef}
       className="relative bg-black"
-      style={{ height: isMobile ? '300vh' : '300vh' }}
+      style={{ height: '300vh' }}
     >
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Background Image */}
@@ -348,10 +348,10 @@ export default function HeroParallax() {
             </h2>
             <p
               ref={paraRef}
-              className="text-base sm:text-lg md:text-xl lg:text-xl text-white/60 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed"
+              className="text-base sm:text-lg md:text-xl lg:text-xl text-white/60 max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed"
             >
               Sites web, e-commerce et applications sur mesure pour propulser
-              votre activite
+              votre activité
             </p>
             <div
               ref={ctaRef}
@@ -361,13 +361,13 @@ export default function HeroParallax() {
                 href="#contact"
                 className="group relative bg-[#638BFF] text-white font-semibold px-[clamp(0.9rem,4vw,1.5rem)] py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-[clamp(0.65rem,2.8vw,0.8rem)] sm:text-sm md:text-base overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]"
               >
-                <span className="relative z-10">Demarrer un projet</span>
+                <span className="relative z-10">Démarrer un projet</span>
               </a>
               <a
                 href="#projets"
                 className="border border-white/20 text-white/80 font-medium px-[clamp(0.9rem,4vw,1.5rem)] py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-[clamp(0.65rem,2.8vw,0.8rem)] sm:text-sm md:text-base hover:border-white/40 hover:text-white transition-all duration-300"
               >
-                Voir nos realisations
+                Voir nos réalisations
               </a>
             </div>
           </div>

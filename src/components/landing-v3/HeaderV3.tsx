@@ -95,9 +95,9 @@ export default function HeaderV3() {
 
   const links = [
     { label: 'Services', href: '#services' },
-    { label: 'Methode', href: '#methode' },
+    { label: 'Méthode', href: '#methode' },
     { label: 'Projets', href: '#projets' },
-    { label: 'Temoignages', href: '#temoignages' },
+    { label: 'Témoignages', href: '#temoignages' },
     { label: 'Contact', href: '#contact' },
   ];
 
@@ -134,7 +134,7 @@ export default function HeaderV3() {
                 <a
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-white/50 hover:text-white transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1px] after:bg-[#638BFF] hover:after:w-full after:transition-all after:duration-300"
+                  className="font-[family-name:var(--font-outfit)] text-sm text-white/50 hover:text-white transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1px] after:bg-[#638BFF] hover:after:w-full after:transition-all after:duration-300"
                 >
                   {link.label}
                 </a>

@@ -12,37 +12,37 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 const steps = [
   {
     number: '01',
-    title: 'Decouverte',
+    title: 'Découverte',
     description:
-      'Echange approfondi pour comprendre vos objectifs, votre marche et vos utilisateurs cibles.',
-    detail: 'Brief complet, analyse concurrentielle, definition des KPI',
+      'Échange approfondi pour comprendre vos objectifs, votre marché et vos utilisateurs cibles.',
+    detail: 'Brief complet, analyse concurrentielle, définition des KPI',
   },
   {
     number: '02',
     title: 'Conception',
     description:
-      'Wireframes, maquettes et prototype interactif valides avec vous avant le developpement.',
-    detail: 'UX research, prototypage Figma, iterations de design',
+      'Wireframes, maquettes et prototype interactif validés avec vous avant le développement.',
+    detail: 'UX research, prototypage Figma, itérations de design',
   },
   {
     number: '03',
-    title: 'Developpement',
+    title: 'Développement',
     description:
-      "Code propre, performant et teste. Points reguliers pour suivre l'avancement en temps reel.",
+      "Code propre, performant et testé. Points réguliers pour suivre l'avancement en temps réel.",
     detail: 'React / Next.js, CI/CD, revues de code hebdomadaires',
   },
   {
     number: '04',
     title: 'Tests & QA',
     description:
-      'Tests cross-browser, responsive, accessibilite et performance pour un produit sans compromis.',
-    detail: 'Tests automatises, audit Lighthouse, compatibilite mobile',
+      'Tests cross-browser, responsive, accessibilité et performance pour un produit sans compromis.',
+    detail: 'Tests automatisés, audit Lighthouse, compatibilité mobile',
   },
   {
     number: '05',
     title: 'Lancement',
     description:
-      'Deploiement, formation et suivi post-lancement. Votre projet entre en production en toute serenite.',
+      'Déploiement, formation et suivi post-lancement. Votre projet entre en production en toute sérénité.',
     detail: 'Mise en ligne, monitoring, support 30 jours inclus',
   },
 ];
@@ -274,8 +274,8 @@ export default function ProcessJourney() {
       />
 
       {/* Section header */}
-      <div className="relative z-10 pt-20 pb-10 md:pt-32 md:pb-16 text-center">
-        <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">Methode</p>
+      <div className="relative z-10 pt-20 pb-12 md:pt-32 md:pb-24 text-center">
+        <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">Méthode</p>
         <h2 className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-5xl font-black text-white">
           Notre processus
         </h2>
@@ -372,12 +372,11 @@ export default function ProcessJourney() {
                 /* Desktop: 2-column grid, alternating left/right */
                 <div
                   className="relative max-w-7xl mx-auto px-8 grid grid-cols-2 gap-16 items-center"
-                  style={{ direction: isLeft ? 'ltr' : 'rtl' }}
                 >
                   {/* Text side */}
                   <div
-                    className={`relative ${isLeft ? 'text-right pr-16' : 'text-left pl-16'}`}
-                    style={{ direction: 'ltr', perspective: 600 }}
+                    className={`relative ${isLeft ? 'text-right pr-16' : 'text-left pl-16 order-2'}`}
+                    style={{ perspective: 600 }}
                   >
                     {/* Step number */}
                     <span
@@ -414,7 +413,7 @@ export default function ProcessJourney() {
                   </div>
 
                   {/* Empty side (opposite of text, for balance) */}
-                  <div />
+                  <div className={isLeft ? '' : 'order-1'} />
                 </div>
               )}
             </div>
