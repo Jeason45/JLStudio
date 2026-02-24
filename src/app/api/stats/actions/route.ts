@@ -35,6 +35,7 @@ export async function GET() {
         type: 'facture',
         status: 'sent',
         sentAt: { lt: threshold7d },
+        deletedAt: null,
       },
       select: {
         id: true,
