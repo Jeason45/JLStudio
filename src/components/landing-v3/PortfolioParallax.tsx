@@ -23,6 +23,9 @@ import {
   Trophy,
   Smartphone,
   Check,
+  PenTool,
+  LineChart,
+  Zap,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -49,75 +52,75 @@ const projects: Project[] = [
   {
     title: 'Flamme by Caubet',
     category: 'Site Vitrine & CRM',
-    tags: ['Next.js', 'Prisma', 'Nodemailer'],
+    tags: ['Next.js 16', 'PostgreSQL', 'Prisma', 'Puppeteer'],
     image: '/images/portfolio-flamme.jpg',
-    description: 'Site premium avec animations et CRM complet pour une entreprise de location de braseros et tournebroches.',
+    description: 'Site vitrine premium avec CRM complet pour une entreprise de location de braseros et tournebroches sur remorque.',
     features: {
-      title: 'Ce site est livré avec :',
+      title: 'Livré avec un CRM autonome',
       items: [
-        { icon: Users, label: 'Gestion des leads & clients' },
-        { icon: FileText, label: 'Devis automatisés' },
-        { icon: CalendarDays, label: 'Calendrier de réservations' },
-        { icon: BarChart3, label: 'Dashboard analytics' },
-        { icon: Mail, label: 'Notifications email' },
+        { icon: Users, label: 'Pipeline leads & clients' },
+        { icon: FileText, label: 'Devis & factures PDF générés automatiquement' },
+        { icon: PenTool, label: 'Signature électronique certifiée eIDAS' },
+        { icon: CalendarDays, label: 'Calendrier de réservations équipements' },
+        { icon: Mail, label: 'Emails transactionnels automatisés' },
       ],
     },
   },
   {
     title: 'Florent Food',
     category: 'Plateforme Créateur',
-    tags: ['Next.js', 'Supabase', 'Stripe'],
+    tags: ['Next.js 16', 'PostgreSQL', 'Prisma', 'Resend'],
     image: '/images/portfolio-florentfood.jpg',
-    description: 'Plateforme premium pour créateur culinaire avec newsletter, recettes et système de membres.',
+    description: 'Plateforme complète pour créateur culinaire : publication de recettes, newsletter et gestion des abonnés.',
     features: {
-      title: 'Ce site est livré avec :',
+      title: 'Livré avec un back-office complet',
       items: [
-        { icon: Mail, label: 'Newsletter & abonnés' },
-        { icon: BookOpen, label: 'Gestion des recettes' },
-        { icon: UserPlus, label: 'Espace membres premium' },
-        { icon: CreditCard, label: 'Paiements Stripe' },
-        { icon: BarChart3, label: 'Analytics de contenu' },
+        { icon: Mail, label: 'Système de newsletter avec séquences automatisées' },
+        { icon: BookOpen, label: 'Gestion des recettes (free & premium)' },
+        { icon: LineChart, label: 'Dashboard analytics avec Google Analytics' },
+        { icon: CreditCard, label: 'Abonnements premium Stripe' },
+        { icon: Zap, label: 'Double provider email (Resend + Gmail fallback)' },
       ],
     },
   },
   {
     title: 'Jouons Avec Les Paroles',
-    category: 'Application Mobile',
-    tags: ['React Native', 'Fastify', 'SQLite'],
+    category: 'Application Mobile & API',
+    tags: ['React Native', 'Expo', 'Fastify', 'PostgreSQL'],
     image: '/images/portfolio-jalp.jpg',
-    description: "Application mobile de karaoké avec 5 modes de jeu, API backend et système de révision intelligent.",
+    description: "Application mobile de quiz musical avec API backend complète, système de progression et multijoueur temps réel.",
     features: {
-      title: "L'application comprend :",
+      title: "Écosystème complet développé",
       items: [
-        { icon: Gamepad2, label: '5 modes de jeu uniques' },
-        { icon: Music, label: 'Catalogue de 500+ chansons' },
-        { icon: Brain, label: 'Révision intelligente' },
-        { icon: Trophy, label: 'Classement & progression' },
-        { icon: Smartphone, label: 'iOS & Android natif' },
+        { icon: Gamepad2, label: '8 modes de jeu (duel, survie, daily challenge...)' },
+        { icon: Brain, label: 'Algorithme de révision espacée FSRS' },
+        { icon: Trophy, label: 'Progression 50 niveaux, achievements, classements' },
+        { icon: Music, label: 'Catalogue de 2 000+ chansons avec métadonnées' },
+        { icon: Smartphone, label: 'Multijoueur temps réel via WebSocket' },
       ],
     },
   },
   {
     title: 'Run As One',
     category: 'Site Événementiel',
-    tags: ['Next.js', 'Framer Motion', 'Tailwind'],
+    tags: ['Next.js 16', 'Framer Motion', 'Tailwind CSS'],
     image: '/images/portfolio-runasone.jpg',
-    description: 'Plateforme pour la première course solidaire nationale au profit de MSF — 6 villes, 24 heures, 1 France.',
+    description: 'Site vitrine pour la première course solidaire nationale au profit de Médecins Sans Frontières — 6 villes, 24 heures.',
   },
   {
     title: 'ZMR Models Agency',
     category: 'Plateforme & CRM',
-    tags: ['Next.js', 'Prisma', 'Stripe', 'AWS S3'],
+    tags: ['Next.js 16', 'PostgreSQL', 'Prisma', 'Stripe', 'Cloudflare R2'],
     image: '/images/portfolio-zmr.jpg',
-    description: "Plateforme premium pour agence de mannequins avec gestion des talents, devis automatisés et espace membres.",
+    description: "Plateforme pour agence de mannequins avec gestion des talents, billetterie événementielle et espace membres.",
     features: {
-      title: 'Ce site est livré avec :',
+      title: 'Livré avec un CRM complet',
       items: [
-        { icon: Camera, label: 'Gestion des talents & books' },
-        { icon: FileText, label: 'Devis & factures PDF' },
-        { icon: UserPlus, label: 'Espace membres & clients' },
-        { icon: FolderOpen, label: 'Stockage média cloud' },
-        { icon: CalendarDays, label: 'Calendrier événements' },
+        { icon: Camera, label: 'Gestion multi-catégories de talents avec books' },
+        { icon: FileText, label: '22+ templates de documents (devis, contrats, factures)' },
+        { icon: UserPlus, label: 'Espace membres avec inscription et vérification' },
+        { icon: FolderOpen, label: 'Stockage média Cloudflare R2 (S3)' },
+        { icon: CreditCard, label: 'Billetterie Stripe avec QR codes de validation' },
       ],
     },
   },
@@ -159,7 +162,6 @@ export default function PortfolioParallax() {
             },
           });
 
-          // Subtle parallax on mockup
           gsap.to(mockup, {
             yPercent: isMobile ? -5 : -10,
             ease: 'none',
@@ -189,7 +191,6 @@ export default function PortfolioParallax() {
           });
         }
 
-        // ── Category ──
         if (categoryEl) {
           gsap.set(categoryEl, { opacity: 0, y: 15 });
           gsap.to(categoryEl, {
@@ -202,7 +203,6 @@ export default function PortfolioParallax() {
           });
         }
 
-        // ── Description ──
         if (descEl) {
           gsap.set(descEl, { opacity: 0, y: 20 });
           gsap.to(descEl, {
@@ -215,7 +215,6 @@ export default function PortfolioParallax() {
           });
         }
 
-        // ── Feature title ──
         if (featureTitle) {
           gsap.set(featureTitle, { opacity: 0, y: 15 });
           gsap.to(featureTitle, {
@@ -228,7 +227,6 @@ export default function PortfolioParallax() {
           });
         }
 
-        // ── Feature items stagger ──
         if (featureItems.length > 0) {
           gsap.set(featureItems, { opacity: 0, x: -15 });
           gsap.to(featureItems, {
@@ -244,7 +242,6 @@ export default function PortfolioParallax() {
           });
         }
 
-        // ── Tags ──
         if (tagEls.length > 0) {
           gsap.set(tagEls, { opacity: 0, y: 10 });
           gsap.to(tagEls, {
@@ -294,7 +291,7 @@ export default function PortfolioParallax() {
                 i < projects.length - 1 ? 'border-b border-white/[0.06]' : ''
               }`}
             >
-              {/* ── Mockup ── */}
+              {/* ── Screenshot ── */}
               <div
                 data-mockup
                 className={`relative will-change-transform ${
@@ -302,32 +299,15 @@ export default function PortfolioParallax() {
                 }`}
                 style={{ opacity: 0 }}
               >
-                {/* Browser frame */}
-                <div className="rounded-xl overflow-hidden border border-white/[0.08] bg-[#111318] shadow-2xl shadow-black/50">
-                  {/* Title bar */}
-                  <div className="flex items-center gap-2 px-4 py-3 bg-[#1a1d25] border-b border-white/[0.06]">
-                    <div className="flex gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                    </div>
-                    <div className="flex-1 mx-4">
-                      <div className="bg-white/[0.05] rounded-md px-3 py-1 max-w-xs mx-auto">
-                        <span className="text-[10px] text-white/30 font-mono">{project.title.toLowerCase().replace(/\s+/g, '-')}.fr</span>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Screenshot */}
-                  <div className="relative aspect-[16/10] overflow-hidden">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover object-top"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      priority={i === 0}
-                    />
-                  </div>
+                <div className="relative aspect-[16/10] rounded-xl overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover object-top"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority={i === 0}
+                  />
                 </div>
               </div>
 
@@ -374,22 +354,19 @@ export default function PortfolioParallax() {
                       {project.features.title}
                     </p>
                     <div className="space-y-2.5">
-                      {project.features.items.map((feature, j) => {
-                        const Icon = feature.icon;
-                        return (
-                          <div
-                            key={j}
-                            data-feature-item
-                            className="flex items-center gap-3"
-                            style={{ opacity: 0 }}
-                          >
-                            <div className="w-6 h-6 rounded-md bg-[#638BFF]/[0.08] border border-[#638BFF]/15 flex items-center justify-center flex-shrink-0">
-                              <Check className="w-3 h-3 text-[#638BFF]" />
-                            </div>
-                            <span className="text-sm text-white/65">{feature.label}</span>
+                      {project.features.items.map((feature, j) => (
+                        <div
+                          key={j}
+                          data-feature-item
+                          className="flex items-center gap-3"
+                          style={{ opacity: 0 }}
+                        >
+                          <div className="w-6 h-6 rounded-md bg-[#638BFF]/[0.08] border border-[#638BFF]/15 flex items-center justify-center flex-shrink-0">
+                            <Check className="w-3 h-3 text-[#638BFF]" />
                           </div>
-                        );
-                      })}
+                          <span className="text-sm text-white/65">{feature.label}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}

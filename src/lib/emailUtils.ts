@@ -28,7 +28,7 @@ interface SendEmailParams {
   type: string;
   contactId?: string;
   documentId?: string;
-  attachments?: Array<{ filename: string; path: string }>;
+  attachments?: Array<{ filename: string; path?: string; content?: Buffer }>;
 }
 
 export async function sendEmail(params: SendEmailParams) {
@@ -53,7 +53,10 @@ export async function sendEmail(params: SendEmailParams) {
       to, subject,
       html: htmlContent,
       text: textContent,
-      attachments: attachments?.map(a => ({ filename: a.filename, path: a.path })),
+      attachments: attachments?.map(a => ({
+        filename: a.filename,
+        ...(a.content ? { content: a.content } : { path: a.path }),
+      })),
     });
 
     await prisma.mailLog.create({

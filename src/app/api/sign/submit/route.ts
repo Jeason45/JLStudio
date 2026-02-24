@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import crypto from 'crypto';
-import fs from 'fs';
-import path from 'path';
 import { generateSignedPDF } from '@/lib/signedPdfGenerator';
 import {
   sendEmail,
@@ -10,7 +8,6 @@ import {
   generateSignatureAdminNotificationHTML,
 } from '@/lib/emailUtils';
 import {
-  saveSignatureImage,
   createSignatureProof,
   getClientIP,
   getUserAgent,
@@ -26,7 +23,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Donnees manquantes' }, { status: 400 });
     }
 
-    // Fetch signature request
+    // Fetch signature request with document data (including fileData)
     const signatureRequest = await prisma.signatureRequest.findUnique({
       where: { token },
       include: { document: true },
@@ -47,19 +44,19 @@ export async function POST(request: NextRequest) {
     const ipAddress = getClientIP(request);
     const userAgent = getUserAgent(request);
 
-    // Verify PDF file exists
-    const documentPath = signatureRequest.document.filePath;
-    if (!documentPath || !fs.existsSync(documentPath)) {
+    // Get document PDF from database
+    const documentData = signatureRequest.document.fileData;
+    if (!documentData) {
       return NextResponse.json({ error: 'Fichier document introuvable' }, { status: 500 });
     }
+    const documentBuffer = Buffer.from(documentData);
 
     // Hash the original PDF
-    const documentBuffer = fs.readFileSync(documentPath);
     const documentHash = crypto.createHash('sha256').update(documentBuffer).digest('hex');
 
-    // Save signature image
-    const signatureImagePath = saveSignatureImage(signatureImage, signatureRequest.documentId, signerEmail);
-    const signatureImageAbsPath = path.join(process.cwd(), signatureImagePath);
+    // Decode signature image from base64
+    const base64Image = signatureImage.replace(/^data:image\/\w+;base64,/, '');
+    const signatureImageBuffer = Buffer.from(base64Image, 'base64');
 
     // Create signature proof
     const signedAt = new Date();
@@ -74,20 +71,14 @@ export async function POST(request: NextRequest) {
       userAgent,
     });
 
-    // Save proof file
-    const proofsDir = path.join(process.cwd(), 'storage', 'proofs');
-    if (!fs.existsSync(proofsDir)) {
-      fs.mkdirSync(proofsDir, { recursive: true });
-    }
-
-    // Create signature, update request and document in a transaction
+    // Create signature and update request in a transaction
     const signature = await prisma.$transaction(async (tx) => {
       const sig = await tx.signature.create({
         data: {
           document: { connect: { id: signatureRequest.documentId } },
           signerName,
           signerEmail,
-          signatureImage: signatureImagePath,
+          signatureImage: signatureImage,
           signatureType: 'draw',
           signedAt,
           ipAddress,
@@ -109,16 +100,11 @@ export async function POST(request: NextRequest) {
       return sig;
     });
 
-    // Save proof JSON file
-    const proofFilePath = path.join(proofsDir, `proof_${signatureRequest.documentId}_${signature.id}.json`);
-    fs.writeFileSync(proofFilePath, JSON.stringify(proofData, null, 2));
-
-    // Generate signed PDF and update document/contact in a transaction
-    let signedPdfPath: string | null = null;
+    // Generate signed PDF and store in database
     try {
-      signedPdfPath = await generateSignedPDF(
-        documentPath,
-        signatureImageAbsPath,
+      const signedPdfBuffer = await generateSignedPDF(
+        documentBuffer,
+        signatureImageBuffer,
         {
           signerName,
           signerEmail,
@@ -128,7 +114,7 @@ export async function POST(request: NextRequest) {
         }
       );
 
-      // Update document and contact status atomically
+      // Update document with signed PDF data and status
       await prisma.$transaction(async (tx) => {
         await tx.document.update({
           where: { id: signatureRequest.documentId },
@@ -136,7 +122,7 @@ export async function POST(request: NextRequest) {
             status: 'signed',
             signedAt,
             signedBy: signerName,
-            signedPdfPath,
+            signedFileData: Uint8Array.from(signedPdfBuffer),
           },
         });
 
@@ -147,6 +133,8 @@ export async function POST(request: NextRequest) {
           });
         }
       });
+
+      const signedFileName = (signatureRequest.document.fileName || 'document').replace('.pdf', '_SIGNED.pdf');
 
       // Send confirmation email to signer
       const confirmHTML = generateSignatureConfirmationHTML({
@@ -163,8 +151,8 @@ export async function POST(request: NextRequest) {
         documentId: signatureRequest.documentId,
         attachments: [
           {
-            filename: (signatureRequest.document.fileName || 'document').replace('.pdf', '_SIGNED.pdf'),
-            path: signedPdfPath,
+            filename: signedFileName,
+            content: signedPdfBuffer,
           },
         ],
       });
@@ -188,8 +176,8 @@ export async function POST(request: NextRequest) {
           documentId: signatureRequest.documentId,
           attachments: [
             {
-              filename: (signatureRequest.document.fileName || 'document').replace('.pdf', '_SIGNED.pdf'),
-              path: signedPdfPath,
+              filename: signedFileName,
+              content: signedPdfBuffer,
             },
           ],
         });

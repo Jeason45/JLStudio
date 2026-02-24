@@ -94,8 +94,8 @@ export async function POST(request: NextRequest) {
       type: requiresSignature ? 'signature_request' : 'document_sent',
       contactId: document.contactId || undefined,
       documentId: document.id,
-      attachments: document.filePath && document.fileName
-        ? [{ filename: document.fileName, path: document.filePath }]
+      attachments: document.fileData && document.fileName
+        ? [{ filename: document.fileName, content: Buffer.from(document.fileData) }]
         : undefined,
     });
 

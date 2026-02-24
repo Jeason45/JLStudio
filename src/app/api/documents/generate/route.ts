@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generatePDFFromTemplate } from '@/lib/mustachePdfGenerator';
 import { prisma } from '@/lib/prisma';
 import { documentGenerateSchema } from '@/lib/validations';
-import fs from 'fs';
-import path from 'path';
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,20 +32,12 @@ export async function POST(request: NextRequest) {
     // Save PDF to storage and create Document record if documentNumber is provided
     let documentId = '';
     if (documentNumber) {
-      const docsDir = path.join(process.cwd(), 'storage', 'documents');
-      if (!fs.existsSync(docsDir)) {
-        fs.mkdirSync(docsDir, { recursive: true });
-      }
-
-      const filePath = path.join(docsDir, safeName);
-      fs.writeFileSync(filePath, result.buffer);
-
       const document = await prisma.document.create({
         data: {
           type: type || 'devis',
           templateSlug,
           fileName: safeName,
-          filePath,
+          fileData: Buffer.from(result.buffer),
           documentNumber,
           ...(contactId ? { contact: { connect: { id: contactId } } } : {}),
           formData: JSON.stringify(data || {}),

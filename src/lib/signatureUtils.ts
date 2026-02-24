@@ -1,11 +1,4 @@
 import crypto from 'crypto';
-import fs from 'fs';
-import path from 'path';
-
-export function generateFileHash(filePath: string): string {
-  const fileBuffer = fs.readFileSync(filePath);
-  return crypto.createHash('sha256').update(fileBuffer).digest('hex');
-}
 
 export function generateStringHash(data: string): string {
   return crypto.createHash('sha256').update(data).digest('hex');
@@ -58,17 +51,6 @@ export function verifySignatureProof(proof: SignatureProofData): boolean {
     proof.signatureType, proof.signedAt, proof.ipAddress, proof.userAgent,
   ].join('|');
   return generateStringHash(proofString) === proof.proofHash;
-}
-
-export function saveSignatureImage(base64Data: string, documentId: string, signerEmail: string): string {
-  const base64Image = base64Data.replace(/^data:image\/\w+;base64,/, '');
-  const imageBuffer = Buffer.from(base64Image, 'base64');
-  const emailHash = generateStringHash(signerEmail).substring(0, 8);
-  const fileName = `signature_${documentId}_${emailHash}_${Date.now()}.png`;
-  const dirPath = path.join(process.cwd(), 'storage', 'signatures');
-  if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
-  fs.writeFileSync(path.join(dirPath, fileName), imageBuffer);
-  return `storage/signatures/${fileName}`;
 }
 
 export function getClientIP(request: Request): string {

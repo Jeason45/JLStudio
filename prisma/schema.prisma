@@ -98,6 +98,7 @@ model Document {
   templateSlug     String?
   fileName         String?
   filePath         String?
+  fileData         Bytes?
   documentNumber   String?
   status           String    @default("draft")
   amount           Float?
@@ -106,6 +107,7 @@ model Document {
   signedAt         DateTime?
   signedBy         String?
   signedPdfPath    String?
+  signedFileData   Bytes?
   sentAt           DateTime?
   deletedAt        DateTime?
   createdAt        DateTime  @default(now())

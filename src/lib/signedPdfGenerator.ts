@@ -1,10 +1,8 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-import * as fs from 'fs';
-import * as path from 'path';
 
 export async function generateSignedPDF(
-  originalPdfPath: string,
-  signatureImagePath: string,
+  originalPdfBuffer: Buffer,
+  signatureImageBuffer: Buffer,
   signatureData: {
     signerName: string;
     signerEmail: string;
@@ -12,11 +10,9 @@ export async function generateSignedPDF(
     ipAddress: string;
     documentHash: string;
   }
-): Promise<string> {
-  const existingPdfBytes = fs.readFileSync(originalPdfPath);
-  const pdfDoc = await PDFDocument.load(existingPdfBytes);
-  const signatureImageBytes = fs.readFileSync(signatureImagePath);
-  const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
+): Promise<Buffer> {
+  const pdfDoc = await PDFDocument.load(originalPdfBuffer);
+  const signatureImage = await pdfDoc.embedPng(signatureImageBuffer);
 
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -58,10 +54,5 @@ export async function generateSignedPDF(
   lastPage.drawText(legalText, { x: (width - legalWidth) / 2, y: 12, size: 7, font: helvetica, color: grayColor });
 
   const pdfBytes = await pdfDoc.save();
-  const originalFileName = path.basename(originalPdfPath, '.pdf');
-  const signedDir = path.join(process.cwd(), 'storage', 'documents', 'signed');
-  if (!fs.existsSync(signedDir)) fs.mkdirSync(signedDir, { recursive: true });
-  const signedFilePath = path.join(signedDir, `${originalFileName}_SIGNED.pdf`);
-  fs.writeFileSync(signedFilePath, pdfBytes);
-  return signedFilePath;
+  return Buffer.from(pdfBytes);
 }
