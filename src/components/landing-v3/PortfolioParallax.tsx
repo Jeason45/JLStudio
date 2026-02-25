@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, Fragment } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -284,12 +284,10 @@ export default function PortfolioParallax() {
           const isEven = i % 2 === 0;
 
           return (
+            <Fragment key={i}>
             <article
-              key={i}
               data-project
-              className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center py-16 sm:py-20 lg:py-28 ${
-                i < projects.length - 1 ? 'border-b border-white/[0.06]' : ''
-              }`}
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center py-10 sm:py-20 lg:py-28"
             >
               {/* ── Screenshot ── */}
               <div
@@ -299,7 +297,7 @@ export default function PortfolioParallax() {
                 }`}
                 style={{ opacity: 0 }}
               >
-                <div className="relative aspect-[16/10] rounded-xl overflow-hidden">
+                <div className="relative aspect-[4/3] lg:aspect-[16/10] rounded-xl overflow-hidden">
                   <Image
                     src={project.image}
                     alt={project.title}
@@ -354,7 +352,7 @@ export default function PortfolioParallax() {
                       {project.features.title}
                     </p>
                     <div className="space-y-2.5">
-                      {project.features.items.map((feature, j) => (
+                      {(isMobile ? project.features.items.slice(0, 3) : project.features.items).map((feature, j) => (
                         <div
                           key={j}
                           data-feature-item
@@ -377,7 +375,7 @@ export default function PortfolioParallax() {
                     <span
                       key={j}
                       data-tag
-                      className="text-xs text-white/50 border border-white/[0.1] bg-white/[0.03] px-4 py-1.5 rounded-full"
+                      className="text-[11px] lg:text-xs text-white/50 border border-white/[0.1] bg-white/[0.03] px-3 py-1 lg:px-4 lg:py-1.5 rounded-full"
                       style={{ opacity: 0 }}
                     >
                       {tag}
@@ -386,6 +384,19 @@ export default function PortfolioParallax() {
                 </div>
               </div>
             </article>
+
+            {/* Separator between projects */}
+            {i < projects.length - 1 && (
+              <div className="flex items-center gap-4">
+                {/* Mobile: numbered pill separator */}
+                <div className="flex-1 h-px bg-[#638BFF]/20 lg:bg-white/[0.06]" />
+                <span className="text-[#638BFF]/40 text-[11px] font-medium tracking-wider lg:hidden">
+                  {String(i + 2).padStart(2, '0')}
+                </span>
+                <div className="flex-1 h-px bg-[#638BFF]/20 lg:bg-white/[0.06] lg:hidden" />
+              </div>
+            )}
+          </Fragment>
           );
         })}
       </div>
