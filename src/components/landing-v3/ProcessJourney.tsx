@@ -256,7 +256,7 @@ export default function ProcessJourney() {
       <div className="absolute inset-0 overflow-hidden">
         <div ref={bgRef} className="absolute inset-[-20%] will-change-transform">
           <Image
-            src="/images/process-bg.jpg"
+            src="/images/process-bg-v2.jpg"
             alt=""
             fill
             className="object-cover opacity-60"
