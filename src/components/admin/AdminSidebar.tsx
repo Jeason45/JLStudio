@@ -175,7 +175,7 @@ export default function AdminSidebar() {
           zIndex: 1600, overflowY: 'auto'
         }}>
           <div style={{ padding: '24px', borderBottom: '1px solid rgba(255,255,255,0.06)', marginTop: '64px' }}>
-            <img src="/images/logo-jlstudio.png" alt="JL Studio" style={{ height: '28px', width: 'auto', marginBottom: '4px' }} />
+            <img src="/images/logo-jlstudio.png" alt="JL Studio" style={{ height: '20px', width: 'auto', marginBottom: '4px' }} />
             <p style={{ fontSize: '11px', color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase', fontWeight: 500 }}>CRM Platform</p>
           </div>
           <nav style={{ flex: 1, padding: '16px', overflowY: 'auto' }}>
@@ -218,7 +218,7 @@ export default function AdminSidebar() {
     }}>
       <div style={{ padding: isCollapsed ? '24px 16px' : '24px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ opacity: isCollapsed ? 0 : 1, transition: 'opacity 0.3s ease', pointerEvents: isCollapsed ? 'none' : 'auto', width: isCollapsed ? 0 : 'auto', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-          <img src="/images/logo-jlstudio.png" alt="JL Studio" style={{ height: '26px', width: 'auto', marginBottom: '2px' }} />
+          <img src="/images/logo-jlstudio.png" alt="JL Studio" style={{ height: '20px', width: 'auto', marginBottom: '2px' }} />
           <p style={{ fontSize: '11px', color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase', fontWeight: 500 }}>CRM Platform</p>
         </div>
         <button

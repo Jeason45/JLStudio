@@ -121,9 +121,9 @@ export default function HeaderV3() {
               <Image
                 src="/images/logo-jlstudio.png"
                 alt="JL Studio"
-                width={120}
-                height={34}
-                className="h-7 sm:h-8 w-auto"
+                width={90}
+                height={18}
+                className="h-5 sm:h-6 w-auto"
                 priority
               />
             </a>
