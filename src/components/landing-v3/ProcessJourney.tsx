@@ -68,6 +68,13 @@ export default function ProcessJourney() {
 
     if (stepEls.length === 0) return;
 
+    // Set line height to stop at the last step's node (center)
+    const lastStep = stepEls[stepEls.length - 1];
+    if (lastStep && line) {
+      const lineHeight = lastStep.offsetTop + lastStep.offsetHeight / 2;
+      line.style.height = `${lineHeight}px`;
+    }
+
     const ctx = gsap.context(() => {
       // SplitText for each title
       const splitTitles = Array.from(titleEls).map((el) =>
@@ -304,7 +311,7 @@ export default function ProcessJourney() {
         {/* Vertical line — left on mobile, center on desktop */}
         <div
           ref={lineRef}
-          className="absolute top-0 bottom-0 w-[1px]"
+          className="absolute top-0 w-[1px]"
           style={{
             left: isMobile ? '24px' : '50%',
             transform: isMobile ? 'none' : 'translateX(-50%)',
