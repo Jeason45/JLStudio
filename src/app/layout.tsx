@@ -17,17 +17,19 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "JL Studio | Developpeur Web Freelance - Sites & Applications Sur Mesure",
+  metadataBase: new URL("https://jlstudio.dev"),
+  title: "JL Studio | Développeur Web Freelance - Sites & Applications Sur Mesure",
   description:
-    "JL Studio - Developpement web freelance. Sites vitrine, e-commerce, applications web sur mesure. Design premium, performances optimales, SEO integre.",
+    "JL Studio - Développement web freelance. Sites vitrine, e-commerce, applications web sur mesure. Design premium, performances optimales, SEO intégré.",
   keywords:
-    "developpeur web, freelance, site vitrine, e-commerce, application web, Next.js, React, design, SEO",
+    "développeur web, freelance, site vitrine, e-commerce, application web, Next.js, React, design, SEO",
   openGraph: {
-    title: "JL Studio | Developpeur Web Freelance",
+    title: "JL Studio | Développeur Web Freelance",
     description:
       "Sites vitrine, e-commerce et applications web sur mesure. Design premium et performances optimales.",
     type: "website",
     locale: "fr_FR",
+    siteName: "JL Studio",
   },
 };
 
