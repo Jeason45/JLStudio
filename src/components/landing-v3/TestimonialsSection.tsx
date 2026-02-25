@@ -144,7 +144,7 @@ export default function TestimonialsSection() {
             src="/images/testimonials-bg-v2.jpg"
             alt=""
             fill
-            className="object-cover opacity-80"
+            className="object-cover opacity-100"
             sizes="100vw"
           />
         </div>
