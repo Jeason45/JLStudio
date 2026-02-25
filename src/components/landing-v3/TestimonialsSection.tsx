@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
@@ -136,80 +137,19 @@ export default function TestimonialsSection() {
       ref={sectionRef}
       className="relative py-20 sm:py-28 md:py-32 overflow-hidden bg-black"
     >
-      {/* Animated floating orbs background */}
+      {/* Background image with parallax */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Blue orbs */}
-        <div className="absolute rounded-full" style={{
-          width: '400px', height: '400px',
-          background: 'radial-gradient(circle, rgba(99,139,255,0.12) 0%, transparent 70%)',
-          top: '10%', left: '-5%',
-          filter: 'blur(60px)',
-          animation: 'float-orb-1 20s ease-in-out infinite',
-        }} />
-        <div className="absolute rounded-full" style={{
-          width: '300px', height: '300px',
-          background: 'radial-gradient(circle, rgba(99,139,255,0.08) 0%, transparent 70%)',
-          top: '60%', right: '-8%',
-          filter: 'blur(50px)',
-          animation: 'float-orb-2 25s ease-in-out infinite',
-        }} />
-        {/* Gold champagne orbs */}
-        <div className="absolute rounded-full" style={{
-          width: '350px', height: '350px',
-          background: 'radial-gradient(circle, rgba(201,169,110,0.1) 0%, transparent 70%)',
-          top: '50%', left: '30%',
-          filter: 'blur(55px)',
-          animation: 'float-orb-3 22s ease-in-out infinite',
-        }} />
-        <div className="absolute rounded-full" style={{
-          width: '250px', height: '250px',
-          background: 'radial-gradient(circle, rgba(201,169,110,0.07) 0%, transparent 70%)',
-          top: '5%', right: '20%',
-          filter: 'blur(45px)',
-          animation: 'float-orb-4 18s ease-in-out infinite',
-        }} />
-        {/* Small accent orbs */}
-        <div className="absolute rounded-full" style={{
-          width: '150px', height: '150px',
-          background: 'radial-gradient(circle, rgba(99,139,255,0.1) 0%, transparent 70%)',
-          bottom: '15%', left: '60%',
-          filter: 'blur(35px)',
-          animation: 'float-orb-5 15s ease-in-out infinite',
-        }} />
-        {/* Noise texture overlay for depth */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '128px 128px',
-          mixBlendMode: 'overlay',
-        }} />
+        <div ref={bgRef} className="absolute inset-[-15%] will-change-transform">
+          <Image
+            src="/images/testimonials-bg.png"
+            alt=""
+            fill
+            className="object-cover"
+            sizes="100vw"
+            quality={100}
+          />
+        </div>
       </div>
-      <style jsx>{`
-        @keyframes float-orb-1 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(80px, 40px) scale(1.1); }
-          66% { transform: translate(-30px, 80px) scale(0.95); }
-        }
-        @keyframes float-orb-2 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(-60px, -50px) scale(1.05); }
-          66% { transform: translate(40px, -30px) scale(0.9); }
-        }
-        @keyframes float-orb-3 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(50px, -60px) scale(1.08); }
-          66% { transform: translate(-70px, 30px) scale(0.92); }
-        }
-        @keyframes float-orb-4 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(-40px, 50px) scale(1.12); }
-          66% { transform: translate(60px, -20px) scale(0.88); }
-        }
-        @keyframes float-orb-5 {
-          0%, 100% { transform: translate(0, 0); }
-          50% { transform: translate(-50px, -40px); }
-        }
-      `}</style>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
         {/* Header */}
@@ -232,7 +172,7 @@ export default function TestimonialsSection() {
             <div
               key={i}
               data-card
-              className="group relative bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 sm:p-8 lg:p-10 hover:border-white/[0.1] transition-colors duration-500"
+              className="group relative bg-black/40 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-6 sm:p-8 lg:p-10 hover:border-white/[0.12] transition-colors duration-500"
               style={{ opacity: 0 }}
             >
               {/* Quote mark — large, decorative */}
