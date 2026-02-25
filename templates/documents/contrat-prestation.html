@@ -7,6 +7,11 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
+    :root {
+      --accent-gold: #C9A96E;
+      --accent-gold-gradient: linear-gradient(135deg, #C9A96E, #B8944F);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -54,7 +59,7 @@
       align-items: flex-end;
       margin: 18px 0 14px;
       padding-bottom: 10px;
-      border-bottom: 1.5px solid #eee;
+      border-bottom: 1.5px solid rgba(201, 169, 110, 0.3);
     }
 
     .contrat-title {
@@ -73,7 +78,7 @@
       left: 0;
       width: 40px;
       height: 2px;
-      background: #0a0e1a;
+      background: var(--accent-gold);
     }
 
     .contrat-meta {
@@ -90,7 +95,7 @@
     .contrat-meta .numero {
       font-size: 11px;
       font-weight: 700;
-      color: #1a2744;
+      color: var(--accent-gold);
       background: #f5f5fa;
       padding: 3px 10px;
       border-radius: 3px;
@@ -387,7 +392,7 @@
       margin-top: 16px;
       padding: 8px 0;
       text-align: center;
-      border-top: 1px solid #eee;
+      border-top: 1px solid rgba(201, 169, 110, 0.3);
       font-size: 8px;
       color: #aaa;
       letter-spacing: 0.01em;
