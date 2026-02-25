@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
@@ -51,7 +50,6 @@ export default function ProcessJourney() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const lineProgressRef = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -60,7 +58,6 @@ export default function ProcessJourney() {
     const section = sectionRef.current;
     const line = lineRef.current;
     const lineProgress = lineProgressRef.current;
-    const bg = bgRef.current;
     const stepEls = section.querySelectorAll<HTMLElement>('[data-step]');
     const numberEls = section.querySelectorAll<HTMLElement>('[data-number]');
     const titleEls = section.querySelectorAll<HTMLElement>('[data-title]');
@@ -76,20 +73,6 @@ export default function ProcessJourney() {
       const splitTitles = Array.from(titleEls).map((el) =>
         SplitText.create(el, { type: 'chars' })
       );
-
-      // ── Background parallax — moves slower than scroll ──
-      if (bg) {
-        gsap.to(bg, {
-          yPercent: isMobile ? -10 : -20,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true,
-          },
-        });
-      }
 
       // ── Progress line grows as you scroll through the section ──
       if (lineProgress) {
@@ -252,26 +235,61 @@ export default function ProcessJourney() {
       id="methode"
       className="relative bg-black overflow-hidden"
     >
-      {/* Background image — parallax */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div ref={bgRef} className="absolute inset-[-20%] will-change-transform">
-          <Image
-            src="/images/process-bg-v2.jpg"
-            alt=""
-            fill
-            className="object-cover opacity-15"
-            sizes="100vw"
-          />
+      {/* Animated grid background */}
+      <div className="absolute inset-0">
+        {/* Grid pattern */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(rgba(99,139,255,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(99,139,255,0.06) 1px, transparent 1px)
+          `,
+          backgroundSize: '60px 60px',
+        }} />
+        {/* Glowing nodes at intersections */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[
+            { top: '12%', left: '20%', delay: '0s', size: '3px' },
+            { top: '28%', left: '50%', delay: '1.5s', size: '4px' },
+            { top: '45%', left: '80%', delay: '0.8s', size: '3px' },
+            { top: '65%', left: '15%', delay: '2.2s', size: '4px' },
+            { top: '78%', left: '60%', delay: '0.4s', size: '3px' },
+            { top: '35%', left: '35%', delay: '3s', size: '2px' },
+            { top: '55%', left: '70%', delay: '1.8s', size: '3px' },
+            { top: '88%', left: '40%', delay: '2.8s', size: '2px' },
+            { top: '18%', left: '75%', delay: '1.2s', size: '3px' },
+            { top: '72%', left: '90%', delay: '0.6s', size: '2px' },
+          ].map((node, i) => (
+            <div key={i} className="absolute rounded-full" style={{
+              top: node.top, left: node.left,
+              width: node.size, height: node.size,
+              background: '#638BFF',
+              boxShadow: '0 0 8px 2px rgba(99,139,255,0.6), 0 0 20px 6px rgba(99,139,255,0.2)',
+              animation: `pulse-node 3s ease-in-out ${node.delay} infinite`,
+            }} />
+          ))}
         </div>
+        {/* Horizontal scan line */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute left-0 right-0 h-[1px]" style={{
+            background: 'linear-gradient(90deg, transparent, rgba(99,139,255,0.15), transparent)',
+            animation: 'scan-line 8s ease-in-out infinite',
+          }} />
+        </div>
+        {/* Top/bottom fade */}
+        <div className="absolute inset-0" style={{
+          background: 'linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.9) 100%)',
+        }} />
       </div>
-
-      {/* Overlay */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 15%, rgba(0,0,0,0.2) 85%, rgba(0,0,0,0.8) 100%)',
-        }}
-      />
+      <style jsx>{`
+        @keyframes pulse-node {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.8); }
+        }
+        @keyframes scan-line {
+          0% { top: -2%; }
+          100% { top: 102%; }
+        }
+      `}</style>
 
       {/* Section header */}
       <div className="relative z-10 pt-20 pb-12 md:pt-32 md:pb-24 text-center">
