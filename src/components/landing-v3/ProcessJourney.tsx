@@ -259,7 +259,7 @@ export default function ProcessJourney() {
             src="/images/process-bg.jpg"
             alt=""
             fill
-            className="object-cover opacity-15"
+            className="object-cover opacity-60"
             sizes="100vw"
           />
         </div>
