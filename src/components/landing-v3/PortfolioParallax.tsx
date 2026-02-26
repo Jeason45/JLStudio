@@ -107,7 +107,7 @@ const projects: Project[] = [
     title: 'ZMR Models Agency',
     category: 'Plateforme & CRM',
     tags: ['Next.js 16', 'PostgreSQL', 'Prisma', 'Stripe', 'Cloudflare R2'],
-    image: '/images/portfolio-zmr.jpg',
+    image: '/images/portfolio-zmr.png',
     description: "Plateforme pour agence de mannequins avec gestion des talents, billetterie événementielle et espace membres.",
     features: {
       title: 'Livré avec un CRM complet',
