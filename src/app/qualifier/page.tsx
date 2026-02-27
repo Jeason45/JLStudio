@@ -2,6 +2,23 @@
 
 import { useState, FormEvent } from 'react';
 import Image from 'next/image';
+import {
+  Globe,
+  ShoppingCart,
+  Settings,
+  Rocket,
+  RefreshCw,
+  Lightbulb,
+  Smartphone,
+  Search,
+  LayoutDashboard,
+  PenLine,
+  CalendarDays,
+  CreditCard,
+  Languages,
+  BarChart3,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -29,13 +46,13 @@ interface ApiResponse {
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
-const PROJECT_TYPES = [
-  { value: 'vitrine', label: 'Site Vitrine', icon: '🌐', desc: 'Présentez votre activité' },
-  { value: 'ecommerce', label: 'E-Commerce', icon: '🛒', desc: 'Vendez en ligne' },
-  { value: 'webapp', label: 'Application Web', icon: '⚙️', desc: 'Outil sur mesure' },
-  { value: 'landing', label: 'Landing Page', icon: '🚀', desc: 'Page de conversion' },
-  { value: 'refonte', label: 'Refonte', icon: '🔄', desc: 'Modernisez votre site' },
-  { value: 'autre', label: 'Autre', icon: '💡', desc: 'Projet spécifique' },
+const PROJECT_TYPES: { value: string; label: string; icon: LucideIcon; desc: string }[] = [
+  { value: 'vitrine', label: 'Site Vitrine', icon: Globe, desc: 'Présentez votre activité' },
+  { value: 'ecommerce', label: 'E-Commerce', icon: ShoppingCart, desc: 'Vendez en ligne' },
+  { value: 'webapp', label: 'Application Web', icon: Settings, desc: 'Outil sur mesure' },
+  { value: 'landing', label: 'Landing Page', icon: Rocket, desc: 'Page de conversion' },
+  { value: 'refonte', label: 'Refonte', icon: RefreshCw, desc: 'Modernisez votre site' },
+  { value: 'autre', label: 'Autre', icon: Lightbulb, desc: 'Projet spécifique' },
 ];
 
 const PAGE_RANGES = [
@@ -45,15 +62,15 @@ const PAGE_RANGES = [
   { value: '20+', label: '20+ pages' },
 ];
 
-const FEATURES = [
-  { value: 'responsive', label: 'Design Responsive', icon: '📱' },
-  { value: 'seo', label: 'SEO', icon: '🔍' },
-  { value: 'cms', label: 'CMS / Back-office', icon: '🖥️' },
-  { value: 'blog', label: 'Blog', icon: '📝' },
-  { value: 'booking', label: 'Réservation', icon: '📅' },
-  { value: 'payment', label: 'Paiement en ligne', icon: '💳' },
-  { value: 'multilang', label: 'Multilingue', icon: '🌍' },
-  { value: 'analytics', label: 'Analytics', icon: '📊' },
+const FEATURES: { value: string; label: string; icon: LucideIcon }[] = [
+  { value: 'responsive', label: 'Design Responsive', icon: Smartphone },
+  { value: 'seo', label: 'SEO', icon: Search },
+  { value: 'cms', label: 'CMS / Back-office', icon: LayoutDashboard },
+  { value: 'blog', label: 'Blog', icon: PenLine },
+  { value: 'booking', label: 'Réservation', icon: CalendarDays },
+  { value: 'payment', label: 'Paiement en ligne', icon: CreditCard },
+  { value: 'multilang', label: 'Multilingue', icon: Languages },
+  { value: 'analytics', label: 'Analytics', icon: BarChart3 },
 ];
 
 const BUDGETS = [
@@ -317,7 +334,7 @@ export default function QualifierPage() {
                           : 'bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]'
                       }`}
                     >
-                      <span className="text-2xl">{pt.icon}</span>
+                      <pt.icon className={`w-6 h-6 ${form.projectType === pt.value ? 'text-[#638BFF]' : 'text-white/40'} transition-colors duration-300`} />
                       <span className="text-sm font-semibold text-white">
                         {pt.label}
                       </span>
@@ -378,7 +395,7 @@ export default function QualifierPage() {
                           : 'bg-white/[0.02] border-white/[0.06] text-white/55 hover:border-white/[0.12] hover:text-white/70'
                       }`}
                     >
-                      <span>{feat.icon}</span>
+                      <feat.icon className={`w-4 h-4 ${form.features.includes(feat.value) ? 'text-[#638BFF]' : 'text-white/40'} transition-colors duration-300`} />
                       <span>{feat.label}</span>
                     </button>
                   ))}
