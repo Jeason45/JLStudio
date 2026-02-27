@@ -22,9 +22,7 @@ interface ApiResponse {
   contact?: {
     id: string;
     score: number;
-    estimatedBudget?: string;
   };
-  estimatedPrice?: string;
   error?: string;
 }
 
@@ -81,7 +79,6 @@ export default function QualifierPage() {
   const [animating, setAnimating] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [apiResult, setApiResult] = useState<ApiResponse | null>(null);
   const [error, setError] = useState('');
 
   const [form, setForm] = useState<FormData>({
@@ -164,7 +161,6 @@ export default function QualifierPage() {
         return;
       }
 
-      setApiResult(data);
       setSubmitted(true);
     } catch {
       setError('Impossible de contacter le serveur. Veuillez réessayer.');
@@ -173,19 +169,6 @@ export default function QualifierPage() {
     }
   }
 
-  // ── Estimated price display helper ──
-
-  function getEstimatedPriceLabel(): string {
-    if (apiResult?.estimatedPrice) return apiResult.estimatedPrice;
-    // Fallback based on selected budget
-    const map: Record<string, string> = {
-      '<2000': 'Moins de 2 000 €',
-      '2000-5000': '2 000 - 5 000 €',
-      '5000-10000': '5 000 - 10 000 €',
-      '>10000': '10 000 € +',
-    };
-    return form.budget ? map[form.budget] || '' : '';
-  }
 
   // ── Styles ──
 
@@ -472,19 +455,6 @@ export default function QualifierPage() {
       maxWidth: '400px',
       lineHeight: '1.6',
     } as React.CSSProperties,
-    successBudget: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '8px',
-      padding: '14px 28px',
-      borderRadius: '12px',
-      background: 'rgba(99,139,255,0.1)',
-      border: '2px solid rgba(99,139,255,0.3)',
-      fontSize: '18px',
-      fontWeight: 700,
-      color: '#638BFF',
-      marginBottom: '36px',
-    } as React.CSSProperties,
     backLink: {
       display: 'inline-flex',
       alignItems: 'center',
@@ -512,7 +482,6 @@ export default function QualifierPage() {
   // ── Render: Success ──
 
   if (submitted) {
-    const priceLabel = getEstimatedPriceLabel();
     return (
       <div style={styles.page}>
         <header style={styles.header}>
@@ -524,13 +493,8 @@ export default function QualifierPage() {
           <div style={styles.successIcon}>✓</div>
           <h1 style={styles.successTitle}>Merci, {form.name.split(' ')[0]} !</h1>
           <p style={styles.successSubtitle}>
-            Votre demande a bien été enregistrée. Nous vous recontacterons rapidement pour discuter de votre projet.
+            Votre projet a bien été enregistré. Nous reviendrons vers vous sous 24h avec une proposition personnalisée adaptée à vos besoins.
           </p>
-          {priceLabel && (
-            <div style={styles.successBudget}>
-              Budget estimé : {priceLabel}
-            </div>
-          )}
           <a href="/" style={styles.backLink}>
             ← Retour au site
           </a>

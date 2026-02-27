@@ -460,7 +460,7 @@ export default function ContactParallax() {
                     href="/qualifier"
                     className="text-[#638BFF] hover:text-[#638BFF]/80 underline underline-offset-2 transition-colors"
                   >
-                    Obtenez un devis estimé en 2 minutes
+                    Décrivez votre projet en 2 minutes
                   </a>
                 </p>
               </div>
