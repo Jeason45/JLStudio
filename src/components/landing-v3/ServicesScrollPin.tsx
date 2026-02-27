@@ -284,7 +284,7 @@ export default function ServicesScrollPin() {
             data-overlay
             className="absolute inset-0"
             style={{
-              background: 'linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.65) 100%)',
+              background: 'linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.7) 100%)',
             }}
           />
 
@@ -322,7 +322,7 @@ export default function ServicesScrollPin() {
               {/* Description */}
               <p
                 data-desc
-                className="text-white/60 text-sm sm:text-base lg:text-lg leading-relaxed mb-6 sm:mb-10 max-w-lg mx-auto relative"
+                className="text-white/75 text-sm sm:text-base lg:text-lg leading-relaxed mb-6 sm:mb-10 max-w-lg mx-auto relative"
               >
                 {service.description}
               </p>
@@ -333,7 +333,7 @@ export default function ServicesScrollPin() {
                   <span
                     key={j}
                     data-feature
-                    className="text-[10px] sm:text-xs text-white/60 border border-white/[0.15] bg-white/[0.05] px-3 sm:px-5 py-1.5 sm:py-2 rounded-full backdrop-blur-sm"
+                    className="text-[10px] sm:text-xs text-white/75 border border-white/[0.15] bg-white/[0.08] px-3 sm:px-5 py-1.5 sm:py-2 rounded-full backdrop-blur-md"
                   >
                     {f}
                   </span>
