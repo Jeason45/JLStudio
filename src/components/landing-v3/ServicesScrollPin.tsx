@@ -306,7 +306,7 @@ export default function ServicesScrollPin() {
               {/* Subtitle */}
               <p
                 data-subtitle
-                className="text-[#638BFF]/70 text-[10px] sm:text-xs tracking-[0.4em] uppercase mb-4 sm:mb-6 relative"
+                className="text-[#638BFF] text-[10px] sm:text-xs tracking-[0.4em] uppercase mb-4 sm:mb-6 relative"
               >
                 {service.subtitle}
               </p>
