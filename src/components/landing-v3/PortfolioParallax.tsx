@@ -134,6 +134,16 @@ export default function PortfolioParallax() {
 
     if (projectEls.length === 0) return;
 
+    // Skip all animations if user prefers reduced motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      projectEls.forEach((projectEl) => {
+        projectEl.querySelectorAll<HTMLElement>('[style]').forEach((el) => {
+          if (el.style.opacity === '0') el.style.opacity = '1';
+        });
+      });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       projectEls.forEach((projectEl) => {
         const mockup = projectEl.querySelector<HTMLElement>('[data-mockup]');

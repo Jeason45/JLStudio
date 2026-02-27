@@ -40,6 +40,17 @@ export default function ContactParallax() {
   useEffect(() => {
     if (!sectionRef.current) return;
 
+    // Skip all animations if user prefers reduced motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (imageRef.current) gsap.set(imageRef.current, { clipPath: 'inset(0 0% 0 0)' });
+      if (formRef.current) {
+        formRef.current.querySelectorAll<HTMLElement>('.form-field').forEach((el) => {
+          el.style.opacity = '1';
+        });
+      }
+      return;
+    }
+
     const ctx = gsap.context(() => {
       // Image wipe reveal
       if (imageRef.current) {

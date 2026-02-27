@@ -68,6 +68,23 @@ export default function ServicesScrollPin() {
 
     if (slides.length === 0) return;
 
+    // Skip all animations if user prefers reduced motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      slides.forEach((slide) => gsap.set(slide, { autoAlpha: 1 }));
+      contents.forEach((c) => gsap.set(c, { autoAlpha: 1 }));
+      titles.forEach((t) => {
+        const s = SplitText.create(t, { type: 'chars' });
+        gsap.set(s.chars, { opacity: 1, y: 0, rotateX: 0 });
+      });
+      subtitles.forEach((s) => gsap.set(s, { opacity: 1, y: 0 }));
+      descriptions.forEach((d) => gsap.set(d, { opacity: 1, y: 0 }));
+      featureWraps.forEach((fw) => {
+        const features = fw?.querySelectorAll('[data-feature]');
+        if (features) gsap.set(features, { opacity: 1, y: 0 });
+      });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       // SplitText for each title
       const splitTitles = Array.from(titles).map((el) =>

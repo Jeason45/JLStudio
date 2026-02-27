@@ -307,12 +307,25 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .btn-premium,
-  .link-hover::after,
-  .divider-animated .divider-line {
-    animation: none !important;
-    transition: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+}
+
+/* ─── PROCESS JOURNEY KEYFRAMES ─────────── */
+@keyframes pulse-node {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.8); }
+}
+
+@keyframes scan-line {
+  0% { top: -2%; }
+  100% { top: 102%; }
 }
 
 /* Ensure content is visible if JS/GSAP fails to load */

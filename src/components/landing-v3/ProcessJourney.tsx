@@ -75,6 +75,20 @@ export default function ProcessJourney() {
       line.style.height = `${lineHeight}px`;
     }
 
+    // Skip all animations if user prefers reduced motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      titleEls.forEach((t) => {
+        const s = SplitText.create(t, { type: 'chars' });
+        gsap.set(s.chars, { opacity: 1, y: 0, rotateX: 0 });
+      });
+      numberEls.forEach((n) => gsap.set(n, { opacity: 1, y: 0 }));
+      descEls.forEach((d) => gsap.set(d, { opacity: 1, y: 0 }));
+      detailEls.forEach((d) => gsap.set(d, { opacity: 1, y: 0 }));
+      nodeEls.forEach((n) => gsap.set(n, { scale: 1, opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }));
+      if (lineProgress) gsap.set(lineProgress, { scaleY: 1 });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       // SplitText for each title
       const splitTitles = Array.from(titleEls).map((el) =>
@@ -287,17 +301,6 @@ export default function ProcessJourney() {
           background: 'linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.9) 100%)',
         }} />
       </div>
-      <style jsx>{`
-        @keyframes pulse-node {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.8); }
-        }
-        @keyframes scan-line {
-          0% { top: -2%; }
-          100% { top: 102%; }
-        }
-      `}</style>
-
       {/* Section header */}
       <div className="relative z-10 pt-20 pb-12 md:pt-32 md:pb-24 text-center">
         <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">Méthode</p>

@@ -26,6 +26,22 @@ export default function HeroParallax() {
   useEffect(() => {
     if (!sectionRef.current) return;
 
+    // Skip all animations if user prefers reduced motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.set(maskRef.current, { opacity: 0 });
+      gsap.set(overlayRef.current, { opacity: 1 });
+      gsap.set(contentRef.current, { opacity: 1 });
+      gsap.set(scrollHintRef.current, { opacity: 0 });
+      gsap.set(bgRef.current, { filter: 'brightness(1)' });
+      const splitH1 = SplitText.create(h1Ref.current!, { type: 'chars' });
+      const splitH2 = SplitText.create(h2Ref.current!, { type: 'chars' });
+      gsap.set(splitH1.chars, { opacity: 1, y: 0, rotateX: 0 });
+      gsap.set(splitH2.chars, { opacity: 1, y: 0, rotateX: 0 });
+      gsap.set(paraRef.current, { opacity: 1, y: 0 });
+      gsap.set(ctaRef.current, { opacity: 1, y: 0 });
+      return;
+    }
+
     // Force initial states BEFORE timeline creation
     gsap.set(textRef.current, { scale: 1, transformOrigin: '50% 75%' });
     gsap.set(maskRef.current, { opacity: 1 });

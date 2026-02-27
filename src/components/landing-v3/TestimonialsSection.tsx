@@ -44,6 +44,14 @@ export default function TestimonialsSection() {
 
     const section = sectionRef.current;
 
+    // Skip all animations if user prefers reduced motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      section.querySelectorAll<HTMLElement>('[style]').forEach((el) => {
+        if (el.style.opacity === '0') el.style.opacity = '1';
+      });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       // ── Background parallax ──
       if (bgRef.current) {
@@ -146,7 +154,7 @@ export default function TestimonialsSection() {
             fill
             className="object-cover"
             sizes="100vw"
-            quality={100}
+            quality={85}
           />
         </div>
       </div>
