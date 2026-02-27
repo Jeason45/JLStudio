@@ -26,11 +26,11 @@ const testimonials = [
     initials: 'F',
   },
   {
-    name: 'Équipe JALP',
-    role: 'Jouons Avec Les Paroles',
+    name: 'Fondatrice ZMR',
+    role: 'ZMR Models Agency',
     quote:
-      "Un projet ambitieux mené de bout en bout : application mobile, API backend et interface web. Jeason a su transformer une idée complexe en produit abouti et fonctionnel.",
-    initials: 'JP',
+      "Un travail remarquable sur tous les aspects : le site vitrine reflète l'image haut de gamme de l'agence, et le CRM nous permet de gérer talents, événements et billetterie depuis une seule plateforme.",
+    initials: 'ZR',
   },
 ];
 
