@@ -26,11 +26,11 @@ const testimonials = [
     initials: 'F',
   },
   {
-    name: 'Fondatrice ZMR',
-    role: 'ZMR Models Agency',
+    name: 'Responsable Al-Ilm',
+    role: 'Al-Ilm — Plateforme éducative',
     quote:
-      "Un travail remarquable sur tous les aspects : le site vitrine reflète l'image haut de gamme de l'agence, et le CRM nous permet de gérer talents, événements et billetterie depuis une seule plateforme.",
-    initials: 'ZR',
+      "Une plateforme à la hauteur du sujet : navigation fluide entre les sourates, accès aux hadiths authentiques et contenu éducatif riche. Un outil qui rend l'apprentissage accessible et agréable.",
+    initials: 'AI',
   },
 ];
 
