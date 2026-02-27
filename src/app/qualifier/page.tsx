@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
+import Image from 'next/image';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -63,13 +64,13 @@ const BUDGETS = [
 ];
 
 const DEADLINES = [
-  { value: 'urgent', label: 'Urgent', desc: 'Moins d\'1 mois' },
+  { value: 'urgent', label: 'Urgent', desc: "Moins d'1 mois" },
   { value: '1-2-mois', label: '1 - 2 mois', desc: 'Délai court' },
   { value: '2-3-mois', label: '2 - 3 mois', desc: 'Délai standard' },
   { value: 'flexible', label: 'Flexible', desc: 'Pas de rush' },
 ];
 
-const STEP_TITLES = ['Votre projet', 'Fonctionnalités', 'Délai & Détails', 'Vos coordonnées'];
+const STEP_LABELS = ['Votre projet', 'Fonctionnalités', 'Délai & Détails', 'Vos coordonnées'];
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -110,17 +111,22 @@ export default function QualifierPage() {
 
   function canAdvance(): boolean {
     if (step === 0) return !!form.projectType;
-    if (step === 3) return !!form.name.trim() && !!form.email.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+    if (step === 3)
+      return (
+        !!form.name.trim() &&
+        !!form.email.trim() &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
+      );
     return true;
   }
 
   // ── Handlers ──
 
   function toggleFeature(value: string) {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
       features: prev.features.includes(value)
-        ? prev.features.filter(f => f !== value)
+        ? prev.features.filter((f) => f !== value)
         : [...prev.features, value],
     }));
   }
@@ -169,333 +175,55 @@ export default function QualifierPage() {
     }
   }
 
+  // ── Input class ──
 
-  // ── Styles ──
-
-  const styles = {
-    page: {
-      minHeight: '100vh',
-      background: '#0a0e1a',
-      color: '#fff',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    } as React.CSSProperties,
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '20px 32px',
-      borderBottom: '1px solid rgba(255,255,255,0.06)',
-    } as React.CSSProperties,
-    logo: {
-      fontSize: '20px',
-      fontWeight: 700,
-      color: '#fff',
-      textDecoration: 'none',
-      letterSpacing: '-0.5px',
-    } as React.CSSProperties,
-    logoAccent: {
-      color: '#638BFF',
-    } as React.CSSProperties,
-    headerRight: {
-      fontSize: '13px',
-      color: 'rgba(255,255,255,0.4)',
-    } as React.CSSProperties,
-    container: {
-      maxWidth: '720px',
-      margin: '0 auto',
-      padding: '40px 24px 80px',
-    } as React.CSSProperties,
-    progressBar: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      marginBottom: '48px',
-    } as React.CSSProperties,
-    progressSegment: (active: boolean, completed: boolean): React.CSSProperties => ({
-      flex: 1,
-      height: '4px',
-      borderRadius: '2px',
-      background: completed ? '#638BFF' : active ? 'linear-gradient(90deg, #638BFF, #4a6fdd)' : 'rgba(255,255,255,0.08)',
-      transition: 'background 0.4s ease',
-    }),
-    progressLabel: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      marginBottom: '8px',
-    } as React.CSSProperties,
-    progressText: {
-      fontSize: '13px',
-      color: 'rgba(255,255,255,0.4)',
-    } as React.CSSProperties,
-    stepTitle: {
-      fontSize: '28px',
-      fontWeight: 700,
-      marginBottom: '8px',
-      letterSpacing: '-0.5px',
-    } as React.CSSProperties,
-    stepSubtitle: {
-      fontSize: '15px',
-      color: 'rgba(255,255,255,0.5)',
-      marginBottom: '36px',
-    } as React.CSSProperties,
-    stepContent: (isAnimating: boolean, dir: 'next' | 'prev'): React.CSSProperties => ({
-      opacity: isAnimating ? 0 : 1,
-      transform: isAnimating
-        ? `translateX(${dir === 'next' ? '30px' : '-30px'})`
-        : 'translateX(0)',
-      transition: 'opacity 0.25s ease, transform 0.25s ease',
-    }),
-    grid6: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-      gap: '12px',
-      marginBottom: '32px',
-    } as React.CSSProperties,
-    grid4: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-      gap: '12px',
-      marginBottom: '32px',
-    } as React.CSSProperties,
-    card: (selected: boolean): React.CSSProperties => ({
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '8px',
-      padding: '20px 16px',
-      borderRadius: '12px',
-      border: selected ? '2px solid #638BFF' : '2px solid rgba(255,255,255,0.08)',
-      background: selected ? 'rgba(99,139,255,0.1)' : 'rgba(255,255,255,0.03)',
-      cursor: 'pointer',
-      transition: 'all 0.2s ease',
-      textAlign: 'center',
-    }),
-    cardIcon: {
-      fontSize: '28px',
-      marginBottom: '4px',
-    } as React.CSSProperties,
-    cardLabel: {
-      fontSize: '14px',
-      fontWeight: 600,
-      color: '#fff',
-    } as React.CSSProperties,
-    cardDesc: {
-      fontSize: '12px',
-      color: 'rgba(255,255,255,0.4)',
-    } as React.CSSProperties,
-    sectionLabel: {
-      fontSize: '14px',
-      fontWeight: 600,
-      color: 'rgba(255,255,255,0.7)',
-      marginBottom: '12px',
-      textTransform: 'uppercase' as const,
-      letterSpacing: '0.5px',
-    } as React.CSSProperties,
-    featureChip: (selected: boolean): React.CSSProperties => ({
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '8px',
-      padding: '10px 18px',
-      borderRadius: '10px',
-      border: selected ? '2px solid #638BFF' : '2px solid rgba(255,255,255,0.08)',
-      background: selected ? 'rgba(99,139,255,0.1)' : 'rgba(255,255,255,0.03)',
-      cursor: 'pointer',
-      transition: 'all 0.2s ease',
-      fontSize: '14px',
-      fontWeight: 500,
-      color: selected ? '#fff' : 'rgba(255,255,255,0.7)',
-    }),
-    featureGrid: {
-      display: 'flex',
-      flexWrap: 'wrap' as const,
-      gap: '10px',
-      marginBottom: '36px',
-    } as React.CSSProperties,
-    radioCard: (selected: boolean): React.CSSProperties => ({
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-      padding: '16px 20px',
-      borderRadius: '12px',
-      border: selected ? '2px solid #638BFF' : '2px solid rgba(255,255,255,0.08)',
-      background: selected ? 'rgba(99,139,255,0.1)' : 'rgba(255,255,255,0.03)',
-      cursor: 'pointer',
-      transition: 'all 0.2s ease',
-    }),
-    radioDot: (selected: boolean): React.CSSProperties => ({
-      width: '18px',
-      height: '18px',
-      borderRadius: '50%',
-      border: selected ? '5px solid #638BFF' : '2px solid rgba(255,255,255,0.2)',
-      background: selected ? '#fff' : 'transparent',
-      flexShrink: 0,
-      transition: 'all 0.2s ease',
-    }),
-    radioLabel: {
-      fontSize: '14px',
-      fontWeight: 600,
-      color: '#fff',
-    } as React.CSSProperties,
-    radioDesc: {
-      fontSize: '12px',
-      color: 'rgba(255,255,255,0.4)',
-      marginTop: '2px',
-    } as React.CSSProperties,
-    textarea: {
-      width: '100%',
-      minHeight: '120px',
-      padding: '16px',
-      borderRadius: '12px',
-      border: '2px solid rgba(255,255,255,0.08)',
-      background: 'rgba(255,255,255,0.03)',
-      color: '#fff',
-      fontSize: '14px',
-      fontFamily: 'inherit',
-      resize: 'vertical' as const,
-      outline: 'none',
-      transition: 'border-color 0.2s ease',
-    } as React.CSSProperties,
-    input: {
-      width: '100%',
-      padding: '14px 16px',
-      borderRadius: '12px',
-      border: '2px solid rgba(255,255,255,0.08)',
-      background: 'rgba(255,255,255,0.03)',
-      color: '#fff',
-      fontSize: '14px',
-      fontFamily: 'inherit',
-      outline: 'none',
-      transition: 'border-color 0.2s ease',
-    } as React.CSSProperties,
-    inputLabel: {
-      display: 'block',
-      fontSize: '13px',
-      fontWeight: 600,
-      color: 'rgba(255,255,255,0.6)',
-      marginBottom: '8px',
-    } as React.CSSProperties,
-    inputGroup: {
-      marginBottom: '20px',
-    } as React.CSSProperties,
-    required: {
-      color: '#638BFF',
-      marginLeft: '2px',
-    } as React.CSSProperties,
-    nav: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginTop: '40px',
-      gap: '16px',
-    } as React.CSSProperties,
-    btnPrev: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      padding: '12px 24px',
-      borderRadius: '10px',
-      border: '2px solid rgba(255,255,255,0.1)',
-      background: 'transparent',
-      color: 'rgba(255,255,255,0.7)',
-      fontSize: '14px',
-      fontWeight: 600,
-      cursor: 'pointer',
-      transition: 'all 0.2s ease',
-      fontFamily: 'inherit',
-    } as React.CSSProperties,
-    btnNext: (disabled: boolean): React.CSSProperties => ({
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      padding: '12px 32px',
-      borderRadius: '10px',
-      border: 'none',
-      background: disabled
-        ? 'rgba(99,139,255,0.3)'
-        : 'linear-gradient(135deg, #638BFF, #4a6fdd)',
-      color: disabled ? 'rgba(255,255,255,0.4)' : '#fff',
-      fontSize: '14px',
-      fontWeight: 600,
-      cursor: disabled ? 'not-allowed' : 'pointer',
-      transition: 'all 0.2s ease',
-      fontFamily: 'inherit',
-      marginLeft: 'auto',
-    }),
-    successContainer: {
-      display: 'flex',
-      flexDirection: 'column' as const,
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center' as const,
-      minHeight: '60vh',
-      padding: '40px 24px',
-    } as React.CSSProperties,
-    successIcon: {
-      width: '80px',
-      height: '80px',
-      borderRadius: '50%',
-      background: 'rgba(99,139,255,0.15)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: '36px',
-      marginBottom: '24px',
-    } as React.CSSProperties,
-    successTitle: {
-      fontSize: '32px',
-      fontWeight: 700,
-      marginBottom: '12px',
-      letterSpacing: '-0.5px',
-    } as React.CSSProperties,
-    successSubtitle: {
-      fontSize: '16px',
-      color: 'rgba(255,255,255,0.5)',
-      marginBottom: '32px',
-      maxWidth: '400px',
-      lineHeight: '1.6',
-    } as React.CSSProperties,
-    backLink: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '8px',
-      padding: '12px 28px',
-      borderRadius: '10px',
-      background: 'linear-gradient(135deg, #638BFF, #4a6fdd)',
-      color: '#fff',
-      textDecoration: 'none',
-      fontSize: '14px',
-      fontWeight: 600,
-      transition: 'all 0.2s ease',
-    } as React.CSSProperties,
-    errorMsg: {
-      marginTop: '12px',
-      padding: '12px 16px',
-      borderRadius: '10px',
-      background: 'rgba(255,80,80,0.1)',
-      border: '1px solid rgba(255,80,80,0.3)',
-      color: '#ff6b6b',
-      fontSize: '13px',
-    } as React.CSSProperties,
-  };
+  const inputClasses =
+    'w-full bg-transparent border-b border-white/[0.08] text-white py-3.5 text-sm outline-none transition-all duration-300 focus:border-[#638BFF]/60 placeholder:text-white/25';
 
   // ── Render: Success ──
 
   if (submitted) {
     return (
-      <div style={styles.page}>
-        <header style={styles.header}>
-          <a href="/" style={styles.logo}>
-            JL <span style={styles.logoAccent}>Studio</span>
+      <div className="min-h-screen bg-[var(--color-background)] text-white">
+        <header className="flex items-center px-6 sm:px-8 py-5 border-b border-white/[0.06]">
+          <a href="/">
+            <Image
+              src="/images/logo-jlstudio.png"
+              alt="JL Studio"
+              width={90}
+              height={18}
+              className="h-5 sm:h-6 w-auto"
+            />
           </a>
         </header>
-        <div style={styles.successContainer}>
-          <div style={styles.successIcon}>✓</div>
-          <h1 style={styles.successTitle}>Merci, {form.name.split(' ')[0]} !</h1>
-          <p style={styles.successSubtitle}>
-            Votre projet a bien été enregistré. Nous reviendrons vers vous sous 24h avec une proposition personnalisée adaptée à vos besoins.
+
+        <div className="flex flex-col items-center justify-center text-center min-h-[70vh] px-6">
+          <div className="w-16 h-16 rounded-full bg-[#638BFF]/15 flex items-center justify-center mb-6">
+            <svg
+              className="w-8 h-8 text-[#638BFF]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <h1 className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl font-black mb-3">
+            Merci, {form.name.split(' ')[0]} !
+          </h1>
+          <p className="text-white/50 text-sm sm:text-base max-w-md leading-relaxed mb-8">
+            Votre projet a bien été enregistré. Nous reviendrons vers vous sous
+            24h avec une proposition personnalisée adaptée à vos besoins.
           </p>
-          <a href="/" style={styles.backLink}>
+          <a
+            href="/"
+            className="bg-[#638BFF] text-white font-semibold px-8 py-3.5 rounded-full text-sm transition-all duration-300 hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]"
+          >
             ← Retour au site
           </a>
         </div>
@@ -506,70 +234,117 @@ export default function QualifierPage() {
   // ── Render: Form ──
 
   return (
-    <div style={styles.page}>
+    <div className="min-h-screen bg-[var(--color-background)] text-white">
       {/* Header */}
-      <header style={styles.header}>
-        <a href="/" style={styles.logo}>
-          JL <span style={styles.logoAccent}>Studio</span>
+      <header className="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-white/[0.06]">
+        <a href="/">
+          <Image
+            src="/images/logo-jlstudio.png"
+            alt="JL Studio"
+            width={90}
+            height={18}
+            className="h-5 sm:h-6 w-auto"
+          />
         </a>
-        <span style={styles.headerRight}>Pré-qualification projet</span>
+        <span className="text-white/40 text-xs tracking-wide">
+          {STEP_LABELS[step]}
+        </span>
       </header>
 
-      <div style={styles.container}>
-        {/* Progress */}
-        <div>
-          <div style={styles.progressLabel}>
-            <span style={styles.progressText}>
+      <div className="max-w-2xl mx-auto px-6 sm:px-8 py-10 sm:py-16">
+        {/* Progress bar */}
+        <div className="mb-10 sm:mb-14">
+          <div className="flex justify-between mb-2.5">
+            <span className="text-white/40 text-xs">
               Étape {step + 1} / {totalSteps}
             </span>
-            <span style={styles.progressText}>{STEP_TITLES[step]}</span>
+            <span className="text-[#638BFF]/50 text-xs">
+              {Math.round(((step + 1) / totalSteps) * 100)}%
+            </span>
           </div>
-          <div style={styles.progressBar}>
+          <div className="flex gap-1.5">
             {Array.from({ length: totalSteps }).map((_, i) => (
               <div
                 key={i}
-                style={styles.progressSegment(i === step, i < step)}
+                className={`flex-1 h-1 rounded-full transition-all duration-500 ${
+                  i < step
+                    ? 'bg-[#638BFF]'
+                    : i === step
+                      ? 'bg-gradient-to-r from-[#638BFF] to-[#7da3ff]'
+                      : 'bg-white/[0.06]'
+                }`}
               />
             ))}
           </div>
         </div>
 
-        {/* Step content with transitions */}
+        {/* Step content */}
         <form onSubmit={handleSubmit}>
-          <div style={styles.stepContent(animating, direction)}>
-
+          <div
+            className={`transition-all duration-300 ease-out ${
+              animating
+                ? `opacity-0 ${direction === 'next' ? 'translate-x-6' : '-translate-x-6'}`
+                : 'opacity-100 translate-x-0'
+            }`}
+          >
             {/* ── Step 1: Project ── */}
             {step === 0 && (
               <div>
-                <h2 style={styles.stepTitle}>Quel type de projet ?</h2>
-                <p style={styles.stepSubtitle}>
-                  Sélectionnez le type de projet qui correspond le mieux à votre besoin.
+                <p className="text-[#638BFF]/70 text-xs tracking-[0.3em] uppercase mb-3">
+                  Étape 1
+                </p>
+                <h2 className="font-[family-name:var(--font-outfit)] text-2xl sm:text-3xl font-black text-white mb-2">
+                  Quel type de projet ?
+                </h2>
+                <p className="text-white/45 text-sm sm:text-base mb-8 sm:mb-10">
+                  Sélectionnez le type qui correspond le mieux à votre besoin.
                 </p>
 
-                <div style={styles.grid6}>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-10">
                   {PROJECT_TYPES.map((pt) => (
-                    <div
+                    <button
                       key={pt.value}
-                      style={styles.card(form.projectType === pt.value)}
-                      onClick={() => setForm(prev => ({ ...prev, projectType: pt.value }))}
+                      type="button"
+                      onClick={() =>
+                        setForm((prev) => ({
+                          ...prev,
+                          projectType: pt.value,
+                        }))
+                      }
+                      className={`flex flex-col items-center gap-2 p-5 sm:p-6 rounded-xl border transition-all duration-300 text-center ${
+                        form.projectType === pt.value
+                          ? 'bg-[#638BFF]/10 border-[#638BFF]/30'
+                          : 'bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]'
+                      }`}
                     >
-                      <span style={styles.cardIcon}>{pt.icon}</span>
-                      <span style={styles.cardLabel}>{pt.label}</span>
-                      <span style={styles.cardDesc}>{pt.desc}</span>
-                    </div>
+                      <span className="text-2xl">{pt.icon}</span>
+                      <span className="text-sm font-semibold text-white">
+                        {pt.label}
+                      </span>
+                      <span className="text-xs text-white/40">{pt.desc}</span>
+                    </button>
                   ))}
                 </div>
 
-                <div style={styles.sectionLabel}>Nombre de pages estimé</div>
-                <div style={styles.grid4}>
+                <p className="text-white/50 text-xs tracking-[0.2em] uppercase font-semibold mb-4">
+                  Nombre de pages estimé
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {PAGE_RANGES.map((pr) => (
-                    <div
+                    <button
                       key={pr.value}
-                      style={styles.card(form.pages === pr.value)}
-                      onClick={() => setForm(prev => ({ ...prev, pages: pr.value }))}
+                      type="button"
+                      onClick={() =>
+                        setForm((prev) => ({ ...prev, pages: pr.value }))
+                      }
+                      className={`py-3.5 px-4 rounded-xl border text-sm font-medium transition-all duration-300 ${
+                        form.pages === pr.value
+                          ? 'bg-[#638BFF]/10 border-[#638BFF]/30 text-white'
+                          : 'bg-white/[0.02] border-white/[0.06] text-white/60 hover:border-white/[0.12]'
+                      }`}
                     >
-                      <span style={styles.cardLabel}>{pr.label}</span>
-                    </div>
+                      {pr.label}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -578,36 +353,75 @@ export default function QualifierPage() {
             {/* ── Step 2: Features ── */}
             {step === 1 && (
               <div>
-                <h2 style={styles.stepTitle}>De quoi avez-vous besoin ?</h2>
-                <p style={styles.stepSubtitle}>
-                  Sélectionnez les fonctionnalités souhaitées pour votre projet.
+                <p className="text-[#638BFF]/70 text-xs tracking-[0.3em] uppercase mb-3">
+                  Étape 2
+                </p>
+                <h2 className="font-[family-name:var(--font-outfit)] text-2xl sm:text-3xl font-black text-white mb-2">
+                  De quoi avez-vous besoin ?
+                </h2>
+                <p className="text-white/45 text-sm sm:text-base mb-8 sm:mb-10">
+                  Sélectionnez les fonctionnalités souhaitées.
                 </p>
 
-                <div style={styles.sectionLabel}>Fonctionnalités</div>
-                <div style={styles.featureGrid}>
+                <p className="text-white/50 text-xs tracking-[0.2em] uppercase font-semibold mb-4">
+                  Fonctionnalités
+                </p>
+                <div className="flex flex-wrap gap-2.5 mb-10">
                   {FEATURES.map((feat) => (
-                    <div
+                    <button
                       key={feat.value}
-                      style={styles.featureChip(form.features.includes(feat.value))}
+                      type="button"
                       onClick={() => toggleFeature(feat.value)}
+                      className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm transition-all duration-300 ${
+                        form.features.includes(feat.value)
+                          ? 'bg-[#638BFF]/10 border-[#638BFF]/30 text-white'
+                          : 'bg-white/[0.02] border-white/[0.06] text-white/55 hover:border-white/[0.12] hover:text-white/70'
+                      }`}
                     >
                       <span>{feat.icon}</span>
                       <span>{feat.label}</span>
-                    </div>
+                    </button>
                   ))}
                 </div>
 
-                <div style={{ ...styles.sectionLabel, marginTop: '8px' }}>Budget</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <p className="text-white/50 text-xs tracking-[0.2em] uppercase font-semibold mb-4">
+                  Budget
+                </p>
+                <div className="flex flex-col gap-2.5">
                   {BUDGETS.map((b) => (
-                    <div
+                    <button
                       key={b.value}
-                      style={styles.radioCard(form.budget === b.value)}
-                      onClick={() => setForm(prev => ({ ...prev, budget: b.value }))}
+                      type="button"
+                      onClick={() =>
+                        setForm((prev) => ({ ...prev, budget: b.value }))
+                      }
+                      className={`flex items-center gap-3.5 px-5 py-4 rounded-xl border text-left transition-all duration-300 ${
+                        form.budget === b.value
+                          ? 'bg-[#638BFF]/10 border-[#638BFF]/30'
+                          : 'bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]'
+                      }`}
                     >
-                      <div style={styles.radioDot(form.budget === b.value)} />
-                      <span style={styles.radioLabel}>{b.label}</span>
-                    </div>
+                      <div
+                        className={`w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
+                          form.budget === b.value
+                            ? 'border-[#638BFF]'
+                            : 'border-white/20'
+                        }`}
+                      >
+                        {form.budget === b.value && (
+                          <div className="w-2 h-2 rounded-full bg-[#638BFF]" />
+                        )}
+                      </div>
+                      <span
+                        className={`text-sm font-medium transition-colors duration-300 ${
+                          form.budget === b.value
+                            ? 'text-white'
+                            : 'text-white/60'
+                        }`}
+                      >
+                        {b.label}
+                      </span>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -616,33 +430,55 @@ export default function QualifierPage() {
             {/* ── Step 3: Deadline & Details ── */}
             {step === 2 && (
               <div>
-                <h2 style={styles.stepTitle}>Quand et comment ?</h2>
-                <p style={styles.stepSubtitle}>
+                <p className="text-[#638BFF]/70 text-xs tracking-[0.3em] uppercase mb-3">
+                  Étape 3
+                </p>
+                <h2 className="font-[family-name:var(--font-outfit)] text-2xl sm:text-3xl font-black text-white mb-2">
+                  Quand et comment ?
+                </h2>
+                <p className="text-white/45 text-sm sm:text-base mb-8 sm:mb-10">
                   Indiquez vos contraintes de délai et décrivez votre projet.
                 </p>
 
-                <div style={styles.sectionLabel}>Délai souhaité</div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '10px', marginBottom: '32px' }}>
+                <p className="text-white/50 text-xs tracking-[0.2em] uppercase font-semibold mb-4">
+                  Délai souhaité
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
                   {DEADLINES.map((d) => (
-                    <div
+                    <button
                       key={d.value}
-                      style={styles.card(form.deadline === d.value)}
-                      onClick={() => setForm(prev => ({ ...prev, deadline: d.value }))}
+                      type="button"
+                      onClick={() =>
+                        setForm((prev) => ({ ...prev, deadline: d.value }))
+                      }
+                      className={`flex flex-col items-center gap-1.5 p-4 sm:p-5 rounded-xl border transition-all duration-300 ${
+                        form.deadline === d.value
+                          ? 'bg-[#638BFF]/10 border-[#638BFF]/30'
+                          : 'bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]'
+                      }`}
                     >
-                      <span style={styles.cardLabel}>{d.label}</span>
-                      <span style={styles.cardDesc}>{d.desc}</span>
-                    </div>
+                      <span className="text-sm font-semibold text-white">
+                        {d.label}
+                      </span>
+                      <span className="text-xs text-white/40">{d.desc}</span>
+                    </button>
                   ))}
                 </div>
 
-                <div style={styles.sectionLabel}>Description du projet (optionnel)</div>
+                <p className="text-white/50 text-xs tracking-[0.2em] uppercase font-semibold mb-4">
+                  Description du projet{' '}
+                  <span className="normal-case tracking-normal text-white/30">
+                    (optionnel)
+                  </span>
+                </p>
                 <textarea
-                  style={styles.textarea}
                   value={form.message}
-                  onChange={e => setForm(prev => ({ ...prev, message: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, message: e.target.value }))
+                  }
                   placeholder="Décrivez brièvement votre projet, vos objectifs, ou toute information utile..."
-                  onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,139,255,0.5)'; }}
-                  onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
+                  rows={4}
+                  className={`${inputClasses} resize-none`}
                 />
               </div>
             )}
@@ -650,124 +486,176 @@ export default function QualifierPage() {
             {/* ── Step 4: Contact Info ── */}
             {step === 3 && (
               <div>
-                <h2 style={styles.stepTitle}>Vos coordonnées</h2>
-                <p style={styles.stepSubtitle}>
-                  Pour que nous puissions vous recontacter avec une proposition adaptée.
+                <p className="text-[#638BFF]/70 text-xs tracking-[0.3em] uppercase mb-3">
+                  Dernière étape
+                </p>
+                <h2 className="font-[family-name:var(--font-outfit)] text-2xl sm:text-3xl font-black text-white mb-2">
+                  Vos coordonnées
+                </h2>
+                <p className="text-white/45 text-sm sm:text-base mb-8 sm:mb-10">
+                  Pour que nous puissions vous recontacter avec une proposition
+                  adaptée.
                 </p>
 
-                <div style={styles.inputGroup}>
-                  <label style={styles.inputLabel}>
-                    Nom complet <span style={styles.required}>*</span>
-                  </label>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={form.name}
-                    onChange={e => setForm(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="Jean Dupont"
-                    required
-                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,139,255,0.5)'; }}
-                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
-                  />
+                <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 mb-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-white mb-3">
+                      Nom complet <span className="text-[#638BFF]">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      autoComplete="name"
+                      value={form.name}
+                      onChange={(e) =>
+                        setForm((prev) => ({ ...prev, name: e.target.value }))
+                      }
+                      placeholder="Jean Dupont"
+                      className={inputClasses}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-white mb-3">
+                      Adresse email <span className="text-[#638BFF]">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      autoComplete="email"
+                      value={form.email}
+                      onChange={(e) =>
+                        setForm((prev) => ({ ...prev, email: e.target.value }))
+                      }
+                      placeholder="jean@exemple.com"
+                      className={inputClasses}
+                    />
+                  </div>
                 </div>
 
-                <div style={styles.inputGroup}>
-                  <label style={styles.inputLabel}>
-                    Adresse email <span style={styles.required}>*</span>
-                  </label>
-                  <input
-                    type="email"
-                    style={styles.input}
-                    value={form.email}
-                    onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))}
-                    placeholder="jean@exemple.com"
-                    required
-                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,139,255,0.5)'; }}
-                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
-                  />
-                </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.inputLabel}>Téléphone</label>
-                  <input
-                    type="tel"
-                    style={styles.input}
-                    value={form.phone}
-                    onChange={e => setForm(prev => ({ ...prev, phone: e.target.value }))}
-                    placeholder="06 12 34 56 78"
-                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,139,255,0.5)'; }}
-                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
-                  />
-                </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.inputLabel}>Entreprise</label>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={form.company}
-                    onChange={e => setForm(prev => ({ ...prev, company: e.target.value }))}
-                    placeholder="Nom de votre entreprise"
-                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,139,255,0.5)'; }}
-                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
-                  />
+                <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
+                  <div>
+                    <label className="block text-sm font-semibold text-white mb-3">
+                      Téléphone
+                    </label>
+                    <input
+                      type="tel"
+                      autoComplete="tel"
+                      value={form.phone}
+                      onChange={(e) =>
+                        setForm((prev) => ({ ...prev, phone: e.target.value }))
+                      }
+                      placeholder="06 12 34 56 78"
+                      className={inputClasses}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-white mb-3">
+                      Entreprise
+                    </label>
+                    <input
+                      type="text"
+                      autoComplete="organization"
+                      value={form.company}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          company: e.target.value,
+                        }))
+                      }
+                      placeholder="Nom de votre entreprise"
+                      className={inputClasses}
+                    />
+                  </div>
                 </div>
 
                 {/* Honeypot anti-spam */}
-                <input name="website" autoComplete="off" tabIndex={-1} style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0 }} />
+                <input
+                  name="website"
+                  autoComplete="off"
+                  tabIndex={-1}
+                  className="absolute left-[-9999px] opacity-0 h-0 w-0"
+                />
               </div>
             )}
           </div>
 
           {/* Error */}
-          {error && <div style={styles.errorMsg}>{error}</div>}
+          {error && (
+            <div className="mt-4 p-4 bg-red-500/[0.06] border border-red-500/15 rounded-xl text-red-400 text-sm text-center">
+              {error}
+            </div>
+          )}
 
           {/* Navigation */}
-          <div style={styles.nav}>
+          <div className="flex items-center justify-between mt-10 sm:mt-12">
             {step > 0 ? (
               <button
                 type="button"
-                style={styles.btnPrev}
                 onClick={() => goTo(step - 1)}
+                className="text-white/50 hover:text-white text-sm font-medium transition-colors duration-300"
               >
                 ← Précédent
               </button>
             ) : (
-              <div />
+              <a
+                href="/"
+                className="text-white/30 hover:text-white/60 text-sm transition-colors duration-300"
+              >
+                ← Retour
+              </a>
             )}
 
             {step < totalSteps - 1 ? (
               <button
                 type="button"
-                style={styles.btnNext(!canAdvance())}
                 disabled={!canAdvance()}
                 onClick={() => canAdvance() && goTo(step + 1)}
+                className={`px-8 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${
+                  canAdvance()
+                    ? 'bg-[#638BFF] text-white hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]'
+                    : 'bg-white/[0.06] text-white/25 cursor-not-allowed'
+                }`}
               >
                 Suivant →
               </button>
             ) : (
               <button
                 type="submit"
-                style={styles.btnNext(!canAdvance() || submitting)}
                 disabled={!canAdvance() || submitting}
+                className={`px-8 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${
+                  canAdvance() && !submitting
+                    ? 'bg-[#638BFF] text-white hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]'
+                    : 'bg-white/[0.06] text-white/25 cursor-not-allowed'
+                }`}
               >
-                {submitting ? 'Envoi en cours...' : 'Envoyer ma demande →'}
+                {submitting ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                    Envoi...
+                  </span>
+                ) : (
+                  'Envoyer ma demande →'
+                )}
               </button>
             )}
           </div>
         </form>
       </div>
-
-      {/* Global CSS for focus/placeholder styling */}
-      <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        ::placeholder { color: rgba(255,255,255,0.25); }
-        ::selection { background: rgba(99,139,255,0.3); }
-        textarea:focus, input:focus { border-color: rgba(99,139,255,0.5) !important; }
-        @media (max-width: 520px) {
-          .qual-grid6 { grid-template-columns: repeat(2, 1fr) !important; }
-        }
-      `}</style>
     </div>
   );
 }
