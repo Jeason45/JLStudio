@@ -100,7 +100,7 @@ export async function GET(req: NextRequest) {
         umamiGet(`${base}/active`, token),
         umamiGet(`${base}/stats?${qs}`, token),
         umamiGet(`${base}/pageviews?${qs}&unit=day&timezone=Europe/Paris`, token),
-        umamiGet(`${base}/metrics?${qs}&type=url&limit=10`, token),
+        umamiGet(`${base}/metrics?${qs}&type=path&limit=10`, token),
         umamiGet(`${base}/metrics?${qs}&type=referrer&limit=10`, token),
         umamiGet(`${base}/metrics?${qs}&type=device&limit=5`, token),
         umamiGet(`${base}/metrics?${qs}&type=country&limit=10`, token),
