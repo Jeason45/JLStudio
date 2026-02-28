@@ -107,9 +107,15 @@ export async function GET(req: NextRequest) {
         umamiGet(`${base}/metrics?${qs}&type=browser&limit=5`, token),
       ]);
 
+    // Normaliser le format self-hosted → format attendu par le client
     return NextResponse.json({
-      active,
-      stats,
+      active: { x: active.visitors ?? active.x ?? 0 },
+      stats: {
+        pageviews: { value: stats.pageviews?.value ?? stats.pageviews ?? 0 },
+        visitors: { value: stats.visitors?.value ?? stats.visitors ?? 0 },
+        bounces: { value: stats.bounces?.value ?? stats.bounces ?? 0 },
+        totaltime: { value: stats.totaltime?.value ?? stats.totaltime ?? 0 },
+      },
       pageviews,
       topPages,
       topReferrers,
