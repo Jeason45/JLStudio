@@ -352,7 +352,7 @@ export default function PortfolioParallax() {
                   <div className="mb-6 sm:mb-8">
                     <p
                       data-feature-title
-                      className="text-white/40 text-xs uppercase tracking-[0.2em] mb-4"
+                      className="text-white/50 text-xs uppercase tracking-[0.2em] mb-4"
                       style={{ opacity: 0 }}
                     >
                       {project.features.title}

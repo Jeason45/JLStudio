@@ -35,7 +35,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
 
       <footer className="border-t border-white/[0.04]">
         <div className="mx-auto max-w-6xl px-6 py-10 text-center">
-          <p className="text-xs text-white/40">
+          <p className="text-xs text-white/50">
             &copy; {new Date().getFullYear()} JL Studio. Tous droits réservés.
           </p>
         </div>

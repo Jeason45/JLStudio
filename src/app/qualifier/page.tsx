@@ -263,7 +263,7 @@ export default function QualifierPage() {
             className="h-5 sm:h-6 w-auto"
           />
         </a>
-        <span className="text-white/40 text-xs tracking-wide">
+        <span className="text-white/50 text-xs tracking-wide">
           {STEP_LABELS[step]}
         </span>
       </header>
@@ -272,7 +272,7 @@ export default function QualifierPage() {
         {/* Progress bar */}
         <div className="mb-10 sm:mb-14">
           <div className="flex justify-between mb-2.5">
-            <span className="text-white/40 text-xs">
+            <span className="text-white/50 text-xs">
               Étape {step + 1} / {totalSteps}
             </span>
             <span className="text-[#638BFF]/50 text-xs">
@@ -334,11 +334,11 @@ export default function QualifierPage() {
                           : 'bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]'
                       }`}
                     >
-                      <pt.icon className={`w-6 h-6 ${form.projectType === pt.value ? 'text-[#638BFF]' : 'text-white/40'} transition-colors duration-300`} />
+                      <pt.icon className={`w-6 h-6 ${form.projectType === pt.value ? 'text-[#638BFF]' : 'text-white/50'} transition-colors duration-300`} />
                       <span className="text-sm font-semibold text-white">
                         {pt.label}
                       </span>
-                      <span className="text-xs text-white/40">{pt.desc}</span>
+                      <span className="text-xs text-white/50">{pt.desc}</span>
                     </button>
                   ))}
                 </div>
@@ -395,7 +395,7 @@ export default function QualifierPage() {
                           : 'bg-white/[0.02] border-white/[0.06] text-white/55 hover:border-white/[0.12] hover:text-white/70'
                       }`}
                     >
-                      <feat.icon className={`w-4 h-4 ${form.features.includes(feat.value) ? 'text-[#638BFF]' : 'text-white/40'} transition-colors duration-300`} />
+                      <feat.icon className={`w-4 h-4 ${form.features.includes(feat.value) ? 'text-[#638BFF]' : 'text-white/50'} transition-colors duration-300`} />
                       <span>{feat.label}</span>
                     </button>
                   ))}
@@ -477,14 +477,14 @@ export default function QualifierPage() {
                       <span className="text-sm font-semibold text-white">
                         {d.label}
                       </span>
-                      <span className="text-xs text-white/40">{d.desc}</span>
+                      <span className="text-xs text-white/50">{d.desc}</span>
                     </button>
                   ))}
                 </div>
 
                 <p className="text-white/50 text-xs tracking-[0.2em] uppercase font-semibold mb-4">
                   Description du projet{' '}
-                  <span className="normal-case tracking-normal text-white/30">
+                  <span className="normal-case tracking-normal text-white/50">
                     (optionnel)
                   </span>
                 </p>
@@ -616,7 +616,7 @@ export default function QualifierPage() {
             ) : (
               <a
                 href="/"
-                className="text-white/30 hover:text-white/60 text-sm transition-colors duration-300"
+                className="text-white/50 hover:text-white/70 text-sm transition-colors duration-300"
               >
                 ← Retour
               </a>

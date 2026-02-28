@@ -262,10 +262,10 @@ export default function HeaderV3() {
 
           {/* Footer info */}
           <div className="absolute bottom-8 left-10 right-10 flex items-center justify-between">
-            <span className="text-xs text-white/25">
+            <span className="text-xs text-white/50">
               jlstudio.dev
             </span>
-            <span className="text-xs text-white/25">
+            <span className="text-xs text-white/50">
               Bordeaux, France
             </span>
           </div>

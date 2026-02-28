@@ -105,7 +105,7 @@ export default function MentionsLegales() {
             Téléphone : <a href="tel:+33767581061" className="text-[#638BFF] hover:underline">07 67 58 10 61</a><br />
             Adresse : 35 quai Deschamps, 33100 Bordeaux
           </p>
-          <p className="mt-4 text-white/30 text-xs">
+          <p className="mt-4 text-white/50 text-xs">
             Dernière mise à jour : février 2026
           </p>
         </section>

@@ -157,7 +157,7 @@ export default function PolitiqueConfidentialite() {
             Nous mettons en oeuvre les mesures techniques et organisationnelles appropriées
             pour protéger vos données contre tout accès non autorisé, perte ou altération.
           </p>
-          <p className="mt-4 text-white/30 text-xs">
+          <p className="mt-4 text-white/50 text-xs">
             Dernière mise à jour : février 2026
           </p>
         </section>

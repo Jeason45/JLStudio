@@ -394,7 +394,7 @@ export default function HeroParallax() {
           ref={scrollHintRef}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[15] flex flex-col items-center gap-2"
         >
-          <span className="text-[0.65rem] sm:text-xs tracking-[0.3em] uppercase text-white/35">
+          <span className="text-[0.65rem] sm:text-xs tracking-[0.3em] uppercase text-white/50">
             Scroll
           </span>
           <div className="w-[1px] h-10 bg-gradient-to-b from-white/30 to-transparent animate-pulse" />

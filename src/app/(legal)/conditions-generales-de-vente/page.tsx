@@ -248,7 +248,7 @@ export default function ConditionsGeneralesDeVente() {
             défaut de résolution amiable, les tribunaux compétents de Bordeaux seront
             seuls compétents.
           </p>
-          <p className="mt-4 text-white/30 text-xs">
+          <p className="mt-4 text-white/50 text-xs">
             Dernière mise à jour : février 2026
           </p>
         </section>

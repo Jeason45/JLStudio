@@ -150,7 +150,7 @@ export default function ContactParallax() {
   };
 
   const inputClasses =
-    'w-full bg-transparent border-b border-white/[0.08] text-white py-3.5 px-0 text-base outline-none transition-all duration-300 focus:border-[#638BFF]/60 placeholder:text-white/35';
+    'w-full bg-transparent border-b border-white/[0.08] text-white py-3.5 px-0 text-base outline-none transition-all duration-300 focus:border-[#638BFF]/60 placeholder:text-white/40';
 
   return (
     <section
@@ -454,7 +454,7 @@ export default function ContactParallax() {
 
               {/* Pre-qualification link */}
               <div className="form-field pt-4 text-center sm:text-left" style={{ opacity: 0 }}>
-                <p className="text-white/40 text-xs">
+                <p className="text-white/50 text-xs">
                   Vous avez déjà une idée précise ?{' '}
                   <a
                     href="/qualifier"
