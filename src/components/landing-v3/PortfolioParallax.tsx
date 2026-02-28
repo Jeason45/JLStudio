@@ -83,7 +83,7 @@ const projects: Project[] = [
     title: 'PropDesk',
     category: 'Plateforme Fintech & IA',
     tags: ['Next.js 16', 'PyTorch', 'Databento', 'PostgreSQL'],
-    image: '/images/portfolio-propdesk.png',
+    image: '/images/portfolio-propdesk.jpg',
     description: "Plateforme de trading IA combinant pilotage multi-comptes, gestion du risque et exécution automatisée via deep learning sur données de niveau institutionnel.",
     features: {
       title: "Écosystème trading complet",
@@ -107,7 +107,7 @@ const projects: Project[] = [
     title: 'Al-Ilm',
     category: 'Plateforme Éducative',
     tags: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'GSAP'],
-    image: '/images/portfolio-alilm.png',
+    image: '/images/portfolio-alilm.jpg',
     description: "Plateforme d'apprentissage islamique complète : lecture du Coran, collections de hadiths authentiques et ressources éducatives interactives.",
     features: {
       title: 'Contenu riche et interactif',

@@ -33,6 +33,38 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "JL Studio",
+  url: "https://jlstudio.dev",
+  logo: "https://jlstudio.dev/images/logo-jlstudio.png",
+  description:
+    "Développeur web freelance à Bordeaux. Sites vitrine, e-commerce et applications web sur mesure.",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "35 quai Deschamps",
+    addressLocality: "Bordeaux",
+    postalCode: "33100",
+    addressCountry: "FR",
+  },
+  telephone: "+33767581061",
+  email: "contact@jlstudio.dev",
+  areaServed: {
+    "@type": "Country",
+    name: "France",
+  },
+  priceRange: "€€",
+  knowsAbout: [
+    "Développement web",
+    "Next.js",
+    "React",
+    "E-commerce",
+    "Applications web",
+    "SEO",
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -41,6 +73,10 @@ export default function RootLayout({
   return (
     <html lang="fr" className="scroll-smooth">
       <body className={`${outfit.variable} ${dmSans.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {children}
       </body>
     </html>

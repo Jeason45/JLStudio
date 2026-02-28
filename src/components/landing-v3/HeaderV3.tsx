@@ -180,6 +180,7 @@ export default function HeaderV3() {
         className="fixed inset-0 z-[59] bg-black/95 backdrop-blur-2xl md:hidden"
         style={{ clipPath: 'circle(0% at calc(100% - 36px) 32px)', height: '100dvh' }}
         aria-hidden={!menuOpen}
+        {...(!menuOpen && { inert: true as unknown as boolean })}
       >
         {/* Subtle background gradient */}
         <div

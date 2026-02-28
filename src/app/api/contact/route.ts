@@ -5,6 +5,15 @@ import { publicContactSchema } from '@/lib/validations';
 import { calculateLeadScore } from '@/lib/scoring/lead-scorer';
 import { rateLimit } from '@/lib/rateLimit';
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
@@ -64,6 +73,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Send notification to admin
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safePhone = phone ? escapeHtml(phone) : '';
+    const safeType = selectedType ? escapeHtml(selectedType) : '';
+    const safeMessage = message ? escapeHtml(message) : '';
+
     await sendEmail({
       to: adminEmail,
       subject: `Nouveau lead: ${name} (score: ${score})`,
@@ -74,13 +89,13 @@ export async function POST(request: NextRequest) {
           <h2 style="color: #638BFF;">Nouveau lead depuis le site</h2>
           <p style="color: #333; font-size: 14px; margin-bottom: 16px;">Un nouveau contact a ete cree automatiquement dans le CRM avec un score de <strong>${score}/100</strong>.</p>
           <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 8px 0; color: #666;">Nom</td><td style="padding: 8px 0; font-weight: bold;">${name}</td></tr>
-            <tr><td style="padding: 8px 0; color: #666;">Email</td><td style="padding: 8px 0;">${email}</td></tr>
-            ${phone ? `<tr><td style="padding: 8px 0; color: #666;">Telephone</td><td style="padding: 8px 0;">${phone}</td></tr>` : ''}
-            ${selectedType ? `<tr><td style="padding: 8px 0; color: #666;">Type de projet</td><td style="padding: 8px 0;">${selectedType}</td></tr>` : ''}
+            <tr><td style="padding: 8px 0; color: #666;">Nom</td><td style="padding: 8px 0; font-weight: bold;">${safeName}</td></tr>
+            <tr><td style="padding: 8px 0; color: #666;">Email</td><td style="padding: 8px 0;">${safeEmail}</td></tr>
+            ${safePhone ? `<tr><td style="padding: 8px 0; color: #666;">Telephone</td><td style="padding: 8px 0;">${safePhone}</td></tr>` : ''}
+            ${safeType ? `<tr><td style="padding: 8px 0; color: #666;">Type de projet</td><td style="padding: 8px 0;">${safeType}</td></tr>` : ''}
             <tr><td style="padding: 8px 0; color: #666;">Rappel souhaite</td><td style="padding: 8px 0;">${wantCallback ? 'Oui' : 'Non'}</td></tr>
           </table>
-          ${message ? `<div style="margin-top: 16px; padding: 16px; background: #f5f5f5; border-radius: 8px;"><p style="margin: 0; color: #333;">${message}</p></div>` : ''}
+          ${safeMessage ? `<div style="margin-top: 16px; padding: 16px; background: #f5f5f5; border-radius: 8px;"><p style="margin: 0; color: #333;">${safeMessage}</p></div>` : ''}
         </div>
       `,
       textContent: `Nouveau lead (score: ${score}/100):\nNom: ${name}\nEmail: ${email}\nTel: ${phone || 'N/A'}\nType: ${selectedType || 'N/A'}\nMessage: ${message || 'Aucun'}\nRappel: ${wantCallback ? 'Oui' : 'Non'}`,
@@ -94,7 +109,7 @@ export async function POST(request: NextRequest) {
       contactId: contact.id,
       htmlContent: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #638BFF;">Merci ${name} !</h2>
+          <h2 style="color: #638BFF;">Merci ${safeName} !</h2>
           <p>Nous avons bien recu votre demande et nous vous recontacterons rapidement.</p>
           ${wantCallback ? '<p>Comme demande, nous vous rappellerons dans les meilleurs delais.</p>' : ''}
           <p style="color: #666; margin-top: 24px;">A bientot,<br><strong>JL Studio</strong></p>

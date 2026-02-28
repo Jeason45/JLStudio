@@ -149,7 +149,7 @@ export default function TestimonialsSection() {
       <div className="absolute inset-0 overflow-hidden">
         <div ref={bgRef} className="absolute inset-[-15%] will-change-transform">
           <Image
-            src="/images/testimonials-bg.png"
+            src="/images/testimonials-bg.jpg"
             alt=""
             fill
             className="object-cover"
