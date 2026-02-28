@@ -11,6 +11,20 @@ const PUBLIC_API_PATHS = [
   '/api/cron',
 ];
 
+const CSP_DIRECTIVES = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  "frame-src 'none'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join('; ');
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
@@ -18,7 +32,12 @@ export async function middleware(req: NextRequest) {
   const isApiPath = pathname.startsWith('/api');
 
   if (!isAdminPath && !isApiPath) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set('Content-Security-Policy', CSP_DIRECTIVES);
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('X-Frame-Options', 'DENY');
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    return response;
   }
 
   const isPublicApi = isApiPath && PUBLIC_API_PATHS.some((p) => pathname.startsWith(p));
@@ -26,7 +45,7 @@ export async function middleware(req: NextRequest) {
   // CORS for public API routes
   if (isPublicApi) {
     const corsHeaders = {
-      'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || '*',
+      'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || 'https://jlstudio.dev',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     };
@@ -67,5 +86,14 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/:path*'],
+  matcher: [
+    /*
+     * Match all paths except static files and Next.js internals:
+     * - _next/static (static files)
+     * - _next/image (image optimization)
+     * - favicon.ico, robots.txt, sitemap.xml
+     * - image files in /images/
+     */
+    '/((?!_next/static|_next/image|favicon\\.ico|robots\\.txt|sitemap\\.xml|images/).*)',
+  ],
 };
