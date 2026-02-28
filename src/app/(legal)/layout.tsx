@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -7,9 +8,11 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="flex h-16 md:h-20 items-center justify-between">
             <Link href="/" className="flex items-center">
-              <img
+              <Image
                 src="/images/logo-jlstudio.png"
                 alt="JL Studio"
+                width={120}
+                height={32}
                 className="h-7 sm:h-8 w-auto"
               />
             </Link>

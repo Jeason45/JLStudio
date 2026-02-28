@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
 
     await sendEmail({
       to: adminEmail,
-      subject: `Nouveau lead: ${name} (score: ${score})`,
+      subject: `Nouveau lead: ${safeName} (score: ${score})`,
       type: 'contact_notification',
       contactId: contact.id,
       htmlContent: `
