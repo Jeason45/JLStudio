@@ -120,42 +120,42 @@ export default function AnalyticsPage() {
       <div style={{ flex: 1, marginLeft: isMobile ? '0' : `${sidebarWidth}px`, transition: 'margin-left 0.3s ease', minHeight: '100vh', padding: isMobile ? '80px 16px 24px 16px' : '40px' }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(16,185,129,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <BarChart3 size={24} style={{ color: '#10b981' }} />
-            </div>
-            <div>
-              <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'rgba(255,255,255,0.95)', margin: 0 }}>Analytics</h1>
-              <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', margin: 0 }}>jlstudio.dev</p>
-            </div>
-            {data && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '20px', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', animation: 'pulse 2s infinite' }} />
-                <span style={{ fontSize: '13px', fontWeight: 600, color: '#10b981' }}>{data.active.x} en ligne</span>
-              </div>
-            )}
+        <div style={{ background: '#0a0e1a', padding: isMobile ? '0 0 32px 0' : '0 0 32px 0', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'linear-gradient(135deg, #638BFF 0%, #4a6fd4 100%)', boxShadow: '0 0 12px rgba(99,139,255,0.4)' }} />
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(99,139,255,0.3) 0%, transparent 100%)' }} />
+            <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Analytics</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ display: 'flex', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden' }}>
-              {PERIODS.map(p => (
-                <button
-                  key={p.days}
-                  onClick={() => setPeriod(p.days)}
-                  style={{
-                    padding: '8px 16px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 600,
-                    background: period === p.days ? 'rgba(16,185,129,0.2)' : 'transparent',
-                    color: period === p.days ? '#10b981' : 'rgba(255,255,255,0.5)',
-                    transition: 'all 0.2s',
-                  }}
-                >
-                  {p.label}
-                </button>
-              ))}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              {data && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '20px', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', animation: 'pulse 2s infinite' }} />
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#10b981' }}>{data.active.x} en ligne</span>
+                </div>
+              )}
             </div>
-            <button onClick={() => fetchData(period)} title="Rafraichir" style={{ width: '36px', height: '36px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.5)' }}>
-              <RefreshCw size={16} style={{ animation: loading ? 'spin 1s linear infinite' : 'none' }} />
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ display: 'flex', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden' }}>
+                {PERIODS.map(p => (
+                  <button
+                    key={p.days}
+                    onClick={() => setPeriod(p.days)}
+                    style={{
+                      padding: '8px 16px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 600,
+                      background: period === p.days ? 'rgba(16,185,129,0.2)' : 'transparent',
+                      color: period === p.days ? '#10b981' : 'rgba(255,255,255,0.5)',
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              <button onClick={() => fetchData(period)} title="Rafraichir" style={{ width: '36px', height: '36px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.5)' }}>
+                <RefreshCw size={16} style={{ animation: loading ? 'spin 1s linear infinite' : 'none' }} />
+              </button>
+            </div>
           </div>
         </div>
 
