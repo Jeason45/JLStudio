@@ -55,9 +55,14 @@ export default function AnalyticsPage() {
     setLoading(true);
     setError(null);
     fetch(`/api/stats/analytics?days=${days}`)
-      .then(res => {
-        if (!res.ok) return res.json().then(d => { throw new Error(d.error || 'Erreur'); });
-        return res.json();
+      .then(async res => {
+        const text = await res.text();
+        let json;
+        try { json = JSON.parse(text); } catch {
+          throw new Error(`Reponse invalide (${res.status}): ${text.slice(0, 200)}`);
+        }
+        if (!res.ok) throw new Error(json.error || `Erreur ${res.status}`);
+        return json;
       })
       .then(d => { setData(d); setLoading(false); })
       .catch(e => { setError(e.message); setLoading(false); });
