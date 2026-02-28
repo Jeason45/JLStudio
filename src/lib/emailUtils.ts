@@ -121,6 +121,15 @@ export async function sendEmail(params: SendEmailParams) {
   }
 }
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export function generateDocumentEmailHTML(params: {
   recipientName: string;
   documentName: string;
@@ -140,9 +149,9 @@ export function generateDocumentEmailHTML(params: {
 <body>
   <div class="header"><h1>JL Studio</h1><p>Document</p></div>
   <div class="content">
-    <p>Bonjour ${recipientName},</p>
-    ${message ? `<p>${message}</p>` : `<p>Veuillez trouver ci-joint le document <strong>${documentName}</strong>.</p>`}
-    <div class="info-box"><p style="margin:0;font-weight:bold;">Document : ${documentName}</p></div>
+    <p>Bonjour ${escapeHtml(recipientName)},</p>
+    ${message ? `<p>${escapeHtml(message)}</p>` : `<p>Veuillez trouver ci-joint le document <strong>${escapeHtml(documentName)}</strong>.</p>`}
+    <div class="info-box"><p style="margin:0;font-weight:bold;">Document : ${escapeHtml(documentName)}</p></div>
     ${signatureLink ? `
       <p>Ce document requiert votre signature electronique :</p>
       <p style="text-align:center;margin:30px 0;"><a href="${signatureLink}" class="btn">Signer le document</a></p>
@@ -170,11 +179,11 @@ export function generateSignatureConfirmationHTML(params: {
 <body>
   <div class="header"><h1>Document Signe</h1><p>JL Studio</p></div>
   <div class="content">
-    <p>Bonjour ${signerName},</p>
+    <p>Bonjour ${escapeHtml(signerName)},</p>
     <p>Votre signature electronique a ete enregistree avec succes.</p>
     <div class="success-box">
       <p style="margin:0;color:#059669;font-weight:bold;">Signature Certifiee</p>
-      <p style="margin:5px 0 0;font-size:12px;color:#64748b;">Document : ${documentName}<br>Date : ${new Date().toLocaleString('fr-FR')}<br>Hash : ${documentHash.substring(0, 16)}...</p>
+      <p style="margin:5px 0 0;font-size:12px;color:#64748b;">Document : ${escapeHtml(documentName)}<br>Date : ${new Date().toLocaleString('fr-FR')}<br>Hash : ${escapeHtml(documentHash.substring(0, 16))}...</p>
     </div>
     <p style="font-size:12px;color:#94a3b8;margin-top:30px;">Signature electronique simple avec preuve cryptographique.</p>
   </div>
@@ -200,11 +209,11 @@ export function generateSignatureAdminNotificationHTML(params: {
 <body>
   <div class="header"><h2 style="margin:0;">Document Signe</h2></div>
   <div class="content">
-    <div class="info-row"><span class="label">Document :</span> ${documentName}</div>
-    <div class="info-row"><span class="label">Signe par :</span> ${signerName} (${signerEmail})</div>
+    <div class="info-row"><span class="label">Document :</span> ${escapeHtml(documentName)}</div>
+    <div class="info-row"><span class="label">Signe par :</span> ${escapeHtml(signerName)} (${escapeHtml(signerEmail)})</div>
     <div class="info-row"><span class="label">Date :</span> ${new Date().toLocaleString('fr-FR')}</div>
-    <div class="info-row"><span class="label">IP :</span> ${ipAddress}</div>
-    <div class="info-row"><span class="label">Hash :</span> <code style="font-size:11px;word-break:break-all;">${documentHash}</code></div>
+    <div class="info-row"><span class="label">IP :</span> ${escapeHtml(ipAddress)}</div>
+    <div class="info-row"><span class="label">Hash :</span> <code style="font-size:11px;word-break:break-all;">${escapeHtml(documentHash)}</code></div>
     <p style="margin-top:20px;"><a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3004'}/admin/documents" style="display:inline-block;background:#638BFF;color:#fff;padding:10px 24px;text-decoration:none;border-radius:5px;font-weight:bold;">Voir les documents</a></p>
   </div>
 </body></html>`;

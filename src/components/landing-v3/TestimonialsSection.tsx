@@ -12,21 +12,21 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const testimonials = [
   {
-    name: 'Famille Caubet',
-    role: 'Flamme by Caubet',
+    name: 'Run As One',
+    role: 'Run As One — Communauté running',
     quote:
-      'Jeason a compris notre univers dès le premier échange. Le site reflète parfaitement notre passion du feu et de la convivialité, avec un système de gestion qui nous simplifie le quotidien.',
-    initials: 'FC',
+      "Un site qui capture parfaitement l'énergie de notre communauté. Le design épuré, les performances rapides et l'expérience mobile irréprochable nous ont permis de fédérer nos coureurs autour d'une plateforme à notre image.",
+    initials: 'RO',
   },
   {
-    name: 'Florent',
-    role: 'Florent Food — 500K+ abonnés',
+    name: 'Propdesk',
+    role: 'Propdesk — Prop trading',
     quote:
-      "Une plateforme à la hauteur de mon image de marque. Le design premium et le système de newsletter intégré m'ont permis de professionnaliser mon activité de créateur de contenu.",
-    initials: 'F',
+      "JL Studio a su traduire notre exigence de précision en un site professionnel et performant. L'interface claire et le parcours utilisateur fluide inspirent confiance dès le premier clic.",
+    initials: 'PD',
   },
   {
-    name: 'Responsable Al-Ilm',
+    name: 'Al-Ilm',
     role: 'Al-Ilm — Plateforme éducative',
     quote:
       "Une plateforme à la hauteur du sujet : navigation fluide entre les sourates, accès aux hadiths authentiques et contenu éducatif riche. Un outil qui rend l'apprentissage accessible et agréable.",
