@@ -18,7 +18,10 @@ async function getToken(): Promise<string> {
     }),
   });
 
-  if (!res.ok) throw new Error(`Umami login failed: ${res.status}`);
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Umami login failed: ${res.status} — ${text.slice(0, 200)}`);
+  }
   const data = await res.json();
   tokenCache = { token: data.token, expiresAt: Date.now() + 55 * 60 * 1000 };
   return data.token;
@@ -29,7 +32,10 @@ async function umamiGet(path: string, token: string) {
     headers: { Authorization: `Bearer ${token}` },
     next: { revalidate: 0 },
   });
-  if (!res.ok) throw new Error(`Umami ${path}: ${res.status}`);
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Umami ${path}: ${res.status} — ${text.slice(0, 200)}`);
+  }
   return res.json();
 }
 
@@ -77,9 +83,10 @@ export async function GET(req: NextRequest) {
       browsers,
     });
   } catch (error) {
-    console.error('Umami API error:', error);
+    const message = error instanceof Error ? error.message : 'Erreur inconnue';
+    console.error('Umami API error:', message);
     return NextResponse.json(
-      { error: 'Erreur lors de la recuperation des analytics' },
+      { error: message },
       { status: 502 }
     );
   }
