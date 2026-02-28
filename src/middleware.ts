@@ -13,11 +13,11 @@ const PUBLIC_API_PATHS = [
 
 const CSP_DIRECTIVES = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://cloud.umami.is",
+  "script-src 'self' 'unsafe-inline' https://analytics.jlstudio.dev",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
-  "connect-src 'self' https://cloud.umami.is",
+  "connect-src 'self' https://analytics.jlstudio.dev",
   "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
