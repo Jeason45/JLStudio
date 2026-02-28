@@ -1,10 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const UMAMI_API = 'https://api.umami.is/v1';
+const UMAMI_API = process.env.UMAMI_API_URL || 'https://analytics.jlstudio.dev';
 
-async function umamiGet(path: string, apiKey: string) {
-  const res = await fetch(`${UMAMI_API}${path}`, {
-    headers: { 'x-umami-api-key': apiKey },
+let tokenCache: { token: string; expiresAt: number } | null = null;
+
+async function getToken(): Promise<string> {
+  if (tokenCache && Date.now() < tokenCache.expiresAt) {
+    return tokenCache.token;
+  }
+
+  const res = await fetch(`${UMAMI_API}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      username: process.env.UMAMI_USERNAME,
+      password: process.env.UMAMI_PASSWORD,
+    }),
+  });
+
+  if (!res.ok) throw new Error(`Umami login failed: ${res.status}`);
+  const data = await res.json();
+  tokenCache = { token: data.token, expiresAt: Date.now() + 55 * 60 * 1000 };
+  return data.token;
+}
+
+async function umamiGet(path: string, token: string) {
+  const res = await fetch(`${UMAMI_API}/api${path}`, {
+    headers: { Authorization: `Bearer ${token}` },
     next: { revalidate: 0 },
   });
   if (!res.ok) throw new Error(`Umami ${path}: ${res.status}`);
@@ -12,12 +34,11 @@ async function umamiGet(path: string, apiKey: string) {
 }
 
 export async function GET(req: NextRequest) {
-  const apiKey = process.env.UMAMI_API_KEY;
   const websiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
 
-  if (!apiKey || !websiteId) {
+  if (!process.env.UMAMI_USERNAME || !process.env.UMAMI_PASSWORD || !websiteId) {
     return NextResponse.json(
-      { error: 'UMAMI_API_KEY ou NEXT_PUBLIC_UMAMI_WEBSITE_ID manquant' },
+      { error: 'UMAMI_USERNAME, UMAMI_PASSWORD ou NEXT_PUBLIC_UMAMI_WEBSITE_ID manquant' },
       { status: 500 }
     );
   }
@@ -31,16 +52,18 @@ export async function GET(req: NextRequest) {
   const base = `/websites/${websiteId}`;
 
   try {
+    const token = await getToken();
+
     const [active, stats, pageviews, topPages, topReferrers, devices, countries, browsers] =
       await Promise.all([
-        umamiGet(`${base}/active`, apiKey),
-        umamiGet(`${base}/stats?${qs}`, apiKey),
-        umamiGet(`${base}/pageviews?${qs}&unit=day&timezone=Europe/Paris`, apiKey),
-        umamiGet(`${base}/metrics?${qs}&type=url&limit=10`, apiKey),
-        umamiGet(`${base}/metrics?${qs}&type=referrer&limit=10`, apiKey),
-        umamiGet(`${base}/metrics?${qs}&type=device&limit=5`, apiKey),
-        umamiGet(`${base}/metrics?${qs}&type=country&limit=10`, apiKey),
-        umamiGet(`${base}/metrics?${qs}&type=browser&limit=5`, apiKey),
+        umamiGet(`${base}/active`, token),
+        umamiGet(`${base}/stats?${qs}`, token),
+        umamiGet(`${base}/pageviews?${qs}&unit=day&timezone=Europe/Paris`, token),
+        umamiGet(`${base}/metrics?${qs}&type=url&limit=10`, token),
+        umamiGet(`${base}/metrics?${qs}&type=referrer&limit=10`, token),
+        umamiGet(`${base}/metrics?${qs}&type=device&limit=5`, token),
+        umamiGet(`${base}/metrics?${qs}&type=country&limit=10`, token),
+        umamiGet(`${base}/metrics?${qs}&type=browser&limit=5`, token),
       ]);
 
     return NextResponse.json({
