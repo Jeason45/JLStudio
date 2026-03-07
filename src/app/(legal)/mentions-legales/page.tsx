@@ -90,7 +90,28 @@ export default function MentionsLegales() {
         </section>
 
         <section>
-          <h2 className="font-[family-name:var(--font-outfit)] text-xl font-bold text-white mb-4">8. Droit applicable</h2>
+          <h2 className="font-[family-name:var(--font-outfit)] text-xl font-bold text-white mb-4">8. Médiation des litiges</h2>
+          <p>
+            Conformément aux articles L.616-1 et R.616-1 du Code de la consommation, en cas de
+            litige non résolu, le consommateur peut recourir gratuitement au service de médiation.
+            Le médiateur compétent est :
+          </p>
+          <p className="mt-3">
+            <strong className="text-white/80">MEDICYS — Centre de médiation et règlement amiable des huissiers de justice</strong><br />
+            73 boulevard de Clichy, 75009 Paris<br />
+            Site web : <a href="https://www.medicys.fr" target="_blank" rel="noopener noreferrer" className="text-[#638BFF] hover:underline">www.medicys.fr</a>
+          </p>
+          <p className="mt-3">
+            Le consommateur peut également recourir à la plateforme de règlement en ligne des
+            litiges de la Commission européenne :{' '}
+            <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-[#638BFF] hover:underline">
+              https://ec.europa.eu/consumers/odr
+            </a>
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-[family-name:var(--font-outfit)] text-xl font-bold text-white mb-4">9. Droit applicable</h2>
           <p>
             Les présentes mentions légales sont soumises au droit français.
             En cas de litige, les tribunaux de Bordeaux seront seuls compétents.
@@ -98,7 +119,7 @@ export default function MentionsLegales() {
         </section>
 
         <section>
-          <h2 className="font-[family-name:var(--font-outfit)] text-xl font-bold text-white mb-4">9. Contact</h2>
+          <h2 className="font-[family-name:var(--font-outfit)] text-xl font-bold text-white mb-4">10. Contact</h2>
           <p>
             Pour toute question relative aux mentions légales, vous pouvez nous contacter :<br />
             E-mail : <a href="mailto:contact@jlstudio.dev" className="text-[#638BFF] hover:underline">contact@jlstudio.dev</a><br />
@@ -106,7 +127,7 @@ export default function MentionsLegales() {
             Adresse : 35 quai Deschamps, 33100 Bordeaux
           </p>
           <p className="mt-4 text-white/50 text-xs">
-            Dernière mise à jour : février 2026
+            Dernière mise à jour : mars 2026
           </p>
         </section>
       </div>
