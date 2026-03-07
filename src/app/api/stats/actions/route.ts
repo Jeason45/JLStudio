@@ -10,6 +10,7 @@ export async function GET() {
     const staleLeads = await prisma.contact.findMany({
       where: {
         status: 'new',
+        deletedAt: null,
         createdAt: { lt: threshold48h },
       },
       select: {

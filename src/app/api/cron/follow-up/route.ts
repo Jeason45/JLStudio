@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
     const staleLeads = await prisma.contact.findMany({
       where: {
         status: 'new',
+        deletedAt: null,
         createdAt: { lt: twoDaysAgo },
       },
       orderBy: { score: 'desc' },
