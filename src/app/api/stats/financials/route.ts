@@ -17,6 +17,7 @@ export async function GET() {
     });
 
     const projects = await prisma.project.findMany({
+      where: { deletedAt: null },
       select: {
         id: true,
         status: true,
@@ -25,6 +26,7 @@ export async function GET() {
     });
 
     const contacts = await prisma.contact.findMany({
+      where: { deletedAt: null },
       select: {
         id: true,
         status: true,
