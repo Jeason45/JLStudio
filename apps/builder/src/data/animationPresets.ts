@@ -1,0 +1,482 @@
+import type { AnimationPreset } from '@/types/interactions'
+
+export const ANIMATION_PRESETS: AnimationPreset[] = [
+  // ─── Entree ───
+  {
+    id: 'fade-in',
+    name: 'Fondu',
+    category: 'entrance',
+    config: {
+      from: { opacity: 0 },
+      to: { opacity: 1 },
+      duration: 600,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'slide-up',
+    name: 'Glisser du bas',
+    category: 'entrance',
+    config: {
+      from: { opacity: 0, y: 40 },
+      to: { opacity: 1, y: 0 },
+      duration: 600,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'slide-down',
+    name: 'Glisser du haut',
+    category: 'entrance',
+    config: {
+      from: { opacity: 0, y: -40 },
+      to: { opacity: 1, y: 0 },
+      duration: 600,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'slide-left',
+    name: 'Glisser de la gauche',
+    category: 'entrance',
+    config: {
+      from: { opacity: 0, x: -40 },
+      to: { opacity: 1, x: 0 },
+      duration: 600,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'slide-right',
+    name: 'Glisser de la droite',
+    category: 'entrance',
+    config: {
+      from: { opacity: 0, x: 40 },
+      to: { opacity: 1, x: 0 },
+      duration: 600,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'zoom-in',
+    name: 'Zoom',
+    category: 'entrance',
+    config: {
+      from: { opacity: 0, scale: 0.8 },
+      to: { opacity: 1, scale: 1 },
+      duration: 500,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'rotate-in',
+    name: 'Rotation',
+    category: 'entrance',
+    config: {
+      from: { opacity: 0, rotate: -10, scale: 0.9 },
+      to: { opacity: 1, rotate: 0, scale: 1 },
+      duration: 600,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'blur-in',
+    name: 'Flou',
+    category: 'entrance',
+    config: {
+      from: { opacity: 0, blur: 10 },
+      to: { opacity: 1, blur: 0 },
+      duration: 600,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'flip-x',
+    name: 'Flip horizontal',
+    category: 'entrance',
+    config: {
+      from: { opacity: 0, rotateY: 90 },
+      to: { opacity: 1, rotateY: 0 },
+      duration: 700,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'flip-y',
+    name: 'Flip vertical',
+    category: 'entrance',
+    config: {
+      from: { opacity: 0, rotateX: 90 },
+      to: { opacity: 1, rotateX: 0 },
+      duration: 700,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+
+  // ─── Sortie (Exit) ───
+  {
+    id: 'fade-out',
+    name: 'Fondu sortie',
+    category: 'exit',
+    config: {
+      from: { opacity: 1 },
+      to: { opacity: 0 },
+      duration: 600,
+      delay: 0,
+      easing: 'ease-in',
+    },
+  },
+  {
+    id: 'slide-out-left',
+    name: 'Glisser vers gauche',
+    category: 'exit',
+    config: {
+      from: { opacity: 1, x: 0 },
+      to: { opacity: 0, x: -40 },
+      duration: 600,
+      delay: 0,
+      easing: 'ease-in',
+    },
+  },
+  {
+    id: 'slide-out-right',
+    name: 'Glisser vers droite',
+    category: 'exit',
+    config: {
+      from: { opacity: 1, x: 0 },
+      to: { opacity: 0, x: 40 },
+      duration: 600,
+      delay: 0,
+      easing: 'ease-in',
+    },
+  },
+  {
+    id: 'slide-out-down',
+    name: 'Glisser vers bas',
+    category: 'exit',
+    config: {
+      from: { opacity: 1, y: 0 },
+      to: { opacity: 0, y: 40 },
+      duration: 600,
+      delay: 0,
+      easing: 'ease-in',
+    },
+  },
+  {
+    id: 'zoom-out',
+    name: 'Zoom sortie',
+    category: 'exit',
+    config: {
+      from: { opacity: 1, scale: 1 },
+      to: { opacity: 0, scale: 0.8 },
+      duration: 500,
+      delay: 0,
+      easing: 'ease-in',
+    },
+  },
+
+  // ─── Hover ───
+  {
+    id: 'hover-grow',
+    name: 'Agrandir',
+    category: 'hover',
+    config: {
+      to: { scale: 1.05 },
+      duration: 200,
+      delay: 0,
+      easing: 'ease-out',
+      reverseOnLeave: true,
+    },
+  },
+  {
+    id: 'hover-lift',
+    name: 'Soulever',
+    category: 'hover',
+    config: {
+      to: { y: -4, scale: 1.02 },
+      duration: 200,
+      delay: 0,
+      easing: 'ease-out',
+      reverseOnLeave: true,
+    },
+  },
+  {
+    id: 'hover-glow',
+    name: 'Lueur',
+    category: 'hover',
+    config: {
+      to: { brightness: 1.1 },
+      duration: 200,
+      delay: 0,
+      easing: 'ease-out',
+      reverseOnLeave: true,
+    },
+  },
+  {
+    id: 'hover-rotate',
+    name: 'Rotation survol',
+    category: 'hover',
+    config: {
+      to: { rotate: 5 },
+      duration: 300,
+      delay: 0,
+      easing: 'ease-out',
+      reverseOnLeave: true,
+    },
+  },
+  {
+    id: 'hover-skew',
+    name: 'Inclinaison',
+    category: 'hover',
+    config: {
+      to: { skewX: 3, skewY: 1 },
+      duration: 300,
+      delay: 0,
+      easing: 'ease-out',
+      reverseOnLeave: true,
+    },
+  },
+
+  // ─── Emphase ───
+  {
+    id: 'pulse',
+    name: 'Pulsation',
+    category: 'emphasis',
+    config: {
+      keyframes: [
+        { offset: 0, properties: { scale: 1 } },
+        { offset: 0.5, properties: { scale: 1.05 } },
+        { offset: 1, properties: { scale: 1 } },
+      ],
+      duration: 800,
+      delay: 0,
+      easing: 'ease-in-out',
+      repeat: -1,
+    },
+  },
+  {
+    id: 'bounce',
+    name: 'Rebond',
+    category: 'emphasis',
+    config: {
+      keyframes: [
+        { offset: 0, properties: { y: 0 } },
+        { offset: 0.4, properties: { y: -12 } },
+        { offset: 0.6, properties: { y: -4 } },
+        { offset: 1, properties: { y: 0 } },
+      ],
+      duration: 600,
+      delay: 0,
+      easing: 'ease-out',
+      repeat: -1,
+    },
+  },
+  {
+    id: 'shake-x',
+    name: 'Secouer H',
+    category: 'emphasis',
+    config: {
+      keyframes: [
+        { offset: 0, properties: { x: 0 } },
+        { offset: 0.1, properties: { x: -10 } },
+        { offset: 0.2, properties: { x: 10 } },
+        { offset: 0.3, properties: { x: -10 } },
+        { offset: 0.4, properties: { x: 10 } },
+        { offset: 0.5, properties: { x: -6 } },
+        { offset: 0.6, properties: { x: 6 } },
+        { offset: 0.7, properties: { x: -3 } },
+        { offset: 0.8, properties: { x: 3 } },
+        { offset: 1, properties: { x: 0 } },
+      ],
+      duration: 800,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'shake-y',
+    name: 'Secouer V',
+    category: 'emphasis',
+    config: {
+      keyframes: [
+        { offset: 0, properties: { y: 0 } },
+        { offset: 0.1, properties: { y: -10 } },
+        { offset: 0.2, properties: { y: 10 } },
+        { offset: 0.3, properties: { y: -10 } },
+        { offset: 0.4, properties: { y: 10 } },
+        { offset: 0.5, properties: { y: -6 } },
+        { offset: 0.6, properties: { y: 6 } },
+        { offset: 0.7, properties: { y: -3 } },
+        { offset: 0.8, properties: { y: 3 } },
+        { offset: 1, properties: { y: 0 } },
+      ],
+      duration: 800,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'swing',
+    name: 'Balancer',
+    category: 'emphasis',
+    config: {
+      keyframes: [
+        { offset: 0, properties: { rotate: 0 } },
+        { offset: 0.2, properties: { rotate: 15 } },
+        { offset: 0.4, properties: { rotate: -10 } },
+        { offset: 0.6, properties: { rotate: 5 } },
+        { offset: 0.8, properties: { rotate: -5 } },
+        { offset: 1, properties: { rotate: 0 } },
+      ],
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-in-out',
+    },
+  },
+  {
+    id: 'rubber-band',
+    name: 'Elastique',
+    category: 'emphasis',
+    config: {
+      keyframes: [
+        { offset: 0, properties: { scaleX: 1, scaleY: 1 } },
+        { offset: 0.3, properties: { scaleX: 1.25, scaleY: 0.75 } },
+        { offset: 0.4, properties: { scaleX: 0.75, scaleY: 1.25 } },
+        { offset: 0.5, properties: { scaleX: 1.15, scaleY: 0.85 } },
+        { offset: 0.65, properties: { scaleX: 0.95, scaleY: 1.05 } },
+        { offset: 0.75, properties: { scaleX: 1.05, scaleY: 0.95 } },
+        { offset: 1, properties: { scaleX: 1, scaleY: 1 } },
+      ],
+      duration: 800,
+      delay: 0,
+      easing: 'ease-out',
+    },
+  },
+  {
+    id: 'jello',
+    name: 'Gelee',
+    category: 'emphasis',
+    config: {
+      keyframes: [
+        { offset: 0, properties: { skewX: 0, skewY: 0 } },
+        { offset: 0.111, properties: { skewX: 0, skewY: 0 } },
+        { offset: 0.222, properties: { skewX: -12.5, skewY: -12.5 } },
+        { offset: 0.333, properties: { skewX: 6.25, skewY: 6.25 } },
+        { offset: 0.444, properties: { skewX: -3.125, skewY: -3.125 } },
+        { offset: 0.556, properties: { skewX: 1.5625, skewY: 1.5625 } },
+        { offset: 0.667, properties: { skewX: -0.78125, skewY: -0.78125 } },
+        { offset: 0.778, properties: { skewX: 0.390625, skewY: 0.390625 } },
+        { offset: 0.889, properties: { skewX: -0.1953125, skewY: -0.1953125 } },
+        { offset: 1, properties: { skewX: 0, skewY: 0 } },
+      ],
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-in-out',
+    },
+  },
+  {
+    id: 'tada',
+    name: 'Tada',
+    category: 'emphasis',
+    config: {
+      keyframes: [
+        { offset: 0, properties: { scale: 1, rotate: 0 } },
+        { offset: 0.1, properties: { scale: 0.9, rotate: -3 } },
+        { offset: 0.2, properties: { scale: 0.9, rotate: -3 } },
+        { offset: 0.3, properties: { scale: 1.1, rotate: 3 } },
+        { offset: 0.4, properties: { scale: 1.1, rotate: -3 } },
+        { offset: 0.5, properties: { scale: 1.1, rotate: 3 } },
+        { offset: 0.6, properties: { scale: 1.1, rotate: -3 } },
+        { offset: 0.7, properties: { scale: 1.1, rotate: 3 } },
+        { offset: 0.8, properties: { scale: 1.1, rotate: -3 } },
+        { offset: 0.9, properties: { scale: 1.1, rotate: 3 } },
+        { offset: 1, properties: { scale: 1, rotate: 0 } },
+      ],
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-in-out',
+    },
+  },
+  {
+    id: 'wobble',
+    name: 'Vaciller',
+    category: 'emphasis',
+    config: {
+      keyframes: [
+        { offset: 0, properties: { x: 0, rotate: 0 } },
+        { offset: 0.15, properties: { x: -25, rotate: -5 } },
+        { offset: 0.3, properties: { x: 20, rotate: 3 } },
+        { offset: 0.45, properties: { x: -15, rotate: -3 } },
+        { offset: 0.6, properties: { x: 10, rotate: 2 } },
+        { offset: 0.75, properties: { x: -5, rotate: -1 } },
+        { offset: 1, properties: { x: 0, rotate: 0 } },
+      ],
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-in-out',
+    },
+  },
+  {
+    id: 'heartbeat',
+    name: 'Battement',
+    category: 'emphasis',
+    config: {
+      keyframes: [
+        { offset: 0, properties: { scale: 1 } },
+        { offset: 0.14, properties: { scale: 1.3 } },
+        { offset: 0.28, properties: { scale: 1 } },
+        { offset: 0.42, properties: { scale: 1.3 } },
+        { offset: 0.7, properties: { scale: 1 } },
+        { offset: 1, properties: { scale: 1 } },
+      ],
+      duration: 1300,
+      delay: 0,
+      easing: 'ease-in-out',
+      repeat: -1,
+    },
+  },
+
+  // ─── Scroll ───
+  {
+    id: 'parallax-slow',
+    name: 'Parallaxe lent',
+    category: 'scroll',
+    config: {
+      from: { y: 30 },
+      to: { y: -30 },
+      duration: 0,
+      delay: 0,
+      easing: 'linear',
+    },
+  },
+  {
+    id: 'parallax-fast',
+    name: 'Parallaxe rapide',
+    category: 'scroll',
+    config: {
+      from: { y: 60 },
+      to: { y: -60 },
+      duration: 0,
+      delay: 0,
+      easing: 'linear',
+    },
+  },
+]
+
+export function getPresetsByCategory(category: AnimationPreset['category']) {
+  return ANIMATION_PRESETS.filter(p => p.category === category)
+}
+
+export function getPresetById(id: string) {
+  return ANIMATION_PRESETS.find(p => p.id === id)
+}

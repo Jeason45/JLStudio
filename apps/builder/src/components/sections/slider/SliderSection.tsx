@@ -1,0 +1,466 @@
+'use client'
+import { cn } from '@/lib/utils'
+import type { SectionConfig } from '@/types/site'
+import type { SliderContent, SlideItem } from '@/types/sections'
+import { elementProps } from '@/lib/elementHelpers'
+import { componentTriggerBus } from '@/lib/animations/componentTriggerBridge'
+import { useSectionCarousel } from '@/hooks/useSectionCarousel'
+import { ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react'
+import { EditablePlaceholder } from '../_EditablePlaceholder'
+import { BrixsaViewCursor } from '../_BrixsaViewCursor'
+import { useEffect, useCallback, useRef } from 'react'
+import type { SectionMeta } from '@/components/sections'
+
+// ═══════════════════════════════════════════════════
+// Universe configs
+// ═══════════════════════════════════════════════════
+
+const UNIVERSE_CONFIGS = {
+  startup: {
+    bg: 'bg-white', text: 'text-zinc-900', sub: 'text-zinc-500', eyebrow: 'text-indigo-600',
+    dotActive: 'bg-indigo-600', dotInactive: 'bg-zinc-300', arrowBg: 'bg-white shadow-lg hover:bg-zinc-50',
+    arrowText: 'text-zinc-700', badge: 'bg-indigo-100 text-indigo-700', slideBg: 'bg-zinc-100',
+    ctaBg: 'bg-indigo-600 hover:bg-indigo-700 text-white', overlay: 'from-black/60 to-transparent',
+  },
+  corporate: {
+    bg: 'bg-slate-900', text: 'text-white', sub: 'text-slate-400', eyebrow: 'text-blue-400',
+    dotActive: 'bg-blue-500', dotInactive: 'bg-slate-600', arrowBg: 'bg-slate-800 border border-slate-700 hover:bg-slate-700',
+    arrowText: 'text-white', badge: 'bg-blue-900/50 text-blue-300', slideBg: 'bg-slate-800',
+    ctaBg: 'bg-blue-600 hover:bg-blue-700 text-white', overlay: 'from-slate-900/80 to-transparent',
+  },
+  luxe: {
+    bg: 'bg-white', text: 'text-zinc-800', sub: 'text-zinc-500', eyebrow: 'text-amber-700',
+    dotActive: 'bg-amber-600', dotInactive: 'bg-zinc-300', arrowBg: 'bg-white border border-zinc-200 hover:bg-zinc-50',
+    arrowText: 'text-zinc-700', badge: 'bg-amber-50 text-amber-800 border border-amber-200', slideBg: 'bg-zinc-50',
+    ctaBg: 'bg-amber-700 hover:bg-amber-800 text-white', overlay: 'from-black/50 to-transparent',
+  },
+  creative: {
+    bg: 'bg-amber-50', text: 'text-zinc-900', sub: 'text-zinc-600', eyebrow: 'text-zinc-900',
+    dotActive: 'bg-zinc-900', dotInactive: 'bg-zinc-400', arrowBg: 'bg-yellow-300 border-2 border-zinc-900 hover:bg-yellow-400',
+    arrowText: 'text-zinc-900', badge: 'bg-yellow-300 text-zinc-900 border-2 border-zinc-900', slideBg: 'bg-white border-2 border-zinc-900',
+    ctaBg: 'bg-zinc-900 hover:bg-zinc-800 text-white', overlay: 'from-black/70 to-transparent',
+  },
+  ecommerce: {
+    bg: 'bg-white', text: 'text-zinc-900', sub: 'text-zinc-500', eyebrow: 'text-emerald-600',
+    dotActive: 'bg-emerald-600', dotInactive: 'bg-zinc-300', arrowBg: 'bg-white shadow-md hover:bg-zinc-50',
+    arrowText: 'text-zinc-700', badge: 'bg-emerald-100 text-emerald-700', slideBg: 'bg-zinc-50',
+    ctaBg: 'bg-emerald-600 hover:bg-emerald-700 text-white', overlay: 'from-black/60 to-transparent',
+  },
+  glass: {
+    bg: 'bg-zinc-950', text: 'text-white', sub: 'text-zinc-400', eyebrow: 'text-purple-400',
+    dotActive: 'bg-purple-500', dotInactive: 'bg-zinc-700', arrowBg: 'bg-white/10 backdrop-blur-sm border border-white/10 hover:bg-white/20',
+    arrowText: 'text-white', badge: 'bg-purple-900/50 text-purple-300 border border-purple-700/50', slideBg: 'bg-white/5 backdrop-blur-sm border border-white/10',
+    ctaBg: 'bg-purple-600 hover:bg-purple-700 text-white', overlay: 'from-zinc-950/80 to-transparent',
+  },
+} as const
+
+type Universe = keyof typeof UNIVERSE_CONFIGS
+
+function parseVariant(variant: string): { universe: Universe; layout: 'hero' | 'cards' | 'thumbnails' } {
+  const parts = variant.split('-')
+  const layoutStr = parts[parts.length - 1]
+  const layout = (['hero', 'cards', 'thumbnails'].includes(layoutStr) ? layoutStr : 'hero') as 'hero' | 'cards' | 'thumbnails'
+  const universe = (parts.slice(0, -1).join('-') || 'startup') as Universe
+  return { universe: universe in UNIVERSE_CONFIGS ? universe : 'startup', layout }
+}
+
+// ═══════════════════════════════════════════════════
+// Slide Components
+// ═══════════════════════════════════════════════════
+
+function HeroSlide({ slide, uConfig, sectionId, index, isEditing }: { slide: SlideItem; uConfig: typeof UNIVERSE_CONFIGS[Universe]; sectionId: string; index: number; isEditing?: boolean }) {
+  return (
+    <div className="embla__slide flex-[0_0_100%] min-w-0 relative">
+      <div className="relative aspect-[16/7] md:aspect-[16/6] overflow-hidden rounded-lg">
+        {slide.image ? (
+          <img {...elementProps(sectionId, `slides.${index}.image`, 'image')} src={slide.image} alt={slide.title ?? ''} className="w-full h-full object-cover" />
+        ) : isEditing ? (
+          <EditablePlaceholder sectionId={sectionId} contentPath={`slides.${index}.image`} type="image" className="w-full h-full" />
+        ) : (
+          <div className={cn('w-full h-full flex items-center justify-center', uConfig.slideBg)}>
+            <ImageIcon className="w-16 h-16 text-zinc-400" />
+          </div>
+        )}
+        <div className={cn('absolute inset-0 bg-gradient-to-t', uConfig.overlay)} />
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+          {slide.badge ? (
+            <span {...elementProps(sectionId, `slides.${index}.badge`, 'badge')} className={cn('inline-block px-3 py-1 rounded-full text-xs font-medium mb-3', uConfig.badge)}>{slide.badge}</span>
+          ) : isEditing ? (
+            <EditablePlaceholder sectionId={sectionId} contentPath={`slides.${index}.badge`} type="badge" />
+          ) : null}
+          {slide.title && (
+            <h3 {...elementProps(sectionId, `slides.${index}.title`, 'heading')} className="text-2xl md:text-4xl font-bold text-white mb-2">{slide.title}</h3>
+          )}
+          {slide.subtitle && (
+            <p {...elementProps(sectionId, `slides.${index}.subtitle`, 'text')} className="text-sm md:text-base text-white/80 max-w-xl mb-4">{slide.subtitle}</p>
+          )}
+          {slide.ctaLabel && (
+            <a {...elementProps(sectionId, `slides.${index}.ctaLabel`, 'button')} href={slide.ctaHref ?? '#'} className={cn('inline-block px-6 py-2.5 rounded-lg text-sm font-medium transition-colors', uConfig.ctaBg)}>
+              {slide.ctaLabel}
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CardSlide({ slide, uConfig, sectionId, index, isEditing }: { slide: SlideItem; uConfig: typeof UNIVERSE_CONFIGS[Universe]; sectionId: string; index: number; isEditing?: boolean }) {
+  return (
+    <div className="embla__slide flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 px-2">
+      <div className={cn('rounded-lg overflow-hidden', uConfig.slideBg)}>
+        <div className="aspect-[4/3] relative">
+          {slide.image ? (
+            <img {...elementProps(sectionId, `slides.${index}.image`, 'image')} src={slide.image} alt={slide.title ?? ''} className="w-full h-full object-cover" />
+          ) : isEditing ? (
+            <EditablePlaceholder sectionId={sectionId} contentPath={`slides.${index}.image`} type="image" className="w-full h-full" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-zinc-200">
+              <ImageIcon className="w-10 h-10 text-zinc-400" />
+            </div>
+          )}
+          {slide.badge ? (
+            <span {...elementProps(sectionId, `slides.${index}.badge`, 'badge')} className={cn('absolute top-3 left-3 px-2 py-0.5 rounded-full text-xs font-medium', uConfig.badge)}>{slide.badge}</span>
+          ) : isEditing ? (
+            <EditablePlaceholder sectionId={sectionId} contentPath={`slides.${index}.badge`} type="badge" />
+          ) : null}
+        </div>
+        <div className="p-4">
+          {slide.title && <h3 {...elementProps(sectionId, `slides.${index}.title`, 'heading')} className={cn('font-semibold text-sm mb-1', uConfig.text)}>{slide.title}</h3>}
+          {slide.subtitle && <p {...elementProps(sectionId, `slides.${index}.subtitle`, 'text')} className={cn('text-xs', uConfig.sub)}>{slide.subtitle}</p>}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════
+// Main Component
+// ═══════════════════════════════════════════════════
+
+/* Brixsa parallax slide.
+   - Preview mode (!isEditing): native CSS background-attachment:fixed — zero jank, pixel-perfect.
+     Requires Canvas.tsx to skip transform in preview (already done).
+   - Editor mode (isEditing): JS scroll-based fallback because transform parent breaks fixed. */
+function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: SlideItem; idx: number; sectionId: string; isEditing?: boolean }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  // JS fallback for editor mode only
+  useEffect(() => {
+    if (!isEditing) return
+    const wrap = wrapRef.current
+    const img = imgRef.current
+    if (!wrap || !img) return
+
+    let scroller: HTMLElement | null = wrap.parentElement
+    while (scroller) {
+      const ov = getComputedStyle(scroller).overflowY
+      if (ov === 'auto' || ov === 'scroll') break
+      scroller = scroller.parentElement
+    }
+    if (!scroller) return
+
+    let accOffset = 0
+    let el: HTMLElement | null = wrap
+    while (el && el !== scroller) {
+      accOffset += el.offsetTop
+      el = el.offsetParent as HTMLElement | null
+    }
+
+    const setSize = () => { img.style.height = `${scroller!.clientHeight}px` }
+    setSize()
+
+    const onScroll = () => {
+      img.style.transform = `translate3d(0,${-(accOffset - scroller!.scrollTop)}px,0)`
+    }
+
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+
+    const ro = new ResizeObserver(setSize)
+    ro.observe(scroller)
+
+    return () => {
+      scroller!.removeEventListener('scroll', onScroll)
+      ro.disconnect()
+    }
+  }, [isEditing])
+
+  // Preview mode: pure CSS background-attachment: fixed
+  const slideSlug = (slide.title ?? 'property').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+
+  if (!isEditing) {
+    return (
+      <a
+        href={`/property/${slideSlug}`}
+        {...elementProps(sectionId, `slides.${idx}`, 'link', 'Slide')}
+        style={{
+          display: 'block',
+          textDecoration: 'none',
+          color: 'inherit',
+        }}
+      >
+        <BrixsaViewCursor
+          style={{
+            minHeight: '100svh',
+            position: 'relative',
+            overflow: 'hidden',
+            color: '#e1e1e1',
+            ...(slide.image ? {
+              backgroundImage: `url(${slide.image})`,
+              backgroundAttachment: 'fixed',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundColor: '#4a2711',
+            } : { backgroundColor: '#4a2711' }),
+          }}
+        >
+          <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(20, 12, 8, 0.8) 14%, rgba(255, 255, 255, 0) 39%)' }} />
+          <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)', background: 'rgba(158,158,158,0.3)', color: '#fff', fontSize: 16, fontWeight: 400, zIndex: 2 }}>
+            Featured
+          </div>
+          <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', width: '100%', gap: 'clamp(16px, 4vw, 32px)' }}>
+              <div style={{ maxWidth: '680px' }}>
+                <h2
+                  {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+                  style={{ fontFamily: '"GeneralSans Variable", sans-serif', fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#fff', textTransform: 'capitalize', marginBottom: 20 }}
+                >
+                  {slide.title}
+                </h2>
+                <p
+                  {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+                  style={{ fontSize: 16, lineHeight: '150%', color: '#e1e1e1' }}
+                >
+                  {slide.subtitle}
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', whiteSpace: 'nowrap' }}>
+                <h5
+                  {...elementProps(sectionId, `slides.${idx}.badge`, 'text')}
+                  style={{ fontFamily: '"GeneralSans Variable", sans-serif', fontSize: 'clamp(1.25rem, .9286rem + 1.4286vw, 2rem)', fontWeight: 500, color: '#fff' }}
+                >
+                  {slide.badge}
+                </h5>
+                <span style={{ fontSize: 16, color: '#e1e1e1' }}>/Monthly</span>
+              </div>
+            </div>
+          </div>
+        </BrixsaViewCursor>
+      </a>
+    )
+  }
+
+  // Editor mode: JS-based scroll compensation with <img> tag
+  return (
+    <div
+      ref={wrapRef}
+      {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+      style={{ minHeight: '100svh', position: 'relative', overflow: 'hidden', backgroundColor: '#4a2711', color: '#e1e1e1' }}
+    >
+      {slide.image && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          ref={imgRef}
+          {...elementProps(sectionId, `slides.${idx}.image`, 'image', 'Slide Image')}
+          src={slide.image}
+          alt=""
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', objectFit: 'cover', objectPosition: 'center', pointerEvents: 'none', willChange: 'transform', backfaceVisibility: 'hidden' }}
+        />
+      )}
+      <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(20, 12, 8, 0.8) 14%, rgba(255, 255, 255, 0) 39%)' }} />
+      <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)', background: 'rgba(158,158,158,0.3)', color: '#fff', fontSize: 16, fontWeight: 400, zIndex: 2 }}>
+        Featured
+      </div>
+      <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', width: '100%', gap: 'clamp(16px, 4vw, 32px)' }}>
+          <div style={{ maxWidth: '680px' }}>
+            <h2
+              {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+              style={{ fontFamily: '"GeneralSans Variable", sans-serif', fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#fff', textTransform: 'capitalize', marginBottom: 20 }}
+            >
+              {slide.title}
+            </h2>
+            <p
+              {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+              style={{ fontSize: 16, lineHeight: '150%', color: '#e1e1e1' }}
+            >
+              {slide.subtitle}
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', whiteSpace: 'nowrap' }}>
+            <h5
+              {...elementProps(sectionId, `slides.${idx}.badge`, 'text')}
+              style={{ fontFamily: '"GeneralSans Variable", sans-serif', fontSize: 'clamp(1.25rem, .9286rem + 1.4286vw, 2rem)', fontWeight: 500, color: '#fff' }}
+            >
+              {slide.badge}
+            </h5>
+            <span style={{ fontSize: 16, color: '#e1e1e1' }}>/Monthly</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function SliderSection({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
+  const content = config.content as SliderContent
+  const { universe, layout } = parseVariant(config.variant || 'startup-hero')
+  const uConfig = UNIVERSE_CONFIGS[universe]
+  const slides = content.slides ?? []
+
+  const { emblaRef, selectedIndex, scrollSnaps, canScrollPrev, canScrollNext, scrollPrev, scrollNext, scrollTo } = useSectionCarousel({
+    loop: content.loop ?? true,
+    autoplay: content.autoplay ?? true,
+    interval: content.interval ?? 5000,
+    align: layout === 'cards' ? 'start' : 'center',
+  })
+
+  const emitChange = useCallback((type: 'slider-change' | 'slider-next' | 'slider-prev', index: number) => {
+    componentTriggerBus.emit({ type, sourceId: config.id, data: { index } })
+  }, [config.id])
+
+  useEffect(() => {
+    emitChange('slider-change', selectedIndex)
+  }, [selectedIndex, emitChange])
+
+  if (slides.length === 0) return null
+
+  // ── brixsa-parallax: Fullscreen parallax property cards ──
+  if (config.variant === 'brixsa-parallax') {
+    const defaultSlides = [
+      { id: '1', title: 'Family Friendly Home', badge: '$3,900', subtitle: 'Nestled in a peaceful suburban neighbourhood, with a spacious layout spanning 1,929 square feet, this home offers the perfect blend of comfort and style.', image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80' } as SlideItem,
+      { id: '2', title: 'Elegant Condo Living', badge: '$3,900', subtitle: 'Nestled in a peaceful suburban neighbourhood, with a spacious layout spanning 1,929 square feet, this home offers the perfect blend of comfort and style.', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80' } as SlideItem,
+      { id: '3', title: 'Palm Grove Mansion', badge: '$3,900', subtitle: 'Nestled in a peaceful suburban neighbourhood, with a spacious layout spanning 1,929 square feet, this home offers the perfect blend of comfort and style.', image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1920&q=80' } as SlideItem,
+    ] as SlideItem[]
+    const items = slides.length > 0 ? slides : defaultSlides
+
+    return (
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Parallax Section')} style={{ width: '100%' }}>
+        {items.map((slide, i) => (
+          <BrixsaFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={config.id} isEditing={isEditing} />
+        ))}
+      </section>
+    )
+  }
+
+  // Thumbnails layout
+  const isThumbnails = layout === 'thumbnails'
+
+  return (
+    <section className={cn(uConfig.bg, 'py-16 md:py-24')}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Header */}
+        {content.title && (
+          <div className="text-center mb-8">
+            {content.eyebrow && (
+              <span {...elementProps(config.id, 'eyebrow', 'text')} className={cn('text-xs font-semibold uppercase tracking-widest', uConfig.eyebrow)}>
+                {content.eyebrow}
+              </span>
+            )}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn('text-3xl md:text-4xl font-bold mt-3', uConfig.text)}>
+              {content.title}
+            </h2>
+          </div>
+        )}
+
+        {/* Carousel */}
+        <div className="relative">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex">
+              {slides.map((slide, i) =>
+                layout === 'cards' ? (
+                  <CardSlide key={slide.id} slide={slide} uConfig={uConfig} sectionId={config.id} index={i} isEditing={isEditing} />
+                ) : (
+                  <HeroSlide key={slide.id} slide={slide} uConfig={uConfig} sectionId={config.id} index={i} isEditing={isEditing} />
+                )
+              )}
+            </div>
+          </div>
+
+          {/* Arrows */}
+          {(content.showArrows ?? true) && slides.length > 1 && (
+            <>
+              <button
+                onClick={() => { scrollPrev(); emitChange('slider-prev', selectedIndex) }}
+                disabled={!canScrollPrev}
+                className={cn('absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-30', uConfig.arrowBg)}
+              >
+                <ChevronLeft className={cn('w-5 h-5', uConfig.arrowText)} />
+              </button>
+              <button
+                onClick={() => { scrollNext(); emitChange('slider-next', selectedIndex) }}
+                disabled={!canScrollNext}
+                className={cn('absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-30', uConfig.arrowBg)}
+              >
+                <ChevronRight className={cn('w-5 h-5', uConfig.arrowText)} />
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Dots */}
+        {(content.showDots ?? true) && scrollSnaps.length > 1 && (
+          <div className="flex justify-center gap-2 mt-6">
+            {scrollSnaps.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => scrollTo(i)}
+                className={cn('w-2.5 h-2.5 rounded-full transition-all', i === selectedIndex ? uConfig.dotActive : uConfig.dotInactive)}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Counter */}
+        {content.showCounter && slides.length > 1 && (
+          <div className={cn('text-center mt-4 text-sm font-medium', uConfig.sub)}>
+            {selectedIndex + 1} / {slides.length}
+          </div>
+        )}
+
+        {/* Thumbnails */}
+        {isThumbnails && slides.length > 1 && (
+          <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+            {slides.map((slide, i) => (
+              <button
+                key={slide.id}
+                onClick={() => scrollTo(i)}
+                className={cn(
+                  'shrink-0 w-20 h-14 rounded-md overflow-hidden border-2 transition-all',
+                  i === selectedIndex ? 'border-indigo-500 opacity-100' : 'border-transparent opacity-60 hover:opacity-80',
+                )}
+              >
+                {slide.image ? (
+                  <img src={slide.image} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-zinc-200 flex items-center justify-center">
+                    <ImageIcon className="w-4 h-4 text-zinc-400" />
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+export const sliderMeta: SectionMeta = {
+  type: 'slider',
+  label: 'Slider',
+  icon: '🎠',
+  variants: [
+    'startup-hero', 'startup-cards', 'startup-thumbnails',
+    'corporate-hero', 'corporate-cards', 'corporate-thumbnails',
+    'luxe-hero', 'luxe-cards', 'luxe-thumbnails',
+    'creative-hero', 'creative-cards', 'creative-thumbnails',
+    'ecommerce-hero', 'ecommerce-cards', 'ecommerce-thumbnails',
+    'glass-hero', 'glass-cards', 'glass-thumbnails',
+    'brixsa-parallax',
+  ],
+  defaultVariant: 'startup-hero',
+  defaultContent: {},
+}

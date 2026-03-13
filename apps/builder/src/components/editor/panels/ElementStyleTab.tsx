@@ -1,0 +1,2153 @@
+'use client'
+import { useState, useRef, useEffect } from 'react'
+import { useEditorStore } from '@/store/editorStore'
+import { PanelSection } from '../PanelSection'
+import { FieldBoxModel } from '../fields/FieldBoxModel'
+import { FieldColor } from '../fields/FieldColor'
+import { FieldFontPicker } from '../fields/FieldFontPicker'
+import { FieldAlignment } from '../fields/FieldAlignment'
+import { ClassSelector } from '../fields/ClassSelector'
+import { ShadowEditor } from '../fields/ShadowEditor'
+import { TextShadowEditor } from '../fields/TextShadowEditor'
+import { TransformEditor } from '../fields/TransformEditor'
+import { TransitionEditor } from '../fields/TransitionEditor'
+import { FilterEditor } from '../fields/FilterEditor'
+import { BackgroundLayerEditor } from '../fields/BackgroundLayerEditor'
+import { CustomCssPropertiesEditor } from '../fields/CustomCssPropertiesEditor'
+import { FieldVariableFontAxes } from '../fields/FieldVariableFontAxes'
+import { FieldPositionBox } from '../fields/FieldPositionBox'
+import { cn } from '@/lib/utils'
+import { parseElementId } from '@/lib/elementHelpers'
+import { resolveWithOrigins, hasBreakpointOverride } from '@/lib/cascadeResolver'
+import { ChevronDown, RotateCcw, Plus, Eye, EyeOff, ArrowDownUp, Maximize2, X, Grid3X3, AlignStartVertical, AlignCenterVertical, AlignEndVertical, StretchVertical, AlignStartHorizontal, AlignCenterHorizontal, AlignEndHorizontal, StretchHorizontal, Baseline, AlignHorizontalJustifyStart, AlignHorizontalJustifyEnd, Minus, Move, Strikethrough, Underline, ArrowRight, ArrowLeft, MousePointer2 } from 'lucide-react'
+import { getBreakpointById } from '@/types/breakpoints'
+import type { ElementBreakpointStyleMap } from '@/types/breakpoints'
+import type { ElementStyleOverride, ElementLayoutStyle } from '@/types/elements'
+import { isPseudoElement } from '@/types/states'
+import { useComputedStyles } from '@/hooks/useComputedStyles'
+
+// ─── Webflow-style classes ───
+const INPUT = 'w-full h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded px-1.5 focus:outline-none focus:ring-1 focus:ring-wf-blue placeholder:text-[#555]'
+const SELECT = 'w-full h-6 bg-[#383838] border border-[#4a4a4a] text-[#e0e0e0] text-[11px] rounded px-1.5 focus:outline-none focus:ring-1 focus:ring-wf-blue cursor-pointer truncate'
+const LBL = 'text-[10px] text-zinc-500 leading-none whitespace-nowrap'
+const SECTION_LABEL = 'text-[10px] text-zinc-500 leading-none'
+
+// ─── Component ───
+
+export function ElementStyleTab() {
+  const {
+    selectedElementPath, siteConfig,
+    updateElementStyle, updateCustomElementStyle, updateClassStyles,
+    activeBreakpoint, updateClassBreakpointStyles, updateElementBreakpointStyle,
+    resetClassBreakpointProp, resetElementBreakpointProp,
+    activeState, setActiveState, updateClassStateStyles, resetClassStateProp,
+  } = useEditorStore()
+  const [showMoreType, setShowMoreType] = useState(false)
+  const [showMoreSize, setShowMoreSize] = useState(false)
+  const [showObjPos, setShowObjPos] = useState(false)
+  // showMoreBg removed — repeat/fixed now inside layer editor
+  const [showFloatClear, setShowFloatClear] = useState(false)
+  const [showGridAlignMore, setShowGridAlignMore] = useState(false)
+  const [showPerCornerRadius, setShowPerCornerRadius] = useState(false)
+  const [borderSides, setBorderSides] = useState<Set<string>>(new Set(['all']))
+  const [showWeightDropdown, setShowWeightDropdown] = useState(false)
+  const [showDecoPopover, setShowDecoPopover] = useState(false)
+  const [editingClassId, setEditingClassId] = useState<string | null>(null)
+  const computedStyles = useComputedStyles(selectedElementPath)
+
+  if (!selectedElementPath) return null
+
+  const parsed = parseElementId(selectedElementPath)
+  if (!parsed) return null
+
+  const { sectionId, contentPath } = parsed
+  const isCustom = contentPath.startsWith('__el.')
+  const customElementId = isCustom ? contentPath.replace('__el.', '') : null
+  const isNotBase = activeBreakpoint !== 'base'
+  const currentBp = getBreakpointById(activeBreakpoint)
+
+  const section = siteConfig?.pages.flatMap(p => p.sections).find(s => s.id === sectionId)
+  if (!section) return null
+
+  const allClasses = siteConfig?.classes ?? []
+  let regularStyles: ElementStyleOverride = {}
+  let customStyle: ElementLayoutStyle = {}
+  let customElement: import('@/types/elements').CustomElement | null = null
+
+  if (isCustom && customElementId) {
+    const findEl = (elements: typeof section.elements, id: string): NonNullable<typeof section.elements>[number] | null => {
+      if (!elements) return null
+      for (const el of elements) {
+        if (el.id === id) return el
+        if (el.children) { const f = findEl(el.children, id); if (f) return f }
+      }
+      return null
+    }
+    const element = findEl(section.elements, customElementId)
+    if (element) { customStyle = element.style; customElement = element }
+  } else {
+    regularStyles = (section.content.__elementStyles?.[contentPath] ?? {}) as ElementStyleOverride
+  }
+
+  const inlineBpOverrides = !isCustom
+    ? ((section.content.__elementBreakpointStyles as ElementBreakpointStyleMap | undefined)?.[contentPath])
+    : undefined
+
+  const editingClass = editingClassId ? allClasses.find(c => c.id === editingClassId) : null
+  const displayStyles = editingClass ? editingClass.styles : regularStyles
+  const elementClassIds = isCustom ? [] : ((section.content.__elementClasses as Record<string, string[]> | undefined)?.[contentPath] ?? [])
+  const origins = resolveWithOrigins(undefined, elementClassIds, regularStyles, allClasses, siteConfig?.tagStyles, activeBreakpoint, inlineBpOverrides, activeState)
+
+  const setStyle = (key: string, value: string | number | undefined) => {
+    const cleanValue = (value !== '' && value !== null && value !== undefined) ? value : undefined
+    if (activeState && editingClassId) { updateClassStateStyles(editingClassId, activeState, { [key]: cleanValue }); return }
+    if (isNotBase) {
+      if (editingClassId) updateClassBreakpointStyles(editingClassId, activeBreakpoint, { [key]: cleanValue })
+      else if (isCustom && customElementId) updateCustomElementStyle(sectionId, customElementId, { [key]: cleanValue })
+      else updateElementBreakpointStyle(sectionId, contentPath, activeBreakpoint, { [key]: cleanValue })
+    } else {
+      if (editingClassId) updateClassStyles(editingClassId, { [key]: cleanValue })
+      else if (isCustom && customElementId) updateCustomElementStyle(sectionId, customElementId, { [key]: cleanValue })
+      else updateElementStyle(sectionId, contentPath, { [key]: cleanValue })
+    }
+  }
+
+  const resetOverrideProp = (key: string) => {
+    if (activeState && editingClassId) { resetClassStateProp(editingClassId, activeState, key); return }
+    if (!isNotBase) return
+    if (editingClassId) resetClassBreakpointProp(editingClassId, activeBreakpoint, key)
+    else if (isCustom && customElementId) updateCustomElementStyle(sectionId, customElementId, { [key]: undefined })
+    else if (!isCustom) resetElementBreakpointProp(sectionId, contentPath, activeBreakpoint, key)
+  }
+
+  const get = (key: string): string | number | undefined => {
+    if (editingClass) {
+      if (activeState && editingClass.stateOverrides?.[activeState]) {
+        const v = (editingClass.stateOverrides[activeState] as Record<string, unknown>)[key]
+        if (v !== undefined) return v as string | number
+      }
+      if (isNotBase && editingClass.breakpointOverrides?.[activeBreakpoint]) {
+        const v = (editingClass.breakpointOverrides[activeBreakpoint] as Record<string, unknown>)[key]
+        if (v !== undefined) return v as string | number
+      }
+      return (editingClass.styles as Record<string, unknown>)[key] as string | number | undefined
+    }
+    if (isCustom) {
+      if (isNotBase && customElement?.breakpointStyles?.[activeBreakpoint]) {
+        const v = (customElement.breakpointStyles[activeBreakpoint] as Record<string, unknown>)[key]
+        if (v !== undefined) return v as string | number
+      }
+      return (customStyle as Record<string, unknown>)[key] as string | number | undefined
+    }
+    const resolved = origins[key]
+    if (resolved) return resolved.value as string | number | undefined
+    return (displayStyles as Record<string, unknown>)[key] as string | number | undefined
+  }
+
+  const str = (key: string): string => (get(key) as string) ?? ''
+  const num = (key: string): number | undefined => get(key) as number | undefined
+  /** Computed style fallback — returns computed value when no explicit style is set */
+  const cstr = (key: string): string => str(key) || computedStyles[key] || ''
+  const cnum = (key: string): number | undefined => num(key) ?? (computedStyles[key] ? parseFloat(computedStyles[key]) : undefined)
+
+  const hasBpOverride = (key: string): boolean => {
+    if (!isNotBase) return false
+    if (isCustom && customElement?.breakpointStyles?.[activeBreakpoint]) {
+      return (customElement.breakpointStyles[activeBreakpoint] as Record<string, unknown>)[key] !== undefined
+    }
+    return hasBreakpointOverride(activeBreakpoint, key, editingClass?.breakpointOverrides, inlineBpOverrides)
+  }
+  const hasStateOverride = (key: string): boolean => {
+    if (!activeState || !editingClass?.stateOverrides?.[activeState]) return false
+    return (editingClass.stateOverrides[activeState] as Record<string, unknown>)[key] !== undefined
+  }
+  const originDot = (key: string): 'blue' | 'orange' | 'violet' | 'yellow' | null => {
+    if (hasStateOverride(key)) return 'yellow'
+    if (hasBpOverride(key)) return 'violet'
+    const origin = origins[key]
+    if (!origin) return null
+    if (editingClassId) return origin.source === 'class' || origin.source === 'combo' ? 'blue' : 'orange'
+    if (origin.source === 'inline') return 'blue'
+    if (origin.source === 'class' || origin.source === 'combo' || origin.source === 'tag') return 'orange'
+    return null
+  }
+
+  const showContentField = activeState && isPseudoElement(activeState) && (activeState === '::before' || activeState === '::after')
+  const currentDisplay = isCustom ? (customStyle.display || '') : str('display')
+  const isFlex = currentDisplay === 'flex' || currentDisplay === 'inline-flex'
+  const isGrid = currentDisplay === 'grid' || currentDisplay === 'inline-grid'
+  const currentPosition = isCustom ? (customStyle.position || 'static') : (str('position') || 'static')
+  const hasPos = currentPosition !== 'static'
+  const elementName = isCustom ? section.elements?.find(el => el.id === customElementId)?.label : contentPath.split('.').pop()
+
+  // ─── Detect parent display for conditional Flex Child / Grid Child ───
+  // Only show Flex/Grid Child for custom elements whose parent custom element has display:flex/grid.
+  // Pre-built section elements don't show Flex/Grid Child (their layout is handled by the section template).
+  const parentDisplay = (() => {
+    if (isCustom && customElementId && section.elements) {
+      const findParent = (elements: NonNullable<typeof section.elements>, targetId: string): NonNullable<typeof section.elements>[number] | null => {
+        for (const el of elements) {
+          if (el.children?.some(c => c.id === targetId)) return el
+          if (el.children) { const f = findParent(el.children, targetId); if (f) return f }
+        }
+        return null
+      }
+      const parent = findParent(section.elements, customElementId)
+      return parent?.style?.display || ''
+    }
+    return ''
+  })()
+  const parentIsFlex = parentDisplay === 'flex' || parentDisplay === 'inline-flex'
+  const parentIsGrid = parentDisplay === 'grid' || parentDisplay === 'inline-grid'
+
+  return (
+    <div className="overflow-hidden min-w-0">
+      {/* ── Breakpoint indicator ── */}
+      {isNotBase && currentBp && (
+        <div className="mx-2 mb-1 px-2 py-1 bg-violet-500/10 border border-violet-500/20 rounded">
+          <span className="text-[10px] text-violet-400 font-medium">Editing: {currentBp.label} ({currentBp.width}px)</span>
+        </div>
+      )}
+
+      {/* ── Class Selector ── */}
+      <ClassSelector elementName={elementName} onClassSelect={(id) => { if (!id) setActiveState(null); setEditingClassId(id) }} editingClassId={editingClassId} />
+
+      {/* ── Content field for ::before / ::after ── */}
+      {showContentField && (
+        <div className="px-2 py-1.5 border-b border-[#4a4a4a]">
+          <WfRow label="Content" labelColor={!!str('content')}><input value={cstr('content')} onChange={e => setStyle('content', e.target.value || undefined)} placeholder='""' className={INPUT} /></WfRow>
+        </div>
+      )}
+
+      {/* ════════════════════════════════════════════ */}
+      {/* ── LAYOUT ── */}
+      {/* ════════════════════════════════════════════ */}
+      <PanelSection title="Layout" compact>
+        <WfRow label="Display" labelColor={!!currentDisplay} dot={originDot('display')} onReset={() => resetOverrideProp('display')}>
+          <DisplayButtonGroup currentDisplay={currentDisplay} onSelect={v => setStyle('display', v || undefined)} />
+        </WfRow>
+
+        {/* ── Flex ── */}
+        {isFlex && (<>
+          <WfRow label="Direction" labelColor={!!str('flexDirection') || !!str('flexWrap')} dot={originDot('flexDirection') || originDot('flexWrap')} onReset={() => { resetOverrideProp('flexDirection'); resetOverrideProp('flexWrap') }}>
+            <FlexDirectionDropdown
+              direction={cstr('flexDirection') || 'row'}
+              wrap={cstr('flexWrap') || 'nowrap'}
+              onChangeDirection={v => setStyle('flexDirection', v === 'row' ? undefined : v)}
+              onChangeWrap={v => setStyle('flexWrap', v === 'nowrap' ? undefined : v)}
+            />
+          </WfRow>
+          {(() => {
+            const dir = cstr('flexDirection') || 'row'
+            const isCol = dir === 'column' || dir === 'column-reverse'
+            const mainVal = cstr('justifyContent') || 'flex-start'
+            const crossVal = cstr('alignItems') || 'stretch'
+            return (
+              <WfRow label="Align" labelColor={!!str('justifyContent') || !!str('alignItems')} dot={originDot('justifyContent') || originDot('alignItems')} onReset={() => { resetOverrideProp('justifyContent'); resetOverrideProp('alignItems') }}>
+                <div className="flex gap-1.5 min-w-0">
+                  <AlignBox
+                    xValue={isCol ? crossVal : mainVal}
+                    yValue={isCol ? mainVal : crossVal}
+                    xValues={['flex-start', 'center', 'flex-end']}
+                    yValues={['flex-start', 'center', 'flex-end']}
+                    onChangeX={v => setStyle(isCol ? 'alignItems' : 'justifyContent', v)}
+                    onChangeY={v => setStyle(isCol ? 'justifyContent' : 'alignItems', v)} />
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <div className="flex items-center gap-1">
+                      <span className="text-[10px] text-[#666] w-3 shrink-0">X</span>
+                      <select value={isCol ? crossVal : mainVal} onChange={e => setStyle(isCol ? 'alignItems' : 'justifyContent', e.target.value)} className={`${SELECT} flex-1 min-w-0`}>
+                        {isCol ? (
+                          <><option value="flex-start">Left</option><option value="center">Center</option><option value="flex-end">Right</option>
+                          <option value="stretch">Stretch</option><option value="baseline">Baseline</option></>
+                        ) : (
+                          <><option value="flex-start">Left</option><option value="center">Center</option><option value="flex-end">Right</option>
+                          <option value="space-between">Space between</option><option value="space-around">Space around</option><option value="space-evenly">Space evenly</option></>
+                        )}
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-[10px] text-[#666] w-3 shrink-0">Y</span>
+                      <select value={isCol ? mainVal : crossVal} onChange={e => setStyle(isCol ? 'justifyContent' : 'alignItems', e.target.value)} className={`${SELECT} flex-1 min-w-0`}>
+                        {isCol ? (
+                          <><option value="flex-start">Top</option><option value="center">Center</option><option value="flex-end">Bottom</option>
+                          <option value="space-between">Space between</option><option value="space-around">Space around</option><option value="space-evenly">Space evenly</option></>
+                        ) : (
+                          <><option value="flex-start">Top</option><option value="center">Center</option><option value="flex-end">Bottom</option>
+                          <option value="stretch">Stretch</option><option value="baseline">Baseline</option></>
+                        )}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </WfRow>
+            )
+          })()}
+          <GapRow value={cstr('gap')} onChange={v => setStyle('gap', v)}
+            rowGap={cstr('rowGap')} columnGap={cstr('columnGap')}
+            onChangeRowGap={v => setStyle('rowGap', v)} onChangeColumnGap={v => setStyle('columnGap', v)}
+            dot={originDot('gap') || originDot('rowGap') || originDot('columnGap')}
+            onReset={() => { resetOverrideProp('gap'); resetOverrideProp('rowGap'); resetOverrideProp('columnGap') }} />
+        </>)}
+
+        {/* ── Grid ── */}
+        {isGrid && (<>
+          <WfRow label="Grid" labelColor={!!str('gridTemplateColumns') || !!str('gridTemplateRows')} dot={originDot('gridTemplateColumns') || originDot('gridTemplateRows')} onReset={() => { resetOverrideProp('gridTemplateColumns'); resetOverrideProp('gridTemplateRows') }}>
+            <div className="flex gap-1.5 min-w-0">
+              <div className="flex-1 min-w-0">
+                <input type="number" min={1}
+                  value={(() => { const v = str('gridTemplateColumns'); if (!v) return 2; const m = v.match(/repeat\((\d+)/); return m ? Number(m[1]) : v.split(/\s+/).filter(Boolean).length })()}
+                  onChange={e => {
+                    const n = Math.max(1, parseInt(e.target.value) || 1)
+                    const current = str('gridTemplateColumns')
+                    // Preserve existing track sizing if it's a simple repeat
+                    const trackMatch = current?.match(/repeat\(\d+,\s*(.+)\)/)
+                    const trackSize = trackMatch ? trackMatch[1].trim() : '1fr'
+                    // If current value is complex (not a simple repeat), only update if user explicitly changes
+                    if (current && !current.match(/^repeat\(\d+/) && n === (current.split(/\s+/).filter(Boolean).length)) return
+                    setStyle('gridTemplateColumns', `repeat(${n}, ${trackSize})`)
+                  }}
+                  className="w-full h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] text-center rounded focus:outline-none focus:ring-1 focus:ring-wf-blue" />
+                <label className="text-[9px] text-wf-blue text-center block mt-0.5">Columns</label>
+              </div>
+              <div className="flex-1 min-w-0">
+                <input type="number" min={1}
+                  value={(() => { const v = str('gridTemplateRows'); if (!v) return 2; const m = v.match(/repeat\((\d+)/); return m ? Number(m[1]) : v.split(/\s+/).filter(Boolean).length })()}
+                  onChange={e => {
+                    const n = Math.max(1, parseInt(e.target.value) || 1)
+                    const current = str('gridTemplateRows')
+                    const trackMatch = current?.match(/repeat\(\d+,\s*(.+)\)/)
+                    const trackSize = trackMatch ? trackMatch[1].trim() : '1fr'
+                    if (current && !current.match(/^repeat\(\d+/) && n === (current.split(/\s+/).filter(Boolean).length)) return
+                    setStyle('gridTemplateRows', `repeat(${n}, ${trackSize})`)
+                  }}
+                  className="w-full h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] text-center rounded focus:outline-none focus:ring-1 focus:ring-wf-blue" />
+                <label className="text-[9px] text-wf-blue text-center block mt-0.5">Rows</label>
+              </div>
+            </div>
+          </WfRow>
+          <WfRow label="Direction" labelColor={!!str('gridAutoFlow')} dot={originDot('gridAutoFlow')} onReset={() => resetOverrideProp('gridAutoFlow')}>
+            <div className="flex rounded overflow-hidden border border-[#4a4a4a]">
+              {([['row','→'],['column','↓']] as const).map(([v, icon], i) => {
+                const cur = (cstr('gridAutoFlow') || 'row').replace(' dense', '')
+                return <button key={v} onClick={() => { const isDense = (cstr('gridAutoFlow') || '').includes('dense'); setStyle('gridAutoFlow', isDense ? `${v} dense` : v) }}
+                  className={`h-[22px] flex-1 text-[13px] leading-none transition-colors ${i > 0 ? 'border-l border-[#4a4a4a]' : ''} ${cur === v ? 'bg-[#111] text-white' : 'bg-[#383838] text-[#aaa] hover:text-white hover:bg-[#444]'}`}>{icon}</button>
+              })}
+              {(() => {
+                const isDense = (cstr('gridAutoFlow') || '').includes('dense')
+                return <button onClick={() => { const base = (str('gridAutoFlow') || 'row').replace(' dense', ''); setStyle('gridAutoFlow', isDense ? base : `${base} dense`) }} title="Dense packing"
+                  className={`h-[22px] flex-1 text-[11px] leading-none transition-colors border-l border-[#4a4a4a] ${isDense ? 'bg-[#111] text-white' : 'bg-[#383838] text-[#aaa] hover:text-white hover:bg-[#444]'}`}>Dense</button>
+              })()}
+            </div>
+          </WfRow>
+          <WfRow label="Align" labelColor={!!str('justifyItems') || !!str('alignItems')} dot={originDot('justifyItems') || originDot('alignItems')} onReset={() => { resetOverrideProp('justifyItems'); resetOverrideProp('alignItems') }}>
+            <div className="flex gap-1.5 min-w-0">
+              <AlignBox
+                xValue={cstr('justifyItems') || 'stretch'}
+                yValue={cstr('alignItems') || 'stretch'}
+                xValues={['left', 'center', 'right']}
+                yValues={['start', 'center', 'end']}
+                onChangeX={v => setStyle('justifyItems', v)}
+                onChangeY={v => setStyle('alignItems', v)} />
+              <div className="flex-1 min-w-0 space-y-1">
+                <div className="flex items-center gap-1">
+                  <span className="text-[10px] text-[#666] w-3 shrink-0">X</span>
+                  <select value={cstr('justifyItems') || 'stretch'} onChange={e => setStyle('justifyItems', e.target.value)} className={`${SELECT} flex-1 min-w-0`}>
+                    <option value="left">Left</option><option value="center">Center</option><option value="right">Right</option>
+                    <option value="stretch">Stretch</option><option value="baseline">Baseline</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-[10px] text-[#666] w-3 shrink-0">Y</span>
+                  <select value={cstr('alignItems') || 'stretch'} onChange={e => setStyle('alignItems', e.target.value)} className={`${SELECT} flex-1 min-w-0`}>
+                    <option value="start">Top</option><option value="center">Center</option><option value="end">Bottom</option>
+                    <option value="stretch">Stretch</option><option value="baseline">Baseline</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </WfRow>
+          <GapRow value={cstr('gap') || str('gridGap')} onChange={v => setStyle('gap', v)}
+            rowGap={cstr('rowGap')} columnGap={cstr('columnGap')}
+            onChangeRowGap={v => setStyle('rowGap', v)} onChangeColumnGap={v => setStyle('columnGap', v)}
+            dot={originDot('gap') || originDot('rowGap') || originDot('columnGap')}
+            onReset={() => { resetOverrideProp('gap'); resetOverrideProp('rowGap'); resetOverrideProp('columnGap') }} />
+          {/* More alignment options — Webflow: Columns (justify-content) & Rows (align-content) */}
+          <MoreToggle open={showGridAlignMore} onClick={() => setShowGridAlignMore(!showGridAlignMore)} label="More alignment options" />
+          {showGridAlignMore && (
+            <div className="space-y-2">
+              <WfRow label="Columns" labelColor={!!str('justifyContent')} dot={originDot('justifyContent')} onReset={() => resetOverrideProp('justifyContent')}>
+                <div className="flex rounded overflow-hidden border border-[#4a4a4a]">
+                  {([['start','╠'],['center','║'],['end','╣'],['stretch','╬'],['space-between','┃┃']] as const).map(([v, icon], i) => {
+                    const cur = cstr('justifyContent') || 'stretch'
+                    return <button key={v} onClick={() => setStyle('justifyContent', v)} title={v}
+                      className={`h-[22px] flex-1 text-[11px] leading-none transition-colors ${i > 0 ? 'border-l border-[#4a4a4a]' : ''} ${cur === v ? 'bg-[#111] text-white' : 'bg-[#383838] text-[#aaa] hover:text-white hover:bg-[#444]'}`}>{icon}</button>
+                  })}
+                </div>
+              </WfRow>
+              <WfRow label="Rows" labelColor={!!str('alignContent')} dot={originDot('alignContent')} onReset={() => resetOverrideProp('alignContent')}>
+                <div className="flex rounded overflow-hidden border border-[#4a4a4a]">
+                  {([['start','╦'],['center','═'],['end','╩'],['stretch','╬'],['space-between','══']] as const).map(([v, icon], i) => {
+                    const cur = cstr('alignContent') || 'stretch'
+                    return <button key={v} onClick={() => setStyle('alignContent', v)} title={v}
+                      className={`h-[22px] flex-1 text-[11px] leading-none transition-colors ${i > 0 ? 'border-l border-[#4a4a4a]' : ''} ${cur === v ? 'bg-[#111] text-white' : 'bg-[#383838] text-[#aaa] hover:text-white hover:bg-[#444]'}`}>{icon}</button>
+                  })}
+                </div>
+              </WfRow>
+            </div>
+          )}
+        </>)}
+      </PanelSection>
+
+      {/* ════════════════════════════════════════════ */}
+      {/* ── FLEX CHILD (only when parent is flex) ── */}
+      {/* ════════════════════════════════════════════ */}
+      {parentIsFlex && <PanelSection title="Flex Child" compact defaultOpen>
+        <WfRow label="Grow" labelColor={num('flexGrow') !== undefined} dot={originDot('flexGrow')} onReset={() => resetOverrideProp('flexGrow')}>
+          <input type="number" min={0} value={num('flexGrow') ?? ''} onChange={e => { if (e.target.value === '') { setStyle('flexGrow', undefined); return }; const n = Number(e.target.value); if (!isNaN(n)) setStyle('flexGrow', Math.max(0, n)) }} placeholder="0" className={INPUT} />
+        </WfRow>
+        <WfRow label="Shrink" labelColor={num('flexShrink') !== undefined} dot={originDot('flexShrink')} onReset={() => resetOverrideProp('flexShrink')}>
+          <input type="number" min={0} value={num('flexShrink') ?? ''} onChange={e => { if (e.target.value === '') { setStyle('flexShrink', undefined); return }; const n = Number(e.target.value); if (!isNaN(n)) setStyle('flexShrink', Math.max(0, n)) }} placeholder="1" className={INPUT} />
+        </WfRow>
+        <WfRow label="Basis" labelColor={!!str('flexBasis')} dot={originDot('flexBasis')} onReset={() => resetOverrideProp('flexBasis')}>
+          <WfSizeField label="" value={cstr('flexBasis')} onChange={v => setStyle('flexBasis', v || undefined)} />
+        </WfRow>
+        <WfRow label="Align" labelColor={!!str('alignSelf')} dot={originDot('alignSelf')} onReset={() => resetOverrideProp('alignSelf')}>
+          <select value={cstr('alignSelf') || 'auto'} onChange={e => setStyle('alignSelf', e.target.value === 'auto' ? undefined : e.target.value)} className={SELECT}>
+            <option value="auto">Auto</option>
+            <option value="start">Start</option>
+            <option value="end">End</option>
+            <option value="center">Center</option>
+            <option value="stretch">Stretch</option>
+            <option value="baseline">Baseline</option>
+          </select>
+        </WfRow>
+        <WfRow label="Order" labelColor={num('order') !== undefined} dot={originDot('order')} onReset={() => resetOverrideProp('order')}>
+          <input type="number" value={num('order') ?? ''} onChange={e => { if (e.target.value === '') { setStyle('order', undefined); return }; const n = Number(e.target.value); if (!isNaN(n)) setStyle('order', n) }} placeholder="0" className={INPUT} />
+        </WfRow>
+      </PanelSection>}
+
+      {/* ════════════════════════════════════════════ */}
+      {/* ── GRID CHILD (only when parent is grid) ── */}
+      {/* ════════════════════════════════════════════ */}
+      {parentIsGrid && <PanelSection title="Grid Child" compact defaultOpen>
+        {/* Info banner */}
+        <div className="mb-1 px-2 py-1.5 bg-[#1e1e2e] border border-[#4a4a4a] rounded text-[10px] text-zinc-400 leading-relaxed flex items-start gap-1.5">
+          <Grid3X3 className="w-3.5 h-3.5 text-zinc-500 shrink-0 mt-0.5" />
+          <span>Cet element est un enfant de grille. Configurez sa position et son alignement dans la grille parente.</span>
+        </div>
+
+        {/* Column span + Row span — side by side */}
+        <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+          <div>
+            <span className={SECTION_LABEL}>Column span</span>
+            <GridSpanInput
+              startProp="gridColumnStart" endProp="gridColumnEnd" spanProp="gridColumn"
+              str={str} setStyle={setStyle}
+              dot={originDot('gridColumn') || originDot('gridColumnStart') || originDot('gridColumnEnd')}
+              onReset={() => { resetOverrideProp('gridColumn'); resetOverrideProp('gridColumnStart'); resetOverrideProp('gridColumnEnd') }}
+            />
+          </div>
+          <div>
+            <span className={SECTION_LABEL}>Row span</span>
+            <GridSpanInput
+              startProp="gridRowStart" endProp="gridRowEnd" spanProp="gridRow"
+              str={str} setStyle={setStyle}
+              dot={originDot('gridRow') || originDot('gridRowStart') || originDot('gridRowEnd')}
+              onReset={() => { resetOverrideProp('gridRow'); resetOverrideProp('gridRowStart'); resetOverrideProp('gridRowEnd') }}
+            />
+          </div>
+        </div>
+
+        {/* Align — icon buttons */}
+        <WfRow label="Align" labelColor={!!str('alignSelf')} dot={originDot('alignSelf')} onReset={() => resetOverrideProp('alignSelf')}>
+          <GridAlignButtons
+            value={cstr('alignSelf')}
+            options={[
+              { v: '', icon: <X className="w-3 h-3" />, title: 'Auto' },
+              { v: 'start', icon: <AlignStartVertical className="w-3.5 h-3.5" />, title: 'Start' },
+              { v: 'center', icon: <AlignCenterVertical className="w-3.5 h-3.5" />, title: 'Center' },
+              { v: 'end', icon: <AlignEndVertical className="w-3.5 h-3.5" />, title: 'End' },
+              { v: 'stretch', icon: <StretchVertical className="w-3.5 h-3.5" />, title: 'Stretch' },
+              { v: 'baseline', icon: <Baseline className="w-3.5 h-3.5" />, title: 'Baseline' },
+            ]}
+            onChange={v => setStyle('alignSelf', v || undefined)}
+          />
+        </WfRow>
+
+        {/* Justify — icon buttons */}
+        <WfRow label="Justify" labelColor={!!str('justifySelf')} dot={originDot('justifySelf')} onReset={() => resetOverrideProp('justifySelf')}>
+          <GridAlignButtons
+            value={cstr('justifySelf')}
+            options={[
+              { v: '', icon: <X className="w-3 h-3" />, title: 'Auto' },
+              { v: 'start', icon: <AlignStartHorizontal className="w-3.5 h-3.5" />, title: 'Start' },
+              { v: 'center', icon: <AlignCenterHorizontal className="w-3.5 h-3.5" />, title: 'Center' },
+              { v: 'end', icon: <AlignEndHorizontal className="w-3.5 h-3.5" />, title: 'End' },
+              { v: 'stretch', icon: <StretchHorizontal className="w-3.5 h-3.5" />, title: 'Stretch' },
+            ]}
+            onChange={v => setStyle('justifySelf', v || undefined)}
+          />
+        </WfRow>
+
+        {/* Order — button group */}
+        <WfRow label="Order" labelColor={num('order') !== undefined} dot={originDot('order')} onReset={() => resetOverrideProp('order')}>
+          <GridOrderButtons value={num('order')} onChange={v => setStyle('order', v)} />
+        </WfRow>
+      </PanelSection>}
+
+      {/* ════════════════════════════════════════════ */}
+      {/* ── SPACING ── */}
+      {/* ════════════════════════════════════════════ */}
+      <PanelSection title="Spacing" compact actions={(() => {
+        const mlAuto = str('marginLeft') === 'auto' && str('marginRight') === 'auto'
+        return (
+          <button onClick={() => {
+            if (mlAuto) { setStyle('marginLeft', undefined); setStyle('marginRight', undefined) }
+            else { setStyle('marginLeft', 'auto'); setStyle('marginRight', 'auto') }
+          }} title={mlAuto ? 'Remove auto centering' : 'Center with auto margins'}
+            className={cn('w-5 h-5 flex items-center justify-center rounded transition-colors',
+              mlAuto ? 'bg-blue-500/20 text-blue-400' : 'text-[#555] hover:text-[#999]'
+            )}>
+            <AlignCenterHorizontal className="w-3 h-3" />
+          </button>
+        )
+      })()}>
+        {(() => {
+          // Decompose shorthand margin/padding into individual props if needed
+          const parseShorthand = (shorthand: string): [string, string, string, string] => {
+            const parts = shorthand.trim().split(/\s+/)
+            if (parts.length === 1) return [parts[0], parts[0], parts[0], parts[0]]
+            if (parts.length === 2) return [parts[0], parts[1], parts[0], parts[1]]
+            if (parts.length === 3) return [parts[0], parts[1], parts[2], parts[1]]
+            return [parts[0], parts[1], parts[2], parts[3]]
+          }
+          const marginShorthand = str('margin')
+          const paddingShorthand = str('padding')
+          const [mT, mR, mB, mL] = marginShorthand ? parseShorthand(marginShorthand) : ['', '', '', '']
+          const [pT, pR, pB, pL] = paddingShorthand ? parseShorthand(paddingShorthand) : ['', '', '', '']
+
+          const SPACING_KEYS = ['marginTop','marginRight','marginBottom','marginLeft','paddingTop','paddingRight','paddingBottom','paddingLeft'] as const
+          type SK = typeof SPACING_KEYS[number]
+
+          return (
+            <FieldBoxModel
+              values={{
+                marginTop: str('marginTop') || mT, marginRight: str('marginRight') || mR,
+                marginBottom: str('marginBottom') || mB, marginLeft: str('marginLeft') || mL,
+                paddingTop: str('paddingTop') || pT, paddingRight: str('paddingRight') || pR,
+                paddingBottom: str('paddingBottom') || pB, paddingLeft: str('paddingLeft') || pL,
+              }}
+              onChange={(key, value) => setStyle(key, value || undefined)}
+              dots={Object.fromEntries(SPACING_KEYS.map(k => [k, originDot(k)])) as Record<SK, ReturnType<typeof originDot>>}
+              onReset={key => resetOverrideProp(key)}
+            />
+          )
+        })()}
+      </PanelSection>
+
+      {/* ════════════════════════════════════════════ */}
+      {/* ── SIZE ── */}
+      {/* ════════════════════════════════════════════ */}
+      <PanelSection title="Size" compact>
+        {/* Width / Height — 2 columns, label above input */}
+        <div className="grid grid-cols-2 gap-x-1.5 gap-y-1">
+          <WfSizeField label="Width" value={cstr('width')} onChange={v => setStyle('width', v || undefined)} dot={originDot('width')} onReset={() => resetOverrideProp('width')} defaultPlaceholder="auto" defaultUnit="-" />
+          <WfSizeField label="Height" value={cstr('height')} onChange={v => setStyle('height', v || undefined)} dot={originDot('height')} onReset={() => resetOverrideProp('height')} defaultPlaceholder="auto" defaultUnit="-" />
+          <WfSizeField label="Min W" value={cstr('minWidth')} onChange={v => setStyle('minWidth', v || undefined)} dot={originDot('minWidth')} onReset={() => resetOverrideProp('minWidth')} defaultPlaceholder="0" defaultUnit="px" />
+          <WfSizeField label="Min H" value={cstr('minHeight')} onChange={v => setStyle('minHeight', v || undefined)} dot={originDot('minHeight')} onReset={() => resetOverrideProp('minHeight')} defaultPlaceholder="0" defaultUnit="px" />
+          <WfSizeField label="Max W" value={cstr('maxWidth')} onChange={v => setStyle('maxWidth', v || undefined)} dot={originDot('maxWidth')} onReset={() => resetOverrideProp('maxWidth')} defaultPlaceholder="none" defaultUnit="-" />
+          <WfSizeField label="Max H" value={cstr('maxHeight')} onChange={v => setStyle('maxHeight', v || undefined)} dot={originDot('maxHeight')} onReset={() => resetOverrideProp('maxHeight')} defaultPlaceholder="none" defaultUnit="-" />
+        </div>
+
+        {/* Overflow — Webflow: icon buttons + Auto text */}
+        {(() => {
+          const cur = cstr('overflow') || 'visible'
+          const items: { v: string; icon: React.ReactNode; title: string }[] = [
+            { v: 'visible', icon: <Eye className="w-3.5 h-3.5" />, title: 'Visible' },
+            { v: 'hidden', icon: <EyeOff className="w-3.5 h-3.5" />, title: 'Hidden' },
+            { v: 'scroll', icon: <ArrowDownUp className="w-3.5 h-3.5" />, title: 'Scroll' },
+            { v: 'clip', icon: <Maximize2 className="w-3.5 h-3.5" />, title: 'Clip' },
+          ]
+          const overflowDot = originDot('overflow')
+          const dotColor = overflowDot === 'blue' ? 'bg-blue-500' : overflowDot === 'orange' ? 'bg-orange-500' : overflowDot === 'violet' ? 'bg-violet-500' : overflowDot === 'yellow' ? 'bg-yellow-500' : ''
+          return (
+            <div className="flex items-center gap-3 min-h-[24px]">
+              <label className="text-[10px] shrink-0 leading-none text-[#888] flex items-center gap-1">
+                {overflowDot && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />}
+                Overflow
+              </label>
+              <div className="flex items-center gap-0 flex-1">
+                {items.map(({ v, icon, title }) => (
+                  <button key={v} onClick={() => setStyle('overflow', v === 'visible' ? '' : v)} title={title}
+                    className={`h-6 w-7 flex items-center justify-center border border-[#4a4a4a] first:rounded-l -ml-px first:ml-0 transition-colors ${cur === v ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                    {icon}
+                  </button>
+                ))}
+                <button onClick={() => setStyle('overflow', cur === 'auto' ? '' : 'auto')} title="Auto"
+                  className={`h-6 px-2 text-[10px] font-medium border border-[#4a4a4a] rounded-r -ml-px transition-colors ${cur === 'auto' ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                  Auto
+                </button>
+              </div>
+            </div>
+          )
+        })()}
+
+        {/* More size options — Webflow style */}
+        <MoreToggle open={showMoreSize} onClick={() => setShowMoreSize(!showMoreSize)} label="More size options" />
+        {showMoreSize && (
+          <div className="space-y-2">
+            <WfRow label="Ratio" labelColor={!!str('aspectRatio')} dot={originDot('aspectRatio')} onReset={() => resetOverrideProp('aspectRatio')}>
+              {(() => {
+                const RATIO_PRESETS = ['', '2.39/1', '2/1', '16/9', '3/2', '2/3', '1/1']
+                const curRatio = cstr('aspectRatio') || ''
+                const isCustom = curRatio && !RATIO_PRESETS.includes(curRatio)
+                return (
+                  <div className="space-y-1">
+                    <select value={isCustom ? '__custom__' : curRatio} onChange={e => {
+                      if (e.target.value === '__custom__') setStyle('aspectRatio', curRatio || '4/3')
+                      else setStyle('aspectRatio', e.target.value || undefined)
+                    }} className={SELECT}>
+                      <option value="">Auto</option>
+                      <option value="2.39/1">Anamorphic (2.39:1)</option>
+                      <option value="2/1">Univisium/Netflix (2:1)</option>
+                      <option value="16/9">Widescreen (16:9)</option>
+                      <option value="3/2">Landscape (3:2)</option>
+                      <option value="2/3">Portrait (2:3)</option>
+                      <option value="1/1">Square (1:1)</option>
+                      <option value="__custom__">Custom</option>
+                    </select>
+                    {isCustom && (
+                      <input value={curRatio} onChange={e => setStyle('aspectRatio', e.target.value || undefined)} placeholder="4/3" className={INPUT} />
+                    )}
+                  </div>
+                )
+              })()}
+            </WfRow>
+            <WfRow label="Box size" labelColor={!!str('boxSizing')} dot={originDot('boxSizing')} onReset={() => resetOverrideProp('boxSizing')}>
+              <div className="flex items-center gap-0">
+                {([['border-box', '◻'], ['content-box', '◻']] as const).map(([v, icon]) => (
+                  <button key={v} onClick={() => setStyle('boxSizing', (cstr('boxSizing') || 'border-box') === v ? undefined : v)}
+                    className={`h-7 flex-1 text-[11px] border border-[#4a4a4a] first:rounded-l last:rounded-r -ml-px first:ml-0 ${(cstr('boxSizing') || 'border-box') === v ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                    {v === 'border-box' ? 'Border' : 'Content'}
+                  </button>
+                ))}
+              </div>
+            </WfRow>
+            <WfRow label="Fit" labelColor={!!str('objectFit')} dot={originDot('objectFit')} onReset={() => resetOverrideProp('objectFit')}>
+              <div className="flex items-center gap-1">
+                <select value={cstr('objectFit') || ''} onChange={e => setStyle('objectFit', e.target.value || undefined)} className={SELECT}>
+                  <option value="">Default</option>
+                  <option value="fill">Fill</option>
+                  <option value="contain">Contain</option>
+                  <option value="cover">Cover</option>
+                  <option value="none">None</option>
+                  <option value="scale-down">Scale Down</option>
+                </select>
+                <button
+                  onClick={() => setShowObjPos(prev => !prev)}
+                  className={`shrink-0 w-6 h-6 flex items-center justify-center rounded border text-[11px] transition-colors ${showObjPos ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] border-[#4a4a4a] hover:text-white'}`}
+                  title="Object position"
+                >
+                  ⋯
+                </button>
+              </div>
+            </WfRow>
+            {/* Item 40 — objectPosition (toggled via "..." button) */}
+            {showObjPos && (() => {
+              const objPos = cstr('objectPosition') || 'center center'
+              // Parse "50% 0%" or "top left" etc into left/top
+              const KEYWORD_MAP: Record<string, string> = { left: '0%', center: '50%', right: '100%', top: '0%', bottom: '100%' }
+              const parts = objPos.trim().split(/\s+/)
+              const rawLeft = parts[0] || '50%'
+              const rawTop = parts[1] || '50%'
+              const leftVal = KEYWORD_MAP[rawLeft] ?? rawLeft
+              const topVal = KEYWORD_MAP[rawTop] ?? rawTop
+              const parseNum = (v: string) => v.replace(/[a-z%]+$/i, '') || '50'
+              const parseUnit = (v: string) => v.match(/[a-z%]+$/i)?.[0] || '%'
+              const buildObjPos = (l: string, t: string) => {
+                setStyle('objectPosition', `${l} ${t}`)
+              }
+              // Grid click → keyword positions
+              const POINTS = [
+                ['0% 0%','50% 0%','100% 0%'],
+                ['0% 50%','50% 50%','100% 50%'],
+                ['0% 100%','50% 100%','100% 100%'],
+              ]
+              const currentNorm = `${leftVal} ${topVal}`
+              return (
+                <div className="flex items-center gap-2 py-1">
+                  {/* 3x3 grid */}
+                  <div className="shrink-0 grid grid-cols-3 rounded overflow-hidden" style={{ width: 52, height: 52, background: '#111' }}>
+                    {POINTS.flat().map(pt => {
+                      const isActive = currentNorm === pt
+                      return (
+                        <button key={pt} onClick={() => setStyle('objectPosition', pt)}
+                          className="flex items-center justify-center">
+                          <div className={`rounded-full transition-colors ${isActive ? 'w-[7px] h-[7px] bg-white' : 'w-[3px] h-[3px] bg-[#555] hover:bg-[#888]'}`} />
+                        </button>
+                      )
+                    })}
+                  </div>
+                  {/* Left / Top inputs */}
+                  <div className="flex-1 min-w-0 flex flex-col gap-1">
+                    <div className="flex items-center gap-1">
+                      <label className="text-[10px] w-[28px] shrink-0 text-[#888]">Left</label>
+                      <input
+                        value={parseNum(leftVal)}
+                        onChange={e => buildObjPos(e.target.value ? `${e.target.value}${parseUnit(leftVal)}` : '50%', topVal)}
+                        className="flex-1 min-w-0 h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded-l px-1.5 focus:outline-none focus:ring-1 focus:ring-wf-blue"
+                      />
+                      <select
+                        value={parseUnit(leftVal)}
+                        onChange={e => buildObjPos(`${parseNum(leftVal)}${e.target.value}`, topVal)}
+                        className="w-9 h-6 bg-[#383838] border border-[#4a4a4a] border-l-0 text-[#999] text-[9px] rounded-r cursor-pointer focus:outline-none"
+                      >
+                        <option value="px">PX</option>
+                        <option value="%">%</option>
+                        <option value="em">EM</option>
+                        <option value="vw">VW</option>
+                        <option value="vh">VH</option>
+                        <option value="svw">SVW</option>
+                        <option value="svh">SVH</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <label className="text-[10px] w-[28px] shrink-0 text-[#888]">Top</label>
+                      <input
+                        value={parseNum(topVal)}
+                        onChange={e => buildObjPos(leftVal, e.target.value ? `${e.target.value}${parseUnit(topVal)}` : '50%')}
+                        className="flex-1 min-w-0 h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded-l px-1.5 focus:outline-none focus:ring-1 focus:ring-wf-blue"
+                      />
+                      <select
+                        value={parseUnit(topVal)}
+                        onChange={e => buildObjPos(leftVal, `${parseNum(topVal)}${e.target.value}`)}
+                        className="w-9 h-6 bg-[#383838] border border-[#4a4a4a] border-l-0 text-[#999] text-[9px] rounded-r cursor-pointer focus:outline-none"
+                      >
+                        <option value="px">PX</option>
+                        <option value="%">%</option>
+                        <option value="em">EM</option>
+                        <option value="vw">VW</option>
+                        <option value="vh">VH</option>
+                        <option value="svw">SVW</option>
+                        <option value="svh">SVH</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )
+            })()}
+          </div>
+        )}
+      </PanelSection>
+
+      {/* ════════════════════════════════════════════ */}
+      {/* ── POSITION ── */}
+      {/* ════════════════════════════════════════════ */}
+      <PanelSection title="Position" compact defaultOpen>
+        <WfRow label="Position" labelColor={hasPos}>
+          <select value={currentPosition} onChange={e => setStyle('position', e.target.value === 'static' ? '' : e.target.value)} className={SELECT}>
+            <option value="static">Static</option>
+            <option value="relative">Relative</option>
+            <option value="absolute">Absolute</option>
+            <option value="fixed">Fixed</option>
+            <option value="sticky">Sticky</option>
+          </select>
+        </WfRow>
+
+        {hasPos && (() => {
+          const relTo = currentPosition === 'relative' ? 'Itself'
+            : currentPosition === 'fixed' ? 'Body'
+            : 'Container'
+          // Position presets: [top, right, bottom, left] — undefined = auto
+          const POS_PRESETS: { t?: string; r?: string; b?: string; l?: string; title: string; icon: React.ReactNode }[] = [
+            { t: '0', r: undefined, b: undefined, l: '0', title: 'Top Left', icon: <div className="w-[4px] h-[4px] bg-current rounded-[0.5px] absolute top-[2px] left-[2px]" /> },
+            { t: '0', r: undefined, b: undefined, l: undefined, title: 'Top Center', icon: <div className="w-[6px] h-[4px] bg-current rounded-[0.5px] absolute top-[2px] left-1/2 -translate-x-1/2" /> },
+            { t: '0', r: '0', b: undefined, l: undefined, title: 'Top Right', icon: <div className="w-[4px] h-[4px] bg-current rounded-[0.5px] absolute top-[2px] right-[2px]" /> },
+            { t: undefined, r: undefined, b: undefined, l: '0', title: 'Center Left', icon: <div className="w-[4px] h-[6px] bg-current rounded-[0.5px] absolute top-1/2 -translate-y-1/2 left-[2px]" /> },
+            { t: '0', r: '0', b: '0', l: '0', title: 'Full', icon: <div className="w-[8px] h-[6px] bg-current rounded-[0.5px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" /> },
+            { t: undefined, r: '0', b: undefined, l: undefined, title: 'Center Right', icon: <div className="w-[4px] h-[6px] bg-current rounded-[0.5px] absolute top-1/2 -translate-y-1/2 right-[2px]" /> },
+            { t: undefined, r: undefined, b: '0', l: '0', title: 'Bottom Left', icon: <div className="w-[4px] h-[4px] bg-current rounded-[0.5px] absolute bottom-[2px] left-[2px]" /> },
+            { t: undefined, r: undefined, b: '0', l: undefined, title: 'Bottom Center', icon: <div className="w-[6px] h-[4px] bg-current rounded-[0.5px] absolute bottom-[2px] left-1/2 -translate-x-1/2" /> },
+            { t: undefined, r: '0', b: '0', l: undefined, title: 'Bottom Right', icon: <div className="w-[4px] h-[4px] bg-current rounded-[0.5px] absolute bottom-[2px] right-[2px]" /> },
+          ]
+          return (
+            <>
+              {/* Position presets row — only for absolute/fixed */}
+              {(currentPosition === 'absolute' || currentPosition === 'fixed') && <div className="flex items-center justify-center gap-[2px] my-1">
+                {POS_PRESETS.map((p, i) => {
+                  const matchPos = (actual: string, expected: string | undefined) => {
+                    if (expected === undefined) return !actual || actual === 'auto'
+                    return parseFloat(actual) === parseFloat(expected)
+                  }
+                  const isActive = matchPos(cstr('top'), p.t) && matchPos(cstr('right'), p.r) && matchPos(cstr('bottom'), p.b) && matchPos(cstr('left'), p.l)
+                  return (
+                    <button key={i} title={p.title}
+                      onClick={() => {
+                        setStyle('top', p.t ? `${p.t}px` : undefined)
+                        setStyle('right', p.r ? `${p.r}px` : undefined)
+                        setStyle('bottom', p.b ? `${p.b}px` : undefined)
+                        setStyle('left', p.l ? `${p.l}px` : undefined)
+                      }}
+                      className={`relative w-[18px] h-[16px] border rounded-[2px] transition-colors ${isActive ? 'border-[#888] bg-[#444] text-white' : 'border-[#555] bg-[#2a2a2a] text-[#666] hover:border-[#888] hover:text-[#aaa]'}`}
+                    >
+                      {p.icon}
+                    </button>
+                  )
+                })}
+              </div>}
+
+              {/* Position box — same visual as spacing FieldBoxModel */}
+              <FieldPositionBox
+                values={{ top: cstr('top'), right: cstr('right'), bottom: cstr('bottom'), left: cstr('left') }}
+                onChange={(key, v) => setStyle(key, v === 'auto' ? undefined : v || undefined)}
+              />
+
+              {/* Relative to element + z-index */}
+              <div className="flex items-center gap-1 mt-1.5">
+                <button className="flex items-center gap-1.5 h-6 px-2 bg-[#383838] border border-[#4a4a4a] rounded text-[11px] text-[#ccc] hover:text-white flex-1 min-w-0">
+                  <Move className="w-3 h-3 shrink-0 text-[#888]" />
+                  <span className="truncate">{relTo}</span>
+                </button>
+                <input type="text" value={cstr('zIndex') ?? ''} onChange={e => {
+                  const v = e.target.value
+                  setStyle('zIndex', v ? Number(v) : undefined)
+                }} placeholder="Auto"
+                  className="w-[52px] h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded px-1.5 text-center focus:outline-none focus:ring-1 focus:ring-wf-blue placeholder:text-[#555]" />
+              </div>
+              <div className="flex items-center mt-0.5 px-0.5">
+                <span className="text-[9px] text-[#666] flex-1">Relative to</span>
+                <span className="text-[9px] text-[#666]">z-Index</span>
+              </div>
+
+            </>
+          )
+        })()}
+
+        {/* Float and clear — Webflow: expandable */}
+        <MoreToggle open={showFloatClear} onClick={() => setShowFloatClear(!showFloatClear)} label="Float and clear" />
+        {showFloatClear && (
+          <>
+            <WfRow label="Float" labelColor={!!str('float')} dot={originDot('float')} onReset={() => resetOverrideProp('float')}>
+              <div className="flex items-center gap-0">
+                {([['', <X className="w-3.5 h-3.5" />, 'None'], ['left', <AlignHorizontalJustifyStart className="w-3.5 h-3.5" />, 'Left'], ['right', <AlignHorizontalJustifyEnd className="w-3.5 h-3.5" />, 'Right']] as const).map(([v, icon, title]) => (
+                  <button key={String(v)} onClick={() => setStyle('float', v || undefined)} title={String(title)}
+                    className={`h-6 flex-1 flex items-center justify-center border border-[#4a4a4a] first:rounded-l last:rounded-r -ml-px first:ml-0 ${(cstr('float') || '') === v ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                    {icon}
+                  </button>
+                ))}
+              </div>
+            </WfRow>
+            <WfRow label="Clear" labelColor={!!str('clear')} dot={originDot('clear')} onReset={() => resetOverrideProp('clear')}>
+              <div className="flex items-center gap-0">
+                {([['', <X className="w-3.5 h-3.5" />, 'None'], ['left', <AlignHorizontalJustifyStart className="w-3.5 h-3.5" />, 'Left'], ['right', <AlignHorizontalJustifyEnd className="w-3.5 h-3.5" />, 'Right'], ['both', <Minus className="w-3.5 h-3.5" />, 'Both']] as const).map(([v, icon, title]) => (
+                  <button key={String(v)} onClick={() => setStyle('clear', v || undefined)} title={String(title)}
+                    className={`h-6 flex-1 flex items-center justify-center border border-[#4a4a4a] first:rounded-l last:rounded-r -ml-px first:ml-0 ${(cstr('clear') || '') === v ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                    {icon}
+                  </button>
+                ))}
+              </div>
+            </WfRow>
+          </>
+        )}
+      </PanelSection>
+
+      {/* ════════════════════════════════════════════ */}
+      {/* ── TYPOGRAPHY ── */}
+      {/* ════════════════════════════════════════════ */}
+      <PanelSection title="Typography" compact>
+        {/* Font */}
+        <WfRow label="Font" labelColor={!!str('fontFamily')}>
+          <FieldFontPicker label="" value={cstr('fontFamily')} onChange={v => setStyle('fontFamily', v)} />
+        </WfRow>
+
+        {/* Weight — custom dropdown with visual weight preview */}
+        <WfRow label="Weight" labelColor={!!str('fontWeight')}>
+          <div className="relative flex-1">
+            <button onClick={() => setShowWeightDropdown(!showWeightDropdown)}
+              className={`${SELECT} flex items-center justify-between`}>
+              <span style={{ fontWeight: cnum('fontWeight') ?? 400 }}>
+                {cnum('fontWeight') ?? 400} - {({100:'Thin',200:'Extra Light',300:'Light',400:'Normal',500:'Medium',600:'Semi Bold',700:'Bold',800:'Extra Bold',900:'Black'} as Record<number,string>)[cnum('fontWeight') ?? 400] ?? 'Normal'}
+              </span>
+              <ChevronDown className="w-3 h-3 text-[#666] shrink-0" />
+            </button>
+            {showWeightDropdown && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowWeightDropdown(false)} />
+                <div className="absolute top-full left-0 right-0 mt-0.5 bg-[#383838] border border-[#4a4a4a] rounded shadow-xl z-50 py-0.5 max-h-60 overflow-auto">
+                  {([
+                    [100,'Thin'],[200,'Extra Light'],[300,'Light'],[400,'Normal'],[500,'Medium'],
+                    [600,'Semi Bold'],[700,'Bold'],[800,'Extra Bold'],[900,'Black']
+                  ] as const).map(([w, label]) => (
+                    <button key={w} onClick={() => { setStyle('fontWeight', w); setShowWeightDropdown(false) }}
+                      className={`w-full px-2 py-1.5 text-left text-[11px] transition-colors ${(cnum('fontWeight') ?? 400) === w ? 'bg-[#111] text-white' : 'text-[#ccc] hover:bg-[#363636] hover:text-white'}`}
+                      style={{ fontWeight: w }}>
+                      {w} - {label}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </WfRow>
+
+        {/* Size + Height */}
+        <WfRow label="Size" labelColor={!!str('fontSize')}>
+          <div className="flex gap-1.5 min-w-0">
+            <div className="flex flex-1 min-w-0 h-6">
+              <input value={cstr('fontSize')?.replace(/[a-z%]+$/i, '') || ''} onChange={e => {
+                const unit = cstr('fontSize')?.match(/[a-z%]+$/i)?.[0] || 'px'
+                setStyle('fontSize', e.target.value ? `${e.target.value}${unit}` : '')
+              }} placeholder={computedStyles.fontSize?.replace(/[a-z%]+$/i, '') || '16'} className="flex-1 min-w-0 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded-l px-2 focus:outline-none focus:ring-1 focus:ring-wf-blue placeholder:text-[#666]" />
+              <select value={cstr('fontSize')?.match(/[a-z%]+$/i)?.[0] || '-'} onChange={e => {
+                const numVal = cstr('fontSize')?.replace(/[a-z%]+$/i, '') || ''
+                if (e.target.value === '-') setStyle('fontSize', '')
+                else setStyle('fontSize', `${numVal}${e.target.value}`)
+              }} className="w-10 bg-[#383838] border border-[#4a4a4a] border-l-0 text-[#999] text-[10px] rounded-r cursor-pointer focus:outline-none">
+                <option value="-">-</option><option value="px">PX</option><option value="%">%</option><option value="em">EM</option><option value="rem">REM</option><option value="vw">VW</option><option value="vh">VH</option>
+              </select>
+            </div>
+            {/* Height + unit */}
+            <div className="flex items-center gap-1 shrink-0">
+              <span className={LBL}>Height</span>
+              <div className="flex h-6">
+                <input value={cstr('lineHeight')} onChange={e => setStyle('lineHeight', e.target.value)} placeholder={computedStyles.lineHeight || '1.5'}
+                  className="w-[34px] bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded-l px-1.5 text-center focus:outline-none focus:ring-1 focus:ring-wf-blue placeholder:text-[#666]" />
+                <select value={cstr('lineHeight')?.match(/[a-z%]+$/i)?.[0] || '-'} onChange={e => {
+                  const numVal = cstr('lineHeight')?.replace(/[a-z%]+$/i, '') || cstr('lineHeight') || ''
+                  if (e.target.value === '-') setStyle('lineHeight', numVal)
+                  else setStyle('lineHeight', `${numVal}${e.target.value}`)
+                }} className="w-8 bg-[#383838] border border-[#4a4a4a] border-l-0 text-[#999] text-[9px] rounded-r cursor-pointer focus:outline-none">
+                  <option value="-">-</option><option value="px">PX</option><option value="%">%</option><option value="em">EM</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </WfRow>
+
+        {/* Color */}
+        <WfRow label="Color" labelColor={!!str('color')}>
+          <FieldColor label="" value={cstr('color')} onChange={v => setStyle('color', v)} />
+        </WfRow>
+
+        {/* Align */}
+        <WfRow label="Align" labelColor={!!str('textAlign')}>
+          <FieldAlignment label="" value={cstr('textAlign')} onChange={v => setStyle('textAlign', v)} />
+        </WfRow>
+
+        {/* Decor — Webflow: ×, strikethrough, underline, overline, "..." popover */}
+        <WfRow label="Decor" labelColor={!!str('textDecoration')}>
+          <div className="flex items-center gap-0 relative">
+            {[
+              { v: 'none', icon: <X className="w-3.5 h-3.5" />, title: 'None' },
+              { v: 'line-through', icon: <Strikethrough className="w-3.5 h-3.5" />, title: 'Strikethrough' },
+              { v: 'underline', icon: <Underline className="w-3.5 h-3.5" />, title: 'Underline' },
+              { v: 'overline', icon: <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="3" x2="20" y2="3" /><path d="M12 21V9" /><path d="M8 13l4-4 4 4" /></svg>, title: 'Overline' },
+            ].map(({ v, icon, title }) => (
+              <button key={v} onClick={() => setStyle('textDecoration', v === 'none' ? '' : v)} title={title}
+                className={`h-6 flex-1 flex items-center justify-center border border-[#4a4a4a] first:rounded-l -ml-px first:ml-0 transition-colors ${(cstr('textDecoration') || 'none') === v ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                {icon}
+              </button>
+            ))}
+            <button onClick={() => setShowDecoPopover(!showDecoPopover)} title="Decoration & underline"
+              className={cn('h-6 w-8 text-[11px] border border-[#4a4a4a] rounded-r -ml-px transition-colors', showDecoPopover ? 'bg-[#111] text-blue-400 border-blue-500/50' : 'bg-[#383838] text-[#999] hover:text-white')}>
+              ···
+            </button>
+
+            {/* ── Decoration & underline popover ── */}
+            {showDecoPopover && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowDecoPopover(false)} />
+                <div className="absolute top-full left-0 right-0 mt-1 bg-[#252525] border border-[#444] rounded-lg shadow-xl z-50 p-2.5 space-y-2" style={{ boxShadow: '0 8px 30px rgba(0,0,0,0.5)' }}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[11px] text-[#ccc] font-semibold">Decoration & underline</span>
+                    <button onClick={() => setShowDecoPopover(false)} className="text-[#666] hover:text-white"><X className="w-3.5 h-3.5" /></button>
+                  </div>
+                  {/* Line */}
+                  <WfRow label="Line" labelColor={!!str('textDecoration')}>
+                    <select value={cstr('textDecoration') || 'none'} onChange={e => setStyle('textDecoration', e.target.value === 'none' ? '' : e.target.value)} className={SELECT}>
+                      <option value="none">None</option>
+                      <option value="line-through">Strikethrough</option>
+                      <option value="underline">Underline</option>
+                      <option value="overline">Overline</option>
+                      <option value="underline overline">Underline + Overline</option>
+                      <option value="underline line-through">Underline + Strikethrough</option>
+                      <option value="overline line-through">Overline + Strikethrough</option>
+                      <option value="underline overline line-through">All</option>
+                    </select>
+                  </WfRow>
+                  {/* Style */}
+                  <WfRow label="Style" labelColor={!!str('textDecorationStyle')}>
+                    <select value={cstr('textDecorationStyle') || 'solid'} onChange={e => setStyle('textDecorationStyle', e.target.value === 'solid' ? undefined : e.target.value)} className={SELECT}>
+                      <option value="solid">— Solid</option>
+                      <option value="double">≡ Double</option>
+                      <option value="dotted">··· Dotted</option>
+                      <option value="dashed">--- Dashed</option>
+                      <option value="wavy">∿ Wavy</option>
+                    </select>
+                  </WfRow>
+                  {/* Thick */}
+                  <WfRow label="Thick" labelColor={!!str('textDecorationThickness')}>
+                    <div className="flex h-6">
+                      <input value={cstr('textDecorationThickness')?.replace(/[a-z%]+$/i, '') || ''} onChange={e => {
+                        const unit = cstr('textDecorationThickness')?.match(/[a-z%]+$/i)?.[0] || 'px'
+                        setStyle('textDecorationThickness', e.target.value ? `${e.target.value}${unit}` : undefined)
+                      }} placeholder="Auto" className="flex-1 min-w-0 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded-l px-2 focus:outline-none" />
+                      <select value={cstr('textDecorationThickness')?.match(/[a-z%]+$/i)?.[0] || '-'} onChange={e => {
+                        const numVal = cstr('textDecorationThickness')?.replace(/[a-z%]+$/i, '') || ''
+                        if (e.target.value === '-') setStyle('textDecorationThickness', numVal || undefined)
+                        else setStyle('textDecorationThickness', numVal ? `${numVal}${e.target.value}` : undefined)
+                      }} className="w-10 bg-[#383838] border border-[#4a4a4a] border-l-0 text-[#999] text-[9px] rounded-r cursor-pointer focus:outline-none">
+                        <option value="-">-</option><option value="px">PX</option><option value="%">%</option><option value="em">EM</option><option value="rem">REM</option><option value="ch">CH</option><option value="vh">VH</option><option value="vw">VW</option><option value="svh">SVH</option><option value="svw">SVW</option>
+                      </select>
+                    </div>
+                  </WfRow>
+                  {/* Color */}
+                  <WfRow label="Color" labelColor={!!str('textDecorationColor')}>
+                    <FieldColor label="" value={cstr('textDecorationColor')} onChange={v => setStyle('textDecorationColor', v)} />
+                  </WfRow>
+                  {/* Skip ink */}
+                  <WfRow label="Skip ink" labelColor={!!str('textDecorationSkipInk')}>
+                    <select value={cstr('textDecorationSkipInk') || 'auto'} onChange={e => setStyle('textDecorationSkipInk', e.target.value === 'auto' ? undefined : e.target.value)} className={SELECT}>
+                      <option value="auto">Auto</option>
+                      <option value="none">None</option>
+                    </select>
+                  </WfRow>
+                </div>
+              </>
+            )}
+          </div>
+        </WfRow>
+
+        {/* ── More type options ── */}
+        <MoreToggle open={showMoreType} onClick={() => setShowMoreType(!showMoreType)} label="More type options" />
+        {showMoreType && (
+          <div className="space-y-2 pt-1 min-w-0 overflow-hidden">
+            {/* Letter spacing / Text indent / Columns — compact like Webflow */}
+            <div className="flex gap-1 min-w-0">
+              <div className="flex-1 min-w-0">
+                <label className={SECTION_LABEL}>Letter spacing</label>
+                <input value={cstr('letterSpacing')?.replace(/[a-z%]+$/i, '') || ''} onChange={e => {
+                  setStyle('letterSpacing', e.target.value ? `${e.target.value}px` : '')
+                }} placeholder="0" className={INPUT} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <label className={SECTION_LABEL}>Text indent</label>
+                <input value={cstr('textIndent')?.replace(/[a-z%]+$/i, '') || ''} onChange={e => {
+                  setStyle('textIndent', e.target.value ? `${e.target.value}px` : '')
+                }} placeholder="0" className={INPUT} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <label className={SECTION_LABEL}>Columns</label>
+                <input type="number" min={1} value={num('columnCount') ?? ''} onChange={e => setStyle('columnCount', e.target.value ? Number(e.target.value) : undefined)} placeholder="auto" className={INPUT} />
+              </div>
+            </div>
+
+            {/* Italicize / Capitalize / Direction */}
+            <div className="flex gap-2 flex-wrap">
+              <div className="shrink-0">
+                <div className="flex items-center gap-0">
+                  {([['normal','I'],['italic','𝐼']] as const).map(([v, icon]) => (
+                    <button key={v} onClick={() => setStyle('fontStyle', v === 'normal' ? '' : v)}
+                      className={`h-6 w-6 text-[12px] border border-[#4a4a4a] first:rounded-l last:rounded-r -ml-px first:ml-0 ${(cstr('fontStyle') || 'normal') === v ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                      {icon}
+                    </button>
+                  ))}
+                </div>
+                <label className="text-[9px] text-[#666] text-center block mt-0.5">Italicize</label>
+              </div>
+              <div className="shrink-0">
+                <div className="flex items-center gap-0">
+                  {([['none','×'],['uppercase','AA'],['capitalize','Aa'],['lowercase','aa']] as const).map(([v, icon]) => (
+                    <button key={v} onClick={() => setStyle('textTransform', v === 'none' ? '' : v)}
+                      className={`h-6 w-6 text-[10px] border border-[#4a4a4a] first:rounded-l last:rounded-r -ml-px first:ml-0 ${(cstr('textTransform') || 'none') === v ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                      {icon}
+                    </button>
+                  ))}
+                </div>
+                <label className="text-[9px] text-[#666] text-center block mt-0.5">Capitalize</label>
+              </div>
+              <div className="shrink-0">
+                <div className="flex items-center gap-0">
+                  <button onClick={() => setStyle('direction', '')}
+                    className={`h-6 w-6 flex items-center justify-center border border-[#4a4a4a] rounded-l ${(cstr('direction') || 'ltr') === 'ltr' ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                  <button onClick={() => setStyle('direction', 'rtl')}
+                    className={`h-6 w-6 flex items-center justify-center border border-[#4a4a4a] rounded-r -ml-px ${cstr('direction') === 'rtl' ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                    <ArrowLeft className="w-3 h-3" />
+                  </button>
+                </div>
+                <label className="text-[9px] text-[#666] text-center block mt-0.5">Direction</label>
+              </div>
+            </div>
+
+            {/* Breaking — Word / Line */}
+            <WfRow label="Breaking" labelColor={!!str('wordBreak') || !!str('overflowWrap')} topAlign>
+              <div className="flex gap-1.5 min-w-0">
+                <div className="flex-1 min-w-0">
+                  <select value={cstr('wordBreak') || 'normal'} onChange={e => setStyle('wordBreak', e.target.value === 'normal' ? '' : e.target.value)} className={SELECT}>
+                    <option value="normal">Normal</option><option value="break-all">Break all</option><option value="keep-all">Keep all</option>
+                  </select>
+                  <label className="text-[9px] text-[#666] text-center block mt-0.5">Word</label>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <select value={cstr('overflowWrap') || 'normal'} onChange={e => setStyle('overflowWrap', e.target.value === 'normal' ? '' : e.target.value)} className={SELECT}>
+                    <option value="normal">Normal</option><option value="break-word">Break word</option><option value="anywhere">Anywhere</option>
+                  </select>
+                  <label className="text-[9px] text-[#666] text-center block mt-0.5">Line</label>
+                </div>
+              </div>
+            </WfRow>
+
+            {/* Wrap */}
+            <WfRow label="Wrap" labelColor={!!str('whiteSpace')}>
+              <select value={cstr('whiteSpace') || 'normal'} onChange={e => setStyle('whiteSpace', e.target.value === 'normal' ? '' : e.target.value)} className={SELECT}>
+                <option value="normal">Normal</option><option value="nowrap">No wrap</option><option value="pre">Pre</option><option value="pre-wrap">Pre wrap</option><option value="pre-line">Pre line</option><option value="break-spaces">Break spaces</option>
+              </select>
+            </WfRow>
+
+            {/* Truncate */}
+            <WfRow label="Truncate" labelColor={!!str('textOverflow')}>
+              <div className="flex items-center gap-0">
+                {([['clip','Clip'],['ellipsis','Ellipsis']] as const).map(([v, label]) => (
+                  <button key={v} onClick={() => setStyle('textOverflow', v === 'clip' ? '' : v)}
+                    className={`h-6 flex-1 text-[11px] border border-[#4a4a4a] first:rounded-l last:rounded-r -ml-px first:ml-0 ${(cstr('textOverflow') || 'clip') === v ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </WfRow>
+
+            {/* Stroke */}
+            <WfRow label="Stroke" labelColor={!!str('webkitTextStrokeWidth') || !!str('webkitTextStrokeColor')} topAlign>
+              <div className="flex gap-1.5 min-w-0">
+                <div className="flex-1 min-w-0">
+                  <div className="flex h-6 min-w-0">
+                    <input value={cstr('webkitTextStrokeWidth')?.replace(/[a-z]+$/i, '') || ''} onChange={e => setStyle('webkitTextStrokeWidth', e.target.value ? `${e.target.value}px` : '')} placeholder="0" className="flex-1 min-w-0 h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded-l px-1.5 focus:outline-none focus:ring-1 focus:ring-wf-blue" />
+                    <span className="h-6 px-1 shrink-0 flex items-center justify-center bg-[#383838] border border-[#4a4a4a] border-l-0 rounded-r text-[10px] text-[#888]">PX</span>
+                  </div>
+                  <label className="text-[9px] text-[#666] text-center block mt-0.5">Width</label>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <FieldColor label="" value={cstr('webkitTextStrokeColor')} onChange={v => setStyle('webkitTextStrokeColor', v)} />
+                  <label className="text-[9px] text-[#666] text-center block mt-0.5">Color</label>
+                </div>
+              </div>
+            </WfRow>
+
+            {/* Text shadows */}
+            <TextShadowEditor label="Text shadows" value={cstr('textShadow')} onChange={v => setStyle('textShadow', v)} />
+          </div>
+        )}
+      </PanelSection>
+
+      {/* ════════════════════════════════════════════ */}
+      {/* ── BACKGROUNDS ── */}
+      {/* ════════════════════════════════════════════ */}
+      <PanelSection title="Backgrounds" compact defaultOpen>
+        {/* Image & gradient — Webflow: blue link + "+" */}
+        {!isCustom && (
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] text-[#888]">Image & gradient</span>
+            <button
+              onClick={() => {
+                const raw = str('backgroundLayers')
+                let layers: { type: string; value: string; size?: string; position?: string; repeat?: string }[] = []
+                try { if (raw) layers = JSON.parse(raw) } catch {}
+                layers.push({ type: 'gradient', value: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%)' })
+                setStyle('backgroundLayers', JSON.stringify(layers))
+              }}
+              className="p-0.5 text-[#888] hover:text-white cursor-pointer transition-colors"
+              title="Add gradient layer"
+            >
+              <Plus className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+        <BackgroundLayerEditor value={cstr('backgroundLayers')} onChange={v => setStyle('backgroundLayers', v || undefined)} />
+
+        {/* Color — Webflow: swatch + "transparent" */}
+        <WfRow label="Color" labelColor={!!str('backgroundColor')}>
+          <FieldColor label="" value={cstr('backgroundColor')} onChange={v => setStyle('backgroundColor', v)} />
+        </WfRow>
+
+        {/* Clipping */}
+        <WfRow label="Clipping" labelColor={!!str('backgroundClip')}>
+          <select value={cstr('backgroundClip') || ''} onChange={e => setStyle('backgroundClip', e.target.value || undefined)} className={SELECT}>
+            <option value="">None</option>
+            <option value="padding-box">Clip background to padding</option>
+            <option value="content-box">Clip background to content</option>
+            <option value="text">Clip background to text</option>
+          </select>
+        </WfRow>
+
+      </PanelSection>
+
+      {/* ════════════════════════════════════════════ */}
+      {/* ── BORDERS ── */}
+      {/* ════════════════════════════════════════════ */}
+      <PanelSection title="Borders" compact defaultOpen>
+        {/* ── Radius ── */}
+        {(() => {
+          const RADIUS_UNITS = ['px','%','em','rem','ch','vw','vh','svw','svh'] as const
+          const radiusRaw = cstr('borderRadius') || ''
+          const radiusNum = parseFloat(radiusRaw) || 0
+          const radiusUnit = radiusRaw.match(/[a-z%]+$/i)?.[0] || 'px'
+
+          const setRadiusAll = (num: string, unit: string) => {
+            setStyle('borderRadius', num ? `${num}${unit}` : undefined)
+          }
+
+          return (
+            <>
+              {/* Row: label + toggle buttons + slider + input + unit */}
+              <div className="flex items-center gap-1.5 min-h-[26px] min-w-0 overflow-hidden">
+                <span className={`${SECTION_LABEL} shrink-0`}>Radius</span>
+                {/* Toggle: all corners / per corner */}
+                <div className="flex items-center gap-0 shrink-0">
+                  <button onClick={() => setShowPerCornerRadius(false)} title="All corners"
+                    className={`w-[22px] h-[22px] flex items-center justify-center border border-[#4a4a4a] rounded-l transition-colors ${!showPerCornerRadius ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#666] hover:text-white'}`}>
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="1" width="8" height="8" rx="0" /></svg>
+                  </button>
+                  <button onClick={() => setShowPerCornerRadius(true)} title="Per corner"
+                    className={`w-[22px] h-[22px] flex items-center justify-center border border-[#4a4a4a] rounded-r -ml-px transition-colors ${showPerCornerRadius ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#666] hover:text-white'}`}>
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="1" width="8" height="8" rx="3" /></svg>
+                  </button>
+                </div>
+                {/* Slider */}
+                <input type="range" min={0} max={100} value={Math.min(radiusNum, 100)}
+                  onChange={e => setRadiusAll(e.target.value === '0' ? '' : e.target.value, radiusUnit)}
+                  className="flex-1 min-w-0 h-1 accent-white bg-[#333] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[10px] [&::-webkit-slider-thumb]:h-[10px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:cursor-pointer" />
+                {/* Value input */}
+                <input value={radiusNum || ''} onChange={e => setRadiusAll(e.target.value, radiusUnit)} placeholder="0"
+                  className="w-10 h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded-l px-1 text-center focus:outline-none focus:ring-1 focus:ring-wf-blue placeholder:text-[#555]" />
+                {/* Unit dropdown */}
+                <select value={radiusUnit} onChange={e => {
+                  const newUnit = e.target.value
+                  if (radiusNum) setRadiusAll(String(radiusNum), newUnit)
+                }} className="w-10 h-6 bg-[#383838] border border-[#4a4a4a] border-l-0 text-[#999] text-[9px] rounded-r cursor-pointer focus:outline-none -ml-px uppercase">
+                  {RADIUS_UNITS.map(u => <option key={u} value={u}>{u.toUpperCase()}</option>)}
+                </select>
+              </div>
+
+              {/* Per-corner inputs */}
+              {showPerCornerRadius && (
+                <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-1.5">
+                  {([
+                    ['borderTopLeftRadius', '⌜'],
+                    ['borderTopRightRadius', '⌝'],
+                    ['borderBottomLeftRadius', '⌞'],
+                    ['borderBottomRightRadius', '⌟'],
+                  ] as const).map(([prop, icon]) => {
+                    const val = cstr(prop) || ''
+                    const vNum = parseFloat(val) || 0
+                    const vUnit = val.match(/[a-z%]+$/i)?.[0] || 'px'
+                    return (
+                      <div key={prop} className="flex items-center gap-0.5">
+                        <span className="text-[11px] text-[#666] w-4 shrink-0 text-center leading-none">{icon}</span>
+                        <input value={vNum || ''} onChange={e => setStyle(prop, e.target.value ? `${e.target.value}${vUnit}` : undefined)} placeholder="0"
+                          className="flex-1 h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded-l px-1.5 focus:outline-none focus:ring-1 focus:ring-wf-blue placeholder:text-[#555] min-w-0" />
+                        <select value={vUnit} onChange={e => { if (vNum) setStyle(prop, `${vNum}${e.target.value}`) }}
+                          className="w-10 h-6 bg-[#383838] border border-[#4a4a4a] border-l-0 text-[#999] text-[9px] rounded-r cursor-pointer focus:outline-none -ml-px uppercase">
+                          {RADIUS_UNITS.map(u => <option key={u} value={u}>{u.toUpperCase()}</option>)}
+                        </select>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </>
+          )
+        })()}
+
+        {/* ── Borders ── */}
+        {(() => {
+          const isAllSelected = borderSides.has('all')
+          const activeSides = isAllSelected ? ['Top', 'Right', 'Bottom', 'Left'] : Array.from(borderSides)
+
+          const toggleSide = (side: string) => {
+            setBorderSides(prev => {
+              const next = new Set(prev)
+              if (side === 'all') {
+                if (next.has('all')) { next.clear() } else { next.clear(); next.add('all') }
+              } else {
+                next.delete('all')
+                if (next.has(side)) next.delete(side)
+                else next.add(side)
+                if (next.size === 4 && ['Top','Right','Bottom','Left'].every(s => next.has(s))) {
+                  next.clear(); next.add('all')
+                }
+              }
+              return next
+            })
+          }
+
+          const readStyle = isAllSelected
+            ? (prop: string) => cstr(`border${prop}`)
+            : (prop: string) => {
+                const first = activeSides[0]
+                return first ? cstr(`border${first}${prop}`) : ''
+              }
+
+          const writeStyle = (prop: string, value: string | undefined) => {
+            if (isAllSelected) {
+              setStyle(`border${prop}`, value)
+            } else {
+              activeSides.forEach(side => setStyle(`border${side}${prop}`, value))
+            }
+          }
+
+          const currentStyle = readStyle('Style') || 'none'
+          const currentWidth = readStyle('Width') || ''
+          const currentColor = readStyle('Color') || ''
+          const hasBorderSet = !!str('borderStyle') || !!str('borderWidth') || !!str('borderColor') ||
+            ['Top','Right','Bottom','Left'].some(s => !!str(`border${s}Style`) || !!str(`border${s}Width`) || !!str(`border${s}Color`))
+          // Labels are plain gray — blue dot is on the PanelSection title instead
+
+          const SideBtn = ({ side, className: cls }: { side: string; className?: string }) => {
+            const isChecked = side === 'all' ? isAllSelected : borderSides.has(side)
+            return (
+              <button onClick={() => toggleSide(side)} title={side}
+                className={cn('w-[18px] h-[18px] flex items-center justify-center border rounded-[2px] transition-colors',
+                  isChecked ? 'bg-[#222] border-[#888] text-white' : 'bg-[#383838] border-[#4a4a4a] text-[#555] hover:border-[#666] hover:text-[#888]',
+                  cls
+                )}>
+                <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <line x1="0" y1="0.5" x2="8" y2="0.5" stroke="currentColor" strokeWidth={side === 'Top' || side === 'all' ? 2 : 0.5} opacity={side === 'Top' || side === 'all' ? 1 : 0.3} />
+                  <line x1="7.5" y1="0" x2="7.5" y2="8" stroke="currentColor" strokeWidth={side === 'Right' || side === 'all' ? 2 : 0.5} opacity={side === 'Right' || side === 'all' ? 1 : 0.3} />
+                  <line x1="0" y1="7.5" x2="8" y2="7.5" stroke="currentColor" strokeWidth={side === 'Bottom' || side === 'all' ? 2 : 0.5} opacity={side === 'Bottom' || side === 'all' ? 1 : 0.3} />
+                  <line x1="0.5" y1="0" x2="0.5" y2="8" stroke="currentColor" strokeWidth={side === 'Left' || side === 'all' ? 2 : 0.5} opacity={side === 'Left' || side === 'all' ? 1 : 0.3} />
+                </svg>
+              </button>
+            )
+          }
+
+          return (
+            <div className="mt-3">
+              <span className={cn(SECTION_LABEL, hasBorderSet && 'text-wf-blue')}>Borders</span>
+
+              {/* Cross layout: side checkboxes left, Style/Width/Color right */}
+              <div className="flex gap-2 mt-1.5">
+                {/* Left: cross-shaped side selector */}
+                <div className="shrink-0 flex flex-col items-center gap-[2px] pt-[2px]">
+                  <SideBtn side="Top" />
+                  <div className="flex gap-[2px]">
+                    <SideBtn side="Left" />
+                    <SideBtn side="all" />
+                    <SideBtn side="Right" />
+                  </div>
+                  <SideBtn side="Bottom" />
+                </div>
+
+                {/* Right: Style / Width / Color */}
+                <div className="flex-1 min-w-0 space-y-1.5">
+                  <div className="flex items-center gap-2 min-h-[24px]">
+                    <label className="text-[10px] text-[#888] w-[34px] shrink-0 leading-none">Style</label>
+                    <div className="flex items-center gap-0 flex-1">
+                      {([['none','×'],['solid','—'],['dashed','- -'],['dotted','···']] as const).map(([v, icon]) => (
+                        <button key={v} onClick={() => writeStyle('Style', v)}
+                          className={`h-6 flex-1 text-[11px] border border-[#4a4a4a] first:rounded-l last:rounded-r -ml-px first:ml-0 ${currentStyle === v ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                          {icon}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 min-h-[24px]">
+                    <label className="text-[10px] text-[#888] w-[34px] shrink-0 leading-none">Width</label>
+                    {(() => {
+                      const bwUnit = currentWidth?.match(/[a-z]+$/i)?.[0] || 'px'
+                      const bwNum = currentWidth?.replace(/[a-z]+$/i, '') || ''
+                      return (
+                        <div className="flex items-center gap-1 flex-1">
+                          <input value={bwNum} onChange={e => writeStyle('Width', e.target.value ? `${e.target.value}${bwUnit}` : undefined)} placeholder="0" className={`${INPUT} flex-1`} />
+                          <select value={bwUnit} onChange={e => writeStyle('Width', bwNum ? `${bwNum}${e.target.value}` : undefined)} className="w-[42px] h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[10px] rounded px-0.5 cursor-pointer focus:outline-none">
+                            <option value="px">PX</option>
+                            <option value="em">EM</option>
+                            <option value="rem">REM</option>
+                          </select>
+                        </div>
+                      )
+                    })()}
+                  </div>
+                  <div className="flex items-center gap-2 min-h-[24px]">
+                    <label className="text-[10px] text-[#888] w-[34px] shrink-0 leading-none">Color</label>
+                    <div className="flex-1 min-w-0">
+                      <FieldColor label="" value={currentColor} onChange={v => writeStyle('Color', v || undefined)} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        })()}
+
+      </PanelSection>
+
+      {/* ════════════════════════════════════════════ */}
+      {/* ── EFFECTS ── */}
+      {/* ════════════════════════════════════════════ */}
+      <PanelSection title="Effects" compact defaultOpen>
+        <WfRow label="Blending" labelColor={!!str('mixBlendMode')}>
+          <select value={cstr('mixBlendMode') || 'normal'} onChange={e => setStyle('mixBlendMode', e.target.value === 'normal' ? '' : e.target.value)} className={SELECT}>
+            {['normal','darken','multiply','color-burn','lighten','screen','color-dodge','overlay','soft-light','hard-light','difference','exclusion','hue','saturation','color','luminosity'].map(m => (
+              <option key={m} value={m}>{m.charAt(0).toUpperCase() + m.slice(1).replace('-', ' ')}</option>
+            ))}
+          </select>
+        </WfRow>
+
+        {/* Opacity — Webflow: slider + value + % */}
+        <WfRow label="Opacity" labelColor={!!str('opacity')}>
+          <div className="flex items-center gap-1.5 flex-1">
+            <input type="range" min={0} max={100} value={Math.round((num('opacity') ?? 1) * 100)} onChange={e => setStyle('opacity', Number(e.target.value) / 100)}
+              className="flex-1 h-1 accent-white cursor-pointer" />
+            <input type="number" min={0} max={100} value={Math.round((num('opacity') ?? 1) * 100)} onChange={e => setStyle('opacity', Number(e.target.value) / 100)}
+              className="w-10 h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] text-center rounded focus:outline-none" />
+            <span className="text-[10px] text-[#666]">%</span>
+          </div>
+        </WfRow>
+
+        {/* Outline — style + width/color/offset when active */}
+        <WfRow label="Outline" labelColor={!!str('outlineStyle')}>
+          <div className="flex items-center gap-0">
+            {([['none','×'],['solid','—'],['dashed','---'],['dotted','···']] as const).map(([v, icon]) => (
+              <button key={v} onClick={() => {
+                setStyle('outlineStyle', v)
+                if (v === 'none') { setStyle('outlineWidth', undefined); setStyle('outlineColor', undefined); setStyle('outlineOffset', undefined) }
+              }}
+                className={`h-7 flex-1 text-[11px] border border-[#4a4a4a] first:rounded-l last:rounded-r -ml-px first:ml-0 ${(cstr('outlineStyle') || 'none') === v ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                {icon}
+              </button>
+            ))}
+          </div>
+        </WfRow>
+        {str('outlineStyle') && str('outlineStyle') !== 'none' && (
+          <>
+            <WfRow label="Width" labelColor={!!str('outlineWidth')}>
+              <div className="flex items-center gap-1.5 flex-1">
+                <input value={cstr('outlineWidth')?.replace(/[a-z]+$/i, '') || ''} onChange={e => setStyle('outlineWidth', e.target.value ? `${e.target.value}px` : undefined)} placeholder="1" className={`${INPUT} w-16`} />
+                <span className="text-[10px] text-[#666]">PX</span>
+              </div>
+            </WfRow>
+            <WfRow label="Color" labelColor={!!str('outlineColor')}>
+              <FieldColor label="" value={cstr('outlineColor')} onChange={v => setStyle('outlineColor', v)} />
+            </WfRow>
+            <WfRow label="Offset" labelColor={!!str('outlineOffset')}>
+              <div className="flex items-center gap-1.5 flex-1">
+                <input value={cstr('outlineOffset')?.replace(/[a-z]+$/i, '') || ''} onChange={e => setStyle('outlineOffset', e.target.value ? `${e.target.value}px` : undefined)} placeholder="0" className={`${INPUT} w-16`} />
+                <span className="text-[10px] text-[#666]">PX</span>
+              </div>
+            </WfRow>
+          </>
+        )}
+
+        {/* Box shadows — Webflow: title + "+" */}
+        <ShadowEditor label="Box shadows" value={cstr('boxShadow')} onChange={v => setStyle('boxShadow', v)} />
+
+        {/* 2D & 3D transforms — Webflow: tabs Move/Scale/Rotate/Skew + settings */}
+        <TransformEditor label="2D & 3D transforms" value={cstr('transform')} onChange={v => setStyle('transform', v)}
+          transformOrigin={cstr('transformOrigin')} onTransformOriginChange={v => setStyle('transformOrigin', v || undefined)}
+          backfaceVisibility={cstr('backfaceVisibility')} onBackfaceVisibilityChange={v => setStyle('backfaceVisibility', v === 'visible' ? undefined : v)}
+          perspective={cstr('perspective')} onPerspectiveChange={v => setStyle('perspective', v || undefined)}
+          childrenPerspective={cstr('childrenPerspective')} onChildrenPerspectiveChange={v => setStyle('childrenPerspective', v || undefined)}
+          perspectiveOrigin={cstr('perspectiveOrigin')} onPerspectiveOriginChange={v => setStyle('perspectiveOrigin', v || undefined)}
+        />
+
+        {/* Transitions — Webflow: title + "+" */}
+        <TransitionEditor label="Transitions" value={cstr('transition')} onChange={v => setStyle('transition', v)} />
+
+        {/* Filters — Webflow: title + "+" */}
+        <FilterEditor label="Filters" value={cstr('filter')} onChange={v => setStyle('filter', v)} />
+
+        {/* Backdrop filters */}
+        <FilterEditor label="Backdrop filters" value={cstr('backdropFilter')} onChange={v => setStyle('backdropFilter', v)} />
+
+        {/* Cursor — Webflow: cursor icon + dropdown */}
+        <WfRow label="Cursor" labelColor={!!str('cursor')}>
+          <div className="flex items-center gap-1.5 min-w-0">
+            <MousePointer2 className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+            <select value={cstr('cursor') || 'auto'} onChange={e => setStyle('cursor', e.target.value === 'auto' ? '' : e.target.value)} className={SELECT + ' flex-1'}>
+            <optgroup label="General">
+              <option value="auto">auto</option><option value="default">default</option><option value="none">none</option>
+            </optgroup>
+            <optgroup label="Links & Status">
+              <option value="pointer">pointer</option><option value="not-allowed">not-allowed</option><option value="wait">wait</option><option value="progress">progress</option><option value="help">help</option><option value="context-menu">context-menu</option>
+            </optgroup>
+            <optgroup label="Selection">
+              <option value="cell">cell</option><option value="crosshair">crosshair</option><option value="text">text</option><option value="vertical-text">vertical-text</option>
+            </optgroup>
+            <optgroup label="Drag & Drop">
+              <option value="grab">grab</option><option value="grabbing">grabbing</option><option value="alias">alias</option><option value="copy">copy</option><option value="move">move</option>
+            </optgroup>
+            <optgroup label="Zoom">
+              <option value="zoom-in">zoom-in</option><option value="zoom-out">zoom-out</option>
+            </optgroup>
+            <optgroup label="Resize">
+              <option value="col-resize">col-resize</option><option value="row-resize">row-resize</option><option value="nesw-resize">nesw-resize</option><option value="nwse-resize">nwse-resize</option><option value="ew-resize">ew-resize</option><option value="ns-resize">ns-resize</option>
+              <option value="n-resize">n-resize</option><option value="w-resize">w-resize</option><option value="s-resize">s-resize</option><option value="e-resize">e-resize</option>
+              <option value="nw-resize">nw-resize</option><option value="ne-resize">ne-resize</option><option value="sw-resize">sw-resize</option><option value="se-resize">se-resize</option>
+            </optgroup>
+          </select>
+          </div>
+        </WfRow>
+
+        {/* Events — Webflow: Auto / None */}
+        <WfRow label="Events" labelColor={!!str('pointerEvents')}>
+          <div className="flex items-center gap-0">
+            {([['auto','Auto'],['none','None']] as const).map(([v, label]) => (
+              <button key={v} onClick={() => setStyle('pointerEvents', v === 'auto' ? '' : v)}
+                className={`h-7 flex-1 text-[11px] border border-[#4a4a4a] first:rounded-l last:rounded-r -ml-px first:ml-0 ${(cstr('pointerEvents') || 'auto') === v ? 'bg-[#111] text-white border-[#555]' : 'bg-[#383838] text-[#999] hover:text-white'}`}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </WfRow>
+      </PanelSection>
+
+      {/* ════════════════════════════════════════════ */}
+      {/* ── CUSTOM PROPERTIES ── */}
+      {/* ════════════════════════════════════════════ */}
+      <PanelSection title="Custom properties" compact defaultOpen>
+        <CustomCssPropertiesEditor value={cstr('customCssProperties')} onChange={v => setStyle('customCssProperties', v || undefined)} />
+      </PanelSection>
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════
+// HELPERS — Webflow-style row and components
+// ═══════════════════════════════════════════════════
+
+/** Display: Webflow-style — buttons toggle between normal/inline variants via chevron dropdown */
+function DisplayButtonGroup({ currentDisplay, onSelect }: { currentDisplay: string; onSelect: (v: string) => void }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const btnRef = useRef<HTMLButtonElement>(null)
+  const [dropPos, setDropPos] = useState({ top: 0, left: 0 })
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false) }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  const handleOpen = () => {
+    if (btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect()
+      setDropPos({ top: rect.bottom + 4, left: rect.right - 180 })
+    }
+    setOpen(!open)
+  }
+
+  const isInline = ['inline-block','inline-flex','inline-grid','inline'].includes(currentDisplay)
+
+  // Webflow: last button shows the selected inline variant, or "None" if no inline
+  const INLINE_LABELS: Record<string, string> = {
+    'inline-block': 'In Block',
+    'inline-flex': 'In Flex',
+    'inline-grid': 'In Grid',
+    'inline': 'Inline',
+  }
+  const lastBtn = isInline
+    ? { value: currentDisplay, label: INLINE_LABELS[currentDisplay] || currentDisplay }
+    : { value: 'none', label: 'None' }
+
+  const ACT = 'bg-[#111] text-white font-medium'
+  const INACT = 'bg-[#383838] text-[#aaa] hover:text-white hover:bg-[#444]'
+
+  return (
+    <div ref={ref} className="min-w-0 w-full">
+      <div className="flex rounded overflow-hidden border border-[#4a4a4a]">
+        {([
+          { value: 'block', label: 'Block' },
+          { value: 'flex', label: 'Flex' },
+          { value: 'grid', label: 'Grid' },
+        ]).map((btn, i) => (
+          <button key={btn.value} onClick={() => onSelect(currentDisplay === btn.value ? '' : btn.value)}
+            className={`h-[22px] flex-1 min-w-0 text-[11px] transition-colors ${i > 0 ? 'border-l border-[#4a4a4a]' : ''} ${currentDisplay === btn.value ? ACT : INACT}`}>
+            {btn.label}
+          </button>
+        ))}
+        <button onClick={() => onSelect(currentDisplay === lastBtn.value ? '' : lastBtn.value)}
+          className={`h-[22px] flex-1 min-w-0 text-[11px] transition-colors border-l border-[#4a4a4a] ${currentDisplay === lastBtn.value ? ACT : INACT}`}>
+          {lastBtn.label}
+        </button>
+        <button ref={btnRef} onClick={handleOpen}
+          className={`h-[22px] w-6 shrink-0 flex items-center justify-center border-l border-[#4a4a4a] transition-colors ${isInline ? ACT : INACT}`}>
+          <ChevronDown className="w-2.5 h-2.5" />
+        </button>
+      </div>
+      {open && (
+        <div className="fixed w-[180px] bg-[#303030] border border-[#444] rounded-md shadow-2xl py-1"
+          style={{ zIndex: 99999, top: dropPos.top, left: dropPos.left }}>
+          {[
+            { value: 'inline-block', label: 'Inline-block', icon: '◻' },
+            { value: 'inline-flex', label: 'Inline-flex', icon: '◻' },
+            { value: 'inline-grid', label: 'Inline-grid', icon: '◻' },
+            { value: 'inline', label: 'Inline', icon: 'A' },
+            { value: 'none', label: 'None', icon: '⊘' },
+          ].map(opt => (
+            <button key={opt.value}
+              onClick={() => { onSelect(currentDisplay === opt.value ? '' : opt.value); setOpen(false) }}
+              className={`w-full flex items-center gap-2.5 px-3 py-[6px] text-[13px] transition-colors ${currentDisplay === opt.value ? 'text-white' : 'text-[#bbb] hover:bg-[#3a3a3a] hover:text-white'}`}>
+              {currentDisplay === opt.value
+                ? <span className="w-4 text-center text-[12px]">✓</span>
+                : <span className="w-4 text-center text-[11px] text-[#666]">{opt.icon}</span>}
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+/** Gap row — Webflow: thin slider + input + unit select + lock icon */
+function GapRow({ value, onChange, rowGap, columnGap, onChangeRowGap, onChangeColumnGap, dot, onReset }: {
+  value: string; onChange: (v: string) => void
+  rowGap?: string; columnGap?: string
+  onChangeRowGap?: (v: string) => void; onChangeColumnGap?: (v: string) => void
+  dot?: 'blue' | 'orange' | 'violet' | 'yellow' | null; onReset?: () => void
+}) {
+  const [linked, setLinked] = useState(true)
+  const parseVal = (v: string) => {
+    const num = parseFloat(v || '0') || 0
+    const unit = v?.match(/[a-z%]+$/i)?.[0] || 'px'
+    return { num, unit }
+  }
+  const main = parseVal(value)
+  const row = parseVal(rowGap || value)
+  const col = parseVal(columnGap || value)
+
+  const handleToggleLink = () => {
+    if (linked && onChangeRowGap && onChangeColumnGap) {
+      onChangeRowGap(`${main.num}${main.unit}`)
+      onChangeColumnGap(`${main.num}${main.unit}`)
+    } else {
+      onChange(`${row.num}${row.unit}`)
+      onChangeRowGap?.(undefined as unknown as string)
+      onChangeColumnGap?.(undefined as unknown as string)
+    }
+    setLinked(!linked)
+  }
+
+  const GapInput = ({ val, unit, onChangeVal }: { val: number; unit: string; onChangeVal: (v: string) => void }) => (
+    <div className="flex items-center gap-1.5 min-w-0">
+      <input type="range" min={0} max={100} value={val}
+        onChange={e => onChangeVal(`${e.target.value}${unit}`)}
+        className="flex-1 h-[3px] accent-[#888] cursor-pointer min-w-0" />
+      <input value={String(val)} onChange={e => onChangeVal(e.target.value ? `${e.target.value}${unit}` : `0${unit}`)}
+        className="w-10 h-[22px] bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] text-center rounded focus:outline-none focus:ring-1 focus:ring-wf-blue" />
+      <select value={unit} onChange={e => onChangeVal(`${val}${e.target.value}`)}
+        className="w-10 bg-[#383838] border border-[#4a4a4a] text-[#666] text-[10px] rounded cursor-pointer focus:outline-none">
+        <option value="px">PX</option><option value="%">%</option><option value="em">EM</option>
+        <option value="rem">REM</option><option value="vw">VW</option>
+      </select>
+    </div>
+  )
+
+  if (!linked && onChangeRowGap && onChangeColumnGap) {
+    return (
+      <div className="space-y-1">
+        <WfRow label="Row gap" labelColor={!!rowGap} dot={dot} onReset={onReset}>
+          <div className="flex items-center gap-1.5 min-w-0">
+            <GapInput val={row.num} unit={row.unit} onChangeVal={onChangeRowGap} />
+            <button onClick={handleToggleLink} className="text-[#999] hover:text-white shrink-0" title="Link gaps">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M11 1a5 5 0 0 0-5 5H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-3a3 3 0 0 1 3-3V1z"/></svg>
+            </button>
+          </div>
+        </WfRow>
+        <WfRow label="Col gap" labelColor={!!columnGap}>
+          <div className="flex items-center gap-1.5 min-w-0">
+            <GapInput val={col.num} unit={col.unit} onChangeVal={onChangeColumnGap} />
+            <div className="w-3 shrink-0" />
+          </div>
+        </WfRow>
+      </div>
+    )
+  }
+
+  return (
+    <WfRow label="Gap" labelColor={!!value} dot={dot} onReset={onReset}>
+      <div className="flex items-center gap-1.5 min-w-0">
+        <GapInput val={main.num} unit={main.unit} onChangeVal={onChange} />
+        <button onClick={handleToggleLink} className="text-[#555] hover:text-[#999] shrink-0" title="Unlink gaps">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a4 4 0 0 0-4 4v1H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-1V5a4 4 0 0 0-4-4zm2 5V5a2 2 0 1 0-4 0v1h4z"/></svg>
+        </button>
+      </div>
+    </WfRow>
+  )
+}
+
+/** Webflow-style row: label left (~48px), field right */
+function WfRow({ label, children, labelColor, dot, onReset, topAlign }: {
+  label: string; children: React.ReactNode; labelColor?: boolean
+  dot?: 'blue' | 'orange' | 'violet' | 'yellow' | null; onReset?: () => void
+  topAlign?: boolean
+}) {
+  const hasBlue = dot === 'blue' || labelColor
+  const dotColor = dot === 'blue' ? 'bg-blue-500' : dot === 'orange' ? 'bg-orange-500' : dot === 'violet' ? 'bg-violet-500' : dot === 'yellow' ? 'bg-yellow-500' : ''
+  return (
+    <div className={cn('flex gap-2 min-h-[24px] min-w-0', topAlign ? 'items-start' : 'items-center')}>
+      <label className={cn(
+        'text-[10px] shrink-0 leading-none flex items-center gap-1',
+        hasBlue ? 'bg-[#2b5a9e] text-white px-1.5 py-0.5 rounded-sm' : 'text-[#888] w-[46px]',
+        !hasBlue && topAlign && 'pt-[5px]',
+        hasBlue && topAlign && 'mt-[3px]',
+      )}>
+        {dot && !hasBlue && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />}
+        {label}
+        {onReset && (dot === 'violet' || dot === 'yellow') && (
+          <button onClick={onReset} className={`ml-auto ${dot === 'yellow' ? 'text-yellow-400' : 'text-violet-400'}`}><RotateCcw className="w-2.5 h-2.5" /></button>
+        )}
+      </label>
+      <div className="flex-1 min-w-0">{children}</div>
+    </div>
+  )
+}
+
+/** Webflow-style size field: label above, input + unit below */
+function WfSizeField({ label, value, onChange, dot, onReset, defaultPlaceholder = 'auto', defaultUnit = '-' }: { label: string; value: string; onChange: (v: string) => void; dot?: 'blue' | 'orange' | 'violet' | 'yellow' | null; onReset?: () => void; defaultPlaceholder?: string; defaultUnit?: string }) {
+  const SIZE_KEYWORDS = ['auto', 'fit-content', 'min-content', 'max-content', 'inherit', 'none']
+  const CSS_FUNCTIONS = ['calc(', 'clamp(', 'min(', 'max(', 'var(']
+  const isCssFunction = CSS_FUNCTIONS.some(fn => value?.includes(fn))
+  const isKeyword = !isCssFunction && SIZE_KEYWORDS.includes(value?.trim() || '')
+  const isBareNumber = !isKeyword && !isCssFunction && !!value && /^-?\d+\.?\d*$/.test(value)
+  const numVal = isKeyword || isCssFunction ? '' : (isBareNumber ? value : (value?.replace(/[a-z%]+$/i, '') || ''))
+  const unitVal = isKeyword ? value : (isCssFunction ? '-' : (isBareNumber ? 'px' : (value?.match(/[a-z%]+$/i)?.[0] || defaultUnit)))
+  const selectVal = isKeyword ? value : (isCssFunction ? '-' : unitVal)
+
+  const dotColor = dot === 'blue' ? 'bg-blue-500' : dot === 'orange' ? 'bg-orange-500' : dot === 'violet' ? 'bg-violet-500' : dot === 'yellow' ? 'bg-yellow-500' : ''
+
+  return (
+    <div className="min-w-0 relative group">
+      {dot && <span className={`absolute top-0 left-0 w-1.5 h-1.5 rounded-full ${dotColor} z-10`} />}
+      {onReset && (dot === 'violet' || dot === 'yellow') && (
+        <button onClick={onReset} className={`absolute top-0 right-0 z-10 ${dot === 'yellow' ? 'text-yellow-400' : 'text-violet-400'} opacity-0 group-hover:opacity-100`}>
+          <RotateCcw className="w-2.5 h-2.5" />
+        </button>
+      )}
+      <label className={`text-[10px] leading-none mb-1 block ${value ? 'text-[#d4956a]' : 'text-[#888]'}`}>{label}</label>
+      <div className="flex min-w-0 h-6">
+        {isKeyword || isCssFunction ? (
+          <div className="flex-1 min-w-0 bg-[#111] border border-[#333] text-[#8bb4e0] text-[11px] rounded-l px-1.5 flex items-center overflow-hidden">
+            <span className="truncate capitalize">{value}</span>
+            <button onClick={() => onChange('')} className="ml-auto text-[#555] hover:text-white text-[10px] shrink-0">×</button>
+          </div>
+        ) : (
+          <input
+            defaultValue={unitVal === '-' ? '' : numVal}
+            key={value}
+            onBlur={e => {
+              const raw = e.target.value.trim()
+              if (!raw) { onChange(''); return }
+              if (SIZE_KEYWORDS.includes(raw) || CSS_FUNCTIONS.some(fn => raw.includes(fn))) { onChange(raw); return }
+              const u = unitVal === '-' ? '' : unitVal
+              onChange(`${raw}${u || 'px'}`)
+            }}
+            onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
+            placeholder={defaultPlaceholder.charAt(0).toUpperCase() + defaultPlaceholder.slice(1)}
+            className="flex-1 min-w-0 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded-l px-1.5 focus:outline-none focus:ring-1 focus:ring-wf-blue placeholder:text-[#555]"
+          />
+        )}
+        <select
+          value={selectVal}
+          onChange={e => {
+            const v = e.target.value
+            if (v === '-') onChange('')
+            else onChange(numVal ? `${numVal}${v}` : '')
+          }}
+          className="w-9 bg-[#383838] border border-[#4a4a4a] border-l-0 text-[#999] text-[9px] rounded-r cursor-pointer focus:outline-none"
+        >
+            <option value="-">-</option>
+            <option value="px">PX</option>
+            <option value="%">%</option>
+            <option value="em">EM</option>
+            <option value="rem">REM</option>
+            <option value="ch">CH</option>
+            <option value="vw">VW</option>
+            <option value="vh">VH</option>
+            <option value="svw">SVW</option>
+            <option value="svh">SVH</option>
+          </select>
+        </div>
+    </div>
+  )
+}
+
+/** Position box input — like BoxInput but for top/right/bottom/left */
+function PositionInput({ value, onChange, label, isHorizontal }: { value?: string; onChange: (v: string) => void; label: string; isHorizontal?: boolean }) {
+  const hasValue = !!value && value !== '0' && value !== '0px'
+  return (
+    <div className={cn(
+      'flex items-center justify-center rounded-sm',
+      isHorizontal ? 'w-[34px] h-[28px]' : 'w-[42px] h-[22px]',
+    )}>
+      <input
+        type="text"
+        defaultValue={value || ''}
+        key={value}
+        onBlur={e => onChange(e.target.value)}
+        onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
+        placeholder="auto"
+        title={`${label}: ${value || 'auto'}`}
+        className={cn(
+          'w-full h-full text-[11px] text-center bg-transparent border-0 focus:outline-none rounded-sm transition-colors',
+          'focus:text-white focus:bg-[#383838]',
+          hasValue ? 'text-[#6eb5f5] font-medium' : 'text-[#bbb]',
+          'placeholder:text-[#555]'
+        )}
+      />
+    </div>
+  )
+}
+
+/** Webflow-style "more options" toggle — centered text with chevron */
+function MoreToggle({ open, onClick, label }: { open: boolean; onClick: () => void; label: string }) {
+  return (
+    <button onClick={onClick}
+      className="w-full flex items-center justify-center gap-1 py-1.5 text-[11px] text-[#888] hover:text-white transition-colors">
+      <ChevronDown className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`} />
+      {label}
+    </button>
+  )
+}
+
+// ─── Origin Grid (9-point selector for transformOrigin / perspectiveOrigin / objectPosition) ───
+function OriginGrid({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const POINTS = [
+    ['top left','top center','top right'],
+    ['center left','center center','center right'],
+    ['bottom left','bottom center','bottom right'],
+  ]
+  const labels = [
+    ['TL','TC','TR'],
+    ['CL','C','CR'],
+    ['BL','BC','BR'],
+  ]
+  const current = (value || 'center center').replace(/^center$/, 'center center')
+  const [custom, setCustom] = useState(false)
+
+  return (
+    <div className="flex items-center gap-1.5 min-w-0">
+      <div className="shrink-0 rounded overflow-hidden grid grid-cols-3 grid-rows-3" style={{ width: 52, height: 52, background: '#111' }}>
+        {POINTS.map((row) => row.map((pt) => {
+          const isActive = current === pt
+          return (
+            <button key={pt} onClick={() => { onChange(pt); setCustom(false) }}
+              className="flex items-center justify-center">
+              <div className={`rounded-full transition-colors ${isActive ? 'w-[7px] h-[7px] bg-white' : 'w-[3px] h-[3px] bg-[#555] hover:bg-[#888]'}`} />
+            </button>
+          )
+        }))}
+      </div>
+      <div className="flex-1 min-w-0">
+        {custom ? (
+          <input value={value || ''} onChange={e => onChange(e.target.value)} placeholder="center center" className="w-full h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded px-2 focus:outline-none focus:ring-1 focus:ring-wf-blue placeholder:text-[#666]" />
+        ) : (
+          <button onClick={() => setCustom(true)} className="w-full h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded px-2 text-left truncate hover:border-[#555] transition-colors">
+            {value || 'center'}
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// FlexAlignPreview is now just AlignBox with the right values passed by the caller
+
+// ─── Align Box (generic) ───
+// Interactive 3×3 clickable grid. Receives current X/Y values + callbacks.
+// No internal axis swapping — the caller handles direction-based swapping.
+function AlignBox({ xValue, yValue, xValues, yValues, onChangeX, onChangeY }: {
+  xValue: string; yValue: string
+  xValues: readonly string[]; yValues: readonly string[]
+  onChangeX?: (v: string) => void; onChangeY?: (v: string) => void
+}) {
+  // Map current value to column/row index (0/1/2), -1 if not in grid
+  const toIdx = (val: string, vals: readonly string[]): number => vals.indexOf(val)
+  const activeCol = toIdx(xValue, xValues)
+  const activeRow = toIdx(yValue, yValues)
+
+  const S = 56, cellS = S / 3
+
+  return (
+    <div className="shrink-0 rounded overflow-hidden relative" style={{ width: S, height: S, background: '#111' }}>
+      {/* Connecting line when one axis is stretch/space-*/}
+      {activeCol >= 0 && activeRow < 0 && (
+        <div className="absolute bg-white/80 rounded-full" style={{ left: activeCol * cellS + cellS / 2 - 1, top: cellS / 2, width: 2, height: (S - cellS) }} />
+      )}
+      {activeRow >= 0 && activeCol < 0 && (
+        <div className="absolute bg-white/80 rounded-full" style={{ left: cellS / 2, top: activeRow * cellS + cellS / 2 - 1, width: (S - cellS), height: 2 }} />
+      )}
+      {activeCol < 0 && activeRow < 0 && (
+        <>
+          <div className="absolute bg-white/50 rounded-full" style={{ left: cellS / 2, top: S / 2 - 1, width: (S - cellS), height: 2 }} />
+          <div className="absolute bg-white/50 rounded-full" style={{ left: S / 2 - 1, top: cellS / 2, width: 2, height: (S - cellS) }} />
+        </>
+      )}
+      {[0, 1, 2].map(row => [0, 1, 2].map(col => {
+        const isExact = col === activeCol && row === activeRow
+        const isOnLine = !isExact && (
+          (activeCol >= 0 && activeRow < 0 && col === activeCol) ||
+          (activeRow >= 0 && activeCol < 0 && row === activeRow) ||
+          (activeCol < 0 && activeRow < 0)
+        )
+        return (
+          <button key={`${col}-${row}`}
+            onClick={() => { onChangeX?.(xValues[col]); onChangeY?.(yValues[row]) }}
+            className="absolute flex items-center justify-center"
+            style={{ left: col * cellS, top: row * cellS, width: cellS, height: cellS }}>
+            {(isExact || isOnLine) ? (
+              <div className="w-[7px] h-[7px] border border-white/90 rounded-[1px]" />
+            ) : (
+              <div className="w-[3px] h-[3px] rounded-full bg-[#555]" />
+            )}
+          </button>
+        )
+      }))}
+    </div>
+  )
+}
+
+// ─── Flex Direction Dropdown (2 buttons + chevron, Webflow-style) ───
+function FlexDirectionDropdown({ direction, wrap, onChangeDirection, onChangeWrap }: {
+  direction: string; wrap: string
+  onChangeDirection: (v: string) => void; onChangeWrap: (v: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false) }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  const isHorizontal = direction === 'row' || direction === 'row-reverse'
+  const isVertical = direction === 'column' || direction === 'column-reverse'
+
+  const GROUPS = [
+    { dir: 'row', label: 'Left to right', items: [
+      { wrap: 'nowrap', label: 'Single row', icon: '→' },
+      { wrap: 'wrap', label: 'Wrap down', icon: '⇉↓' },
+      { wrap: 'wrap-reverse', label: 'Wrap up', icon: '⇉↑' },
+    ]},
+    { dir: 'row-reverse', label: 'Right to left', items: [
+      { wrap: 'nowrap', label: 'Single row', icon: '←' },
+      { wrap: 'wrap', label: 'Wrap down', icon: '⇇↓' },
+      { wrap: 'wrap-reverse', label: 'Wrap up', icon: '⇇↑' },
+    ]},
+    { dir: 'column', label: 'Top to bottom', items: [
+      { wrap: 'nowrap', label: 'Single column', icon: '↓' },
+      { wrap: 'wrap', label: 'Wrap right', icon: '↓→' },
+      { wrap: 'wrap-reverse', label: 'Wrap left', icon: '↓←' },
+    ]},
+    { dir: 'column-reverse', label: 'Bottom to top', items: [
+      { wrap: 'nowrap', label: 'Single column', icon: '↑' },
+      { wrap: 'wrap', label: 'Wrap right', icon: '↑→' },
+      { wrap: 'wrap-reverse', label: 'Wrap left', icon: '↑←' },
+    ]},
+  ]
+
+  return (
+    <div ref={ref} className="relative">
+      <div className="flex rounded overflow-hidden border border-[#4a4a4a]">
+        {/* Horizontal button */}
+        <button onClick={() => onChangeDirection('row')} title="Horizontal"
+          className={cn(
+            'h-[22px] flex-1 text-[13px] leading-none transition-colors',
+            isHorizontal ? 'bg-[#111] text-white' : 'bg-[#383838] text-[#aaa] hover:text-white hover:bg-[#444]'
+          )}>→</button>
+        {/* Vertical button */}
+        <button onClick={() => onChangeDirection('column')} title="Vertical"
+          className={cn(
+            'h-[22px] flex-1 text-[13px] leading-none transition-colors border-l border-[#4a4a4a]',
+            isVertical ? 'bg-[#111] text-white' : 'bg-[#383838] text-[#aaa] hover:text-white hover:bg-[#444]'
+          )}>↓</button>
+        {/* Dropdown chevron */}
+        <button onClick={() => setOpen(!open)} title="Direction & wrap options"
+          className={cn(
+            'h-[22px] w-7 flex items-center justify-center border-l border-[#4a4a4a] transition-colors',
+            open ? 'bg-[#111] text-white' : 'bg-[#383838] text-[#888] hover:text-white hover:bg-[#444]'
+          )}>
+          <ChevronDown className="w-3 h-3" />
+        </button>
+      </div>
+
+      {open && (
+        <div className="absolute left-0 right-0 top-full mt-1 bg-[#383838] border border-[#4a4a4a] rounded-lg shadow-xl z-50 py-1 max-h-[320px] overflow-y-auto">
+          {GROUPS.map(group => (
+            <div key={group.dir}>
+              <div className="px-3 py-1.5 text-[11px] font-semibold text-zinc-300">{group.label}</div>
+              {group.items.map(item => {
+                const isActive = direction === group.dir && wrap === item.wrap
+                return (
+                  <button key={`${group.dir}-${item.wrap}`}
+                    onClick={() => { onChangeDirection(group.dir); onChangeWrap(item.wrap); setOpen(false) }}
+                    className={cn(
+                      'w-full flex items-center gap-2.5 px-3 py-1.5 text-left transition-colors',
+                      isActive ? 'bg-[#3a3a3a] text-white' : 'text-zinc-400 hover:bg-[#333] hover:text-zinc-200'
+                    )}>
+                    {isActive && <span className="text-[11px] w-3">✓</span>}
+                    {!isActive && <span className="w-3" />}
+                    <span className="text-[12px] w-5 text-center shrink-0">{item.icon}</span>
+                    <span className="text-[11px]">{item.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          ))}
+          <div className="px-3 py-1.5 mt-1 border-t border-[#4a4a4a]">
+            <p className="text-[10px] text-zinc-600 italic">Hover an option to see direction and wrap values.</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── Grid Span Input (Column span / Row span) ───
+function GridSpanInput({ startProp, endProp, spanProp, str, setStyle, dot, onReset }: {
+  startProp: string; endProp: string; spanProp: string
+  str: (k: string) => string; setStyle: (k: string, v: string | number | undefined) => void
+  dot?: 'blue' | 'orange' | 'violet' | 'yellow' | null; onReset?: () => void
+}) {
+  // Parse current span from gridColumn/gridRow or start/end
+  const spanValue = str(spanProp)
+  const startValue = str(startProp)
+  const endValue = str(endProp)
+
+  // Extract the span number (e.g. "span 2" → 2, "1 / span 3" → 3, "auto" → 1)
+  const getSpan = (): number => {
+    if (spanValue) {
+      const m = spanValue.match(/span\s+(\d+)/)
+      if (m) return parseInt(m[1])
+      // "1 / 3" format → 3-1=2
+      const parts = spanValue.split('/').map(s => s.trim())
+      if (parts.length === 2 && !isNaN(Number(parts[0])) && !isNaN(Number(parts[1]))) {
+        return Math.abs(Number(parts[1]) - Number(parts[0]))
+      }
+    }
+    if (endValue) {
+      const m = endValue.match(/span\s+(\d+)/)
+      if (m) return parseInt(m[1])
+    }
+    return 1
+  }
+
+  const currentSpan = getSpan()
+  const isAuto = !spanValue && !startValue && !endValue
+
+  const setSpan = (n: number) => {
+    if (n <= 1) {
+      setStyle(spanProp, undefined)
+      setStyle(startProp, undefined)
+      setStyle(endProp, undefined)
+    } else {
+      setStyle(spanProp, `span ${n}`)
+      setStyle(startProp, undefined)
+      setStyle(endProp, undefined)
+    }
+  }
+
+  const dotColor = dot === 'blue' ? 'bg-blue-500' : dot === 'orange' ? 'bg-orange-500' : dot === 'violet' ? 'bg-violet-500' : dot === 'yellow' ? 'bg-yellow-500' : ''
+
+  return (
+    <div className="flex items-center gap-1 mt-1">
+      {dot && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />}
+      <div className="flex items-center flex-1 h-6 bg-[#111] border border-[#333] rounded overflow-hidden">
+        <button onClick={() => setSpan(Math.max(1, currentSpan - 1))} className="w-6 h-full text-[#999] hover:text-white hover:bg-[#444] transition-colors text-sm leading-none">−</button>
+        <input
+          type="number" min={1} max={20}
+          value={isAuto ? '' : currentSpan}
+          onChange={e => { const n = parseInt(e.target.value); if (!isNaN(n) && n >= 1) setSpan(n) }}
+          placeholder="Auto"
+          className="flex-1 h-full bg-transparent text-center text-[11px] text-[#e0e0e0] outline-none placeholder:text-[#666] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        />
+        <button onClick={() => setSpan(currentSpan + 1)} className="w-6 h-full text-[#999] hover:text-white hover:bg-[#444] transition-colors text-sm leading-none">+</button>
+      </div>
+      {onReset && (dot === 'violet' || dot === 'yellow') && (
+        <button onClick={onReset} className={`shrink-0 ${dot === 'yellow' ? 'text-yellow-400' : 'text-violet-400'}`}><RotateCcw className="w-2.5 h-2.5" /></button>
+      )}
+    </div>
+  )
+}
+
+// ─── Grid Align Buttons (icon button group) ───
+function GridAlignButtons({ value, options, onChange }: {
+  value: string
+  options: { v: string; icon: React.ReactNode; title: string }[]
+  onChange: (v: string) => void
+}) {
+  return (
+    <div className="flex rounded overflow-hidden border border-[#4a4a4a]">
+      {options.map(({ v, icon, title }, i) => {
+        const isActive = (v === '' && !value) || (v !== '' && value === v)
+        return (
+          <button key={v || 'auto'} onClick={() => onChange(v)} title={title}
+            className={cn(
+              'h-[22px] flex-1 flex items-center justify-center transition-colors',
+              i > 0 && 'border-l border-[#4a4a4a]',
+              isActive ? 'bg-[#111] text-white' : 'bg-[#383838] text-[#888] hover:text-white hover:bg-[#444]'
+            )}>
+            {icon}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+// ─── Grid Order Buttons (Auto / First / Last / Custom) ───
+function GridOrderButtons({ value, onChange }: {
+  value: number | undefined
+  onChange: (v: number | undefined) => void
+}) {
+  const [showCustom, setShowCustom] = useState(false)
+  const isAuto = value === undefined || value === 0
+  const isFirst = value === -9999
+  const isLast = value === 9999
+  const isCustom = !isAuto && !isFirst && !isLast
+
+  return (
+    <div className="space-y-1">
+      <div className="flex rounded overflow-hidden border border-[#4a4a4a]">
+        {([
+          { v: 'auto', label: '×', title: 'Auto (0)' },
+          { v: 'first', label: 'First', title: 'First (-9999)' },
+          { v: 'last', label: 'Last', title: 'Last (9999)' },
+          { v: 'custom', label: '...', title: 'Custom value' },
+        ] as const).map(({ v, label, title }, i) => {
+          const active = (v === 'auto' && isAuto) || (v === 'first' && isFirst) || (v === 'last' && isLast) || (v === 'custom' && isCustom)
+          return (
+            <button key={v} title={title}
+              onClick={() => {
+                if (v === 'auto') { onChange(undefined); setShowCustom(false) }
+                else if (v === 'first') { onChange(-9999); setShowCustom(false) }
+                else if (v === 'last') { onChange(9999); setShowCustom(false) }
+                else setShowCustom(true)
+              }}
+              className={cn(
+                'h-[22px] flex-1 text-[11px] leading-none transition-colors',
+                i > 0 && 'border-l border-[#4a4a4a]',
+                active ? 'bg-[#111] text-white' : 'bg-[#383838] text-[#aaa] hover:text-white hover:bg-[#444]'
+              )}>
+              {label}
+            </button>
+          )
+        })}
+      </div>
+      {(showCustom || isCustom) && (
+        <input
+          type="number"
+          value={isCustom ? value : ''}
+          onChange={e => { if (e.target.value === '') { onChange(undefined); return }; const n = Number(e.target.value); if (!isNaN(n)) onChange(n) }}
+          placeholder="0"
+          className="w-full h-6 bg-[#111] border border-[#333] text-[#e0e0e0] text-[11px] rounded px-2 focus:outline-none focus:ring-1 focus:ring-wf-blue placeholder:text-[#666]"
+        />
+      )}
+    </div>
+  )
+}

@@ -1,0 +1,637 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────
+// EXISTING MODELS (from website-configurator)
+// ─────────────────────────────────────────────
+
+model Site {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  config      Json       @default("{}")
+  status      SiteStatus @default(DRAFT)
+  deployUrl   String?
+  thumbnail   String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  pages             Page[]
+  contacts          Contact[]
+  leads             Lead[]
+  forms             Form[]
+  media             Media[]
+  cmsCollections    CmsCollection[]
+  products          Product[]
+  productCategories ProductCategory[]
+  orders            Order[]
+  coupons           Coupon[]
+  shippingZones     ShippingZone[]
+  taxRates          TaxRate[]
+
+  // Portal relations
+  portalUsers            PortalUser[]
+  portalConfig           PortalConfig?
+  portalDocuments        PortalDocument[]
+  portalDocumentCounters PortalDocumentCounter[]
+  portalSignatureRequests PortalSignatureRequest[]
+  portalMailLogs         PortalMailLog[]
+  portalInteractions     PortalInteraction[]
+  portalAppointments     PortalAppointment[]
+  portalCompanySettings  PortalCompanySettings?
+  activities             Activity[]
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  siteId    String
+  slug      String
+  title     String
+  config    Json     @default("{}")
+  order     Int      @default(0)
+  isHome    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@unique([siteId, slug])
+  @@index([siteId, order])
+}
+
+model Contact {
+  id        String        @id @default(cuid())
+  siteId    String
+  email     String
+  firstName String?
+  lastName  String?
+  phone     String?
+  company   String?
+  position  String?
+  tags      String[]      @default([])
+  notes     String?
+  status    ContactStatus @default(NEW)
+  metadata  Json?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  site               Site                @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  leads              Lead[]
+  portalDocuments    PortalDocument[]
+  portalInteractions PortalInteraction[]
+  portalAppointments PortalAppointment[]
+
+  @@unique([siteId, email])
+  @@index([siteId, status])
+  @@index([siteId, createdAt])
+}
+
+model Lead {
+  id         String     @id @default(cuid())
+  siteId     String
+  contactId  String?
+  formId     String
+  data       Json       @default("{}")
+  status     LeadStatus @default(NEW)
+  source     String?
+  userAgent  String?
+  ipAddress  String?
+  notes      String?
+  assignedTo String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  site    Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  contact Contact? @relation(fields: [contactId], references: [id])
+  form    Form     @relation(fields: [formId], references: [id])
+
+  @@index([siteId, status])
+  @@index([siteId, createdAt])
+  @@index([contactId])
+}
+
+model Form {
+  id        String   @id @default(cuid())
+  siteId    String
+  name      String
+  fields    Json     @default("[]")
+  settings  Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  site  Site   @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  leads Lead[]
+
+  @@index([siteId])
+}
+
+model Media {
+  id           String   @id @default(cuid())
+  siteId       String?
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  width        Int?
+  height       Int?
+  url          String
+  thumbnailUrl String?
+  alt          String   @default("")
+  folder       String   @default("")
+  createdAt    DateTime @default(now())
+
+  site Site? @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, createdAt])
+  @@index([folder])
+}
+
+model CmsCollection {
+  id        String   @id @default(cuid())
+  siteId    String
+  name      String
+  slug      String
+  fields    Json     @default("[]")
+  settings  Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  site  Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  items CmsItem[]
+
+  @@unique([siteId, slug])
+  @@index([siteId])
+}
+
+model CmsItem {
+  id           String        @id @default(cuid())
+  collectionId String
+  slug         String
+  data         Json          @default("{}")
+  status       CmsItemStatus @default(DRAFT)
+  publishedAt  DateTime?
+  scheduledAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  collection CmsCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, slug])
+  @@index([collectionId, status])
+  @@index([collectionId, createdAt])
+}
+
+model Product {
+  id             String        @id @default(cuid())
+  siteId         String
+  name           String
+  slug           String
+  description    String?
+  images         String[]      @default([])
+  price          Int
+  compareAtPrice Int?
+  currency       String        @default("EUR")
+  sku            String?
+  stock          Int           @default(0)
+  trackInventory Boolean       @default(false)
+  isDigital      Boolean       @default(false)
+  digitalFileUrl String?
+  categoryId     String?
+  tags           String[]      @default([])
+  status         ProductStatus @default(DRAFT)
+  variants       Json          @default("[]")
+  metadata       Json          @default("{}")
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  site       Site             @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  category   ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  orderItems OrderItem[]
+
+  @@unique([siteId, slug])
+  @@index([siteId, status])
+  @@index([siteId, categoryId])
+  @@index([siteId, createdAt])
+}
+
+model ProductCategory {
+  id        String   @id @default(cuid())
+  siteId    String
+  name      String
+  slug      String
+  parentId  String?
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  site     Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  parent   ProductCategory?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children ProductCategory[] @relation("CategoryTree")
+  products Product[]
+
+  @@unique([siteId, slug])
+  @@index([siteId])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  siteId          String
+  orderNumber     String
+  email           String
+  status          OrderStatus @default(PENDING)
+  subtotal        Int
+  tax             Int         @default(0)
+  shipping        Int         @default(0)
+  discount        Int         @default(0)
+  total           Int
+  currency        String      @default("EUR")
+  shippingAddress Json        @default("{}")
+  billingAddress  Json?
+  paymentProvider String?
+  paymentId       String?
+  couponId        String?
+  notes           String?
+  metadata        Json        @default("{}")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  site   Site        @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  coupon Coupon?     @relation(fields: [couponId], references: [id], onDelete: SetNull)
+  items  OrderItem[]
+
+  @@unique([siteId, orderNumber])
+  @@index([siteId, status])
+  @@index([siteId, createdAt])
+  @@index([email])
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  orderId      String
+  productId    String?
+  name         String
+  price        Int
+  quantity     Int
+  variantLabel String?
+  sku          String?
+
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+}
+
+model Coupon {
+  id             String     @id @default(cuid())
+  siteId         String
+  code           String
+  type           CouponType
+  value          Int
+  minOrderAmount Int?
+  maxUses        Int?
+  usedCount      Int        @default(0)
+  validFrom      DateTime?
+  validTo        DateTime?
+  active         Boolean    @default(true)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  site   Site    @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@unique([siteId, code])
+  @@index([siteId, active])
+}
+
+model ShippingZone {
+  id        String   @id @default(cuid())
+  siteId    String
+  name      String
+  countries String[] @default([])
+  rates     Json     @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId])
+}
+
+model TaxRate {
+  id             String   @id @default(cuid())
+  siteId         String
+  name           String
+  rate           Float
+  country        String?
+  region         String?
+  includeInPrice Boolean  @default(false)
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, active])
+}
+
+// ─────────────────────────────────────────────
+// EXISTING ENUMS
+// ─────────────────────────────────────────────
+
+enum SiteStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ContactStatus {
+  NEW
+  ACTIVE
+  INACTIVE
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  LOST
+}
+
+enum CmsItemStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  SCHEDULED
+}
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING
+  PAYMENT_PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum CouponType {
+  DISCOUNT_PERCENT
+  DISCOUNT_FIXED
+  FREE_SHIPPING
+}
+
+// ─────────────────────────────────────────────
+// PORTAL MODELS
+// ─────────────────────────────────────────────
+
+enum PortalUserRole {
+  ADMIN
+  CLIENT
+  EDITOR
+}
+
+model PortalUser {
+  id        String         @id @default(cuid())
+  siteId    String
+  email     String
+  password  String
+  firstName String?
+  lastName  String?
+  role      PortalUserRole @default(CLIENT)
+  active    Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  site       Site       @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  activities Activity[]
+
+  @@unique([siteId, email])
+  @@index([siteId])
+}
+
+model PortalConfig {
+  id               String  @id @default(cuid())
+  siteId           String  @unique
+  logoUrl          String?
+  primaryColor     String  @default("#638BFF")
+  moduleCRM        Boolean @default(true)
+  moduleDevis      Boolean @default(true)
+  moduleFactures   Boolean @default(true)
+  moduleContrats   Boolean @default(false)
+  moduleProjets    Boolean @default(false)
+  moduleCMS        Boolean @default(false)
+  moduleCalendrier Boolean @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+}
+
+enum PortalDocumentType {
+  DEVIS
+  FACTURE
+  CONTRAT
+}
+
+enum PortalDocumentStatus {
+  DRAFT
+  SENT
+  SIGNED
+  ACCEPTED
+  REJECTED
+  PAID
+  CANCELLED
+}
+
+model PortalDocument {
+  id             String               @id @default(cuid())
+  siteId         String
+  contactId      String?
+  type           PortalDocumentType
+  status         PortalDocumentStatus @default(DRAFT)
+  documentNumber String?
+  title          String
+  content        Json                 @default("{}")
+  amount         Float?
+  taxRate        Float                @default(20)
+  taxAmount      Float?
+  totalAmount    Float?
+  validUntil     DateTime?
+  sentAt         DateTime?
+  signedAt       DateTime?
+  paidAt         DateTime?
+  notes          String?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  site      Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  contact   Contact?             @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  signature PortalSignature?
+
+  @@index([siteId, type])
+  @@index([siteId, status])
+  @@index([siteId, createdAt])
+  @@index([contactId])
+}
+
+model PortalDocumentCounter {
+  id     String @id @default(cuid())
+  siteId String
+  prefix String // DEV, FAC, CON
+  year   Int
+  last   Int    @default(0)
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@unique([siteId, prefix, year])
+}
+
+model PortalSignature {
+  id         String   @id @default(cuid())
+  documentId String   @unique
+  signerName String
+  signerEmail String
+  imageData  String   // base64 PNG
+  hash       String   // SHA-256 proof
+  ipAddress  String?
+  userAgent  String?
+  signedAt   DateTime @default(now())
+
+  document PortalDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+}
+
+model PortalSignatureRequest {
+  id         String    @id @default(cuid())
+  siteId     String
+  documentId String
+  token      String    @unique
+  email      String
+  expiresAt  DateTime
+  signedAt   DateTime?
+  createdAt  DateTime  @default(now())
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([siteId])
+}
+
+model PortalMailLog {
+  id        String   @id @default(cuid())
+  siteId    String
+  to        String
+  subject   String
+  template  String?
+  status    String   @default("sent")
+  error     String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, createdAt])
+}
+
+enum PortalInteractionType {
+  NOTE
+  CALL
+  MEETING
+  EMAIL
+  TASK
+}
+
+model PortalInteraction {
+  id        String                @id @default(cuid())
+  siteId    String
+  contactId String
+  type      PortalInteractionType
+  title     String
+  content   String?
+  date      DateTime              @default(now())
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+
+  site    Site    @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, contactId])
+  @@index([siteId, createdAt])
+}
+
+model PortalAppointment {
+  id        String    @id @default(cuid())
+  siteId    String
+  contactId String?
+  title     String
+  description String?
+  startTime DateTime
+  endTime   DateTime
+  location  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  site    Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  contact Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  @@index([siteId, startTime])
+  @@index([contactId])
+}
+
+model PortalCompanySettings {
+  id           String  @id @default(cuid())
+  siteId       String  @unique
+  companyName  String?
+  address      String?
+  zipCode      String?
+  city         String?
+  country      String  @default("France")
+  phone        String?
+  email        String?
+  website      String?
+  siret        String?
+  tvaNumber    String?
+  iban         String?
+  bic          String?
+  logoUrl      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  siteId    String
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  details   Json?
+  createdAt DateTime @default(now())
+
+  site Site        @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user PortalUser? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([siteId, createdAt])
+  @@index([userId])
+}
