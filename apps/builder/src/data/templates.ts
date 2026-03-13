@@ -1139,257 +1139,481 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     ],
   },
 
-  // ─── Beard X — Barbershop Premium ───
+  // ─── Beard X — Barbershop Premium (6 pages — scanné depuis beardtemplate.webflow.io) ───
   {
     id: 'beard-x-barbershop',
     name: 'Beard X — Barbershop',
-    description: 'Site premium pour barbershop avec services, produits, galerie et témoignages',
+    description: 'Site premium complet pour barbershop : accueil, à propos, services, contact, blog et boutique. Scanné pixel-perfect depuis Webflow.',
     category: 'coiffeur',
     universe: 'luxe',
     emoji: '💈',
     preview: 'from-amber-800 to-zinc-900',
     brand: {
       colors: {
-        primary: '#1A1A1A',
-        secondary: '#D4A94B',
-        accent: '#D4A94B',
+        primary: '#121212',
+        secondary: '#DEC7A6',
+        accent: '#C09B6B',
         background: '#FFFFFF',
-        foreground: '#1A1A1A',
-        muted: '#F5F5F0',
+        foreground: '#121212',
+        muted: '#F8F5EF',
       },
       typography: {
         heading: 'DM Sans',
         body: 'DM Sans',
         size: 'default',
       },
-      borderRadius: 'sm',
+      borderRadius: 'md',
       spacing: 'relaxed',
     },
+
+    // ══════════════════════════════════════════════
+    // PAGE ACCUEIL (/)
+    // ══════════════════════════════════════════════
     sections: [
+      // ── Navbar ──
+      { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+
+      // ── Hero — split image right ──
       {
-        type: 'site-header',
-        variant: 'luxe',
-        content: {
-          logo: 'Beard X',
-          links: [
-            { id: '1', label: 'Accueil', href: '/' },
-            { id: '2', label: 'À propos', href: '#about' },
-            { id: '3', label: 'Services', href: '#services' },
-            { id: '4', label: 'Boutique', href: '#products' },
-            { id: '5', label: 'Contact', href: '#contact' },
-          ],
-          ctaLabel: 'Réserver',
-          ctaHref: '#contact',
-        },
-        style: { background: 'white', paddingY: 'none' },
-        visible: true,
-      },
-      {
-        type: 'hero',
-        variant: 'luxe',
+        type: 'hero', variant: 'luxe',
         content: {
           eyebrow: 'BARBERSHOP PREMIUM',
           title: 'A unique barber experience',
-          subtitle: 'Un savoir-faire artisanal au service de votre style. Coupes, barbes et soins dans un cadre raffiné.',
-          primaryButton: { label: 'Prendre rendez-vous', href: '#contact', variant: 'primary' },
-          secondaryButton: { label: 'Nos services', href: '#services', variant: 'outline' },
+          subtitle: 'Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam.',
+          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
+          secondaryButton: { label: 'Browse services', href: '/services', variant: 'outline' },
           backgroundImage: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1600&q=80',
         },
-        style: {
-          background: 'custom',
-          paddingY: 'xl',
-          customBgColor: '#1A1A1A',
-          backgroundImage: {
-            url: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1600&q=80',
-            overlayColor: '#000000',
-            overlayOpacity: 0.5,
-          },
-        },
+        style: { background: 'custom', paddingY: 'xl', customBgColor: '#121212', backgroundImage: { url: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1600&q=80', overlayColor: '#000000', overlayOpacity: 0.5 } },
         visible: true,
       },
+
+      // ── Stats — 10+ years ──
       {
-        type: 'stats',
-        variant: 'luxe-simple',
+        type: 'stats', variant: 'luxe-cards',
         content: {
-          eyebrow: 'À propos',
-          title: '10+ ans à rendre nos clients heureux',
-          subtitle: 'Notre équipe de barbiers expérimentés vous accueille dans un espace dédié au bien-être masculin.',
+          eyebrow: 'About us',
+          title: '10+ years making our customers happy',
+          subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.',
           items: [
-            { id: '1', value: '99%', label: 'Satisfaction client' },
-            { id: '2', value: '10+', label: 'Années d\'expérience' },
-            { id: '3', value: '15K+', label: 'Clients satisfaits' },
+            { id: '1', value: '99%', label: 'Customer satisfaction' },
+            { id: '2', value: '10y', label: 'Years of experience' },
           ],
         },
         style: { background: 'light', paddingY: 'xl' },
         visible: true,
       },
+
+      // ── Services — 6 items grid ──
       {
-        type: 'features',
-        variant: 'luxe-grid',
+        type: 'features', variant: 'luxe-grid',
         content: {
           eyebrow: 'Services',
-          title: 'Nos prestations',
-          subtitle: 'Des soins experts pour un look impeccable.',
+          title: 'Browse our services',
+          subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
-            { id: '1', icon: '✂️', title: 'Coupe classique', description: 'Coupe sur mesure adaptée à votre morphologie et votre style de vie.' },
-            { id: '2', icon: '🧔', title: 'Taille de barbe', description: 'Taille, sculpture et entretien pour une barbe parfaitement dessinée.' },
-            { id: '3', icon: '👦', title: 'Coupe enfant', description: 'Coupe tendance pour les plus jeunes dans une ambiance détendue.' },
-            { id: '4', icon: '🪒', title: 'Rasage nuque', description: 'Finition précise au rasoir pour un résultat net et soigné.' },
-            { id: '5', icon: '💆', title: 'Soin du cuir chevelu', description: 'Hydratation et massage pour un cuir chevelu sain et revitalisé.' },
-            { id: '6', icon: '🧖', title: 'Barbe grooming & spa', description: 'Soin complet barbe avec huiles essentielles et serviette chaude.' },
+            { id: '1', icon: '✂️', title: 'Classic Haircut — $37 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+            { id: '2', icon: '🧔', title: 'Beard Trim — $25 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+            { id: '3', icon: '👦', title: 'kids haircut — $26 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+            { id: '4', icon: '🪒', title: 'Neck shave — $12 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+            { id: '5', icon: '💆', title: 'scalp Moisturizing — $55 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+            { id: '6', icon: '🧖', title: 'beard grooming & spa — $46 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
           ],
         },
         style: { background: 'white', paddingY: 'xl' },
         visible: true,
       },
+
+      // ── Experience gallery — mixed grid + video ──
       {
-        type: 'gallery-grid',
-        variant: 'luxe-masonry',
+        type: 'gallery-grid', variant: 'luxe-masonry',
         content: {
-          eyebrow: 'Notre travail',
-          title: 'Découvrez notre savoir-faire',
+          eyebrow: 'Experience',
+          title: 'We offer an unique experience',
+          subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.',
           items: [
-            { id: '1', title: 'Coupe fade classique', category: 'Coupes' },
-            { id: '2', title: 'Barbe sculptée', category: 'Barbes' },
-            { id: '3', title: 'Look complet', category: 'Transformations' },
-            { id: '4', title: 'Dégradé moderne', category: 'Coupes' },
-            { id: '5', title: 'Rasage traditionnel', category: 'Soins' },
-            { id: '6', title: 'Styling premium', category: 'Finitions' },
+            { id: '1', title: 'Barbershop experience', category: 'Experience' },
+            { id: '2', title: 'Premium service', category: 'Experience' },
+            { id: '3', title: 'Master barber at work', category: 'Experience' },
+            { id: '4', title: 'Classic shave', category: 'Experience' },
           ],
         },
         style: { background: 'light', paddingY: 'xl' },
         visible: true,
       },
+
+      // ── Work showcase — dark CTA ──
       {
-        type: 'image-text',
-        variant: 'luxe-split',
+        type: 'cta', variant: 'luxe-centered',
         content: {
-          eyebrow: 'Pourquoi nous choisir',
-          title: 'L\'excellence au service de votre style',
-          text: 'Nos barbiers sont formés aux techniques les plus exigeantes. Chaque prestation est une expérience unique dans un cadre pensé pour votre confort.',
+          title: 'Take a look at our work',
+          subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.',
+          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
+        },
+        style: { background: 'custom', paddingY: 'xl', customBgColor: '#121212', backgroundImage: { url: 'https://images.unsplash.com/photo-1585747860019-8e8ef67e8ed8?w=1600&q=80', overlayColor: '#000000', overlayOpacity: 0.7 } },
+        visible: true,
+      },
+
+      // ── Why choose us — image-text ──
+      {
+        type: 'image-text', variant: 'luxe-image-right',
+        content: {
+          eyebrow: 'Why choose us',
+          title: 'Why choose us',
+          text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.',
           items: [
-            { id: '1', icon: '⭐', title: 'Barbiers experts', description: 'Formés dans les meilleures écoles internationales.' },
-            { id: '2', icon: '💎', title: 'Produits premium', description: 'Uniquement des soins haut de gamme pour votre peau et vos cheveux.' },
+            { id: '1', icon: '👨', title: 'Top Barbers', description: 'A mollis pretium sagittis iaculis quam lacus nulla nullam pharetra quis fermentum ipsum phasellus sit.' },
+            { id: '2', icon: '💎', title: 'Premium Services', description: 'Nulla leo velit feugiat in consequat accumsan est enim mi consectetur dis pulvinar venenatis dapibus.' },
           ],
-          image: { src: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80', alt: 'Barbier au travail' },
+          image: { src: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80', alt: 'Barber at work' },
         },
         style: { background: 'white', paddingY: 'xl' },
         visible: true,
       },
+
+      // ── Products — 3 items ──
       {
-        type: 'product-grid',
-        variant: 'luxe-cards',
+        type: 'product-grid', variant: 'luxe-grid',
         content: {
-          eyebrow: 'Boutique',
-          title: 'Nos produits',
-          subtitle: 'Prolongez l\'expérience chez vous avec nos soins sélectionnés.',
+          eyebrow: 'Products',
+          title: 'Browse our products',
+          subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
-            { id: '1', name: 'Huile barbe & moustache', price: '19,00 €', description: 'Huile nourrissante aux extraits naturels pour une barbe douce et brillante.', image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?w=600&q=80' },
-            { id: '2', name: 'Sérum barbe & cheveux', price: '49,00 €', description: 'Sérum réparateur enrichi en kératine pour barbe et cheveux.', image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600&q=80' },
-            { id: '3', name: 'Argile coiffante premium', price: '29,00 €', description: 'Fixation forte et finition mate pour un look naturel toute la journée.', image: 'https://images.unsplash.com/photo-1597854710119-ab0269e0e1f0?w=600&q=80' },
+            { id: '1', name: 'Beard & mustache care oil', price: '$19.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?w=600&q=80' },
+            { id: '2', name: 'Beard & hair serum', price: '$49.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600&q=80' },
+            { id: '3', name: 'Premium Hair Clay', price: '$29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1597854710119-ab0269e0e1f0?w=600&q=80' },
           ],
         },
         style: { background: 'light', paddingY: 'xl' },
         visible: true,
       },
+
+      // ── Testimonials — 2 featured ──
       {
-        type: 'testimonials',
-        variant: 'luxe-cards',
+        type: 'testimonials', variant: 'luxe-featured',
         content: {
-          eyebrow: 'Témoignages',
-          title: 'Ce que disent nos clients',
+          eyebrow: 'Testimonials',
+          title: 'What our clients say',
+          subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.',
           items: [
-            { id: '1', quote: 'Le meilleur barbershop de la ville. Service impeccable et ambiance au top.', author: 'John Carter', role: 'Client régulier', company: 'Los Angeles, CA', rating: 5 },
-            { id: '2', quote: 'Ma barbe n\'a jamais été aussi bien entretenue. Je recommande à 100%.', author: 'David Laurent', role: 'Client fidèle', company: 'Paris, France', rating: 5 },
-            { id: '3', quote: 'Accueil chaleureux, coupe parfaite et produits de qualité. Top !', author: 'Marc Dubois', role: 'Nouveau client', company: 'Lyon, France', rating: 5 },
-            { id: '4', quote: 'Un vrai moment de détente. Le rasage à l\'ancienne est une expérience unique.', author: 'Thomas Petit', role: 'Client VIP', company: 'Bordeaux, France', rating: 5 },
+            { id: '1', quote: 'this barber shop is simply awesome', author: 'John Carter', role: 'Client', company: 'Los angeles, CA.', rating: 5 },
+            { id: '2', quote: 'The best barber shop I\'ve ever been', author: 'Sam Houston', role: 'Client', company: 'Los angeles, CA.', rating: 5 },
           ],
         },
         style: { background: 'white', paddingY: 'xl' },
         visible: true,
       },
+
+      // ── Instagram feed — 5 images ──
       {
-        type: 'newsletter',
-        variant: 'luxe-centered',
+        type: 'gallery-grid', variant: 'luxe-grid',
         content: {
-          title: 'Restez informé',
-          subtitle: 'Recevez nos offres exclusives et conseils grooming directement dans votre boîte mail.',
-          placeholder: 'Votre adresse email',
-          buttonLabel: 'S\'abonner',
+          eyebrow: 'Instagram',
+          title: 'Follow us on instagram',
+          items: [
+            { id: '1', title: 'Instagram 1', category: 'Instagram' },
+            { id: '2', title: 'Instagram 2', category: 'Instagram' },
+            { id: '3', title: 'Instagram 3', category: 'Instagram' },
+            { id: '4', title: 'Instagram 4', category: 'Instagram' },
+            { id: '5', title: 'Instagram 5', category: 'Instagram' },
+          ],
         },
-        style: { background: 'dark', paddingY: 'lg' },
+        style: { background: 'light', paddingY: 'lg' },
         visible: true,
       },
+
+      // ── Newsletter ──
+      { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'white', paddingY: 'lg' }, visible: true },
+
+      // ── Footer ──
       {
-        type: 'site-footer',
-        variant: 'luxe',
+        type: 'site-footer', variant: 'luxe',
         content: {
           logo: 'Beard X',
-          tagline: 'L\'expérience barbershop premium.',
-          copyright: `© ${year} Beard X. Tous droits réservés.`,
+          tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.',
+          copyright: `Copyright © Beard X`,
           columns: [
-            { id: '1', title: 'Navigation', links: [{ id: '1', label: 'Accueil', href: '/' }, { id: '2', label: 'À propos', href: '#about' }, { id: '3', label: 'Services', href: '#services' }, { id: '4', label: 'Boutique', href: '#products' }, { id: '5', label: 'Contact', href: '#contact' }] },
-            { id: '2', title: 'Horaires', links: [{ id: '1', label: 'Lun-Ven: 9h-19h', href: '#' }, { id: '2', label: 'Samedi: 9h-18h', href: '#' }, { id: '3', label: 'Dimanche: Fermé', href: '#' }] },
+            { id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] },
+            { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] },
           ],
-          socials: { facebook: '#', instagram: '#', twitter: '#' },
+          socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' },
         },
         style: { background: 'dark', paddingY: 'none' },
         visible: true,
       },
     ],
+
+    // ══════════════════════════════════════════════
+    // PAGES ADDITIONNELLES
+    // ══════════════════════════════════════════════
     pages: [
+      // ── PAGE ABOUT ──
       {
-        slug: '/contact',
-        title: 'Contact',
+        slug: '/about',
+        title: 'About',
         sections: [
+          { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
           {
-            type: 'site-header',
-            variant: 'luxe',
+            type: 'hero', variant: 'luxe',
             content: {
-              logo: 'Beard X',
-              links: [
-                { id: '1', label: 'Accueil', href: '/' },
-                { id: '2', label: 'À propos', href: '/#about' },
-                { id: '3', label: 'Services', href: '/#services' },
-                { id: '4', label: 'Boutique', href: '/#products' },
-                { id: '5', label: 'Contact', href: '/contact' },
-              ],
-              ctaLabel: 'Réserver',
-              ctaHref: '/contact',
-            },
-            style: { background: 'white', paddingY: 'none' },
-            visible: true,
-          },
-          {
-            type: 'contact',
-            variant: 'luxe-split',
-            content: {
-              eyebrow: 'Contact',
-              title: 'Prenez rendez-vous',
-              subtitle: 'Réservez votre créneau ou envoyez-nous un message.',
-              address: '123 Rue du Style, 75001 Paris',
-              phone: '+33 1 23 45 67 89',
-              email: 'contact@beardx.fr',
-              hours: 'Lun-Ven: 9h-19h | Sam: 9h-18h',
+              eyebrow: 'ABOUT US',
+              title: 'About our barber shop',
+              subtitle: 'Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam.',
+              primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
+              secondaryButton: { label: 'Browse services', href: '/services', variant: 'outline' },
             },
             style: { background: 'white', paddingY: 'xl' },
             visible: true,
           },
           {
-            type: 'site-footer',
-            variant: 'luxe',
+            type: 'image-text', variant: 'luxe-image-left',
             content: {
-              logo: 'Beard X',
-              tagline: 'L\'expérience barbershop premium.',
-              copyright: `© ${year} Beard X. Tous droits réservés.`,
-              columns: [
-                { id: '1', title: 'Navigation', links: [{ id: '1', label: 'Accueil', href: '/' }, { id: '2', label: 'Services', href: '/#services' }, { id: '3', label: 'Contact', href: '/contact' }] },
-              ],
-              socials: { facebook: '#', instagram: '#', twitter: '#' },
+              eyebrow: 'Who we are',
+              title: 'Who we are',
+              text: 'Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat. Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam eu.',
+              image: { src: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=80', alt: 'Barber shop interior' },
             },
-            style: { background: 'dark', paddingY: 'none' },
+            style: { background: 'white', paddingY: 'xl' },
             visible: true,
           },
+          {
+            type: 'stats', variant: 'luxe-cards',
+            content: {
+              title: 'Our numbers speak',
+              items: [
+                { id: '1', value: '99%', label: 'Customer satisfaction', description: 'Lorem ipsum dolor sit amet consectet adipiscing elit eget quamumto.' },
+                { id: '2', value: '20k+', label: 'Services provided', description: 'Lorem ipsum dolor sit amet consectet adipiscing elit eget quamumto.' },
+                { id: '3', value: '10+', label: 'Years of Experience', description: 'Lorem ipsum dolor sit amet consectet adipiscing elit eget quamumto.' },
+              ],
+            },
+            style: { background: 'light', paddingY: 'xl' },
+            visible: true,
+          },
+          {
+            type: 'image-text', variant: 'luxe-image-right',
+            content: {
+              eyebrow: 'Our story',
+              title: 'How we started our barber shop',
+              text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget integer mi fermentum.',
+              image: { src: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80', alt: 'Barber at work' },
+            },
+            style: { background: 'white', paddingY: 'xl' },
+            visible: true,
+          },
+          {
+            type: 'features', variant: 'luxe-grid',
+            content: {
+              eyebrow: 'Team',
+              title: 'Meet Our Team',
+              subtitle: 'Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum.',
+              items: [
+                { id: '1', icon: '👨‍🦱', title: 'John Carter', description: 'Owner & Master Barber' },
+                { id: '2', icon: '👨', title: 'Phil Houston', description: 'Master Barber' },
+                { id: '3', icon: '👨‍🦰', title: 'Frances Willem', description: 'Master Barber' },
+              ],
+            },
+            style: { background: 'light', paddingY: 'xl' },
+            visible: true,
+          },
+          { type: 'gallery-grid', variant: 'luxe-grid', content: { eyebrow: 'Instagram', title: 'Follow us on instagram', items: [{ id: '1', title: 'Instagram 1', category: 'Instagram' }, { id: '2', title: 'Instagram 2', category: 'Instagram' }, { id: '3', title: 'Instagram 3', category: 'Instagram' }, { id: '4', title: 'Instagram 4', category: 'Instagram' }, { id: '5', title: 'Instagram 5', category: 'Instagram' }] }, style: { background: 'white', paddingY: 'lg' }, visible: true },
+          { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'light', paddingY: 'lg' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+        ],
+      },
+
+      // ── PAGE SERVICES ──
+      {
+        slug: '/services',
+        title: 'Services',
+        sections: [
+          { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+          {
+            type: 'hero', variant: 'luxe',
+            content: {
+              eyebrow: 'SERVICES',
+              title: 'Our Services',
+              subtitle: 'Eun in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam.',
+            },
+            style: { background: 'white', paddingY: 'lg' },
+            visible: true,
+          },
+          {
+            type: 'features', variant: 'luxe-grid',
+            content: {
+              title: 'All Services',
+              items: [
+                { id: '1', icon: '✂️', title: 'Classic Haircut — $37 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+                { id: '2', icon: '🧔', title: 'Beard Trim — $25 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+                { id: '3', icon: '👦', title: 'kids haircut — $26 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+                { id: '4', icon: '🪒', title: 'Neck shave — $12 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+                { id: '5', icon: '💆', title: 'scalp Moisturizing — $55 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+                { id: '6', icon: '🧖', title: 'beard grooming & spa — $46 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+              ],
+            },
+            style: { background: 'light', paddingY: 'xl' },
+            visible: true,
+          },
+          { type: 'cta', variant: 'luxe-centered', content: { title: 'Ready to get started?', subtitle: 'Book your appointment today or learn more about us.', primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' }, secondaryButton: { label: 'More About us', href: '/about', variant: 'outline' } }, style: { background: 'white', paddingY: 'xl' }, visible: true },
+          { type: 'gallery-grid', variant: 'luxe-grid', content: { eyebrow: 'Instagram', title: 'Follow us on instagram', items: [{ id: '1', title: 'Instagram 1', category: 'Instagram' }, { id: '2', title: 'Instagram 2', category: 'Instagram' }, { id: '3', title: 'Instagram 3', category: 'Instagram' }, { id: '4', title: 'Instagram 4', category: 'Instagram' }, { id: '5', title: 'Instagram 5', category: 'Instagram' }] }, style: { background: 'light', paddingY: 'lg' }, visible: true },
+          { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'white', paddingY: 'lg' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+        ],
+      },
+
+      // ── PAGE CONTACT ──
+      {
+        slug: '/contact',
+        title: 'Contact',
+        sections: [
+          { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+          {
+            type: 'contact', variant: 'luxe-with-info',
+            content: {
+              eyebrow: 'Contact',
+              title: 'Get in touch',
+              subtitle: 'Elementum anetus tempus volutpat mollis nisl cursus diam velit ut quis mi consectetur sit nibh posuere sit nisi scelerisque venenatis risus sit ornare odio nullam tortor amet egestas sapien aliquet.',
+              phone: '(475) 453 - 3465',
+              email: 'contact@Beard.com',
+              address: '4841 Oakway Lane, Los Angeles, CA, 90017',
+              hours: 'Mon-Fri: 8am - 7pm | Sat-Sun: 10am - 5pm',
+            },
+            style: { background: 'white', paddingY: 'xl' },
+            visible: true,
+          },
+          {
+            type: 'form', variant: 'luxe-default',
+            content: {
+              title: 'Send us a message',
+              fields: [
+                { id: '1', label: 'Name', type: 'text', placeholder: 'Your name', required: true },
+                { id: '2', label: 'Email', type: 'email', placeholder: 'Your email', required: true },
+                { id: '3', label: 'Phone', type: 'tel', placeholder: 'Your phone', required: false },
+                { id: '4', label: 'Message', type: 'textarea', placeholder: 'Your message', required: true },
+              ],
+              submitLabel: 'Send message',
+              successMessage: 'Thanks for reaching out. We will get back to you soon.',
+            },
+            style: { background: 'light', paddingY: 'xl' },
+            visible: true,
+          },
+          {
+            type: 'features', variant: 'luxe-grid',
+            content: {
+              eyebrow: 'Locations',
+              title: 'More Locations',
+              items: [
+                { id: '1', icon: '📍', title: 'Los Angeles, CA', description: '4841 Oakway Lane, Los Angeles, CA, 90017\nMon-Fri: 8am-7pm | Sat-Sun: 10am-5pm\n(917) 707-9336' },
+                { id: '2', icon: '📍', title: 'New York, NY', description: '1344 Hanover Street, New York, NY, 10016\nMon-Fri: 8am-7pm | Sat-Sun: 10am-5pm\n(337) 352-8177' },
+                { id: '3', icon: '📍', title: 'San Francisco, CA', description: '4895 Wolf Pen Road, San Francisco, CA, 94107\nMon-Fri: 8am-7pm | Sat-Sun: 10am-5pm\n(254) 123-1190' },
+              ],
+            },
+            style: { background: 'white', paddingY: 'xl' },
+            visible: true,
+          },
+          {
+            type: 'faq', variant: 'luxe-grid',
+            content: {
+              eyebrow: 'FAQ',
+              title: 'Frequently Asked Questions',
+              subtitle: 'Turpis viverra dis non arcu at eget aenean sed imperdiet ullamcorper elementum purus neque. Ut ultrices non ultrices leo urn donec neque dui imperdiet viverra nunc nibh in tellusac.',
+              items: [
+                { id: '1', question: 'Do you offer neck shaving service?', answer: 'Yes, we offer professional neck shaving as a standalone service or as an add-on to any haircut.' },
+                { id: '2', question: 'Do you offer long hair haircuts?', answer: 'Absolutely. Our barbers are trained in all hair lengths and styles.' },
+                { id: '3', question: 'Can I get a refund if i need to cancel?', answer: 'We offer full refunds for cancellations made at least 24 hours before your appointment.' },
+                { id: '4', question: 'hOW DO I TAKE CARE OF MY BEARD DAILY?', answer: 'We recommend using beard oil daily, washing with a gentle cleanser, and brushing regularly to maintain shape.' },
+              ],
+            },
+            style: { background: 'light', paddingY: 'xl' },
+            visible: true,
+          },
+          { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'white', paddingY: 'lg' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+        ],
+      },
+
+      // ── PAGE BLOG ──
+      {
+        slug: '/blog',
+        title: 'Blog',
+        sections: [
+          { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+          {
+            type: 'hero', variant: 'luxe',
+            content: {
+              eyebrow: 'BLOG',
+              title: 'Articles & News',
+              subtitle: 'Stay updated with the latest tips, trends and news from our barber shop.',
+            },
+            style: { background: 'white', paddingY: 'lg' },
+            visible: true,
+          },
+          {
+            type: 'blog-grid', variant: 'glass-featured',
+            content: {
+              eyebrow: 'Featured',
+              title: 'Featured Posts',
+              items: [
+                { id: '1', title: 'How to keep your razors sharp as brand new', category: 'Tips', date: 'Oct 24, 2022', excerpt: 'Learn the best practices to maintain your razors in perfect condition.' },
+                { id: '2', title: 'Gel vs pomade, Which one is the right for me', category: 'Articles', date: 'Oct 31, 2022', excerpt: 'A complete comparison to help you choose the right product for your hair type.' },
+                { id: '3', title: '7 Trends to change your look in 2023', category: 'Articles', date: 'Oct 31, 2022', excerpt: 'Discover the latest haircut and grooming trends for the upcoming year.' },
+              ],
+            },
+            style: { background: 'light', paddingY: 'xl' },
+            visible: true,
+          },
+          {
+            type: 'blog-grid', variant: 'glass-grid',
+            content: {
+              title: 'Latest Posts',
+              items: [
+                { id: '1', title: 'How to keep your razors sharp as brand new', category: 'Tips', date: 'Oct 24, 2022', excerpt: 'Learn the best practices.' },
+                { id: '2', title: '5 Best Ways to Maintain Your Beard & Mustache', category: 'News', date: 'Oct 24, 2022', excerpt: 'Top tips for beard maintenance.' },
+                { id: '3', title: 'Gel vs pomade, Which one is the right for me', category: 'Articles', date: 'Oct 24, 2022', excerpt: 'Gel or pomade? We help you decide.' },
+                { id: '4', title: '10 Tips to keep your hair clean for longer', category: 'Tips', date: 'Oct 24, 2022', excerpt: 'Extend the life of your haircut.' },
+              ],
+            },
+            style: { background: 'white', paddingY: 'xl' },
+            visible: true,
+          },
+          { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'light', paddingY: 'lg' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+        ],
+      },
+
+      // ── PAGE SHOP ──
+      {
+        slug: '/shop',
+        title: 'Shop',
+        sections: [
+          { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+          {
+            type: 'hero', variant: 'luxe',
+            content: {
+              eyebrow: 'SHOP',
+              title: 'Browse our products',
+              subtitle: 'Premium grooming products hand-picked by our master barbers.',
+            },
+            style: { background: 'white', paddingY: 'lg' },
+            visible: true,
+          },
+          {
+            type: 'product-grid', variant: 'luxe-grid',
+            content: {
+              title: 'All Products',
+              items: [
+                { id: '1', name: 'Beard & mustache care oil', price: '$19.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?w=600&q=80' },
+                { id: '2', name: 'Beard & hair serum', price: '$49.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600&q=80' },
+                { id: '3', name: 'Premium Hair Clay', price: '$29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1597854710119-ab0269e0e1f0?w=600&q=80' },
+                { id: '4', name: 'Grooming hair shampoo', price: '$29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?w=600&q=80' },
+                { id: '5', name: 'Premium matte pomade', price: '$39.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1585751119414-ef2636f8aede?w=600&q=80' },
+                { id: '6', name: 'Grooming hair Conditioning', price: '$29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80' },
+              ],
+            },
+            style: { background: 'light', paddingY: 'xl' },
+            visible: true,
+          },
+          { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'white', paddingY: 'lg' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
     ],
