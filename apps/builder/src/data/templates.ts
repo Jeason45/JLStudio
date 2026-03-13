@@ -1188,23 +1188,25 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         visible: true,
       },
 
-      // ── Stats — 10+ years ──
+      // ── Stats — 10+ years (split: image left, text+stats right) ──
       {
-        type: 'stats', variant: 'luxe-cards',
+        type: 'image-text', variant: 'luxe-image-left',
         content: {
           eyebrow: 'About us',
           title: '10+ years making our customers happy',
-          subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.',
+          text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
-            { id: '1', value: '99%', label: 'Customer satisfaction' },
-            { id: '2', value: '10y', label: 'Years of experience' },
+            { id: '1', icon: '📊', title: '99%', description: 'Customer satisfaction' },
+            { id: '2', icon: '📊', title: '10y', description: 'Years of experience' },
           ],
+          image: { src: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=80', alt: 'Barbershop interior' },
+          primaryButton: { label: 'More About us', href: '/about', variant: 'primary' },
         },
         style: { background: 'light', paddingY: 'xl' },
         visible: true,
       },
 
-      // ── Services — 6 items grid ──
+      // ── Services — 6 items grid + 2 CTAs ──
       {
         type: 'features', variant: 'luxe-grid',
         content: {
@@ -1219,6 +1221,8 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             { id: '5', icon: '💆', title: 'scalp Moisturizing — $55 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
             { id: '6', icon: '🧖', title: 'beard grooming & spa — $46 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
           ],
+          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
+          secondaryButton: { label: 'Browse all services', href: '/services', variant: 'outline' },
         },
         style: { background: 'white', paddingY: 'xl' },
         visible: true,
@@ -1230,13 +1234,14 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         content: {
           eyebrow: 'Experience',
           title: 'We offer an unique experience',
-          subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.',
+          subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
             { id: '1', title: 'Barbershop experience', category: 'Experience' },
             { id: '2', title: 'Premium service', category: 'Experience' },
             { id: '3', title: 'Master barber at work', category: 'Experience' },
             { id: '4', title: 'Classic shave', category: 'Experience' },
           ],
+          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
         },
         style: { background: 'light', paddingY: 'xl' },
         visible: true,
@@ -1283,6 +1288,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             { id: '2', name: 'Beard & hair serum', price: '$49.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600&q=80' },
             { id: '3', name: 'Premium Hair Clay', price: '$29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1597854710119-ab0269e0e1f0?w=600&q=80' },
           ],
+          primaryButton: { label: 'Browse all products', href: '/shop', variant: 'outline' },
         },
         style: { background: 'light', paddingY: 'xl' },
         visible: true,
@@ -1299,6 +1305,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             { id: '1', quote: 'this barber shop is simply awesome', author: 'John Carter', role: 'Client', company: 'Los angeles, CA.', rating: 5 },
             { id: '2', quote: 'The best barber shop I\'ve ever been', author: 'Sam Houston', role: 'Client', company: 'Los angeles, CA.', rating: 5 },
           ],
+          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
         },
         style: { background: 'white', paddingY: 'xl' },
         visible: true,
