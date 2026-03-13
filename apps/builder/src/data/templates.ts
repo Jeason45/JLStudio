@@ -1265,12 +1265,13 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         content: {
           eyebrow: 'Why choose us',
           title: 'Why choose us',
-          text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.',
+          text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
             { id: '1', icon: '👨', title: 'Top Barbers', description: 'A mollis pretium sagittis iaculis quam lacus nulla nullam pharetra quis fermentum ipsum phasellus sit.' },
-            { id: '2', icon: '💎', title: 'Premium Services', description: 'Nulla leo velit feugiat in consequat accumsan est enim mi consectetur dis pulvinar venenatis dapibus.' },
+            { id: '2', icon: '💎', title: 'Premium services', description: 'Nulla leo velit feugiat in consequat accumsan est enim mi consectetur dis pulvinar venenatis dapibus.' },
           ],
           image: { src: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80', alt: 'Barber at work' },
+          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
         },
         style: { background: 'white', paddingY: 'xl' },
         visible: true,
@@ -1343,7 +1344,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             { id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] },
             { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] },
           ],
-          socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' },
+          socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' },
         },
         style: { background: 'dark', paddingY: 'none' },
         visible: true,
@@ -1379,6 +1380,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               title: 'Who we are',
               text: 'Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat. Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam eu.',
               image: { src: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=80', alt: 'Barber shop interior' },
+              primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
             },
             style: { background: 'white', paddingY: 'xl' },
             visible: true,
@@ -1403,6 +1405,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               title: 'How we started our barber shop',
               text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget integer mi fermentum.',
               image: { src: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80', alt: 'Barber at work' },
+              primaryButton: { label: 'MEET OUR TEAM', href: '#Team', variant: 'primary' },
             },
             style: { background: 'white', paddingY: 'xl' },
             visible: true,
@@ -1424,7 +1427,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           },
           { type: 'gallery-grid', variant: 'luxe-grid', content: { eyebrow: 'Instagram', title: 'Follow us on instagram', items: [{ id: '1', title: 'Instagram 1', category: 'Instagram' }, { id: '2', title: 'Instagram 2', category: 'Instagram' }, { id: '3', title: 'Instagram 3', category: 'Instagram' }, { id: '4', title: 'Instagram 4', category: 'Instagram' }, { id: '5', title: 'Instagram 5', category: 'Instagram' }] }, style: { background: 'white', paddingY: 'lg' }, visible: true },
           { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'light', paddingY: 'lg' }, visible: true },
-          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
 
@@ -1456,14 +1459,14 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
                 { id: '5', icon: '💆', title: 'scalp Moisturizing — $55 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
                 { id: '6', icon: '🧖', title: 'beard grooming & spa — $46 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
               ],
+              primaryButton: { label: 'More About us', href: '/about', variant: 'outline' },
             },
             style: { background: 'light', paddingY: 'xl' },
             visible: true,
           },
-          { type: 'cta', variant: 'luxe-centered', content: { title: 'Ready to get started?', subtitle: 'Book your appointment today or learn more about us.', primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' }, secondaryButton: { label: 'More About us', href: '/about', variant: 'outline' } }, style: { background: 'white', paddingY: 'xl' }, visible: true },
           { type: 'gallery-grid', variant: 'luxe-grid', content: { eyebrow: 'Instagram', title: 'Follow us on instagram', items: [{ id: '1', title: 'Instagram 1', category: 'Instagram' }, { id: '2', title: 'Instagram 2', category: 'Instagram' }, { id: '3', title: 'Instagram 3', category: 'Instagram' }, { id: '4', title: 'Instagram 4', category: 'Instagram' }, { id: '5', title: 'Instagram 5', category: 'Instagram' }] }, style: { background: 'light', paddingY: 'lg' }, visible: true },
           { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'white', paddingY: 'lg' }, visible: true },
-          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
 
@@ -1521,7 +1524,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             type: 'faq', variant: 'luxe-grid',
             content: {
               eyebrow: 'FAQ',
-              title: 'Frequently Asked Questions',
+              title: 'Frequently Asked questions',
               subtitle: 'Turpis viverra dis non arcu at eget aenean sed imperdiet ullamcorper elementum purus neque. Ut ultrices non ultrices leo urn donec neque dui imperdiet viverra nunc nibh in tellusac.',
               items: [
                 { id: '1', question: 'Do you offer neck shaving service?', answer: 'Yes, we offer professional neck shaving as a standalone service or as an add-on to any haircut.' },
@@ -1534,7 +1537,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             visible: true,
           },
           { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'white', paddingY: 'lg' }, visible: true },
-          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
 
@@ -1555,7 +1558,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             visible: true,
           },
           {
-            type: 'blog-grid', variant: 'glass-featured',
+            type: 'blog-grid', variant: 'luxe-featured',
             content: {
               eyebrow: 'Featured',
               title: 'Featured Posts',
@@ -1569,7 +1572,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             visible: true,
           },
           {
-            type: 'blog-grid', variant: 'glass-grid',
+            type: 'blog-grid', variant: 'luxe-grid',
             content: {
               title: 'Latest Posts',
               items: [
@@ -1583,7 +1586,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             visible: true,
           },
           { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'light', paddingY: 'lg' }, visible: true },
-          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
 
@@ -1620,7 +1623,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             visible: true,
           },
           { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'white', paddingY: 'lg' }, visible: true },
-          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: `Copyright © Beard X`, columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
     ],
