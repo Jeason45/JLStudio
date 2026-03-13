@@ -7,7 +7,9 @@ export async function middleware(req: NextRequest) {
   // Public paths — no auth required
   if (
     pathname === '/login' ||
-    pathname.startsWith('/api/auth')
+    pathname === '/api/auth/login' ||
+    pathname === '/api/auth/logout' ||
+    pathname === '/api/auth/verify-2fa'
   ) {
     return NextResponse.next();
   }
