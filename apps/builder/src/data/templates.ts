@@ -1303,8 +1303,8 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           title: 'What our clients say',
           subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.',
           items: [
-            { id: '1', quote: 'this barber shop is simply awesome', author: 'John Carter', role: 'Client', company: 'Los angeles, CA.', rating: 5 },
-            { id: '2', quote: 'The best barber shop I\'ve ever been', author: 'Sam Houston', role: 'Client', company: 'Los angeles, CA.', rating: 5 },
+            { id: '1', quote: 'this barber shop is simply awesome', description: 'Et proin ut in dignissim sem non a nullam magna lectus urna et dui quam tellus imperdiet sit purus at fringilla scelerisque diam amet fermentum orci fringilla aliquet nulla lectus erat eu auctor diam potenti turpis interdum eu.', author: 'John Carter', role: 'Client', company: 'Los angeles, CA.', rating: 5 },
+            { id: '2', quote: 'The best barber shop I\'ve ever been', description: 'Et proin ut in dignissim sem non a nullam magna lectus urna et dui quam tellus imperdiet sit purus at fringilla scelerisque diam amet fermentum orci fringilla aliquet nulla lectus erat eu auctor diam potenti turpis interdum eu.', author: 'Sam Houston', role: 'Client', company: 'Los angeles, CA.', rating: 5 },
           ],
           primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
         },
@@ -1388,7 +1388,6 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           {
             type: 'stats', variant: 'luxe-cards',
             content: {
-              title: 'Our numbers speak',
               items: [
                 { id: '1', value: '99%', label: 'Customer satisfaction', description: 'Lorem ipsum dolor sit amet consectet adipiscing elit eget quamumto.' },
                 { id: '2', value: '20k+', label: 'Services provided', description: 'Lorem ipsum dolor sit amet consectet adipiscing elit eget quamumto.' },
@@ -1401,11 +1400,10 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           {
             type: 'image-text', variant: 'luxe-image-right',
             content: {
-              eyebrow: 'Our story',
               title: 'How we started our barber shop',
               text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget integer mi fermentum.',
               image: { src: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80', alt: 'Barber at work' },
-              primaryButton: { label: 'MEET OUR TEAM', href: '#Team', variant: 'primary' },
+              primaryButton: { label: 'mEET OUR TEAM', href: '#Team', variant: 'primary' },
             },
             style: { background: 'white', paddingY: 'xl' },
             visible: true,
@@ -1438,19 +1436,10 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         sections: [
           { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
           {
-            type: 'hero', variant: 'luxe',
-            content: {
-              eyebrow: 'SERVICES',
-              title: 'Our Services',
-              subtitle: 'Eun in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam.',
-            },
-            style: { background: 'white', paddingY: 'lg' },
-            visible: true,
-          },
-          {
             type: 'features', variant: 'luxe-grid',
             content: {
-              title: 'All Services',
+              title: 'Our Services',
+              subtitle: 'Eun in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam.',
               items: [
                 { id: '1', icon: '✂️', title: 'Classic Haircut — $37 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
                 { id: '2', icon: '🧔', title: 'Beard Trim — $25 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
@@ -1459,7 +1448,8 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
                 { id: '5', icon: '💆', title: 'scalp Moisturizing — $55 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
                 { id: '6', icon: '🧖', title: 'beard grooming & spa — $46 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
               ],
-              primaryButton: { label: 'More About us', href: '/about', variant: 'outline' },
+              primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
+              secondaryButton: { label: 'More About us', href: '/about', variant: 'outline' },
             },
             style: { background: 'light', paddingY: 'xl' },
             visible: true,
@@ -1512,9 +1502,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               eyebrow: 'Locations',
               title: 'More Locations',
               items: [
-                { id: '1', icon: '📍', title: 'Los Angeles, CA', description: '4841 Oakway Lane, Los Angeles, CA, 90017\nMon-Fri: 8am-7pm | Sat-Sun: 10am-5pm\n(917) 707-9336' },
-                { id: '2', icon: '📍', title: 'New York, NY', description: '1344 Hanover Street, New York, NY, 10016\nMon-Fri: 8am-7pm | Sat-Sun: 10am-5pm\n(337) 352-8177' },
-                { id: '3', icon: '📍', title: 'San Francisco, CA', description: '4895 Wolf Pen Road, San Francisco, CA, 94107\nMon-Fri: 8am-7pm | Sat-Sun: 10am-5pm\n(254) 123-1190' },
+                { id: '1', icon: '📍', title: 'Los Angeles, CA', description: '4841 Oakway Lane, Los angeles, ca, 90017\nmon-fri / 8:00 am - 7:00 pm | sat-sun / 10:00 am - 5:00 pm\n(917) - 707 - 9336 | (818) - 323 - 2528' },
+                { id: '2', icon: '📍', title: 'New york, NY', description: '1344 Hanover Street, New york, NY, 10016\nmon-fri / 8:00 am - 7:00 pm | sat-sun / 10:00 am - 5:00 pm\n(337) - 352 - 8177 | (646) - 200 - 7591' },
+                { id: '3', icon: '📍', title: 'San francisco, CA', description: '4895 Wolf Pen Road, San Francisco, CA, 94107\nmon-fri / 8:00 am - 7:00 pm | sat-sun / 10:00 am - 5:00 pm\n(254) - 123 - 1190 | (254) - 321 - 9011' },
               ],
             },
             style: { background: 'white', paddingY: 'xl' },
@@ -1527,10 +1517,10 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               title: 'Frequently Asked questions',
               subtitle: 'Turpis viverra dis non arcu at eget aenean sed imperdiet ullamcorper elementum purus neque. Ut ultrices non ultrices leo urn donec neque dui imperdiet viverra nunc nibh in tellusac.',
               items: [
-                { id: '1', question: 'Do you offer neck shaving service?', answer: 'Yes, we offer professional neck shaving as a standalone service or as an add-on to any haircut.' },
-                { id: '2', question: 'Do you offer long hair haircuts?', answer: 'Absolutely. Our barbers are trained in all hair lengths and styles.' },
-                { id: '3', question: 'Can I get a refund if i need to cancel?', answer: 'We offer full refunds for cancellations made at least 24 hours before your appointment.' },
-                { id: '4', question: 'hOW DO I TAKE CARE OF MY BEARD DAILY?', answer: 'We recommend using beard oil daily, washing with a gentle cleanser, and brushing regularly to maintain shape.' },
+                { id: '1', question: 'Do you offer neck shaving service?', answer: 'Interdum facilisis velit cursus libero magna fringilla viverra blandit gravida tortor ultricies tellus magna nibh massa interdum convallis id sed amet turpis lectus mi fringilla commodo faucibus leo facilisis libero facilisi dignissim ultrices nec ullamcorper aet pulvinar faucibus sed sit netus nullam enim ut.' },
+                { id: '2', question: 'Do you offer long hair haircuts?', answer: 'Interdum facilisis velit cursus libero magna fringilla viverra blandit gravida tortor ultricies tellus magna nibh massa interdum convallis id sed amet turpis lectus mi fringilla commodo faucibus leo facilisis libero facilisi dignissim ultrices nec ullamcorper aet pulvinar faucibus sed sit netus nullam enim ut.' },
+                { id: '3', question: 'Can I get a refund if i need to cancel?', answer: 'Interdum facilisis velit cursus libero magna fringilla viverra blandit gravida tortor ultricies tellus magna nibh massa interdum convallis id sed amet turpis lectus mi fringilla commodo faucibus leo facilisis libero facilisi dignissim ultrices nec ullamcorper aet pulvinar faucibus sed sit netus nullam enim ut.' },
+                { id: '4', question: 'hOW DO I TAKE CARE OF MY BEARD DAILY?', answer: 'Interdum facilisis velit cursus libero magna fringilla viverra blandit gravida tortor ultricies tellus magna nibh massa interdum convallis id sed amet turpis lectus mi fringilla commodo faucibus leo facilisis libero facilisi dignissim ultrices nec ullamcorper aet pulvinar faucibus sed sit netus nullam enim ut.' },
               ],
             },
             style: { background: 'light', paddingY: 'xl' },
@@ -1551,8 +1541,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             type: 'hero', variant: 'luxe',
             content: {
               eyebrow: 'BLOG',
-              title: 'Articles & News',
-              subtitle: 'Stay updated with the latest tips, trends and news from our barber shop.',
+              title: 'ARTICLES & NEWS',
             },
             style: { background: 'white', paddingY: 'lg' },
             visible: true,
@@ -1560,12 +1549,10 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           {
             type: 'blog-grid', variant: 'luxe-featured',
             content: {
-              eyebrow: 'Featured',
-              title: 'Featured Posts',
               items: [
-                { id: '1', title: 'How to keep your razors sharp as brand new', category: 'Tips', date: 'Oct 24, 2022', excerpt: 'Learn the best practices to maintain your razors in perfect condition.' },
-                { id: '2', title: 'Gel vs pomade, Which one is the right for me', category: 'Articles', date: 'Oct 31, 2022', excerpt: 'A complete comparison to help you choose the right product for your hair type.' },
-                { id: '3', title: '7 Trends to change your look in 2023', category: 'Articles', date: 'Oct 31, 2022', excerpt: 'Discover the latest haircut and grooming trends for the upcoming year.' },
+                { id: '1', title: 'How to keep your razors sharp as brand new', category: 'Tips', date: 'Oct 24, 2022' },
+                { id: '2', title: 'Gel vs pomade, Which one is the right for me', category: 'Articles', date: 'Oct 31, 2022' },
+                { id: '3', title: '7 Trends to change your look in 2023', category: 'Articles', date: 'Oct 31, 2022' },
               ],
             },
             style: { background: 'light', paddingY: 'xl' },
@@ -1576,10 +1563,10 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             content: {
               title: 'Latest Posts',
               items: [
-                { id: '1', title: 'How to keep your razors sharp as brand new', category: 'Tips', date: 'Oct 24, 2022', excerpt: 'Learn the best practices.' },
-                { id: '2', title: '5 Best Ways to Maintain Your Beard & Mustache', category: 'News', date: 'Oct 24, 2022', excerpt: 'Top tips for beard maintenance.' },
-                { id: '3', title: 'Gel vs pomade, Which one is the right for me', category: 'Articles', date: 'Oct 24, 2022', excerpt: 'Gel or pomade? We help you decide.' },
-                { id: '4', title: '10 Tips to keep your hair clean for longer', category: 'Tips', date: 'Oct 24, 2022', excerpt: 'Extend the life of your haircut.' },
+                { id: '1', title: 'How to keep your razors sharp as brand new', category: 'Tips', date: 'Oct 24, 2022' },
+                { id: '2', title: '5 BEST WAYS TO MANTAIN YOUR BEARD & MUSTACHE', category: 'News', date: 'Oct 24, 2022' },
+                { id: '3', title: 'Gel vs pomade, Which one is the right for me', category: 'Articles', date: 'Oct 24, 2022' },
+                { id: '4', title: '10 Tips to keep your hair clean for longer', category: 'Tips', date: 'Oct 24, 2022' },
               ],
             },
             style: { background: 'white', paddingY: 'xl' },
@@ -1601,7 +1588,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             content: {
               eyebrow: 'SHOP',
               title: 'Browse our products',
-              subtitle: 'Premium grooming products hand-picked by our master barbers.',
+              subtitle: 'Lorem amet sem ipsum tellus massa est lectus venenatis leo sapien condimentum rhoncus in a ullamcorper ullamcorper libero mauris pharetra massa elementum ut nisl suspendisse at at non tempus vestibulum arcu facilisi senectus dis facilisis aliquet.',
             },
             style: { background: 'white', paddingY: 'lg' },
             visible: true,
@@ -1609,7 +1596,6 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           {
             type: 'product-grid', variant: 'luxe-grid',
             content: {
-              title: 'All Products',
               items: [
                 { id: '1', name: 'Beard & mustache care oil', price: '$19.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?w=600&q=80' },
                 { id: '2', name: 'Beard & hair serum', price: '$49.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600&q=80' },
