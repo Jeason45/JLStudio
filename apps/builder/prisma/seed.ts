@@ -1,11 +1,28 @@
 import { PrismaClient } from '../src/generated/prisma'
 import { DEFAULT_SITE_CONFIG } from '../src/types/site'
 import { nanoid } from 'nanoid'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('🌱 Seeding...')
+  console.log('Seeding...')
+
+  // Builder admin user
+  const adminEmail = process.env.BUILDER_ADMIN_EMAIL || 'admin@jlstudio.dev'
+  const adminPassword = process.env.BUILDER_ADMIN_PASSWORD || 'JLStudio@Builder2026'
+  const hashedPassword = await bcrypt.hash(adminPassword, 12)
+
+  await prisma.builderUser.upsert({
+    where: { email: adminEmail },
+    update: {},
+    create: {
+      email: adminEmail,
+      password: hashedPassword,
+      name: 'Jeason',
+    },
+  })
+  console.log('Admin builder:', adminEmail)
 
   const siteId = nanoid(10)
   const config = DEFAULT_SITE_CONFIG(siteId, 'Site de démonstration')
