@@ -32,7 +32,7 @@ export function SiteCard({ site }: SiteCardProps) {
     if (!window.confirm(`Supprimer "${site.name}" ? Cette action est irréversible.`)) return
     const res = await fetch(`/api/sites/${site.id}`, { method: 'DELETE' })
     if (res.ok) {
-      router.refresh()
+      window.location.reload()
     }
   }
 
