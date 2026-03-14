@@ -10,6 +10,7 @@
 const { chromium } = require('playwright')
 const path = require('path')
 const fs = require('fs')
+const { execSync } = require('child_process')
 
 const { extractLibraries } = require('./extractors/libraries')
 const { extractCSS } = require('./extractors/css')
@@ -765,6 +766,100 @@ async function recordVideo(url, outputDir, sections) {
 }
 
 // ═══════════════════════════════════════════════
+// FRAME EXTRACTION
+// ═══════════════════════════════════════════════
+
+function hasFfmpeg() {
+  try {
+    execSync('which ffmpeg', { stdio: 'ignore' })
+    return true
+  } catch {
+    return false
+  }
+}
+
+async function extractFrames(url, outputDir) {
+  const desktopFramesDir = path.join(outputDir, 'frames', 'desktop')
+  const mobileFramesDir = path.join(outputDir, 'frames', 'mobile')
+  ensureDir(desktopFramesDir)
+  ensureDir(mobileFramesDir)
+
+  const desktopVideo = path.join(outputDir, 'video-desktop.webm')
+  const mobileVideo = path.join(outputDir, 'video-mobile.webm')
+
+  if (hasFfmpeg()) {
+    // ─── ffmpeg extraction (preferred) ───
+    log('  🎞️  Extracting frames via ffmpeg (2 fps)...')
+
+    if (fs.existsSync(desktopVideo)) {
+      try {
+        execSync(`ffmpeg -i "${desktopVideo}" -vf fps=2 "${path.join(desktopFramesDir, 'frame-%03d.png')}" -y -loglevel error`)
+        const count = fs.readdirSync(desktopFramesDir).filter(f => f.endsWith('.png')).length
+        log(`  ✅ Desktop frames: ${count}`)
+      } catch (err) {
+        log(`  ⚠️  ffmpeg desktop failed: ${err.message}`)
+      }
+    } else {
+      log('  ⚠️  No desktop video found, skipping desktop frames')
+    }
+
+    if (fs.existsSync(mobileVideo)) {
+      try {
+        execSync(`ffmpeg -i "${mobileVideo}" -vf fps=2 "${path.join(mobileFramesDir, 'frame-%03d.png')}" -y -loglevel error`)
+        const count = fs.readdirSync(mobileFramesDir).filter(f => f.endsWith('.png')).length
+        log(`  ✅ Mobile frames: ${count}`)
+      } catch (err) {
+        log(`  ⚠️  ffmpeg mobile failed: ${err.message}`)
+      }
+    } else {
+      log('  ⚠️  No mobile video found, skipping mobile frames')
+    }
+  } else {
+    // ─── Playwright fallback: screenshot during scroll ───
+    log('  🎞️  ffmpeg not found — extracting frames via Playwright scroll...')
+
+    async function captureScrollFrames(viewport, ua, framesDir) {
+      const browser = await chromium.launch({ headless: true })
+      const context = await browser.newContext({ viewport, userAgent: ua })
+      const page = await context.newPage()
+      await page.goto(url, { waitUntil: 'networkidle', timeout: TIMEOUT })
+      await page.waitForTimeout(2000)
+
+      const totalHeight = await page.evaluate(() => document.body.scrollHeight)
+      const stepSize = 200
+      const stepDelay = 500
+      let frameIndex = 0
+
+      for (let y = 0; y <= totalHeight; y += stepSize) {
+        await page.evaluate((scrollY) => window.scrollTo({ top: scrollY, behavior: 'instant' }), y)
+        await page.waitForTimeout(stepDelay)
+        const frameName = `frame-${String(frameIndex).padStart(3, '0')}.png`
+        await page.screenshot({ path: path.join(framesDir, frameName), fullPage: false })
+        frameIndex++
+      }
+
+      await browser.close()
+      return frameIndex
+    }
+
+    try {
+      const desktopCount = await captureScrollFrames(DESKTOP_VP, USER_AGENT, desktopFramesDir)
+      log(`  ✅ Desktop frames (Playwright): ${desktopCount}`)
+    } catch (err) {
+      log(`  ⚠️  Playwright desktop frames failed: ${err.message}`)
+    }
+
+    try {
+      const mobileUA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1'
+      const mobileCount = await captureScrollFrames(MOBILE_VP, mobileUA, mobileFramesDir)
+      log(`  ✅ Mobile frames (Playwright): ${mobileCount}`)
+    } catch (err) {
+      log(`  ⚠️  Playwright mobile frames failed: ${err.message}`)
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════
 // MAIN
 // ═══════════════════════════════════════════════
 
@@ -834,7 +929,11 @@ async function main() {
     log('🎬 Recording video...')
     await recordVideo(url, outputDir, sections)
 
-    // 11. Save raw data
+    // 11. Extract frames from videos (or via Playwright fallback)
+    log('🎞️  Extracting frames...')
+    await extractFrames(url, outputDir)
+
+    // 13. Save raw data
     const rawData = {
       url,
       scannedAt: new Date().toISOString(),
@@ -851,7 +950,7 @@ async function main() {
     fs.writeFileSync(rawPath, JSON.stringify(rawData, null, 2))
     log(`💾 Raw data saved: ${rawPath}`)
 
-    // 12. Generate report
+    // 14. Generate report
     const report = generateReport(url, rawData)
     const reportPath = path.join(outputDir, 'scan-report.md')
     fs.writeFileSync(reportPath, report)
@@ -877,6 +976,8 @@ async function main() {
     log(`   screenshots/ — desktop + mobile + sections`)
     log(`   video-desktop.webm — desktop scroll-through`)
     log(`   video-mobile.webm — mobile scroll-through`)
+    log(`   frames/desktop/ — desktop scroll frames (2 fps)`)
+    log(`   frames/mobile/ — mobile scroll frames (2 fps)`)
 
   } catch (error) {
     log(`❌ Error: ${error.message}`)

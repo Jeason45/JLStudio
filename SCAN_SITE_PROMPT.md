@@ -365,6 +365,22 @@ Les screenshots sont LA source de vérité visuelle. Avant de lire une seule lig
     * Screenshot montre du beige mais le code dit #fff → le screenshot a raison
     * Tout le texte apparaît en majuscules dans les screenshots → text-transform: uppercase
     * Les screenshots révèlent les computed styles finaux, pas les intentions du CSS
+4. Si des frames sont disponibles, les analyser AVANT les screenshots :
+    → scripts/scans/[slug]/frames/desktop/ (1 frame toutes les 0.5s)
+    → scripts/scans/[slug]/frames/mobile/
+
+    Comparer les frames CONSÉCUTIVES pour détecter :
+    → Parallax : si l'image de fond ne bouge pas entre deux frames
+      alors que le contenu a bougé → background-attachment: fixed
+    → Animations au scroll : éléments qui apparaissent progressivement
+      entre frame-010 et frame-015 → entrance animation
+    → Effets hover : comparer frames avant/après hover sur un bouton
+    → Smooth scroll : si le défilement est très progressif et fluide
+      entre les frames → smooth scroll library (Lenis, Locomotive)
+    → Counter animations : si des chiffres changent entre les frames
+      → counter animation au scroll
+    → Marquee/ticker : si du texte se déplace horizontalement
+      entre frames → marquee effect
 
 PASSE 1 — STRUCTURE & LAYOUT GLOBAL
 Identifie toutes les pages, toutes les sections dans l'ordre exact, la hiérarchie DOM. Pour chaque section : type, position, background, layout (full-width, contained, split, grid, mosaic).
@@ -2070,6 +2086,37 @@ Screenshots Playwright — CAPTURE COMPLÈTE
   '#site-canvas footer' séparément
 * Timeout : waitForNetworkIdle + 5s pour les fonts et images lazy-loaded
 
+Frames Playwright — ANALYSE DES EFFETS VISUELS
+* Le scan extrait des frames toutes les 0.5 secondes depuis
+  les vidéos du site :
+  → scripts/scans/[slug]/frames/desktop/ (desktop 1440x900)
+  → scripts/scans/[slug]/frames/mobile/ (mobile 390x844)
+
+* Ces frames sont LA source de vérité pour les effets visuels.
+  Elles permettent de détecter ce que les screenshots statiques
+  ne peuvent pas montrer.
+
+* Méthode d'analyse des frames :
+  1. Comparer frame-000 avec frame-005 (début de scroll)
+     → Qu'est-ce qui a bougé ? Le contenu ? Le fond ?
+  2. Comparer frame-010 avec frame-015 (milieu de page)
+     → Des éléments sont-ils apparus ? (animations entrance)
+  3. Comparer frame-020 avec frame-025 (fin de page)
+     → Y a-t-il des animations stagger sur les cards ?
+  4. Chercher des frames où le curseur est sur un bouton
+     → Y a-t-il un changement de couleur, lift, shadow ?
+
+* Mapping frames → JSON :
+  → Fond fixe, contenu qui bouge → backgroundAttachment: "fixed"
+  → Éléments qui apparaissent progressivement → entrance: "fade-up"
+  → Chiffres qui changent → textAnimations: [{ type: "counter" }]
+  → Texte qui se déplace horizontalement → type: "marquee"
+  → Défilement très progressif et fluide → smoothScroll: true
+  → Bouton qui change d'apparence → hoverEffects: ["bg-darken"]
+
+* Nettoyage après analyse :
+  node scripts/cleanup-frames.js scripts/scans/[slug]
+
 Polices non-Google — SYSTÈME DE FALLBACK
 * Si le site utilise une police qui N'EST PAS dans Google Fonts (ex: Generalsans, GT Walsheim) :
   → Documenter la police exacte dans brand.typography
@@ -2175,6 +2222,102 @@ Variable subtitle dans product-grid — EXTRACTION OBLIGATOIRE
     empêche les bordures parasites
   → Si un SVG montre quand même une bordure → ajouter inline style={{ outline: 'none', border: 'none' }}
 * Les illustrations décoratives SVG en arrière-plan NE DOIVENT PAS avoir de bordure visible
+
+Éléments décoratifs peu contrastés — DÉTECTION OBLIGATOIRE
+* Sur CHAQUE site, vérifier si des éléments décoratifs
+  (SVG, illustrations, icônes de fond, patterns) ont une couleur
+  très proche du fond de section.
+
+* Pourquoi c'est critique : un élément quasi-invisible dans
+  le configurateur peut sembler absent alors qu'il est présent
+  mais avec une opacité ou une couleur trop proche du fond.
+  Ce problème est fréquent sur les sites premium qui utilisent
+  des illustrations décoratives subtiles en arrière-plan.
+
+* Méthode de détection :
+  → Dans les screenshots : zoomer sur les coins et bords de sections
+    pour détecter les éléments quasi-invisibles
+  → Dans les frames : ces éléments peuvent apparaître plus clairement
+    lors des transitions ou animations
+  → Dans le CSS : chercher opacity < 0.2 ou couleurs très proches
+    du fond (ex: #F5EFE8 sur fond #F8F5EF)
+  → Ratio de contraste minimum pour être visible : 1.5
+
+* Comment documenter dans le JSON :
+  → Si élément présent mais peu visible :
+    decorativeOpacity: "low" dans reproductionNotes
+  → Toujours spécifier l'opacité exacte détectée
+  → Ne jamais supposer qu'un élément invisible est absent
+
+* Dans le configurateur :
+  → opacity minimum recommandée : 0.15
+  → Si trop faible → noter pour correction manuelle
+
+Structure des fichiers du scan — RÉFÉRENCE COMPLÈTE
+* Après un scan complet, les fichiers sont organisés ainsi :
+  scripts/scans/[slug]/
+  ├── raw-data.json          → données CSS/animations extraites
+  ├── output.json            → JSON template pour import
+  ├── scan-report.md         → rapport textuel du scan
+  ├── video-desktop.webm     → vidéo enregistrée desktop (1440x900)
+  ├── video-mobile.webm      → vidéo enregistrée mobile (390x844)
+  ├── screenshots/           → screenshots de l'original
+  ├── frames/
+  │   ├── desktop/           → frames desktop (frame-000.png...)
+  │   └── mobile/            → frames mobile (frame-000.png...)
+  └── comparison/
+      ├── current-full-desktop.png
+      ├── current-full-mobile.png
+      ├── current-section-XX.png
+      └── diff-report.md
+
+* Commandes du système :
+  # Scanner un nouveau site :
+  node scripts/scan-site.js https://[URL]
+
+  # Importer le template (nouveau site) :
+  node scripts/import-template.js scripts/scans/[slug]/output.json
+
+  # Mettre à jour un site existant :
+  node scripts/import-template.js scripts/scans/[slug]/output.json --site-id [SITE-ID]
+
+  # Screenshotter le résultat :
+  node scripts/screenshot-site.js [SITE-ID] scripts/scans/[slug]/comparison
+
+  # Comparer et générer diff-report :
+  node scripts/compare-screenshots.js scripts/scans/[slug]
+
+  # Nettoyer les frames après analyse :
+  node scripts/cleanup-frames.js scripts/scans/[slug]
+
+BrandStyleInjector — PIÈGES ET SOLUTIONS GÉNÉRIQUES
+* Le configurateur injecte automatiquement les couleurs du brand
+  sur tous les éléments via le BrandStyleInjector.
+  Ce système applique des CSS variables sur #site-canvas et peut
+  écraser les classes Tailwind et styles CSS des composants.
+
+* Éléments particulièrement affectés sur TOUT site :
+  → Headers transparents : injection de background-color sur
+    header et nav → fond coloré indésirable au lieu de transparent
+    SOLUTION : inline style backgroundColor: 'transparent'
+  → Footers avec fond custom : injection de la couleur brand
+    SOLUTION : background: "custom" + customBgColor + inline style
+  → Liens et textes colorés : override des couleurs personnalisées
+    SOLUTION : inline color: '#hex' plutôt que classes Tailwind
+  → SVG et icônes : outline ou border indésirables
+    SOLUTION : règle CSS #site-canvas svg { border: none; outline: none }
+
+* Règle générale applicable à tout site :
+  Pour tout élément qui doit résister au BrandStyleInjector →
+  utiliser des inline styles JavaScript.
+  Les inline styles ont TOUJOURS priorité sur les CSS variables.
+
+* Comment détecter ce problème sur un nouveau site :
+  → Si un élément a la mauvaise couleur dans le configurateur
+    mais que le JSON est correct → c'est probablement le
+    BrandStyleInjector qui override
+  → Vérifier dans les DevTools : l'élément a-t-il une
+    CSS variable appliquée par #site-canvas ?
 
 ---
 
