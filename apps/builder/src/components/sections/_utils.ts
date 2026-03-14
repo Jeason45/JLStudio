@@ -111,12 +111,16 @@ export function getEyebrowClass(bg: SectionBackground): string {
 }
 
 export function getTitleSizeClass(size?: SectionTitleSize): string {
-  return {
+  const map: Record<SectionTitleSize, string> = {
     sm: 'text-xl md:text-2xl',
     md: 'text-2xl md:text-3xl',
     lg: 'text-3xl md:text-4xl lg:text-5xl',
     xl: 'text-4xl md:text-5xl lg:text-6xl',
-  }[size ?? 'lg']
+    '2xl': 'text-5xl md:text-6xl lg:text-7xl',
+    '3xl': 'text-6xl md:text-7xl lg:text-8xl',
+    '4xl': 'text-7xl md:text-8xl lg:text-9xl',
+  }
+  return map[size ?? 'lg']
 }
 
 export function getTextAlignClass(align?: SectionTextAlign): string {
