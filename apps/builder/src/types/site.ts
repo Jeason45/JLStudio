@@ -65,7 +65,7 @@ export interface Footer {
 export type SectionBackground = 'white' | 'light' | 'dark' | 'primary' | 'gradient' | 'custom' | 'custom-gradient'
 export type SectionPaddingY = 'none' | 'sm' | 'md' | 'lg' | 'xl'
 
-export type SectionTitleSize = 'sm' | 'md' | 'lg' | 'xl'
+export type SectionTitleSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
 export type SectionTextAlign = 'left' | 'center' | 'right' | 'justify'
 export type SectionSpacing = 'none' | 'sm' | 'md' | 'lg' | 'xl'
 export type SectionLetterSpacing = 'tight' | 'normal' | 'wide' | 'wider'
