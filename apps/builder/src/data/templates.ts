@@ -1330,12 +1330,14 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             { id: 'test-2', quote: 'THE BEST BARBER SHOP I\'VE EVER BEEN', description: 'Et proin ut in dignissim sem non a nullam magna lectus urna et dui quam tellus imperdiet sit purus at fringilla scelerisque diam amet fermentum orci fringilla aliquet nulla lectus erat eu auctor diam potenti turpis interdum eu.', author: 'SAM HOUSTON', role: 'LOS ANGELES, CA.', rating: 5, avatar: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353222a4d0d416ddf8e4360_Image-testimonials.jpg' },
           ],
           showArrows: true,
+          cardShadow: true,
+          arrowStyle: 'square-dark',
           primaryButton: { label: 'BOOK AN APPOINTMENT', href: '/contact', variant: 'primary' },
           floatingImages: [
             { src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635322dd2cf250efc75644d1_Floating-item-barbershop-clients.svg', position: 'top-right', size: 280, opacity: 0.45 },
           ],
         },
-        style: { background: 'custom', customBgColor: '#F8F5EF', paddingY: 'xl', textAlign: 'left', textColor: '#121212', accentColor: '#DEC7A6', cardShadow: true, arrowStyle: 'square-dark' },
+        style: { background: 'custom', customBgColor: '#F8F5EF', paddingY: 'xl', textAlign: 'left', textColor: '#121212', accentColor: '#DEC7A6' },
         visible: true,
       },
 

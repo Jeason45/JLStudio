@@ -105,12 +105,41 @@ Répéter jusqu'à satisfaction visuelle.
 Après validation finale :
   node scripts/cleanup-frames.js scripts/scans/[slug]
 
-### ÉTAPE 9 — GIT COMMIT
+### ÉTAPE 9 — SYNCHRONISER LE TEMPLATE MODAL
 
-Quand tout est validé et satisfaisant :
+**Cette étape ne se fait QUE quand l'utilisateur a validé le rendu en localhost.**
+
+Le fichier `apps/builder/src/data/templates.ts` contient les templates
+affichés dans le modal de création de site du configurateur.
+Il doit être synchronisé avec le `output.json` finalisé pour que les
+futurs sites créés depuis ce template aient le bon rendu.
+
+Pour chaque template :
+1. Trouver l'entrée correspondante dans `templates.ts` (par `id`)
+   — ou en créer une nouvelle si c'est un nouveau template
+2. Remplacer la section `sections: [...]` (homepage) par les sections
+   du `output.json` finalisé, en convertissant du JSON vers la syntaxe
+   TypeScript du fichier
+3. Synchroniser aussi : `brand`, `pages` (pages additionnelles),
+   et toute métadonnée modifiée (name, description, category, etc.)
+4. S'assurer que TOUS les champs sont présents : `floatingImages`,
+   `stats`, `columns`, `showArrows`, `cardShadow`, `arrowStyle`,
+   `decorativeIcon`, `backgroundImage` (object), `textColor`, etc.
+
+**Points d'attention :**
+- `templates.ts` = ce qui est déployé sur le vrai configurateur
+- Les sites **déjà créés** en base ne sont PAS mis à jour par ce fichier
+  (seuls les NOUVEAUX sites créés depuis le modal sont impactés)
+- Vérifier que le build passe (`pnpm build`) avant de commit
+
+### ÉTAPE 10 — GIT COMMIT & PUSH
+
+Quand tout est validé et synchronisé :
   git add .
   git commit -m "feat: template [nom du site]"
   git push
+
+Vérifier que le build passe sur Coolify après le push.
 
 ---
 
