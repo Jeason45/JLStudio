@@ -1171,7 +1171,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     // ══════════════════════════════════════════════
     sections: [
       // ── Navbar ──
-      { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+      { type: 'site-header', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', links: [{ id: '1', label: 'Home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
 
       // ── Hero — split image right ──
       {
@@ -1181,9 +1181,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           subtitle: 'Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam.',
           primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
           secondaryButton: { label: 'Browse services', href: '#Services', variant: 'outline' },
-          backgroundImage: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1600&q=80',
+          backgroundImage: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63868e1dab1fa01aaa25552a_home-hero-top-image-barber-webflow-ecommerce-template.png',
         },
-        style: { background: 'custom', paddingY: 'xl', customBgColor: '#121212', backgroundImage: { url: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1600&q=80', overlayColor: '#000000', overlayOpacity: 0.5 } },
+        style: { background: 'custom', paddingY: 'xl', customBgColor: '#121212', backgroundImage: { url: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63868e1dab1fa01aaa25552a_home-hero-top-image-barber-webflow-ecommerce-template.png', overlayColor: '#000000', overlayOpacity: 0.5 } },
         visible: true,
       },
 
@@ -1194,10 +1194,10 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           title: '10+ years making our customers happy',
           text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
-            { id: '1', icon: '📊', title: '99%', description: 'Customer satisfaction' },
-            { id: '2', icon: '📊', title: '10y', description: 'Years of experience' },
+            { id: '1', icon: 'trending-up', title: '99%', description: 'Customer satisfaction' },
+            { id: '2', icon: 'clock', title: '10y', description: 'Years of experience' },
           ],
-          image: { src: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=80', alt: 'Barbershop interior' },
+          image: { src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352caffe6a8ab6bbcae3ce2_Left-Image-Barbershop.jpg', alt: 'Barbershop interior' },
           primaryButton: { label: 'More About us', href: '/about', variant: 'primary' },
         },
         style: { background: 'light', paddingY: 'xl' },
@@ -1211,12 +1211,12 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           title: 'Browse our services',
           subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
-            { id: '1', icon: '✂️', title: 'Classic Haircut — $37 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
-            { id: '2', icon: '🧔', title: 'Beard Trim — $25 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
-            { id: '3', icon: '👦', title: 'kids haircut — $26 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
-            { id: '4', icon: '🪒', title: 'Neck shave — $12 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
-            { id: '5', icon: '💆', title: 'scalp Moisturizing — $55 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
-            { id: '6', icon: '🧖', title: 'beard grooming & spa — $46 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+            { id: '1', icon: 'scissors', title: 'Classic Haircut', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$37 USD' },
+            { id: '2', icon: 'scissors', title: 'Beard Trim', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$25 USD' },
+            { id: '3', icon: 'scissors', title: 'kids haircut', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$26 USD' },
+            { id: '4', icon: 'scissors', title: 'Neck shave', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$12 USD' },
+            { id: '5', icon: 'droplets', title: 'scalp Moisturizing', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$55 USD' },
+            { id: '6', icon: 'sparkles', title: 'beard grooming & spa', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$46 USD' },
           ],
           primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
           secondaryButton: { label: 'Browse all services', href: '/services', variant: 'outline' },
@@ -1232,10 +1232,10 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           title: 'We offer an unique experience',
           subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
-            { id: '1', title: 'Barbershop experience', category: 'Experience' },
-            { id: '2', title: 'Premium service', category: 'Experience' },
-            { id: '3', title: 'Master barber at work', category: 'Experience' },
-            { id: '4', title: 'Classic shave', category: 'Experience' },
+            { id: '1', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f2b6a7b90cfd94ae18b4_Left-Image-Experience-Barbershop.jpg', alt: 'Barbershop experience', category: 'Experience' },
+            { id: '2', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f252e708dc38e92e533c_Center-Top-Image-Experience-Barbershop.jpg', alt: 'Premium service', category: 'Experience' },
+            { id: '3', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f268e708dc07112e544a_Center-Bottom-Image-Experience-Barbershop.jpg', alt: 'Master barber at work', category: 'Experience' },
+            { id: '4', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f2f605de392c9d02f20b_Right-Image-Experience-Barbershop.jpg', alt: 'Classic shave', category: 'Experience' },
           ],
           primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
           video: { type: 'youtube', id: 'sCurGlAOFIw' },
@@ -1252,7 +1252,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
         },
-        style: { background: 'custom', paddingY: 'xl', customBgColor: '#121212', backgroundImage: { url: 'https://images.unsplash.com/photo-1585747860019-8e8ef67e8ed8?w=1600&q=80', overlayColor: '#000000', overlayOpacity: 0.7 } },
+        style: { background: 'custom', paddingY: 'xl', customBgColor: '#121212', textColor: '#FFFFFF', backgroundImage: { url: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f2b6a7b90cfd94ae18b4_Left-Image-Experience-Barbershop.jpg', overlayColor: '#000000', overlayOpacity: 0.7 } },
         visible: true,
       },
 
@@ -1263,10 +1263,10 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           title: 'Why choose us',
           text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
-            { id: '1', icon: '👨', title: 'Top Barbers', description: 'A mollis pretium sagittis iaculis quam lacus nulla nullam pharetra quis fermentum ipsum phasellus sit.' },
-            { id: '2', icon: '💎', title: 'Premium services', description: 'Nulla leo velit feugiat in consequat accumsan est enim mi consectetur dis pulvinar venenatis dapibus.' },
+            { id: '1', icon: 'user', title: 'Top Barbers', description: 'A mollis pretium sagittis iaculis quam lacus nulla nullam pharetra quis fermentum ipsum phasellus sit.' },
+            { id: '2', icon: 'gem', title: 'Premium services', description: 'Nulla leo velit feugiat in consequat accumsan est enim mi consectetur dis pulvinar venenatis dapibus.' },
           ],
-          image: { src: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80', alt: 'Barber at work' },
+          image: { src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635302fb0af27dbf66bd5e74_Image-barbershop-choosing.jpg', alt: 'Barber at work' },
           primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
         },
         style: { background: 'white', paddingY: 'xl' },
@@ -1280,9 +1280,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           title: 'Browse our products',
           subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
-            { id: '1', name: 'Beard & mustache care oil', price: '$19.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?w=600&q=80', href: '/product/beard-mustache-care-oil' },
-            { id: '2', name: 'Beard & hair serum', price: '$49.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600&q=80', href: '/product/beard-hair-serum' },
-            { id: '3', name: 'Premium Hair Clay', price: '$29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1597854710119-ab0269e0e1f0?w=600&q=80', href: '/product/premium-hair-clay' },
+            { id: '1', name: 'Beard & mustache care oil', price: '$ 19.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/6353172e41400e47f4b2fb08_Glass-dropper-bottle-%26-tube.png', href: '/product/beard-mustache-care-oil' },
+            { id: '2', name: 'Beard & hair serum', price: '$ 49.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317abd7135d5db1e806e2_Cosmetic-packaging-kit-with-kraft-mailer-box.png', href: '/product/beard-hair-serum' },
+            { id: '3', name: 'Premium Hair Clay', price: '$ 29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317bbcef9162eb3edfdcc_Amber-cosmetic-bottle-packaging.png', href: '/product/premium-hair-clay' },
           ],
           primaryButton: { label: 'Browse all products', href: '/shop', variant: 'outline' },
         },
@@ -1297,8 +1297,8 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           title: 'What our clients say',
           subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.',
           items: [
-            { id: '1', quote: 'this barber shop is simply awesome', description: 'Et proin ut in dignissim sem non a nullam magna lectus urna et dui quam tellus imperdiet sit purus at fringilla scelerisque diam amet fermentum orci fringilla aliquet nulla lectus erat eu auctor diam potenti turpis interdum eu.', author: 'John Carter', role: 'Client', company: 'Los angeles, CA.', rating: 5 },
-            { id: '2', quote: 'The best barber shop I\'ve ever been', description: 'Et proin ut in dignissim sem non a nullam magna lectus urna et dui quam tellus imperdiet sit purus at fringilla scelerisque diam amet fermentum orci fringilla aliquet nulla lectus erat eu auctor diam potenti turpis interdum eu.', author: 'Sam Houston', role: 'Client', company: 'Los angeles, CA.', rating: 5 },
+            { id: '1', quote: 'this barber shop is simply awesome', description: 'Et proin ut in dignissim sem non a nullam magna lectus urna et dui quam tellus imperdiet sit purus at fringilla scelerisque diam amet fermentum orci fringilla aliquet nulla lectus erat eu auctor diam potenti turpis interdum eu.', author: 'John Carter', company: 'Los angeles, CA.', avatar: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63531ceb14dc4f7751c93706_Testimonials.jpg', rating: 5 },
+            { id: '2', quote: 'The best barber shop I\'ve ever been', description: 'Et proin ut in dignissim sem non a nullam magna lectus urna et dui quam tellus imperdiet sit purus at fringilla scelerisque diam amet fermentum orci fringilla aliquet nulla lectus erat eu auctor diam potenti turpis interdum eu.', author: 'Sam Houston', company: 'Los angeles, CA.', avatar: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353222a4d0d416ddf8e4360_Image-testimonials.jpg', rating: 5 },
           ],
           primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
         },
@@ -1332,14 +1332,14 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       {
         type: 'site-footer', variant: 'luxe',
         content: {
-          logo: 'Beard X',
+          logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg',
           tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.',
           copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow',
           columns: [
-            { id: '1', title: 'Menu', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }] },
-            { id: '2', title: 'Hours', links: [{ id: '1', label: 'Mon-Fri: 8am - 7pm', href: '#' }, { id: '2', label: 'Sat-Sun: 10am - 5pm', href: '#' }] },
+            { id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] },
+            { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] },
           ],
-          socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' },
+          socials: { facebook: 'https://www.facebook.com/', twitter: 'https://www.twitter.com/', instagram: 'https://www.instagram.com/', youtube: 'https://www.youtube.com/', pinterest: 'https://www.pinterest.com' },
         },
         style: { background: 'dark', paddingY: 'none' },
         visible: true,
@@ -1355,7 +1355,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         slug: '/about',
         title: 'About',
         sections: [
-          { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+          { type: 'site-header', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', links: [{ id: '1', label: 'Home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
           {
             type: 'hero', variant: 'luxe',
             content: {
@@ -1395,29 +1395,29 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             content: {
               title: 'How we started our barber shop',
               text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget integer mi fermentum.',
-              image: { src: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80', alt: 'Barber at work' },
-              primaryButton: { label: 'mEET OUR TEAM', href: '#Team', variant: 'primary' },
+              image: { src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6356b2f0356e57aad870b04f_Image-right-about-barbershop-started-our-barber-shop.jpg', alt: 'Barber at work' },
+              primaryButton: { label: 'MEET OUR TEAM', href: '#Team', variant: 'primary' },
             },
             style: { background: 'white', paddingY: 'xl' },
             visible: true,
           },
           {
-            type: 'features', variant: 'luxe-grid',
+            type: 'team', variant: 'luxe-grid',
             content: {
               title: 'Meet Our Team',
               subtitle: 'Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum.',
-              items: [
-                { id: '1', icon: '👨‍🦱', title: 'John Carter', description: 'Owner & Master Barber' },
-                { id: '2', icon: '👨', title: 'Phil Houston', description: 'Master Barber' },
-                { id: '3', icon: '👨‍🦰', title: 'Frances Willem', description: 'Master Barber' },
+              members: [
+                { id: '1', name: 'John Carter', role: 'Owner & Master Barber', avatar: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/6356bf9c583d4150989357c6_John%20Carter.jpg' },
+                { id: '2', name: 'Phil Houston', role: 'Master Barber', avatar: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/6356bf946350fc3b9dc21d62_Phil%20Houston.jpg' },
+                { id: '3', name: 'Frances Willem', role: 'Master Barber', avatar: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/6356bf89b233b5c9bf83d113_Frances%20Willem.jpg' },
               ],
             },
             style: { background: 'light', paddingY: 'xl' },
             visible: true,
           },
-          { type: 'gallery-grid', variant: 'luxe-grid', content: { title: 'Follow us on instagram', items: [{ id: '1', title: 'Instagram 1', category: 'Instagram' }, { id: '2', title: 'Instagram 2', category: 'Instagram' }, { id: '3', title: 'Instagram 3', category: 'Instagram' }, { id: '4', title: 'Instagram 4', category: 'Instagram' }, { id: '5', title: 'Instagram 5', category: 'Instagram' }], primaryButton: { label: 'Follow us', href: 'https://www.instagram.com/', variant: 'outline' } }, style: { background: 'white', paddingY: 'lg' }, visible: true },
+          { type: 'gallery-grid', variant: 'luxe-grid', content: { title: 'Follow us on instagram', items: [{ id: '1', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353262d71b74a7c9aec6273_Image-barbershop-men-01.jpg', alt: 'Instagram 1', category: 'Instagram' }, { id: '2', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63532603db028e692e7bd202_Handsome-man-cutting-beard-barber-salon%201.jpg', alt: 'Instagram 2', category: 'Instagram' }, { id: '3', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353261dd7638b80bb954e95_handsome-man-cutting-beard-barber-salon%202.png', alt: 'Instagram 3', category: 'Instagram' }, { id: '4', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635326365ee93e1f49821d0e_Handsome-man-cutting-beard-barber-salon.png', alt: 'Instagram 4', category: 'Instagram' }, { id: '5', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353262573ae728269cab801_Image-barbershop-machine.jpg', alt: 'Instagram 5', category: 'Instagram' }], primaryButton: { label: 'Follow us', href: 'https://www.instagram.com/', variant: 'outline' } }, style: { background: 'white', paddingY: 'lg' }, visible: true },
           { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'light', paddingY: 'lg' }, visible: true },
-          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow', columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] }, { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow', columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] }, { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] }], socials: { facebook: 'https://www.facebook.com/', twitter: 'https://www.twitter.com/', instagram: 'https://www.instagram.com/', youtube: 'https://www.youtube.com/', pinterest: 'https://www.pinterest.com' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
 
@@ -1426,29 +1426,30 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         slug: '/services',
         title: 'Services',
         sections: [
-          { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+          { type: 'site-header', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', links: [{ id: '1', label: 'Home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
           {
             type: 'features', variant: 'luxe-grid',
             content: {
               title: 'Our Services',
               subtitle: 'Eun in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam.',
+              // Note: Services page uses different subtitle from homepage
               items: [
-                { id: '1', icon: '✂️', title: 'Classic Haircut — $37 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
-                { id: '2', icon: '🧔', title: 'Beard Trim — $25 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
-                { id: '3', icon: '👦', title: 'kids haircut — $26 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
-                { id: '4', icon: '🪒', title: 'Neck shave — $12 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
-                { id: '5', icon: '💆', title: 'scalp Moisturizing — $55 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
-                { id: '6', icon: '🧖', title: 'beard grooming & spa — $46 USD', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.' },
+                { id: '1', icon: 'scissors', title: 'Classic Haircut', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$37 USD' },
+                { id: '2', icon: 'scissors', title: 'Beard Trim', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$25 USD' },
+                { id: '3', icon: 'scissors', title: 'kids haircut', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$26 USD' },
+                { id: '4', icon: 'scissors', title: 'Neck shave', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$12 USD' },
+                { id: '5', icon: 'droplets', title: 'scalp Moisturizing', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$55 USD' },
+                { id: '6', icon: 'sparkles', title: 'beard grooming & spa', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$46 USD' },
               ],
-              primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
-              secondaryButton: { label: 'More About us', href: '/about', variant: 'outline' },
+              primaryButton: { label: 'More About us', href: '/about', variant: 'outline' },
+              secondaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
             },
             style: { background: 'light', paddingY: 'xl' },
             visible: true,
           },
-          { type: 'gallery-grid', variant: 'luxe-grid', content: { title: 'Follow us on instagram', items: [{ id: '1', title: 'Instagram 1', category: 'Instagram' }, { id: '2', title: 'Instagram 2', category: 'Instagram' }, { id: '3', title: 'Instagram 3', category: 'Instagram' }, { id: '4', title: 'Instagram 4', category: 'Instagram' }, { id: '5', title: 'Instagram 5', category: 'Instagram' }], primaryButton: { label: 'Follow us', href: 'https://www.instagram.com/', variant: 'outline' } }, style: { background: 'light', paddingY: 'lg' }, visible: true },
+          { type: 'gallery-grid', variant: 'luxe-grid', content: { title: 'Follow us on instagram', items: [{ id: '1', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353262d71b74a7c9aec6273_Image-barbershop-men-01.jpg', alt: 'Instagram 1', category: 'Instagram' }, { id: '2', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63532603db028e692e7bd202_Handsome-man-cutting-beard-barber-salon%201.jpg', alt: 'Instagram 2', category: 'Instagram' }, { id: '3', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353261dd7638b80bb954e95_handsome-man-cutting-beard-barber-salon%202.png', alt: 'Instagram 3', category: 'Instagram' }, { id: '4', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635326365ee93e1f49821d0e_Handsome-man-cutting-beard-barber-salon.png', alt: 'Instagram 4', category: 'Instagram' }, { id: '5', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353262573ae728269cab801_Image-barbershop-machine.jpg', alt: 'Instagram 5', category: 'Instagram' }], primaryButton: { label: 'Follow us', href: 'https://www.instagram.com/', variant: 'outline' } }, style: { background: 'light', paddingY: 'lg' }, visible: true },
           { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'white', paddingY: 'lg' }, visible: true },
-          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow', columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] }, { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow', columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] }, { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] }], socials: { facebook: 'https://www.facebook.com/', twitter: 'https://www.twitter.com/', instagram: 'https://www.instagram.com/', youtube: 'https://www.youtube.com/', pinterest: 'https://www.pinterest.com' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
 
@@ -1457,7 +1458,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         slug: '/contact',
         title: 'Contact',
         sections: [
-          { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+          { type: 'site-header', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', links: [{ id: '1', label: 'Home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
           {
             type: 'contact', variant: 'luxe-with-info',
             content: {
@@ -1476,13 +1477,13 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             content: {
               title: 'Send us a message',
               fields: [
-                { id: '1', label: 'Name', type: 'text', placeholder: 'Your name', required: true },
-                { id: '2', label: 'Email', type: 'email', placeholder: 'Your email', required: true },
-                { id: '3', label: 'Phone', type: 'tel', placeholder: 'Your phone', required: false },
-                { id: '4', label: 'Message', type: 'textarea', placeholder: 'Your message', required: true },
+                { id: '1', label: 'Name', name: 'name', type: 'text', placeholder: 'Your name', required: true, width: 'full' },
+                { id: '2', label: 'Email', name: 'email', type: 'email', placeholder: 'Your email', required: true, width: 'half' },
+                { id: '3', label: 'Phone', name: 'phone', type: 'tel', placeholder: 'Your phone', required: false, width: 'half' },
+                { id: '4', label: 'Message', name: 'message', type: 'textarea', placeholder: 'Your message', required: true, width: 'full' },
               ],
               submitLabel: 'Send message',
-              successMessage: 'Thanks for reaching out. We will get back to you soon.',
+              successMessage: 'Thank you. Thanks for reaching out. We will get back to you soon.',
             },
             style: { background: 'light', paddingY: 'xl' },
             visible: true,
@@ -1492,9 +1493,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             content: {
               title: 'More locations',
               items: [
-                { id: '1', icon: '📍', title: 'Los Angeles, CA', description: '4841 Oakway Lane, Los angeles, ca, 90017\nmon-fri / 8:00 am - 7:00 pm | sat-sun / 10:00 am - 5:00 pm\n(917) - 707 - 9336 | (818) - 323 - 2528' },
-                { id: '2', icon: '📍', title: 'New york, NY', description: '1344 Hanover Street, New york, NY, 10016\nmon-fri / 8:00 am - 7:00 pm | sat-sun / 10:00 am - 5:00 pm\n(337) - 352 - 8177 | (646) - 200 - 7591' },
-                { id: '3', icon: '📍', title: 'San francisco, CA', description: '4895 Wolf Pen Road, San Francisco, CA, 94107\nmon-fri / 8:00 am - 7:00 pm | sat-sun / 10:00 am - 5:00 pm\n(254) - 123 - 1190 | (254) - 321 - 9011' },
+                { id: '1', icon: 'map-pin', title: 'Los Angeles, CA', description: '4841 Oakway Lane, Los angeles, ca, 90017\nmon-fri / 8:00 am - 7:00 pm | sat-sun / 10:00 am - 5:00 pm\n(917) - 707 - 9336 | (818) - 323 - 2528' },
+                { id: '2', icon: 'map-pin', title: 'New york, NY', description: '1344 Hanover Street, New york, NY, 10016\nmon-fri / 8:00 am - 7:00 pm | sat-sun / 10:00 am - 5:00 pm\n(337) - 352 - 8177 | (646) - 200 - 7591' },
+                { id: '3', icon: 'map-pin', title: 'San francisco, CA', description: '4895 Wolf Pen Road, San Francisco, CA, 94107\nmon-fri / 8:00 am - 7:00 pm | sat-sun / 10:00 am - 5:00 pm\n(254) - 123 - 1190 | (254) - 321 - 9011' },
               ],
             },
             style: { background: 'white', paddingY: 'xl' },
@@ -1516,7 +1517,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             visible: true,
           },
           { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'white', paddingY: 'lg' }, visible: true },
-          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow', columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] }, { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow', columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] }, { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] }], socials: { facebook: 'https://www.facebook.com/', twitter: 'https://www.twitter.com/', instagram: 'https://www.instagram.com/', youtube: 'https://www.youtube.com/', pinterest: 'https://www.pinterest.com' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
 
@@ -1525,7 +1526,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         slug: '/blog',
         title: 'Blog',
         sections: [
-          { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+          { type: 'site-header', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', links: [{ id: '1', label: 'Home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
           {
             type: 'hero', variant: 'luxe',
             content: {
@@ -1538,9 +1539,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             type: 'blog-grid', variant: 'luxe-featured',
             content: {
               items: [
-                { id: '1', title: 'How to keep your razors sharp as brand new', category: 'Tips', date: 'Oct 24, 2022' },
-                { id: '2', title: 'Gel vs pomade, Which one is the right for me', category: 'Articles', date: 'Oct 31, 2022' },
-                { id: '3', title: '7 Trends to change your look in 2023', category: 'Articles', date: 'Oct 31, 2022' },
+                { id: '1', title: 'How to keep your razors sharp as brand new', category: 'Tips', date: 'Oct 24, 2022', slug: '/blog/how-to-keep-your-razors-sharp-as-brand-new', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/6356e4aa16f821178987d76b_How%20to%20keep%20your%20razors%20sharp%20as%20brand%20new.jpg' },
+                { id: '2', title: 'Gel vs pomade, Which one is the right for me', category: 'Articles', date: 'Oct 31, 2022', slug: '/blog/gel-vs-pomade-which-one-is-the-right-for-me' },
+                { id: '3', title: '7 Trends to change your look in 2023', category: 'Articles', date: 'Oct 31, 2022', slug: '/blog/7-trends-to-change-your-look-in-2023' },
               ],
             },
             style: { background: 'light', paddingY: 'xl' },
@@ -1551,17 +1552,17 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             content: {
               title: 'Latest Posts',
               items: [
-                { id: '1', title: 'How to keep your razors sharp as brand new', category: 'Tips', date: 'Oct 24, 2022' },
-                { id: '2', title: '5 BEST WAYS TO MANTAIN YOUR BEARD & MUSTACHE', category: 'News', date: 'Oct 24, 2022' },
-                { id: '3', title: 'Gel vs pomade, Which one is the right for me', category: 'Articles', date: 'Oct 24, 2022' },
-                { id: '4', title: '10 Tips to keep your hair clean for longer', category: 'Tips', date: 'Oct 24, 2022' },
+                { id: '1', title: 'How to keep your razors sharp as brand new', category: 'Tips', date: 'Oct 24, 2022', slug: '/blog/how-to-keep-your-razors-sharp-as-brand-new' },
+                { id: '2', title: '5 BEST WAYS TO MANTAIN YOUR BEARD & MUSTACHE', category: 'News', date: 'Oct 24, 2022', slug: '/blog/5-best-ways-to-mantain-your-beard-mustache' },
+                { id: '3', title: 'Gel vs pomade, Which one is the right for me', category: 'Articles', date: 'Oct 24, 2022', slug: '/blog/gel-vs-pomade-which-one-is-the-right-for-me' },
+                { id: '4', title: '10 Tips to keep your hair clean for longer', category: 'Tips', date: 'Oct 24, 2022', slug: '/blog/10-tips-to-keep-your-hair-clean-for-longer' },
               ],
             },
             style: { background: 'white', paddingY: 'xl' },
             visible: true,
           },
           { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'light', paddingY: 'lg' }, visible: true },
-          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow', columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] }, { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow', columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] }, { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] }], socials: { facebook: 'https://www.facebook.com/', twitter: 'https://www.twitter.com/', instagram: 'https://www.instagram.com/', youtube: 'https://www.youtube.com/', pinterest: 'https://www.pinterest.com' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
 
@@ -1570,12 +1571,13 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         slug: '/shop',
         title: 'Shop',
         sections: [
-          { type: 'site-header', variant: 'luxe', content: { logo: 'Beard X', links: [{ id: '1', label: 'Home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+          { type: 'site-header', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', links: [{ id: '1', label: 'Home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
           {
             type: 'hero', variant: 'luxe',
             content: {
               title: 'Browse our products',
               subtitle: 'Lorem amet sem ipsum tellus massa est lectus venenatis leo sapien condimentum rhoncus in a ullamcorper ullamcorper libero mauris pharetra massa elementum ut nisl suspendisse at at non tempus vestibulum arcu facilisi senectus dis facilisis aliquet.',
+              // Note: Shop page hero uses different body text from other pages
             },
             style: { background: 'white', paddingY: 'lg' },
             visible: true,
@@ -1584,19 +1586,19 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             type: 'product-grid', variant: 'luxe-grid',
             content: {
               items: [
-                { id: '1', name: 'Beard & mustache care oil', price: '$19.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?w=600&q=80' },
-                { id: '2', name: 'Beard & hair serum', price: '$49.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600&q=80' },
-                { id: '3', name: 'Premium Hair Clay', price: '$29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1597854710119-ab0269e0e1f0?w=600&q=80' },
-                { id: '4', name: 'Grooming hair shampoo', price: '$29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?w=600&q=80' },
-                { id: '5', name: 'Premium matte pomade', price: '$39.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1585751119414-ef2636f8aede?w=600&q=80' },
-                { id: '6', name: 'Grooming hair Conditioning', price: '$29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80' },
+                { id: '1', name: 'Beard & mustache care oil', price: '$ 19.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/6353172e41400e47f4b2fb08_Glass-dropper-bottle-%26-tube.png' },
+                { id: '2', name: 'Beard & hair serum', price: '$ 49.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317abd7135d5db1e806e2_Cosmetic-packaging-kit-with-kraft-mailer-box.png' },
+                { id: '3', name: 'Premium Hair Clay', price: '$ 29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317bbcef9162eb3edfdcc_Amber-cosmetic-bottle-packaging.png' },
+                { id: '4', name: 'Grooming hair shampoo', price: '$ 29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317c8db028ea9f87bf8fe_Hard-shadow-amber-cosmetic-package.png' },
+                { id: '5', name: 'Premium matte pomade', price: '$ 39.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317d6db028e73027bf966_Men-care-products.png' },
+                { id: '6', name: 'Grooming hair Conditioning', price: '$ 29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317e0cef916f14bedfef9_Amber-cosmetic-bottle-packagin.png' },
               ],
             },
             style: { background: 'light', paddingY: 'xl' },
             visible: true,
           },
           { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'white', paddingY: 'lg' }, visible: true },
-          { type: 'site-footer', variant: 'luxe', content: { logo: 'Beard X', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow', columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] }, { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] }], socials: { facebook: '#', twitter: '#', instagram: '#', youtube: '#', pinterest: '#' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'site-footer', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.', copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow', columns: [{ id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] }, { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] }], socials: { facebook: 'https://www.facebook.com/', twitter: 'https://www.twitter.com/', instagram: 'https://www.instagram.com/', youtube: 'https://www.youtube.com/', pinterest: 'https://www.pinterest.com' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
     ],
