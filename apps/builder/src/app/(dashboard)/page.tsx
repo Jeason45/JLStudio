@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { StartBuildingCard } from '@/components/dashboard/StartBuildingCard'
 import { PopularTemplates } from '@/components/dashboard/PopularTemplates'
 
+export const dynamic = 'force-dynamic'
+
 export default async function DashboardPage() {
   let sites: Awaited<ReturnType<typeof getAllSites>> = []
   try {
