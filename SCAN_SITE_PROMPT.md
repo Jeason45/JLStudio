@@ -9,6 +9,117 @@ Ton objectif : analyser le site cible (URL + screenshots fournis) et produire un
 
 ---
 
+## WORKFLOW OBLIGATOIRE — À SUIVRE POUR CHAQUE NOUVEAU SITE
+
+Avant toute analyse, suivre ces étapes dans l'ordre strict.
+Ne pas sauter d'étape. Ne pas commencer l'analyse sans avoir
+complété le scan.
+
+### ÉTAPE 1 — SCANNER LE SITE
+
+Lance le scan Playwright qui fait tout automatiquement :
+  node scripts/scan-site.js [URL DU SITE]
+
+Ce script génère automatiquement dans scripts/scans/[slug]/ :
+  - raw-data.json        → données CSS, computed styles,
+                           animations, fonts, librairies JS
+  - scan-report.md       → rapport textuel du scan
+  - screenshots/         → screenshots de chaque section
+                           (nommage : section-01-hero.png, etc.)
+  - frames/desktop/      → 1 frame toutes les 0.5s (scroll complet)
+  - frames/mobile/       → idem en viewport mobile (390x844)
+  - video-desktop.webm   → enregistrement vidéo desktop (1440x900)
+  - video-mobile.webm    → enregistrement vidéo mobile (390x844)
+
+Attendre que le scan soit COMPLÈTEMENT terminé avant de continuer.
+
+### ÉTAPE 2 — ANALYSER LES DONNÉES
+
+Une fois le scan terminé, analyser dans cet ordre :
+
+1. Lire raw-data.json en entier
+   → Computed styles, fonts, CSS variables, animations détectées
+
+2. Analyser les screenshots/ section par section
+   → Identifier le type, le layout, le background, le contenu
+
+3. Analyser les frames consécutives dans frames/desktop/
+   → Comparer frame-000 vs frame-005 : qu'est-ce qui bouge ?
+   → Comparer frame-010 vs frame-015 : animations entrance ?
+   → Comparer frame-020 vs frame-025 : stagger sur cards ?
+   → Détecter : parallax, fade-in, smooth scroll, counters, marquee
+
+4. Analyser frames/mobile/ pour les différences responsive
+
+5. Effectuer toutes les passes définies dans ce prompt
+   (PASSE 0 à PASSE 6)
+
+### ÉTAPE 3 — GÉNÉRER output.json
+
+En utilisant ce prompt comme guide, générer output.json
+au format PageTemplate du configurateur.
+Sauvegarder dans : scripts/scans/[slug]/output.json
+
+### ÉTAPE 4 — LANCER LA BOUCLE D'AUTO-AMÉLIORATION
+
+Lancer jusqu'à 5 itérations ou score ≥ 95% :
+  - Audit du JSON produit
+  - Correction des problèmes identifiés
+  - Mise à jour de SCAN_SITE_PROMPT.md avec nouvelles règles génériques
+  - Régénération du JSON
+
+### ÉTAPE 5 — IMPORTER DANS LE CONFIGURATEUR
+
+Nouveau site :
+  node scripts/import-template.js scripts/scans/[slug]/output.json
+
+Mettre à jour un site existant :
+  node scripts/import-template.js scripts/scans/[slug]/output.json \
+  --site-id [SITE-ID]
+
+L'URL du site créé sera retournée par le script.
+
+### ÉTAPE 6 — SCREENSHOTTER ET COMPARER
+
+Prendre les screenshots du résultat dans le configurateur :
+  node scripts/screenshot-site.js [SITE-ID] \
+  scripts/scans/[slug]/comparison
+
+Générer le diff-report :
+  node scripts/compare-screenshots.js scripts/scans/[slug]
+
+Lire le diff-report.md et identifier les écarts visuels.
+
+### ÉTAPE 7 — CORRIGER ET RÉIMPORTER
+
+Pour chaque écart identifié dans le diff-report :
+1. Corriger output.json
+2. Mettre à jour SCAN_SITE_PROMPT.md avec une règle générique
+3. Réimporter avec --site-id pour mettre à jour le site existant
+4. Relancer les screenshots et comparer
+
+Répéter jusqu'à satisfaction visuelle.
+
+### ÉTAPE 8 — NETTOYER
+
+Après validation finale :
+  node scripts/cleanup-frames.js scripts/scans/[slug]
+
+### ÉTAPE 9 — GIT COMMIT
+
+Quand tout est validé et satisfaisant :
+  git add .
+  git commit -m "feat: template [nom du site]"
+  git push
+
+---
+
+IMPORTANT : Ce workflow s'applique à CHAQUE nouveau site scanné.
+Les scripts font le travail technique automatiquement.
+Claude se concentre sur l'analyse et la génération du JSON.
+
+---
+
 ## PARTIE 1 — MAPPING VERS LE CONFIGURATEUR (INTERFACES RÉELLES)
 
 **CRITIQUE** : Le JSON que tu produis doit mapper DIRECTEMENT vers les interfaces TypeScript du configurateur. Ne pas inventer de champs — utiliser uniquement les valeurs acceptées.
