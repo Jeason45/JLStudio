@@ -8,6 +8,7 @@ import { Image, Bed, Bath, Ruler } from 'lucide-react'
 import { elementProps } from '@/lib/elementHelpers'
 import { LightboxOverlay } from '@/components/ui/LightboxOverlay'
 import { BrixsaViewCursor } from '../_BrixsaViewCursor'
+import { DecorativeOrnament } from '../_DecorativeOrnament'
 
 export function GallerySection({ config }: { config: SectionConfig }) {
   const content = (config.content ?? {}) as Partial<GalleryContent & { enableLightbox?: boolean }>
@@ -181,13 +182,15 @@ export function GallerySection({ config }: { config: SectionConfig }) {
 
   if (universe === 'luxe') {
     const gold = accentColor ?? '#b8860b'
+    const hasDecorativeIcon = !!content.decorativeIcon
 
     const title = content.title && (
       <div className="text-center mb-14 space-y-4">
-        <h2 {...elementProps(config.id, 'title', 'heading')} className="text-3xl md:text-4xl font-light text-zinc-900 tracking-tight" style={customTextColor ? { color: customTextColor } : undefined}>
+        {hasDecorativeIcon && <DecorativeOrnament color={gold} />}
+        <h2 {...elementProps(config.id, 'title', 'heading')} className="text-3xl md:text-4xl font-black text-zinc-900 tracking-tight" style={customTextColor ? { color: customTextColor } : undefined}>
           {content.title}
         </h2>
-        <div className="w-12 h-px mx-auto" style={{ background: gold }} />
+        {!hasDecorativeIcon && <div className="w-12 h-px mx-auto" style={{ background: gold }} />}
       </div>
     )
 

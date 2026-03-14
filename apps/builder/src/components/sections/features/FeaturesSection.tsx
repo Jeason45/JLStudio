@@ -9,6 +9,7 @@ import { Check, ArrowRight, Star } from 'lucide-react'
 import { DynamicIcon } from '@/components/ui/DynamicIcon'
 import { getTitleSizeClass, getTextAlignClass } from '../_utils'
 import { EditablePlaceholder } from '../_EditablePlaceholder'
+import { DecorativeOrnament } from '../_DecorativeOrnament'
 
 interface FeaturesSectionProps {
   config: SectionConfig
@@ -238,20 +239,22 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
   if (universe === 'luxe') {
     const gold = accentColor ?? '#b8860b'
     const layout = variant.replace('luxe-', '')
+    const hasDecorativeIcon = !!content.decorativeIcon
 
     const header = (
       <div className={cn("text-center mb-16 space-y-5", textAlign && getTextAlignClass(textAlign))}>
+        {hasDecorativeIcon && <DecorativeOrnament color={gold} />}
         {eyebrow ? (
           <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-xs tracking-[0.25em] uppercase font-light" style={{ color: gold }}>
             {eyebrow}
           </span>
         ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="eyebrow" type="badge" className="mb-4" />}
         {title && (
-          <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light text-zinc-900 leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={customTextColor ? { color: customTextColor } : undefined}>
+          <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-black text-zinc-900 leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={customTextColor ? { color: customTextColor } : undefined}>
             {title}
           </h2>
         )}
-        <div className="w-12 h-px mx-auto" style={{ background: gold }} />
+        {!hasDecorativeIcon && <div className="w-12 h-px mx-auto" style={{ background: gold }} />}
         {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base text-zinc-400 max-w-xl mx-auto tracking-wide font-light">{subtitle}</p>}
       </div>
     )
@@ -265,7 +268,7 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
               {items.map((item, i) => (
                 <div key={item.id} className="text-center space-y-4">
-                  <DynamicIcon name={item.icon} className="w-7 h-7" fallbackClassName="text-2xl leading-none" />
+                  <DynamicIcon name={item.icon} className="w-7 h-7 mx-auto" fallbackClassName="text-2xl leading-none" style={{ color: gold }} />
                   <div className="w-8 h-px mx-auto" style={{ background: gold }} />
                   <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-medium text-zinc-900 tracking-wide text-sm uppercase">{item.title}</h3>
                   <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm text-zinc-400 leading-relaxed font-light">{item.description}</p>

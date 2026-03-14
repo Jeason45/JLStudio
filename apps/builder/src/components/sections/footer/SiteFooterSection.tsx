@@ -67,17 +67,21 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
   // Univers luxe : centré, espacé, accent doré, typographie fine, respirant
   if (variant === 'luxe') {
     const gold = accentColor ?? '#b8860b'
+    const customBg = config.style.customBgColor
     return (
-      <footer className="bg-zinc-950 px-6 pt-20 pb-10" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+      <footer className="bg-zinc-950 px-6 pt-20 pb-10" style={{ fontFamily: 'var(--font-body, inherit)', ...(customBg ? { backgroundColor: customBg } : { backgroundColor: '#09090b' }) }}>
         <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-10">
           <div {...elementProps(config.id, 'logo', 'image')} className="text-2xl font-light tracking-[0.25em] uppercase text-white">{logo}</div>
           {content.tagline && <p className="text-sm text-white/40 max-w-md tracking-wide">{content.tagline}</p>}
           {/* Gold divider */}
           <div className="w-16 h-px" style={{ background: gold }} />
           {/* Nav links */}
-          <nav className="flex flex-wrap justify-center gap-x-8 gap-y-3">
+          <nav className="flex flex-wrap justify-center gap-x-8 gap-y-3" style={{ backgroundColor: 'transparent' }}>
             {columns.flatMap((col, ci) => col.links.map((link, li) => ({ link, ci, li }))).map(({ link, ci, li }) => (
-              <a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} key={link.id} href={link.href} className="text-xs tracking-[0.15em] uppercase text-white/50 hover:text-white transition-colors">
+              <a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} key={`${ci}-${li}-${link.id || link.label}`} href={link.href} className="text-xs tracking-[0.15em] uppercase transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#FFFFFF' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.5)' }}
+              >
                 {link.label}
               </a>
             ))}

@@ -51,6 +51,46 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
     )
   }
 
+  // ─── VARIANT: luxe-transparent ───
+  // Univers luxe transparent : overlay sur hero, logo gauche, nav droite, accents dorés
+  if (variant === 'luxe-transparent') {
+    const gold = accentColor ?? '#b8860b'
+    return (
+      <header className="absolute top-0 left-0 w-full px-6 py-5" style={{ zIndex: 50, fontFamily: 'var(--font-body, inherit)', backgroundColor: 'transparent' }}>
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div {...elementProps(config.id, 'logo', 'image')} className="text-lg font-medium tracking-[0.15em] uppercase" style={{ color: '#FFFFFF' }}>{logo}</div>
+          <nav className="hidden md:flex items-center gap-8" style={{ backgroundColor: 'transparent' }}>
+            {links.map((link, i) => (
+              <a
+                {...elementProps(config.id, `links.${i}.label`, 'link')}
+                key={link.id}
+                href={link.href}
+                className="text-xs tracking-[0.12em] uppercase transition-colors"
+                style={{ color: 'rgba(255,255,255,0.8)' }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#FFFFFF' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.8)' }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+          {ctaLabel && (
+            <a
+              {...elementProps(config.id, 'ctaLabel', 'button')}
+              href={ctaHref}
+              className="hidden md:inline-flex px-5 py-2 text-xs tracking-[0.12em] uppercase font-medium border transition-colors"
+              style={{ borderColor: gold, color: gold, backgroundColor: 'transparent' }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = gold; (e.currentTarget as HTMLElement).style.color = '#1a1a1a' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'; (e.currentTarget as HTMLElement).style.color = gold }}
+            >
+              {ctaLabel}
+            </a>
+          )}
+        </div>
+      </header>
+    )
+  }
+
   // ─── VARIANT: luxe ───
   // Univers luxe / premium : beaucoup d'espace, logo centré, accents dorés, finesse
   if (variant === 'luxe') {
@@ -965,7 +1005,7 @@ export const siteHeaderMeta = {
   type: 'site-header',
   label: 'Header',
   icon: '🧭',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa', 'zmr-agency'],
+  variants: ['startup', 'corporate', 'luxe-transparent', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa', 'zmr-agency'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

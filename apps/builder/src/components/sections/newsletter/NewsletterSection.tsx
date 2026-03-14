@@ -3,6 +3,7 @@ import type { SectionConfig } from '@/types/site'
 import type { NewsletterContent } from '@/types/sections'
 import { getTitleSizeClass, getTextAlignClass } from '../_utils'
 import { elementProps } from '@/lib/elementHelpers'
+import { DecorativeOrnament } from '../_DecorativeOrnament'
 
 export function NewsletterSection({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
   const content = (config.content ?? {}) as Partial<NewsletterContent>
@@ -211,14 +212,16 @@ export function NewsletterSection({ config, isEditing }: { config: SectionConfig
     )
 
     // Centered
+    const hasDecorativeIcon = !!content.decorativeIcon
     if (layout === 'centered') {
       return (
         <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
           <div className={cn("max-w-2xl mx-auto px-6 text-center space-y-6", textAlign && getTextAlignClass(textAlign))}>
+            {hasDecorativeIcon && <DecorativeOrnament color={gold} />}
             {eyebrowEl}
-            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light text-zinc-900 leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-black text-zinc-900 leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))}
                 style={customTextColor ? { color: customTextColor } : undefined}>{title}</h2>
-            <div className="w-12 h-px mx-auto" style={{ background: gold }} />
+            {!hasDecorativeIcon && <div className="w-12 h-px mx-auto" style={{ background: gold }} />}
             {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base text-zinc-400 max-w-xl mx-auto tracking-wide font-light">{subtitle}</p>}
             {count && <div className="text-4xl font-light text-zinc-900">{count}</div>}
             {socialProof && <p className="text-sm text-zinc-400 tracking-wide font-light">{socialProof}</p>}

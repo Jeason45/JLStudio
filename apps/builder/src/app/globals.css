@@ -125,6 +125,12 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* Prevent border/outline leak on SVG elements inside the site canvas */
+  #site-canvas svg,
+  #site-canvas svg * {
+    border: none;
+    outline: none;
+  }
   body {
     @apply bg-background text-foreground;
   }

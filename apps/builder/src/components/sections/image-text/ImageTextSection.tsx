@@ -5,8 +5,10 @@ import { sectionClasses, getTextColorClass, getMutedTextClass, getEyebrowClass, 
 import type { SectionConfig } from '@/types/site'
 import type { ImageTextContent } from '@/types/sections'
 import { Image, ArrowRight, Check } from 'lucide-react'
+import { DynamicIcon } from '@/components/ui/DynamicIcon'
 import { elementProps } from '@/lib/elementHelpers'
 import { EditablePlaceholder } from '../_EditablePlaceholder'
+import { DecorativeOrnament } from '../_DecorativeOrnament'
 import { useBrixsaScrollReveal, useBrixsaCounter } from '@/hooks/useBrixsaScrollReveal'
 
 export function ImageTextSection({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
@@ -149,25 +151,51 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
 
   if (universe === 'luxe') {
     const gold = accentColor ?? '#b8860b'
+    const hasDecorativeIcon = !!content.decorativeIcon
 
     return (
       <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
         <div className={cn('max-w-5xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-16', isLeft && 'lg:flex-row-reverse')}>
           {/* Text */}
           <div className="flex-1 space-y-6">
+            {hasDecorativeIcon && <DecorativeOrnament color={gold} className="justify-start" />}
             {content.eyebrow && (
               <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-xs tracking-[0.25em] uppercase font-light" style={{ color: gold }}>
                 {content.eyebrow}
               </span>
             )}
             {content.title && (
-              <h2 {...elementProps(config.id, 'title', 'heading')} className="text-3xl md:text-4xl font-light text-zinc-900 tracking-tight leading-tight" style={customTextColor ? { color: customTextColor } : undefined}>
+              <h2 {...elementProps(config.id, 'title', 'heading')} className="text-3xl md:text-4xl font-black text-zinc-900 tracking-tight leading-tight" style={customTextColor ? { color: customTextColor } : undefined}>
                 {content.title}
               </h2>
             )}
-            <div className="w-12 h-px" style={{ background: gold }} />
+            {!hasDecorativeIcon && <div className="w-12 h-px" style={{ background: gold }} />}
             {content.subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base text-zinc-400 tracking-wide font-light">{content.subtitle}</p>}
             {content.body && <p {...elementProps(config.id, 'body', 'text')} className="text-sm text-zinc-400 leading-relaxed font-light tracking-wide">{content.body}</p>}
+            {content.items && content.items.length > 0 && (
+              <div className="space-y-4 pt-2">
+                {content.items.map((item) => (
+                  <div key={item.id} className="flex items-start gap-4">
+                    <div
+                      className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full mt-0.5"
+                      style={{ backgroundColor: `${gold}15`, border: `1px solid ${gold}30` }}
+                    >
+                      {item.icon ? (
+                        <DynamicIcon name={item.icon} className="w-3.5 h-3.5" fallbackClassName="text-xs leading-none" style={{ color: gold }} />
+                      ) : (
+                        <Check className="w-3.5 h-3.5" style={{ color: gold }} />
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-zinc-800 tracking-wide">{item.title}</p>
+                      {item.description && (
+                        <p className="text-xs text-zinc-400 font-light tracking-wide leading-relaxed mt-0.5">{item.description}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="flex gap-4 flex-wrap pt-2">
               {content.primaryButton && (
                 <a

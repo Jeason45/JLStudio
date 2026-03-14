@@ -7,6 +7,7 @@ import { useSectionCarousel } from '@/hooks/useSectionCarousel'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { getTitleSizeClass, getTextAlignClass } from '../_utils'
 import { elementProps } from '@/lib/elementHelpers'
+import { DecorativeOrnament } from '../_DecorativeOrnament'
 
 interface TestimonialsSectionProps {
   config: SectionConfig
@@ -306,8 +307,11 @@ function CorporateMarquee({ content, items, accent, styleOverrides, sectionId }:
 
 function LuxeHeader({ content, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; styleOverrides?: StyleOverrides; sectionId: string }) {
   const { titleSize, textAlign, textColor } = styleOverrides ?? {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hasDecorativeIcon = !!(content as any).decorativeIcon
   return (
     <div className={cn("mb-16 text-center space-y-4", textAlign && getTextAlignClass(textAlign))}>
+      {hasDecorativeIcon && <DecorativeOrnament color="#b8860b" />}
       {content.eyebrow && (
         <span className="inline-block text-[11px] font-light tracking-[0.25em] uppercase" style={{ color: '#b8860b' }}>
           {content.eyebrow}
@@ -315,11 +319,15 @@ function LuxeHeader({ content, styleOverrides, sectionId }: { content: Partial<T
       )}
       {content.title && (
         <>
-          <div className="flex items-center justify-center gap-4 mb-2">
-            <span className="h-px w-12" style={{ backgroundColor: '#b8860b' }} />
-            <h2 {...elementProps(sectionId, 'title', 'heading')} className={cn("text-3xl md:text-4xl lg:text-5xl font-light tracking-wide text-zinc-900", titleSize && getTitleSizeClass(titleSize))} style={textColor ? { color: textColor } : undefined}>{content.title}</h2>
-            <span className="h-px w-12" style={{ backgroundColor: '#b8860b' }} />
-          </div>
+          {!hasDecorativeIcon ? (
+            <div className="flex items-center justify-center gap-4 mb-2">
+              <span className="h-px w-12" style={{ backgroundColor: '#b8860b' }} />
+              <h2 {...elementProps(sectionId, 'title', 'heading')} className={cn("text-3xl md:text-4xl lg:text-5xl font-black tracking-wide text-zinc-900", titleSize && getTitleSizeClass(titleSize))} style={textColor ? { color: textColor } : undefined}>{content.title}</h2>
+              <span className="h-px w-12" style={{ backgroundColor: '#b8860b' }} />
+            </div>
+          ) : (
+            <h2 {...elementProps(sectionId, 'title', 'heading')} className={cn("text-3xl md:text-4xl lg:text-5xl font-black tracking-wide text-zinc-900", titleSize && getTitleSizeClass(titleSize))} style={textColor ? { color: textColor } : undefined}>{content.title}</h2>
+          )}
         </>
       )}
       {content.subtitle && <p {...elementProps(sectionId, 'subtitle', 'text')} className="text-base max-w-2xl mx-auto text-zinc-400 font-light tracking-wide">{content.subtitle}</p>}

@@ -4,6 +4,7 @@ import type { SectionConfig } from '@/types/site'
 import type { ProductGridContent, ProductItem } from '@/types/sections'
 import { Star, ShoppingCart, Check, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react'
 import { elementProps } from '@/lib/elementHelpers'
+import { DecorativeOrnament } from '../_DecorativeOrnament'
 
 export function ProductGridSection({ config }: { config: SectionConfig }) {
   const content = (config.content ?? {}) as Partial<ProductGridContent>
@@ -13,6 +14,7 @@ export function ProductGridSection({ config }: { config: SectionConfig }) {
   const universe = variant.split('-')[0]
 
   const title = content.title
+  const subtitle = content.subtitle
   const eyebrow = content.eyebrow
 
   // ═══════════════════════════════════════════
@@ -259,20 +261,23 @@ export function ProductGridSection({ config }: { config: SectionConfig }) {
   if (universe === 'luxe') {
     const gold = accentColor ?? '#b8860b'
     const layout = variant.replace('luxe-', '')
+    const hasDecorativeIcon = !!content.decorativeIcon
 
     const header = (
       <div className="text-center mb-16 space-y-5">
+        {hasDecorativeIcon && <DecorativeOrnament color={gold} />}
         {eyebrow && (
           <span className="inline-block text-xs tracking-[0.25em] uppercase font-light" style={{ color: gold }}>
             {eyebrow}
           </span>
         )}
         {title && (
-          <h2 {...elementProps(config.id, 'title', 'heading')} className="text-3xl md:text-4xl font-light text-zinc-900 leading-tight tracking-tight" style={customTextColor ? { color: customTextColor } : undefined}>
+          <h2 {...elementProps(config.id, 'title', 'heading')} className="text-3xl md:text-4xl font-black text-zinc-900 leading-tight tracking-tight" style={customTextColor ? { color: customTextColor } : undefined}>
             {title}
           </h2>
         )}
-        <div className="w-12 h-px mx-auto" style={{ background: gold }} />
+        {!hasDecorativeIcon && <div className="w-12 h-px mx-auto" style={{ background: gold }} />}
+        {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base text-zinc-400 max-w-xl mx-auto tracking-wide font-light">{subtitle}</p>}
       </div>
     )
 

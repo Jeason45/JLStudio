@@ -596,6 +596,7 @@ export interface ImageTextContent {
   imagePosition: 'left' | 'right'
   primaryButton?: ButtonConfig
   secondaryButton?: ButtonConfig
+  items?: Array<{ id: string; icon?: string; title: string; description?: string }>
 }
 
 // ─── PRODUCT HERO ────────────────────────────

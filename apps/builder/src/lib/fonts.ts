@@ -61,7 +61,7 @@ export const FONT_LIST: FontDef[] = [
   { name: 'Josefin Sans', category: 'sans-serif', weights: [400, 600, 700] },
   { name: 'Mulish', category: 'sans-serif', weights: [400, 500, 600, 700] },
   { name: 'Cabin', category: 'sans-serif', weights: [400, 500, 600, 700] },
-  { name: 'Barlow', category: 'sans-serif', weights: [400, 500, 600, 700] },
+  { name: 'Barlow', category: 'sans-serif', weights: [400, 500, 600, 700, 800, 900] },
   { name: 'Lexend', category: 'sans-serif', weights: [400, 500, 600, 700] },
   { name: 'Space Grotesk', category: 'sans-serif', weights: [400, 500, 600, 700] },
   { name: 'Geist', category: 'sans-serif', weights: [400, 500, 600, 700] },

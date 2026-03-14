@@ -95,9 +95,40 @@ export function BrandStyleInjector() {
       if (ff && typeof ff === 'string') fonts.add(ff)
     }
 
+    // Map of non-Google fonts to their Google Font fallbacks
+    const fontFallbacks: Record<string, string> = {
+      'Generalsans': 'Barlow',
+      'General Sans': 'Barlow',
+    }
+
     fonts.forEach(font => {
       const encoded = googleFontsMap[font]
-      if (!encoded) return
+      if (!encoded) {
+        // If not a Google Font, check for a fallback and load that instead
+        const fallback = fontFallbacks[font]
+        if (fallback) {
+          const fallbackEncoded = googleFontsMap[fallback]
+          if (fallbackEncoded) {
+            const id = `gfont-${fallback.replace(/\s+/g, '-').toLowerCase()}`
+            if (!document.getElementById(id)) {
+              const link = document.createElement('link')
+              link.id = id
+              link.rel = 'stylesheet'
+              link.href = `https://fonts.googleapis.com/css2?family=${fallbackEncoded}&display=swap`
+              document.head.appendChild(link)
+            }
+            // Inject CSS to alias the non-Google font name to the fallback
+            const aliasId = `font-alias-${font.replace(/\s+/g, '-').toLowerCase()}`
+            if (!document.getElementById(aliasId)) {
+              const style = document.createElement('style')
+              style.id = aliasId
+              style.textContent = `@font-face { font-family: '${font}'; src: local('${fallback}'); font-display: swap; }`
+              document.head.appendChild(style)
+            }
+          }
+        }
+        return
+      }
       const id = `gfont-${font.replace(/\s+/g, '-').toLowerCase()}`
       if (document.getElementById(id)) return
       const link = document.createElement('link')

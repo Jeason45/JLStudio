@@ -1690,6 +1690,86 @@ PIÈGES COURANTS À ÉVITER
 * Les champs "logo" dans site-header.content et site-footer.content attendent une URL d'image ou un texte
 * Le champ "eyebrow" est un PETIT texte au-dessus du titre (badge, label) — PAS un titre ni un sous-titre
 * Si un texte est en ALL CAPS dans le HTML source mais le CSS a text-transform:none → c'est un texte écrit en MAJUSCULES (copier tel quel). Si le CSS a text-transform:uppercase → c'est le CSS qui transforme (textTransform: "uppercase" dans style)
+* Logo SVG qui ne se rend pas : TOUJOURS ajouter un champ `logoText` en plus du champ `logo` (URL).
+  Le `logoText` est le nom de la marque en texte brut (ex: "BEARD X", "ACME Corp") — sert de fallback
+  si le composant ne sait pas rendre un SVG distant. Applicable à site-header ET site-footer.
+* gallery-grid items DOIVENT avoir un champ `src` avec l'URL de l'image.
+  Un item sans `src` = image vide dans le rendu. Ne pas mettre uniquement `title` et `category`.
+  ❌ { id: '1', title: 'Instagram 1', category: 'Instagram' }
+  ✅ { id: '1', src: 'https://...image.jpg', alt: 'Instagram 1', category: 'Instagram' }
+* Les contenus textuels (titres, labels, boutons) doivent être en UPPERCASE dans le JSON
+  si le site source les affiche en uppercase. Ne pas compter uniquement sur textTransform dans style
+  car certains rendus ne supportent pas cette propriété CSS. Doubler : texte en CAPS + textTransform.
+* Les sections avec `background: 'light'` utilisent la couleur muted du brand (souvent #F5F5F5 par défaut).
+  Si la couleur de fond est un ton crème/beige/custom spécifique → utiliser `background: 'custom'`
+  avec `customBgColor: '#F8F5EF'` (ou la couleur exacte). Ne pas se fier à 'light' pour des fonds non-gris.
+* Icône/illustration décorative au-dessus des titres de section : capturer dans `decorativeIcon` (URL SVG)
+  dans le content de la section. Ce n'est PAS un eyebrow (pas de texte), c'est un ornement visuel.
+  Souvent un motif récurrent (ex: logo simplifié, icône dorée, séparateur). Le même SVG peut être
+  réutilisé sur TOUTES les sections — le capturer une fois et le reproduire sur chaque section concernée.
+* product-grid items : si les cartes produit ont un bouton overlay (ex: "LEARN MORE") → ajouter
+  `ctaLabel: 'LEARN MORE'` dans chaque item. Ne pas ignorer les micro-interactions sur les cartes.
+* Testimonials avec guillemets décoratifs : inclure les guillemets dans le texte du `quote`
+  si visuellement présents (ex: '"THIS IS AMAZING"'). Certains rendus n'ajoutent pas de guillemets
+  automatiquement — mieux vaut les avoir dans le contenu que de les perdre.
+* `accentColor` dans style : couleur utilisée pour les éléments d'accent (icônes, suffixes de stats,
+  séparateurs, boutons hover). Si le site utilise une couleur or/dorée, accent blue, etc. récurrente
+  sur les détails → la capturer dans `accentColor` de CHAQUE section qui l'utilise.
+* `textAlign` dans style : vérifier l'alignement de CHAQUE section titre/sous-titre.
+  Les sections image-text, testimonials, gallery avec titre à gauche + bouton à droite → textAlign: 'left'.
+  Ne pas supposer que tout est centré — regarder les screenshots attentivement.
+  Sections typiquement centrées : hero, cta, newsletter, stats, pricing.
+  Sections typiquement alignées gauche : image-text, testimonials, gallery (quand le titre est à gauche).
+* Footer avec colonnes denses : un footer peut avoir 3+ colonnes visuelles mais certaines n'ont
+  pas de titre (titre vide ""). Capturer CHAQUE colonne séparément, même sans titre.
+  Ne pas fusionner toutes les colonnes en une seule colonne "MENU" géante.
+* Navbar : capturer TOUS les liens visibles incluant "PAGES" (dropdown), "CART(N)", etc.
+  Si un lien a un chevron/dropdown → ajouter `hasDropdown: true` dans l'item.
+  Le bouton CTA de la navbar a souvent un style différent des liens (fond noir, outline, etc.)
+* CTA avec icône play vidéo : si une section CTA a un bouton play (icône ronde blanche)
+  → ajouter `icon: 'play'` dans le content. C'est un élément visuel distinctif.
+* Hero avec emblem/logo décoratif au-dessus du titre (ex: badge vintage, logo simplifié)
+  → capturer dans `decorativeIcon` ou `badge` dans le content du hero.
+* GalleryContent attend le champ `images` (PAS `items`). Le composant GallerySection fait
+  `content.images ?? []`. Si on met `items` au lieu de `images`, la galerie sera VIDE.
+  ❌ { type: 'gallery-grid', content: { items: [...] } }
+  ✅ { type: 'gallery-grid', content: { images: [...] } }
+* Les variants de section doivent correspondre à des variants EXISTANTS dans le composant.
+  Vérifier dans le fichier composant. Ex: features luxe a 3 variants : `luxe-grid`, `luxe-bento`,
+  `luxe-list`. Un variant inventé comme `luxe-services` tombera dans le fallback (souvent `list`).
+* Le champ `logo` dans site-header.content et site-footer.content est rendu comme TEXTE par le
+  composant. Si on met une URL SVG, elle sera affichée en texte brut. Mettre le NOM de la marque
+  directement (ex: `logo: 'BEARD X'`), PAS l'URL du SVG.
+* Hero luxe : le champ `eyebrow` est utilisé pour le petit texte au-dessus du titre (badge text).
+  Le champ `badge` n'est PAS lu par le composant hero luxe. Toujours utiliser `eyebrow`.
+* Hero luxe : `content.backgroundImage` est rendu comme image de fond plein écran. S'assurer que
+  c'est une VRAIE photo (JPG), pas un SVG/emblem. Les emblems décoratifs transparents rendus en
+  background = résultat visuel catastrophique (SVG géant visible sur tout le viewport).
+* image-text content : le composant luxe lit `subtitle` et `body` pour le texte. Le champ `text`
+  n'est PAS lu. Si on met `text: '...'` au lieu de `subtitle: '...'`, le texte ne s'affichera pas.
+  Le champ `items` (feature list) n'est PAS rendu non plus par le luxe image-text — fusionner les
+  items dans `body` comme texte libre si nécessaire.
+* image-text content.image : attend une STRING (URL directe), PAS un objet `{ src, alt }`.
+  L'alt text est séparé dans `content.imageAlt`. Un objet `{ src, alt }` sera rendu comme
+  `[object Object]` = image cassée.
+  ❌ { image: { src: 'url.jpg', alt: 'desc' } }
+  ✅ { image: 'url.jpg', imageAlt: 'desc' }
+* style.backgroundImage dans CTA/sections : le luxe CTA variant ne gère PAS style.backgroundImage.
+  Seul le brixsa variant lit content.backgroundImage. Le style.backgroundImage est ignoré par la
+  plupart des variants luxe — ne pas s'y fier pour le rendu. Retirer si inutile pour garder les
+  données propres.
+* features luxe-grid : le composant rend icon + title + description. Il ne rend PAS le champ `price`.
+  Si le prix doit être visible, l'inclure à la fin de `description` (ex: "Description text. $37 USD").
+* gallery-grid luxe : le composant ne rend PAS subtitle, primaryButton, eyebrow, decorativeIcon, video.
+  Seuls `title` et `images[]` sont rendus. Les données supplémentaires sont conservées pour référence
+  mais ne s'affichent pas.
+* testimonials luxe-featured : le composant rend rating, quote (italic + ldquo), author, role, company.
+  Il ne rend PAS avatar, description. Les guillemets sont ajoutés automatiquement par le composant
+  (&ldquo;/&rdquo;) — ne PAS les doubler dans le texte du quote.
+* site-footer luxe : affichage centré, liens flattened en une seule ligne (pas de colonnes visuelles).
+  Les colonnes sont préservées dans les données mais le rendu les fusionne.
+* paddingY du footer : vérifier le padding réel du site source. La plupart des footers ont
+  paddingY: 'lg' minimum, pas 'none'.
 
 EXEMPLES CORRECTS vs INCORRECTS :
 ❌ INCORRECT :
@@ -1726,6 +1806,26 @@ EXEMPLES CORRECTS vs INCORRECTS :
   { "type": "gallery-grid", "content": { "images": [{ "src": "url" }] } }  // manque id et alt
 ✅ CORRECT :
   { "type": "gallery-grid", "content": { "images": [{ "id": "img-1", "src": "url", "alt": "description" }] } }
+
+❌ INCORRECT :
+  { "type": "site-header", "content": { "logo": "https://cdn.../logo.svg" } }  // URL rendue en texte brut
+✅ CORRECT :
+  { "type": "site-header", "content": { "logo": "BRAND NAME" } }  // texte affiché correctement
+
+❌ INCORRECT :
+  { "type": "gallery-grid", "content": { "items": [{ "id": "1", "src": "url.jpg", "alt": "Photo" }] } }  // `items` au lieu de `images`
+✅ CORRECT :
+  { "type": "gallery-grid", "content": { "images": [{ "id": "1", "src": "url.jpg", "alt": "Photo" }] } }  // `images` = champ correct
+
+❌ INCORRECT :
+  { "style": { "background": "light" } }  // fond crème/beige mais utilise "light" (= gris par défaut)
+✅ CORRECT :
+  { "style": { "background": "custom", "customBgColor": "#F8F5EF" } }
+
+❌ INCORRECT :
+  { "content": { "title": "Browse our services" }, "style": { "textTransform": "uppercase" } }  // texte en minuscules, textTransform seul
+✅ CORRECT :
+  { "content": { "title": "BROWSE OUR SERVICES" }, "style": { "textTransform": "uppercase" } }  // doubler : texte en CAPS + style
 
 ❌ INCORRECT :
   { "type": "testimonials", "content": { "items": [{ "rating": "5" }] } }  // string au lieu de number
@@ -1904,6 +2004,178 @@ Librairie — MATCHING OBLIGATOIRE
 * Chaque animation → documenter dans animationsDetected avec easing précis
 * Chaque illustration décorative → documenter dans illustrationsDetected
 
+Headers transparents / overlay — DÉTECTION CRITIQUE
+* Si le header/navbar se superpose au hero (position: absolute/fixed, fond transparent) :
+  → variant DOIT contenir "transparent" (ex: "luxe-transparent", "glass-transparent")
+  → style.background: "dark" (le fond est l'image du hero, donc sombre)
+  → style.textColor: "#FFFFFF" (texte blanc car sur fond sombre)
+  → Le composant header DOIT avoir backgroundColor: 'transparent' en inline style
+    pour résister aux overrides du BrandStyleInjector (#site-canvas header { background-color: ... })
+  → Le <nav> à l'intérieur DOIT aussi avoir backgroundColor: 'transparent' en inline style
+  → Le SortableSectionWrapper utilise height: 0 + overflow: visible pour que le header
+    overlay le hero. Le content div NE DOIT PAS appliquer de bg class dans ce cas.
+* Comment détecter : le header n'a pas de couleur de fond visible, le hero est visible
+  derrière les liens de navigation
+* Piège : si le header a position: absolute mais un fond coloré (même transparent 50%),
+  ce n'est PAS un transparent header, c'est un header semi-transparent → documenter
+  l'opacité dans le style
+
+Footers avec fond custom — DÉTECTION CRITIQUE
+* Si le footer a un fond différent du reste du site :
+  → style.background: "custom"
+  → style.customBgColor: "#XXXXXX" (couleur HEX exacte, ex: "#121212")
+  → NE PAS utiliser style.background: "dark" car cela mappe vers bg-zinc-900 (#18181b)
+    qui est une approximation, pas la couleur exacte
+  → style.textColor: "#FFFFFF" si texte clair
+* Le composant footer DOIT appliquer customBgColor en inline style backgroundColor
+  pour résister aux overrides du BrandStyleInjector
+* Les <nav> à l'intérieur du footer DOIVENT avoir backgroundColor: 'transparent' en inline
+* Les liens du footer DOIVENT avoir color en inline style pour résister aux overrides
+  de texte du BrandStyleInjector
+* Comment détecter : inspecter le computed background-color de <footer> dans DevTools
+
+Ornements décoratifs — SPÉCIFICATION SVG EXACTE
+* Si un ornement/icône décoratif apparaît au-dessus des titres de section :
+  → content.decorativeIcon: URL de l'icône OU description précise
+  → Documenter le SVG exact dans le JSON si c'est un SVG inline
+  → NE PAS se fier à un nom générique ("moustache", "scissors") car le rendu
+    dépend du SVG path exact
+  → Si l'icône est flanquée de lignes horizontales → documenter : decorativeLines: true
+  → Couleur des lignes et de l'icône → utiliser la même accentColor de la section
+* Piège : un SVG "moustache" peut être rendu comme des ciseaux si les paths sont incorrects.
+  Toujours vérifier visuellement le rendu après import.
+
+Noms de produits / services — CHAMPS OBLIGATOIRES
+* Chaque item de service ou produit DOIT avoir :
+  → title (ou name) : le nom visible. Si le composant attend "title" et le JSON a "name",
+    il ne s'affichera pas. Vérifier le mapping du composant cible.
+  → description : le texte descriptif
+  → price : le prix avec devise exacte
+* Mapping features/items : si le composant attend "items" mais le scan produit "features",
+  la route d'import DOIT normaliser features[] → items[]
+
+Features list dans image-text — SUPPORT OBLIGATOIRE
+* Les sections image-text peuvent contenir une liste de features (icône + titre + description)
+  à côté de l'image. C'est un pattern fréquent.
+  → content.items: [{ icon, title, description }]
+  → NE PAS confondre avec content.features (qui n'est pas toujours lu par le composant)
+  → La route d'import DOIT normaliser features[] → items[] pour les sections image-text
+
+Screenshots Playwright — CAPTURE COMPLÈTE
+* Le script de screenshot DOIT capturer :
+  → Le <header> (souvent en dehors de <section> elements)
+  → Le <footer> (souvent en dehors de <section> elements)
+  → Tous les <section> elements
+* Locator : utiliser '#site-canvas section' pour les sections, '#site-canvas header' et
+  '#site-canvas footer' séparément
+* Timeout : waitForNetworkIdle + 5s pour les fonts et images lazy-loaded
+
+Polices non-Google — SYSTÈME DE FALLBACK
+* Si le site utilise une police qui N'EST PAS dans Google Fonts (ex: Generalsans, GT Walsheim) :
+  → Documenter la police exacte dans brand.typography
+  → Le BrandStyleInjector utilisera un système de fallback : la police non-Google est aliasée
+    vers une Google Font similaire via @font-face
+  → Documenter le fallback recommandé : ex: "Generalsans" → "Barlow"
+* Si la police a des graisses spécifiques (ex: Barlow 900 pour les titres) :
+  → Documenter les weights nécessaires : brand.typography.headingWeight: 900
+  → S'assurer que le fichier fonts.ts inclut ces weights dans la config de la police
+
+Icônes de services — COULEUR D'ACCENT
+* Si les icônes dans une section services/features ont une couleur spécifique :
+  → La couleur DOIT être dans style.accentColor de la section
+  → Le composant DOIT appliquer accentColor comme color inline sur les icônes
+  → NE PAS laisser les icônes en couleur par défaut (noir) si le design les montre dorées/colorées
+* Comment détecter : comparer la couleur des icônes avec le texte environnant.
+  Si les icônes ont une couleur distincte → c'est l'accent color.
+
+Illustrations décoratives SVG — DOCUMENTATION
+* Si des illustrations SVG décoratives (ex: ciseaux, rasoir, blaireau) apparaissent en
+  arrière-plan de sections à faible opacité (0.1-0.2) :
+  → Les documenter dans decorativeElements de chaque section concernée
+  → URL du SVG, position (left/right/center), opacité, taille approximative
+  → Ce sont des éléments d'ambiance, pas du contenu — ils sont positionnés en absolute
+* Le configurateur ne supporte pas encore le rendu de ces illustrations. Les documenter
+  pour une implémentation future.
+
+Effet parallax (background-attachment: fixed) — DÉTECTION ET DOCUMENTATION
+* Si une image de fond reste fixe pendant le scroll (l'utilisateur "traverse" l'image) :
+  → C'est un effet parallax via background-attachment: fixed
+  → Documenter dans style.backgroundImage.attachment: "fixed"
+  → Identifier TOUTES les sections avec cet effet (souvent hero + CTA)
+  → NE PAS confondre avec un scroll-based parallax JS (vitesse différente du scroll)
+* Le SortableSectionWrapper applique backgroundAttachment depuis
+  section.style.backgroundImage.attachment
+* LIMITATION iOS : background-attachment: fixed ne fonctionne pas sur iOS/mobile.
+  Le fallback automatique est scroll. Documenter cette limitation dans reproductionNotes.
+* Comment détecter :
+  → background-attachment: fixed dans le computed style
+  → Visuellement : l'image de fond ne bouge pas quand on scrolle, le contenu défile par-dessus
+
+BrandStyleInjector — PIÈGES CONNUS
+* Le BrandStyleInjector injecte des CSS overrides agressifs sur #site-canvas :
+  → `#site-canvas section, header, footer, nav { background-color: var(--color-background) }`
+  → `#site-canvas .text-white { color: var(--color-foreground) }`
+* Ces overrides sont utiles pour la cohérence du brand system mais CASSENT les sections
+  qui ont des backgrounds/couleurs explicites différentes du thème global.
+* Solution : les composants de section DOIVENT utiliser des inline styles (backgroundColor,
+  color) pour les éléments qui ne doivent PAS être overridés par le brand system.
+* Le SortableSectionWrapper contrecarre ces overrides via :
+  → CSS variable --color-foreground sur le wrapper (quand textColor est défini)
+  → Classes !bg-transparent sur les children (quand hasBgOverride est true)
+  → Inline styles pour les backgrounds custom
+* Sections transparentes (headers overlay) : le content div NE DOIT PAS recevoir de bg class.
+
+Images de fond hero/CTA — VÉRIFICATION D'URL OBLIGATOIRE
+* Après extraction de l'URL d'une image de fond (hero, CTA, section avec backgroundImage) :
+  → Vérifier que l'URL est accessible (pas de 404, pas de CORS bloquant)
+  → Vérifier que content.backgroundImage ET style.backgroundImage.url sont cohérents
+    (même URL ou intent similaire)
+  → Si l'image de fond est dans style.backgroundImage.url, le SortableSectionWrapper la rendra
+    automatiquement. Si elle est aussi dans content.backgroundImage, le composant la rendra
+    lui-même (doublons possibles).
+  → Pour les sections CTA/hero : mettre l'image dans style.backgroundImage.url + overlay.
+    Le composant interne doit avoir un fond transparent pour que le wrapper bg soit visible.
+* Piège : certaines images de la source originale peuvent montrer du contenu inapproprié
+  ou non pertinent. Documenter le contenu visuel de l'image dans le JSON pour le vérificateur.
+
+Logo texte dans headers transparents — PAS DE FOND
+* Quand le header est transparent (variant luxe-transparent, glass-transparent, etc.) :
+  → Le logo DOIT être en texte blanc pur sans aucun conteneur/badge/background
+  → Inline style color: '#FFFFFF' (pas de classe Tailwind)
+  → PAS de background, padding-around, rounded, ou border sur le div du logo
+  → Si le site source a un logo SVG circulaire/badge, c'est un élément décoratif du hero,
+    PAS le logo du header. Ne pas confondre les deux.
+* Le `globals.css` contient `* { @apply border-border outline-ring/50 }` qui peut ajouter
+  un outline visible sur certains éléments. Les éléments SVG dans #site-canvas sont exemptés
+  via une règle spécifique.
+
+Forme SVG ornement moustache — VALIDATION VISUELLE OBLIGATOIRE
+* L'ornement décoratif (DecorativeOrnament) rend : [ligne dorée] [SVG moustache] [ligne dorée]
+  → Le SVG DOIT visuellement ressembler à une moustache (courbes descendantes avec remontées
+    aux extrémités), PAS à une vague (~), un tilde, des ciseaux, ou une croix
+  → Paramètres corrects du SVG : viewBox="0 0 60 20", strokeWidth 2.5 pour la courbe principale,
+    strokeWidth 1.5 pour les détails internes
+  → Toujours vérifier le rendu VISUEL après import, pas juste le path SVG
+  → Les deux lignes horizontales dorées (40px chacune) DOIVENT être présentes des deux côtés
+* Si un autre type d'ornement est nécessaire (ciseaux, étoile, etc.) : créer un composant
+  séparé ou passer un type prop à DecorativeOrnament
+
+Variable subtitle dans product-grid — EXTRACTION OBLIGATOIRE
+* Le composant ProductGridSection lit content.title, content.subtitle, et content.eyebrow
+  → Les trois champs DOIVENT être présents dans le output.json pour les sections product-grid
+  → Si un champ manque dans le scan mais existe sur le site source → l'ajouter
+  → Si subtitle n'est pas extrait, le composant crashera (ReferenceError)
+* Vérifier que TOUS les champs utilisés par le composant cible sont extraits dans le scan
+
+Éléments SVG dans le canvas — PAS DE BORDURES
+* Le `globals.css` contient `* { @apply border-border outline-ring/50 }` qui applique
+  border-color et outline-color sur TOUS les éléments
+* Pour les SVG décoratifs (ornements, illustrations, icônes) dans #site-canvas :
+  → La règle CSS `#site-canvas svg, #site-canvas svg * { border: none; outline: none; }`
+    empêche les bordures parasites
+  → Si un SVG montre quand même une bordure → ajouter inline style={{ outline: 'none', border: 'none' }}
+* Les illustrations décoratives SVG en arrière-plan NE DOIVENT PAS avoir de bordure visible
+
 ---
 
 ## PARTIE 6 — BOUCLE D'AUTO-AMÉLIORATION
@@ -1983,7 +2255,7 @@ CHECKLIST DE QUALITÉ FINALE (avant de rendre le JSON)
 4. [ ] Chaque variant suit le pattern {universe}-{layout}
 5. [ ] Le brand.colors correspond visuellement aux screenshots
 6. [ ] Les fonts détectées sont confirmées par le code source
-7. [ ] Les backgrounds de CHAQUE section sont corrects (pas tout en "white")
+7. [ ] Les backgrounds de CHAQUE section sont corrects (pas tout en "white" ou "light")
 8. [ ] textTransform est renseigné pour CHAQUE section avec du texte uppercase
 9. [ ] Le footer.copyright est copié MOT POUR MOT
 10. [ ] Les liens de navigation sont COMPLETS (tous les liens, labels exacts)
@@ -1991,6 +2263,14 @@ CHECKLIST DE QUALITÉ FINALE (avant de rendre le JSON)
 12. [ ] Les items de listes ont TOUS un id unique
 13. [ ] Le JSON est valide (pas de trailing commas, pas de commentaires)
 14. [ ] Le designPreset utilise des IDs exacts de la librairie
+15. [ ] Les champs logo (header + footer) ont un `logoText` fallback en plus de l'URL
+16. [ ] Les gallery-grid items ont TOUS un champ `src` avec URL d'image (pas juste title/category)
+17. [ ] Les textes affichés en UPPERCASE sont en CAPS dans le JSON ET ont textTransform dans style
+18. [ ] Les fonds crème/beige/custom utilisent `background: 'custom'` + `customBgColor` (pas 'light')
+19. [ ] Les icônes/ornements décoratifs récurrents au-dessus des titres sont dans `decorativeIcon`
+20. [ ] La couleur d'accent récurrente (or, bleu, etc.) est dans `accentColor` de chaque section
+21. [ ] Les product-grid items avec bouton overlay ont un `ctaLabel`
+22. [ ] Les testimonials quotes incluent les guillemets décoratifs si visibles sur le site
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 RÉCAPITULATIF FINAL
@@ -2042,3 +2322,66 @@ Sauvegarde la version finale améliorée dans SCAN_SITE_PROMPT.md.
 | Propriétés animables | 23+ |
 | Templates de pages | 20+ |
 | **Total items librairie** | **500+** |
+
+---
+
+## PARTIE 8 — RÈGLES APPRISES (auto-amélioration)
+
+### Règle 1 : `background: "dark"` ne nécessite PAS `customBgColor`
+Si une section a `background: "dark"`, ne PAS ajouter `customBgColor: "#121212"` en plus.
+Le `customBgColor` est réservé à `background: "custom"` uniquement.
+De même, `background: "white"` et `background: "light"` n'ont pas besoin de `customBgColor`.
+
+### Règle 2 : Footer avec sous-colonnes visuelles
+Un footer peut avoir une colonne "MENU" qui se divise visuellement en 2 sous-colonnes côte à côte.
+Dans le JSON, capturer comme UNE seule colonne avec tous les liens (le rendu gère le layout multi-colonnes).
+NE PAS créer 2 colonnes séparées si elles partagent le même titre.
+
+### Règle 3 : Fonts custom non référencées
+Si une font détectée (via computed styles) N'EST PAS dans la liste des 80+ Google Fonts intégrées
+au configurateur, la documenter comme `provider: "local"` dans fontImports ET mentionner
+"requires custom upload" dans reproductionNotes. Exemples : Generalsans, Cabinet Grotesk custom, etc.
+
+### Règle 4 : Testimonials slider unique items
+Un slider/carousel de témoignages peut RÉPÉTER les mêmes items pour l'effet de boucle.
+Capturer uniquement les items UNIQUES (dédoublonner par quote + author).
+Documenter le nombre d'items uniques vs le nombre total affiché dans reproductionNotes.
+
+### Règle 5 : Sections image-text avec features intégrées
+Si une section image-text contient des mini-features (icon + title + description) EN PLUS du titre et body
+principal, les capturer dans `content.features[]` et non comme items séparés.
+Cela correspond au pattern "image-text with feature list" (ex: "Why Choose Us" + features list).
+
+### Règle 6 : Decorative barber/industry-specific SVG illustrations
+Les sites premium utilisent souvent des illustrations SVG semi-transparentes (opacity 0.1-0.2)
+comme éléments décoratifs de fond. Ces illustrations sont SPÉCIFIQUES à l'industrie (barber pole,
+tools, emblem pour barbershop ; camera, lens pour photo ; fork, wine glass pour restaurant).
+Les capturer dans illustrationsDetected avec leur opacity approximative et les sections concernées.
+
+### Règle 7 : Recurring decorative icon/ornament above section titles
+Si le même SVG/icon (ex: mustache, star, diamond) apparaît au-dessus du titre de PLUSIEURS sections,
+le documenter UNE fois dans iconsDetected avec `usedIn: ["list of all sections"]` et ajouter
+`decorativeIcon` dans le content de CHAQUE section concernée avec l'URL du SVG.
+C'est un pattern récurrent (ornament divider) et non un eyebrow textuel.
+
+### Règle 8 : Ne pas dupliquer subtitle et body dans image-text
+Le composant image-text luxe rend BOTH `subtitle` et `body`. Si le site source n'a qu'UN seul
+paragraphe sous le titre, mettre ce texte dans `subtitle` UNIQUEMENT et omettre `body`.
+Si on met le même texte dans les deux champs, il sera affiché DEUX FOIS dans le rendu.
+
+### Règle 9 : Hero subtitle = vrai texte du site, pas lorem ipsum générique
+Le texte du hero (subtitle) est souvent DIFFÉRENT du lorem ipsum utilisé dans les autres sections.
+Toujours vérifier le screenshot du hero pour copier le texte EXACT affiché, même s'il ressemble
+à du lorem ipsum. Le hero peut avoir un texte spécifique tandis que les autres sections partagent
+le même placeholder.
+
+### Règle 10 : Services grid columns = visual layout, not total items
+Le champ `columns` dans features/services doit refléter le nombre de COLONNES visuelles par rangée,
+pas le nombre total d'items. Si la grille montre 2 items par rangée sur 3 rangées → columns: 2.
+Si 3 items par rangée sur 2 rangées → columns: 3. Vérifier le screenshot, pas deviner.
+
+### Règle 11 : Header CTA vs Hero CTA distinction
+Le CTA de la navbar (bouton en haut à droite) peut être DIFFÉRENT des CTAs du hero.
+Exemple : navbar CTA = "BOOK AN APPOINTMENT" (action directe), hero secondary = "BROWSE SERVICES" (navigation).
+Vérifier le screenshot du header pour identifier le vrai CTA navbar, pas le raw-data extractor
+qui peut confondre les deux.

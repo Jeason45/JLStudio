@@ -141,6 +141,11 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
   const isBrixsaCta = previewMode && section.type === 'cta' && section.variant?.includes('brixsa')
   const isBrixsaFooter = previewMode && section.type === 'site-footer' && section.variant?.includes('brixsa')
 
+  // Transparent headers (luxe-transparent, brixsa) need zero-height wrapper so they overlay the next section
+  const isTransparentHeader = section.type === 'site-header' && (
+    section.variant?.includes('transparent') || section.variant === 'brixsa' || section.variant === 'zmr-agency'
+  )
+
   return (
     <div
       ref={setNodeRef}
@@ -154,6 +159,8 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
         // Brixsa footer reveal: CTA wrapper has high z-index, footer sticks at bottom behind it
         ...(isBrixsaCta ? { zIndex: 2 } : {}),
         ...(isBrixsaFooter ? { position: 'sticky' as const, bottom: 0, zIndex: 0 } : {}),
+        // Transparent header: zero height so it overlays the hero below
+        ...(isTransparentHeader ? { height: 0, overflow: 'visible', zIndex: 50 } : {}),
       }}
       onClick={handleClick}
       className={cn(
@@ -250,6 +257,7 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
               backgroundImage: `url(${section.style.backgroundImage.url})`,
               backgroundSize: section.style.backgroundImage.size ?? 'cover',
               backgroundPosition: section.style.backgroundImage.position ?? 'center',
+              backgroundAttachment: section.style.backgroundImage.attachment ?? 'scroll',
             }}
           />
           {section.style.backgroundImage.overlayColor && (
@@ -281,10 +289,10 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
       <div
         className={cn(
           'relative',
-          // When bg is overridden or bg image is active, make child section transparent so our wrapper bg shows through
-          (hasBgOverride || hasBgImage) && '[&>section]:!bg-transparent [&>section]:!bg-none',
-          // Apply standard bg class on this wrapper (light, dark, primary, gradient)
-          hasStandardBgOverride && getSectionBgClass(section.style.background),
+          // When bg is overridden or bg image is active, make child element transparent so our wrapper bg shows through
+          !isTransparentHeader && (hasBgOverride || hasBgImage) && '[&>section]:!bg-transparent [&>section]:!bg-none [&>footer]:!bg-transparent [&>footer]:!bg-none [&>header]:!bg-transparent [&>header]:!bg-none',
+          // Apply standard bg class on this wrapper (light, dark, primary, gradient) — skip for transparent headers and when bg image is present
+          !isTransparentHeader && !hasBgImage && hasStandardBgOverride && getSectionBgClass(section.style.background),
           // When padding overrides are set, zero out child section padding and apply ours
           hasPaddingOverride && '[&>section]:!py-0 [&>section]:!pt-0 [&>section]:!pb-0',
           hasPaddingOverride && section.style.paddingTop && getPaddingTopClass(section.style.paddingTop),
@@ -292,8 +300,10 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
         )}
         style={{
           zIndex: 2,
-          // Apply custom bg inline styles (custom color or custom gradient)
-          ...(hasCustomBg ? getSectionBgStyle(section.style) : {}),
+          // Apply custom bg inline styles (custom color or custom gradient) — skip for transparent headers and when bg image is present
+          ...(!isTransparentHeader && !hasBgImage && hasCustomBg ? getSectionBgStyle(section.style) : {}),
+          // Transparent headers: ensure no background leaks through
+          ...(isTransparentHeader ? { backgroundColor: 'transparent' } : {}),
         }}
       >
         <SectionErrorBoundary sectionId={section.id} sectionType={`${section.type}/${section.variant ?? 'default'}`}>

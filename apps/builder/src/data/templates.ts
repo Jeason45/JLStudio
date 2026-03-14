@@ -1171,19 +1171,20 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     // ══════════════════════════════════════════════
     sections: [
       // ── Navbar ──
-      { type: 'site-header', variant: 'luxe', content: { logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg', links: [{ id: '1', label: 'Home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Contact', href: '/contact' }], ctaLabel: 'Book an appointment', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
+      { type: 'site-header', variant: 'luxe', content: { logo: 'BEARD X', links: [{ id: '1', label: 'HOME', href: '/home' }, { id: '2', label: 'ABOUT', href: '/about' }, { id: '3', label: 'PAGES', href: '#', hasDropdown: true }, { id: '4', label: 'SERVICES', href: '/services' }, { id: '5', label: 'CONTACT', href: '/contact' }, { id: '6', label: 'CART (3)', href: '/cart' }], ctaLabel: 'BOOK AN APPOINTMENT', ctaHref: '/contact', sticky: true }, style: { background: 'white', paddingY: 'none', textTransform: 'uppercase', letterSpacing: 'wide' }, visible: true },
 
-      // ── Hero — split image right ──
+      // ── Hero — full-width dark photo + emblem overlay ──
       {
         type: 'hero', variant: 'luxe',
         content: {
-          title: 'A unique barber experience',
+          eyebrow: 'BARBER SHOP — ESTD 2019',
+          title: 'A UNIQUE BARBER EXPERIENCE',
           subtitle: 'Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam.',
-          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
-          secondaryButton: { label: 'Browse services', href: '#Services', variant: 'outline' },
-          backgroundImage: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63868e1dab1fa01aaa25552a_home-hero-top-image-barber-webflow-ecommerce-template.png',
+          primaryButton: { label: 'BOOK AN APPOINTMENT', href: '/contact', variant: 'primary' },
+          secondaryButton: { label: 'BROWSE SERVICES', href: '#Services', variant: 'ghost' },
+          backgroundImage: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f2b6a7b90cfd94ae18b4_Left-Image-Experience-Barbershop.jpg',
         },
-        style: { background: 'custom', paddingY: 'xl', customBgColor: '#121212', backgroundImage: { url: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63868e1dab1fa01aaa25552a_home-hero-top-image-barber-webflow-ecommerce-template.png', overlayColor: '#000000', overlayOpacity: 0.5 } },
+        style: { background: 'custom', paddingY: 'xl', customBgColor: '#121212', textColor: '#FFFFFF', textTransform: 'uppercase', letterSpacing: 'wide', fontWeight: 900, titleSize: '4xl', accentColor: '#C09B6B' },
         visible: true,
       },
 
@@ -1191,37 +1192,38 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       {
         type: 'image-text', variant: 'luxe-image-left',
         content: {
-          title: '10+ years making our customers happy',
-          text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
-          items: [
-            { id: '1', icon: 'trending-up', title: '99%', description: 'Customer satisfaction' },
-            { id: '2', icon: 'clock', title: '10y', description: 'Years of experience' },
-          ],
-          image: { src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352caffe6a8ab6bbcae3ce2_Left-Image-Barbershop.jpg', alt: 'Barbershop interior' },
-          primaryButton: { label: 'More About us', href: '/about', variant: 'primary' },
+          decorativeIcon: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352c47ce6a8ab56afae0fe0_Icon-Barbershop.svg',
+          title: '10+ YEARS MAKING OUR CUSTOMERS HAPPY',
+          subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
+          body: '99% CUSTOMER SATISFACTION · 10+ YEARS OF EXPERIENCE',
+          image: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352caffe6a8ab6bbcae3ce2_Left-Image-Barbershop.jpg',
+          imageAlt: 'Barbershop interior',
+          primaryButton: { label: 'MORE ABOUT US', href: '/about', variant: 'primary' },
         },
-        style: { background: 'light', paddingY: 'xl' },
+        style: { background: 'custom', customBgColor: '#F8F5EF', paddingY: 'xl', textTransform: 'uppercase', letterSpacing: 'wide', fontWeight: 800, accentColor: '#C09B6B', textAlign: 'left', titleSize: 'lg' },
         visible: true,
       },
 
-      // ── Services — 6 items grid + 2 CTAs ──
+      // ── Services — 6 items (2-column grid) + 2 CTAs ──
       {
         type: 'features', variant: 'luxe-grid',
         content: {
-          title: 'Browse our services',
+          eyebrow: 'OUR SERVICES',
+          decorativeIcon: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352c47ce6a8ab56afae0fe0_Icon-Barbershop.svg',
+          title: 'BROWSE OUR SERVICES',
           subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
-            { id: '1', icon: 'scissors', title: 'Classic Haircut', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$37 USD' },
-            { id: '2', icon: 'scissors', title: 'Beard Trim', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$25 USD' },
-            { id: '3', icon: 'scissors', title: 'kids haircut', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$26 USD' },
-            { id: '4', icon: 'scissors', title: 'Neck shave', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$12 USD' },
-            { id: '5', icon: 'droplets', title: 'scalp Moisturizing', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$55 USD' },
-            { id: '6', icon: 'sparkles', title: 'beard grooming & spa', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing.', price: '$46 USD' },
+            { id: '1', icon: 'scissors', title: 'CLASSIC HAIRCUT', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $37 USD' },
+            { id: '2', icon: 'scissors', title: 'BEARD TRIM', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $25 USD' },
+            { id: '3', icon: 'scissors', title: 'KIDS HAIRCUT', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $26 USD' },
+            { id: '4', icon: 'scissors', title: 'NECK SHAVE', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $12 USD' },
+            { id: '5', icon: 'droplets', title: 'SCALP MOISTURIZING', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $55 USD' },
+            { id: '6', icon: 'sparkles', title: 'BEARD GROOMING & SPA', description: 'Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $46 USD' },
           ],
-          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
-          secondaryButton: { label: 'Browse all services', href: '/services', variant: 'outline' },
+          primaryButton: { label: 'BOOK AN APPOINTMENT', href: '/contact', variant: 'primary' },
+          secondaryButton: { label: 'BROWSE ALL SERVICES', href: '/services', variant: 'outline' },
         },
-        style: { background: 'white', paddingY: 'xl' },
+        style: { background: 'white', paddingY: 'xl', textTransform: 'uppercase', letterSpacing: 'wide', fontWeight: 800, accentColor: '#C09B6B' },
         visible: true,
       },
 
@@ -1229,18 +1231,19 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       {
         type: 'gallery-grid', variant: 'luxe-masonry',
         content: {
-          title: 'We offer an unique experience',
+          decorativeIcon: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352c47ce6a8ab56afae0fe0_Icon-Barbershop.svg',
+          title: 'WE OFFER AN UNIQUE EXPERIENCE',
           subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
-          items: [
+          images: [
             { id: '1', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f2b6a7b90cfd94ae18b4_Left-Image-Experience-Barbershop.jpg', alt: 'Barbershop experience', category: 'Experience' },
             { id: '2', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f252e708dc38e92e533c_Center-Top-Image-Experience-Barbershop.jpg', alt: 'Premium service', category: 'Experience' },
             { id: '3', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f268e708dc07112e544a_Center-Bottom-Image-Experience-Barbershop.jpg', alt: 'Master barber at work', category: 'Experience' },
             { id: '4', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f2f605de392c9d02f20b_Right-Image-Experience-Barbershop.jpg', alt: 'Classic shave', category: 'Experience' },
           ],
-          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
+          primaryButton: { label: 'BOOK AN APPOINTMENT', href: '/contact', variant: 'primary' },
           video: { type: 'youtube', id: 'sCurGlAOFIw' },
         },
-        style: { background: 'light', paddingY: 'xl' },
+        style: { background: 'custom', customBgColor: '#F8F5EF', paddingY: 'xl', textTransform: 'uppercase', letterSpacing: 'wide', fontWeight: 800, accentColor: '#C09B6B', textAlign: 'left' },
         visible: true,
       },
 
@@ -1248,11 +1251,12 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       {
         type: 'cta', variant: 'luxe-centered',
         content: {
-          title: 'Take a look at our work',
+          badge: 'OUR WORK',
+          title: 'TAKE A LOOK AT OUR WORK',
           subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
-          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
+          primaryButton: { label: 'BOOK AN APPOINTMENT', href: '/contact', variant: 'primary' },
         },
-        style: { background: 'custom', paddingY: 'xl', customBgColor: '#121212', textColor: '#FFFFFF', backgroundImage: { url: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f2b6a7b90cfd94ae18b4_Left-Image-Experience-Barbershop.jpg', overlayColor: '#000000', overlayOpacity: 0.7 } },
+        style: { background: 'custom', paddingY: 'xl', customBgColor: '#121212', textColor: '#FFFFFF', textTransform: 'uppercase', letterSpacing: 'wide', fontWeight: 900, titleSize: '3xl', accentColor: '#C09B6B' },
         visible: true,
       },
 
@@ -1260,16 +1264,15 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       {
         type: 'image-text', variant: 'luxe-image-right',
         content: {
-          title: 'Why choose us',
-          text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
-          items: [
-            { id: '1', icon: 'user', title: 'Top Barbers', description: 'A mollis pretium sagittis iaculis quam lacus nulla nullam pharetra quis fermentum ipsum phasellus sit.' },
-            { id: '2', icon: 'gem', title: 'Premium services', description: 'Nulla leo velit feugiat in consequat accumsan est enim mi consectetur dis pulvinar venenatis dapibus.' },
-          ],
-          image: { src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635302fb0af27dbf66bd5e74_Image-barbershop-choosing.jpg', alt: 'Barber at work' },
-          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
+          decorativeIcon: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352c47ce6a8ab56afae0fe0_Icon-Barbershop.svg',
+          title: 'WHY CHOOSE US',
+          subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
+          body: 'TOP BARBERS — A mollis pretium sagittis iaculis quam lacus nulla nullam pharetra quis fermentum ipsum phasellus sit. PREMIUM SERVICES — Nulla leo velit feugiat in consequat accumsan est enim mi consectetur dis pulvinar venenatis dapibus.',
+          image: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635302fb0af27dbf66bd5e74_Image-barbershop-choosing.jpg',
+          imageAlt: 'Barber at work',
+          primaryButton: { label: 'BOOK AN APPOINTMENT', href: '/contact', variant: 'primary' },
         },
-        style: { background: 'white', paddingY: 'xl' },
+        style: { background: 'white', paddingY: 'xl', textTransform: 'uppercase', letterSpacing: 'wide', fontWeight: 800, accentColor: '#C09B6B', textAlign: 'left' },
         visible: true,
       },
 
@@ -1277,16 +1280,17 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       {
         type: 'product-grid', variant: 'luxe-grid',
         content: {
-          title: 'Browse our products',
+          decorativeIcon: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352c47ce6a8ab56afae0fe0_Icon-Barbershop.svg',
+          title: 'BROWSE OUR PRODUCTS',
           subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
-            { id: '1', name: 'Beard & mustache care oil', price: '$ 19.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/6353172e41400e47f4b2fb08_Glass-dropper-bottle-%26-tube.png', href: '/product/beard-mustache-care-oil' },
-            { id: '2', name: 'Beard & hair serum', price: '$ 49.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317abd7135d5db1e806e2_Cosmetic-packaging-kit-with-kraft-mailer-box.png', href: '/product/beard-hair-serum' },
-            { id: '3', name: 'Premium Hair Clay', price: '$ 29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317bbcef9162eb3edfdcc_Amber-cosmetic-bottle-packaging.png', href: '/product/premium-hair-clay' },
+            { id: '1', name: 'BEARD & MUSTACHE CARE OIL', price: '$ 19.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/6353172e41400e47f4b2fb08_Glass-dropper-bottle-%26-tube.png', href: '/product/beard-mustache-care-oil', ctaLabel: 'LEARN MORE' },
+            { id: '2', name: 'BEARD & HAIR SERUM', price: '$ 49.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317abd7135d5db1e806e2_Cosmetic-packaging-kit-with-kraft-mailer-box.png', href: '/product/beard-hair-serum', ctaLabel: 'LEARN MORE' },
+            { id: '3', name: 'PREMIUM HAIR CLAY', price: '$ 29.00 USD', description: 'Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.', image: 'https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317bbcef9162eb3edfdcc_Amber-cosmetic-bottle-packaging.png', href: '/product/premium-hair-clay', ctaLabel: 'LEARN MORE' },
           ],
-          primaryButton: { label: 'Browse all products', href: '/shop', variant: 'outline' },
+          primaryButton: { label: 'BROWSE ALL PRODUCTS', href: '/shop', variant: 'outline' },
         },
-        style: { background: 'light', paddingY: 'xl' },
+        style: { background: 'custom', customBgColor: '#F8F5EF', paddingY: 'xl', textTransform: 'uppercase', letterSpacing: 'wide', fontWeight: 800, accentColor: '#C09B6B' },
         visible: true,
       },
 
@@ -1294,54 +1298,59 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       {
         type: 'testimonials', variant: 'luxe-featured',
         content: {
-          title: 'What our clients say',
+          decorativeIcon: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352c47ce6a8ab56afae0fe0_Icon-Barbershop.svg',
+          title: 'WHAT OUR CLIENTS SAY',
           subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.',
           items: [
-            { id: '1', quote: 'this barber shop is simply awesome', description: 'Et proin ut in dignissim sem non a nullam magna lectus urna et dui quam tellus imperdiet sit purus at fringilla scelerisque diam amet fermentum orci fringilla aliquet nulla lectus erat eu auctor diam potenti turpis interdum eu.', author: 'John Carter', company: 'Los angeles, CA.', avatar: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63531ceb14dc4f7751c93706_Testimonials.jpg', rating: 5 },
-            { id: '2', quote: 'The best barber shop I\'ve ever been', description: 'Et proin ut in dignissim sem non a nullam magna lectus urna et dui quam tellus imperdiet sit purus at fringilla scelerisque diam amet fermentum orci fringilla aliquet nulla lectus erat eu auctor diam potenti turpis interdum eu.', author: 'Sam Houston', company: 'Los angeles, CA.', avatar: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353222a4d0d416ddf8e4360_Image-testimonials.jpg', rating: 5 },
+            { id: '1', quote: 'THIS BARBER SHOP IS SIMPLY AWESOME', author: 'JOHN CARTER', role: 'Customer', company: 'Los Angeles, CA.', avatar: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63531ceb14dc4f7751c93706_Testimonials.jpg', rating: 5 },
+            { id: '2', quote: 'THE BEST BARBER SHOP I\'VE EVER BEEN', author: 'SAM HOUSTON', role: 'Customer', company: 'Los Angeles, CA.', avatar: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353222a4d0d416ddf8e4360_Image-testimonials.jpg', rating: 5 },
           ],
-          primaryButton: { label: 'Book an appointment', href: '/contact', variant: 'primary' },
+          primaryButton: { label: 'BOOK AN APPOINTMENT', href: '/contact', variant: 'primary' },
         },
-        style: { background: 'white', paddingY: 'xl' },
+        style: { background: 'white', paddingY: 'xl', textTransform: 'uppercase', letterSpacing: 'wide', fontWeight: 800, accentColor: '#C09B6B', textAlign: 'left' },
         visible: true,
       },
 
-      // ── Instagram feed — 5 images ──
+      // ── Instagram feed — 6 images (3x2 bento grid) ──
       {
-        type: 'gallery-grid', variant: 'luxe-grid',
+        type: 'gallery-grid', variant: 'luxe-masonry',
         content: {
-          eyebrow: 'Instagram',
-          title: 'Follow us on instagram',
-          items: [
-            { id: '1', title: 'Instagram 1', category: 'Instagram' },
-            { id: '2', title: 'Instagram 2', category: 'Instagram' },
-            { id: '3', title: 'Instagram 3', category: 'Instagram' },
-            { id: '4', title: 'Instagram 4', category: 'Instagram' },
-            { id: '5', title: 'Instagram 5', category: 'Instagram' },
+          decorativeIcon: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352c47ce6a8ab56afae0fe0_Icon-Barbershop.svg',
+          eyebrow: 'INSTAGRAM',
+          title: 'FOLLOW US ON INSTAGRAM',
+          images: [
+            { id: '1', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353262d71b74a7c9aec6273_Image-barbershop-men-01.jpg', alt: 'Instagram 1', category: 'Instagram' },
+            { id: '2', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63532603db028e692e7bd202_Handsome-man-cutting-beard-barber-salon%201.jpg', alt: 'Instagram 2', category: 'Instagram' },
+            { id: '3', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353261dd7638b80bb954e95_handsome-man-cutting-beard-barber-salon%202.png', alt: 'Instagram 3', category: 'Instagram' },
+            { id: '4', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635326365ee93e1f49821d0e_Handsome-man-cutting-beard-barber-salon.png', alt: 'Instagram 4', category: 'Instagram' },
+            { id: '5', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353262573ae728269cab801_Image-barbershop-machine.jpg', alt: 'Instagram 5', category: 'Instagram' },
+            { id: '6', src: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635326365ee93e1f49821d0e_Handsome-man-cutting-beard-barber-salon.png', alt: 'Instagram 6', category: 'Instagram' },
           ],
-          primaryButton: { label: 'Follow us', href: 'https://www.instagram.com/', variant: 'outline' },
+          columns: 3,
+          primaryButton: { label: 'FOLLOW US', href: 'https://www.instagram.com/', variant: 'secondary' },
         },
-        style: { background: 'light', paddingY: 'lg' },
+        style: { background: 'custom', customBgColor: '#F8F5EF', paddingY: 'lg', textTransform: 'uppercase', letterSpacing: 'wide', fontWeight: 800, accentColor: '#C09B6B' },
         visible: true,
       },
 
       // ── Newsletter ──
-      { type: 'newsletter', variant: 'luxe-centered', content: { title: 'Subscribe to our newsletter', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'Your email address', buttonLabel: 'Subscribe' }, style: { background: 'white', paddingY: 'lg' }, visible: true },
+      { type: 'newsletter', variant: 'luxe-centered', content: { decorativeIcon: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352c47ce6a8ab56afae0fe0_Icon-Barbershop.svg', title: 'SUBSCRIBE TO OUR NEWSLETTER', subtitle: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.', placeholder: 'ENTER YOUR EMAIL', buttonLabel: 'SUBSCRIBE NOW' }, style: { background: 'custom', customBgColor: '#F8F5EF', paddingY: 'lg', textTransform: 'uppercase', letterSpacing: 'wide', fontWeight: 800, accentColor: '#C09B6B' }, visible: true },
 
       // ── Footer ──
       {
         type: 'site-footer', variant: 'luxe',
         content: {
-          logo: 'https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/639278a08df82b733cd1d7a9_logo-beard-webflow-template.svg',
+          logo: 'BEARD X',
           tagline: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.',
           copyright: 'Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow',
           columns: [
-            { id: '1', title: 'Menu', links: [{ id: '1', label: 'home', href: '/home' }, { id: '2', label: 'About', href: '/about' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Shop', href: '/shop' }, { id: '6', label: 'Contact', href: '/contact' }, { id: '7', label: 'Team member', href: '/team/john-carter' }] },
-            { id: '2', title: 'Utility Pages', links: [{ id: '1', label: 'Start here', href: '/template-pages/start-here' }, { id: '2', label: 'Styleguide', href: '/template-pages/style-guide' }, { id: '3', label: 'Licenses', href: '/template-pages/licenses' }, { id: '4', label: 'Changelog', href: '/template-pages/changelog' }] },
+            { id: '1', title: 'MENU', links: [{ id: '1', label: 'HOME', href: '/home' }, { id: '2', label: 'ABOUT', href: '/about' }, { id: '3', label: 'SERVICES', href: '/services' }, { id: '4', label: 'BLOG', href: '/blog' }, { id: '5', label: 'BLOG POST', href: '/blog/how-to-keep-your-razors-sharp-as-brand-new' }] },
+            { id: '2', title: '', links: [{ id: '1', label: 'SHOP', href: '/shop' }, { id: '2', label: 'SHOP SINGLE', href: '/product/beard-mustache-care-oil' }, { id: '3', label: 'CONTACT', href: '/contact' }, { id: '4', label: 'TEAM MEMBER', href: '/team/john-carter' }, { id: '5', label: 'MORE WEBFLOW TEMPLATES', href: 'https://webflow.com/templates' }] },
+            { id: '3', title: 'UTILITY PAGES', links: [{ id: '1', label: 'START HERE', href: '/template-pages/start-here' }, { id: '2', label: 'STYLEGUIDE', href: '/template-pages/style-guide' }, { id: '3', label: 'PASSWORD PROTECTED', href: '/template-pages/password-protected' }, { id: '4', label: '404 NOT FOUND', href: '/404' }, { id: '5', label: 'LICENSES', href: '/template-pages/licenses' }, { id: '6', label: 'CHANGELOG', href: '/template-pages/changelog' }] },
           ],
           socials: { facebook: 'https://www.facebook.com/', twitter: 'https://www.twitter.com/', instagram: 'https://www.instagram.com/', youtube: 'https://www.youtube.com/', pinterest: 'https://www.pinterest.com' },
         },
-        style: { background: 'dark', paddingY: 'none' },
+        style: { background: 'dark', paddingY: 'lg', textTransform: 'uppercase', letterSpacing: 'wide', accentColor: '#C09B6B' },
         visible: true,
       },
     ],
