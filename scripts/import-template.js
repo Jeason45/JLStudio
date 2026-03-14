@@ -80,6 +80,10 @@ async function main() {
   console.log(`  Mode: ${result.mode}`)
   console.log(`  Sections imported: ${result.site.sectionsCount}`)
   console.log(`  Pages: ${result.site.pagesCount}`)
+  if (result.template) {
+    console.log(`  Template ID: ${result.template.id}`)
+    console.log(`  Template slug: ${result.template.slug}`)
+  }
   console.log(`\n  Editor URL: ${BUILDER_URL}${result.site.editorUrl}`)
 
   // Write result for downstream scripts

@@ -77,6 +77,33 @@ model Page {
 }
 
 // ─────────────────────────────────────────────
+// TEMPLATES
+// ─────────────────────────────────────────────
+
+model Template {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  category    String?
+  universe    String?
+  emoji       String?
+  preview     String?
+  sections    Json     @default("[]")
+  pages       Json     @default("[]")
+  brand       Json     @default("{}")
+  navigation  Json     @default("{}")
+  footer      Json     @default("{}")
+  meta        Json     @default("{}")
+  sourceUrl   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([universe])
+}
+
+// ─────────────────────────────────────────────
 // CRM
 // ─────────────────────────────────────────────
 

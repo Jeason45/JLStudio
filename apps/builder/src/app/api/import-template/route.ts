@@ -10,6 +10,36 @@ function toSlug(name: string): string {
     .replace(/^-|-$/g, '')
 }
 
+// Upsert template record in DB (by slug)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function upsertTemplate(template: any, slug: string): Promise<{ id: string; slug: string }> {
+  const data = {
+    name: template.site?.name || 'Unnamed',
+    description: template.site?.industry
+      ? `${template.site.industry} - ${template.site.audience || ''}`
+      : template.meta?.description || null,
+    category: template.site?.industry || null,
+    universe: template.style?.mood?.[0] || null,
+    emoji: null as string | null,
+    preview: null as string | null,
+    sourceUrl: template.site?.sourceUrl || null,
+    sections: template.sections || [],
+    pages: template.pages || [],
+    brand: template.brand || {},
+    navigation: template.navigation || {},
+    footer: template.footer || {},
+    meta: template.meta || {},
+  }
+
+  const result = await prisma.template.upsert({
+    where: { slug },
+    create: { slug, ...data },
+    update: data,
+  })
+
+  return { id: result.id, slug: result.slug }
+}
+
 // Normalize content fields to match expected component interfaces
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function normalizeContent(type: string, content: Record<string, any>): Record<string, any> {
@@ -217,6 +247,10 @@ export async function POST(req: NextRequest) {
         })
       }
 
+      // Upsert template record
+      const templateSlug = toSlug(siteName)
+      const tpl = await upsertTemplate(template, templateSlug)
+
       return NextResponse.json(
         {
           success: true,
@@ -229,6 +263,7 @@ export async function POST(req: NextRequest) {
             sectionsCount: homeSections.length,
             pagesCount: config.pages.length,
           },
+          template: tpl,
         },
         { status: 200 },
       )
@@ -277,6 +312,9 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    // Upsert template record
+    const tpl = await upsertTemplate(template, slug)
+
     return NextResponse.json(
       {
         success: true,
@@ -289,6 +327,7 @@ export async function POST(req: NextRequest) {
           sectionsCount: homeSections.length,
           pagesCount: config.pages.length,
         },
+        template: tpl,
       },
       { status: 201 },
     )
