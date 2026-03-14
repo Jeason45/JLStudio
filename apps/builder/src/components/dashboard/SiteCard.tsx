@@ -30,9 +30,16 @@ export function SiteCard({ site }: SiteCardProps) {
 
   const handleDelete = async () => {
     if (!window.confirm(`Supprimer "${site.name}" ? Cette action est irréversible.`)) return
-    const res = await fetch(`/api/sites/${site.id}`, { method: 'DELETE' })
-    if (res.ok) {
-      window.location.reload()
+    try {
+      const res = await fetch(`/api/sites/${site.id}`, { method: 'DELETE' })
+      if (res.ok) {
+        router.refresh()
+      } else {
+        const data = await res.json().catch(() => ({ error: 'Erreur inconnue' }))
+        alert(`Erreur lors de la suppression : ${data.error}`)
+      }
+    } catch (err) {
+      alert('Erreur réseau lors de la suppression')
     }
   }
 
@@ -102,7 +109,10 @@ export function SiteCard({ site }: SiteCardProps) {
                 )}
                 <DropdownMenuSeparator className="bg-zinc-800" />
                 <DropdownMenuItem
-                  onClick={handleDelete}
+                  onSelect={(e) => {
+                    e.preventDefault()
+                    handleDelete()
+                  }}
                   className="gap-2 text-red-400 focus:text-red-400 focus:bg-red-950/50"
                 >
                   <Trash2 className="w-4 h-4" /> Supprimer
