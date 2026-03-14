@@ -632,6 +632,7 @@ export interface ProductItem {
 export interface ProductGridContent {
   eyebrow?: string
   title: string
+  subtitle?: string
   items: ProductItem[]
   ctaLabel?: string
   ctaHref?: string
