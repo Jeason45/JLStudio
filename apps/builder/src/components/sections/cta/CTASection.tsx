@@ -4,6 +4,7 @@ import type { CTAConfig, CTAContent } from '@/types/sections'
 import type { SectionConfig } from '@/types/site'
 import { getTitleSizeClass, getTextAlignClass } from '../_utils'
 import { EditablePlaceholder } from '../_EditablePlaceholder'
+import { Play } from 'lucide-react'
 
 interface CTASectionProps {
   config: SectionConfig
@@ -288,13 +289,28 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
 
     // Centered
     if (layout === 'centered') {
+      const bgImage = config.style.backgroundImage
+      const hasBgImage = !!bgImage?.url
       return (
-        <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-          <div className={cn("max-w-4xl mx-auto px-6 text-center space-y-6", textAlign && getTextAlignClass(textAlign))}>
+        <section className={cn(hasBgImage ? 'relative py-32' : 'bg-white py-24')} style={{ fontFamily: 'var(--font-body, inherit)' }}>
+          {hasBgImage && (
+            <>
+              <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage.url})`, backgroundAttachment: bgImage.attachment || 'scroll' }} />
+              <div className="absolute inset-0" style={{ backgroundColor: bgImage.overlayColor || '#000', opacity: bgImage.overlayOpacity ?? 0.7 }} />
+            </>
+          )}
+          <div className={cn("max-w-4xl mx-auto px-6 text-center space-y-6 relative z-10", textAlign && getTextAlignClass(textAlign))}>
+            {content.icon === 'play' && (
+              <div className="flex justify-center">
+                <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
+                  <Play className="w-6 h-6 text-zinc-900 ml-1" fill="currentColor" />
+                </div>
+              </div>
+            )}
             {badgeEl}
-            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light text-zinc-900 leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={textColor ? { color: textColor } : undefined}>{title}</h2>
-            <div className="w-12 h-px mx-auto" style={{ background: gold }} />
-            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base text-zinc-400 max-w-xl mx-auto tracking-wide font-light">{subtitle}</p>}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light leading-tight tracking-tight", hasBgImage ? 'text-white' : 'text-zinc-900', titleSize && getTitleSizeClass(titleSize))} style={textColor ? { color: textColor } : undefined}>{title}</h2>
+            {!hasBgImage && <div className="w-12 h-px mx-auto" style={{ background: gold }} />}
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className={cn("text-base max-w-xl mx-auto tracking-wide font-light", hasBgImage ? 'text-white/70' : 'text-zinc-400')}>{subtitle}</p>}
             <div className="flex flex-wrap gap-4 justify-center pt-4">
               {primaryBtn}
               {secondaryBtn}

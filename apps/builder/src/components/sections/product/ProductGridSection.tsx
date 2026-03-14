@@ -4,7 +4,7 @@ import type { SectionConfig } from '@/types/site'
 import type { ProductGridContent, ProductItem } from '@/types/sections'
 import { Star, ShoppingCart, Check, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react'
 import { elementProps } from '@/lib/elementHelpers'
-import { DecorativeOrnament } from '../_DecorativeOrnament'
+import { DecorativeOrnament, FloatingIllustration } from '../_DecorativeOrnament'
 
 export function ProductGridSection({ config }: { config: SectionConfig }) {
   const content = (config.content ?? {}) as Partial<ProductGridContent>
@@ -265,7 +265,7 @@ export function ProductGridSection({ config }: { config: SectionConfig }) {
 
     const header = (
       <div className="text-center mb-16 space-y-5">
-        {hasDecorativeIcon && <DecorativeOrnament color={gold} />}
+        {hasDecorativeIcon && <DecorativeOrnament color={gold} iconUrl={typeof content.decorativeIcon === 'string' && content.decorativeIcon.startsWith('http') ? content.decorativeIcon : undefined} />}
         {eyebrow && (
           <span className="inline-block text-xs tracking-[0.25em] uppercase font-light" style={{ color: gold }}>
             {eyebrow}
@@ -284,8 +284,8 @@ export function ProductGridSection({ config }: { config: SectionConfig }) {
     // Grid
     if (layout === 'grid') {
       return (
-        <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-          <div className="max-w-5xl mx-auto px-6">
+        <section className="bg-white py-24 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+          <div className="max-w-5xl mx-auto px-6 relative">
             {header}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {items.map((item, i) => (
@@ -299,6 +299,9 @@ export function ProductGridSection({ config }: { config: SectionConfig }) {
                     </span>
                   )}
                   <h3 {...elementProps(config.id, `items.${i}.name`, 'heading')} className="font-medium text-zinc-900 tracking-wide text-sm uppercase">{item.name}</h3>
+                  {item.description && (
+                    <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm text-zinc-400 font-light leading-relaxed">{item.description}</p>
+                  )}
                   <div className="flex items-center justify-center gap-3">
                     <span {...elementProps(config.id, `items.${i}.price`, 'text')} className="text-lg font-light tracking-wide text-zinc-900">{item.price}</span>
                     {item.originalPrice && <span className="text-sm line-through text-zinc-400 font-light">{item.originalPrice}</span>}
@@ -307,6 +310,13 @@ export function ProductGridSection({ config }: { config: SectionConfig }) {
                 </div>
               ))}
             </div>
+            {content.primaryButton && (
+              <div className="flex justify-center mt-12">
+                <a {...elementProps(config.id, 'primaryButton', 'button')} href={content.primaryButton.href} className="px-8 py-3.5 text-sm font-medium tracking-[0.1em] uppercase border border-zinc-300 text-zinc-700 hover:bg-zinc-50 transition-colors">
+                  {content.primaryButton.label}
+                </a>
+              </div>
+            )}
           </div>
         </section>
       )
@@ -314,8 +324,8 @@ export function ProductGridSection({ config }: { config: SectionConfig }) {
 
     // List
     return (
-      <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-        <div className="max-w-4xl mx-auto px-6">
+      <section className="bg-white py-24 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+        <div className="max-w-4xl mx-auto px-6 relative">
           {header}
           <div className="space-y-0 divide-y divide-zinc-100">
             {items.map((item, i) => (

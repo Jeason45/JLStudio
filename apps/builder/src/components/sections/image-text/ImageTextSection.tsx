@@ -8,7 +8,7 @@ import { Image, ArrowRight, Check } from 'lucide-react'
 import { DynamicIcon } from '@/components/ui/DynamicIcon'
 import { elementProps } from '@/lib/elementHelpers'
 import { EditablePlaceholder } from '../_EditablePlaceholder'
-import { DecorativeOrnament } from '../_DecorativeOrnament'
+import { DecorativeOrnament, FloatingIllustration } from '../_DecorativeOrnament'
 import { useBrixsaScrollReveal, useBrixsaCounter } from '@/hooks/useBrixsaScrollReveal'
 
 export function ImageTextSection({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
@@ -154,11 +154,11 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
     const hasDecorativeIcon = !!content.decorativeIcon
 
     return (
-      <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-        <div className={cn('max-w-5xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-16', isLeft && 'lg:flex-row-reverse')}>
+      <section className="bg-white py-24 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+        <div className={cn('max-w-5xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-16 relative', isLeft && 'lg:flex-row-reverse')}>
           {/* Text */}
           <div className="flex-1 space-y-6">
-            {hasDecorativeIcon && <DecorativeOrnament color={gold} className="justify-start" />}
+            {hasDecorativeIcon && <DecorativeOrnament color={gold} iconUrl={typeof content.decorativeIcon === 'string' && content.decorativeIcon.startsWith('http') ? content.decorativeIcon : undefined} className="justify-start" />}
             {content.eyebrow && (
               <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-xs tracking-[0.25em] uppercase font-light" style={{ color: gold }}>
                 {content.eyebrow}
@@ -171,6 +171,19 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
             )}
             {!hasDecorativeIcon && <div className="w-12 h-px" style={{ background: gold }} />}
             {content.subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base text-zinc-400 tracking-wide font-light">{content.subtitle}</p>}
+            {/* Stats row */}
+            {content.stats && (content.stats as { id: string; value: string; label: string }[]).length > 0 && (
+              <div className="flex gap-10 pt-2">
+                {(content.stats as { id: string; value: string; label: string }[]).map((stat, si) => (
+                  <div key={stat.id || si}>
+                    <p className="text-4xl font-black text-zinc-900 tracking-tight">
+                      {stat.value.replace(/[A-Za-z%]+$/, '')}<span style={{ color: gold }}>{stat.value.match(/[A-Za-z%]+$/)?.[0] || ''}</span>
+                    </p>
+                    <p className="text-xs font-bold tracking-wide uppercase text-zinc-900 mt-1">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            )}
             {content.body && <p {...elementProps(config.id, 'body', 'text')} className="text-sm text-zinc-400 leading-relaxed font-light tracking-wide">{content.body}</p>}
             {content.items && content.items.length > 0 && (
               <div className="space-y-4 pt-2">

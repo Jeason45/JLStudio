@@ -14,6 +14,7 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
   const logo = content.logo ?? 'Logo'
   const ctaLabel = content.ctaLabel
   const ctaHref = content.ctaHref ?? '#'
+  const cartLabel = content.cartLabel
 
   // ─── VARIANT: corporate ───
   // Univers entreprise / finance : fond navy sombre, clean, CTA sobre avec bordure
@@ -74,18 +75,25 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
               </a>
             ))}
           </nav>
-          {ctaLabel && (
-            <a
-              {...elementProps(config.id, 'ctaLabel', 'button')}
-              href={ctaHref}
-              className="hidden md:inline-flex px-5 py-2 text-xs tracking-[0.12em] uppercase font-medium border transition-colors"
-              style={{ borderColor: gold, color: gold, backgroundColor: 'transparent' }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = gold; (e.currentTarget as HTMLElement).style.color = '#1a1a1a' }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'; (e.currentTarget as HTMLElement).style.color = gold }}
-            >
-              {ctaLabel}
-            </a>
-          )}
+          <div className="hidden md:flex items-center gap-5">
+            {cartLabel && (
+              <span {...elementProps(config.id, 'cartLabel', 'text')} className="text-xs tracking-[0.12em] uppercase" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                {cartLabel}
+              </span>
+            )}
+            {ctaLabel && (
+              <a
+                {...elementProps(config.id, 'ctaLabel', 'button')}
+                href={ctaHref}
+                className="inline-flex px-5 py-2 text-xs tracking-[0.12em] uppercase font-medium border transition-colors"
+                style={{ borderColor: gold, color: gold, backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = gold; (e.currentTarget as HTMLElement).style.color = '#1a1a1a' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'; (e.currentTarget as HTMLElement).style.color = gold }}
+              >
+                {ctaLabel}
+              </a>
+            )}
+          </div>
         </div>
       </header>
     )

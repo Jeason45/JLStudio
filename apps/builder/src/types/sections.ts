@@ -29,6 +29,7 @@ export interface HeroContent {
   secondaryButton?: ButtonConfig
   image?: ImageConfig
   backgroundImage?: string
+  decorativeImage?: string
   videoUrl?: string
   posterImage?: string
   autoplay?: boolean
@@ -691,6 +692,7 @@ export interface SiteHeaderContent {
   links: NavLink[]
   ctaLabel?: string
   ctaHref?: string
+  cartLabel?: string
   sticky?: boolean
   transparent?: boolean
 }

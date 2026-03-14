@@ -4,10 +4,10 @@ import { cn } from '@/lib/utils'
 import type { SectionConfig, SectionTitleSize, SectionTextAlign } from '@/types/site'
 import type { TestimonialsContent, TestimonialItem } from '@/types/sections'
 import { useSectionCarousel } from '@/hooks/useSectionCarousel'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight } from 'lucide-react'
 import { getTitleSizeClass, getTextAlignClass } from '../_utils'
 import { elementProps } from '@/lib/elementHelpers'
-import { DecorativeOrnament } from '../_DecorativeOrnament'
+import { DecorativeOrnament, FloatingIllustration } from '../_DecorativeOrnament'
 
 interface TestimonialsSectionProps {
   config: SectionConfig
@@ -305,42 +305,75 @@ function CorporateMarquee({ content, items, accent, styleOverrides, sectionId }:
 // LUXE — bg-white / zinc-50, gold, font-light, tracking-wide, italic quotes, gold dividers
 // ─────────────────────────────────────────────
 
-function LuxeHeader({ content, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; styleOverrides?: StyleOverrides; sectionId: string }) {
+function LuxeHeader({ content, styleOverrides, sectionId, arrows }: { content: Partial<TestimonialsContent>; styleOverrides?: StyleOverrides; sectionId: string; arrows?: React.ReactNode }) {
   const { titleSize, textAlign, textColor } = styleOverrides ?? {}
   const hasDecorativeIcon = !!content.decorativeIcon
   return (
-    <div className={cn("mb-16 text-center space-y-4", textAlign && getTextAlignClass(textAlign))}>
-      {hasDecorativeIcon && <DecorativeOrnament color="#b8860b" />}
+    <div className={cn("mb-16 space-y-4", arrows ? "text-left" : "text-center", textAlign && getTextAlignClass(textAlign))}>
+      {hasDecorativeIcon && <DecorativeOrnament color="#b8860b" iconUrl={typeof content.decorativeIcon === 'string' && content.decorativeIcon.startsWith('http') ? content.decorativeIcon : undefined} />}
       {content.eyebrow && (
         <span className="inline-block text-[11px] font-light tracking-[0.25em] uppercase" style={{ color: '#b8860b' }}>
           {content.eyebrow}
         </span>
       )}
       {content.title && (
-        <>
-          {!hasDecorativeIcon ? (
-            <div className="flex items-center justify-center gap-4 mb-2">
-              <span className="h-px w-12" style={{ backgroundColor: '#b8860b' }} />
-              <h2 {...elementProps(sectionId, 'title', 'heading')} className={cn("text-3xl md:text-4xl lg:text-5xl font-black tracking-wide text-zinc-900", titleSize && getTitleSizeClass(titleSize))} style={textColor ? { color: textColor } : undefined}>{content.title}</h2>
-              <span className="h-px w-12" style={{ backgroundColor: '#b8860b' }} />
-            </div>
-          ) : (
+        <div className={cn(arrows && "flex items-start justify-between gap-8")}>
+          <div>
             <h2 {...elementProps(sectionId, 'title', 'heading')} className={cn("text-3xl md:text-4xl lg:text-5xl font-black tracking-wide text-zinc-900", titleSize && getTitleSizeClass(titleSize))} style={textColor ? { color: textColor } : undefined}>{content.title}</h2>
-          )}
-        </>
+          </div>
+          {arrows}
+        </div>
       )}
-      {content.subtitle && <p {...elementProps(sectionId, 'subtitle', 'text')} className="text-base max-w-2xl mx-auto text-zinc-400 font-light tracking-wide">{content.subtitle}</p>}
+      {content.subtitle && <p {...elementProps(sectionId, 'subtitle', 'text')} className={cn("text-base text-zinc-400 font-light tracking-wide", !arrows && "max-w-2xl mx-auto")}>{content.subtitle}</p>}
     </div>
   )
 }
 
-function LuxeCard({ item, large, sectionId, itemIndex }: { item: TestimonialItem; large?: boolean; sectionId: string; itemIndex: number }) {
+function LuxeCard({ item, large, horizontal, sectionId, itemIndex }: { item: TestimonialItem; large?: boolean; horizontal?: boolean; sectionId: string; itemIndex: number }) {
+  if (horizontal) {
+    return (
+      <div className="bg-white rounded-sm p-6 flex gap-5 border border-zinc-100 shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
+        {item.avatar && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img {...elementProps(sectionId, `items.${itemIndex}.avatar`, 'image')} src={item.avatar} alt={item.author || ''} className="w-20 h-20 rounded-sm object-cover shrink-0" />
+        )}
+        <div className="flex-1 min-w-0">
+          <LuxeStars rating={item.rating} />
+          <p {...elementProps(sectionId, `items.${itemIndex}.quote`, 'text')} className="text-sm font-bold text-zinc-900 mb-2">
+            &ldquo;{item.quote}&rdquo;
+          </p>
+          {item.description && (
+            <p {...elementProps(sectionId, `items.${itemIndex}.description`, 'text')} className="text-sm text-zinc-500 font-light leading-relaxed mb-4">
+              {item.description}
+            </p>
+          )}
+          <div className="flex items-center gap-3 pt-2">
+            <p {...elementProps(sectionId, `items.${itemIndex}.author`, 'text')} className="text-sm font-bold tracking-wide text-zinc-900">{item.author}</p>
+            {item.role && (
+              <>
+                <div className="w-px h-4 bg-zinc-300" />
+                <p {...elementProps(sectionId, `items.${itemIndex}.role`, 'text')} className="text-xs text-zinc-400 font-light tracking-wide">{item.role}{item.company ? ` · ${item.company}` : ''}</p>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={cn('p-8 text-center', large && 'flex flex-col justify-center')}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {item.avatar && <img {...elementProps(sectionId, `items.${itemIndex}.avatar`, 'image')} src={item.avatar} alt={item.author || ''} className="w-16 h-16 rounded-full object-cover mx-auto mb-4" />}
       <LuxeStars rating={item.rating} />
-      <p {...elementProps(sectionId, `items.${itemIndex}.quote`, 'text')} className={cn('leading-relaxed mb-6 italic text-zinc-500 font-light', large ? 'text-xl' : 'text-sm')}>
+      <p {...elementProps(sectionId, `items.${itemIndex}.quote`, 'text')} className={cn('leading-relaxed mb-4 italic text-zinc-900 font-medium', large ? 'text-xl' : 'text-sm')}>
         &ldquo;{item.quote}&rdquo;
       </p>
+      {item.description && (
+        <p {...elementProps(sectionId, `items.${itemIndex}.description`, 'text')} className="text-sm text-zinc-500 font-light leading-relaxed mb-6 max-w-lg mx-auto">
+          {item.description}
+        </p>
+      )}
       <div className="mx-auto w-8 h-px mb-4" style={{ backgroundColor: '#b8860b' }} />
       <p {...elementProps(sectionId, `items.${itemIndex}.author`, 'text')} className="text-sm font-medium tracking-wide text-zinc-900">{item.author}</p>
       <p {...elementProps(sectionId, `items.${itemIndex}.role`, 'text')} className="text-xs text-zinc-400 font-light tracking-wide mt-1">{item.role}{item.company ? ` · ${item.company}` : ''}</p>
@@ -350,8 +383,8 @@ function LuxeCard({ item, large, sectionId, itemIndex }: { item: TestimonialItem
 
 function LuxeGrid({ content, items, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; styleOverrides?: StyleOverrides; sectionId: string }) {
   return (
-    <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-      <div className="max-w-6xl mx-auto px-6">
+    <section className="bg-white py-24 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6 relative">
         <LuxeHeader content={content} styleOverrides={styleOverrides} sectionId={sectionId} />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-0 divide-x divide-zinc-100">
           {items.map((item, i) => <LuxeCard key={item.id} item={item} sectionId={sectionId} itemIndex={i} />)}
@@ -364,8 +397,8 @@ function LuxeGrid({ content, items, styleOverrides, sectionId }: { content: Part
 function LuxeFeatured({ content, items, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; styleOverrides?: StyleOverrides; sectionId: string }) {
   const [main, ...rest] = items
   return (
-    <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-      <div className="max-w-6xl mx-auto px-6">
+    <section className="bg-white py-24 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6 relative">
         <LuxeHeader content={content} styleOverrides={styleOverrides} sectionId={sectionId} />
         <div className="grid lg:grid-cols-2 gap-0 divide-x divide-zinc-100">
           <LuxeCard item={main} large sectionId={sectionId} itemIndex={0} />
@@ -381,8 +414,8 @@ function LuxeFeatured({ content, items, styleOverrides, sectionId }: { content: 
 function LuxeMarquee({ content, items, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; styleOverrides?: StyleOverrides; sectionId: string }) {
   const doubled = [...items, ...items]
   return (
-    <section className="bg-zinc-50 py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-      <div className="max-w-6xl mx-auto px-6">
+    <section className="bg-zinc-50 py-24 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6 relative">
         <LuxeHeader content={content} styleOverrides={styleOverrides} sectionId={sectionId} />
       </div>
       <div className="overflow-hidden relative">
@@ -879,7 +912,7 @@ function BrixsaFeatured({ content, items, sectionId }: { content: Partial<Testim
 const SLIDER_CONFIGS = {
   startup: { bg: 'bg-zinc-50', cardBg: 'bg-white border-zinc-100', dotActive: 'bg-indigo-600', dotInactive: 'bg-zinc-300', arrowBg: 'bg-white shadow-lg', arrowText: 'text-zinc-700' },
   corporate: { bg: 'bg-slate-900', cardBg: 'bg-slate-800 border-slate-700', dotActive: 'bg-blue-500', dotInactive: 'bg-slate-600', arrowBg: 'bg-slate-800 border border-slate-700', arrowText: 'text-white' },
-  luxe: { bg: 'bg-white', cardBg: 'bg-white border-zinc-200', dotActive: 'bg-amber-600', dotInactive: 'bg-zinc-300', arrowBg: 'bg-white border border-zinc-200', arrowText: 'text-zinc-700' },
+  luxe: { bg: 'bg-white', cardBg: 'bg-white border-zinc-200', dotActive: 'bg-amber-600', dotInactive: 'bg-zinc-300', arrowBg: 'bg-zinc-900', arrowText: 'text-white', arrowShape: 'square' as const, arrowPosition: 'header' as const },
   creative: { bg: 'bg-amber-50', cardBg: 'bg-white border-2 border-zinc-900', dotActive: 'bg-zinc-900', dotInactive: 'bg-zinc-400', arrowBg: 'bg-yellow-300 border-2 border-zinc-900', arrowText: 'text-zinc-900' },
   ecommerce: { bg: 'bg-white', cardBg: 'bg-white border-zinc-200', dotActive: 'bg-emerald-600', dotInactive: 'bg-zinc-300', arrowBg: 'bg-white shadow-md', arrowText: 'text-zinc-700' },
   glass: { bg: 'bg-zinc-950', cardBg: 'bg-white/5 border-white/10 backdrop-blur-sm', dotActive: 'bg-purple-500', dotInactive: 'bg-zinc-700', arrowBg: 'bg-white/10 border border-white/10', arrowText: 'text-white' },
@@ -887,37 +920,55 @@ const SLIDER_CONFIGS = {
 
 function makeSliderVariant(
   universe: keyof typeof SLIDER_CONFIGS,
-  renderHeader: (props: { content: Partial<TestimonialsContent>; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) => React.ReactNode,
+  renderHeader: (props: { content: Partial<TestimonialsContent>; accent: string; styleOverrides?: StyleOverrides; sectionId: string; arrows?: React.ReactNode }) => React.ReactNode,
   renderCard: (props: { item: TestimonialItem; accent: string; sectionId: string; itemIndex: number }) => React.ReactNode,
+  options?: { slideWidth?: string },
 ) {
   const cfg = SLIDER_CONFIGS[universe]
+  const slideW = options?.slideWidth ?? '100%'
+  const isSquareArrow = 'arrowShape' in cfg && cfg.arrowShape === 'square'
+  const isHeaderArrow = 'arrowPosition' in cfg && cfg.arrowPosition === 'header'
   return function SliderVariant({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
     const { emblaRef, selectedIndex, scrollSnaps, canScrollPrev, canScrollNext, scrollPrev, scrollNext, scrollTo } = useSectionCarousel({ loop: true, autoplay: true, interval: 5000 })
 
+    const ArrowIconLeft = isSquareArrow ? ArrowLeft : ChevronLeft
+    const ArrowIconRight = isSquareArrow ? ArrowRight : ChevronRight
+    const arrowButtons = items.length > 1 ? (
+      <div className={cn(isHeaderArrow ? 'flex gap-2' : 'contents')}>
+        <button onClick={scrollPrev} className={cn(
+          'flex items-center justify-center transition-all',
+          isSquareArrow ? 'w-12 h-12' : 'w-10 h-10 rounded-full',
+          !isHeaderArrow && 'absolute -left-4 top-1/2 -translate-y-1/2',
+          cfg.arrowBg
+        )}>
+          <ArrowIconLeft className={cn(isSquareArrow ? 'w-6 h-6' : 'w-5 h-5')} style={{ color: 'white' }} />
+        </button>
+        <button onClick={scrollNext} className={cn(
+          'flex items-center justify-center transition-all',
+          isSquareArrow ? 'w-12 h-12' : 'w-10 h-10 rounded-full',
+          !isHeaderArrow && 'absolute -right-4 top-1/2 -translate-y-1/2',
+          cfg.arrowBg
+        )}>
+          <ArrowIconRight className={cn(isSquareArrow ? 'w-6 h-6' : 'w-5 h-5')} style={{ color: 'white' }} />
+        </button>
+      </div>
+    ) : null
+
     return (
-      <section className={cn(cfg.bg, 'py-24')} style={{ fontFamily: 'var(--font-body, inherit)' }}>
+      <section className={cn(cfg.bg, 'py-24 relative overflow-hidden')} style={{ fontFamily: 'var(--font-body, inherit)' }}>
         <div className="max-w-6xl mx-auto px-6">
-          {renderHeader({ content, accent, styleOverrides, sectionId })}
+          {renderHeader({ content, accent, styleOverrides, sectionId, arrows: isHeaderArrow ? arrowButtons : undefined })}
           <div className="relative">
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
                 {items.map((item, i) => (
-                  <div key={item.id} className="flex-[0_0_100%] min-w-0 px-3">
+                  <div key={item.id} className="min-w-0 px-3" style={{ flex: `0 0 ${slideW}` }}>
                     {renderCard({ item, accent, sectionId, itemIndex: i })}
                   </div>
                 ))}
               </div>
             </div>
-            {items.length > 1 && (
-              <>
-                <button onClick={scrollPrev} disabled={!canScrollPrev} className={cn('absolute -left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-30', cfg.arrowBg)}>
-                  <ChevronLeft className={cn('w-5 h-5', cfg.arrowText)} />
-                </button>
-                <button onClick={scrollNext} disabled={!canScrollNext} className={cn('absolute -right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-30', cfg.arrowBg)}>
-                  <ChevronRight className={cn('w-5 h-5', cfg.arrowText)} />
-                </button>
-              </>
-            )}
+            {!isHeaderArrow && arrowButtons}
           </div>
           {scrollSnaps.length > 1 && (
             <div className="flex justify-center gap-2 mt-6">
@@ -941,8 +992,9 @@ const CorporateSlider = makeSliderVariant('corporate',
   (props) => <CorporateCard {...props} />,
 )
 const LuxeSlider = makeSliderVariant('luxe',
-  ({ content, styleOverrides, sectionId }) => <LuxeHeader content={content} styleOverrides={styleOverrides} sectionId={sectionId} />,
-  ({ item, sectionId, itemIndex }) => <LuxeCard item={item} sectionId={sectionId} itemIndex={itemIndex} />,
+  ({ content, styleOverrides, sectionId, arrows }) => <LuxeHeader content={content} styleOverrides={styleOverrides} sectionId={sectionId} arrows={arrows} />,
+  ({ item, sectionId, itemIndex }) => <LuxeCard item={item} horizontal sectionId={sectionId} itemIndex={itemIndex} />,
+  { slideWidth: '48%' },
 )
 const CreativeSlider = makeSliderVariant('creative',
   ({ content, styleOverrides, sectionId }) => <CreativeHeader content={content} styleOverrides={styleOverrides} sectionId={sectionId} />,

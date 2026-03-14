@@ -9,7 +9,7 @@ import { Check, ArrowRight, Star } from 'lucide-react'
 import { DynamicIcon } from '@/components/ui/DynamicIcon'
 import { getTitleSizeClass, getTextAlignClass } from '../_utils'
 import { EditablePlaceholder } from '../_EditablePlaceholder'
-import { DecorativeOrnament } from '../_DecorativeOrnament'
+import { DecorativeOrnament, FloatingIllustration } from '../_DecorativeOrnament'
 
 interface FeaturesSectionProps {
   config: SectionConfig
@@ -243,7 +243,7 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
 
     const header = (
       <div className={cn("text-center mb-16 space-y-5", textAlign && getTextAlignClass(textAlign))}>
-        {hasDecorativeIcon && <DecorativeOrnament color={gold} />}
+        {hasDecorativeIcon && <DecorativeOrnament color={gold} iconUrl={typeof content.decorativeIcon === 'string' && content.decorativeIcon.startsWith('http') ? content.decorativeIcon : undefined} />}
         {eyebrow ? (
           <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-xs tracking-[0.25em] uppercase font-light" style={{ color: gold }}>
             {eyebrow}
@@ -261,20 +261,56 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
 
     // Grid
     if (layout === 'grid') {
+      const cols = content.columns ?? 3
+      const colClass = cols === 2 ? 'sm:grid-cols-2' : cols === 4 ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-2 lg:grid-cols-3'
+      const useHorizontal = cols === 2
+
       return (
-        <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-          <div className="max-w-5xl mx-auto px-6">
+        <section className="bg-white py-24 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+          <div className="max-w-5xl mx-auto px-6 relative">
             {header}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
-              {items.map((item, i) => (
+            <div className={cn('grid gap-10', colClass)}>
+              {items.map((item, i) => useHorizontal ? (
+                <div key={item.id} className="flex gap-5 items-start">
+                  {item.icon?.startsWith('http') ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={item.icon} alt="" className="w-10 h-10 shrink-0 object-contain" style={{ filter: 'none' }} />
+                  ) : (
+                    <DynamicIcon name={item.icon} className="w-10 h-10 shrink-0" fallbackClassName="text-3xl leading-none" style={{ color: gold }} />
+                  )}
+                  <div className="space-y-2">
+                    <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-bold text-zinc-900 tracking-wide text-sm uppercase">{item.title}</h3>
+                    <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm text-zinc-400 leading-relaxed font-light">{item.description}</p>
+                  </div>
+                </div>
+              ) : (
                 <div key={item.id} className="text-center space-y-4">
-                  <DynamicIcon name={item.icon} className="w-7 h-7 mx-auto" fallbackClassName="text-2xl leading-none" style={{ color: gold }} />
+                  {item.icon?.startsWith('http') ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={item.icon} alt="" className="w-7 h-7 mx-auto object-contain" style={{ filter: 'none' }} />
+                  ) : (
+                    <DynamicIcon name={item.icon} className="w-7 h-7 mx-auto" fallbackClassName="text-2xl leading-none" style={{ color: gold }} />
+                  )}
                   <div className="w-8 h-px mx-auto" style={{ background: gold }} />
                   <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-medium text-zinc-900 tracking-wide text-sm uppercase">{item.title}</h3>
                   <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm text-zinc-400 leading-relaxed font-light">{item.description}</p>
                 </div>
               ))}
             </div>
+            {(content.primaryButton || content.secondaryButton) && (
+              <div className="flex flex-wrap gap-4 justify-center mt-12">
+                {content.primaryButton && (
+                  <a {...elementProps(config.id, 'primaryButton', 'button')} href={content.primaryButton.href} className="px-8 py-3.5 text-sm font-medium tracking-[0.1em] uppercase text-white transition-all hover:brightness-110" style={{ backgroundColor: gold }}>
+                    {content.primaryButton.label}
+                  </a>
+                )}
+                {content.secondaryButton && (
+                  <a {...elementProps(config.id, 'secondaryButton', 'button')} href={content.secondaryButton.href} className="px-8 py-3.5 text-sm font-medium tracking-[0.1em] uppercase border border-zinc-300 text-zinc-700 hover:bg-zinc-50 transition-colors">
+                    {content.secondaryButton.label}
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </section>
       )
@@ -283,8 +319,8 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
     // Bento
     if (layout === 'bento') {
       return (
-        <section className="bg-zinc-50 py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-          <div className="max-w-5xl mx-auto px-6">
+        <section className="bg-zinc-50 py-24 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+          <div className="max-w-5xl mx-auto px-6 relative">
             {header}
             <div className="grid sm:grid-cols-2 gap-6">
               {items.map((item, i) => (
@@ -312,8 +348,8 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
 
     // List
     return (
-      <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-        <div className="max-w-3xl mx-auto px-6">
+      <section className="bg-white py-24 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+        <div className="max-w-3xl mx-auto px-6 relative">
           {header}
           <div className="space-y-10">
             {items.map((item, i) => (

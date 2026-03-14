@@ -1,11 +1,11 @@
 {
   "success": true,
-  "mode": "update",
+  "mode": "create",
   "site": {
-    "id": "QYc5HzmmO7",
-    "slug": "beard-x-zsEL",
+    "id": "W3bp7JvSVP",
+    "slug": "beard-x-rg-C",
     "name": "Beard X",
-    "editorUrl": "/editor/QYc5HzmmO7",
+    "editorUrl": "/editor/W3bp7JvSVP",
     "sectionsCount": 12,
     "pagesCount": 6
   },

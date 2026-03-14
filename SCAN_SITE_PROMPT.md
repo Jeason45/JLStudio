@@ -2639,3 +2639,94 @@ Le CTA de la navbar (bouton en haut à droite) peut être DIFFÉRENT des CTAs du
 Exemple : navbar CTA = "BOOK AN APPOINTMENT" (action directe), hero secondary = "BROWSE SERVICES" (navigation).
 Vérifier le screenshot du header pour identifier le vrai CTA navbar, pas le raw-data extractor
 qui peut confondre les deux.
+
+### Règle 12 : CTA sections avec background image — toujours spécifier overlayOpacity
+Les sections CTA avec image de fond nécessitent TOUJOURS un `backgroundImage.overlayOpacity` élevé (0.8-0.9).
+Si l'original a un fond quasi-opaque (gris foncé), utiliser 0.85-0.9. Ne jamais omettre l'overlay.
+Le composant luxe-centered supporte désormais `backgroundImage` dans le style avec `overlayColor` et `overlayOpacity`.
+
+### Règle 13 : Gallery sections — toujours inclure primaryButton
+Les galeries ont presque toujours un CTA sous les images ("FOLLOW US", "VIEW ALL", "BOOK AN APPOINTMENT").
+Toujours capturer ce bouton dans `content.primaryButton` avec `label` et `href`.
+
+### Règle 14 : Footer multi-colonnes — garder les titres de colonnes
+Quand un footer a des colonnes avec des titres ("MENU", "UTILITY PAGES", "RESOURCES"),
+garder le champ `title` dans chaque colonne du JSON. Le composant luxe utilisera automatiquement
+un layout multi-colonnes (brand+socials à gauche, colonnes de liens à droite).
+Sans titres, il retombe sur le layout centré une colonne.
+
+### Règle 15 : Testimonials layout — détecter horizontal cards vs centered single
+Vérifier le screenshot de la section testimonials. Si les cartes montrent l'avatar À GAUCHE du texte
+(layout horizontal), le composant luxe-slider rendra automatiquement des cartes horizontales
+côte à côte. Le pattern "avatar au-dessus, texte centré" est un layout différent (grid/featured).
+Le slider luxe affiche ~1.6 cartes visibles pour l'effet de défilement horizontal.
+
+### Règle 16 : Illustrations décoratives flottantes (floating items)
+Quand le site scanné a des illustrations/SVG décoratifs positionnés en fond de section (coins,
+faible opacité, souvent thématiques — ciseaux, rasoir, brosse, pot de crème, etc.), les capturer
+dans `content.floatingImages[]`. Chaque entrée :
+```json
+{ "src": "https://cdn.../illustration.svg", "position": "bottom-left", "size": 280, "opacity": 0.22 }
+```
+Positions valides : `"top-left"`, `"top-right"`, `"bottom-left"`, `"bottom-right"`.
+Opacité recommandée : 0.40–0.50 (clairement visible en fond). Taille recommandée : 250–350px.
+
+**Détection — ces illustrations sont souvent manquées au premier scan :**
+1. Dans le `raw-data.json`, rechercher systématiquement les URLs contenant : `"floating"`, `"decorative"`, `"illustration"`, `"background"`, `"item"` combiné au nom du thème (ex: `"barbershop"`, `"restaurant"`).
+2. Ces images sont souvent des `<img>` avec `position: absolute`, `pointer-events: none`, `opacity` faible (0.05–0.5) — elles ne sont PAS dans le flux du contenu et se repèrent par leur CSS (`absolute`, `z-index` bas, `opacity` < 1).
+3. Vérifier CHAQUE section du screenshot : regarder les coins et les bords — ces illustrations sont subtiles et faciles à rater car elles se fondent dans le fond.
+4. Croiser avec les assets du CDN : souvent un même site réutilise 3-4 illustrations décoratives sur plusieurs sections. Une fois une illustration trouvée, vérifier si elle apparaît ailleurs.
+5. Dans le raw-data, elles sont souvent dans des `<div>` avec des classes contenant `floating`, `bg-`, `decoration`, `ornament`, ou dans des wrappers `absolute` séparés du contenu principal.
+
+**Technique :** Les floatingImages sont rendues par le `SortableSectionWrapper` (pas par les composants de section eux-mêmes). Elles sont en `position: absolute`, `pointer-events: none`, `z-index: 3`, avec `overflow-hidden` sur le wrapper pour les contenir dans leur section.
+
+### Règle 17 : Icônes de service en URL (pas Lucide generics)
+Quand les icônes de features/services sont des SVG custom du site (pas des Lucide/emoji standards),
+stocker l'URL complète dans `item.icon` (ex: `"https://cdn.../classic-haircut.svg"`).
+Le composant FeaturesSection détecte automatiquement `item.icon.startsWith('http')` et rend un
+`<img>` au lieu d'un `<DynamicIcon>`. Ne PAS utiliser des noms Lucide génériques (scissors, baby...)
+quand le site a ses propres icônes SVG custom.
+
+### Règle 18 : DecorativeIcon comme URL réelle
+Le champ `content.decorativeIcon` peut être une URL SVG (ex: `"https://cdn.../Icon-barbershop.svg"`).
+Quand c'est une URL (commence par `http`), elle est passée au composant `DecorativeOrnament` via
+la prop `iconUrl` et rendue en `<img>` entre les lignes dorées. Quand c'est un booléen ou absent,
+la moustache barbershop intégrée (SVG inline) est utilisée par défaut.
+Toujours préférer l'URL réelle du site scanné plutôt qu'un simple `true`.
+
+### Règle 19 : Hero background parallax (background-attachment: fixed)
+Quand le hero du site scanné utilise un effet parallax (l'image de fond reste fixe pendant le scroll),
+ajouter `style.backgroundImage.attachment: "fixed"` dans la config de la section hero.
+Le composant HeroSection luxe rend l'image via CSS `background-image` sur un div (pas un `<img>`)
+avec `background-attachment: fixed`. Ne PAS utiliser de tag `<img>` pour le parallax — ça ne
+fonctionne qu'avec `background-image` CSS.
+
+### Règle 20 : Testimonial cards avec ombre (cardShadow)
+Quand les cartes de témoignages ont un fond blanc visible avec une ombre portée et/ou une bordure
+(au lieu de texte à plat sans séparation visuelle), ajouter `"cardShadow": true` dans le content
+de la section testimonials. Le composant TestimonialsSection applique alors `shadow-[0_4px_24px_rgba(0,0,0,0.08)]`
+et `border border-zinc-100` sur chaque carte.
+Sans ce flag, les cartes sont rendues à plat sans ombre ni bordure.
+
+### Règle 21 : Style des flèches de navigation slider (arrowStyle)
+Quand les flèches de navigation d'un slider/carousel sont des carrés noirs avec icône blanche
+(au lieu de cercles gris par défaut), ajouter `"arrowStyle": "square-dark"` dans le content.
+Valeurs possibles :
+- absent/défaut : cercles gris avec chevrons
+- `"square-dark"` : carrés noirs avec flèches blanches (style luxe/barbershop)
+Toujours vérifier sur les screenshots la forme (rond vs carré) et la couleur (gris vs noir) des flèches.
+
+### Règle 22 : Galerie 5 images en grille rectangle
+Quand une galerie (Instagram, portfolio) affiche exactement 5 images formant un rectangle propre
+(pas un masonry irrégulier), avec l'image centrale plus grande qui span 2 lignes, le composant
+GallerySection le gère automatiquement quand `images.length === 5` : grille CSS 3 colonnes × 2 lignes,
+image du centre en `row-span-2`. Il suffit de fournir exactement 5 images dans le bon ordre
+(top-left, center, top-right, bottom-left, bottom-right) pour obtenir ce layout.
+
+### Règle 23 : textColor blanc sur sections à fond sombre
+Quand une section a un `customBgColor` sombre (ex: `#1a1a1a`, `#121212`, `#09090b`), TOUJOURS
+ajouter `"textColor": "#ffffff"` dans le `style` de cette section. Cela s'applique à TOUTE section
+avec fond sombre : newsletter, gallery, footer, hero, etc. — pas seulement le footer.
+Les composants adaptent automatiquement les couleurs de texte, input, bordures etc. via la détection
+`isDarkBg`, mais le `textColor` dans le style est nécessaire pour que le `SortableSectionWrapper`
+propage la couleur via CSS variable `--color-foreground`.

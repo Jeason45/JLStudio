@@ -141,6 +141,7 @@ function buildSiteConfig(template: any, siteId: string, siteName: string): { con
         ...(s.style?.fontWeight && { fontWeight: s.style.fontWeight }),
         ...(s.style?.letterSpacing && { letterSpacing: s.style.letterSpacing }),
         ...(s.style?.textTransform && { textTransform: s.style.textTransform }),
+        ...(s.style?.fontStyle && { fontStyle: s.style.fontStyle }),
         ...(s.style?.customBgColor && { customBgColor: s.style.customBgColor }),
         ...(s.style?.customGradient && { customGradient: s.style.customGradient }),
         ...(s.style?.backgroundImage && { backgroundImage: s.style.backgroundImage }),

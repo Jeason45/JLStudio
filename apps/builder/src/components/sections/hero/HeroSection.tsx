@@ -26,6 +26,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
   const subtitle = content.subtitle ?? 'Votre sous-titre accrocheur ici.'
   const bgImage = content.backgroundImage
   const heroImage = content.image?.src
+  const fontStyle = config.style.fontStyle
 
   // Helper: background image or placeholder
   const renderBgImage = (cls?: string) =>
@@ -232,14 +233,17 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     const gold = accentColor ?? '#b8860b'
     return (
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-        {/* Background image with parallax feel */}
+        {/* Background image with parallax */}
         {(bgImage || heroImage) ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <div
             {...elementProps(config.id, 'image', 'image')}
-            src={bgImage || heroImage!}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover scale-105"
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${bgImage || heroImage})`,
+              backgroundSize: config.style.backgroundImage?.size || 'cover',
+              backgroundPosition: config.style.backgroundImage?.position || 'center',
+              backgroundAttachment: config.style.backgroundImage?.attachment || 'scroll',
+            }}
           />
         ) : (
           <div className="absolute inset-0 bg-zinc-900" />
@@ -254,6 +258,16 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
         <div className="absolute inset-0 bg-black/50" />
         {/* Content */}
         <div className={cn("relative z-10 max-w-4xl mx-auto px-6 text-center py-24 space-y-8", textAlign && getTextAlignClass(textAlign))}>
+          {/* Decorative image (logo/emblem) */}
+          {content.decorativeImage && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              {...elementProps(config.id, 'decorativeImage', 'image')}
+              src={content.decorativeImage}
+              alt=""
+              className="mx-auto max-h-32 w-auto object-contain"
+            />
+          )}
           {content.eyebrow && (
             <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-xs tracking-[0.25em] uppercase font-light" style={{ color: gold }}>
               {content.eyebrow}
@@ -264,7 +278,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
           <h1
             {...elementProps(config.id, 'title', 'heading')}
             className={cn("text-4xl md:text-5xl lg:text-7xl font-light leading-[1.1] tracking-tight text-white", titleSize && getTitleSizeClass(titleSize))}
-            style={customTextColor ? { color: customTextColor } : undefined}
+            style={{ ...(customTextColor ? { color: customTextColor } : {}), ...(fontStyle === 'italic' ? { fontStyle: 'italic' } : {}) }}
           >
             {title}
           </h1>

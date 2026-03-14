@@ -8,7 +8,7 @@ import { Image, Bed, Bath, Ruler } from 'lucide-react'
 import { elementProps } from '@/lib/elementHelpers'
 import { LightboxOverlay } from '@/components/ui/LightboxOverlay'
 import { BrixsaViewCursor } from '../_BrixsaViewCursor'
-import { DecorativeOrnament } from '../_DecorativeOrnament'
+import { DecorativeOrnament, FloatingIllustration } from '../_DecorativeOrnament'
 
 export function GallerySection({ config }: { config: SectionConfig }) {
   const content = (config.content ?? {}) as Partial<GalleryContent & { enableLightbox?: boolean }>
@@ -184,10 +184,11 @@ export function GallerySection({ config }: { config: SectionConfig }) {
     const gold = accentColor ?? '#b8860b'
     const hasDecorativeIcon = !!content.decorativeIcon
 
+    const isDarkBg = config.style.background === 'custom' && !!config.style.customBgColor && !['#ffffff', '#fff', '#F8F5EF', '#f8f5ef'].includes(config.style.customBgColor)
     const title = content.title && (
       <div className="text-center mb-14 space-y-4">
-        {hasDecorativeIcon && <DecorativeOrnament color={gold} />}
-        <h2 {...elementProps(config.id, 'title', 'heading')} className="text-3xl md:text-4xl font-black text-zinc-900 tracking-tight" style={customTextColor ? { color: customTextColor } : undefined}>
+        {hasDecorativeIcon && <DecorativeOrnament color={isDarkBg ? '#DEC7A6' : gold} iconUrl={typeof content.decorativeIcon === 'string' && content.decorativeIcon.startsWith('http') ? content.decorativeIcon : undefined} />}
+        <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-black tracking-tight", isDarkBg ? "text-white" : "text-zinc-900")} style={customTextColor ? { color: customTextColor } : undefined}>
           {content.title}
         </h2>
         {!hasDecorativeIcon && <div className="w-12 h-px mx-auto" style={{ background: gold }} />}
@@ -213,29 +214,93 @@ export function GallerySection({ config }: { config: SectionConfig }) {
     )
 
     if (layout === 'masonry') {
+      const btn = (content as Record<string, unknown>).primaryButton as { label: string; href: string } | undefined
+      // Featured-center grid for 5 images: 3 cols, center spans 2 rows
+      const useFeaturedGrid = images.length === 5
       return (
-        <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-          <div className="max-w-5xl mx-auto px-6">
+        <section className={cn("py-24 relative overflow-hidden", !(config.style.background === 'custom' && config.style.customBgColor) && "bg-white")} style={{ fontFamily: 'var(--font-body, inherit)', ...(config.style.background === 'custom' && config.style.customBgColor ? { backgroundColor: config.style.customBgColor } : {}) }}>
+          <div className="max-w-5xl mx-auto px-6 relative">
             {title}
-            <div className={cn(masonryColClass, 'gap-6 space-y-6')}>
-              {images.map((img, i) => (
-                <div key={img.id} className="break-inside-avoid overflow-hidden relative group">
-                  {img.src ? (
+            {useFeaturedGrid ? (
+              <div className="grid grid-cols-3 grid-rows-2 gap-4" style={{ gridTemplateRows: 'auto auto' }}>
+                {/* Top-left */}
+                <div className="overflow-hidden relative group rounded-sm">
+                  {images[0]?.src ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img {...elementProps(config.id, `images.${i}.src`, 'image')} src={img.src} alt={img.alt} className={cn('w-full object-cover transition-transform duration-700 group-hover:scale-105', getAspect(i))} />
+                    <img {...elementProps(config.id, 'images.0.src', 'image')} src={images[0].src} alt={images[0].alt} className="w-full h-full object-cover aspect-square transition-transform duration-700 group-hover:scale-105" />
                   ) : (
-                    <div {...elementProps(config.id, `images.${i}.src`, 'image')} className={cn('w-full flex items-center justify-center bg-zinc-100', getAspect(i))}>
-                      <Image className="w-8 h-8 text-zinc-300" />
-                    </div>
-                  )}
-                  {img.caption && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                      <p {...elementProps(config.id, `images.${i}.caption`, 'text')} className="text-white text-xs tracking-widest uppercase font-light">{img.caption}</p>
-                    </div>
+                    <div {...elementProps(config.id, 'images.0.src', 'image')} className="w-full aspect-square flex items-center justify-center bg-zinc-100"><Image className="w-8 h-8 text-zinc-300" /></div>
                   )}
                 </div>
-              ))}
-            </div>
+                {/* Center — spans 2 rows */}
+                <div className="row-span-2 overflow-hidden relative group rounded-sm">
+                  {images[1]?.src ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img {...elementProps(config.id, 'images.1.src', 'image')} src={images[1].src} alt={images[1].alt} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  ) : (
+                    <div {...elementProps(config.id, 'images.1.src', 'image')} className="w-full h-full flex items-center justify-center bg-zinc-100"><Image className="w-8 h-8 text-zinc-300" /></div>
+                  )}
+                </div>
+                {/* Top-right */}
+                <div className="overflow-hidden relative group rounded-sm">
+                  {images[2]?.src ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img {...elementProps(config.id, 'images.2.src', 'image')} src={images[2].src} alt={images[2].alt} className="w-full h-full object-cover aspect-square transition-transform duration-700 group-hover:scale-105" />
+                  ) : (
+                    <div {...elementProps(config.id, 'images.2.src', 'image')} className="w-full aspect-square flex items-center justify-center bg-zinc-100"><Image className="w-8 h-8 text-zinc-300" /></div>
+                  )}
+                </div>
+                {/* Bottom-left */}
+                <div className="overflow-hidden relative group rounded-sm">
+                  {images[3]?.src ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img {...elementProps(config.id, 'images.3.src', 'image')} src={images[3].src} alt={images[3].alt} className="w-full h-full object-cover aspect-square transition-transform duration-700 group-hover:scale-105" />
+                  ) : (
+                    <div {...elementProps(config.id, 'images.3.src', 'image')} className="w-full aspect-square flex items-center justify-center bg-zinc-100"><Image className="w-8 h-8 text-zinc-300" /></div>
+                  )}
+                </div>
+                {/* Bottom-right */}
+                <div className="overflow-hidden relative group rounded-sm">
+                  {images[4]?.src ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img {...elementProps(config.id, 'images.4.src', 'image')} src={images[4].src} alt={images[4].alt} className="w-full h-full object-cover aspect-square transition-transform duration-700 group-hover:scale-105" />
+                  ) : (
+                    <div {...elementProps(config.id, 'images.4.src', 'image')} className="w-full aspect-square flex items-center justify-center bg-zinc-100"><Image className="w-8 h-8 text-zinc-300" /></div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className={cn(masonryColClass, 'gap-6 space-y-6')}>
+                {images.map((img, i) => (
+                  <div key={img.id} className="break-inside-avoid overflow-hidden relative group">
+                    {img.src ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img {...elementProps(config.id, `images.${i}.src`, 'image')} src={img.src} alt={img.alt} className={cn('w-full object-cover transition-transform duration-700 group-hover:scale-105', getAspect(i))} />
+                    ) : (
+                      <div {...elementProps(config.id, `images.${i}.src`, 'image')} className={cn('w-full flex items-center justify-center bg-zinc-100', getAspect(i))}>
+                        <Image className="w-8 h-8 text-zinc-300" />
+                      </div>
+                    )}
+                    {img.caption && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <p {...elementProps(config.id, `images.${i}.caption`, 'text')} className="text-white text-xs tracking-widest uppercase font-light">{img.caption}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            {btn && (
+              <div className="flex justify-center pt-12">
+                <a
+                  {...elementProps(config.id, 'primaryButton', 'button')}
+                  href={btn.href}
+                  className={cn("px-10 py-3.5 text-sm font-medium tracking-[0.12em] uppercase border transition-colors", isDarkBg ? "border-white/30 text-white hover:border-white/50" : "border-zinc-300 text-zinc-700 hover:border-zinc-400")}
+                >
+                  {btn.label}
+                </a>
+              </div>
+            )}
           </div>
         </section>
       )
@@ -243,8 +308,8 @@ export function GallerySection({ config }: { config: SectionConfig }) {
 
     // Grid
     return (
-      <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-        <div className="max-w-5xl mx-auto px-6">
+      <section className="bg-white py-24 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+        <div className="max-w-5xl mx-auto px-6 relative">
           {title}
           <div className={cn('grid gap-6', colClass)}>
             {images.map((img, i) => imgCard(img, undefined, i))}

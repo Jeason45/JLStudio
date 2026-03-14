@@ -107,6 +107,7 @@ export interface SectionStyle {
   fontWeight?: number
   letterSpacing?: SectionLetterSpacing
   textTransform?: SectionTextTransform
+  fontStyle?: 'normal' | 'italic'
   // Custom backgrounds
   customBgColor?: string
   customGradient?: GradientConfig

@@ -31,20 +31,42 @@
     "spacing": "relaxed"
   },
   "style": {
-    "mood": ["luxury", "dark"],
+    "mood": [
+      "luxury",
+      "dark"
+    ],
     "palette": "light",
     "density": "spacious",
     "typography": "sans-dominant"
   },
   "navigation": {
     "links": [
-      { "label": "HOME", "href": "/home" },
-      { "label": "ABOUT", "href": "/about" },
-      { "label": "PAGES", "href": "#", "hasDropdown": true },
-      { "label": "SERVICES", "href": "/services" },
-      { "label": "CONTACT", "href": "/contact" }
+      {
+        "label": "HOME",
+        "href": "/home"
+      },
+      {
+        "label": "ABOUT",
+        "href": "/about"
+      },
+      {
+        "label": "PAGES",
+        "href": "#",
+        "hasDropdown": true
+      },
+      {
+        "label": "SERVICES",
+        "href": "/services"
+      },
+      {
+        "label": "CONTACT",
+        "href": "/contact"
+      }
     ],
-    "cta": { "label": "BOOK AN APPOINTMENT", "href": "/contact" },
+    "cta": {
+      "label": "BOOK AN APPOINTMENT",
+      "href": "/contact"
+    },
     "style": "transparent"
   },
   "footer": {
@@ -52,27 +74,75 @@
       {
         "title": "MENU",
         "links": [
-          { "label": "HOME", "href": "/home" },
-          { "label": "ABOUT", "href": "/about" },
-          { "label": "SERVICES", "href": "/services" },
-          { "label": "BLOG", "href": "/blog" },
-          { "label": "BLOG POST", "href": "/blog/how-to-keep-your-razors-sharp-as-brand-new" },
-          { "label": "SHOP", "href": "/shop" },
-          { "label": "SHOP SINGLE", "href": "/product/premium-matte-pomade" },
-          { "label": "CONTACT", "href": "/contact" },
-          { "label": "TEAM MEMBER", "href": "/team/john-carter" },
-          { "label": "MORE WEBFLOW TEMPLATES", "href": "https://brixtemplates.com/more-webflow-templates" }
+          {
+            "label": "HOME",
+            "href": "/home"
+          },
+          {
+            "label": "ABOUT",
+            "href": "/about"
+          },
+          {
+            "label": "SERVICES",
+            "href": "/services"
+          },
+          {
+            "label": "BLOG",
+            "href": "/blog"
+          },
+          {
+            "label": "BLOG POST",
+            "href": "/blog/how-to-keep-your-razors-sharp-as-brand-new"
+          },
+          {
+            "label": "SHOP",
+            "href": "/shop"
+          },
+          {
+            "label": "SHOP SINGLE",
+            "href": "/product/premium-matte-pomade"
+          },
+          {
+            "label": "CONTACT",
+            "href": "/contact"
+          },
+          {
+            "label": "TEAM MEMBER",
+            "href": "/team/john-carter"
+          },
+          {
+            "label": "MORE WEBFLOW TEMPLATES",
+            "href": "https://brixtemplates.com/more-webflow-templates"
+          }
         ]
       },
       {
         "title": "UTILITY PAGES",
         "links": [
-          { "label": "START HERE", "href": "/template-pages/start-here" },
-          { "label": "STYLEGUIDE", "href": "/template-pages/style-guide" },
-          { "label": "PASSWORD PROTECTED", "href": "/401" },
-          { "label": "404 NOT FOUND", "href": "/404" },
-          { "label": "LICENSES", "href": "/template-pages/licenses" },
-          { "label": "CHANGELOG", "href": "/template-pages/changelog" }
+          {
+            "label": "START HERE",
+            "href": "/template-pages/start-here"
+          },
+          {
+            "label": "STYLEGUIDE",
+            "href": "/template-pages/style-guide"
+          },
+          {
+            "label": "PASSWORD PROTECTED",
+            "href": "/401"
+          },
+          {
+            "label": "404 NOT FOUND",
+            "href": "/404"
+          },
+          {
+            "label": "LICENSES",
+            "href": "/template-pages/licenses"
+          },
+          {
+            "label": "CHANGELOG",
+            "href": "/template-pages/changelog"
+          }
         ]
       }
     ],
@@ -180,7 +250,15 @@
           "textTransform": "none",
           "letterSpacing": "0"
         },
-        "usedIn": ["services", "gallery", "cta", "products", "testimonials", "instagram", "newsletter"],
+        "usedIn": [
+          "services",
+          "gallery",
+          "cta",
+          "products",
+          "testimonials",
+          "instagram",
+          "newsletter"
+        ],
         "confidence": "high"
       },
       {
@@ -193,10 +271,12 @@
           "borderRadius": "0px",
           "fontSize": "56px",
           "fontWeight": 900,
-          "textTransform": "uppercase",
+          "textTransform": "none",
           "letterSpacing": "normal"
         },
-        "usedIn": ["image-text (10+ years section)"],
+        "usedIn": [
+          "image-text (10+ years section)"
+        ],
         "confidence": "medium"
       }
     ],
@@ -205,7 +285,12 @@
         "type": "service-card",
         "variant": "Icon top, title, description, price - minimal card without border",
         "structure": {
-          "fields": ["icon", "title", "description", "price"],
+          "fields": [
+            "icon",
+            "title",
+            "description",
+            "price"
+          ],
           "mediaPosition": "top",
           "hasIcon": true,
           "hasBadge": false,
@@ -219,14 +304,21 @@
           "padding": "0px",
           "hoverEffect": "none"
         },
-        "usedIn": ["services section"],
+        "usedIn": [
+          "services section"
+        ],
         "confidence": "high"
       },
       {
         "type": "product-card",
         "variant": "Image top with beige bg, title, description, price below",
         "structure": {
-          "fields": ["image", "title", "description", "price"],
+          "fields": [
+            "image",
+            "title",
+            "description",
+            "price"
+          ],
           "mediaPosition": "top",
           "hasIcon": false,
           "hasBadge": false,
@@ -240,14 +332,23 @@
           "padding": "0px",
           "hoverEffect": "none"
         },
-        "usedIn": ["products section"],
+        "usedIn": [
+          "products section"
+        ],
         "confidence": "high"
       },
       {
         "type": "testimonial-card",
         "variant": "Avatar left, 5 stars, quote title, body text, author name + location separated by pipe",
         "structure": {
-          "fields": ["avatar", "rating", "quote", "body", "author", "location"],
+          "fields": [
+            "avatar",
+            "rating",
+            "quote",
+            "body",
+            "author",
+            "location"
+          ],
           "mediaPosition": "left",
           "hasIcon": false,
           "hasBadge": false,
@@ -261,14 +362,20 @@
           "padding": "40px",
           "hoverEffect": "none"
         },
-        "usedIn": ["testimonials section"],
+        "usedIn": [
+          "testimonials section"
+        ],
         "confidence": "high"
       },
       {
         "type": "stat-block",
         "variant": "Large number with gold accent suffix, label below",
         "structure": {
-          "fields": ["value", "suffix", "label"],
+          "fields": [
+            "value",
+            "suffix",
+            "label"
+          ],
           "mediaPosition": "none",
           "hasIcon": false,
           "hasBadge": false,
@@ -282,7 +389,9 @@
           "padding": "0px",
           "hoverEffect": "none"
         },
-        "usedIn": ["image-text about section"],
+        "usedIn": [
+          "image-text about section"
+        ],
         "confidence": "high"
       }
     ],
@@ -403,7 +512,9 @@
         "staggerDelay": "100ms",
         "delay": "0ms",
         "matchesPreset": null,
-        "usedIn": ["all sections"],
+        "usedIn": [
+          "all sections"
+        ],
         "confidence": "medium"
       },
       {
@@ -420,7 +531,9 @@
         "staggerDelay": null,
         "delay": "0ms",
         "matchesPreset": null,
-        "usedIn": ["image-text sections"],
+        "usedIn": [
+          "image-text sections"
+        ],
         "confidence": "medium"
       },
       {
@@ -437,7 +550,9 @@
         "staggerDelay": null,
         "delay": "0ms",
         "matchesPreset": null,
-        "usedIn": ["image-text sections"],
+        "usedIn": [
+          "image-text sections"
+        ],
         "confidence": "medium"
       },
       {
@@ -453,7 +568,9 @@
         "staggerDelay": null,
         "delay": "0ms",
         "matchesPreset": null,
-        "usedIn": ["image-text about section (stats)"],
+        "usedIn": [
+          "image-text about section (stats)"
+        ],
         "confidence": "low"
       },
       {
@@ -469,7 +586,9 @@
         "staggerDelay": null,
         "delay": "0ms",
         "matchesPreset": null,
-        "usedIn": ["all primary buttons"],
+        "usedIn": [
+          "all primary buttons"
+        ],
         "confidence": "high"
       }
     ],
@@ -481,7 +600,10 @@
         "suggestedId": null,
         "opacity": 0.15,
         "blendMode": "normal",
-        "usedIn": ["services section (top right)", "why choose us (center top)"],
+        "usedIn": [
+          "services section (top right)",
+          "why choose us (center top)"
+        ],
         "confidence": "high"
       },
       {
@@ -491,7 +613,11 @@
         "suggestedId": null,
         "opacity": 0.15,
         "blendMode": "normal",
-        "usedIn": ["gallery experience (top left)", "products (top right)", "footer newsletter (top left, bottom right)"],
+        "usedIn": [
+          "gallery experience (top left)",
+          "products (top right)",
+          "footer newsletter (top left, bottom right)"
+        ],
         "confidence": "high"
       },
       {
@@ -501,7 +627,11 @@
         "suggestedId": null,
         "opacity": 0.1,
         "blendMode": "normal",
-        "usedIn": ["hero section (center emblem)", "why choose us (center)", "testimonials (center right)"],
+        "usedIn": [
+          "hero section (center emblem)",
+          "why choose us (center)",
+          "testimonials (center right)"
+        ],
         "confidence": "high"
       }
     ]
@@ -514,11 +644,27 @@
       "content": {
         "logo": "BEARD X",
         "links": [
-          { "label": "HOME", "href": "/home" },
-          { "label": "ABOUT", "href": "/about" },
-          { "label": "PAGES", "href": "#", "hasDropdown": true },
-          { "label": "SERVICES", "href": "/services" },
-          { "label": "CONTACT", "href": "/contact" }
+          {
+            "label": "HOME",
+            "href": "/home"
+          },
+          {
+            "label": "ABOUT",
+            "href": "/about"
+          },
+          {
+            "label": "PAGES",
+            "href": "#",
+            "hasDropdown": true
+          },
+          {
+            "label": "SERVICES",
+            "href": "/services"
+          },
+          {
+            "label": "CONTACT",
+            "href": "/contact"
+          }
         ],
         "ctaLabel": "BOOK AN APPOINTMENT",
         "ctaHref": "/contact",
@@ -527,7 +673,7 @@
       "style": {
         "background": "dark",
         "paddingY": "sm",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
         "textColor": "#FFFFFF",
         "fontFamily": "Barlow",
@@ -542,8 +688,8 @@
       "content": {
         "title": "A UNIQUE BARBER EXPERIENCE",
         "subtitle": "Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam.",
-        "backgroundImage": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352fa0c41400e058eb15b63_Image-video-barbershop-x.jpg",
-        "decorativeIcon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352cb6835e754223e11526d_Icon-barbershop.svg",
+        "backgroundImage": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352b63fc9635f6969ca8f39_Home-barbershop-x.jpg",
+        "decorativeImage": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63868e1dab1fa01aaa25552a_home-hero-top-image-barber-webflow-ecommerce-template.png",
         "primaryButton": {
           "label": "BOOK AN APPOINTMENT",
           "href": "/contact",
@@ -559,12 +705,13 @@
         "background": "dark",
         "paddingY": "xl",
         "textAlign": "center",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
         "textColor": "#FFFFFF",
         "accentColor": "#DEC7A6",
+        "fontStyle": "italic",
         "backgroundImage": {
-          "url": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352fa0c41400e058eb15b63_Image-video-barbershop-x.jpg",
+          "url": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352b63fc9635f6969ca8f39_Home-barbershop-x.jpg",
           "overlayColor": "#000000",
           "overlayOpacity": 0.7,
           "size": "cover",
@@ -590,8 +737,24 @@
           "variant": "primary"
         },
         "stats": [
-          { "id": "stat-1", "value": "99%", "label": "Customer Satisfaction" },
-          { "id": "stat-2", "value": "10Y", "label": "Years of Experience" }
+          {
+            "id": "stat-1",
+            "value": "99%",
+            "label": "Customer Satisfaction"
+          },
+          {
+            "id": "stat-2",
+            "value": "10Y",
+            "label": "Years of Experience"
+          }
+        ],
+        "floatingImages": [
+          {
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352d052776938303fc5a663_Floating-item-barbershop.svg",
+            "position": "bottom-right",
+            "size": 280,
+            "opacity": 0.45
+          }
         ]
       },
       "style": {
@@ -599,7 +762,7 @@
         "customBgColor": "#F8F5EF",
         "paddingY": "xl",
         "textAlign": "left",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
         "textColor": "#121212",
         "accentColor": "#DEC7A6"
@@ -618,37 +781,37 @@
         "items": [
           {
             "id": "svc-1",
-            "icon": "scissors",
+            "icon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63862eaff96ecdf8025493ea_classic-haircut-service-icon-barber-webflow-ecommerce-template.svg",
             "title": "CLASSIC HAIRCUT",
             "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $37 USD"
           },
           {
             "id": "svc-2",
-            "icon": "scissors",
+            "icon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63862eaf785a2ef90f1cabf3_beard-trim-service-icon-barber-webflow-ecommerce-template.svg",
             "title": "BEARD TRIM",
             "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $25 USD"
           },
           {
             "id": "svc-3",
-            "icon": "baby",
+            "icon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63862eb0fc1ac2a331a28242_kids-haircut-service-icon-barber-webflow-ecommerce-template.svg",
             "title": "KIDS HAIRCUT",
             "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $26 USD"
           },
           {
             "id": "svc-4",
-            "icon": "scissors",
+            "icon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63862eaf971e1c6a341257c4_neck-shave-service-icon-barber-webflow-ecommerce-template.svg",
             "title": "NECK SHAVE",
             "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $12 USD"
           },
           {
             "id": "svc-5",
-            "icon": "droplet",
+            "icon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63862eaf5ff3e2f137ed3b3a_scalp-moisturizing-service-icon-barber-webflow-ecommerce-template.svg",
             "title": "SCALP MOISTURIZING",
             "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $55 USD"
           },
           {
             "id": "svc-6",
-            "icon": "sparkles",
+            "icon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63862eaf05534bf92c96d0b5_beard-grooming-and-spa-service-icon-barber-webflow-ecommerce-template.svg",
             "title": "BEARD GROOMING & SPA",
             "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $46 USD"
           }
@@ -662,14 +825,22 @@
           "label": "BROWSE ALL SERVICES",
           "href": "/services",
           "variant": "outline"
-        }
+        },
+        "floatingImages": [
+          {
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352dc80844a1728a8e6cdfa_Floating-item-barbershop-services-Left.svg",
+            "position": "bottom-left",
+            "size": 280,
+            "opacity": 0.45
+          }
+        ]
       },
       "style": {
         "background": "custom",
         "customBgColor": "#F8F5EF",
         "paddingY": "xl",
         "textAlign": "center",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
         "textColor": "#121212",
         "accentColor": "#DEC7A6"
@@ -710,14 +881,28 @@
           "label": "BOOK AN APPOINTMENT",
           "href": "/contact",
           "variant": "primary"
-        }
+        },
+        "floatingImages": [
+          {
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/636085c6d110a1e1db0e4823_floating-item-barbershop-experience-webflow-ecommerce-template.svg",
+            "position": "top-right",
+            "size": 280,
+            "opacity": 0.45
+          },
+          {
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f6f015baa6ebf4f7e84a_Floating-item-Left-barbershop-Experience.svg",
+            "position": "bottom-left",
+            "size": 280,
+            "opacity": 0.45
+          }
+        ]
       },
       "style": {
         "background": "custom",
         "customBgColor": "#F8F5EF",
         "paddingY": "xl",
         "textAlign": "left",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
         "textColor": "#121212",
         "accentColor": "#DEC7A6"
@@ -743,14 +928,14 @@
         "background": "dark",
         "paddingY": "xl",
         "textAlign": "center",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
         "textColor": "#FFFFFF",
         "accentColor": "#DEC7A6",
         "backgroundImage": {
           "url": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352fa0c41400e058eb15b63_Image-video-barbershop-x.jpg",
           "overlayColor": "#000000",
-          "overlayOpacity": 0.7,
+          "overlayOpacity": 0.85,
           "size": "cover",
           "position": "center",
           "attachment": "fixed"
@@ -787,14 +972,22 @@
           "label": "BOOK AN APPOINTMENT",
           "href": "/contact",
           "variant": "primary"
-        }
+        },
+        "floatingImages": [
+          {
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352d052776938303fc5a663_Floating-item-barbershop.svg",
+            "position": "bottom-right",
+            "size": 280,
+            "opacity": 0.45
+          }
+        ]
       },
       "style": {
         "background": "custom",
         "customBgColor": "#F8F5EF",
         "paddingY": "xl",
         "textAlign": "left",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
         "textColor": "#121212",
         "accentColor": "#DEC7A6"
@@ -837,13 +1030,21 @@
           "label": "BROWSE ALL PRODUCTS",
           "href": "/shop",
           "variant": "outline"
-        }
+        },
+        "floatingImages": [
+          {
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635318c7d13ee9d5bb3fec73_Floating-item-Left-barbershop-products.svg",
+            "position": "bottom-left",
+            "size": 280,
+            "opacity": 0.45
+          }
+        ]
       },
       "style": {
         "background": "white",
         "paddingY": "xl",
         "textAlign": "center",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
         "textColor": "#121212",
         "accentColor": "#DEC7A6"
@@ -883,17 +1084,27 @@
           "label": "BOOK AN APPOINTMENT",
           "href": "/contact",
           "variant": "primary"
-        }
+        },
+        "floatingImages": [
+          {
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635322dd2cf250efc75644d1_Floating-item-barbershop-clients.svg",
+            "position": "top-right",
+            "size": 280,
+            "opacity": 0.45
+          }
+        ]
       },
       "style": {
         "background": "custom",
         "customBgColor": "#F8F5EF",
         "paddingY": "xl",
         "textAlign": "left",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
         "textColor": "#121212",
-        "accentColor": "#DEC7A6"
+        "accentColor": "#DEC7A6",
+        "cardShadow": true,
+        "arrowStyle": "square-dark"
       },
       "visible": true
     },
@@ -944,12 +1155,12 @@
       },
       "style": {
         "background": "custom",
-        "customBgColor": "#F8F5EF",
+        "customBgColor": "#1a1a1a",
         "paddingY": "xl",
         "textAlign": "center",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
-        "textColor": "#121212",
+        "textColor": "#ffffff",
         "accentColor": "#DEC7A6"
       },
       "visible": true
@@ -966,13 +1177,14 @@
         "buttonLabel": "SUBSCRIBE NOW"
       },
       "style": {
-        "background": "dark",
+        "background": "custom",
         "paddingY": "lg",
         "textAlign": "center",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
-        "textColor": "#FFFFFF",
-        "accentColor": "#DEC7A6"
+        "textColor": "#ffffff",
+        "accentColor": "#DEC7A6",
+        "customBgColor": "#1a1a1a"
       },
       "visible": true
     },
@@ -988,27 +1200,75 @@
           {
             "title": "MENU",
             "links": [
-              { "label": "HOME", "href": "/home" },
-              { "label": "ABOUT", "href": "/about" },
-              { "label": "SERVICES", "href": "/services" },
-              { "label": "BLOG", "href": "/blog" },
-              { "label": "BLOG POST", "href": "/blog/how-to-keep-your-razors-sharp-as-brand-new" },
-              { "label": "SHOP", "href": "/shop" },
-              { "label": "SHOP SINGLE", "href": "/product/premium-matte-pomade" },
-              { "label": "CONTACT", "href": "/contact" },
-              { "label": "TEAM MEMBER", "href": "/team/john-carter" },
-              { "label": "MORE WEBFLOW TEMPLATES", "href": "https://brixtemplates.com/more-webflow-templates" }
+              {
+                "label": "HOME",
+                "href": "/home"
+              },
+              {
+                "label": "ABOUT",
+                "href": "/about"
+              },
+              {
+                "label": "SERVICES",
+                "href": "/services"
+              },
+              {
+                "label": "BLOG",
+                "href": "/blog"
+              },
+              {
+                "label": "BLOG POST",
+                "href": "/blog/how-to-keep-your-razors-sharp-as-brand-new"
+              },
+              {
+                "label": "SHOP",
+                "href": "/shop"
+              },
+              {
+                "label": "SHOP SINGLE",
+                "href": "/product/premium-matte-pomade"
+              },
+              {
+                "label": "CONTACT",
+                "href": "/contact"
+              },
+              {
+                "label": "TEAM MEMBER",
+                "href": "/team/john-carter"
+              },
+              {
+                "label": "MORE WEBFLOW TEMPLATES",
+                "href": "https://brixtemplates.com/more-webflow-templates"
+              }
             ]
           },
           {
             "title": "UTILITY PAGES",
             "links": [
-              { "label": "START HERE", "href": "/template-pages/start-here" },
-              { "label": "STYLEGUIDE", "href": "/template-pages/style-guide" },
-              { "label": "PASSWORD PROTECTED", "href": "/401" },
-              { "label": "404 NOT FOUND", "href": "/404" },
-              { "label": "LICENSES", "href": "/template-pages/licenses" },
-              { "label": "CHANGELOG", "href": "/template-pages/changelog" }
+              {
+                "label": "START HERE",
+                "href": "/template-pages/start-here"
+              },
+              {
+                "label": "STYLEGUIDE",
+                "href": "/template-pages/style-guide"
+              },
+              {
+                "label": "PASSWORD PROTECTED",
+                "href": "/401"
+              },
+              {
+                "label": "404 NOT FOUND",
+                "href": "/404"
+              },
+              {
+                "label": "LICENSES",
+                "href": "/template-pages/licenses"
+              },
+              {
+                "label": "CHANGELOG",
+                "href": "/template-pages/changelog"
+              }
             ]
           }
         ],
@@ -1019,14 +1279,28 @@
           "instagram": "https://www.instagram.com/",
           "youtube": "https://www.youtube.com/",
           "pinterest": "https://www.pinterest.com/"
-        }
+        },
+        "floatingImages": [
+          {
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352cb6835e754223e11526d_Icon-barbershop.svg",
+            "position": "bottom-left",
+            "size": 220,
+            "opacity": 0.15
+          },
+          {
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/638112706760ce3d37c721c0_services-floating-image-top-right-barber-webflow-ecommerce-template.svg",
+            "position": "bottom-right",
+            "size": 220,
+            "opacity": 0.15
+          }
+        ]
       },
       "style": {
         "background": "custom",
         "customBgColor": "#121212",
         "paddingY": "lg",
         "textAlign": "left",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
         "textColor": "#FFFFFF",
         "accentColor": "#DEC7A6"
@@ -1039,35 +1313,50 @@
       "id": "page-about",
       "slug": "/about",
       "title": "About",
-      "seo": { "title": "About - Beard X", "description": "Learn about Beard X barber shop with 10+ years of experience." },
+      "seo": {
+        "title": "About - Beard X",
+        "description": "Learn about Beard X barber shop with 10+ years of experience."
+      },
       "sections": []
     },
     {
       "id": "page-services",
       "slug": "/services",
       "title": "Services",
-      "seo": { "title": "Services - Beard X", "description": "Browse our premium barber services." },
+      "seo": {
+        "title": "Services - Beard X",
+        "description": "Browse our premium barber services."
+      },
       "sections": []
     },
     {
       "id": "page-shop",
       "slug": "/shop",
       "title": "Shop",
-      "seo": { "title": "Shop - Beard X", "description": "Browse our premium grooming products." },
+      "seo": {
+        "title": "Shop - Beard X",
+        "description": "Browse our premium grooming products."
+      },
       "sections": []
     },
     {
       "id": "page-blog",
       "slug": "/blog",
       "title": "Blog",
-      "seo": { "title": "Blog - Beard X", "description": "Read our latest articles about grooming." },
+      "seo": {
+        "title": "Blog - Beard X",
+        "description": "Read our latest articles about grooming."
+      },
       "sections": []
     },
     {
       "id": "page-contact",
       "slug": "/contact",
       "title": "Contact",
-      "seo": { "title": "Contact - Beard X", "description": "Book an appointment at Beard X." },
+      "seo": {
+        "title": "Contact - Beard X",
+        "description": "Book an appointment at Beard X."
+      },
       "sections": []
     }
   ],
@@ -1082,7 +1371,7 @@
         "paddingY": "22px",
         "fontSize": "16px",
         "fontWeight": 900,
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "letterSpacing": "normal",
         "hoverBg": "#C09B6B",
         "hoverTransform": "translateY(-3px)",
@@ -1094,7 +1383,7 @@
         "text": "#121212",
         "border": "2px solid #121212",
         "borderRadius": "0px",
-        "textTransform": "uppercase",
+        "textTransform": "none",
         "confidence": "high"
       },
       "dark": {
@@ -1165,31 +1454,94 @@
   },
   "backgroundMap": {
     "/": [
-      { "section": "site-header", "bg": "transparent", "textColor": "light" },
-      { "section": "hero", "bg": "image + overlay rgba(0,0,0,0.7)", "textColor": "light" },
-      { "section": "image-text (about)", "bg": "#F8F5EF", "textColor": "dark" },
-      { "section": "features (services)", "bg": "#FFFFFF", "textColor": "dark" },
-      { "section": "gallery-grid (experience)", "bg": "#F8F5EF", "textColor": "dark" },
-      { "section": "cta (video)", "bg": "image + overlay rgba(0,0,0,0.7)", "textColor": "light" },
-      { "section": "image-text (why choose us)", "bg": "#F8F5EF", "textColor": "dark" },
-      { "section": "product-grid", "bg": "#FFFFFF", "textColor": "dark" },
-      { "section": "testimonials", "bg": "#F8F5EF", "textColor": "dark" },
-      { "section": "gallery-grid (instagram)", "bg": "#F8F5EF", "textColor": "dark" },
-      { "section": "newsletter", "bg": "#121212", "textColor": "light" },
-      { "section": "site-footer", "bg": "#121212", "textColor": "light" }
+      {
+        "section": "site-header",
+        "bg": "transparent",
+        "textColor": "light"
+      },
+      {
+        "section": "hero",
+        "bg": "image + overlay rgba(0,0,0,0.7)",
+        "textColor": "light"
+      },
+      {
+        "section": "image-text (about)",
+        "bg": "#F8F5EF",
+        "textColor": "dark"
+      },
+      {
+        "section": "features (services)",
+        "bg": "#FFFFFF",
+        "textColor": "dark"
+      },
+      {
+        "section": "gallery-grid (experience)",
+        "bg": "#F8F5EF",
+        "textColor": "dark"
+      },
+      {
+        "section": "cta (video)",
+        "bg": "image + overlay rgba(0,0,0,0.7)",
+        "textColor": "light"
+      },
+      {
+        "section": "image-text (why choose us)",
+        "bg": "#F8F5EF",
+        "textColor": "dark"
+      },
+      {
+        "section": "product-grid",
+        "bg": "#FFFFFF",
+        "textColor": "dark"
+      },
+      {
+        "section": "testimonials",
+        "bg": "#F8F5EF",
+        "textColor": "dark"
+      },
+      {
+        "section": "gallery-grid (instagram)",
+        "bg": "#F8F5EF",
+        "textColor": "dark"
+      },
+      {
+        "section": "newsletter",
+        "bg": "#121212",
+        "textColor": "light"
+      },
+      {
+        "section": "site-footer",
+        "bg": "#121212",
+        "textColor": "light"
+      }
     ]
   },
   "visualEffects": {
     "scrollEffects": [
-      { "type": "fade-in", "count": 36, "trigger": "scroll-into-view" },
-      { "type": "slide-in", "count": 62, "trigger": "scroll-into-view" },
-      { "type": "counter", "count": 3, "trigger": "scroll-into-view" }
+      {
+        "type": "fade-in",
+        "count": 36,
+        "trigger": "scroll-into-view"
+      },
+      {
+        "type": "slide-in",
+        "count": 62,
+        "trigger": "scroll-into-view"
+      },
+      {
+        "type": "counter",
+        "count": 3,
+        "trigger": "scroll-into-view"
+      }
     ],
     "hoverEffects": [
       {
         "element": "Primary buttons (Book an appointment)",
         "changes": {
-          "backgroundColor": { "from": "#DEC7A6", "to": "#C09B6B" },
+          "backgroundColor": {
+            "from": "#DEC7A6",
+            "to": "#C09B6B"
+          },
           "transform": "translateY(-3px)"
         },
         "transition": "0.3s ease"
@@ -1197,15 +1549,24 @@
       {
         "element": "Outline buttons (Browse all services/products)",
         "changes": {
-          "color": { "from": "#333333", "to": "#121212" },
-          "borderColor": { "from": "#333333", "to": "#121212" }
+          "color": {
+            "from": "#333333",
+            "to": "#121212"
+          },
+          "borderColor": {
+            "from": "#333333",
+            "to": "#121212"
+          }
         },
         "transition": "0.3s ease"
       },
       {
         "element": "Nav links",
         "changes": {
-          "color": { "from": "#FFFFFF", "to": "#DEC7A6" }
+          "color": {
+            "from": "#FFFFFF",
+            "to": "#DEC7A6"
+          }
         },
         "transition": "0.3s ease"
       }
@@ -1216,13 +1577,30 @@
     }
   },
   "integrations": {
-    "crm": { "enabled": true },
-    "analytics": { "provider": null, "id": null },
-    "gtm": { "containerId": null },
-    "metaPixel": { "pixelId": null },
+    "crm": {
+      "enabled": true
+    },
+    "analytics": {
+      "provider": null,
+      "id": null
+    },
+    "gtm": {
+      "containerId": null
+    },
+    "metaPixel": {
+      "pixelId": null
+    },
     "customIntegrations": [
-      { "name": "Webflow", "type": "script", "detected": "Webflow JS library loaded" },
-      { "name": "jQuery", "type": "script", "detected": "jQuery library loaded" }
+      {
+        "name": "Webflow",
+        "type": "script",
+        "detected": "Webflow JS library loaded"
+      },
+      {
+        "name": "jQuery",
+        "type": "script",
+        "detected": "jQuery library loaded"
+      }
     ]
   },
   "portalModules": {
@@ -1238,7 +1616,9 @@
     {
       "provider": "google",
       "name": "Barlow",
-      "weights": [900],
+      "weights": [
+        900
+      ],
       "importUrl": null,
       "confidence": "high",
       "source": "computed"
@@ -1246,7 +1626,9 @@
     {
       "provider": "local",
       "name": "Generalsans",
-      "weights": [400],
+      "weights": [
+        400
+      ],
       "importUrl": null,
       "confidence": "high",
       "source": "computed"
@@ -1254,7 +1636,9 @@
     {
       "provider": "google",
       "name": "DM Sans",
-      "weights": [400],
+      "weights": [
+        400
+      ],
       "importUrl": null,
       "confidence": "high",
       "source": "link-tag"

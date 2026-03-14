@@ -11,6 +11,7 @@ import { SectionDivider } from '@/components/sections/SectionDivider'
 import { applySectionOverrides, getPaddingTopClass, getPaddingBottomClass, getSectionBgStyle, getSectionBgClass } from '@/components/sections/_utils'
 import { AnimationController } from './animations/AnimationController'
 import { VideoBackgroundLayer } from './VideoBackgroundLayer'
+import { FloatingIllustration } from '@/components/sections/_DecorativeOrnament'
 import type { AnimationConfig } from '@/types/interactions'
 import { resolveInstanceContent } from '@/lib/componentResolver'
 import { Component, useMemo, type ReactNode } from 'react'
@@ -165,6 +166,7 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
       onClick={handleClick}
       className={cn(
         'relative group transition-all',
+        !isTransparentHeader && 'overflow-hidden',
         overrides.className,
         !section.visible && 'opacity-40',
         !previewMode && !isSelected && 'hover:outline hover:outline-1 hover:outline-wf-blue/30 hover:outline-offset-[-1px]',
@@ -284,6 +286,11 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
 
       {/* Divider top */}
       <SectionDivider config={section.style.dividerTop} position="top" />
+
+      {/* Floating illustrations — rendered outside the content wrapper so they aren't covered by its zIndex/bg */}
+      {(section.content as any)?.floatingImages?.map((fi: any, idx: number) => (
+        <FloatingIllustration key={`fi-${idx}`} src={fi.src} position={fi.position} size={fi.size} opacity={fi.opacity} />
+      ))}
 
       {/* Content */}
       <div

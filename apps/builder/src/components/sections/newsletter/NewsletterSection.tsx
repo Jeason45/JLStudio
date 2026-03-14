@@ -3,7 +3,7 @@ import type { SectionConfig } from '@/types/site'
 import type { NewsletterContent } from '@/types/sections'
 import { getTitleSizeClass, getTextAlignClass } from '../_utils'
 import { elementProps } from '@/lib/elementHelpers'
-import { DecorativeOrnament } from '../_DecorativeOrnament'
+import { DecorativeOrnament, FloatingIllustration } from '../_DecorativeOrnament'
 
 export function NewsletterSection({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
   const content = (config.content ?? {}) as Partial<NewsletterContent>
@@ -189,14 +189,16 @@ export function NewsletterSection({ config, isEditing }: { config: SectionConfig
       </span>
     )
 
+    const isDarkBg = config.style.background === 'custom' && !!config.style.customBgColor && !['#ffffff', '#fff', '#F8F5EF', '#f8f5ef'].includes(config.style.customBgColor)
     const inputEl = (
       <input
         {...elementProps(config.id, 'placeholder', 'text')}
         type="email"
         placeholder={placeholder}
         disabled={isEditing}
-        className="flex-1 h-12 px-5 text-sm font-light tracking-wide border border-zinc-200 bg-transparent text-zinc-900 placeholder:text-zinc-300 focus:outline-none focus:border-current transition-colors"
-        style={{ borderColor: `${gold}40`, '--tw-ring-color': gold } as React.CSSProperties}
+        className={cn("flex-1 h-12 px-5 text-sm font-light tracking-wide border bg-transparent focus:outline-none focus:border-current transition-colors",
+          isDarkBg ? "border-white/20 text-white placeholder:text-white/30" : "border-zinc-200 text-zinc-900 placeholder:text-zinc-300")}
+        style={{ borderColor: isDarkBg ? undefined : `${gold}40`, '--tw-ring-color': gold } as React.CSSProperties}
       />
     )
 
@@ -215,21 +217,22 @@ export function NewsletterSection({ config, isEditing }: { config: SectionConfig
     const hasDecorativeIcon = !!content.decorativeIcon
     if (layout === 'centered') {
       return (
-        <section className="bg-white py-24" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-          <div className={cn("max-w-2xl mx-auto px-6 text-center space-y-6", textAlign && getTextAlignClass(textAlign))}>
-            {hasDecorativeIcon && <DecorativeOrnament color={gold} />}
+        <section className={cn("py-24 relative overflow-hidden", !(config.style.background === 'custom' && config.style.customBgColor) && "bg-white")} style={{ fontFamily: 'var(--font-body, inherit)', ...(config.style.background === 'custom' && config.style.customBgColor ? { backgroundColor: config.style.customBgColor } : {}) }}>
+          {/* FloatingImages are rendered by SortableSectionWrapper to avoid z-index stacking issues */}
+          <div className={cn("max-w-2xl mx-auto px-6 text-center space-y-6 relative z-[2]", textAlign && getTextAlignClass(textAlign))}>
+            {hasDecorativeIcon && <DecorativeOrnament color={isDarkBg ? '#DEC7A6' : gold} iconUrl={typeof content.decorativeIcon === 'string' && content.decorativeIcon.startsWith('http') ? content.decorativeIcon : undefined} />}
             {eyebrowEl}
-            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-black text-zinc-900 leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-black leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize), isDarkBg ? "text-white" : "text-zinc-900")}
                 style={customTextColor ? { color: customTextColor } : undefined}>{title}</h2>
             {!hasDecorativeIcon && <div className="w-12 h-px mx-auto" style={{ background: gold }} />}
-            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base text-zinc-400 max-w-xl mx-auto tracking-wide font-light">{subtitle}</p>}
-            {count && <div className="text-4xl font-light text-zinc-900">{count}</div>}
-            {socialProof && <p className="text-sm text-zinc-400 tracking-wide font-light">{socialProof}</p>}
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className={cn("text-base max-w-xl mx-auto tracking-wide font-light", isDarkBg ? "text-white/60" : "text-zinc-400")}>{subtitle}</p>}
+            {count && <div className={cn("text-4xl font-light", isDarkBg ? "text-white" : "text-zinc-900")}>{count}</div>}
+            {socialProof && <p className={cn("text-sm tracking-wide font-light", isDarkBg ? "text-white/50" : "text-zinc-400")}>{socialProof}</p>}
             <div className="flex gap-0 max-w-md mx-auto">
               {inputEl}
               {buttonEl}
             </div>
-            {disclaimer && <p className="text-xs text-zinc-400 tracking-wide font-light">{disclaimer}</p>}
+            {disclaimer && <p className={cn("text-xs tracking-wide font-light", isDarkBg ? "text-white/40" : "text-zinc-400")}>{disclaimer}</p>}
           </div>
         </section>
       )

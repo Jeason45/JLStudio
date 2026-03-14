@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils'
 import type { SectionConfig } from '@/types/site'
 import type { SiteFooterContent } from '@/types/sections'
 import { elementProps } from '@/lib/elementHelpers'
+import { FloatingIllustration } from '../_DecorativeOrnament'
 
 const socialLabels: Record<string, string> = { twitter: 'Twitter', linkedin: 'LinkedIn', github: 'GitHub', instagram: 'Instagram' }
 
@@ -40,11 +41,11 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
               </div>
             </div>
             {columns.map((col, ci) => (
-              <div key={col.id}>
+              <div key={col.id || `col-${ci}`}>
                 <p {...elementProps(config.id, `columns.${ci}.title`, 'heading')} className="font-semibold text-sm text-white mb-4">{col.title}</p>
                 <ul className="space-y-2.5">
                   {col.links.map((link, li) => (
-                    <li key={link.id}><a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} href={link.href} className="text-sm text-slate-400 hover:text-white transition-colors">{link.label}</a></li>
+                    <li key={link.id || `${ci}-${li}`}><a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} href={link.href} className="text-sm text-slate-400 hover:text-white transition-colors">{link.label}</a></li>
                   ))}
                 </ul>
               </div>
@@ -68,9 +69,47 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
   if (variant === 'luxe') {
     const gold = accentColor ?? '#b8860b'
     const customBg = config.style.customBgColor
+    const hasColumnTitles = columns.some(col => col.title)
+
+    if (hasColumnTitles) {
+      // Multi-column layout when columns have titles
+      return (
+        <footer className="bg-zinc-950 px-6 pt-20 pb-10 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)', ...(customBg ? { backgroundColor: customBg } : { backgroundColor: '#09090b' }) }}>
+          <div className="max-w-6xl mx-auto relative z-[2]">
+            <div className={cn('grid gap-10 mb-14', columns.length >= 2 ? 'sm:grid-cols-3' : 'sm:grid-cols-2')}>
+              {/* Brand column */}
+              <div>
+                <div {...elementProps(config.id, 'logo', 'image')} className="text-xl font-light tracking-[0.25em] uppercase text-white mb-4">{logo}</div>
+                {content.tagline && <p className="text-sm text-white/40 leading-relaxed tracking-wide mb-6">{content.tagline}</p>}
+                <SocialsRow socials={socials} className="text-white/30 hover:text-white" sectionId={config.id} />
+              </div>
+              {/* Link columns */}
+              {columns.map((col, ci) => (
+                <div key={col.id || `col-${ci}`}>
+                  <p {...elementProps(config.id, `columns.${ci}.title`, 'heading')} className="text-xs font-medium tracking-[0.15em] uppercase text-white/50 mb-5">{col.title}</p>
+                  <ul className="space-y-3">
+                    {col.links.map((link, li) => (
+                      <li key={link.id || `${ci}-${li}`}>
+                        <a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} href={link.href} className="text-sm font-medium tracking-[0.08em] uppercase text-white/70 hover:text-white transition-colors">{link.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            {/* Bottom bar */}
+            <div className="border-t border-white/10 pt-6">
+              <p {...elementProps(config.id, 'copyright', 'text')} className="text-[11px] text-white/25 tracking-wide text-center">{content.copyright}</p>
+            </div>
+          </div>
+        </footer>
+      )
+    }
+
+    // Single-column centered layout (no column titles)
     return (
-      <footer className="bg-zinc-950 px-6 pt-20 pb-10" style={{ fontFamily: 'var(--font-body, inherit)', ...(customBg ? { backgroundColor: customBg } : { backgroundColor: '#09090b' }) }}>
-        <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-10">
+      <footer className="bg-zinc-950 px-6 pt-20 pb-10 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)', ...(customBg ? { backgroundColor: customBg } : { backgroundColor: '#09090b' }) }}>
+        <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-10 relative z-[2]">
           <div {...elementProps(config.id, 'logo', 'image')} className="text-2xl font-light tracking-[0.25em] uppercase text-white">{logo}</div>
           {content.tagline && <p className="text-sm text-white/40 max-w-md tracking-wide">{content.tagline}</p>}
           {/* Gold divider */}
@@ -110,11 +149,11 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
               </div>
             </div>
             {columns.map((col, ci) => (
-              <div key={col.id}>
+              <div key={col.id || `col-${ci}`}>
                 <p {...elementProps(config.id, `columns.${ci}.title`, 'heading')} className="font-semibold text-sm text-white mb-4">{col.title}</p>
                 <ul className="space-y-2.5">
                   {col.links.map((link, li) => (
-                    <li key={link.id}><a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} href={link.href} className="text-sm text-zinc-500 hover:text-white transition-colors">{link.label}</a></li>
+                    <li key={link.id || `${ci}-${li}`}><a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} href={link.href} className="text-sm text-zinc-500 hover:text-white transition-colors">{link.label}</a></li>
                   ))}
                 </ul>
               </div>
@@ -148,11 +187,11 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
             {/* Links in grid */}
             <div className={cn('grid gap-6', columns.length >= 3 ? 'grid-cols-3' : 'grid-cols-2')}>
               {columns.map((col, ci) => (
-                <div key={col.id}>
+                <div key={col.id || `col-${ci}`}>
                   <p {...elementProps(config.id, `columns.${ci}.title`, 'heading')} className="font-bold text-xs uppercase tracking-wider text-zinc-900 mb-4">{col.title}</p>
                   <ul className="space-y-2">
                     {col.links.map((link, li) => (
-                      <li key={link.id}><a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} href={link.href} className="text-sm text-zinc-600 hover:text-orange-600 transition-colors">{link.label}</a></li>
+                      <li key={link.id || `${ci}-${li}`}><a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} href={link.href} className="text-sm text-zinc-600 hover:text-orange-600 transition-colors">{link.label}</a></li>
                     ))}
                   </ul>
                 </div>
@@ -205,11 +244,11 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
               </div>
             </div>
             {columns.map((col, ci) => (
-              <div key={col.id}>
+              <div key={col.id || `col-${ci}`}>
                 <p {...elementProps(config.id, `columns.${ci}.title`, 'heading')} className="font-semibold text-sm text-white mb-3">{col.title}</p>
                 <ul className="space-y-2">
                   {col.links.map((link, li) => (
-                    <li key={link.id}><a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} href={link.href} className="text-sm text-zinc-400 hover:text-white transition-colors">{link.label}</a></li>
+                    <li key={link.id || `${ci}-${li}`}><a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} href={link.href} className="text-sm text-zinc-400 hover:text-white transition-colors">{link.label}</a></li>
                   ))}
                 </ul>
               </div>
@@ -245,11 +284,11 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
               </div>
               <div className={cn('grid gap-8', columns.length >= 3 ? 'grid-cols-3' : 'grid-cols-2')}>
                 {columns.map((col, ci) => (
-                  <div key={col.id}>
+                  <div key={col.id || `col-${ci}`}>
                     <p {...elementProps(config.id, `columns.${ci}.title`, 'heading')} className="font-medium text-xs text-white/30 uppercase tracking-wider mb-3">{col.title}</p>
                     <ul className="space-y-2">
                       {col.links.map((link, li) => (
-                        <li key={link.id}>
+                        <li key={link.id || `${ci}-${li}`}>
                           <a {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')} href={link.href} className="text-sm text-white/50 hover:text-white transition-colors">{link.label}</a>
                         </li>
                       ))}
@@ -385,7 +424,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
                 <div className="flex-1 flex flex-col" style={{ gap: 12 }}>
                   {mainCol.links.map((link, li) => (
                     <a
-                      key={link.id}
+                      key={link.id || `${ci}-${li}`}
                       {...elementProps(config.id, `columns.0.links.${li}.label`, 'link')}
                       href={link.href}
                       className="block"
@@ -414,7 +453,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
                   {secondaryCols.map((col, ci) => {
                     const colIndex = ci + 1
                     return (
-                      <div key={col.id}>
+                      <div key={col.id || `col-${ci}`}>
                         <p
                           {...elementProps(config.id, `columns.${colIndex}.title`, 'heading')}
                           style={{ fontSize: 16, fontWeight: 500, color: '#56595a', marginBottom: 12 }}
@@ -424,7 +463,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
                         <div className="flex flex-col" style={{ gap: 4 }}>
                           {col.links.map((link, li) => (
                             <a
-                              key={link.id}
+                              key={link.id || `${ci}-${li}`}
                               {...elementProps(config.id, `columns.${colIndex}.links.${li}.label`, 'link')}
                               href={link.href}
                               className="brixsa-link-mask"
@@ -481,7 +520,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
           {/* Legal Links with dot separators */}
           <nav className="flex flex-wrap justify-center gap-4 mb-4" style={{ fontSize: '11px' }}>
             {links.map((link, i) => (
-              <span key={link.id} className="flex items-center gap-4">
+              <span key={link.id || `${ci}-${li}`} className="flex items-center gap-4">
                 {i > 0 && <span style={{ color: '#4b5563' }}>.</span>}
                 <a
                   {...elementProps(config.id, `columns.0.links.${i}.label`, 'link')}
