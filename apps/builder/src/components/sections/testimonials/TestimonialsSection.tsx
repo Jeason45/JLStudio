@@ -307,8 +307,7 @@ function CorporateMarquee({ content, items, accent, styleOverrides, sectionId }:
 
 function LuxeHeader({ content, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; styleOverrides?: StyleOverrides; sectionId: string }) {
   const { titleSize, textAlign, textColor } = styleOverrides ?? {}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const hasDecorativeIcon = !!(content as any).decorativeIcon
+  const hasDecorativeIcon = !!content.decorativeIcon
   return (
     <div className={cn("mb-16 text-center space-y-4", textAlign && getTextAlignClass(textAlign))}>
       {hasDecorativeIcon && <DecorativeOrnament color="#b8860b" />}

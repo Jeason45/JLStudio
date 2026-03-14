@@ -73,6 +73,7 @@ export interface FeaturesContent {
   title: string
   subtitle?: string
   items: FeatureItem[]
+  decorativeIcon?: string
 }
 
 export interface FeaturesConfig extends SectionConfig {
@@ -219,6 +220,7 @@ export interface TestimonialsContent {
   title: string
   subtitle?: string
   items: TestimonialItem[]
+  decorativeIcon?: string
 }
 
 // ─────────────────────────────────────────────
@@ -583,6 +585,7 @@ export interface GalleryContent {
   title?: string
   images: GalleryImage[]
   columns?: number
+  decorativeIcon?: string
 }
 
 // ─── IMAGE TEXT ──────────────────────────────
@@ -597,6 +600,7 @@ export interface ImageTextContent {
   primaryButton?: ButtonConfig
   secondaryButton?: ButtonConfig
   items?: Array<{ id: string; icon?: string; title: string; description?: string }>
+  decorativeIcon?: string
 }
 
 // ─── PRODUCT HERO ────────────────────────────
@@ -631,6 +635,7 @@ export interface ProductGridContent {
   items: ProductItem[]
   ctaLabel?: string
   ctaHref?: string
+  decorativeIcon?: string
 }
 
 // ─── COMPARISON TABLE ────────────────────────
@@ -655,6 +660,7 @@ export interface NewsletterContent {
   disclaimer?: string
   count?: string
   socialProof?: string
+  decorativeIcon?: string
 }
 
 
