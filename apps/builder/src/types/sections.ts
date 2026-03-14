@@ -75,6 +75,7 @@ export interface FeaturesContent {
   subtitle?: string
   items: FeatureItem[]
   decorativeIcon?: string
+  columns?: number
 }
 
 export interface FeaturesConfig extends SectionConfig {
