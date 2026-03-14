@@ -39,6 +39,8 @@ export async function DELETE(
 ) {
   try {
     const { siteId } = await params
+    const site = await getSiteById(siteId)
+    if (!site) return NextResponse.json({ error: 'Site non trouvé' }, { status: 404 })
     await deleteSite(siteId)
     return NextResponse.json({ success: true })
   } catch (error) {
