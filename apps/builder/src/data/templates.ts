@@ -1260,7 +1260,6 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       {
         type: 'image-text', variant: 'luxe-image-right',
         content: {
-          eyebrow: 'Why choose us',
           title: 'Why choose us',
           text: 'Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.',
           items: [
