@@ -86,6 +86,7 @@ export interface BackgroundImageConfig {
   overlayOpacity?: number
   size?: 'cover' | 'contain' | 'auto'
   position?: 'center' | 'top' | 'bottom' | 'left' | 'right'
+  attachment?: 'scroll' | 'fixed'
 }
 
 export interface DividerConfig {
