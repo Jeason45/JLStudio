@@ -33,6 +33,35 @@ function cleanPreviousScreenshots(dir) {
   }
 }
 
+async function login() {
+  const email = process.env.BUILDER_ADMIN_EMAIL || 'admin@jlstudio.dev'
+  const password = process.env.BUILDER_ADMIN_PASSWORD || 'JLStudio@Builder2026'
+
+  const res = await fetch(`${BUILDER_URL}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  })
+
+  if (!res.ok) {
+    console.log(`Login failed (${res.status}) — screenshots may fail if auth required`)
+    return null
+  }
+
+  // Extract builder-token from Set-Cookie header
+  const setCookie = res.headers.getSetCookie?.() || []
+  for (const cookie of setCookie) {
+    const match = cookie.match(/builder-token=([^;]+)/)
+    if (match) {
+      console.log(`✓ Logged in as ${email}`)
+      return match[1]
+    }
+  }
+
+  console.log('Login OK but no cookie found — trying without auth')
+  return null
+}
+
 async function main() {
   const siteId = process.argv[2]
   const outputDir = process.argv[3]
@@ -51,10 +80,34 @@ async function main() {
 
   console.log(`Opening editor: ${editorUrl}`)
 
+  // Login to get auth token
+  const token = await login()
+
   const browser = await chromium.launch({ headless: true })
 
+  // Create context with auth cookie if available
+  const contextOptions = {}
+  if (token) {
+    const url = new URL(BUILDER_URL)
+    contextOptions.storageState = {
+      cookies: [{
+        name: 'builder-token',
+        value: token,
+        domain: url.hostname,
+        path: '/',
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax',
+      }],
+      origins: [],
+    }
+  }
+
+  const context = await browser.newContext(contextOptions)
+
   // ─── DESKTOP (1440x900) ───
-  const desktopPage = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+  const desktopPage = await context.newPage()
+  await desktopPage.setViewportSize({ width: 1440, height: 900 })
   await desktopPage.goto(editorUrl, { waitUntil: 'networkidle', timeout: 60000 })
   await desktopPage.waitForTimeout(5000)
 
@@ -105,7 +158,8 @@ async function main() {
   await desktopPage.close()
 
   // ─── MOBILE (390x844) ───
-  const mobilePage = await browser.newPage({ viewport: { width: 390, height: 844 } })
+  const mobilePage = await context.newPage()
+  await mobilePage.setViewportSize({ width: 390, height: 844 })
   await mobilePage.goto(editorUrl, { waitUntil: 'networkidle', timeout: 60000 })
   await mobilePage.waitForTimeout(5000)
 
@@ -115,6 +169,7 @@ async function main() {
   console.log(`✓ ${path.basename(fullMobilePath)}`)
 
   await mobilePage.close()
+  await context.close()
   await browser.close()
 
   console.log(`\nDone! ${sectionIndex + 1} screenshots saved to ${absOutput}`)

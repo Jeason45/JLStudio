@@ -1,0 +1,1291 @@
+{
+  "site": {
+    "name": "Beard X",
+    "slug": "beard-x",
+    "industry": "retail",
+    "audience": "B2C-premium",
+    "primaryGoal": "branding"
+  },
+  "meta": {
+    "title": "Home - Beard X - Webflow Ecommerce website template",
+    "description": "Beard X is our barber shop Webflow Template carefully designed for modern men's hair salons and men's hairdressers looking to have a premium and elegant website design.",
+    "lang": "en",
+    "favicon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352a8aab5dc5f70cc983753_Favicon.svg",
+    "ogImage": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63866f937eb4aab9ca431e06_featured-image-barber-webflow-ecommerce-template.png"
+  },
+  "brand": {
+    "colors": {
+      "primary": "#DEC7A6",
+      "secondary": "#121212",
+      "accent": "#C09B6B",
+      "background": "#F8F5EF",
+      "foreground": "#121212",
+      "muted": "#7F7F7F"
+    },
+    "typography": {
+      "heading": "Barlow",
+      "body": "Generalsans",
+      "size": "large"
+    },
+    "borderRadius": "none",
+    "spacing": "relaxed"
+  },
+  "style": {
+    "mood": ["luxury", "dark"],
+    "palette": "light",
+    "density": "spacious",
+    "typography": "sans-dominant"
+  },
+  "navigation": {
+    "links": [
+      { "label": "HOME", "href": "/home" },
+      { "label": "ABOUT", "href": "/about" },
+      { "label": "PAGES", "href": "#", "hasDropdown": true },
+      { "label": "SERVICES", "href": "/services" },
+      { "label": "CONTACT", "href": "/contact" }
+    ],
+    "cta": { "label": "BOOK AN APPOINTMENT", "href": "/contact" },
+    "style": "transparent"
+  },
+  "footer": {
+    "columns": [
+      {
+        "title": "MENU",
+        "links": [
+          { "label": "HOME", "href": "/home" },
+          { "label": "ABOUT", "href": "/about" },
+          { "label": "SERVICES", "href": "/services" },
+          { "label": "BLOG", "href": "/blog" },
+          { "label": "BLOG POST", "href": "/blog/how-to-keep-your-razors-sharp-as-brand-new" },
+          { "label": "SHOP", "href": "/shop" },
+          { "label": "SHOP SINGLE", "href": "/product/premium-matte-pomade" },
+          { "label": "CONTACT", "href": "/contact" },
+          { "label": "TEAM MEMBER", "href": "/team/john-carter" },
+          { "label": "MORE WEBFLOW TEMPLATES", "href": "https://brixtemplates.com/more-webflow-templates" }
+        ]
+      },
+      {
+        "title": "UTILITY PAGES",
+        "links": [
+          { "label": "START HERE", "href": "/template-pages/start-here" },
+          { "label": "STYLEGUIDE", "href": "/template-pages/style-guide" },
+          { "label": "PASSWORD PROTECTED", "href": "/401" },
+          { "label": "404 NOT FOUND", "href": "/404" },
+          { "label": "LICENSES", "href": "/template-pages/licenses" },
+          { "label": "CHANGELOG", "href": "/template-pages/changelog" }
+        ]
+      }
+    ],
+    "copyright": "Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow",
+    "showSocials": true,
+    "socials": {
+      "facebook": "https://www.facebook.com/",
+      "twitter": "https://twitter.com/",
+      "instagram": "https://www.instagram.com/",
+      "youtube": "https://www.youtube.com/",
+      "pinterest": "https://www.pinterest.com/"
+    }
+  },
+  "library": {
+    "iconsDetected": [
+      {
+        "location": "Above section titles (recurring mustache ornament with lines)",
+        "description": "Small gold mustache SVG icon flanked by two horizontal lines, used as decorative separator above most section titles",
+        "family": "custom-svg",
+        "suggestedId": null,
+        "confidence": "high"
+      },
+      {
+        "location": "Services section - Classic Haircut",
+        "description": "Gold outlined scissors icon",
+        "family": "custom-svg",
+        "suggestedId": null,
+        "confidence": "high"
+      },
+      {
+        "location": "Services section - Beard Trim",
+        "description": "Gold outlined razor/blade icon",
+        "family": "custom-svg",
+        "suggestedId": null,
+        "confidence": "high"
+      },
+      {
+        "location": "Services section - Kids Haircut",
+        "description": "Gold outlined child with scissors icon",
+        "family": "custom-svg",
+        "suggestedId": null,
+        "confidence": "high"
+      },
+      {
+        "location": "Services section - Neck Shave",
+        "description": "Gold outlined neck/razor icon",
+        "family": "custom-svg",
+        "suggestedId": null,
+        "confidence": "high"
+      },
+      {
+        "location": "Services section - Scalp Moisturizing",
+        "description": "Gold outlined head/moisturizer icon",
+        "family": "custom-svg",
+        "suggestedId": null,
+        "confidence": "high"
+      },
+      {
+        "location": "Services section - Beard Grooming & Spa",
+        "description": "Gold outlined beard grooming icon",
+        "family": "custom-svg",
+        "suggestedId": null,
+        "confidence": "high"
+      },
+      {
+        "location": "Why Choose Us - Top Barbers feature",
+        "description": "Gold outlined man with beard icon",
+        "family": "custom-svg",
+        "suggestedId": null,
+        "confidence": "high"
+      },
+      {
+        "location": "Why Choose Us - Premium Services feature",
+        "description": "Gold outlined barber chair icon",
+        "family": "custom-svg",
+        "suggestedId": null,
+        "confidence": "high"
+      },
+      {
+        "location": "CTA section - Play video button",
+        "description": "Large white circle with play triangle, used as video lightbox trigger",
+        "family": "custom-svg",
+        "suggestedId": null,
+        "confidence": "high"
+      },
+      {
+        "location": "Footer social icons",
+        "description": "Facebook, Twitter, Instagram, YouTube, Pinterest icons in white circles",
+        "family": "custom-svg",
+        "suggestedId": null,
+        "confidence": "high"
+      }
+    ],
+    "elementsDetected": [
+      {
+        "type": "divider",
+        "variant": "Gold mustache ornament with horizontal lines on each side",
+        "style": {
+          "bg": "transparent",
+          "text": "#DEC7A6",
+          "border": "",
+          "borderRadius": "0px",
+          "fontSize": "15px",
+          "fontWeight": 400,
+          "textTransform": "none",
+          "letterSpacing": "0"
+        },
+        "usedIn": ["services", "gallery", "cta", "products", "testimonials", "instagram", "newsletter"],
+        "confidence": "high"
+      },
+      {
+        "type": "badge",
+        "variant": "Gold stat number with accent suffix",
+        "style": {
+          "bg": "transparent",
+          "text": "#121212",
+          "border": "",
+          "borderRadius": "0px",
+          "fontSize": "56px",
+          "fontWeight": 900,
+          "textTransform": "uppercase",
+          "letterSpacing": "normal"
+        },
+        "usedIn": ["image-text (10+ years section)"],
+        "confidence": "medium"
+      }
+    ],
+    "componentsDetected": [
+      {
+        "type": "service-card",
+        "variant": "Icon top, title, description, price - minimal card without border",
+        "structure": {
+          "fields": ["icon", "title", "description", "price"],
+          "mediaPosition": "top",
+          "hasIcon": true,
+          "hasBadge": false,
+          "hasRating": false
+        },
+        "style": {
+          "bg": "transparent",
+          "border": "none",
+          "borderRadius": "0px",
+          "shadow": "none",
+          "padding": "0px",
+          "hoverEffect": "none"
+        },
+        "usedIn": ["services section"],
+        "confidence": "high"
+      },
+      {
+        "type": "product-card",
+        "variant": "Image top with beige bg, title, description, price below",
+        "structure": {
+          "fields": ["image", "title", "description", "price"],
+          "mediaPosition": "top",
+          "hasIcon": false,
+          "hasBadge": false,
+          "hasRating": false
+        },
+        "style": {
+          "bg": "#FFFFFF",
+          "border": "none",
+          "borderRadius": "0px",
+          "shadow": "none",
+          "padding": "0px",
+          "hoverEffect": "none"
+        },
+        "usedIn": ["products section"],
+        "confidence": "high"
+      },
+      {
+        "type": "testimonial-card",
+        "variant": "Avatar left, 5 stars, quote title, body text, author name + location separated by pipe",
+        "structure": {
+          "fields": ["avatar", "rating", "quote", "body", "author", "location"],
+          "mediaPosition": "left",
+          "hasIcon": false,
+          "hasBadge": false,
+          "hasRating": true
+        },
+        "style": {
+          "bg": "#FFFFFF",
+          "border": "1px solid #E0E0E0",
+          "borderRadius": "0px",
+          "shadow": "none",
+          "padding": "40px",
+          "hoverEffect": "none"
+        },
+        "usedIn": ["testimonials section"],
+        "confidence": "high"
+      },
+      {
+        "type": "stat-block",
+        "variant": "Large number with gold accent suffix, label below",
+        "structure": {
+          "fields": ["value", "suffix", "label"],
+          "mediaPosition": "none",
+          "hasIcon": false,
+          "hasBadge": false,
+          "hasRating": false
+        },
+        "style": {
+          "bg": "transparent",
+          "border": "none",
+          "borderRadius": "0px",
+          "shadow": "none",
+          "padding": "0px",
+          "hoverEffect": "none"
+        },
+        "usedIn": ["image-text about section"],
+        "confidence": "high"
+      }
+    ],
+    "wireframesDetected": [
+      {
+        "section": "hero",
+        "pattern": "hero-fullscreen-centered",
+        "structure": "[nav] → [emblem] → heading → subtitle → [2 CTA buttons side by side]",
+        "columns": 1,
+        "mediaPosition": "background",
+        "textAlignment": "center",
+        "hasDecorativeElements": true,
+        "confidence": "high"
+      },
+      {
+        "section": "image-text (about)",
+        "pattern": "image-left-text-right-with-stats",
+        "structure": "[image left] → [icon] → heading → body → [stats row: 2 stat blocks]  → CTA button",
+        "columns": 2,
+        "mediaPosition": "left",
+        "textAlignment": "left",
+        "hasDecorativeElements": true,
+        "confidence": "high"
+      },
+      {
+        "section": "services",
+        "pattern": "centered-title-grid-2x3",
+        "structure": "[ornament] → heading → body → [grid 2x3: icon + title + desc + price] → [2 buttons]",
+        "columns": 3,
+        "mediaPosition": "none",
+        "textAlignment": "center",
+        "hasDecorativeElements": true,
+        "confidence": "high"
+      },
+      {
+        "section": "gallery (experience)",
+        "pattern": "title-left-mosaic-right",
+        "structure": "[ornament] → heading → body → CTA → [mosaic: 4 images asymmetric 3-col]",
+        "columns": 3,
+        "mediaPosition": "right",
+        "textAlignment": "left",
+        "hasDecorativeElements": true,
+        "confidence": "high"
+      },
+      {
+        "section": "CTA video",
+        "pattern": "centered-cta-bg-image",
+        "structure": "[play icon] → heading → body → CTA button",
+        "columns": 1,
+        "mediaPosition": "background",
+        "textAlignment": "center",
+        "hasDecorativeElements": false,
+        "confidence": "high"
+      },
+      {
+        "section": "why choose us",
+        "pattern": "text-left-images-right-overlapping",
+        "structure": "[ornament] → heading → body → [feature: icon + title + desc] → [feature: icon + title + desc] → CTA → [2 overlapping images right]",
+        "columns": 2,
+        "mediaPosition": "right",
+        "textAlignment": "left",
+        "hasDecorativeElements": true,
+        "confidence": "high"
+      },
+      {
+        "section": "products",
+        "pattern": "centered-title-product-grid-3col",
+        "structure": "[ornament] → heading → body → [3 product cards: image + title + desc + price] → CTA",
+        "columns": 3,
+        "mediaPosition": "none",
+        "textAlignment": "center",
+        "hasDecorativeElements": true,
+        "confidence": "high"
+      },
+      {
+        "section": "testimonials",
+        "pattern": "title-left-slider-right",
+        "structure": "[ornament] → heading → body → [slider: testimonial cards with arrows] → CTA",
+        "columns": 2,
+        "mediaPosition": "none",
+        "textAlignment": "left",
+        "hasDecorativeElements": true,
+        "confidence": "high"
+      },
+      {
+        "section": "instagram gallery",
+        "pattern": "centered-title-mosaic-5",
+        "structure": "[ornament] → heading → [mosaic: 1 large center + 4 small corners] → CTA",
+        "columns": 3,
+        "mediaPosition": "none",
+        "textAlignment": "center",
+        "hasDecorativeElements": false,
+        "confidence": "high"
+      },
+      {
+        "section": "footer",
+        "pattern": "newsletter-top-columns-bottom",
+        "structure": "[newsletter: ornament + heading + body + email input + submit] → [3 columns: logo+tagline+socials | menu links | utility links] → copyright",
+        "columns": 3,
+        "mediaPosition": "none",
+        "textAlignment": "left",
+        "hasDecorativeElements": true,
+        "confidence": "high"
+      }
+    ],
+    "animationsDetected": [
+      {
+        "name": "Fade up on scroll",
+        "type": "fade-up",
+        "properties": {
+          "opacity": "0→1",
+          "translateY": "30px→0"
+        },
+        "duration": "600ms",
+        "easing": "ease-out",
+        "trigger": "scroll",
+        "threshold": "0.1",
+        "staggerDelay": "100ms",
+        "delay": "0ms",
+        "matchesPreset": null,
+        "usedIn": ["all sections"],
+        "confidence": "medium"
+      },
+      {
+        "name": "Slide in from left",
+        "type": "slide-left",
+        "properties": {
+          "opacity": "0→1",
+          "translateX": "-50px→0"
+        },
+        "duration": "600ms",
+        "easing": "ease-out",
+        "trigger": "scroll",
+        "threshold": "0.1",
+        "staggerDelay": null,
+        "delay": "0ms",
+        "matchesPreset": null,
+        "usedIn": ["image-text sections"],
+        "confidence": "medium"
+      },
+      {
+        "name": "Slide in from right",
+        "type": "slide-right",
+        "properties": {
+          "opacity": "0→1",
+          "translateX": "50px→0"
+        },
+        "duration": "600ms",
+        "easing": "ease-out",
+        "trigger": "scroll",
+        "threshold": "0.1",
+        "staggerDelay": null,
+        "delay": "0ms",
+        "matchesPreset": null,
+        "usedIn": ["image-text sections"],
+        "confidence": "medium"
+      },
+      {
+        "name": "Counter animation",
+        "type": "stagger",
+        "properties": {
+          "opacity": "0→1"
+        },
+        "duration": "2000ms",
+        "easing": "ease-out",
+        "trigger": "scroll",
+        "threshold": "0.5",
+        "staggerDelay": null,
+        "delay": "0ms",
+        "matchesPreset": null,
+        "usedIn": ["image-text about section (stats)"],
+        "confidence": "low"
+      },
+      {
+        "name": "Button hover lift",
+        "type": "fade-up",
+        "properties": {
+          "translateY": "0→-3px"
+        },
+        "duration": "300ms",
+        "easing": "ease",
+        "trigger": "hover",
+        "threshold": null,
+        "staggerDelay": null,
+        "delay": "0ms",
+        "matchesPreset": null,
+        "usedIn": ["all primary buttons"],
+        "confidence": "high"
+      }
+    ],
+    "illustrationsDetected": [
+      {
+        "type": "decorative",
+        "description": "Vintage barber pole SVG illustration, tall vertical, cream/beige tones",
+        "position": "behind-section",
+        "suggestedId": null,
+        "opacity": 0.15,
+        "blendMode": "normal",
+        "usedIn": ["services section (top right)", "why choose us (center top)"],
+        "confidence": "high"
+      },
+      {
+        "type": "decorative",
+        "description": "Vintage barber shop tools SVG (razor, comb, brush) cream tones",
+        "position": "corner",
+        "suggestedId": null,
+        "opacity": 0.15,
+        "blendMode": "normal",
+        "usedIn": ["gallery experience (top left)", "products (top right)", "footer newsletter (top left, bottom right)"],
+        "confidence": "high"
+      },
+      {
+        "type": "decorative",
+        "description": "Barber shop logo/emblem SVG large vintage style",
+        "position": "behind-section",
+        "suggestedId": null,
+        "opacity": 0.1,
+        "blendMode": "normal",
+        "usedIn": ["hero section (center emblem)", "why choose us (center)", "testimonials (center right)"],
+        "confidence": "high"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "section-site-header-0",
+      "type": "site-header",
+      "variant": "luxe-transparent",
+      "content": {
+        "logo": "BEARD X",
+        "links": [
+          { "label": "HOME", "href": "/home" },
+          { "label": "ABOUT", "href": "/about" },
+          { "label": "PAGES", "href": "#", "hasDropdown": true },
+          { "label": "SERVICES", "href": "/services" },
+          { "label": "CONTACT", "href": "/contact" }
+        ],
+        "ctaLabel": "BOOK AN APPOINTMENT",
+        "ctaHref": "/contact",
+        "cartLabel": "CART (0)"
+      },
+      "style": {
+        "background": "dark",
+        "paddingY": "sm",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#FFFFFF",
+        "fontFamily": "Barlow",
+        "fontWeight": 900
+      },
+      "visible": true
+    },
+    {
+      "id": "section-hero-1",
+      "type": "hero",
+      "variant": "luxe",
+      "content": {
+        "title": "A UNIQUE BARBER EXPERIENCE",
+        "subtitle": "Eu, in in pharetra mauris mi pretium magnis nullam et consequat vel ina sit ut pharetra ultrices feugiat etol quam luctus in dictum placerat malesuada sollicitudin eu vel diam.",
+        "backgroundImage": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352fa0c41400e058eb15b63_Image-video-barbershop-x.jpg",
+        "decorativeIcon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352cb6835e754223e11526d_Icon-barbershop.svg",
+        "primaryButton": {
+          "label": "BOOK AN APPOINTMENT",
+          "href": "/contact",
+          "variant": "primary"
+        },
+        "secondaryButton": {
+          "label": "BROWSE SERVICES",
+          "href": "/home#Services",
+          "variant": "secondary"
+        }
+      },
+      "style": {
+        "background": "dark",
+        "paddingY": "xl",
+        "textAlign": "center",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#FFFFFF",
+        "accentColor": "#DEC7A6",
+        "backgroundImage": {
+          "url": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352fa0c41400e058eb15b63_Image-video-barbershop-x.jpg",
+          "overlayColor": "#000000",
+          "overlayOpacity": 0.7,
+          "size": "cover",
+          "position": "center",
+          "attachment": "fixed"
+        }
+      },
+      "visible": true
+    },
+    {
+      "id": "section-image-text-2",
+      "type": "image-text",
+      "variant": "luxe-image-left",
+      "content": {
+        "title": "10+ YEARS MAKING OUR CUSTOMERS HAPPY",
+        "subtitle": "Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.",
+        "image": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352caffe6a8ab6bbcae3ce2_Left-Image-Barbershop.jpg",
+        "imageAlt": "Image Left Barbershop",
+        "imagePosition": "left",
+        "primaryButton": {
+          "label": "MORE ABOUT US",
+          "href": "/about",
+          "variant": "primary"
+        },
+        "stats": [
+          { "id": "stat-1", "value": "99%", "label": "Customer Satisfaction" },
+          { "id": "stat-2", "value": "10Y", "label": "Years of Experience" }
+        ]
+      },
+      "style": {
+        "background": "custom",
+        "customBgColor": "#F8F5EF",
+        "paddingY": "xl",
+        "textAlign": "left",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#121212",
+        "accentColor": "#DEC7A6"
+      },
+      "visible": true
+    },
+    {
+      "id": "section-features-3",
+      "type": "features",
+      "variant": "luxe-grid",
+      "content": {
+        "title": "BROWSE OUR SERVICES",
+        "subtitle": "Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.",
+        "decorativeIcon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352cb6835e754223e11526d_Icon-barbershop.svg",
+        "columns": 2,
+        "items": [
+          {
+            "id": "svc-1",
+            "icon": "scissors",
+            "title": "CLASSIC HAIRCUT",
+            "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $37 USD"
+          },
+          {
+            "id": "svc-2",
+            "icon": "scissors",
+            "title": "BEARD TRIM",
+            "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $25 USD"
+          },
+          {
+            "id": "svc-3",
+            "icon": "baby",
+            "title": "KIDS HAIRCUT",
+            "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $26 USD"
+          },
+          {
+            "id": "svc-4",
+            "icon": "scissors",
+            "title": "NECK SHAVE",
+            "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $12 USD"
+          },
+          {
+            "id": "svc-5",
+            "icon": "droplet",
+            "title": "SCALP MOISTURIZING",
+            "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $55 USD"
+          },
+          {
+            "id": "svc-6",
+            "icon": "sparkles",
+            "title": "BEARD GROOMING & SPA",
+            "description": "Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis adipiscing. $46 USD"
+          }
+        ],
+        "primaryButton": {
+          "label": "BOOK AN APPOINTMENT",
+          "href": "/contact",
+          "variant": "primary"
+        },
+        "secondaryButton": {
+          "label": "BROWSE ALL SERVICES",
+          "href": "/services",
+          "variant": "outline"
+        }
+      },
+      "style": {
+        "background": "custom",
+        "customBgColor": "#F8F5EF",
+        "paddingY": "xl",
+        "textAlign": "center",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#121212",
+        "accentColor": "#DEC7A6"
+      },
+      "visible": true
+    },
+    {
+      "id": "section-gallery-grid-4",
+      "type": "gallery-grid",
+      "variant": "luxe-masonry",
+      "content": {
+        "title": "WE OFFER AN UNIQUE EXPERIENCE",
+        "subtitle": "Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.",
+        "decorativeIcon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352cb6835e754223e11526d_Icon-barbershop.svg",
+        "images": [
+          {
+            "id": "exp-img-1",
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f2b6a7b90cfd94ae18b4_Left-Image-Experience-Barbershop.jpg",
+            "alt": "Image Left Experience"
+          },
+          {
+            "id": "exp-img-2",
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f252e708dc38e92e533c_Center-Top-Image-Experience-Barbershop.jpg",
+            "alt": "Image Center Top Experience"
+          },
+          {
+            "id": "exp-img-3",
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f268e708dc07112e544a_Center-Bottom-Image-Experience-Barbershop.jpg",
+            "alt": "Image Center Bottom Experience"
+          },
+          {
+            "id": "exp-img-4",
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352f2f605de392c9d02f20b_Right-Image-Experience-Barbershop.jpg",
+            "alt": "Image Right Experience"
+          }
+        ],
+        "primaryButton": {
+          "label": "BOOK AN APPOINTMENT",
+          "href": "/contact",
+          "variant": "primary"
+        }
+      },
+      "style": {
+        "background": "custom",
+        "customBgColor": "#F8F5EF",
+        "paddingY": "xl",
+        "textAlign": "left",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#121212",
+        "accentColor": "#DEC7A6"
+      },
+      "visible": true
+    },
+    {
+      "id": "section-cta-5",
+      "type": "cta",
+      "variant": "luxe-centered",
+      "content": {
+        "title": "TAKE A LOOK AT OUR WORK",
+        "subtitle": "Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.",
+        "icon": "play",
+        "primaryButton": {
+          "label": "BOOK AN APPOINTMENT",
+          "href": "/contact",
+          "variant": "primary"
+        },
+        "videoUrl": "https://www.youtube.com/watch?v=sCurGlAOFIw"
+      },
+      "style": {
+        "background": "dark",
+        "paddingY": "xl",
+        "textAlign": "center",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#FFFFFF",
+        "accentColor": "#DEC7A6",
+        "backgroundImage": {
+          "url": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352fa0c41400e058eb15b63_Image-video-barbershop-x.jpg",
+          "overlayColor": "#000000",
+          "overlayOpacity": 0.7,
+          "size": "cover",
+          "position": "center",
+          "attachment": "fixed"
+        }
+      },
+      "visible": true
+    },
+    {
+      "id": "section-image-text-6",
+      "type": "image-text",
+      "variant": "luxe-image-right",
+      "content": {
+        "title": "WHY CHOOSE US",
+        "subtitle": "Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.",
+        "decorativeIcon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352cb6835e754223e11526d_Icon-barbershop.svg",
+        "image": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635302fb0af27dbf66bd5e74_Image-barbershop-choosing.jpg",
+        "imageAlt": "Image Barbershop",
+        "imagePosition": "right",
+        "features": [
+          {
+            "id": "feat-1",
+            "icon": "user",
+            "title": "TOP BARBERS",
+            "description": "A mollis pretium sagittis iaculis quam lacus nulla nullam pharetra quis fermentum ipsum phasellus sit."
+          },
+          {
+            "id": "feat-2",
+            "icon": "armchair",
+            "title": "PREMIUM SERVICES",
+            "description": "Nulla leo velit feugiat in consequat accumsan est enim mi consectetur dis pulvinar venenatis dapibus."
+          }
+        ],
+        "primaryButton": {
+          "label": "BOOK AN APPOINTMENT",
+          "href": "/contact",
+          "variant": "primary"
+        }
+      },
+      "style": {
+        "background": "custom",
+        "customBgColor": "#F8F5EF",
+        "paddingY": "xl",
+        "textAlign": "left",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#121212",
+        "accentColor": "#DEC7A6"
+      },
+      "visible": true
+    },
+    {
+      "id": "section-product-grid-7",
+      "type": "product-grid",
+      "variant": "luxe-grid",
+      "content": {
+        "title": "BROWSE OUR PRODUCTS",
+        "subtitle": "Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna in senectus sit eget justo eget.",
+        "decorativeIcon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352cb6835e754223e11526d_Icon-barbershop.svg",
+        "columns": 3,
+        "items": [
+          {
+            "id": "prod-1",
+            "title": "BEARD & MUSTACHE CARE OIL",
+            "description": "Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.",
+            "price": "$ 19.00 USD",
+            "image": "https://cdn.prod.website-files.com/6351df90df95e78497f35e12/6353172e41400e47f4b2fb08_Glass-dropper-bottle-%26-tube.png"
+          },
+          {
+            "id": "prod-2",
+            "title": "BEARD & HAIR SERUM",
+            "description": "Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.",
+            "price": "$ 49.00 USD",
+            "image": "https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317abd7135d5db1e806e2_Cosmetic-packaging-kit-with-kraft-mailer-box.png"
+          },
+          {
+            "id": "prod-3",
+            "title": "PREMIUM HAIR CLAY",
+            "description": "Nulla egestas sapien integer mi fermentum tellusol tristique consequatolm pulvinar sagittis.",
+            "price": "$ 29.00 USD",
+            "image": "https://cdn.prod.website-files.com/6351df90df95e78497f35e12/635317bbcef9162eb3edfdcc_Amber-cosmetic-bottle-packaging.png"
+          }
+        ],
+        "primaryButton": {
+          "label": "BROWSE ALL PRODUCTS",
+          "href": "/shop",
+          "variant": "outline"
+        }
+      },
+      "style": {
+        "background": "white",
+        "paddingY": "xl",
+        "textAlign": "center",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#121212",
+        "accentColor": "#DEC7A6"
+      },
+      "visible": true
+    },
+    {
+      "id": "section-testimonials-8",
+      "type": "testimonials",
+      "variant": "luxe-slider",
+      "content": {
+        "title": "WHAT OUR CLIENTS SAY",
+        "subtitle": "Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.",
+        "decorativeIcon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352cb6835e754223e11526d_Icon-barbershop.svg",
+        "items": [
+          {
+            "id": "test-1",
+            "quote": "THIS BARBER SHOP IS SIMPLY AWESOME",
+            "description": "Et proin ut in dignissim sem non a nullam magna lectus urna et dui quam tellus imperdiet sit purus at fringilla scelerisque diam amet fermentum orci fringilla aliquet nulla lectus erat eu auctor diam potenti turpis interdum eu.",
+            "author": "JOHN CARTER",
+            "role": "LOS ANGELES, CA.",
+            "rating": 5,
+            "avatar": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63531ceb14dc4f7751c93706_Testimonials.jpg"
+          },
+          {
+            "id": "test-2",
+            "quote": "THE BEST BARBER SHOP I'VE EVER BEEN",
+            "description": "Et proin ut in dignissim sem non a nullam magna lectus urna et dui quam tellus imperdiet sit purus at fringilla scelerisque diam amet fermentum orci fringilla aliquet nulla lectus erat eu auctor diam potenti turpis interdum eu.",
+            "author": "SAM HOUSTON",
+            "role": "LOS ANGELES, CA.",
+            "rating": 5,
+            "avatar": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353222a4d0d416ddf8e4360_Image-testimonials.jpg"
+          }
+        ],
+        "showArrows": true,
+        "primaryButton": {
+          "label": "BOOK AN APPOINTMENT",
+          "href": "/contact",
+          "variant": "primary"
+        }
+      },
+      "style": {
+        "background": "custom",
+        "customBgColor": "#F8F5EF",
+        "paddingY": "xl",
+        "textAlign": "left",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#121212",
+        "accentColor": "#DEC7A6"
+      },
+      "visible": true
+    },
+    {
+      "id": "section-gallery-grid-9",
+      "type": "gallery-grid",
+      "variant": "luxe-masonry",
+      "content": {
+        "title": "FOLLOW US ON INSTAGRAM",
+        "decorativeIcon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352cb6835e754223e11526d_Icon-barbershop.svg",
+        "images": [
+          {
+            "id": "insta-1",
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353262d71b74a7c9aec6273_Image-barbershop-men-01.jpg",
+            "alt": "Image Barbershop Instagram",
+            "category": "Instagram"
+          },
+          {
+            "id": "insta-2",
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/635326365ee93e1f49821d0e_Handsome-man-cutting-beard-barber-salon.png",
+            "alt": "Image Barbershop Instagram",
+            "category": "Instagram"
+          },
+          {
+            "id": "insta-3",
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353261dd7638b80bb954e95_handsome-man-cutting-beard-barber-salon%202.png",
+            "alt": "Image Barbershop Instagram",
+            "category": "Instagram"
+          },
+          {
+            "id": "insta-4",
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/63532603db028e692e7bd202_Handsome-man-cutting-beard-barber-salon%201.jpg",
+            "alt": "Image Barbershop Instagram",
+            "category": "Instagram"
+          },
+          {
+            "id": "insta-5",
+            "src": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6353262573ae728269cab801_Image-barbershop-machine.jpg",
+            "alt": "Image Barbershop Instagram",
+            "category": "Instagram"
+          }
+        ],
+        "primaryButton": {
+          "label": "FOLLOW US",
+          "href": "https://www.instagram.com/",
+          "variant": "primary"
+        }
+      },
+      "style": {
+        "background": "custom",
+        "customBgColor": "#F8F5EF",
+        "paddingY": "xl",
+        "textAlign": "center",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#121212",
+        "accentColor": "#DEC7A6"
+      },
+      "visible": true
+    },
+    {
+      "id": "section-newsletter-10",
+      "type": "newsletter",
+      "variant": "luxe-centered",
+      "content": {
+        "title": "SUBSCRIBE TO OUR NEWSLETTER",
+        "subtitle": "Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper id vel prci eu magna.",
+        "decorativeIcon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352cb6835e754223e11526d_Icon-barbershop.svg",
+        "placeholder": "ENTER YOUR EMAIL",
+        "buttonLabel": "SUBSCRIBE NOW"
+      },
+      "style": {
+        "background": "dark",
+        "paddingY": "lg",
+        "textAlign": "center",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#FFFFFF",
+        "accentColor": "#DEC7A6"
+      },
+      "visible": true
+    },
+    {
+      "id": "section-site-footer-11",
+      "type": "site-footer",
+      "variant": "luxe",
+      "content": {
+        "logo": "BEARD X",
+        "logoIcon": "https://cdn.prod.website-files.com/6351df90df95e750c4f35ddf/6352cb6835e754223e11526d_Icon-barbershop.svg",
+        "tagline": "Nulla egestas sapien integer mi fermentum tellus tristique consequat pulvinar sagittis adipiscing egestas purus et mi tempus semper.",
+        "columns": [
+          {
+            "title": "MENU",
+            "links": [
+              { "label": "HOME", "href": "/home" },
+              { "label": "ABOUT", "href": "/about" },
+              { "label": "SERVICES", "href": "/services" },
+              { "label": "BLOG", "href": "/blog" },
+              { "label": "BLOG POST", "href": "/blog/how-to-keep-your-razors-sharp-as-brand-new" },
+              { "label": "SHOP", "href": "/shop" },
+              { "label": "SHOP SINGLE", "href": "/product/premium-matte-pomade" },
+              { "label": "CONTACT", "href": "/contact" },
+              { "label": "TEAM MEMBER", "href": "/team/john-carter" },
+              { "label": "MORE WEBFLOW TEMPLATES", "href": "https://brixtemplates.com/more-webflow-templates" }
+            ]
+          },
+          {
+            "title": "UTILITY PAGES",
+            "links": [
+              { "label": "START HERE", "href": "/template-pages/start-here" },
+              { "label": "STYLEGUIDE", "href": "/template-pages/style-guide" },
+              { "label": "PASSWORD PROTECTED", "href": "/401" },
+              { "label": "404 NOT FOUND", "href": "/404" },
+              { "label": "LICENSES", "href": "/template-pages/licenses" },
+              { "label": "CHANGELOG", "href": "/template-pages/changelog" }
+            ]
+          }
+        ],
+        "copyright": "Copyright © Beard X | Designed by BRIX Templates - Powered by Webflow",
+        "socials": {
+          "facebook": "https://www.facebook.com/",
+          "twitter": "https://twitter.com/",
+          "instagram": "https://www.instagram.com/",
+          "youtube": "https://www.youtube.com/",
+          "pinterest": "https://www.pinterest.com/"
+        }
+      },
+      "style": {
+        "background": "custom",
+        "customBgColor": "#121212",
+        "paddingY": "lg",
+        "textAlign": "left",
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "textColor": "#FFFFFF",
+        "accentColor": "#DEC7A6"
+      },
+      "visible": true
+    }
+  ],
+  "pages": [
+    {
+      "id": "page-about",
+      "slug": "/about",
+      "title": "About",
+      "seo": { "title": "About - Beard X", "description": "Learn about Beard X barber shop with 10+ years of experience." },
+      "sections": []
+    },
+    {
+      "id": "page-services",
+      "slug": "/services",
+      "title": "Services",
+      "seo": { "title": "Services - Beard X", "description": "Browse our premium barber services." },
+      "sections": []
+    },
+    {
+      "id": "page-shop",
+      "slug": "/shop",
+      "title": "Shop",
+      "seo": { "title": "Shop - Beard X", "description": "Browse our premium grooming products." },
+      "sections": []
+    },
+    {
+      "id": "page-blog",
+      "slug": "/blog",
+      "title": "Blog",
+      "seo": { "title": "Blog - Beard X", "description": "Read our latest articles about grooming." },
+      "sections": []
+    },
+    {
+      "id": "page-contact",
+      "slug": "/contact",
+      "title": "Contact",
+      "seo": { "title": "Contact - Beard X", "description": "Book an appointment at Beard X." },
+      "sections": []
+    }
+  ],
+  "components": {
+    "buttons": {
+      "primary": {
+        "bg": "#DEC7A6",
+        "text": "#121212",
+        "border": "2px solid rgba(0,0,0,0)",
+        "borderRadius": "0px",
+        "paddingX": "18px",
+        "paddingY": "22px",
+        "fontSize": "16px",
+        "fontWeight": 900,
+        "textTransform": "uppercase",
+        "letterSpacing": "normal",
+        "hoverBg": "#C09B6B",
+        "hoverTransform": "translateY(-3px)",
+        "shadow": "none",
+        "confidence": "high"
+      },
+      "secondary": {
+        "bg": "transparent",
+        "text": "#121212",
+        "border": "2px solid #121212",
+        "borderRadius": "0px",
+        "textTransform": "uppercase",
+        "confidence": "high"
+      },
+      "dark": {
+        "bg": "#121212",
+        "text": "#FFFFFF",
+        "border": "none",
+        "confidence": "medium"
+      },
+      "ghost": {
+        "bg": "transparent",
+        "border": "none",
+        "confidence": "low"
+      }
+    },
+    "cards": {
+      "borderRadius": "0px",
+      "shadow": "none",
+      "border": "1px solid #E0E0E0",
+      "padding": "40px",
+      "hoverEffect": "none",
+      "confidence": "high"
+    },
+    "inputs": {
+      "borderRadius": "0px",
+      "border": "0px none",
+      "bg": "rgba(0,0,0,0)",
+      "focusBorder": "#DEC7A6",
+      "height": "84px",
+      "textTransform": "uppercase",
+      "letterSpacing": "normal",
+      "confidence": "high"
+    },
+    "navbar": {
+      "type": "fixed",
+      "height": "auto",
+      "bg": "transparent",
+      "scrollBehavior": "transparent on hero, solid on scroll",
+      "mobileMenu": "fullscreen",
+      "linkTextTransform": "uppercase",
+      "confidence": "high"
+    },
+    "badges": {
+      "borderRadius": "0px",
+      "paddingX": "12px",
+      "paddingY": "6px",
+      "fontSize": "14px",
+      "textTransform": "uppercase",
+      "confidence": "low"
+    },
+    "stats": {
+      "numberSize": "56px",
+      "numberWeight": 900,
+      "numberColor": "#121212",
+      "suffixColor": "#DEC7A6",
+      "labelTextTransform": "none",
+      "labelLetterSpacing": "normal",
+      "confidence": "high"
+    },
+    "testimonialCards": {
+      "hasAvatar": true,
+      "hasStarRating": true,
+      "starCount": 5,
+      "starColor": "#121212",
+      "quoteStyle": "guillemets",
+      "authorSeparator": "|",
+      "confidence": "high"
+    }
+  },
+  "backgroundMap": {
+    "/": [
+      { "section": "site-header", "bg": "transparent", "textColor": "light" },
+      { "section": "hero", "bg": "image + overlay rgba(0,0,0,0.7)", "textColor": "light" },
+      { "section": "image-text (about)", "bg": "#F8F5EF", "textColor": "dark" },
+      { "section": "features (services)", "bg": "#FFFFFF", "textColor": "dark" },
+      { "section": "gallery-grid (experience)", "bg": "#F8F5EF", "textColor": "dark" },
+      { "section": "cta (video)", "bg": "image + overlay rgba(0,0,0,0.7)", "textColor": "light" },
+      { "section": "image-text (why choose us)", "bg": "#F8F5EF", "textColor": "dark" },
+      { "section": "product-grid", "bg": "#FFFFFF", "textColor": "dark" },
+      { "section": "testimonials", "bg": "#F8F5EF", "textColor": "dark" },
+      { "section": "gallery-grid (instagram)", "bg": "#F8F5EF", "textColor": "dark" },
+      { "section": "newsletter", "bg": "#121212", "textColor": "light" },
+      { "section": "site-footer", "bg": "#121212", "textColor": "light" }
+    ]
+  },
+  "visualEffects": {
+    "scrollEffects": [
+      { "type": "fade-in", "count": 36, "trigger": "scroll-into-view" },
+      { "type": "slide-in", "count": 62, "trigger": "scroll-into-view" },
+      { "type": "counter", "count": 3, "trigger": "scroll-into-view" }
+    ],
+    "hoverEffects": [
+      {
+        "element": "Primary buttons (Book an appointment)",
+        "changes": {
+          "backgroundColor": { "from": "#DEC7A6", "to": "#C09B6B" },
+          "transform": "translateY(-3px)"
+        },
+        "transition": "0.3s ease"
+      },
+      {
+        "element": "Outline buttons (Browse all services/products)",
+        "changes": {
+          "color": { "from": "#333333", "to": "#121212" },
+          "borderColor": { "from": "#333333", "to": "#121212" }
+        },
+        "transition": "0.3s ease"
+      },
+      {
+        "element": "Nav links",
+        "changes": {
+          "color": { "from": "#FFFFFF", "to": "#DEC7A6" }
+        },
+        "transition": "0.3s ease"
+      }
+    ],
+    "textAnimations": [],
+    "globalEffects": {
+      "smoothScroll": true
+    }
+  },
+  "integrations": {
+    "crm": { "enabled": true },
+    "analytics": { "provider": null, "id": null },
+    "gtm": { "containerId": null },
+    "metaPixel": { "pixelId": null },
+    "customIntegrations": [
+      { "name": "Webflow", "type": "script", "detected": "Webflow JS library loaded" },
+      { "name": "jQuery", "type": "script", "detected": "jQuery library loaded" }
+    ]
+  },
+  "portalModules": {
+    "moduleCRM": true,
+    "moduleDevis": true,
+    "moduleFactures": true,
+    "moduleContrats": false,
+    "moduleProjets": false,
+    "moduleCMS": false,
+    "moduleCalendrier": true
+  },
+  "fontImports": [
+    {
+      "provider": "google",
+      "name": "Barlow",
+      "weights": [900],
+      "importUrl": null,
+      "confidence": "high",
+      "source": "computed"
+    },
+    {
+      "provider": "local",
+      "name": "Generalsans",
+      "weights": [400],
+      "importUrl": null,
+      "confidence": "high",
+      "source": "computed"
+    },
+    {
+      "provider": "google",
+      "name": "DM Sans",
+      "weights": [400],
+      "importUrl": null,
+      "confidence": "high",
+      "source": "link-tag"
+    }
+  ],
+  "designPreset": {
+    "closestPalette": "luxe-champagne",
+    "closestTypography": "typo-clash-inter",
+    "closestTagStyle": "ts-luxe-serif",
+    "closestTheme": "theme-luxe-gold",
+    "styleFamily": "luxe",
+    "confidence": "high"
+  },
+  "detectedCSS": {
+    "textTransform": {
+      "headings": "uppercase",
+      "buttons": "uppercase",
+      "labels": "uppercase"
+    },
+    "letterSpacing": {
+      "headings": "normal",
+      "buttons": "normal"
+    },
+    "fontWeight": {
+      "headings": "900",
+      "body": "400"
+    },
+    "lineHeight": {
+      "headings": "1.065",
+      "body": "1.667"
+    }
+  },
+  "reproductionNotes": "Site is a premium barbershop template (Beard X by BRIX Templates). Key reproduction details: (1) Recurring gold mustache SVG ornament with horizontal lines above nearly every section title - this is a signature decorative element. (2) Vintage barber illustrations (pole, tools, logo emblem) appear as semi-transparent decorative backgrounds in multiple sections. (3) Background alternates: cream (#F8F5EF) → white (#FFFFFF) → cream → dark overlay → cream → white → cream → cream → dark. (4) Hero has a large vintage emblem/logo in the center above the H1. (5) Testimonials are a horizontal slider with left/right arrows, 2 unique testimonials repeated. (6) Products section has images on beige/tan backgrounds. (7) Instagram gallery uses a 2+1+2 mosaic layout (1 large center, 4 small corners). (8) Footer combines newsletter (dark section) + 3-column footer (logo+tagline+socials | menu links in 2 sub-columns | utility pages) + copyright. (9) Closest template match: custom (barbershop-specific layout combining services + products + testimonials + instagram gallery). (10) CMS collections detected: blog posts (title, image, date, body), products (title, image, price, description, variants), team members (name, image, role). (11) Fonts: Barlow is in the Google Fonts library (supported natively). Generalsans is NOT in the 80+ font library - requires custom upload. DM Sans detected in link tag but not visually used in main content. (12) The hero background image is the same as the CTA section background."
+}
