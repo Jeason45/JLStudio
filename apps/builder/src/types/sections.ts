@@ -76,6 +76,8 @@ export interface FeaturesContent {
   items: FeatureItem[]
   decorativeIcon?: string
   columns?: number
+  primaryButton?: ButtonConfig
+  secondaryButton?: ButtonConfig
 }
 
 export interface FeaturesConfig extends SectionConfig {
@@ -215,6 +217,7 @@ export interface TestimonialItem {
   company?: string
   avatar?: string
   rating?: number
+  description?: string
 }
 
 export interface TestimonialsContent {
@@ -223,6 +226,10 @@ export interface TestimonialsContent {
   subtitle?: string
   items: TestimonialItem[]
   decorativeIcon?: string
+  primaryButton?: ButtonConfig
+  showArrows?: boolean
+  cardShadow?: boolean
+  arrowStyle?: string
 }
 
 // ─────────────────────────────────────────────
@@ -602,6 +609,7 @@ export interface ImageTextContent {
   primaryButton?: ButtonConfig
   secondaryButton?: ButtonConfig
   items?: Array<{ id: string; icon?: string; title: string; description?: string }>
+  stats?: Array<{ id: string; value: string; label: string }>
   decorativeIcon?: string
 }
 
@@ -630,6 +638,7 @@ export interface ProductItem {
   category?: string
   rating?: number
   reviews?: number
+  description?: string
 }
 export interface ProductGridContent {
   eyebrow?: string
@@ -639,6 +648,7 @@ export interface ProductGridContent {
   ctaLabel?: string
   ctaHref?: string
   decorativeIcon?: string
+  primaryButton?: ButtonConfig
 }
 
 // ─── COMPARISON TABLE ────────────────────────

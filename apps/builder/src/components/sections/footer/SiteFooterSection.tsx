@@ -424,7 +424,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
                 <div className="flex-1 flex flex-col" style={{ gap: 12 }}>
                   {mainCol.links.map((link, li) => (
                     <a
-                      key={link.id || `${ci}-${li}`}
+                      key={link.id || `0-${li}`}
                       {...elementProps(config.id, `columns.0.links.${li}.label`, 'link')}
                       href={link.href}
                       className="block"
@@ -520,7 +520,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
           {/* Legal Links with dot separators */}
           <nav className="flex flex-wrap justify-center gap-4 mb-4" style={{ fontSize: '11px' }}>
             {links.map((link, i) => (
-              <span key={link.id || `${ci}-${li}`} className="flex items-center gap-4">
+              <span key={link.id || `link-${i}`} className="flex items-center gap-4">
                 {i > 0 && <span style={{ color: '#4b5563' }}>.</span>}
                 <a
                   {...elementProps(config.id, `columns.0.links.${i}.label`, 'link')}
