@@ -904,7 +904,7 @@ async function compareSections(scanDir) {
                     fix: { type: 'string' },
                     field: { type: 'string' },
                   },
-                  required: ['priority', 'category', 'description', 'fix'],
+                  required: ['priority', 'category', 'description', 'fix', 'field'],
                 },
               },
               biggestGap: { type: 'string' },
@@ -948,26 +948,40 @@ async function autoCorrect(scanDir, report) {
     return false
   }
 
+  // Count actionable corrections
+  const actionableCount = semanticIssues.filter(s => (s.issues || []).some(i => i.priority !== 'low')).length
+    + pixelIssues.filter(p => !semanticIssues.some(s => s.sectionIndex === p.index)).length
+
+  if (actionableCount === 0) {
+    log('  No actionable corrections (only low-priority issues)')
+    return false
+  }
+
   // Build correction instructions from both reports
   let corrections = '## Corrections a appliquer au output.json\n\n'
+  const sectionsToFix = []
 
   // Semantic issues (higher quality, prioritize these)
   for (const sr of semanticIssues) {
+    const actionable = (sr.issues || []).filter(i => i.priority !== 'low')
+    if (actionable.length === 0) continue
+
+    sectionsToFix.push(sr.sectionIndex)
     corrections += `### Section ${sr.sectionIndex} (${sr.type}, ${sr.variant}) — match: ${sr.overallMatch}%\n`
     corrections += `Plus gros ecart: ${sr.biggestGap}\n`
-    for (const issue of (sr.issues || []).filter(i => i.priority !== 'low')) {
+    for (const issue of actionable) {
       corrections += `- [${issue.priority}] ${issue.category}: ${issue.description}\n`
       corrections += `  Fix: ${issue.fix}\n`
-      if (issue.field) corrections += `  Champ: ${issue.field}\n`
+      if (issue.field) corrections += `  Champ JSON: sections[${sr.sectionIndex}].${issue.field}\n`
     }
     corrections += '\n'
   }
 
   // Pixel issues (fill gaps)
   for (const ps of pixelIssues) {
-    // Skip if already covered by semantic
     if (semanticIssues.some(s => s.sectionIndex === ps.index)) continue
 
+    sectionsToFix.push(ps.index)
     corrections += `### Section ${ps.index} (${ps.type}, ${ps.variant}) — pixel score: ${ps.similarity}%\n`
     for (const issue of ps.issues) {
       corrections += `- [${issue.severity}] ${issue.type}: `
@@ -979,20 +993,36 @@ async function autoCorrect(scanDir, report) {
     corrections += '\n'
   }
 
-  const systemPrompt = readPrompt('generate-template')
+  log(`  Fixing ${sectionsToFix.length} sections: [${sectionsToFix.join(', ')}]`)
 
-  const result = await askClaude(systemPrompt, `
-Voici le output.json actuel :
-\`\`\`json
-${JSON.stringify(template, null, 2)}
-\`\`\`
+  // Build message content with screenshots for context
+  const ssDir = path.join(scanDir, 'screenshots')
+  const compDir = path.join(scanDir, 'comparison')
+  const messageContent = []
 
-${corrections}
+  messageContent.push({
+    type: 'text',
+    text: `Voici le output.json actuel :\n\`\`\`json\n${JSON.stringify(template, null, 2)}\n\`\`\`\n\n${corrections}\n\nApplique UNIQUEMENT les corrections listees. Ne touche PAS aux sections qui fonctionnent.`
+  })
 
-Applique TOUTES les corrections listees ci-dessus.
-Retourne le JSON COMPLET corrige (pas juste les diffs).
-Ne modifie PAS les sections qui fonctionnent deja bien.
-`, {
+  // Attach screenshots of broken sections (original + current) for visual context
+  for (const idx of sectionsToFix.slice(0, 5)) { // Max 5 pairs to avoid token limit
+    const origFile = path.join(ssDir, `section-${String(idx).padStart(2, '0')}-original.png`)
+    const currFile = path.join(compDir, `diff-section-${String(idx).padStart(2, '0')}.png`)
+
+    if (fs.existsSync(origFile)) {
+      messageContent.push({ type: 'text', text: `\n--- Section ${idx} ORIGINAL ---` })
+      messageContent.push(imageBlock(origFile))
+    }
+    if (fs.existsSync(currFile)) {
+      messageContent.push({ type: 'text', text: `--- Section ${idx} DIFF (rouge = ecarts) ---` })
+      messageContent.push(imageBlock(currFile))
+    }
+  }
+
+  const systemPrompt = readPrompt('correct-template')
+
+  const result = await askClaude(systemPrompt, messageContent, {
     model: MODEL_HEAVY,
     maxTokens: 16384,
   })
@@ -1010,6 +1040,18 @@ Ne modifie PAS les sections qui fonctionnent deja bien.
   if (!corrected.sections || corrected.sections.length === 0) {
     log('  ✗ Corrected JSON has no sections — keeping original')
     return false
+  }
+
+  // Safety: verify section count didn't change unexpectedly
+  if (corrected.sections.length !== template.sections.length) {
+    log(`  ⚠ Section count changed: ${template.sections.length} → ${corrected.sections.length}`)
+  }
+
+  // Log what was corrected
+  if (corrected.meta?.corrections) {
+    for (const c of corrected.meta.corrections) {
+      log(`    • ${c}`)
+    }
   }
 
   fs.writeFileSync(outputPath, JSON.stringify(corrected, null, 2))
