@@ -1191,6 +1191,19 @@ async function main() {
     log('Skipping enrichment (--skip-enrich)')
   }
 
+  // ─── Step 12: Cleanup scan artifacts ───
+  if (!args.includes('--keep-artifacts')) {
+    log('═══ STEP 12: CLEANUP SCAN ARTIFACTS ═══')
+    try {
+      const { cleanScanDir } = require('./clean-scans.js')
+      const cleaned = cleanScanDir(scanDir)
+      log(`  Cleaned ${cleaned.deleted} artifacts (${cleaned.freedMB} MB freed)`)
+      log(`  Kept: raw-data.json, visual-report.json, scan-report.md, output.json`)
+    } catch (e) {
+      log(`  ⚠ Cleanup failed: ${e.message}`)
+    }
+  }
+
   console.log('')
 }
 
