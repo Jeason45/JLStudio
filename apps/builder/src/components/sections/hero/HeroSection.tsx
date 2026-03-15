@@ -315,11 +315,15 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
   // Néobrutalist : fond crème, bordures épaisses, typo black XXL, image offset avec rotation, stickers
   if (variant === 'creative') {
     const accent = accentColor ?? '#ea580c'
+    const isCentered = textAlign === 'center'
     return (
       <section className="relative bg-[#f5f0e8] overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-        <div className="max-w-7xl mx-auto px-6 py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-10">
+        <div className={cn(
+          'max-w-7xl mx-auto px-6 flex items-center',
+          isCentered ? 'flex-col pt-12 pb-6 lg:pt-16 lg:pb-8 gap-8' : 'flex-col lg:flex-row py-16 lg:py-24 gap-10'
+        )}>
           {/* Text */}
-          <div className={cn("flex-1 space-y-6", textAlign && getTextAlignClass(textAlign))}>
+          <div className={cn("space-y-6", isCentered ? 'text-center flex flex-col items-center max-w-3xl' : 'flex-1', textAlign && !isCentered && getTextAlignClass(textAlign))}>
             {content.eyebrow && (
               <span
                 {...elementProps(config.id, 'eyebrow', 'badge')}
@@ -336,14 +340,19 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
             >
               {title}
             </h1>
-            <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg text-zinc-600 max-w-lg leading-relaxed">{subtitle}</p>
-            <div className="flex flex-wrap gap-3 pt-2">
+            <p {...elementProps(config.id, 'subtitle', 'text')} className={cn("text-lg text-zinc-600 leading-relaxed", isCentered ? 'max-w-xl' : 'max-w-lg')}>{subtitle}</p>
+            <div className={cn("flex flex-wrap gap-3 pt-2", isCentered && 'justify-center')}>
               {content.primaryButton && (
                 <a
                   {...elementProps(config.id, 'primaryButton', 'button')}
                   href={content.primaryButton.href}
-                  className="px-6 py-3.5 text-sm font-bold uppercase tracking-wider text-white border-2 rounded-none transition-all hover:translate-x-0.5 hover:-translate-y-0.5 shadow-[4px_4px_0_0_#18181b] hover:shadow-[6px_6px_0_0_#18181b]"
-                  style={{ backgroundColor: accent, borderColor: accent }}
+                  className={cn(
+                    'px-6 py-3.5 text-sm font-bold uppercase tracking-wider border-2 rounded-none transition-all',
+                    content.primaryButton.variant === 'outline'
+                      ? 'bg-transparent text-zinc-900 border-zinc-900 hover:bg-zinc-900 hover:text-white'
+                      : 'text-white hover:translate-x-0.5 hover:-translate-y-0.5 shadow-[4px_4px_0_0_#18181b] hover:shadow-[6px_6px_0_0_#18181b]'
+                  )}
+                  style={content.primaryButton.variant === 'outline' ? undefined : { backgroundColor: accent, borderColor: accent }}
                 >
                   {content.primaryButton.label}
                 </a>
@@ -360,7 +369,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
             </div>
           </div>
           {/* Image with offset/rotation effect */}
-          <div className="flex-1 max-w-lg w-full relative">
+          <div className={cn("relative", isCentered ? 'w-full max-w-2xl' : 'flex-1 max-w-lg w-full')}>
             {/* Shadow offset */}
             <div className="absolute inset-0 translate-x-3 translate-y-3 bg-zinc-900 rounded-none" />
             <div className="relative overflow-hidden border-3 border-zinc-900 bg-zinc-200 aspect-[4/3] rounded-none" style={{ borderWidth: '3px' }}>
@@ -380,12 +389,12 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
               )}
             </div>
             {/* Sticker badge */}
-            {content.eyebrow && (
+            {(content.badge || content.eyebrow) && (
               <div
                 className="absolute -top-4 -right-4 w-20 h-20 rounded-full flex items-center justify-center text-white text-[10px] font-black uppercase rotate-12 shadow-lg"
                 style={{ backgroundColor: accent }}
               >
-                NEW!
+                {content.badge || 'NEW!'}
               </div>
             )}
           </div>

@@ -5,6 +5,7 @@ import { Menu, Search, ShoppingBag, User, X } from 'lucide-react'
 import { elementProps } from '@/lib/elementHelpers'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
+import { renderLogo } from '@/components/sections/_utils'
 
 export function SiteHeaderSection({ config }: { config: SectionConfig }) {
   const content = (config.content ?? {}) as Partial<SiteHeaderContent>
@@ -23,7 +24,7 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
       <header className="bg-slate-900 px-6 py-0 border-b border-slate-700/50" style={{ fontFamily: 'var(--font-body, inherit)' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between h-16">
           <div className="flex items-center gap-10">
-            <div {...elementProps(config.id, 'logo', 'image')} className="font-semibold text-lg text-white tracking-wide">{logo}</div>
+            <div {...elementProps(config.id, 'logo', 'image')} className="font-semibold text-lg text-white tracking-wide">{renderLogo(logo, 'font-semibold text-lg text-white tracking-wide')}</div>
             <nav className="hidden md:flex items-center gap-8">
               {links.map((link, i) => (
                 <a
@@ -59,7 +60,7 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
     return (
       <header className="absolute top-0 left-0 w-full px-6 py-5" style={{ zIndex: 50, fontFamily: 'var(--font-body, inherit)', backgroundColor: 'transparent' }}>
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div {...elementProps(config.id, 'logo', 'image')} className="text-lg font-medium tracking-[0.15em] uppercase" style={{ color: '#FFFFFF' }}>{logo}</div>
+          <div {...elementProps(config.id, 'logo', 'image')} className="text-lg font-medium tracking-[0.15em] uppercase" style={{ color: '#FFFFFF' }}>{renderLogo(logo, 'text-lg font-medium tracking-[0.15em] uppercase')}</div>
           <nav className="hidden md:flex items-center gap-8" style={{ backgroundColor: 'transparent' }}>
             {links.map((link, i) => (
               <a
@@ -108,7 +109,7 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
         <div className="max-w-6xl mx-auto">
           {/* Logo centré */}
           <div className="flex justify-center py-6">
-            <div {...elementProps(config.id, 'logo', 'image')} className="text-2xl font-light tracking-[0.25em] uppercase text-zinc-800">{logo}</div>
+            <div {...elementProps(config.id, 'logo', 'image')} className="text-2xl font-light tracking-[0.25em] uppercase text-zinc-800">{renderLogo(logo, 'text-2xl font-light tracking-[0.25em] uppercase text-zinc-800')}</div>
           </div>
           {/* Séparateur doré fin */}
           <div className="h-px w-full" style={{ background: `linear-gradient(90deg, transparent, ${gold}, transparent)` }} />
@@ -149,7 +150,7 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
     return (
       <header className="bg-white px-6 py-3 border-b border-zinc-100" style={{ fontFamily: 'var(--font-body, inherit)' }}>
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div {...elementProps(config.id, 'logo', 'image')} className="font-bold text-xl text-zinc-900 tracking-tight">{logo}</div>
+          <div {...elementProps(config.id, 'logo', 'image')} className="font-bold text-xl text-zinc-900 tracking-tight">{renderLogo(logo, 'font-bold text-xl text-zinc-900 tracking-tight')}</div>
           <nav className="hidden md:flex items-center bg-zinc-100 rounded-full px-1.5 py-1">
             {links.map((link, i) => (
               <a
@@ -183,7 +184,7 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
     return (
       <header className="bg-[#f5f0e8] px-6 py-0 border-b-[3px] border-zinc-900" style={{ fontFamily: 'var(--font-body, inherit)' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between h-16">
-          <div {...elementProps(config.id, 'logo', 'image')} className="font-black text-2xl text-zinc-900 tracking-tight">{logo}</div>
+          <div {...elementProps(config.id, 'logo', 'image')} className="font-black text-2xl text-zinc-900 tracking-tight">{renderLogo(logo, 'font-black text-2xl text-zinc-900 tracking-tight')}</div>
           <nav className="hidden md:flex items-center gap-6">
             {links.map((link, i) => (
               <a
@@ -225,7 +226,7 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
         {/* Top bar */}
         <div className="px-6 py-3">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
-            <div {...elementProps(config.id, 'logo', 'image')} className="font-bold text-xl text-zinc-900">{logo}</div>
+            <div {...elementProps(config.id, 'logo', 'image')} className="font-bold text-xl text-zinc-900">{renderLogo(logo, 'font-bold text-xl text-zinc-900')}</div>
             {/* Search bar */}
             <div {...elementProps(config.id, 'searchBar', 'text')} className="hidden md:flex flex-1 max-w-lg mx-8">
               <div className="flex w-full h-10 rounded-lg border border-zinc-200 overflow-hidden bg-zinc-50">
@@ -286,7 +287,7 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
     return (
       <header className="bg-zinc-950/80 backdrop-blur-2xl px-6 py-0 border-b border-white/[0.08]" style={{ fontFamily: 'var(--font-body, inherit)' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between h-16">
-          <div {...elementProps(config.id, 'logo', 'image')} className="font-bold text-lg text-white tracking-tight">{logo}</div>
+          <div {...elementProps(config.id, 'logo', 'image')} className="font-bold text-lg text-white tracking-tight">{renderLogo(logo, 'font-bold text-lg text-white tracking-tight')}</div>
           <nav className="hidden md:flex items-center gap-1">
             {links.map((link, i) => (
               <a
@@ -420,7 +421,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
               fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
             }}
           >
-            {logo}<sup>®</sup>
+            {renderLogo(logo)}<sup>®</sup>
           </div>
 
           {/* RIGHT — Menu button (glassmorphism) */}
@@ -518,7 +519,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
                   fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
                 }}
               >
-                {logo}<sup>®</sup>
+                {renderLogo(logo)}<sup>®</sup>
               </div>
               <div
                 {...elementProps(config.id, 'closeButton', 'button', 'Close Button')}
@@ -814,7 +815,7 @@ function ZmrAgencyHeader({ config, logo, ctaLabel, links }: { config: SectionCon
               onMouseOver={(e) => (e.currentTarget.style.opacity = '0.7')}
               onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
             >
-              {logo}
+              {renderLogo(logo)}
             </a>
             {ctaLabel && (
               <p style={{

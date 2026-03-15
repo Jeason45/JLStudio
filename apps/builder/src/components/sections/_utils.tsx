@@ -1,3 +1,4 @@
+import React from 'react'
 import { cn } from '@/lib/utils'
 import type {
   SectionBackground,
@@ -227,4 +228,19 @@ export function sectionClasses(bgOrStyle: SectionBackground | SectionStyle, pyOr
     getMarginBottomClass(s.marginBottom),
     pyOrExtra as string, // extra
   )
+}
+
+// ─── Logo rendering helper ────────────────────
+// Detects if logo string is a URL (image) or plain text and renders accordingly.
+const IMAGE_URL_RE = /^(https?:\/\/|\/|data:image\/)/i
+export function isLogoUrl(logo: string): boolean {
+  return IMAGE_URL_RE.test(logo.trim())
+}
+
+export function renderLogo(logo: string, className?: string, imgClassName?: string): React.ReactNode {
+  if (isLogoUrl(logo)) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={logo} alt="Logo" className={cn('h-8 w-auto object-contain', imgClassName)} />
+  }
+  return <span className={className}>{logo}</span>
 }

@@ -9,27 +9,6 @@ Ton objectif : analyser le site cible (URL + screenshots fournis) et produire un
 
 ---
 
-## INDEX RAPIDE — RÈGLES CRITIQUES À LIRE EN PRIORITÉ
-
-Avant de commencer, mémoriser ces règles qui évitent 90% des erreurs :
-
-| # | Règle | Localisation |
-|---|-------|-------------|
-| 1 | Ne jamais inventer une valeur — null si non vérifiable | RÈGLES ABSOLUES |
-| 2 | Screenshots = source de vérité, ils priment sur le code | PASSE 0 |
-| 3 | textTransform "uppercase" ne s'applique PAS globalement | Règle 25 |
-| 4 | Logo = URL complète (http...) pas le texte alt | Règle 24 |
-| 5 | Illustrations décoratives = floatingImages, pas eyebrow | Règle 16 |
-| 6 | DecorativeIcon = URL réelle du SVG, pas juste "true" | Règle 18 |
-| 7 | Parallax = backgroundImage.attachment: "fixed" | Règle 19 |
-| 8 | Fond crème/beige = background:"custom" + customBgColor | RÈGLES ABSOLUES |
-| 9 | Icônes de service custom = URL complète, pas Lucide | Règle 17 |
-| 10 | textColor blanc OBLIGATOIRE sur toute section sombre | Règle 23 |
-| 11 | Variant image-text = nom du variant détermine la position | Règle 29 |
-| 12 | Boucle d'amélioration = 50 itérations max, arrêt à 95% | PARTIE 6 |
-
----
-
 ## WORKFLOW OBLIGATOIRE — À SUIVRE POUR CHAQUE NOUVEAU SITE
 
 Avant toute analyse, suivre ces étapes dans l'ordre strict.
@@ -83,7 +62,7 @@ Sauvegarder dans : scripts/scans/[slug]/output.json
 
 ### ÉTAPE 4 — LANCER LA BOUCLE D'AUTO-AMÉLIORATION
 
-Lancer jusqu'à 50 itérations ou score ≥ 95% :
+Lancer jusqu'à 5 itérations ou score ≥ 95% :
   - Audit du JSON produit
   - Correction des problèmes identifiés
   - Mise à jour de SCAN_SITE_PROMPT.md avec nouvelles règles génériques
@@ -118,54 +97,6 @@ Pour chaque écart identifié dans le diff-report :
 2. Mettre à jour SCAN_SITE_PROMPT.md avec une règle générique
 3. Réimporter avec --site-id pour mettre à jour le site existant
 4. Relancer les screenshots et comparer
-
-Répéter selon cette séquence section par section :
-
-PHASE BRAND — Valider le brand avant tout (BLOQUANT)
-Avant d'analyser les sections, valider le brand 3 fois :
-
-Boucle 1 : Extraire couleurs, fonts, spacing depuis raw-data.json
-Boucle 2 : Confirmer visuellement dans les screenshots
-Boucle 3 : Vérifier que le rendu dans le configurateur
-           correspond au brand du site original
-
-→ Ne pas passer aux sections si le brand est faux.
-  Un brand incorrect rend toutes les sections fausses.
-
-PHASE SECTIONS — Traiter chaque section dans l'ordre de la page
-Pour CHAQUE section, effectuer 15 boucles :
-
-Boucles 1-3 : STRUCTURE
-  → Type correct ? Variant correct ? Layout correct ?
-  → Screenshot section originale vs configurateur à chaque boucle
-
-Boucles 4-6 : DESIGN TOKENS
-  → Couleurs exactes, typographie, espacements
-  → Screenshot section originale vs configurateur à chaque boucle
-
-Boucles 7-9 : CONTENU
-  → Textes exacts, images correctes, icônes, ornements
-  → Screenshot section originale vs configurateur à chaque boucle
-
-Boucles 10-12 : EFFETS VISUELS
-  → Animations entrance, hover effects, parallax
-  → Screenshot section originale vs configurateur à chaque boucle
-
-Boucles 13-15 : CONFIRMATION
-  → Rien n'a régressé depuis les boucles précédentes
-  → Score ≥ 95% sur cette section avant de continuer
-  → Screenshot final de confirmation
-
-→ Passer à la section suivante SEULEMENT si score ≥ 95%
-→ Si score < 95% après 15 boucles : noter les écarts
-  restants et continuer (ne pas bloquer indéfiniment)
-
-PHASE VALIDATION GLOBALE
-Après toutes les sections :
-1. Screenshot full page du configurateur
-2. Comparaison avec l'original
-3. Vérifier la cohérence visuelle entre sections
-4. Score global final
 
 Répéter jusqu'à satisfaction visuelle.
 
@@ -215,221 +146,6 @@ Vérifier que le build passe sur Coolify après le push.
 IMPORTANT : Ce workflow s'applique à CHAQUE nouveau site scanné.
 Les scripts font le travail technique automatiquement.
 Claude se concentre sur l'analyse et la génération du JSON.
-
----
-
-## PARTIE 8 — RÈGLES APPRISES (auto-amélioration)
-
-### Règle 1 : `background: "dark"` ne nécessite PAS `customBgColor`
-Si une section a `background: "dark"`, ne PAS ajouter `customBgColor: "#121212"` en plus.
-Le `customBgColor` est réservé à `background: "custom"` uniquement.
-De même, `background: "white"` et `background: "light"` n'ont pas besoin de `customBgColor`.
-
-### Règle 2 : Footer avec sous-colonnes visuelles
-Un footer peut avoir une colonne "MENU" qui se divise visuellement en 2 sous-colonnes côte à côte.
-Dans le JSON, capturer comme UNE seule colonne avec tous les liens (le rendu gère le layout multi-colonnes).
-NE PAS créer 2 colonnes séparées si elles partagent le même titre.
-
-### Règle 3 : Fonts custom non référencées
-Si une font détectée (via computed styles) N'EST PAS dans la liste des 80+ Google Fonts intégrées
-au configurateur, la documenter comme `provider: "local"` dans fontImports ET mentionner
-"requires custom upload" dans reproductionNotes. Exemples : Generalsans, Cabinet Grotesk custom, etc.
-
-### Règle 4 : Testimonials slider unique items
-Un slider/carousel de témoignages peut RÉPÉTER les mêmes items pour l'effet de boucle.
-Capturer uniquement les items UNIQUES (dédoublonner par quote + author).
-Documenter le nombre d'items uniques vs le nombre total affiché dans reproductionNotes.
-
-### Règle 5 : Sections image-text avec features intégrées
-Si une section image-text contient des mini-features (icon + title + description) EN PLUS du titre et body
-principal, les capturer dans `content.features[]` et non comme items séparés.
-Cela correspond au pattern "image-text with feature list" (ex: "Why Choose Us" + features list).
-
-### Règle 6 : Decorative barber/industry-specific SVG illustrations
-Les sites premium utilisent souvent des illustrations SVG semi-transparentes (opacity 0.1-0.2)
-comme éléments décoratifs de fond. Ces illustrations sont SPÉCIFIQUES à l'industrie (barber pole,
-tools, emblem pour barbershop ; camera, lens pour photo ; fork, wine glass pour restaurant).
-Les capturer dans illustrationsDetected avec leur opacity approximative et les sections concernées.
-
-### Règle 7 : Recurring decorative icon/ornament above section titles
-Si le même SVG/icon (ex: mustache, star, diamond) apparaît au-dessus du titre de PLUSIEURS sections,
-le documenter UNE fois dans iconsDetected avec `usedIn: ["list of all sections"]` et ajouter
-`decorativeIcon` dans le content de CHAQUE section concernée avec l'URL du SVG.
-C'est un pattern récurrent (ornament divider) et non un eyebrow textuel.
-
-### Règle 8 : Ne pas dupliquer subtitle et body dans image-text
-Le composant image-text luxe rend BOTH `subtitle` et `body`. Si le site source n'a qu'UN seul
-paragraphe sous le titre, mettre ce texte dans `subtitle` UNIQUEMENT et omettre `body`.
-Si on met le même texte dans les deux champs, il sera affiché DEUX FOIS dans le rendu.
-
-### Règle 9 : Hero subtitle = vrai texte du site, pas lorem ipsum générique
-Le texte du hero (subtitle) est souvent DIFFÉRENT du lorem ipsum utilisé dans les autres sections.
-Toujours vérifier le screenshot du hero pour copier le texte EXACT affiché, même s'il ressemble
-à du lorem ipsum. Le hero peut avoir un texte spécifique tandis que les autres sections partagent
-le même placeholder.
-
-### Règle 10 : Services grid columns = visual layout, not total items
-Le champ `columns` dans features/services doit refléter le nombre de COLONNES visuelles par rangée,
-pas le nombre total d'items. Si la grille montre 2 items par rangée sur 3 rangées → columns: 2.
-Si 3 items par rangée sur 2 rangées → columns: 3. Vérifier le screenshot, pas deviner.
-
-### Règle 11 : Header CTA vs Hero CTA distinction
-Le CTA de la navbar (bouton en haut à droite) peut être DIFFÉRENT des CTAs du hero.
-Exemple : navbar CTA = "BOOK AN APPOINTMENT" (action directe), hero secondary = "BROWSE SERVICES" (navigation).
-Vérifier le screenshot du header pour identifier le vrai CTA navbar, pas le raw-data extractor
-qui peut confondre les deux.
-
-### Règle 12 : CTA sections avec background image — toujours spécifier overlayOpacity
-Les sections CTA avec image de fond nécessitent TOUJOURS un `backgroundImage.overlayOpacity` élevé (0.8-0.9).
-Si l'original a un fond quasi-opaque (gris foncé), utiliser 0.85-0.9. Ne jamais omettre l'overlay.
-Le composant luxe-centered supporte désormais `backgroundImage` dans le style avec `overlayColor` et `overlayOpacity`.
-
-### Règle 13 : Gallery sections — toujours inclure primaryButton
-Les galeries ont presque toujours un CTA sous les images ("FOLLOW US", "VIEW ALL", "BOOK AN APPOINTMENT").
-Toujours capturer ce bouton dans `content.primaryButton` avec `label` et `href`.
-
-### Règle 14 : Footer multi-colonnes — garder les titres de colonnes
-Quand un footer a des colonnes avec des titres ("MENU", "UTILITY PAGES", "RESOURCES"),
-garder le champ `title` dans chaque colonne du JSON. Le composant luxe utilisera automatiquement
-un layout multi-colonnes (brand+socials à gauche, colonnes de liens à droite).
-Sans titres, il retombe sur le layout centré une colonne.
-
-### Règle 15 : Testimonials layout — détecter horizontal cards vs centered single
-Vérifier le screenshot de la section testimonials. Si les cartes montrent l'avatar À GAUCHE du texte
-(layout horizontal), le composant luxe-slider rendra automatiquement des cartes horizontales
-côte à côte. Le pattern "avatar au-dessus, texte centré" est un layout différent (grid/featured).
-Le slider luxe affiche ~1.6 cartes visibles pour l'effet de défilement horizontal.
-
-### Règle 16 : Illustrations décoratives flottantes (floating items)
-Quand le site scanné a des illustrations/SVG décoratifs positionnés en fond de section (coins,
-faible opacité, souvent thématiques — ciseaux, rasoir, brosse, pot de crème, etc.), les capturer
-dans `content.floatingImages[]`. Chaque entrée :
-```json
-{ "src": "https://cdn.../illustration.svg", "position": "bottom-left", "size": 280, "opacity": 0.22 }
-```
-Positions valides : `"top-left"`, `"top-right"`, `"bottom-left"`, `"bottom-right"`.
-Opacité recommandée : 0.40–0.50 (clairement visible en fond). Taille recommandée : 250–350px.
-
-**Détection — ces illustrations sont souvent manquées au premier scan :**
-1. Dans le `raw-data.json`, rechercher systématiquement les URLs contenant : `"floating"`, `"decorative"`, `"illustration"`, `"background"`, `"item"` combiné au nom du thème (ex: `"barbershop"`, `"restaurant"`).
-2. Ces images sont souvent des `<img>` avec `position: absolute`, `pointer-events: none`, `opacity` faible (0.05–0.5) — elles ne sont PAS dans le flux du contenu et se repèrent par leur CSS (`absolute`, `z-index` bas, `opacity` < 1).
-3. Vérifier CHAQUE section du screenshot : regarder les coins et les bords — ces illustrations sont subtiles et faciles à rater car elles se fondent dans le fond.
-4. Croiser avec les assets du CDN : souvent un même site réutilise 3-4 illustrations décoratives sur plusieurs sections. Une fois une illustration trouvée, vérifier si elle apparaît ailleurs.
-5. Dans le raw-data, elles sont souvent dans des `<div>` avec des classes contenant `floating`, `bg-`, `decoration`, `ornament`, ou dans des wrappers `absolute` séparés du contenu principal.
-
-**Technique :** Les floatingImages sont rendues par le `SortableSectionWrapper` (pas par les composants de section eux-mêmes). Elles sont en `position: absolute`, `pointer-events: none`, `z-index: 3`, avec `overflow-hidden` sur le wrapper pour les contenir dans leur section.
-
-### Règle 17 : Icônes de service en URL (pas Lucide generics)
-Quand les icônes de features/services sont des SVG custom du site (pas des Lucide/emoji standards),
-stocker l'URL complète dans `item.icon` (ex: `"https://cdn.../classic-haircut.svg"`).
-Le composant FeaturesSection détecte automatiquement `item.icon.startsWith('http')` et rend un
-`<img>` au lieu d'un `<DynamicIcon>`. Ne PAS utiliser des noms Lucide génériques (scissors, baby...)
-quand le site a ses propres icônes SVG custom.
-
-### Règle 18 : DecorativeIcon comme URL réelle
-Le champ `content.decorativeIcon` peut être une URL SVG (ex: `"https://cdn.../Icon-barbershop.svg"`).
-Quand c'est une URL (commence par `http`), elle est passée au composant `DecorativeOrnament` via
-la prop `iconUrl` et rendue en `<img>` entre les lignes dorées. Quand c'est un booléen ou absent,
-la moustache barbershop intégrée (SVG inline) est utilisée par défaut.
-Toujours préférer l'URL réelle du site scanné plutôt qu'un simple `true`.
-
-### Règle 19 : Hero background parallax (background-attachment: fixed)
-Quand le hero du site scanné utilise un effet parallax (l'image de fond reste fixe pendant le scroll),
-ajouter `style.backgroundImage.attachment: "fixed"` dans la config de la section hero.
-Le composant HeroSection luxe rend l'image via CSS `background-image` sur un div (pas un `<img>`)
-avec `background-attachment: fixed`. Ne PAS utiliser de tag `<img>` pour le parallax — ça ne
-fonctionne qu'avec `background-image` CSS.
-
-### Règle 20 : Testimonial cards avec ombre (cardShadow)
-Quand les cartes de témoignages ont un fond blanc visible avec une ombre portée et/ou une bordure
-(au lieu de texte à plat sans séparation visuelle), ajouter `"cardShadow": true` dans le content
-de la section testimonials. Le composant TestimonialsSection applique alors `shadow-[0_4px_24px_rgba(0,0,0,0.08)]`
-et `border border-zinc-100` sur chaque carte.
-Sans ce flag, les cartes sont rendues à plat sans ombre ni bordure.
-
-### Règle 21 : Style des flèches de navigation slider (arrowStyle)
-Quand les flèches de navigation d'un slider/carousel sont des carrés noirs avec icône blanche
-(au lieu de cercles gris par défaut), ajouter `"arrowStyle": "square-dark"` dans le content.
-Valeurs possibles :
-- absent/défaut : cercles gris avec chevrons
-- `"square-dark"` : carrés noirs avec flèches blanches (style luxe/barbershop)
-Toujours vérifier sur les screenshots la forme (rond vs carré) et la couleur (gris vs noir) des flèches.
-
-### Règle 22 : Galerie 5 images en grille rectangle
-Quand une galerie (Instagram, portfolio) affiche exactement 5 images formant un rectangle propre
-(pas un masonry irrégulier), avec l'image centrale plus grande qui span 2 lignes, le composant
-GallerySection le gère automatiquement quand `images.length === 5` : grille CSS 3 colonnes × 2 lignes,
-image du centre en `row-span-2`. Il suffit de fournir exactement 5 images dans le bon ordre
-(top-left, center, top-right, bottom-left, bottom-right) pour obtenir ce layout.
-
-### Règle 23 : textColor blanc sur sections à fond sombre
-Quand une section a un `customBgColor` sombre (ex: `#1a1a1a`, `#121212`, `#09090b`), TOUJOURS
-ajouter `"textColor": "#ffffff"` dans le `style` de cette section. Cela s'applique à TOUTE section
-avec fond sombre : newsletter, gallery, footer, hero, etc. — pas seulement le footer.
-Les composants adaptent automatiquement les couleurs de texte, input, bordures etc. via la détection
-`isDarkBg`, mais le `textColor` dans le style est nécessaire pour que le `SortableSectionWrapper`
-propage la couleur via CSS variable `--color-foreground`.
-
-### Règle 24 : Logo URL dans header/footer — renderLogo auto-détection
-Les composants `SiteHeaderSection` et `SiteFooterSection` utilisent `renderLogo()` qui détecte
-automatiquement si `content.logo` est une URL (commence par `http://`, `https://`, `/` ou `data:image/`)
-et rend un `<img>` au lieu de texte brut. Toujours capturer l'URL du logo SVG/PNG dans `content.logo`
-quand le site a un logo image, pas le texte alt. Exemple : `"logo": "https://cdn.../logo.svg"`.
-
-### Règle 25 : textTransform "uppercase" — ne pas appliquer globalement
-`textTransform: "uppercase"` dans le style d'une section s'applique à TOUT le texte de la section
-(titres, body, descriptions, badges). La plupart des sites n'utilisent uppercase que sur les titres
-(via la font display) et pas sur le body. NE PAS mettre `textTransform: "uppercase"` sauf si le site
-utilise réellement uppercase sur tout le texte de la section. Préférer omettre ce champ — les composants
-gèrent déjà l'uppercase sur les éléments appropriés (badges, eyebrows, nav links).
-
-### Règle 26 : FloatingImages — taille vs espace disponible
-Les `floatingImages` sont en position absolute dans les coins de la section. Si une image flottante
-est trop grande (>200px) et positionnée sur le même côté que le contenu textuel, elle va RECOUVRIR
-le texte et le rendre illisible. Règles :
-- Pour les sections `split` (text + buttons côte à côte) : ne pas mettre de floating image >150px
-  sur le côté du texte. Préférer les petites illustrations décoratives (<100px) à faible opacité.
-- Pour les sections `centered` : les floating images dans les coins ne posent pas de problème.
-- La position `top-left` est la plus dangereuse car le texte commence en haut à gauche.
-
-### Règle 27 : Logos section pour marquee textuel — pas de marquee natif
-Le composant `LogosSection` (creative) NE SUPPORTE PAS l'animation marquee/défilement horizontal.
-Il rend les items comme des badges/pills statiques en flex wrap. Si le site original a un marquee
-textuel, le mapper quand même en `logos` (creative) avec les textes en `name` — c'est le meilleur
-compromis disponible. Documenter "marquee not supported" dans reproductionNotes.
-
-### Règle 28 : Hero creative — layout split obligatoire
-Le variant `hero` creative supporte DEUX layouts via `style.textAlign`:
-- `"textAlign": "center"` → layout centré (texte centré au-dessus, image en dessous) — idéal pour food/restaurant
-- Autre valeur ou absent → layout split (texte à gauche, image à droite)
-Le subtitle est TOUJOURS rendu (même vide). Mettre `"subtitle": ""` si le site n'en a pas.
-Le badge circulaire (coin haut droit de l'image) affiche `content.badge` si défini, sinon "NEW!".
-Utiliser `"badge": "UP TO 40% OFF"` pour un badge custom. Le champ `trustText` est IGNORÉ.
-Le bouton primaire supporte `"variant": "outline"` pour un style bordure sans remplissage.
-
-### Règle 29 : Image-text variant — position dans le nom du variant
-Le composant ImageTextSection utilise le NOM du variant pour déterminer la position de l'image,
-PAS le champ `imagePosition`. Si l'image est à gauche : `"variant": "creative-image-left"`.
-Si l'image est à droite : `"variant": "creative-image-right"` (ou juste `"creative"` = image-right).
-Le suffixe `-image-left` ou `-image-right` est REQUIS. Le champ `imagePosition` dans content est ignoré.
-
-### Règle 30 : ImageTextSection creative — items et boutons outline
-Le variant creative de ImageTextSection supporte `content.items[]` (rendus comme badges avec icône + titre + description).
-Chaque item : `{ "id": "...", "icon": "lucide-icon-name", "title": "...", "description": "..." }`.
-Le bouton primaire supporte `"variant": "outline"` pour un style transparent avec bordure.
-Le champ `features[]` dans output.json sera automatiquement converti en `items[]` par normalizeContent().
-
-### Règle 31 : Product-grid variant — utiliser creative-grid pas creative
-Le variant `creative` seul n'existe PAS pour product-grid. Utiliser `creative-grid` (4 colonnes, cartes
-neobrutalist avec bordures épaisses) ou `creative-list` (lignes horizontales). Idem pour les autres
-univers : `startup-grid`, `corporate-grid`, `luxe-grid`, etc.
-
-### Règle 32 : Logos section — creative-strip = pills statiques
-Le variant `creative-strip` rend les items comme des pilules/badges sur un fond blanc avec bordure noire.
-Pas de marquee/scroll animé. Le textColor s'applique au texte INTÉRIEUR des pilules — si le fond
-des pilules est blanc/crème, utiliser une couleur FONCÉE comme textColor pour la lisibilité.
-
----
 
 ---
 
@@ -786,44 +502,9 @@ Les screenshots sont LA source de vérité visuelle. Avant de lire une seule lig
     * Observe les polices (serif ? sans-serif ? combien de familles ?)
     * Évalue les espacements (généreux = luxury / serré = dense)
 3. Règle absolue : ce qui est visible dans les screenshots prime sur le code.
-   - Screenshot montre du beige mais le code dit #fff → le screenshot a raison
-   - Tout le texte apparaît en majuscules dans les screenshots → text-transform: uppercase
-   - Les screenshots révèlent les computed styles finaux, pas les intentions du CSS
-
-3bis. VALIDATION CROISÉE FRAMES / SCREENSHOTS — OBLIGATOIRE
-
-Pour chaque effet détecté dans les frames, le confirmer
-dans le screenshot correspondant avant de le documenter :
-
-→ Parallax détecté dans les frames (fond fixe) :
-  Vérifier dans le screenshot que la section a bien
-  une image de fond (pas un fond uni)
-  Si confirmé → backgroundImage.attachment: "fixed"
-  Si pas d'image de fond → ce n'est pas du parallax
-
-→ Animation entrance détectée dans les frames :
-  Vérifier dans le screenshot que l'élément existe bien
-  et n'est pas simplement en dehors du viewport initial
-  Si confirmé → entrance: "fade-up" ou équivalent
-
-→ Counter animation détectée dans les frames :
-  Vérifier dans le screenshot que des chiffres sont visibles
-  Si confirmé → textAnimations: [{ type: 'counter' }]
-
-→ Marquee détecté dans les frames :
-  Vérifier dans le screenshot qu'il s'agit bien d'un
-  défilement horizontal et non d'un carousel classique
-  Si confirmé → documenter dans visualEffects.textAnimations
-
-→ Smooth scroll détecté dans les frames :
-  Vérifier dans raw-data.json la présence de Lenis,
-  Locomotive Scroll ou équivalent dans les librairies
-  Si confirmé → globalEffects.smoothScroll.active: true
-
-Règle absolue : un effet détecté dans les frames SANS
-confirmation dans les screenshots ou raw-data.json
-→ confidence: 'low', ne pas l'inclure dans output.json
-
+    * Screenshot montre du beige mais le code dit #fff → le screenshot a raison
+    * Tout le texte apparaît en majuscules dans les screenshots → text-transform: uppercase
+    * Les screenshots révèlent les computed styles finaux, pas les intentions du CSS
 4. Si des frames sont disponibles, les analyser AVANT les screenshots :
     → scripts/scans/[slug]/frames/desktop/ (1 frame toutes les 0.5s)
     → scripts/scans/[slug]/frames/mobile/
@@ -2783,32 +2464,6 @@ BrandStyleInjector — PIÈGES ET SOLUTIONS GÉNÉRIQUES
 ## PARTIE 6 — BOUCLE D'AUTO-AMÉLIORATION
 Après avoir généré le JSON initial, lance automatiquement cette boucle sans attendre.
 Cycle par itération
-Étape 0 — VALIDATION VISUELLE OBLIGATOIRE (avant chaque audit)
-
-Avant tout audit textuel du JSON, valider visuellement :
-
-1. Réimporter le JSON dans le configurateur :
-   node scripts/import-template.js scripts/scans/[slug]/output.json \
-   --site-id [SITE-ID]
-
-2. Screenshotter le résultat section par section :
-   node scripts/screenshot-site.js [SITE-ID] \
-   scripts/scans/[slug]/comparison
-
-3. Pour chaque section, comparer côte à côte :
-   - Screenshot original : scripts/scans/[slug]/screenshots/
-   - Screenshot configurateur : scripts/scans/[slug]/comparison/current-section-XX.png
-
-4. Noter les écarts visuels PAR SECTION avec ce niveau de priorité :
-   🔴 STRUCTURAL : type incorrect, variant inexistant, crash, section manquante
-   🟡 VISUAL : mauvaise couleur, mauvaise image, layout cassé, fond incorrect
-   🟢 COSMETIC : spacing, font-weight, letter-spacing, opacité
-
-5. Corriger en priorité les écarts 🔴 avant les 🟡 avant les 🟢
-
-Règle absolue : ne jamais passer à la boucle suivante sans avoir
-screenshotté et comparé visuellement le résultat.
-
 Étape 1 — Audit obligatoire
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 AUDIT ITÉRATION N/10
@@ -2841,36 +2496,7 @@ Score global                   : XX% (moyenne pondérée : fidélité visuelle 3
 Améliorations apportées au prompt : X
 Améliorations apportées au JSON   : X
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Étape 2 — ORDRE DE PRIORITÉ DES CORRECTIONS (OBLIGATOIRE)
-
-Corriger TOUJOURS dans cet ordre strict. Ne jamais corriger
-un problème cosmétique avant un problème structurel.
-
-🔴 NIVEAU 1 — STRUCTURAL (traiter en premier, bloquant)
-   → Section manquante ou en trop
-   → Type de section incorrect (ex: features au lieu de image-text)
-   → Variant inexistant dans le configurateur
-   → Crash ou erreur de rendu
-   → Brand complètement faux (couleurs, fonts)
-
-🟡 NIVEAU 2 — VISUAL (traiter en second, impactant)
-   → Mauvaise image de fond ou image de contenu
-   → Mauvaise couleur de section (blanc au lieu de crème)
-   → Layout cassé (colonnes, position image/texte)
-   → Textes manquants ou incorrects
-   → Ornements et icônes absents
-
-🟢 NIVEAU 3 — COSMETIC (traiter en dernier, détail)
-   → Spacing légèrement différent
-   → Font-weight pas exactement le bon
-   → Letter-spacing à affiner
-   → Opacité d'overlay à ajuster
-   → Taille d'éléments décoratifs
-
-Règle absolue : si des corrections 🔴 existent,
-NE PAS toucher aux 🟡 ou 🟢 avant de les résoudre.
-
-Étape 3 — Minimum obligatoire : 5 améliorations concrètes
+Étape 2 — Minimum obligatoire : 5 améliorations concrètes
 Si moins de 5 trouvées, creuse obligatoirement :
 * Computed styles CSS de chaque section
 * Animations frame par frame (keyframes exactes)
@@ -2890,54 +2516,19 @@ Si moins de 5 trouvées, creuse obligatoirement :
 Étape 3 — Ce qui compte comme une vraie amélioration
 ✅ Champ null → valeur précise ✅ confidence "low"/"medium" → "high" (source vérifiée) ✅ Nouvel élément du site capturé ✅ Format corrigé pour être directement exploitable dans le configurateur ✅ Règle d'extraction ajoutée au prompt (générique, applicable à tout futur site) ✅ Valeur approximative → valeur mesurée au pixel ✅ Pattern visuel identifié (textTransform, buttonStyle, background alterné) ✅ Background de section corrigé (blanc par défaut → vraie couleur) ✅ Variante de bouton corrigée (primary↔outline) ✅ Icône identifiée et matchée avec la librairie ✅ Élément de base documenté dans elementsDetected ✅ Composant documenté dans componentsDetected ✅ Wireframe documenté dans wireframesDetected ✅ Animation avec durée, easing et trigger précis
 ❌ Reformuler sans changer le résultat ❌ Ajouter un champ qui sera toujours null ❌ Micro-changements cosmétiques ❌ Répéter la même valeur différemment formulée
-Étape 4 — AMÉLIORER SCAN_SITE_PROMPT.md (PROTOCOLE STRICT)
-
-Principe : chaque erreur corrigée = potentielle nouvelle règle générique.
-Suivre ce protocole OBLIGATOIRE avant d'ajouter toute règle :
-
-FILTRE 1 — Est-ce générique ?
-Une seule question :
-  → Cette règle pourrait-elle se produire sur un autre site
-    que celui qu'on vient de scanner ?
-
-  Si OUI → générique → continuer
-  Si NON → ne pas ajouter
-
-FILTRE 2 — Est-ce un doublon ?
-Vérifier les Règles 1 à N dans la PARTIE 8 avant d'ajouter.
-  Si une règle similaire existe → enrichir l'existante
-  Si aucune règle similaire → continuer
-
-FILTRE 3 — Format obligatoire
-Toute nouvelle règle DOIT suivre ce template exactement :
-'Si [condition détectable visuellement ou dans le code]
-→ alors [action précise dans output.json ou dans un composant]
-→ vérifier que [résultat visuel attendu dans le configurateur]'
-
-Exemple correct :
-'Si le header a position: absolute et fond transparent sur le hero
-→ alors ajouter style: { background: transparent } en inline
-  ET s'assurer que le hero a padding-top suffisant
-→ vérifier que le header est visible sur l'image du hero
-  sans fond coloré derrière lui'
-
-PLACEMENT :
-→ Ajouter en PARTIE 8 avec numéro séquentiel (Règle N+1)
-→ Ne jamais insérer ailleurs dans le prompt
-
-Types de règles valides à ajouter :
-* Heuristique de détection manquante
-* Piège courant évité
-* Mapping visuel → JSON manquant
-* Validation de type manquante
-* Pattern récurrent non documenté
-
-IMPORTANT : ne pas ajouter de règles spécifiques
-au site en cours d'analyse
+Étape 4 — Améliore ce fichier SCAN_SITE_PROMPT.md
+Principe : chaque erreur corrigée = nouvelle règle générique ajoutée au prompt. Les règles doivent être applicables à TOUT futur site, pas seulement au site en cours.
+Types de règles à ajouter :
+* Heuristique de détection manquante (ex: "si le footer a des icônes sociales, les documenter dans socials")
+* Piège courant évité (ex: "ne pas confondre blog-grid et blog")
+* Mapping visuel → JSON manquant (ex: "fond crème → background: 'custom' + customBgColor")
+* Validation de type manquante (ex: "rating est un number, pas une string")
+* Pattern récurrent non documenté (ex: "alternance image-text left/right")
+IMPORTANT : ne pas ajouter de règles spécifiques au site en cours (couleurs exactes, textes, etc.)
 Étape 5 — Relance le scan complet
 Rescanne le site avec le prompt amélioré. Compare explicitement JSON précédent vs nouveau JSON.
 Condition d'arrêt
-* Score global ≥ 95%, OU 50 itérations effectuées
+* Score global ≥ 95%, OU 10 itérations effectuées
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 CHECKLIST DE QUALITÉ FINALE (avant de rendre le JSON)
@@ -3015,3 +2606,215 @@ Sauvegarde la version finale améliorée dans SCAN_SITE_PROMPT.md.
 | Templates de pages | 20+ |
 | **Total items librairie** | **500+** |
 
+---
+
+## PARTIE 8 — RÈGLES APPRISES (auto-amélioration)
+
+### Règle 1 : `background: "dark"` ne nécessite PAS `customBgColor`
+Si une section a `background: "dark"`, ne PAS ajouter `customBgColor: "#121212"` en plus.
+Le `customBgColor` est réservé à `background: "custom"` uniquement.
+De même, `background: "white"` et `background: "light"` n'ont pas besoin de `customBgColor`.
+
+### Règle 2 : Footer avec sous-colonnes visuelles
+Un footer peut avoir une colonne "MENU" qui se divise visuellement en 2 sous-colonnes côte à côte.
+Dans le JSON, capturer comme UNE seule colonne avec tous les liens (le rendu gère le layout multi-colonnes).
+NE PAS créer 2 colonnes séparées si elles partagent le même titre.
+
+### Règle 3 : Fonts custom non référencées
+Si une font détectée (via computed styles) N'EST PAS dans la liste des 80+ Google Fonts intégrées
+au configurateur, la documenter comme `provider: "local"` dans fontImports ET mentionner
+"requires custom upload" dans reproductionNotes. Exemples : Generalsans, Cabinet Grotesk custom, etc.
+
+### Règle 4 : Testimonials slider unique items
+Un slider/carousel de témoignages peut RÉPÉTER les mêmes items pour l'effet de boucle.
+Capturer uniquement les items UNIQUES (dédoublonner par quote + author).
+Documenter le nombre d'items uniques vs le nombre total affiché dans reproductionNotes.
+
+### Règle 5 : Sections image-text avec features intégrées
+Si une section image-text contient des mini-features (icon + title + description) EN PLUS du titre et body
+principal, les capturer dans `content.features[]` et non comme items séparés.
+Cela correspond au pattern "image-text with feature list" (ex: "Why Choose Us" + features list).
+
+### Règle 6 : Decorative barber/industry-specific SVG illustrations
+Les sites premium utilisent souvent des illustrations SVG semi-transparentes (opacity 0.1-0.2)
+comme éléments décoratifs de fond. Ces illustrations sont SPÉCIFIQUES à l'industrie (barber pole,
+tools, emblem pour barbershop ; camera, lens pour photo ; fork, wine glass pour restaurant).
+Les capturer dans illustrationsDetected avec leur opacity approximative et les sections concernées.
+
+### Règle 7 : Recurring decorative icon/ornament above section titles
+Si le même SVG/icon (ex: mustache, star, diamond) apparaît au-dessus du titre de PLUSIEURS sections,
+le documenter UNE fois dans iconsDetected avec `usedIn: ["list of all sections"]` et ajouter
+`decorativeIcon` dans le content de CHAQUE section concernée avec l'URL du SVG.
+C'est un pattern récurrent (ornament divider) et non un eyebrow textuel.
+
+### Règle 8 : Ne pas dupliquer subtitle et body dans image-text
+Le composant image-text luxe rend BOTH `subtitle` et `body`. Si le site source n'a qu'UN seul
+paragraphe sous le titre, mettre ce texte dans `subtitle` UNIQUEMENT et omettre `body`.
+Si on met le même texte dans les deux champs, il sera affiché DEUX FOIS dans le rendu.
+
+### Règle 9 : Hero subtitle = vrai texte du site, pas lorem ipsum générique
+Le texte du hero (subtitle) est souvent DIFFÉRENT du lorem ipsum utilisé dans les autres sections.
+Toujours vérifier le screenshot du hero pour copier le texte EXACT affiché, même s'il ressemble
+à du lorem ipsum. Le hero peut avoir un texte spécifique tandis que les autres sections partagent
+le même placeholder.
+
+### Règle 10 : Services grid columns = visual layout, not total items
+Le champ `columns` dans features/services doit refléter le nombre de COLONNES visuelles par rangée,
+pas le nombre total d'items. Si la grille montre 2 items par rangée sur 3 rangées → columns: 2.
+Si 3 items par rangée sur 2 rangées → columns: 3. Vérifier le screenshot, pas deviner.
+
+### Règle 11 : Header CTA vs Hero CTA distinction
+Le CTA de la navbar (bouton en haut à droite) peut être DIFFÉRENT des CTAs du hero.
+Exemple : navbar CTA = "BOOK AN APPOINTMENT" (action directe), hero secondary = "BROWSE SERVICES" (navigation).
+Vérifier le screenshot du header pour identifier le vrai CTA navbar, pas le raw-data extractor
+qui peut confondre les deux.
+
+### Règle 12 : CTA sections avec background image — toujours spécifier overlayOpacity
+Les sections CTA avec image de fond nécessitent TOUJOURS un `backgroundImage.overlayOpacity` élevé (0.8-0.9).
+Si l'original a un fond quasi-opaque (gris foncé), utiliser 0.85-0.9. Ne jamais omettre l'overlay.
+Le composant luxe-centered supporte désormais `backgroundImage` dans le style avec `overlayColor` et `overlayOpacity`.
+
+### Règle 13 : Gallery sections — toujours inclure primaryButton
+Les galeries ont presque toujours un CTA sous les images ("FOLLOW US", "VIEW ALL", "BOOK AN APPOINTMENT").
+Toujours capturer ce bouton dans `content.primaryButton` avec `label` et `href`.
+
+### Règle 14 : Footer multi-colonnes — garder les titres de colonnes
+Quand un footer a des colonnes avec des titres ("MENU", "UTILITY PAGES", "RESOURCES"),
+garder le champ `title` dans chaque colonne du JSON. Le composant luxe utilisera automatiquement
+un layout multi-colonnes (brand+socials à gauche, colonnes de liens à droite).
+Sans titres, il retombe sur le layout centré une colonne.
+
+### Règle 15 : Testimonials layout — détecter horizontal cards vs centered single
+Vérifier le screenshot de la section testimonials. Si les cartes montrent l'avatar À GAUCHE du texte
+(layout horizontal), le composant luxe-slider rendra automatiquement des cartes horizontales
+côte à côte. Le pattern "avatar au-dessus, texte centré" est un layout différent (grid/featured).
+Le slider luxe affiche ~1.6 cartes visibles pour l'effet de défilement horizontal.
+
+### Règle 16 : Illustrations décoratives flottantes (floating items)
+Quand le site scanné a des illustrations/SVG décoratifs positionnés en fond de section (coins,
+faible opacité, souvent thématiques — ciseaux, rasoir, brosse, pot de crème, etc.), les capturer
+dans `content.floatingImages[]`. Chaque entrée :
+```json
+{ "src": "https://cdn.../illustration.svg", "position": "bottom-left", "size": 280, "opacity": 0.22 }
+```
+Positions valides : `"top-left"`, `"top-right"`, `"bottom-left"`, `"bottom-right"`.
+Opacité recommandée : 0.40–0.50 (clairement visible en fond). Taille recommandée : 250–350px.
+
+**Détection — ces illustrations sont souvent manquées au premier scan :**
+1. Dans le `raw-data.json`, rechercher systématiquement les URLs contenant : `"floating"`, `"decorative"`, `"illustration"`, `"background"`, `"item"` combiné au nom du thème (ex: `"barbershop"`, `"restaurant"`).
+2. Ces images sont souvent des `<img>` avec `position: absolute`, `pointer-events: none`, `opacity` faible (0.05–0.5) — elles ne sont PAS dans le flux du contenu et se repèrent par leur CSS (`absolute`, `z-index` bas, `opacity` < 1).
+3. Vérifier CHAQUE section du screenshot : regarder les coins et les bords — ces illustrations sont subtiles et faciles à rater car elles se fondent dans le fond.
+4. Croiser avec les assets du CDN : souvent un même site réutilise 3-4 illustrations décoratives sur plusieurs sections. Une fois une illustration trouvée, vérifier si elle apparaît ailleurs.
+5. Dans le raw-data, elles sont souvent dans des `<div>` avec des classes contenant `floating`, `bg-`, `decoration`, `ornament`, ou dans des wrappers `absolute` séparés du contenu principal.
+
+**Technique :** Les floatingImages sont rendues par le `SortableSectionWrapper` (pas par les composants de section eux-mêmes). Elles sont en `position: absolute`, `pointer-events: none`, `z-index: 3`, avec `overflow-hidden` sur le wrapper pour les contenir dans leur section.
+
+### Règle 17 : Icônes de service en URL (pas Lucide generics)
+Quand les icônes de features/services sont des SVG custom du site (pas des Lucide/emoji standards),
+stocker l'URL complète dans `item.icon` (ex: `"https://cdn.../classic-haircut.svg"`).
+Le composant FeaturesSection détecte automatiquement `item.icon.startsWith('http')` et rend un
+`<img>` au lieu d'un `<DynamicIcon>`. Ne PAS utiliser des noms Lucide génériques (scissors, baby...)
+quand le site a ses propres icônes SVG custom.
+
+### Règle 18 : DecorativeIcon comme URL réelle
+Le champ `content.decorativeIcon` peut être une URL SVG (ex: `"https://cdn.../Icon-barbershop.svg"`).
+Quand c'est une URL (commence par `http`), elle est passée au composant `DecorativeOrnament` via
+la prop `iconUrl` et rendue en `<img>` entre les lignes dorées. Quand c'est un booléen ou absent,
+la moustache barbershop intégrée (SVG inline) est utilisée par défaut.
+Toujours préférer l'URL réelle du site scanné plutôt qu'un simple `true`.
+
+### Règle 19 : Hero background parallax (background-attachment: fixed)
+Quand le hero du site scanné utilise un effet parallax (l'image de fond reste fixe pendant le scroll),
+ajouter `style.backgroundImage.attachment: "fixed"` dans la config de la section hero.
+Le composant HeroSection luxe rend l'image via CSS `background-image` sur un div (pas un `<img>`)
+avec `background-attachment: fixed`. Ne PAS utiliser de tag `<img>` pour le parallax — ça ne
+fonctionne qu'avec `background-image` CSS.
+
+### Règle 20 : Testimonial cards avec ombre (cardShadow)
+Quand les cartes de témoignages ont un fond blanc visible avec une ombre portée et/ou une bordure
+(au lieu de texte à plat sans séparation visuelle), ajouter `"cardShadow": true` dans le content
+de la section testimonials. Le composant TestimonialsSection applique alors `shadow-[0_4px_24px_rgba(0,0,0,0.08)]`
+et `border border-zinc-100` sur chaque carte.
+Sans ce flag, les cartes sont rendues à plat sans ombre ni bordure.
+
+### Règle 21 : Style des flèches de navigation slider (arrowStyle)
+Quand les flèches de navigation d'un slider/carousel sont des carrés noirs avec icône blanche
+(au lieu de cercles gris par défaut), ajouter `"arrowStyle": "square-dark"` dans le content.
+Valeurs possibles :
+- absent/défaut : cercles gris avec chevrons
+- `"square-dark"` : carrés noirs avec flèches blanches (style luxe/barbershop)
+Toujours vérifier sur les screenshots la forme (rond vs carré) et la couleur (gris vs noir) des flèches.
+
+### Règle 22 : Galerie 5 images en grille rectangle
+Quand une galerie (Instagram, portfolio) affiche exactement 5 images formant un rectangle propre
+(pas un masonry irrégulier), avec l'image centrale plus grande qui span 2 lignes, le composant
+GallerySection le gère automatiquement quand `images.length === 5` : grille CSS 3 colonnes × 2 lignes,
+image du centre en `row-span-2`. Il suffit de fournir exactement 5 images dans le bon ordre
+(top-left, center, top-right, bottom-left, bottom-right) pour obtenir ce layout.
+
+### Règle 23 : textColor blanc sur sections à fond sombre
+Quand une section a un `customBgColor` sombre (ex: `#1a1a1a`, `#121212`, `#09090b`), TOUJOURS
+ajouter `"textColor": "#ffffff"` dans le `style` de cette section. Cela s'applique à TOUTE section
+avec fond sombre : newsletter, gallery, footer, hero, etc. — pas seulement le footer.
+Les composants adaptent automatiquement les couleurs de texte, input, bordures etc. via la détection
+`isDarkBg`, mais le `textColor` dans le style est nécessaire pour que le `SortableSectionWrapper`
+propage la couleur via CSS variable `--color-foreground`.
+
+### Règle 24 : Logo URL dans header/footer — renderLogo auto-détection
+Les composants `SiteHeaderSection` et `SiteFooterSection` utilisent `renderLogo()` qui détecte
+automatiquement si `content.logo` est une URL (commence par `http://`, `https://`, `/` ou `data:image/`)
+et rend un `<img>` au lieu de texte brut. Toujours capturer l'URL du logo SVG/PNG dans `content.logo`
+quand le site a un logo image, pas le texte alt. Exemple : `"logo": "https://cdn.../logo.svg"`.
+
+### Règle 25 : textTransform "uppercase" — ne pas appliquer globalement
+`textTransform: "uppercase"` dans le style d'une section s'applique à TOUT le texte de la section
+(titres, body, descriptions, badges). La plupart des sites n'utilisent uppercase que sur les titres
+(via la font display) et pas sur le body. NE PAS mettre `textTransform: "uppercase"` sauf si le site
+utilise réellement uppercase sur tout le texte de la section. Préférer omettre ce champ — les composants
+gèrent déjà l'uppercase sur les éléments appropriés (badges, eyebrows, nav links).
+
+### Règle 26 : FloatingImages — taille vs espace disponible
+Les `floatingImages` sont en position absolute dans les coins de la section. Si une image flottante
+est trop grande (>200px) et positionnée sur le même côté que le contenu textuel, elle va RECOUVRIR
+le texte et le rendre illisible. Règles :
+- Pour les sections `split` (text + buttons côte à côte) : ne pas mettre de floating image >150px
+  sur le côté du texte. Préférer les petites illustrations décoratives (<100px) à faible opacité.
+- Pour les sections `centered` : les floating images dans les coins ne posent pas de problème.
+- La position `top-left` est la plus dangereuse car le texte commence en haut à gauche.
+
+### Règle 27 : Logos section pour marquee textuel — pas de marquee natif
+Le composant `LogosSection` (creative) NE SUPPORTE PAS l'animation marquee/défilement horizontal.
+Il rend les items comme des badges/pills statiques en flex wrap. Si le site original a un marquee
+textuel, le mapper quand même en `logos` (creative) avec les textes en `name` — c'est le meilleur
+compromis disponible. Documenter "marquee not supported" dans reproductionNotes.
+
+### Règle 29 : Image-text variant — position dans le nom du variant
+Le composant ImageTextSection utilise le NOM du variant pour déterminer la position de l'image,
+PAS le champ `imagePosition`. Si l'image est à gauche : `"variant": "creative-image-left"`.
+Si l'image est à droite : `"variant": "creative-image-right"` (ou juste `"creative"` = image-right).
+Le suffixe `-image-left` ou `-image-right` est REQUIS. Le champ `imagePosition` dans content est ignoré.
+
+### Règle 28 : Hero creative — layout split obligatoire
+Le variant `hero` creative supporte DEUX layouts via `style.textAlign`:
+- `"textAlign": "center"` → layout centré (texte centré au-dessus, image en dessous) — idéal pour food/restaurant
+- Autre valeur ou absent → layout split (texte à gauche, image à droite)
+Le subtitle est TOUJOURS rendu (même vide). Mettre `"subtitle": ""` si le site n'en a pas.
+Le badge circulaire (coin haut droit de l'image) affiche `content.badge` si défini, sinon "NEW!".
+Utiliser `"badge": "UP TO 40% OFF"` pour un badge custom. Le champ `trustText` est IGNORÉ.
+Le bouton primaire supporte `"variant": "outline"` pour un style bordure sans remplissage.
+
+### Règle 30 : ImageTextSection creative — items et boutons outline
+Le variant creative de ImageTextSection supporte `content.items[]` (rendus comme badges avec icône + titre + description).
+Chaque item : `{ "id": "...", "icon": "lucide-icon-name", "title": "...", "description": "..." }`.
+Le bouton primaire supporte `"variant": "outline"` pour un style transparent avec bordure.
+Le champ `features[]` dans output.json sera automatiquement converti en `items[]` par normalizeContent().
+
+### Règle 31 : Product-grid variant — utiliser creative-grid pas creative
+Le variant `creative` seul n'existe PAS pour product-grid. Utiliser `creative-grid` (4 colonnes, cartes
+neobrutalist avec bordures épaisses) ou `creative-list` (lignes horizontales). Idem pour les autres
+univers : `startup-grid`, `corporate-grid`, `luxe-grid`, etc.
+
+### Règle 32 : Logos section — creative-strip = pills statiques
+Le variant `creative-strip` rend les items comme des pilules/badges sur un fond blanc avec bordure noire.
+Pas de marquee/scroll animé. Le textColor s'applique au texte INTÉRIEUR des pilules — si le fond
+des pilules est blanc/crème, utiliser une couleur FONCÉE comme textColor pour la lisibilité.

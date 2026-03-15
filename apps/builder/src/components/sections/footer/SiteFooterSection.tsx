@@ -3,6 +3,7 @@ import type { SectionConfig } from '@/types/site'
 import type { SiteFooterContent } from '@/types/sections'
 import { elementProps } from '@/lib/elementHelpers'
 import { FloatingIllustration } from '../_DecorativeOrnament'
+import { renderLogo } from '@/components/sections/_utils'
 
 const socialLabels: Record<string, string> = { twitter: 'Twitter', linkedin: 'LinkedIn', github: 'GitHub', instagram: 'Instagram' }
 
@@ -34,7 +35,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
         <div className="max-w-7xl mx-auto">
           <div className="grid gap-10 sm:grid-cols-5 mb-12">
             <div className="sm:col-span-2">
-              <p {...elementProps(config.id, 'logo', 'image')} className="font-semibold text-lg text-white tracking-wide mb-3">{logo}</p>
+              <p {...elementProps(config.id, 'logo', 'image')} className="font-semibold text-lg text-white tracking-wide mb-3">{renderLogo(logo, 'font-semibold text-lg text-white tracking-wide')}</p>
               {content.tagline && <p className="text-sm text-slate-400 leading-relaxed max-w-xs">{content.tagline}</p>}
               <div className="mt-5">
                 <SocialsRow socials={socials} className="text-slate-500 hover:text-blue-400" sectionId={config.id} />
@@ -79,7 +80,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
             <div className={cn('grid gap-10 mb-14', columns.length >= 2 ? 'sm:grid-cols-3' : 'sm:grid-cols-2')}>
               {/* Brand column */}
               <div>
-                <div {...elementProps(config.id, 'logo', 'image')} className="text-xl font-light tracking-[0.25em] uppercase text-white mb-4">{logo}</div>
+                <div {...elementProps(config.id, 'logo', 'image')} className="text-xl font-light tracking-[0.25em] uppercase text-white mb-4">{renderLogo(logo, 'text-xl font-light tracking-[0.25em] uppercase text-white')}</div>
                 {content.tagline && <p className="text-sm text-white/40 leading-relaxed tracking-wide mb-6">{content.tagline}</p>}
                 <SocialsRow socials={socials} className="text-white/30 hover:text-white" sectionId={config.id} />
               </div>
@@ -110,7 +111,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
     return (
       <footer className="bg-zinc-950 px-6 pt-20 pb-10 relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)', ...(customBg ? { backgroundColor: customBg } : { backgroundColor: '#09090b' }) }}>
         <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-10 relative z-[2]">
-          <div {...elementProps(config.id, 'logo', 'image')} className="text-2xl font-light tracking-[0.25em] uppercase text-white">{logo}</div>
+          <div {...elementProps(config.id, 'logo', 'image')} className="text-2xl font-light tracking-[0.25em] uppercase text-white">{renderLogo(logo, 'text-2xl font-light tracking-[0.25em] uppercase text-white')}</div>
           {content.tagline && <p className="text-sm text-white/40 max-w-md tracking-wide">{content.tagline}</p>}
           {/* Gold divider */}
           <div className="w-16 h-px" style={{ background: gold }} />
@@ -142,7 +143,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
         <div className="max-w-6xl mx-auto">
           <div className={cn('grid gap-10 mb-14', columns.length >= 3 ? 'sm:grid-cols-4' : 'sm:grid-cols-3')}>
             <div>
-              <div {...elementProps(config.id, 'logo', 'image')} className="font-bold text-xl text-white tracking-tight mb-3">{logo}</div>
+              <div {...elementProps(config.id, 'logo', 'image')} className="font-bold text-xl text-white tracking-tight mb-3">{renderLogo(logo, 'font-bold text-xl text-white tracking-tight')}</div>
               {content.tagline && <p className="text-sm text-zinc-400 leading-relaxed">{content.tagline}</p>}
               <div className="mt-5">
                 <SocialsRow socials={socials} className="text-zinc-500 hover:text-white" sectionId={config.id} />
@@ -181,7 +182,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
           <div className="grid gap-10 sm:grid-cols-2 mb-14">
             {/* Brand */}
             <div>
-              <div {...elementProps(config.id, 'logo', 'image')} className="font-black text-4xl md:text-5xl text-zinc-900 tracking-tight mb-4">{logo}</div>
+              <div {...elementProps(config.id, 'logo', 'image')} className="font-black text-4xl md:text-5xl text-zinc-900 tracking-tight mb-4">{renderLogo(logo, 'font-black text-4xl md:text-5xl text-zinc-900 tracking-tight')}</div>
               {content.tagline && <p className="text-base text-zinc-600 max-w-sm">{content.tagline}</p>}
             </div>
             {/* Links in grid */}
@@ -237,7 +238,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
         <div className="max-w-7xl mx-auto py-10">
           <div className={cn('grid gap-8', columns.length >= 4 ? 'sm:grid-cols-5' : 'sm:grid-cols-4')}>
             <div>
-              <p {...elementProps(config.id, 'logo', 'image')} className="font-bold text-lg text-white mb-3">{logo}</p>
+              <p {...elementProps(config.id, 'logo', 'image')} className="font-bold text-lg text-white mb-3">{renderLogo(logo, 'font-bold text-lg text-white')}</p>
               {content.tagline && <p className="text-sm text-zinc-400">{content.tagline}</p>}
               <div className="mt-4">
                 <SocialsRow socials={socials} className="text-zinc-500 hover:text-white" sectionId={config.id} />
@@ -279,7 +280,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
           <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl border border-white/[0.08] p-10 mb-12">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
               <div>
-                <div {...elementProps(config.id, 'logo', 'image')} className="font-bold text-xl text-white tracking-tight mb-2">{logo}</div>
+                <div {...elementProps(config.id, 'logo', 'image')} className="font-bold text-xl text-white tracking-tight mb-2">{renderLogo(logo, 'font-bold text-xl text-white tracking-tight')}</div>
                 {content.tagline && <p className="text-sm text-white/40 max-w-md">{content.tagline}</p>}
               </div>
               <div className={cn('grid gap-8', columns.length >= 3 ? 'grid-cols-3' : 'grid-cols-2')}>
@@ -347,7 +348,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
                 {...elementProps(config.id, 'logo', 'image')}
                 style={{ fontFamily: headingFont, fontSize: 28, fontWeight: 600, color: '#140c08', marginBottom: 30 }}
               >
-                {logo}<sup style={{ fontSize: '0.5em', verticalAlign: 'super' }}>&reg;</sup>
+                {renderLogo(logo)}<sup style={{ fontSize: '0.5em', verticalAlign: 'super' }}>&reg;</sup>
               </p>
               {(content.tagline) && (
                 <p

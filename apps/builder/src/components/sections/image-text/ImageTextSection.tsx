@@ -272,12 +272,37 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
             )}
             {content.subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base text-zinc-600">{content.subtitle}</p>}
             {content.body && <p {...elementProps(config.id, 'body', 'text')} className="text-sm text-zinc-600 leading-relaxed">{content.body}</p>}
+            {content.items && content.items.length > 0 && (
+              <div className="flex flex-wrap gap-3 pt-2">
+                {content.items.map((item) => (
+                  <div key={item.id} className={cn(
+                    'bg-[#f5f0e3] rounded-lg px-4 py-3',
+                    item.description ? 'w-full' : ''
+                  )}>
+                    <div className="flex items-center gap-3">
+                      {item.icon && (
+                        <DynamicIcon name={item.icon} className="w-5 h-5 flex-shrink-0" style={{ color: accentColor ?? '#B92E2D' }} />
+                      )}
+                      <span className="text-xs font-bold uppercase tracking-wider text-zinc-900">{item.title}</span>
+                    </div>
+                    {item.description && (
+                      <p className="text-xs text-zinc-600 mt-2 leading-relaxed">{item.description}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="flex gap-3 flex-wrap pt-2">
               {content.primaryButton && (
                 <a
                   {...elementProps(config.id, 'primaryButton', 'button')}
                   href={content.primaryButton.href}
-                  className="px-6 py-3 bg-zinc-900 text-white text-sm font-bold uppercase tracking-wide border-2 border-zinc-900 shadow-[4px_4px_0_0_#18181b] hover:shadow-[6px_6px_0_0_#18181b] hover:translate-x-0.5 hover:-translate-y-0.5 transition-all"
+                  className={cn(
+                    'px-6 py-3 text-sm font-bold uppercase tracking-wide border-2 transition-all',
+                    content.primaryButton.variant === 'outline'
+                      ? 'bg-transparent border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white'
+                      : 'bg-zinc-900 text-white border-zinc-900 shadow-[4px_4px_0_0_#18181b] hover:shadow-[6px_6px_0_0_#18181b] hover:translate-x-0.5 hover:-translate-y-0.5'
+                  )}
                 >
                   {content.primaryButton.label}
                 </a>
