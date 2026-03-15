@@ -36,6 +36,7 @@ export interface HeroContent {
   price?: string
   originalPrice?: string
   trustText?: string
+  badge?: string
 }
 
 export interface HeroConfig extends SectionConfig {
