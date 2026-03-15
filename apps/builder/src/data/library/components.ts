@@ -247,6 +247,65 @@ const BUTTONS: LibraryElementItem[] = [
       defaultContent: { label: 'Delete', href: '#' },
     },
   },
+  {
+    id: 'btn-scan-d8ea1ef78050',
+    label: 'Button sharp black',
+    category: 'components',
+    subcategory: 'buttons',
+    tags: ['button', 'uppercase', 'bold', 'sharp'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Button sharp black',
+      defaultStyle: {
+        display: 'inline-block', padding: '22px 18px',
+        backgroundColor: '#dec7a6', color: '#121212',
+        borderRadius: '0px', fontSize: '16px', fontWeight: 900,
+        cursor: 'pointer', textAlign: 'center',
+        textTransform: 'uppercase',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'Button', href: '#' },
+    },
+  },
+  {
+    id: 'btn-scan-2cf5fc799b94',
+    label: 'Button sm normal',
+    category: 'components',
+    subcategory: 'buttons',
+    tags: ['button'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Button sm normal',
+      defaultStyle: {
+        display: 'inline-block', padding: '0px 15px',
+        backgroundColor: '#000000', color: '#ffffff',
+        borderRadius: '2px', fontSize: '18px', fontWeight: 400,
+        cursor: 'pointer', textAlign: 'center',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'Button', href: '#' },
+    },
+  },
+  {
+    id: 'btn-scan-0bfb34b56a2b',
+    label: 'Button sm black',
+    category: 'components',
+    subcategory: 'buttons',
+    tags: ['button', 'uppercase', 'bold'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Button sm black',
+      defaultStyle: {
+        display: 'inline-block', padding: '30px 24px',
+        backgroundColor: '#dec7a6', color: '#121212',
+        borderRadius: '2px', fontSize: '18px', fontWeight: 900,
+        cursor: 'pointer', textAlign: 'center',
+        textTransform: 'uppercase',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'Button', href: '#' },
+    },
+  },
 ]
 
 // ─── BADGES (10 styles) ───

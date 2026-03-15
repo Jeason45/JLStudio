@@ -596,6 +596,7 @@ export interface GalleryContent {
   images: GalleryImage[]
   columns?: number
   decorativeIcon?: string
+  primaryButton?: ButtonConfig
 }
 
 // ─── IMAGE TEXT ──────────────────────────────

@@ -214,7 +214,7 @@ export function GallerySection({ config }: { config: SectionConfig }) {
     )
 
     if (layout === 'masonry') {
-      const btn = (content as Record<string, unknown>).primaryButton as { label: string; href: string } | undefined
+      const btn = content.primaryButton
       // Featured-center grid for 5 images: 3 cols, center spans 2 rows
       const useFeaturedGrid = images.length === 5
       return (

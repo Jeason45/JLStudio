@@ -81,93 +81,93 @@ En utilisant ce prompt comme guide, générer output.json
 au format PageTemplate du configurateur.
 Sauvegarder dans : scripts/scans/[slug]/output.json
 
-### ÉTAPE 4 — LANCER LA BOUCLE D'AUTO-AMÉLIORATION
+### ÉTAPE 4 — PREMIER IMPORT
 
-Lancer jusqu'à 50 itérations ou score ≥ 95% :
-  - Audit du JSON produit
-  - Correction des problèmes identifiés
-  - Mise à jour de SCAN_SITE_PROMPT.md avec nouvelles règles génériques
-  - Régénération du JSON
-
-### ÉTAPE 5 — IMPORTER DANS LE CONFIGURATEUR
-
-Nouveau site :
+Créer le site dans le configurateur :
   node scripts/import-template.js scripts/scans/[slug]/output.json
 
-Mettre à jour un site existant :
-  node scripts/import-template.js scripts/scans/[slug]/output.json \
-  --site-id [SITE-ID]
+L'URL du site créé et le SITE-ID seront retournés par le script.
+Noter le SITE-ID pour les étapes suivantes.
 
-L'URL du site créé sera retournée par le script.
+### ÉTAPE 5 — COMPARAISON VISUELLE AUTOMATIQUE
 
-### ÉTAPE 6 — SCREENSHOTTER ET COMPARER
+Lancer la comparaison visuelle (import + screenshot + pixel diff) :
 
-Prendre les screenshots du résultat dans le configurateur :
-  node scripts/screenshot-site.js [SITE-ID] \
-  scripts/scans/[slug]/comparison
+  # Pipeline complet (import → screenshot → comparaison) :
+  node scripts/compare-visual.js scripts/scans/[slug] --site-id [SITE-ID]
 
-Générer le diff-report :
-  node scripts/compare-screenshots.js scripts/scans/[slug]
+  # Re-screenshot + comparaison seulement (skip import) :
+  node scripts/compare-visual.js scripts/scans/[slug] --site-id [SITE-ID] --skip-import
 
-Lire le diff-report.md et identifier les écarts visuels.
+  # Comparaison seulement (screenshots déjà pris) :
+  node scripts/compare-visual.js scripts/scans/[slug]
 
-### ÉTAPE 7 — CORRIGER ET RÉIMPORTER
+Le script génère automatiquement :
+  - comparison/diff-section-XX.png  → overlay rouge des pixels différents
+  - comparison/visual-report.json   → scores + issues classifiées par section
+  - comparison/visual-report.md     → rapport lisible avec corrections à appliquer
 
-Pour chaque écart identifié dans le diff-report :
-1. Corriger output.json
-2. Mettre à jour SCAN_SITE_PROMPT.md avec une règle générique
-3. Réimporter avec --site-id pour mettre à jour le site existant
-4. Relancer les screenshots et comparer
+Lire visual-report.md pour identifier les corrections :
+  - Score par section (0-100%)
+  - Priorité (🔴 critique → 🟡 moyen → 🟢 cosmétique)
+  - Issues classifiées automatiquement :
+    background_color     → mauvaise couleur de fond, fix suggéré
+    height_mismatch      → contenu manquant ou padding incorrect
+    missing_image        → image placeholder au lieu de vraie image
+    dominant_color_shift  → palette de couleurs significativement différente
+    structural_mismatch  → type ou variant probablement incorrect
+    layout_mismatch      → structure de contenu différente
+  - Couleurs dominantes extraites (original vs configurateur)
+  - Zones problématiques (top/middle/bottom/left/right)
 
-Répéter selon cette séquence section par section :
+### ÉTAPE 6 — CORRIGER ET RÉIMPORTER (BOUCLE)
+
+Utiliser le visual-report.md pour guider les corrections.
+Traiter dans l'ordre de priorité (🔴 d'abord, puis 🟡, puis 🟢).
+
+Pour chaque section à corriger :
+1. Lire l'issue classifiée dans visual-report.md
+2. Regarder le diff-section-XX.png pour localiser l'écart
+3. Corriger output.json (contenu, style, variant)
+4. Relancer la comparaison :
+   node scripts/compare-visual.js scripts/scans/[slug] --site-id [SITE-ID]
+5. Vérifier que le score de la section a augmenté
+
+Boucle de correction par phases :
 
 PHASE BRAND — Valider le brand avant tout (BLOQUANT)
 Avant d'analyser les sections, valider le brand 3 fois :
 
 Boucle 1 : Extraire couleurs, fonts, spacing depuis raw-data.json
 Boucle 2 : Confirmer visuellement dans les screenshots
-Boucle 3 : Vérifier que le rendu dans le configurateur
-           correspond au brand du site original
+Boucle 3 : Vérifier via compare-visual.js que les couleurs dominantes
+           correspondent au brand du site original
 
 → Ne pas passer aux sections si le brand est faux.
   Un brand incorrect rend toutes les sections fausses.
 
-PHASE SECTIONS — Traiter chaque section dans l'ordre de la page
-Pour CHAQUE section, effectuer 15 boucles :
+PHASE SECTIONS — Traiter les sections par priorité du visual-report
+Pour chaque section 🔴, puis 🟡, puis 🟢 :
 
-Boucles 1-3 : STRUCTURE
-  → Type correct ? Variant correct ? Layout correct ?
-  → Screenshot section originale vs configurateur à chaque boucle
+1. STRUCTURE (si structural_mismatch ou layout_mismatch) :
+   → Vérifier type et variant
+   → Relancer compare-visual.js après correction
 
-Boucles 4-6 : DESIGN TOKENS
-  → Couleurs exactes, typographie, espacements
-  → Screenshot section originale vs configurateur à chaque boucle
+2. COULEURS (si background_color ou dominant_color_shift) :
+   → Appliquer le fix suggéré dans le rapport
+   → Relancer compare-visual.js
 
-Boucles 7-9 : CONTENU
-  → Textes exacts, images correctes, icônes, ornements
-  → Screenshot section originale vs configurateur à chaque boucle
+3. CONTENU (si height_mismatch ou missing_image) :
+   → Ajouter contenu manquant, corriger padding
+   → Relancer compare-visual.js
 
-Boucles 10-12 : EFFETS VISUELS
-  → Animations entrance, hover effects, parallax
-  → Screenshot section originale vs configurateur à chaque boucle
-
-Boucles 13-15 : CONFIRMATION
-  → Rien n'a régressé depuis les boucles précédentes
-  → Score ≥ 95% sur cette section avant de continuer
-  → Screenshot final de confirmation
-
-→ Passer à la section suivante SEULEMENT si score ≥ 95%
-→ Si score < 95% après 15 boucles : noter les écarts
-  restants et continuer (ne pas bloquer indéfiniment)
+4. VALIDATION : score section ≥ 90% → passer à la suivante
+   Si < 90% après 5 tentatives → noter et continuer
 
 PHASE VALIDATION GLOBALE
-Après toutes les sections :
-1. Screenshot full page du configurateur
-2. Comparaison avec l'original
-3. Vérifier la cohérence visuelle entre sections
-4. Score global final
-
-Répéter jusqu'à satisfaction visuelle.
+Quand toutes les sections sont traitées :
+  node scripts/compare-visual.js scripts/scans/[slug] --site-id [SITE-ID]
+Score global cible : ≥ 95%. Si atteint → passer à l'étape 8.
 
 ### ÉTAPE 8 — NETTOYER
 
@@ -218,7 +218,7 @@ Claude se concentre sur l'analyse et la génération du JSON.
 
 ---
 
-## PARTIE 8 — RÈGLES APPRISES (auto-amélioration)
+## PARTIE 0 — RÈGLES APPRISES (auto-amélioration, lire en premier)
 
 ### Règle 1 : `background: "dark"` ne nécessite PAS `customBgColor`
 Si une section a `background: "dark"`, ne PAS ajouter `customBgColor: "#121212"` en plus.
@@ -240,9 +240,11 @@ Un slider/carousel de témoignages peut RÉPÉTER les mêmes items pour l'effet 
 Capturer uniquement les items UNIQUES (dédoublonner par quote + author).
 Documenter le nombre d'items uniques vs le nombre total affiché dans reproductionNotes.
 
-### Règle 5 : Sections image-text avec features intégrées
+### Règle 5 : Sections image-text avec items intégrés
 Si une section image-text contient des mini-features (icon + title + description) EN PLUS du titre et body
-principal, les capturer dans `content.features[]` et non comme items séparés.
+principal, les capturer dans `content.items[]` (pas `features[]`). L'interface ImageTextContent attend `items[]`.
+Si tu utilises `features[]` par erreur dans le JSON, `normalizeContent()` le convertira automatiquement
+en `items[]` à l'import — mais préférer directement `items[]` pour éviter la confusion.
 Cela correspond au pattern "image-text with feature list" (ex: "Why Choose Us" + features list).
 
 ### Règle 6 : Decorative barber/industry-specific SVG illustrations
@@ -257,10 +259,12 @@ le documenter UNE fois dans iconsDetected avec `usedIn: ["list of all sections"]
 `decorativeIcon` dans le content de CHAQUE section concernée avec l'URL du SVG.
 C'est un pattern récurrent (ornament divider) et non un eyebrow textuel.
 
-### Règle 8 : Ne pas dupliquer subtitle et body dans image-text
-Le composant image-text luxe rend BOTH `subtitle` et `body`. Si le site source n'a qu'UN seul
+### Règle 8 : Ne pas dupliquer subtitle et body dans image-text (variant luxe uniquement)
+Le composant image-text **luxe** rend BOTH `subtitle` et `body`. Si le site source n'a qu'UN seul
 paragraphe sous le titre, mettre ce texte dans `subtitle` UNIQUEMENT et omettre `body`.
 Si on met le même texte dans les deux champs, il sera affiché DEUX FOIS dans le rendu.
+Note : les autres variants (startup, corporate, creative, etc.) gèrent aussi les deux champs
+mais avec un rendu différent — cette règle de duplication est surtout critique pour le variant luxe.
 
 ### Règle 9 : Hero subtitle = vrai texte du site, pas lorem ipsum générique
 Le texte du hero (subtitle) est souvent DIFFÉRENT du lorem ipsum utilisé dans les autres sections.
@@ -318,6 +322,7 @@ Opacité recommandée : 0.40–0.50 (clairement visible en fond). Taille recomma
 5. Dans le raw-data, elles sont souvent dans des `<div>` avec des classes contenant `floating`, `bg-`, `decoration`, `ornament`, ou dans des wrappers `absolute` séparés du contenu principal.
 
 **Technique :** Les floatingImages sont rendues par le `SortableSectionWrapper` (pas par les composants de section eux-mêmes). Elles sont en `position: absolute`, `pointer-events: none`, `z-index: 3`, avec `overflow-hidden` sur le wrapper pour les contenir dans leur section.
+**Note TypeScript :** `floatingImages` n'est PAS dans les interfaces de content des sections (HeroContent, FeaturesContent, etc.). C'est un champ géré au niveau SectionConfig/SortableSectionWrapper. Dans le JSON, le placer dans `content.floatingImages[]` — il sera lu par le wrapper indépendamment du type de section.
 
 ### Règle 17 : Icônes de service en URL (pas Lucide generics)
 Quand les icônes de features/services sont des SVG custom du site (pas des Lucide/emoji standards),
@@ -398,13 +403,13 @@ Il rend les items comme des badges/pills statiques en flex wrap. Si le site orig
 textuel, le mapper quand même en `logos` (creative) avec les textes en `name` — c'est le meilleur
 compromis disponible. Documenter "marquee not supported" dans reproductionNotes.
 
-### Règle 28 : Hero creative — layout split obligatoire
+### Règle 28 : Hero creative — layout centré ou split via textAlign
 Le variant `hero` creative supporte DEUX layouts via `style.textAlign`:
 - `"textAlign": "center"` → layout centré (texte centré au-dessus, image en dessous) — idéal pour food/restaurant
 - Autre valeur ou absent → layout split (texte à gauche, image à droite)
 Le subtitle est TOUJOURS rendu (même vide). Mettre `"subtitle": ""` si le site n'en a pas.
 Le badge circulaire (coin haut droit de l'image) affiche `content.badge` si défini, sinon "NEW!".
-Utiliser `"badge": "UP TO 40% OFF"` pour un badge custom. Le champ `trustText` est IGNORÉ.
+Utiliser `"badge": "UP TO 40% OFF"` pour un badge custom. Le champ `trustText` est IGNORÉ par le variant creative (il est rendu uniquement par les variants corporate et startup).
 Le bouton primaire supporte `"variant": "outline"` pour un style bordure sans remplissage.
 
 ### Règle 29 : Image-text variant — position dans le nom du variant
@@ -459,7 +464,7 @@ SectionStyle (interface SectionStyle) — CE QUI FAIT LE VISUEL
   background: 'white' | 'light' | 'dark' | 'primary' | 'gradient' | 'custom' | 'custom-gradient',
   paddingY: 'none' | 'sm' | 'md' | 'lg' | 'xl',
   fullWidth?: boolean,
-  titleSize?: 'sm' | 'md' | 'lg' | 'xl',
+  titleSize?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl',
   textAlign?: 'left' | 'center' | 'right' | 'justify',
   // Règle : hero/cta/stats = souvent 'center', image-text = souvent 'left', features = dépend du layout
   textColor?: string,           // #hex — override couleur de texte
@@ -469,6 +474,7 @@ SectionStyle (interface SectionStyle) — CE QUI FAIT LE VISUEL
   fontWeight?: number,          // 700, 800, 900...
   letterSpacing?: 'tight' | 'normal' | 'wide' | 'wider',
   textTransform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize',
+  fontStyle?: 'normal' | 'italic',    // italique global sur la section (rare, surtout pour citations/quotes)
   // *** BACKGROUNDS AVANCÉS ***
   customBgColor?: string,       // #hex pour background: 'custom'
   customGradient?: { from: string, to: string, direction: 'to-r' | 'to-l' | 'to-t' | 'to-b' | 'to-br' | 'to-bl' | 'to-tr' | 'to-tl' },
@@ -493,6 +499,14 @@ SectionStyle (interface SectionStyle) — CE QUI FAIT LE VISUEL
   dividerTop?: { shape: 'none' | 'wave' | 'angle' | 'curve' | 'triangle', color?: string },
   dividerBottom?: { shape: 'none' | 'wave' | 'angle' | 'curve' | 'triangle', color?: string }
 }
+Heuristique de détection des dividers :
+- Chercher dans les screenshots des formes SVG entre deux sections de couleurs différentes
+- Vague/ondulation → shape: 'wave'
+- Ligne diagonale droite → shape: 'angle'
+- Courbe douce unique → shape: 'curve'
+- Forme en pointe/V → shape: 'triangle'
+- La couleur du divider correspond généralement à la section du DESSOUS (il "cache" la jonction)
+- Si aucune forme détectée entre deux sections → ne pas ajouter de divider (shape: 'none')
 Types de sections disponibles
 Universes : startup | corporate | luxe | creative | ecommerce | glass | brixsa | zmr
 Types (37 au total) :
@@ -521,6 +535,20 @@ Layouts courants par type :
   - quick-stack : 1+2 | 2x2 | 3x1 | masonry | 1+1 | asymmetric
   - hero : (par universe direct) startup | corporate | luxe | creative | ecommerce | glass | brixsa | brixsa-page | zmr-agency | zmr-talent-profile
 
+Fallbacks de variants (que se passe-t-il si un variant est invalide ?)
+  Chaque composant a un fallback quand le variant ne match aucun case :
+  - hero → fallback sur `startup`
+  - features → fallback sur `startup-grid`
+  - cta → fallback sur `startup-centered`
+  - image-text → fallback récursif sur `startup-image-right`
+  - gallery-grid → fallback sur `startup-grid`
+  - stats → fallback sur `startup-simple`
+  - pricing → fallback sur `startup-columns`
+  - testimonials → fallback sur `startup-grid`
+  - site-header/site-footer → fallback sur `startup`
+  ⚠️ Un variant inexistant ne crashe PAS — il retombe silencieusement sur startup.
+  Mais le rendu sera visuellement différent de l'attendu. Toujours vérifier que le variant existe.
+
 ButtonConfig (utilisé dans les CTAs et sections)
 {
   label: string,
@@ -539,6 +567,43 @@ L'universe détermine le rendu visuel de chaque section. Choisis selon l'ambianc
   glass → Fintech, crypto, tech avant-garde. Glassmorphism, blur, transparence, gradients néon.
 
 Règle : toutes les sections d'un même site DOIVENT utiliser le MÊME universe (sauf brixsa/zmr qui sont des universes spécifiques).
+
+Variants brixsa et zmr (usage spécifique, ne pas utiliser pour les scans génériques) :
+  brixsa : variants spécialisés immobilier (hero brixsa, brixsa-page, brixsa-about, brixsa-privacy, brixsa-listing, brixsa-detail, brixsa-cards, brixsa-grid, brixsa-centered)
+  zmr : variants spécialisés agence créative (zmr-agency, zmr-talent-profile, zmr-grid, zmr-showcase, zmr-agency-grid)
+  Ces variants sont des reproductions pixel-perfect de sites spécifiques et ne doivent pas être utilisés pour scanner d'autres sites.
+
+Arbre de décision — Variants hero
+Le hero n'a PAS de suffixe layout, il utilise directement le nom de l'universe :
+  → Site tech/SaaS avec gradient et glow ? → variant: "startup"
+  → Site corporate avec navy/bleu pro ? → variant: "corporate"
+  → Site luxe avec serif et espacement ? → variant: "luxe"
+  → Site créatif/agence néobrutalist ? → variant: "creative"
+  → Site e-commerce avec badges produit ? → variant: "ecommerce"
+  → Site fintech/crypto glassmorphism ? → variant: "glass"
+Le layout du hero creative se contrôle via textAlign :
+  → Texte centré + image dessous → style.textAlign: "center"
+  → Texte gauche + image droite (split) → omettre textAlign
+
+Arbre de décision — Variants image-text
+Le variant image-text suit le pattern {universe}-image-{position} :
+  → Image à droite du texte ? → variant: "{universe}-image-right"
+  → Image à gauche du texte ? → variant: "{universe}-image-left"
+  Exemples : "creative-image-left", "luxe-image-right", "startup-image-left"
+  Le champ content.imagePosition est IGNORÉ — seul le nom du variant compte.
+
+Arbre de décision — Variants CTA
+Le CTA suit le pattern {universe}-{layout} :
+  → Texte centré, fond plein → variant: "{universe}-centered"
+  → Split texte/image côte à côte → variant: "{universe}-split"
+  → Carte encadrée → variant: "{universe}-card"
+
+Arbre de décision — Variants features
+  → Grille de cards avec icônes → variant: "{universe}-grid"
+  → Layout bento asymétrique → variant: "{universe}-bento"
+  → Liste verticale → variant: "{universe}-list"
+  → Accordéon de features → variant: "{universe}-accordion"
+  → Cards de services avec images → variant: "{universe}-services"
 
 Ordre standard des sections (wireframe typique)
 1. site-header / navbar-advanced (TOUJOURS en premier)
@@ -712,6 +777,27 @@ Bounce : bounce-in · bounce-out · bounce-in-out
 Elastic : elastic-in · elastic-out · elastic-in-out
 Custom : cubic-bezier(x1, y1, x2, y2)
 
+normalizeContent() — Transformations automatiques à l'import
+La route d'import (`POST /api/import-template`) applique ces transformations automatiquement :
+1. `product-grid` : si `items[].title` est présent mais pas `items[].name` → copie `title` dans `name` (ProductItem attend `name`)
+2. `image-text` : si `features[]` est présent mais pas `items[]` → renomme `features` en `items` (ImageTextContent attend `items`)
+3. `site-header` : si `links[]` n'ont pas d'`id` → génère `nav-0`, `nav-1`, etc.
+
+⚠️ Préférer les noms corrects dès le JSON (`items[]` pas `features[]`, `name` pas `title` pour les produits) — normalizeContent est un filet de sécurité, pas une excuse.
+
+Import API — `POST /api/import-template` (builder, port 3001)
+  Body JSON requis : `{ site: { name: string }, sections: [...], brand?: {...}, meta?: {...}, navigation?: {...}, footer?: {...} }`
+  Champs optionnels : `siteId` (pour mettre à jour un site existant au lieu d'en créer un nouveau)
+  Validation : `site.name` et `sections[]` non vides sont obligatoires (sinon 400)
+  Réponse succès : `{ site: { id, slug, name, sectionsCount }, template?: { id, slug } }`
+  Erreurs possibles :
+    400 — `site.name` ou `sections[]` manquant
+    404 — `siteId` fourni mais site introuvable en BDD
+    500 — erreur serveur / BDD
+  Script CLI : `node scripts/import-template.js <path> [--site-id <id>]`
+
+---
+
 ## PARTIE 2 — CHAMPS CONTENT PAR TYPE DE SECTION (RÉFÉRENCE OBLIGATOIRE)
 Chaque section a un type et un content typé. Utilise UNIQUEMENT les champs listés ci-dessous.
 
@@ -730,11 +816,11 @@ blog-grid: { eyebrow?, title, subtitle?, posts: [{ id, title, excerpt, category,
 timeline: { eyebrow?, title, items: [{ id, date, title, description, icon? }] }
 steps: { eyebrow?, title, subtitle?, items: [{ id, number, title, description, icon? }] }
 gallery-grid: { title?, images: [{ id, src, alt, caption?, hoverSrc?, badge?, category?, subcategory? }], columns? }
-image-text: { eyebrow?, title, subtitle?, body, image, imageAlt, imagePosition: 'left'|'right', primaryButton?, secondaryButton? }
+image-text: { eyebrow?, title, subtitle?, body, image, imageAlt, imagePosition: 'left'|'right', primaryButton?, secondaryButton?, items?: [{ id, icon?, title, description? }], stats?: [{ id, value, label }], decorativeIcon? }
 newsletter: { eyebrow?, title, subtitle?, placeholder, buttonLabel, disclaimer?, count?, socialProof? }
 comparison-table: { title, columns: string[], features: [{ id, name, values: (string|boolean)[] }] }
 awards: { eyebrow?, title?, items: [{ id, name, year, issuer, icon? }] }
-site-header: { logo, links: [{ id, label, href }], ctaLabel?, ctaHref?, sticky?, transparent? }
+site-header: { logo, links: [{ id, label, href }], ctaLabel?, ctaHref?, cartLabel?, sticky?, transparent? }
 navbar-advanced: { logo, links: [{ id, label, href, hasDropdown, megaSections?: [{ id, title, links }] }], ctaLabel?, ctaHref?, sticky, transparent, hamburgerStyle: 'minimal'|'bold'|'animated', announcementBar? }
 site-footer: { logo, tagline?, columns: [{ id, title, links: [{ id, label, href }] }], copyright, socials?: { twitter?, linkedin?, github?, instagram? } }
 tabs: { eyebrow?, title, subtitle?, orientation: 'horizontal'|'vertical', items: [{ id, label, content, image? }] }
@@ -746,7 +832,7 @@ map: { eyebrow?, title?, subtitle?, provider: 'embed'|'openstreetmap'|'mapbox', 
 search: { title?, placeholder, showCategories }
 quick-stack: { eyebrow?, title?, subtitle?, layout: '1+2'|'2x2'|'3x1'|'masonry'|'1+1'|'asymmetric', items: [{ id, title?, subtitle?, body?, image?, icon?, badge?, ctaLabel?, ctaHref? }] }
 dropdown: { eyebrow?, title, triggerLabel, isMegaMenu, groups: [{ id, title, items: [{ id, label, href, description?, icon? }] }] }
-product-grid: { eyebrow?, title, items: [{ id, name, price, originalPrice?, image?, badge?, category?, rating?, reviews? }], ctaLabel?, ctaHref? }
+product-grid: { eyebrow?, title, subtitle?, items: [{ id, name, price, originalPrice?, image?, badge?, category?, rating?, reviews?, description? }], ctaLabel?, ctaHref?, decorativeIcon?, primaryButton?: ButtonConfig }
 product-detail: { productId?, name, description, price, compareAtPrice?, images: string[], badge?, variants: [{ id, label, options }], addToCartLabel, buyNowLabel?, trustBadges: string[] }
 cart: { emptyMessage, continueShoppingLabel, checkoutLabel, showCouponField, showProductImages }
 checkout: { paymentProviders: ('stripe'|'paypal')[], stripePublishableKey?, paypalClientId?, showOrderSummary, showCouponField, successRedirectUrl?, termsUrl? }
@@ -765,6 +851,11 @@ Types d'éléments custom (pour les sections "custom") :
   custom-lottie : animation Lottie (JSON/dotLottie)
   custom-spline : scène 3D Spline
   custom-rive : animation Rive (.riv)
+
+⚠️ Types réservés (interfaces définies mais PAS de composant implémenté) :
+  quote, richtext, changelog — ces types ont des interfaces TypeScript mais aucun composant de rendu.
+  Ne PAS les utiliser dans output.json. Si le contenu du site correspond à ces types,
+  utiliser `custom` avec des éléments custom-heading + custom-text à la place.
 
 ---
 
@@ -1845,7 +1936,7 @@ Valeurs autorisées UNIQUEMENT. Maximum 2 moods.
         "opacity": 1.0,
         "dividerTop": { "shape": "none|wave|angle|curve|triangle", "color": "#hex" },
         "dividerBottom": { "shape": "none|wave|angle|curve|triangle", "color": "#hex" },
-        "titleSize": "sm|md|lg|xl",
+        "titleSize": "sm|md|lg|xl|2xl|3xl|4xl",
         "fullWidth": false
       },
       "visible": true
@@ -2728,7 +2819,9 @@ Structure des fichiers du scan — RÉFÉRENCE COMPLÈTE
       ├── current-full-desktop.png
       ├── current-full-mobile.png
       ├── current-section-XX.png
-      └── diff-report.md
+      ├── diff-section-XX.png        → overlay pixel diff (rouge = différence)
+      ├── visual-report.json         → scores + issues classifiées (structuré)
+      └── visual-report.md           → rapport lisible avec corrections suggérées
 
 * Commandes du système :
   # Scanner un nouveau site :
@@ -2740,11 +2833,14 @@ Structure des fichiers du scan — RÉFÉRENCE COMPLÈTE
   # Mettre à jour un site existant :
   node scripts/import-template.js scripts/scans/[slug]/output.json --site-id [SITE-ID]
 
-  # Screenshotter le résultat :
-  node scripts/screenshot-site.js [SITE-ID] scripts/scans/[slug]/comparison
+  # Pipeline complet (import + screenshot + pixel diff + rapport) :
+  node scripts/compare-visual.js scripts/scans/[slug] --site-id [SITE-ID]
 
-  # Comparer et générer diff-report :
-  node scripts/compare-screenshots.js scripts/scans/[slug]
+  # Re-screenshot + comparaison (skip import) :
+  node scripts/compare-visual.js scripts/scans/[slug] --site-id [SITE-ID] --skip-import
+
+  # Comparaison seulement (screenshots déjà pris) :
+  node scripts/compare-visual.js scripts/scans/[slug]
 
   # Nettoyer les frames après analyse :
   node scripts/cleanup-frames.js scripts/scans/[slug]
@@ -2780,38 +2876,53 @@ BrandStyleInjector — PIÈGES ET SOLUTIONS GÉNÉRIQUES
 
 ---
 
+ARBRE DE DÉCISION — OÙ CORRIGER ?
+
+1. Le rendu visuel est mauvais mais le JSON est correct
+   → Corriger le COMPOSANT (src/components/sections/...)
+   → Puis mettre à jour le PROMPT si nécessaire
+
+2. Le JSON généré est incorrect
+   → Corriger le PROMPT (SCAN_SITE_PROMPT.md)
+
+3. Un champ nécessaire n'existe pas dans les types
+   → Corriger les TYPES (src/types/sections.ts ou site.ts)
+   → Puis mettre à jour le PROMPT
+
+4. L'import ne fonctionne pas correctement
+   → Corriger la ROUTE (api/import-template/route.ts)
+   → Puis documenter dans le PROMPT
+
+Règle absolue : toujours mettre à jour le PROMPT
+après une correction de code pour garder la cohérence.
+
+---
+
 ## PARTIE 6 — BOUCLE D'AUTO-AMÉLIORATION
 Après avoir généré le JSON initial, lance automatiquement cette boucle sans attendre.
 Cycle par itération
-Étape 0 — VALIDATION VISUELLE OBLIGATOIRE (avant chaque audit)
+Étape 0 — VALIDATION VISUELLE AUTOMATIQUE (avant chaque audit)
 
-Avant tout audit textuel du JSON, valider visuellement :
+Avant tout audit textuel du JSON, lancer la comparaison visuelle automatique :
 
-1. Réimporter le JSON dans le configurateur :
-   node scripts/import-template.js scripts/scans/[slug]/output.json \
-   --site-id [SITE-ID]
+  node scripts/compare-visual.js scripts/scans/[slug] --site-id [SITE-ID]
 
-2. Screenshotter le résultat section par section :
-   node scripts/screenshot-site.js [SITE-ID] \
-   scripts/scans/[slug]/comparison
+Ce script fait tout en une seule commande :
+1. Réimporte le JSON dans le configurateur
+2. Screenshotte chaque section du résultat
+3. Calcule le pixel diff par section (vs screenshots originaux)
+4. Classe automatiquement les écarts par priorité (🔴🟡🟢)
+5. Génère visual-report.md avec les scores et les corrections suggérées
 
-3. Pour chaque section, comparer côte à côte :
-   - Screenshot original : scripts/scans/[slug]/screenshots/
-   - Screenshot configurateur : scripts/scans/[slug]/comparison/current-section-XX.png
-
-4. Noter les écarts visuels PAR SECTION avec ce niveau de priorité :
-   🔴 STRUCTURAL : type incorrect, variant inexistant, crash, section manquante
-   🟡 VISUAL : mauvaise couleur, mauvaise image, layout cassé, fond incorrect
-   🟢 COSMETIC : spacing, font-weight, letter-spacing, opacité
-
-5. Corriger en priorité les écarts 🔴 avant les 🟡 avant les 🟢
+Lire le visual-report.md AVANT de commencer l'audit textuel.
+Les scores par section guident les priorités de correction.
 
 Règle absolue : ne jamais passer à la boucle suivante sans avoir
-screenshotté et comparé visuellement le résultat.
+lancé compare-visual.js et vérifié les scores.
 
 Étape 1 — Audit obligatoire
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-AUDIT ITÉRATION N/10
+AUDIT ITÉRATION N/50
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Champs null évitables          : X → [liste exacte]
 Valeurs confidence "low"       : X → [liste exacte]
@@ -2887,10 +2998,10 @@ Si moins de 5 trouvées, creuse obligatoirement :
 * Éléments de base non capturés → badges, dividers, avatars
 * Wireframe patterns non documentés
 * Animations non identifiées → observer keyframes et transitions
-Étape 3 — Ce qui compte comme une vraie amélioration
+Étape 4 — Ce qui compte comme une vraie amélioration
 ✅ Champ null → valeur précise ✅ confidence "low"/"medium" → "high" (source vérifiée) ✅ Nouvel élément du site capturé ✅ Format corrigé pour être directement exploitable dans le configurateur ✅ Règle d'extraction ajoutée au prompt (générique, applicable à tout futur site) ✅ Valeur approximative → valeur mesurée au pixel ✅ Pattern visuel identifié (textTransform, buttonStyle, background alterné) ✅ Background de section corrigé (blanc par défaut → vraie couleur) ✅ Variante de bouton corrigée (primary↔outline) ✅ Icône identifiée et matchée avec la librairie ✅ Élément de base documenté dans elementsDetected ✅ Composant documenté dans componentsDetected ✅ Wireframe documenté dans wireframesDetected ✅ Animation avec durée, easing et trigger précis
 ❌ Reformuler sans changer le résultat ❌ Ajouter un champ qui sera toujours null ❌ Micro-changements cosmétiques ❌ Répéter la même valeur différemment formulée
-Étape 4 — AMÉLIORER SCAN_SITE_PROMPT.md (PROTOCOLE STRICT)
+Étape 5 — AMÉLIORER SCAN_SITE_PROMPT.md (PROTOCOLE STRICT)
 
 Principe : chaque erreur corrigée = potentielle nouvelle règle générique.
 Suivre ce protocole OBLIGATOIRE avant d'ajouter toute règle :
@@ -2904,7 +3015,7 @@ Une seule question :
   Si NON → ne pas ajouter
 
 FILTRE 2 — Est-ce un doublon ?
-Vérifier les Règles 1 à N dans la PARTIE 8 avant d'ajouter.
+Vérifier les Règles 1 à N dans la PARTIE 0 avant d'ajouter.
   Si une règle similaire existe → enrichir l'existante
   Si aucune règle similaire → continuer
 
@@ -2922,7 +3033,7 @@ Exemple correct :
   sans fond coloré derrière lui'
 
 PLACEMENT :
-→ Ajouter en PARTIE 8 avec numéro séquentiel (Règle N+1)
+→ Ajouter en PARTIE 0 avec numéro séquentiel (Règle N+1)
 → Ne jamais insérer ailleurs dans le prompt
 
 Types de règles valides à ajouter :
@@ -2934,7 +3045,7 @@ Types de règles valides à ajouter :
 
 IMPORTANT : ne pas ajouter de règles spécifiques
 au site en cours d'analyse
-Étape 5 — Relance le scan complet
+Étape 6 — Relance le scan complet
 Rescanne le site avec le prompt amélioré. Compare explicitement JSON précédent vs nouveau JSON.
 Condition d'arrêt
 * Score global ≥ 95%, OU 50 itérations effectuées
@@ -2967,7 +3078,7 @@ CHECKLIST DE QUALITÉ FINALE (avant de rendre le JSON)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 RÉCAPITULATIF FINAL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Itérations effectuées                     : X/10
+Itérations effectuées                     : X/50
 Score global final                        : XX%
 Améliorations totales apportées au prompt : X
 Éléments encore imprécis                  : [liste]
@@ -2983,6 +3094,18 @@ Collections CMS identifiées               : [liste]
 Composants réutilisables détectés          : [liste de patterns]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Sauvegarde la version finale améliorée dans SCAN_SITE_PROMPT.md.
+
+---
+
+## NOTE TECHNIQUE — elementProps() (pour le debug)
+
+Chaque élément rendu dans les sections utilise `elementProps(sectionId, contentPath, type)` qui injecte :
+- `data-element-id="sectionId::contentPath"` — identifiant unique pour la sélection dans l'éditeur
+- `data-element-type="heading|text|image|button|badge|container"` — type d'élément
+- `data-element-label` — label affiché dans le panneau de propriétés
+
+Ce mécanisme est invisible dans le rendu final mais essentiel pour le drag & drop et l'édition inline.
+Quand un élément ne réagit pas au clic dans l'éditeur, vérifier qu'il a bien son `elementProps()`.
 
 ---
 

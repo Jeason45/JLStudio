@@ -415,6 +415,42 @@ const IMAGE_HOVERS: LibraryElementItem[] = [
       defaultContent: { html: '<div style="width:100%;height:140px;overflow:hidden;border-radius:.75rem;position:relative;cursor:pointer" onmouseover="this.children[1].style.transform=\'translateX(100%)\'" onmouseout="this.children[1].style.transform=\'translateX(-100%)\'"><div style="width:100%;height:100%;background:linear-gradient(135deg,#3a2a1a,#5c4033);display:flex;align-items:center;justify-content:center"><span style="color:#c8a97e;font-size:.875rem;font-weight:500">Hover for Shine</span></div><div style="position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(246,239,229,.15) 45%,rgba(246,239,229,.3) 50%,rgba(246,239,229,.15) 55%,transparent 60%);transform:translateX(-100%);transition:transform .6s cubic-bezier(.25,.46,.45,.94)"></div></div>' },
     },
   },
+  {
+    id: 'hover-scan-e533d164a9ca',
+    label: 'Hover transform + backgroundColor',
+    category: 'animations', subcategory: 'hovers',
+    tags: ['hover', 'transform', 'backgroundColor'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Hover transform + backgroundColor',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: { html: '<div style="transform:none;background-color:rgb(222, 199, 166);transition:transform, backgroundColor 0.3s ease;padding:1.25rem;border-radius:.75rem;background:rgba(74,39,17,.12);border:1px solid rgba(200,169,126,.2);color:#f6efe5;font-size:.875rem;text-align:center;cursor:pointer" onmouseover="Object.assign(this.style,{\'transform\':\'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -3, 0.01, 1)\',\'background-color\':\'rgb(192, 155, 107)\'})" onmouseout="Object.assign(this.style,{\'transform\':\'none\',\'background-color\':\'rgb(222, 199, 166)\'})">Hover Effect &mdash; transform + backgroundColor</div>' },
+    },
+  },
+  {
+    id: 'hover-scan-93868c68c12e',
+    label: 'Hover color + borderColor',
+    category: 'animations', subcategory: 'hovers',
+    tags: ['hover', 'color', 'borderColor'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Hover color + borderColor',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: { html: '<div style="color:rgb(51, 51, 51);border-color:rgb(51, 51, 51);transition:color, borderColor 0.3s ease;padding:1.25rem;border-radius:.75rem;background:rgba(74,39,17,.12);border:1px solid rgba(200,169,126,.2);color:#f6efe5;font-size:.875rem;text-align:center;cursor:pointer" onmouseover="Object.assign(this.style,{\'color\':\'rgb(18, 18, 18)\',\'border-color\':\'rgb(18, 18, 18)\'})" onmouseout="Object.assign(this.style,{\'color\':\'rgb(51, 51, 51)\',\'border-color\':\'rgb(51, 51, 51)\'})">Hover Effect &mdash; color + borderColor</div>' },
+    },
+  },
+  {
+    id: 'hover-scan-9eb9eaf2e1cd',
+    label: 'Hover transform + color + borderColor',
+    category: 'animations', subcategory: 'hovers',
+    tags: ['hover', 'transform', 'color', 'borderColor'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Hover transform + color + borderColor',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: { html: '<div style="transform:matrix(1, 0, 0, 1, 0, 0);color:rgb(255, 255, 255);border-color:rgb(255, 255, 255);transition:transform, color, borderColor 0.3s ease;padding:1.25rem;border-radius:.75rem;background:rgba(74,39,17,.12);border:1px solid rgba(200,169,126,.2);color:#f6efe5;font-size:.875rem;text-align:center;cursor:pointer" onmouseover="Object.assign(this.style,{\'transform\':\'matrix(-1, 0, 0, -1, 0, 0)\',\'color\':\'rgb(222, 199, 166)\',\'border-color\':\'rgb(222, 199, 166)\'})" onmouseout="Object.assign(this.style,{\'transform\':\'matrix(1, 0, 0, 1, 0, 0)\',\'color\':\'rgb(255, 255, 255)\',\'border-color\':\'rgb(255, 255, 255)\'})">Hover Effect &mdash; transform + color + borderColor</div>' },
+    },
+  },
 ]
 
 // ─── HOVER EFFECTS (UI) ───
