@@ -55,7 +55,15 @@ export function MiniSectionPreview({ sectionType, variant, content, style, scale
 
   return (
     <PreviewErrorBoundary fallback={placeholder}>
-      <div ref={containerRef} className="w-full bg-white overflow-hidden" style={{ height: '140px' }}>
+      <div ref={containerRef} className="mini-preview-freeze w-full bg-white overflow-hidden" style={{ height: '140px' }}>
+        <style>{`
+          .mini-preview-freeze *,
+          .mini-preview-freeze *::before,
+          .mini-preview-freeze *::after {
+            animation: none !important;
+            transition: none !important;
+          }
+        `}</style>
         <div style={{ width: `${100 / scale}%`, transform: `scale(${scale})`, transformOrigin: 'top left', pointerEvents: 'none', userSelect: 'none' }}>
           <SectionComponent config={config} isEditing={true} />
         </div>
