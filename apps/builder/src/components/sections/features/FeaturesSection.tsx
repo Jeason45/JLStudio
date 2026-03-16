@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import { elementProps } from '@/lib/elementHelpers'
 import type { FeaturesConfig, FeaturesContent, FeatureItem } from '@/types/sections'
@@ -4952,6 +4952,678 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
     )
   }
 
+  // ─── VARIANT: prisme-accordion ───
+  // Opticien premium : split layout accordion, ice blue progress bar, image crossfade with zoom, auto-advance
+  if (variant === 'prisme-accordion') {
+    const PRISME_AUTO_DURATION = 7000
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [activePanel, setActivePanel] = useState(0)
+    const [progressKey, setProgressKey] = useState(0)
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const sectionRef = useRef<HTMLDivElement>(null)
+    const [isVisible, setIsVisible] = useState(false)
+    const [hasRevealed, setHasRevealed] = useState(false)
+
+    const panelImages = [
+      'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=1200&q=85',
+      'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=1200&q=85',
+      'https://images.unsplash.com/photo-1577803645773-f96470509666?w=1200&q=85',
+      'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?w=1200&q=85',
+    ]
+
+    const defaultPanelData = [
+      { title: 'Examen de vue', description: 'Un bilan visuel complet avec les dernières technologies de mesure pour une correction optimale et personnalisée.' },
+      { title: 'Montures design', description: 'Une sélection curatée de créateurs internationaux. Des montures qui allient style, confort et technicité.' },
+      { title: 'Verres progressifs', description: 'La technologie de pointe au service de votre confort. Des verres sur-mesure pour une vision parfaite à toutes les distances.' },
+      { title: 'Lentilles de contact', description: 'Adaptation professionnelle et suivi personnalisé pour des lentilles parfaitement adaptées à vos yeux et votre mode de vie.' },
+    ]
+
+    const resolvedPanels = items.length > 0
+      ? items.map((item, i) => ({
+          title: item.title || defaultPanelData[i % defaultPanelData.length].title,
+          description: (item as unknown as Record<string, unknown>).description as string || defaultPanelData[i % defaultPanelData.length].description,
+          image: (item as unknown as Record<string, unknown>).image as string || panelImages[i % panelImages.length],
+          id: item.id,
+        }))
+      : defaultPanelData.map((data, i) => ({ ...data, image: panelImages[i], id: `default-${i}` }))
+
+    const advancePanel = useCallback(() => {
+      setActivePanel(prev => (prev + 1) % resolvedPanels.length)
+      setProgressKey(k => k + 1)
+    }, [resolvedPanels.length])
+
+    const selectPanel = useCallback((i: number) => {
+      setActivePanel(i)
+      setProgressKey(k => k + 1)
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }, [])
+
+    // Auto-advance timer
+    useEffect(() => {
+      if (isEditing || !isVisible) return
+      timerRef.current = setTimeout(advancePanel, PRISME_AUTO_DURATION)
+      return () => { if (timerRef.current) clearTimeout(timerRef.current) }
+    }, [activePanel, progressKey, advancePanel, isEditing, isVisible])
+
+    // Scroll reveal observer
+    useEffect(() => {
+      const el = sectionRef.current
+      if (!el) return
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          if (!hasRevealed) setHasRevealed(true)
+        } else {
+          setIsVisible(false)
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+      return () => obs.disconnect()
+    }, [hasRevealed])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    const staggerDelay = (i: number) => `${0.12 * i}s`
+
+    return (
+      <section
+        ref={sectionRef}
+        {...elementProps(config.id, 'wrapper', 'container', 'Services Section')}
+        className="overflow-hidden"
+        style={{ backgroundColor: '#E8DED0', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}
+      >
+        <style>{`
+          @keyframes prisme-progress-fill { from { width: 0%; } to { width: 100%; } }
+          @keyframes prisme-reveal-up { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+          @keyframes prisme-img-in { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: scale(1); } }
+          .prisme-acc-panel:hover .prisme-acc-glass {
+            background: rgba(184, 212, 227, 0.06) !important;
+          }
+          .prisme-acc-panel.prisme-acc-active:hover .prisme-acc-glass {
+            background: transparent !important;
+          }
+          @media (max-width: 968px) {
+            .prisme-acc-split { flex-direction: column !important; }
+            .prisme-acc-image-col { width: 100% !important; min-height: 400px !important; }
+            .prisme-acc-content-col { width: 100% !important; }
+          }
+        `}</style>
+
+        {/* Header area — staggered reveal */}
+        <div
+          {...elementProps(config.id, 'headerArea', 'container', 'Header Area')}
+          style={{
+            padding: 'clamp(60px, 10vw, 120px) 60px clamp(40px, 6vw, 80px)',
+            opacity: hasRevealed ? 1 : 0,
+            transform: hasRevealed ? 'translateY(0)' : 'translateY(40px)',
+            transition: 'opacity 0.8s ease, transform 0.8s ease',
+          }}
+        >
+          <div style={{ maxWidth: 1320, margin: '0 auto', textAlign: 'center' }}>
+            {title && (
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                className={cn(titleSize && getTitleSizeClass(titleSize))}
+                style={{
+                  maxWidth: 700,
+                  margin: '0 auto',
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 300,
+                  lineHeight: '110%',
+                  color: customTextColor ?? '#0F1923',
+                }}
+              >
+                {title}
+              </h2>
+            )}
+          </div>
+        </div>
+
+        {/* Split layout: image left + accordion right */}
+        <div
+          {...elementProps(config.id, 'splitLayout', 'container', 'Split Layout')}
+          className="prisme-acc-split"
+          style={{
+            display: 'flex',
+            minHeight: 640,
+            maxWidth: 1320,
+            margin: '0 auto',
+            padding: '0 clamp(20px, 4vw, 60px)',
+            paddingBottom: 'clamp(60px, 10vw, 120px)',
+            gap: 0,
+            opacity: hasRevealed ? 1 : 0,
+            transform: hasRevealed ? 'translateY(0)' : 'translateY(40px)',
+            transition: 'opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s',
+          }}
+        >
+          {/* Left — Image with crossfade + zoom */}
+          <div
+            {...elementProps(config.id, 'imagePanel', 'container', 'Image Panel')}
+            className="prisme-acc-image-col"
+            style={{ position: 'relative', width: '50%', overflow: 'hidden', borderRadius: '12px 0 0 12px', backgroundColor: '#0F1923' }}
+          >
+            {resolvedPanels.map((panel, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={`${panel.id}-${i}`}
+                {...(activePanel === i ? elementProps(config.id, `panels.${i}.image`, 'image', 'Panel Image') : {})}
+                src={panel.image}
+                alt={panel.title}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  opacity: activePanel === i ? 1 : 0,
+                  transform: activePanel === i ? 'scale(1)' : 'scale(1.08)',
+                  transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                }}
+              />
+            ))}
+            {/* Subtle gradient overlay on image */}
+            <div style={{
+              position: 'absolute', inset: 0, zIndex: 1,
+              background: 'linear-gradient(135deg, rgba(15,25,35,0.15) 0%, transparent 60%)',
+              pointerEvents: 'none',
+            }} />
+            {/* Geometric decorative lines (optician precision) */}
+            <svg style={{ position: 'absolute', bottom: 24, left: 24, zIndex: 2, opacity: 0.3 }} width="80" height="80" viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="38" stroke="#B8D4E3" strokeWidth="0.5" />
+              <circle cx="40" cy="40" r="28" stroke="#B8D4E3" strokeWidth="0.5" />
+              <line x1="2" y1="40" x2="78" y2="40" stroke="#B8D4E3" strokeWidth="0.3" />
+              <line x1="40" y1="2" x2="40" y2="78" stroke="#B8D4E3" strokeWidth="0.3" />
+            </svg>
+          </div>
+
+          {/* Right — Accordion panels */}
+          <div
+            {...elementProps(config.id, 'accordionCol', 'container', 'Accordion Column')}
+            className="prisme-acc-content-col"
+            style={{
+              width: '50%',
+              backgroundColor: '#0F1923',
+              borderRadius: '0 12px 12px 0',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              padding: 'clamp(32px, 5vw, 56px)',
+            }}
+          >
+            {resolvedPanels.map((panel, i) => {
+              const isActive = activePanel === i
+              return (
+                <div
+                  key={panel.id}
+                  {...elementProps(config.id, `panels.${i}`, 'container', 'Panel')}
+                  className={cn('prisme-acc-panel', isActive && 'prisme-acc-active')}
+                  onClick={() => selectPanel(i)}
+                  style={{
+                    cursor: 'pointer',
+                    position: 'relative',
+                    borderBottom: i < resolvedPanels.length - 1 ? '1px solid rgba(184, 212, 227, 0.1)' : 'none',
+                    padding: isActive ? '24px 0 28px' : '20px 0',
+                    transition: 'padding 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                    opacity: hasRevealed ? 1 : 0,
+                    transform: hasRevealed ? 'translateY(0)' : 'translateY(20px)',
+                    transitionDelay: hasRevealed ? staggerDelay(i + 2) : '0s',
+                    transitionProperty: 'opacity, transform, padding',
+                    transitionDuration: '0.6s, 0.6s, 0.5s',
+                  }}
+                >
+                  {/* Glass highlight overlay */}
+                  <div
+                    className="prisme-acc-glass"
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      borderRadius: 8,
+                      background: 'transparent',
+                      transition: 'background 0.4s ease',
+                      pointerEvents: 'none',
+                    }}
+                  />
+
+                  {/* Header row: number + title */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, position: 'relative', zIndex: 1 }}>
+                    <span
+                      {...elementProps(config.id, `panels.${i}.number`, 'text', 'Panel Number')}
+                      style={{
+                        fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                        fontSize: 'clamp(1.5rem, 1rem + 1.5vw, 2.25rem)',
+                        fontWeight: 200,
+                        color: '#B8D4E3',
+                        opacity: isActive ? 1 : 0.4,
+                        transition: 'opacity 0.4s ease',
+                        minWidth: 48,
+                      }}
+                    >
+                      0{i + 1}
+                    </span>
+                    <h4
+                      {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                      style={{
+                        fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                        fontSize: 'clamp(1.1rem, 0.9rem + 1vw, 1.5rem)',
+                        fontWeight: isActive ? 400 : 300,
+                        color: isActive ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
+                        margin: 0,
+                        transition: 'color 0.4s ease, font-weight 0.4s ease',
+                        flex: 1,
+                      }}
+                    >
+                      {panel.title}
+                    </h4>
+                    {/* Expand indicator */}
+                    <svg
+                      width="20" height="20" viewBox="0 0 20 20" fill="none"
+                      style={{
+                        transform: isActive ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                        opacity: isActive ? 0.8 : 0.3,
+                        flexShrink: 0,
+                      }}
+                    >
+                      <path d="M5 8l5 5 5-5" stroke="#B8D4E3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+
+                  {/* Collapsible description */}
+                  <div
+                    style={{
+                      maxHeight: isActive ? 200 : 0,
+                      overflow: 'hidden',
+                      transition: 'max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease',
+                      opacity: isActive ? 1 : 0,
+                    }}
+                  >
+                    <p
+                      {...elementProps(config.id, `items.${i}.description`, 'text')}
+                      style={{
+                        fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                        fontSize: 14,
+                        fontWeight: 400,
+                        color: 'rgba(184, 212, 227, 0.6)',
+                        margin: 0,
+                        paddingTop: 12,
+                        paddingLeft: 64,
+                        maxWidth: 420,
+                        lineHeight: '170%',
+                      }}
+                    >
+                      {panel.description}
+                    </p>
+                  </div>
+
+                  {/* Animated ice blue progress bar */}
+                  {isActive && (
+                    <div style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: 2,
+                      backgroundColor: 'rgba(184, 212, 227, 0.1)',
+                      overflow: 'hidden',
+                    }}>
+                      <div
+                        key={`progress-${activePanel}-${progressKey}`}
+                        style={{
+                          height: '100%',
+                          backgroundColor: '#B8D4E3',
+                          animation: isEditing ? 'none' : `prisme-progress-fill ${PRISME_AUTO_DURATION}ms linear forwards`,
+                          width: isEditing ? '60%' : undefined,
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ─── VARIANT: petale-accordion ───
+  // Fleuriste premium : split layout accordion, rose gold progress bar, organic bloom image transition, auto-advance
+  if (variant === 'petale-accordion') {
+    const PETALE_AUTO_DURATION = 7000
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [activePanel, setActivePanel] = useState(0)
+    const [progressKey, setProgressKey] = useState(0)
+    const petaleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const petaleSectionRef = useRef<HTMLDivElement>(null)
+    const [petaleIsVisible, setPetaleIsVisible] = useState(false)
+    const [petaleHasRevealed, setPetaleHasRevealed] = useState(false)
+
+    const panelImages = [
+      'https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=1200&q=85',
+      'https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?w=1200&q=85',
+      'https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=1200&q=85',
+      'https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=1200&q=85',
+    ]
+
+    const defaultPanelData = [
+      { title: 'Bouquets sur-mesure', description: 'Chaque bouquet est une cr\u00E9ation unique, compos\u00E9e selon vos envies, la saison et le message que vous souhaitez transmettre. Des fleurs fra\u00EEches s\u00E9lectionn\u00E9es avec soin.' },
+      { title: '\u00C9v\u00E9nements & mariages', description: 'De la d\u00E9coration florale de votre c\u00E9r\u00E9monie aux centres de table, nous cr\u00E9ons des ambiances v\u00E9g\u00E9tales inoubliables pour vos moments les plus pr\u00E9cieux.' },
+      { title: 'Abonnements floraux', description: 'Recevez chaque semaine ou chaque mois une composition fra\u00EEche et de saison, directement chez vous ou au bureau. L\u2019\u00E9l\u00E9gance au quotidien.' },
+      { title: 'Livraison express', description: 'Commandez avant midi, recevez votre bouquet le jour m\u00EAme. Un service de livraison soign\u00E9 avec message personnalis\u00E9 pour surprendre vos proches.' },
+    ]
+
+    const resolvedPanels = items.length > 0
+      ? items.map((item, i) => ({
+          title: item.title || defaultPanelData[i % defaultPanelData.length].title,
+          description: (item as unknown as Record<string, unknown>).description as string || defaultPanelData[i % defaultPanelData.length].description,
+          image: (item as unknown as Record<string, unknown>).image as string || panelImages[i % panelImages.length],
+          id: item.id,
+        }))
+      : defaultPanelData.map((data, i) => ({ ...data, image: panelImages[i], id: `default-${i}` }))
+
+    const petaleAdvancePanel = useCallback(() => {
+      setActivePanel(prev => (prev + 1) % resolvedPanels.length)
+      setProgressKey(k => k + 1)
+    }, [resolvedPanels.length])
+
+    const petaleSelectPanel = useCallback((i: number) => {
+      setActivePanel(i)
+      setProgressKey(k => k + 1)
+      if (petaleTimerRef.current) clearTimeout(petaleTimerRef.current)
+    }, [])
+
+    // Auto-advance timer
+    useEffect(() => {
+      if (isEditing || !petaleIsVisible) return
+      petaleTimerRef.current = setTimeout(petaleAdvancePanel, PETALE_AUTO_DURATION)
+      return () => { if (petaleTimerRef.current) clearTimeout(petaleTimerRef.current) }
+    }, [activePanel, progressKey, petaleAdvancePanel, isEditing, petaleIsVisible])
+
+    // Scroll reveal observer
+    useEffect(() => {
+      const el = petaleSectionRef.current
+      if (!el) return
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          setPetaleIsVisible(true)
+          if (!petaleHasRevealed) setPetaleHasRevealed(true)
+        } else {
+          setPetaleIsVisible(false)
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+      return () => obs.disconnect()
+    }, [petaleHasRevealed])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    const petaleStaggerDelay = (i: number) => `${0.12 * i}s`
+
+    return (
+      <section
+        ref={petaleSectionRef}
+        {...elementProps(config.id, 'wrapper', 'container', 'Services Section')}
+        className="overflow-hidden"
+        style={{ backgroundColor: '#1A1A1A', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}
+      >
+        <style>{`
+          @keyframes petale-progress-fill { from { width: 0%; } to { width: 100%; } }
+          .petale-acc-panel:hover .petale-acc-glass {
+            background: rgba(212, 165, 116, 0.04) !important;
+          }
+          .petale-acc-panel.petale-acc-active:hover .petale-acc-glass {
+            background: transparent !important;
+          }
+          @media (max-width: 968px) {
+            .petale-acc-split { flex-direction: column !important; }
+            .petale-acc-image-col { width: 100% !important; min-height: 400px !important; }
+            .petale-acc-content-col { width: 100% !important; }
+          }
+        `}</style>
+
+        {/* Header area — staggered reveal */}
+        <div
+          {...elementProps(config.id, 'headerArea', 'container', 'Header Area')}
+          style={{
+            padding: 'clamp(60px, 10vw, 120px) 60px clamp(40px, 6vw, 80px)',
+            opacity: petaleHasRevealed ? 1 : 0,
+            transform: petaleHasRevealed ? 'translateY(0)' : 'translateY(40px)',
+            transition: 'opacity 0.8s ease, transform 0.8s ease',
+          }}
+        >
+          <div style={{ maxWidth: 1320, margin: '0 auto', textAlign: 'center' }}>
+            {title && (
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                className={cn(titleSize && getTitleSizeClass(titleSize))}
+                style={{
+                  maxWidth: 700,
+                  margin: '0 auto',
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize' as const,
+                  color: customTextColor ?? '#D4A574',
+                }}
+              >
+                {title}
+              </h2>
+            )}
+          </div>
+        </div>
+
+        {/* Split layout: image left + accordion right */}
+        <div
+          {...elementProps(config.id, 'splitLayout', 'container', 'Split Layout')}
+          className="petale-acc-split"
+          style={{
+            display: 'flex',
+            minHeight: 640,
+            maxWidth: 1320,
+            margin: '0 auto',
+            padding: '0 clamp(20px, 4vw, 60px)',
+            paddingBottom: 'clamp(60px, 10vw, 120px)',
+            gap: 0,
+            opacity: petaleHasRevealed ? 1 : 0,
+            transform: petaleHasRevealed ? 'translateY(0)' : 'translateY(40px)',
+            transition: 'opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s',
+          }}
+        >
+          {/* Left — Image with organic bloom crossfade */}
+          <div
+            {...elementProps(config.id, 'imagePanel', 'container', 'Image Panel')}
+            className="petale-acc-image-col"
+            style={{ position: 'relative', width: '50%', overflow: 'hidden', borderRadius: '16px 0 0 16px', backgroundColor: '#1A1A1A' }}
+          >
+            {resolvedPanels.map((panel, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={`${panel.id}-${i}`}
+                {...(activePanel === i ? elementProps(config.id, `panels.${i}.image`, 'image', 'Panel Image') : {})}
+                src={panel.image}
+                alt={panel.title}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  opacity: activePanel === i ? 1 : 0,
+                  transform: activePanel === i ? 'scale(1)' : 'scale(1.12)',
+                  filter: activePanel === i ? 'blur(0px)' : 'blur(4px)',
+                  transition: 'opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.8s ease',
+                }}
+              />
+            ))}
+            {/* Warm gradient overlay */}
+            <div style={{
+              position: 'absolute', inset: 0, zIndex: 1,
+              background: 'linear-gradient(135deg, rgba(26,26,26,0.1) 0%, transparent 60%, rgba(212,165,116,0.08) 100%)',
+              pointerEvents: 'none',
+            }} />
+            {/* Botanical decorative SVG */}
+            <svg style={{ position: 'absolute', bottom: 20, left: 20, zIndex: 2, opacity: 0.25 }} width="70" height="90" viewBox="0 0 70 90" fill="none">
+              <path d="M35 90V45" stroke="#D4A574" strokeWidth="0.6" />
+              <path d="M35 45C25 35 10 30 5 20C15 25 28 30 35 45Z" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+              <path d="M35 45C45 35 60 30 65 20C55 25 42 30 35 45Z" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+              <path d="M35 60C28 52 15 48 10 40C20 44 30 50 35 60Z" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+              <path d="M35 60C42 52 55 48 60 40C50 44 40 50 35 60Z" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+              <circle cx="35" cy="15" r="8" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+              <circle cx="35" cy="15" r="4" stroke="#D4A574" strokeWidth="0.4" fill="none" />
+            </svg>
+          </div>
+
+          {/* Right — Accordion panels */}
+          <div
+            {...elementProps(config.id, 'accordionCol', 'container', 'Accordion Column')}
+            className="petale-acc-content-col"
+            style={{
+              width: '50%',
+              backgroundColor: '#111111',
+              borderRadius: '0 16px 16px 0',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              padding: 'clamp(32px, 5vw, 56px)',
+            }}
+          >
+            {resolvedPanels.map((panel, i) => {
+              const isActive = activePanel === i
+              return (
+                <div
+                  key={panel.id}
+                  {...elementProps(config.id, `panels.${i}`, 'container', 'Panel')}
+                  className={cn('petale-acc-panel', isActive && 'petale-acc-active')}
+                  onClick={() => petaleSelectPanel(i)}
+                  style={{
+                    cursor: 'pointer',
+                    position: 'relative',
+                    borderBottom: i < resolvedPanels.length - 1 ? '1px solid rgba(212, 165, 116, 0.1)' : 'none',
+                    padding: isActive ? '24px 0 28px' : '20px 0',
+                    transition: 'padding 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                    opacity: petaleHasRevealed ? 1 : 0,
+                    transform: petaleHasRevealed ? 'translateY(0)' : 'translateY(20px)',
+                    transitionDelay: petaleHasRevealed ? petaleStaggerDelay(i + 2) : '0s',
+                    transitionProperty: 'opacity, transform, padding',
+                    transitionDuration: '0.6s, 0.6s, 0.5s',
+                  }}
+                >
+                  {/* Warm glass highlight overlay */}
+                  <div
+                    className="petale-acc-glass"
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      borderRadius: 8,
+                      background: 'transparent',
+                      transition: 'background 0.4s ease',
+                      pointerEvents: 'none',
+                    }}
+                  />
+
+                  {/* Header row: serif number + title */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, position: 'relative', zIndex: 1 }}>
+                    <span
+                      {...elementProps(config.id, `panels.${i}.number`, 'text', 'Panel Number')}
+                      style={{
+                        fontFamily: "'Georgia', 'Times New Roman', serif",
+                        fontSize: 'clamp(1.5rem, 1rem + 1.5vw, 2.25rem)',
+                        fontWeight: 400,
+                        fontStyle: 'italic',
+                        color: '#D4A574',
+                        opacity: isActive ? 1 : 0.4,
+                        transition: 'opacity 0.4s ease',
+                        minWidth: 48,
+                      }}
+                    >
+                      0{i + 1}
+                    </span>
+                    <h4
+                      {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                      style={{
+                        fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                        fontSize: 'clamp(1.1rem, 0.9rem + 1vw, 1.5rem)',
+                        fontWeight: isActive ? 500 : 400,
+                        textTransform: 'capitalize' as const,
+                        color: isActive ? '#FFFFFF' : 'rgba(255,255,255,0.45)',
+                        margin: 0,
+                        transition: 'color 0.4s ease, font-weight 0.4s ease',
+                        flex: 1,
+                      }}
+                    >
+                      {panel.title}
+                    </h4>
+                    <svg
+                      width="20" height="20" viewBox="0 0 20 20" fill="none"
+                      style={{
+                        transform: isActive ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                        opacity: isActive ? 0.8 : 0.3,
+                        flexShrink: 0,
+                      }}
+                    >
+                      <path d="M5 8l5 5 5-5" stroke="#D4A574" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+
+                  {/* Collapsible description */}
+                  <div
+                    style={{
+                      maxHeight: isActive ? 200 : 0,
+                      overflow: 'hidden',
+                      transition: 'max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease',
+                      opacity: isActive ? 1 : 0,
+                    }}
+                  >
+                    <p
+                      {...elementProps(config.id, `items.${i}.description`, 'text')}
+                      style={{
+                        fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                        fontSize: 14,
+                        fontWeight: 400,
+                        color: 'rgba(212, 165, 116, 0.55)',
+                        margin: 0,
+                        paddingTop: 12,
+                        paddingLeft: 64,
+                        maxWidth: 420,
+                        lineHeight: '170%',
+                      }}
+                    >
+                      {panel.description}
+                    </p>
+                  </div>
+
+                  {/* Animated rose gold progress bar */}
+                  {isActive && (
+                    <div style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: 2,
+                      backgroundColor: 'rgba(212, 165, 116, 0.1)',
+                      overflow: 'hidden',
+                    }}>
+                      <div
+                        key={`progress-${activePanel}-${progressKey}`}
+                        style={{
+                          height: '100%',
+                          background: 'linear-gradient(90deg, #D4A574, #E8C9A8)',
+                          animation: isEditing ? 'none' : `petale-progress-fill ${PETALE_AUTO_DURATION}ms linear forwards`,
+                          width: isEditing ? '60%' : undefined,
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // fallback → startup-grid
   return <FeaturesSection config={{ ...config, variant: 'startup-grid' }} />
 }
@@ -4987,6 +5659,8 @@ export const featuresMeta = {
     'ascent-accordion',
     'zenith-accordion',
     'miel-accordion',
+    'prisme-accordion',
+    'petale-accordion',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

@@ -1277,6 +1277,444 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
     )
   }
 
+  // ═══════════════════════════════════════════
+  // PRISME — Opticien / Clean precision
+  // Premium: parallax bg, 3-layer overlay, staggered text reveals,
+  // button fill sweep + glow pulse, floating lens-circle SVG decorations
+  // ═══════════════════════════════════════════
+
+  if (variant === 'prisme-centered') {
+    const navy = '#0F1923'
+    const iceBlue = '#B8D4E3'
+    const warmCream = '#E8DED0'
+
+    const scrollRevealDelayRef = (delay: number) => (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(30px)'
+      el.style.transition = `opacity 0.8s ease ${delay}s, transform 0.8s ease ${delay}s`
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    // Parallax: shift background image on scroll via IntersectionObserver + scroll listener
+    const prismeParallaxRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      const img = el.querySelector('.prisme-cta-parallax-img') as HTMLElement | null
+      if (!img) return
+      const handleScroll = () => {
+        const rect = el.getBoundingClientRect()
+        const viewH = window.innerHeight
+        if (rect.bottom < 0 || rect.top > viewH) return
+        const progress = (viewH - rect.top) / (viewH + rect.height)
+        const offset = (progress - 0.5) * 40 // -20px to +20px
+        img.style.transform = `translateY(${offset}px) scale(1.08)`
+      }
+      window.addEventListener('scroll', handleScroll, { passive: true })
+      handleScroll()
+      // Cleanup not strictly needed for static sections, but observer pattern ensures one-time setup
+    }
+
+    const bgImage = (content as Record<string, unknown>).backgroundImage as string | undefined
+
+    return (
+      <>
+      <style dangerouslySetInnerHTML={{ __html: `
+        /* Prisme CTA — button fill sweep from left */
+        .prisme-cta-btn {
+          position: relative;
+          overflow: hidden;
+          transition: color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .prisme-cta-btn-fill {
+          position: absolute;
+          inset: 0;
+          background: ${iceBlue};
+          transform: translateX(-102%);
+          transition: transform 0.4s ease;
+        }
+        .prisme-cta-btn:hover .prisme-cta-btn-fill {
+          transform: translateX(0);
+        }
+        .prisme-cta-btn:hover {
+          color: ${navy} !important;
+          border-color: ${iceBlue} !important;
+        }
+        /* Glow pulse on hover */
+        @keyframes prisme-cta-glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(184, 212, 227, 0.15); }
+          50% { box-shadow: 0 0 40px rgba(184, 212, 227, 0.3), 0 0 80px rgba(184, 212, 227, 0.1); }
+        }
+        .prisme-cta-btn:hover {
+          animation: prisme-cta-glow 2s ease-in-out infinite;
+        }
+        /* Floating lens circles — slow rotation */
+        @keyframes prisme-lens-rotate {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes prisme-lens-float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-12px) rotate(180deg); }
+        }
+      ` }} />
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'CTA Section')}
+        style={{
+          position: 'relative',
+          minHeight: '70vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: 'var(--font-body, inherit)',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Background with parallax */}
+        <div
+          ref={prismeParallaxRef}
+          {...elementProps(config.id, 'bgWrapper', 'container', 'Background')}
+          style={{ position: 'absolute', inset: '-40px 0', zIndex: 0, overflow: 'hidden' }}
+        >
+          {bgImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={bgImage}
+              alt=""
+              className="prisme-cta-parallax-img"
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', transform: 'scale(1.08)', willChange: 'transform' }}
+            />
+          ) : (
+            <div className="prisme-cta-parallax-img" style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, ${navy}, #162636, ${navy})` }} />
+          )}
+          {/* 3-layer overlay system */}
+          {/* Layer 1: Bottom fade */}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,25,35,0.9) 0%, rgba(15,25,35,0.3) 50%, rgba(15,25,35,0.6) 100%)', pointerEvents: 'none' }} />
+          {/* Layer 2: Diagonal sweep */}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,25,35,0.5) 0%, transparent 40%, rgba(15,25,35,0.4) 100%)', pointerEvents: 'none' }} />
+          {/* Layer 3: Vignette */}
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, transparent 30%, rgba(15,25,35,0.6) 100%)', pointerEvents: 'none' }} />
+        </div>
+
+        {/* Floating lens-circle SVG decorations */}
+        <svg
+          style={{
+            position: 'absolute',
+            top: '10%',
+            left: '8%',
+            width: 120,
+            height: 120,
+            opacity: 0.06,
+            zIndex: 1,
+            animation: 'prisme-lens-float 12s ease-in-out infinite',
+          }}
+          viewBox="0 0 120 120"
+          fill="none"
+        >
+          <circle cx="60" cy="60" r="55" stroke={iceBlue} strokeWidth="1.5" />
+          <circle cx="60" cy="60" r="40" stroke={iceBlue} strokeWidth="0.8" />
+          <circle cx="60" cy="60" r="25" stroke={iceBlue} strokeWidth="0.5" />
+        </svg>
+        <svg
+          style={{
+            position: 'absolute',
+            bottom: '12%',
+            right: '6%',
+            width: 180,
+            height: 180,
+            opacity: 0.04,
+            zIndex: 1,
+            animation: 'prisme-lens-float 16s ease-in-out infinite 2s',
+          }}
+          viewBox="0 0 180 180"
+          fill="none"
+        >
+          <circle cx="90" cy="90" r="85" stroke={iceBlue} strokeWidth="1.5" />
+          <circle cx="90" cy="90" r="60" stroke={iceBlue} strokeWidth="1" />
+          <circle cx="90" cy="90" r="35" stroke={iceBlue} strokeWidth="0.5" />
+          <line x1="5" y1="90" x2="175" y2="90" stroke={iceBlue} strokeWidth="0.3" />
+          <line x1="90" y1="5" x2="90" y2="175" stroke={iceBlue} strokeWidth="0.3" />
+        </svg>
+        <svg
+          style={{
+            position: 'absolute',
+            top: '55%',
+            left: '3%',
+            width: 80,
+            height: 80,
+            opacity: 0.035,
+            zIndex: 1,
+            animation: 'prisme-lens-rotate 30s linear infinite',
+          }}
+          viewBox="0 0 80 80"
+          fill="none"
+        >
+          <circle cx="40" cy="40" r="36" stroke={warmCream} strokeWidth="1" />
+          <circle cx="40" cy="40" r="20" stroke={warmCream} strokeWidth="0.6" />
+        </svg>
+
+        {/* Content — staggered scroll reveals */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 2,
+            maxWidth: '700px',
+            textAlign: 'center',
+            padding: 'clamp(40px, 8vw, 100px) clamp(20px, 5vw, 60px)',
+          }}
+        >
+          <div ref={scrollRevealDelayRef(0)}>
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              className={cn(titleSize && getTitleSizeClass(titleSize))}
+              style={{
+                fontFamily: '"GeneralSans Variable", sans-serif',
+                fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                fontWeight: 500,
+                lineHeight: '115%',
+                color: textColor ?? warmCream,
+                marginBottom: '20px',
+              }}
+            >
+              {content.title || 'Voyez le monde autrement'}
+            </h2>
+          </div>
+          <div ref={scrollRevealDelayRef(0.15)}>
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              style={{
+                fontSize: '18px',
+                fontWeight: 400,
+                lineHeight: '160%',
+                color: 'rgba(232, 222, 208, 0.6)',
+                marginBottom: '40px',
+              }}
+            >
+              {subtitle || 'Des verres d\u2019exception pour un regard unique'}
+            </p>
+          </div>
+          <div ref={scrollRevealDelayRef(0.3)}>
+            <a
+              {...elementProps(config.id, 'primaryButton', 'button')}
+              href={content.primaryButton?.href ?? '/rendez-vous'}
+              className="prisme-cta-btn"
+              style={{
+                display: 'inline-block',
+                backgroundColor: 'transparent',
+                color: iceBlue,
+                border: `1px solid ${iceBlue}`,
+                borderRadius: '0px',
+                padding: '14px 36px',
+                fontSize: '14px',
+                fontWeight: 500,
+                fontFamily: '"Inter Variable", var(--font-body, sans-serif)',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              <span className="prisme-cta-btn-fill" />
+              <span style={{ position: 'relative', zIndex: 1 }}>
+                {content.primaryButton?.label || 'Prendre rendez-vous'}
+              </span>
+            </a>
+          </div>
+        </div>
+      </section>
+      </>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // PETALE — Fleuriste / Warm organic
+  // ═══════════════════════════════════════════
+
+  if (variant === 'petale-centered') {
+    const scrollRevealDelayRef = (delay: number) => (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(30px)'
+      el.style.transition = `opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s, transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s`
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const parallaxRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      const img = el.querySelector('.petale-cta-parallax-img') as HTMLElement | null
+      if (!img) return
+      const handleScroll = () => {
+        const rect = el.getBoundingClientRect()
+        const viewH = window.innerHeight
+        if (rect.bottom < 0 || rect.top > viewH) return
+        const progress = (viewH - rect.top) / (viewH + rect.height)
+        const offset = (progress - 0.5) * 60
+        img.style.transform = `translateY(${offset}px) scale(1.15)`
+      }
+      window.addEventListener('scroll', handleScroll, { passive: true })
+      handleScroll()
+    }
+
+    const bgImage = (content as Record<string, unknown>).backgroundImage as string | undefined
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'CTA Section')}
+        style={{
+          position: 'relative',
+          minHeight: '70vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: 'var(--font-body, inherit)',
+          overflow: 'hidden',
+        }}
+      >
+        <style>{`
+          .petale-cta-btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; }
+          .petale-cta-btn .petale-cta-btn-fill { position: absolute; inset: 0; background: linear-gradient(135deg, #D4A574, #c4955e); transform: translateX(-102%); transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+          .petale-cta-btn:hover .petale-cta-btn-fill { transform: translateX(0); }
+          .petale-cta-btn:hover { box-shadow: 0 8px 30px rgba(212, 165, 116, 0.3); color: #1A1A1A !important; border-color: #D4A574 !important; }
+          .petale-cta-btn:hover .petale-cta-btn-label { color: #1A1A1A; }
+          .petale-cta-btn-label { transition: color 0.4s; }
+          @keyframes petale-drift-1 { 0%,100% { transform: translate(0,0) rotate(0deg); } 33% { transform: translate(15px,-20px) rotate(12deg); } 66% { transform: translate(-10px,10px) rotate(-8deg); } }
+          @keyframes petale-drift-2 { 0%,100% { transform: translate(0,0) rotate(0deg); } 25% { transform: translate(-12px,18px) rotate(-15deg); } 50% { transform: translate(8px,-8px) rotate(10deg); } 75% { transform: translate(-18px,-12px) rotate(-5deg); } }
+          @keyframes petale-drift-3 { 0%,100% { transform: translate(0,0) rotate(0deg); } 40% { transform: translate(20px,12px) rotate(18deg); } 80% { transform: translate(-8px,-15px) rotate(-12deg); } }
+        `}</style>
+
+        {/* Background with parallax */}
+        <div ref={parallaxRef} {...elementProps(config.id, 'bgWrapper', 'container', 'Background')} style={{ position: 'absolute', inset: '-30px', zIndex: 0 }}>
+          {bgImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={bgImage}
+              alt=""
+              className="petale-cta-parallax-img"
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', transform: 'scale(1.15)', willChange: 'transform' }}
+            />
+          ) : (
+            <div className="petale-cta-parallax-img" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1A1A1A, #2A2420, #1A1A1A)', transform: 'scale(1.15)' }} />
+          )}
+          {/* Multi-layer overlay: warm bottom fade */}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(26, 26, 26, 0.9) 0%, rgba(26, 26, 26, 0.4) 50%, rgba(26, 26, 26, 0.6) 100%)' }} />
+          {/* Organic diagonal */}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(45, 80, 22, 0.15) 0%, transparent 50%, rgba(212, 165, 116, 0.1) 100%)' }} />
+          {/* Soft vignette */}
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, transparent 30%, rgba(26, 26, 26, 0.5) 100%)' }} />
+        </div>
+
+        {/* Floating decorative petal/leaf SVGs */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', overflow: 'hidden' }}>
+          {/* Petal top-left */}
+          <svg style={{ position: 'absolute', top: '12%', left: '8%', opacity: 0.12, animation: 'petale-drift-1 12s ease-in-out infinite' }} width="50" height="70" viewBox="0 0 50 70" fill="none">
+            <ellipse cx="25" cy="30" rx="12" ry="28" fill="#D4A574" transform="rotate(-20 25 30)" />
+            <line x1="25" y1="30" x2="25" y2="65" stroke="#2D5016" strokeWidth="1" opacity="0.6" />
+          </svg>
+          {/* Leaf top-right */}
+          <svg style={{ position: 'absolute', top: '18%', right: '10%', opacity: 0.1, animation: 'petale-drift-2 15s ease-in-out infinite' }} width="60" height="40" viewBox="0 0 60 40" fill="none">
+            <path d="M5 35C5 35 15 5 55 5C55 5 45 35 5 35Z" fill="#2D5016" opacity="0.8" />
+            <path d="M5 35C5 35 25 18 55 5" stroke="#2D5016" strokeWidth="0.8" opacity="0.5" />
+          </svg>
+          {/* Petal bottom-right */}
+          <svg style={{ position: 'absolute', bottom: '15%', right: '12%', opacity: 0.09, animation: 'petale-drift-3 18s ease-in-out infinite' }} width="45" height="65" viewBox="0 0 45 65" fill="none">
+            <ellipse cx="22" cy="28" rx="10" ry="25" fill="#D4A574" transform="rotate(15 22 28)" />
+            <line x1="22" y1="28" x2="22" y2="60" stroke="#2D5016" strokeWidth="1" opacity="0.5" />
+          </svg>
+          {/* Small leaf bottom-left */}
+          <svg style={{ position: 'absolute', bottom: '22%', left: '15%', opacity: 0.08, animation: 'petale-drift-2 14s ease-in-out infinite reverse' }} width="40" height="30" viewBox="0 0 40 30" fill="none">
+            <path d="M3 25C3 25 10 3 37 3C37 3 30 25 3 25Z" fill="#2D5016" opacity="0.7" />
+          </svg>
+        </div>
+
+        {/* Content */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 2,
+            maxWidth: '700px',
+            textAlign: 'center',
+            padding: 'clamp(40px, 8vw, 100px) clamp(20px, 5vw, 60px)',
+          }}
+        >
+          <div ref={scrollRevealDelayRef(0)}>
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              className={cn(titleSize && getTitleSizeClass(titleSize))}
+              style={{
+                fontFamily: '"GeneralSans Variable", sans-serif',
+                fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                fontWeight: 500,
+                lineHeight: '115%',
+                color: textColor ?? '#F5F0EB',
+                marginBottom: '20px',
+              }}
+            >
+              {content.title || 'Offrez un moment fleuri'}
+            </h2>
+          </div>
+          <div ref={scrollRevealDelayRef(0.15)}>
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              style={{
+                fontSize: '18px',
+                fontWeight: 400,
+                lineHeight: '160%',
+                color: 'rgba(245, 240, 235, 0.6)',
+                marginBottom: '40px',
+              }}
+            >
+              {subtitle || 'Des compositions uniques pour chaque occasion'}
+            </p>
+          </div>
+          <div ref={scrollRevealDelayRef(0.3)}>
+            <a
+              {...elementProps(config.id, 'primaryButton', 'button')}
+              href={content.primaryButton?.href ?? '/boutique'}
+              className="petale-cta-btn"
+              style={{
+                display: 'inline-flex',
+                color: '#D4A574',
+                borderRadius: '6px',
+                padding: '14px 36px',
+                fontSize: '16px',
+                fontWeight: 600,
+                fontFamily: '"Inter Variable", var(--font-body, sans-serif)',
+                border: '1px solid rgba(212, 165, 116, 0.4)',
+                cursor: 'pointer',
+                transition: 'box-shadow 0.4s ease, color 0.4s ease, border-color 0.4s ease',
+                textDecoration: 'none',
+                background: 'transparent',
+              }}
+            >
+              <span className="petale-cta-btn-fill" />
+              <span className="petale-cta-btn-label" style={{ position: 'relative', zIndex: 2 }}>
+                {content.primaryButton?.label || 'D\u00E9couvrir nos cr\u00E9ations'}
+              </span>
+              <svg style={{ position: 'relative', zIndex: 2 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback -> startup-centered
   return <CTASection config={{ ...config, variant: 'startup-centered' }} isEditing={isEditing} />
 }
@@ -1296,6 +1734,8 @@ export const ctaMeta = {
     'obscura-centered',
     'nacre-centered',
     'brixsa-centered',
+    'prisme-centered',
+    'petale-centered',
   ],
   defaultVariant: 'startup-centered',
   defaultContent: {},

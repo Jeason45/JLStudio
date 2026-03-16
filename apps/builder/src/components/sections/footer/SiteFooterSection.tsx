@@ -2520,6 +2520,416 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
     )
   }
 
+  // ─── VARIANT: prisme ───
+  // Opticien premium : fond navy #0F1923, blanc #FFFFFF, bleu glace #B8D4E3, crème #E8DED0, text-mask hover
+  if (variant === 'prisme') {
+    const headingFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const bodyFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const navy = '#0F1923'
+    const white = '#FFFFFF'
+    const iceBlue = '#B8D4E3'
+    const textMuted = 'rgba(184,212,227,0.5)'
+
+    const prismeFooterSocials = [
+      { key: 'instagram', label: 'Instagram', icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+      )},
+      { key: 'facebook', label: 'Facebook', icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      )},
+    ]
+
+    return (
+      <footer
+        {...elementProps(config.id, 'wrapper', 'container', 'Footer')}
+        className="relative"
+        style={{ backgroundColor: navy, color: white, fontFamily: bodyFont }}
+      >
+        <style>{`
+          .prisme-footer-link {
+            display: inline-block;
+            color: ${white};
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 300;
+            transition: color 0.3s ease, transform 0.3s ease;
+          }
+          .prisme-footer-link:hover {
+            color: ${iceBlue};
+            transform: translateX(2px);
+          }
+          .prisme-social-circle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(184,212,227,0.25);
+            color: ${textMuted};
+            transition: color 0.3s, border-color 0.3s, background-color 0.3s;
+          }
+          .prisme-social-circle:hover {
+            color: ${navy};
+            border-color: ${iceBlue};
+            background-color: ${iceBlue};
+          }
+          @keyframes prisme-shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+          }
+          .prisme-shimmer-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, ${iceBlue}, transparent);
+            background-size: 200% 100%;
+            animation: prisme-shimmer 3s ease infinite;
+          }
+          .prisme-back-to-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(184,212,227,0.2);
+            color: ${textMuted};
+            cursor: pointer;
+            transition: color 0.3s, border-color 0.3s, transform 0.3s;
+          }
+          .prisme-back-to-top:hover {
+            color: ${iceBlue};
+            border-color: ${iceBlue};
+            transform: translateY(-2px);
+          }
+          @media (max-width: 768px) {
+            .prisme-resp-footer-cols { flex-direction: column !important; gap: 32px !important; }
+          }
+        `}</style>
+
+        <div {...elementProps(config.id, 'footerInner', 'container', 'Footer Inner')} style={{ paddingTop: 'clamp(60px, 10vw, 100px)', paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)' }}>
+          {/* Logo + ice blue separator */}
+          <div {...elementProps(config.id, 'brandArea', 'container', 'Brand Area')} className="flex flex-col items-center" style={{ marginBottom: 48 }}>
+            <p
+              {...elementProps(config.id, 'logo', 'image')}
+              style={{ fontFamily: headingFont, fontSize: 32, fontWeight: 300, color: iceBlue, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 20, transition: 'letter-spacing 0.4s ease', cursor: 'pointer' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.letterSpacing = '0.2em' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.letterSpacing = '0.12em' }}
+            >
+              {renderLogo(logo)}
+            </p>
+            <div style={{ width: 60, height: 1, backgroundColor: iceBlue }} />
+            {content.tagline && (
+              <p
+                {...elementProps(config.id, 'tagline', 'text')}
+                style={{ fontFamily: bodyFont, fontSize: 14, fontWeight: 300, color: textMuted, letterSpacing: '0.06em', marginTop: 16, textAlign: 'center' }}
+              >
+                {content.tagline}
+              </p>
+            )}
+          </div>
+
+          {/* 4 Columns */}
+          <div {...elementProps(config.id, 'columnsArea', 'container', 'Columns Area')} className="flex flex-row justify-center prisme-resp-footer-cols" style={{ gap: 'clamp(40px, 8vw, 120px)', paddingBottom: 48 }}>
+            {columns.length > 0 ? columns.map((col, ci) => (
+              <div key={col.id || `col-${ci}`} className="flex flex-col" style={{ minWidth: 140 }}>
+                <p
+                  {...elementProps(config.id, `columns.${ci}.title`, 'heading')}
+                  style={{ fontFamily: headingFont, fontSize: 11, fontWeight: 500, color: iceBlue, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 16 }}
+                >
+                  {col.title}
+                </p>
+                <div className="flex flex-col" style={{ gap: 6 }}>
+                  {col.links.map((link, li) => (
+                    <a
+                      key={link.id || `${ci}-${li}`}
+                      {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')}
+                      href={link.href}
+                      className="prisme-footer-link"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )) : (
+              /* Default 4 columns for optician */
+              <>
+                {[
+                  { title: 'Informations', links: [{ label: 'Notre histoire', href: '#' }, { label: '\u00C9quipe', href: '#' }, { label: 'Engagements', href: '#' }] },
+                  { title: 'Services', links: [{ label: 'Examen de vue', href: '#' }, { label: 'Montures', href: '#' }, { label: 'Verres progressifs', href: '#' }, { label: 'Lentilles', href: '#' }] },
+                  { title: 'Horaires', links: [{ label: 'Lun - Ven: 9h - 19h', href: '#' }, { label: 'Samedi: 10h - 18h', href: '#' }, { label: 'Dimanche: Ferm\u00E9', href: '#' }] },
+                  { title: 'Contact', links: [{ label: '01 23 45 67 89', href: 'tel:0123456789' }, { label: 'contact@prisme.fr', href: 'mailto:contact@prisme.fr' }, { label: '12 rue de la Vision, Paris', href: '#' }] },
+                ].map((col, ci) => (
+                  <div key={ci} className="flex flex-col" style={{ minWidth: 140 }}>
+                    <p style={{ fontFamily: headingFont, fontSize: 11, fontWeight: 500, color: iceBlue, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 16 }}>
+                      {col.title}
+                    </p>
+                    <div className="flex flex-col" style={{ gap: 6 }}>
+                      {col.links.map((link, li) => (
+                        <a
+                          key={li}
+                          href={link.href}
+                          className="prisme-footer-link"
+                        >
+                          {link.label}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+
+          {/* Social icons row — centered */}
+          <div {...elementProps(config.id, 'socialsRow', 'container', 'Social Icons')} className="flex flex-row items-center justify-center" style={{ gap: 16, paddingBottom: 40 }}>
+            {prismeFooterSocials.map((s, i) => (
+              <a
+                key={s.key}
+                {...elementProps(config.id, `socials.${s.key}`, 'link')}
+                href={(socials as Record<string, string | undefined>)[s.key] ?? '#'}
+                aria-label={s.label}
+                className="prisme-social-circle"
+              >
+                {s.icon}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Shimmer gradient divider */}
+        <div className="prisme-shimmer-line" />
+
+        {/* Bottom bar */}
+        <div
+          {...elementProps(config.id, 'bottomBar', 'container', 'Footer Bottom')}
+          className="flex flex-wrap items-center justify-between"
+          style={{ padding: '24px clamp(20px, 5vw, 60px)', gap: 16 }}
+        >
+          <p
+            {...elementProps(config.id, 'copyright', 'text')}
+            style={{ color: textMuted, fontSize: 13 }}
+          >
+            {content.copyright ?? `\u00A9 ${new Date().getFullYear()} Prisme Optique. Tous droits r\u00E9serv\u00E9s.`}
+          </p>
+          {/* Back to top button */}
+          <div
+            className="prisme-back-to-top"
+            role="button"
+            onClick={() => {
+              const canvas = document.getElementById('site-canvas')
+              if (!canvas) return
+              let scrollParent: HTMLElement | null = canvas.parentElement
+              while (scrollParent) {
+                const st = getComputedStyle(scrollParent)
+                if (st.overflowY === 'auto' || st.overflowY === 'scroll' || st.overflow === 'auto') break
+                scrollParent = scrollParent.parentElement
+              }
+              if (scrollParent) scrollParent.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            aria-label="Back to top"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+          </div>
+        </div>
+      </footer>
+    )
+  }
+
+  // ─── VARIANT: petale ───
+  // Univers fleuriste & artisan floral : fond noir riche #1A1A1A, crème chaude #F5EDE4, rose gold #D4A574, vert forêt #4A6741, text-mask hover
+  if (variant === 'petale') {
+    const headingFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const bodyFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const richBlack = '#1A1A1A'
+    const warmCream = '#F5EDE4'
+    const roseGold = '#D4A574'
+    const textMuted = 'rgba(212,165,116,0.5)'
+
+    const petaleFooterSocials = [
+      { key: 'instagram', label: 'Instagram', icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+      )},
+      { key: 'facebook', label: 'Facebook', icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      )},
+      { key: 'pinterest', label: 'Pinterest', icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+      )},
+    ]
+
+    return (
+      <footer
+        {...elementProps(config.id, 'wrapper', 'container', 'Footer')}
+        className="relative"
+        style={{ backgroundColor: richBlack, color: warmCream, fontFamily: bodyFont }}
+      >
+        <style>{`
+          .petale-footer-link {
+            display: inline-block;
+            color: ${warmCream};
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            transition: color 0.3s ease, transform 0.3s ease;
+          }
+          .petale-footer-link:hover {
+            color: ${roseGold};
+            transform: translateX(2px);
+          }
+          .petale-social-circle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(212,165,116,0.25);
+            color: ${textMuted};
+            transition: color 0.3s, border-color 0.3s, background-color 0.3s, border-radius 0.3s;
+          }
+          .petale-social-circle:hover {
+            color: ${richBlack};
+            border-color: ${roseGold};
+            background-color: ${roseGold};
+            border-radius: 50%;
+          }
+          @keyframes petale-shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+          }
+          .petale-shimmer-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, ${roseGold}, transparent);
+            background-size: 200% 100%;
+            animation: petale-shimmer 3s ease infinite;
+          }
+          .petale-back-to-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(212,165,116,0.2);
+            color: ${textMuted};
+            cursor: pointer;
+            transition: color 0.3s, border-color 0.3s, background-color 0.3s, transform 0.3s;
+          }
+          .petale-back-to-top:hover {
+            color: ${richBlack};
+            border-color: ${roseGold};
+            background-color: ${roseGold};
+            transform: translateY(-2px);
+          }
+          @media (max-width: 768px) {
+            .petale-resp-footer-cols { flex-direction: column !important; gap: 32px !important; }
+          }
+        `}</style>
+
+        <div {...elementProps(config.id, 'footerInner', 'container', 'Footer Inner')} style={{ paddingTop: 'clamp(60px, 10vw, 100px)', paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)' }}>
+          {/* Logo + rose gold separator */}
+          <div {...elementProps(config.id, 'brandArea', 'container', 'Brand Area')} className="flex flex-col items-center" style={{ marginBottom: 48 }}>
+            <p
+              {...elementProps(config.id, 'logo', 'image')}
+              style={{ fontFamily: headingFont, fontSize: 32, fontWeight: 600, color: roseGold, letterSpacing: '0.05em', marginBottom: 20, transition: 'text-shadow 0.4s ease', cursor: 'pointer' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.textShadow = `0 0 20px rgba(212, 165, 116, 0.4)` }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.textShadow = 'none' }}
+            >
+              {renderLogo(logo)}
+            </p>
+            <div style={{ width: 60, height: 1, backgroundColor: roseGold }} />
+            {content.tagline && (
+              <p
+                {...elementProps(config.id, 'tagline', 'text')}
+                style={{ color: warmCream, fontSize: 14, marginTop: 16, opacity: 0.7 }}
+              >
+                {content.tagline}
+              </p>
+            )}
+          </div>
+
+          {/* 3 Columns */}
+          <div {...elementProps(config.id, 'columnsArea', 'container', 'Columns Area')} className="flex flex-row justify-center petale-resp-footer-cols" style={{ gap: 'clamp(40px, 8vw, 120px)', paddingBottom: 48 }}>
+            {columns.map((col, ci) => (
+              <div key={col.id || `col-${ci}`} className="flex flex-col" style={{ minWidth: 140 }}>
+                <p
+                  {...elementProps(config.id, `columns.${ci}.title`, 'heading')}
+                  style={{ fontFamily: headingFont, fontSize: 13, fontWeight: 600, color: roseGold, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}
+                >
+                  {col.title}
+                </p>
+                <div className="flex flex-col" style={{ gap: 6 }}>
+                  {col.links.map((link, li) => (
+                    <a
+                      key={link.id || `${ci}-${li}`}
+                      {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')}
+                      href={link.href}
+                      className="petale-footer-link"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Social icons row — centered with organic rounded styling */}
+          <div {...elementProps(config.id, 'socialsRow', 'container', 'Social Icons')} className="flex flex-row items-center justify-center" style={{ gap: 16, paddingBottom: 40 }}>
+            {petaleFooterSocials.map((s) => (
+              <a
+                key={s.key}
+                {...elementProps(config.id, `socials.${s.key}`, 'link')}
+                href={(socials as Record<string, string | undefined>)[s.key] ?? '#'}
+                aria-label={s.label}
+                className="petale-social-circle"
+              >
+                {s.icon}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Rose gold shimmer gradient divider */}
+        <div className="petale-shimmer-line" />
+
+        {/* Bottom bar */}
+        <div
+          {...elementProps(config.id, 'bottomBar', 'container', 'Footer Bottom')}
+          className="flex flex-wrap items-center justify-between"
+          style={{ padding: '24px clamp(20px, 5vw, 60px)', gap: 16 }}
+        >
+          <p
+            {...elementProps(config.id, 'copyright', 'text')}
+            style={{ color: textMuted, fontSize: 13 }}
+          >
+            {content.copyright ?? `\u00A9 ${new Date().getFullYear()} P\u00E9tale. Tous droits r\u00E9serv\u00E9s.`}
+          </p>
+          {/* Back to top button — organic warm style */}
+          <div
+            className="petale-back-to-top"
+            role="button"
+            onClick={() => {
+              const canvas = document.getElementById('site-canvas')
+              if (!canvas) return
+              let scrollParent: HTMLElement | null = canvas.parentElement
+              while (scrollParent) {
+                const st = getComputedStyle(scrollParent)
+                if (st.overflowY === 'auto' || st.overflowY === 'scroll' || st.overflow === 'auto') break
+                scrollParent = scrollParent.parentElement
+              }
+              if (scrollParent) scrollParent.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            aria-label="Back to top"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+          </div>
+        </div>
+      </footer>
+    )
+  }
+
   // fallback → startup
   return <SiteFooterSection config={{ ...config, variant: 'startup' }} />
 }
@@ -2528,7 +2938,7 @@ export const siteFooterMeta = {
   type: 'site-footer',
   label: 'Footer',
   icon: '🔻',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith', 'miel'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith', 'miel', 'prisme', 'petale'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

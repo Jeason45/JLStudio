@@ -19,7 +19,7 @@ export interface ImageConfig {
 // HERO
 // ─────────────────────────────────────────────
 
-export type HeroVariant = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass' | 'obscura' | 'canopy' | 'nacre' | 'brixsa' | 'brixsa-page' | 'braise' | 'forge' | 'ciseaux' | 'zmr-agency' | 'zmr-talent-profile' | 'atelier' | 'encre' | 'serenite' | 'pulse' | 'saveur' | 'ascent' | 'zenith' | 'miel'
+export type HeroVariant = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass' | 'obscura' | 'canopy' | 'nacre' | 'brixsa' | 'brixsa-page' | 'braise' | 'forge' | 'ciseaux' | 'zmr-agency' | 'zmr-talent-profile' | 'atelier' | 'encre' | 'serenite' | 'pulse' | 'saveur' | 'ascent' | 'zenith' | 'miel' | 'prisme' | 'petale'
 
 export interface HeroContent {
   eyebrow?: string
@@ -76,6 +76,8 @@ export type FeaturesVariant =
   | 'ascent-accordion'
   | 'zenith-accordion'
   | 'miel-accordion'
+  | 'prisme-accordion'
+  | 'petale-accordion'
 
 export interface FeatureItem {
   id: string
@@ -931,6 +933,8 @@ export type SliderVariant =
   | 'ascent-parallax'
   | 'zenith-parallax'
   | 'miel-parallax'
+  | 'prisme-parallax'
+  | 'petale-parallax'
 
 export type SliderEffect = 'slide' | 'fade' | 'scale'
 

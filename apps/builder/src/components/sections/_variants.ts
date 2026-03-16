@@ -29,6 +29,8 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'ascent', label: 'Ascent (Coach Business)', description: 'Slider plein \u00E9cran, navy foncé, or lumineux, coach business & life coach', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'zenith', label: 'Z\u00E9nith (Yoga)', description: 'Slider plein \u00E9cran, noir doux, sauge/beige, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'miel', label: 'Miel (P\u00E2tisserie)', description: 'Slider plein \u00E9cran, chocolat profond, or miel/caramel, p\u00E2tisserie & boulangerie', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'prisme', label: 'Prisme (Opticien)', description: 'Slider plein \u00E9cran, navy profond, bleu glac\u00E9/cr\u00E8me, opticien & lunetier', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'petale', label: 'P\u00E9tale (Fleuriste)', description: 'Slider plein \u00E9cran, noir riche, rose gold/vert for\u00EAt, fleuriste & artisan floral', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   features: [
     // Startup / SaaS
@@ -69,6 +71,8 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'ascent-accordion', label: 'Ascent Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, coach business & life coach, navy/or lumineux', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'zenith-accordion', label: 'Z\u00E9nith Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, studio yoga & pilates, noir doux/sauge', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'miel-accordion', label: 'Miel Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, p\u00E2tisserie & boulangerie, chocolat/or miel', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'prisme-accordion', label: 'Prisme Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, opticien & lunetier, navy/bleu glac\u00E9', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'petale-accordion', label: 'P\u00E9tale Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, fleuriste, noir/rose gold', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   cta: [
     // Startup
@@ -99,6 +103,8 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'nacre-centered', label: 'Nacre — Centr\u00E9', description: 'CTA image fond, overlay bordeaux, dor\u00E9/rose poudr\u00E9', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'brixsa-centered', label: 'Brixsa — Centré', description: 'CTA image fond, overlay noir, crème/brun', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'canopy-banner', label: 'Canopy — Bannière', description: 'Bannière éco pleine largeur, vert forêt, coins carrés', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'prisme-centered', label: 'Prisme — Centr\u00E9', description: 'CTA image fond, overlay navy, bouton bleu glac\u00E9 outline, opticien & lunetier', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'petale-centered', label: 'P\u00E9tale — Centr\u00E9', description: 'CTA image fond, overlay noir, bouton rose gold outline, fleuriste & artisan floral', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   stats: [
     { id: 'startup-simple', label: 'Startup — Simple', description: 'Chiffres en ligne, moderne', previewStyle: { background: 'light', paddingY: 'md' } },
@@ -168,6 +174,8 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'ascent-featured', label: 'Ascent Featured', description: '50/50 initiales dorées + citation, navy foncé/or lumineux, coach business & life coach', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'zenith-featured', label: 'Z\u00E9nith Featured', description: '50/50 initiales sauge + citation, noir doux/sauge/beige, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'miel-featured', label: 'Miel Featured', description: '50/50 initiales dor\u00E9es + citation, chocolat profond/or miel, p\u00E2tisserie & boulangerie', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'prisme-featured', label: 'Prisme Featured', description: '50/50 initiales bleu glac\u00E9 + citation, navy profond/bleu glac\u00E9, opticien & lunetier', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'petale-featured', label: 'P\u00E9tale Featured', description: '50/50 initiales rose gold + citation, noir riche/rose gold, fleuriste & artisan floral', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   pricing: [
     // Startup
@@ -333,6 +341,8 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'ascent-interventions', label: 'Ascent Interventions', description: 'Grid 3 colonnes, galerie interventions & programmes, navy foncé/or lumineux, coach business', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'zenith-cours', label: 'Z\u00E9nith Cours', description: 'Grid 3 colonnes, galerie cours yoga & pilates, noir doux/sauge, studio wellness', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'miel-creations', label: 'Miel Cr\u00E9ations', description: 'Grid 3 colonnes, galerie p\u00E2tisseries & viennoiseries, chocolat profond/or miel', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'prisme-collection', label: 'Prisme Collection', description: 'Grid 3 colonnes, collection montures design, navy/bleu glac\u00E9', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'petale-creations', label: 'P\u00E9tale Cr\u00E9ations', description: 'Grid 3 colonnes, compositions florales, noir/rose gold', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'image-text': [
     { id: 'startup-image-right', label: 'Startup — Image droite', description: 'Indigo, texte + image', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -415,6 +425,8 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'ascent', label: 'Ascent (Coach Business)', description: 'Transparent, navy foncé, or lumineux, coach business & life coach', previewStyle: { background: 'dark', paddingY: 'sm' } },
     { id: 'zenith', label: 'Z\u00E9nith (Yoga)', description: 'Transparent, noir doux, sauge/beige, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'sm' } },
     { id: 'miel', label: 'Miel (P\u00E2tisserie)', description: 'Transparent, chocolat profond, or miel/caramel, p\u00E2tisserie & boulangerie', previewStyle: { background: 'dark', paddingY: 'sm' } },
+    { id: 'prisme', label: 'Prisme (Opticien)', description: 'Transparent, navy profond, bleu glac\u00E9/cr\u00E8me, opticien & lunetier', previewStyle: { background: 'dark', paddingY: 'sm' } },
+    { id: 'petale', label: 'P\u00E9tale (Fleuriste)', description: 'Transparent, noir riche, rose gold/cr\u00E8me, fleuriste & artisan floral', previewStyle: { background: 'dark', paddingY: 'sm' } },
   ],
   'site-footer': [
     { id: 'startup', label: 'Startup / SaaS', description: 'Moderne, colonnes, status', previewStyle: { background: 'dark', paddingY: 'md' } },
@@ -436,6 +448,8 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'ascent', label: 'Ascent (Coach Business)', description: 'Logo centr\u00E9, 3 colonnes, navy foncé/or lumineux, text-mask hover, LinkedIn/Instagram/YouTube', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'zenith', label: 'Z\u00E9nith (Yoga)', description: 'Logo centr\u00E9, 3 colonnes, noir doux/sauge, text-mask hover, Instagram/YouTube/Facebook', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'miel', label: 'Miel (P\u00E2tisserie)', description: 'Logo centr\u00E9, 3 colonnes, chocolat profond/or miel, text-mask hover, Instagram/Facebook/Pinterest', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'prisme', label: 'Prisme (Opticien)', description: 'Logo centr\u00E9, 3 colonnes, navy profond/bleu glac\u00E9, text-mask hover, Instagram/Facebook/LinkedIn', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'petale', label: 'P\u00E9tale (Fleuriste)', description: 'Logo centr\u00E9, 3 colonnes, noir riche/rose gold, text-mask hover, Instagram/Facebook/Pinterest', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   tabs: [
     { id: 'startup-horizontal', label: 'Startup — Horizontal', description: 'Tabs pill indigo, horizontal', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -528,6 +542,8 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'ascent-parallax', label: 'Ascent Parallax', description: 'Moments & parcours client plein \u00E9cran avec parallax, navy foncé/or lumineux, coach business', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'zenith-parallax', label: 'Z\u00E9nith Parallax', description: 'Espaces & moments de pratique plein \u00E9cran avec parallax, noir doux/sauge, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'miel-parallax', label: 'Miel Parallax', description: 'Ambiances artisanales plein \u00E9cran avec parallax, chocolat profond/or miel, p\u00E2tisserie & boulangerie', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'prisme-parallax', label: 'Prisme Parallax', description: 'Ambiances optique plein \u00E9cran avec parallax, navy/bleu glac\u00E9, opticien & lunetier', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'petale-parallax', label: 'P\u00E9tale Parallax', description: 'Ambiances florales plein \u00E9cran avec parallax, noir/rose gold, fleuriste', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   dropdown: [
     { id: 'startup-simple', label: 'Startup — Simple', description: 'Dropdown simple indigo', previewStyle: { background: 'white', paddingY: 'md' } },

@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import type { SectionConfig, SectionTitleSize, SectionTextAlign } from '@/types/site'
 import type { TestimonialsContent, TestimonialItem } from '@/types/sections'
@@ -3466,6 +3466,754 @@ function MielFeatured({ content, items, sectionId }: { content: Partial<Testimon
   )
 }
 
+function PrismeFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [direction, setDirection] = useState<'next' | 'prev'>('next')
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+  const autoRotateInterval = 7000
+
+  const navy = '#0F1923'
+  const iceBlue = '#B8D4E3'
+  const warmCream = '#E8DED0'
+
+  const defaultQuotes = [
+    'Mon opticien m\'a accompagn\u00E9 avec une patience et une expertise remarquables. Mes nouvelles lunettes progressives sont parfaites, je vois enfin net \u00E0 toutes les distances.',
+    'Le choix de montures est incroyable. L\'\u00E9quipe a su me guider vers un mod\u00E8le qui correspond parfaitement \u00E0 mon style. Je re\u00E7ois des compliments chaque jour.',
+    'L\'examen de vue \u00E9tait d\'une pr\u00E9cision que je n\'avais jamais connue ailleurs. Les technologies utilis\u00E9es sont \u00E0 la pointe. Je recommande vivement.',
+  ]
+
+  const defaultAuthors = [
+    { name: 'Marie-Claire D.', role: 'Cliente depuis 5 ans' },
+    { name: 'Thomas R.', role: 'Montures Tom Ford' },
+    { name: 'Sophie L.', role: 'Examen de vue' },
+  ]
+
+  const quotes = items.length > 0
+    ? items.map((item, i) => item.quote || defaultQuotes[i % defaultQuotes.length])
+    : defaultQuotes
+
+  const authors = items.length > 0
+    ? items.map((item, i) => ({ name: item.author || defaultAuthors[i % defaultAuthors.length].name, role: item.role || defaultAuthors[i % defaultAuthors.length].role }))
+    : defaultAuthors
+
+  const total = quotes.length
+
+  const goTo = useCallback((idx: number, dir: 'next' | 'prev') => {
+    if (isTransitioning) return
+    setIsTransitioning(true)
+    setDirection(dir)
+    setActiveIndex(idx)
+    setTimeout(() => setIsTransitioning(false), 600)
+  }, [isTransitioning])
+
+  const goPrev = useCallback(() => goTo((activeIndex - 1 + total) % total, 'prev'), [activeIndex, total, goTo])
+  const goNext = useCallback(() => goTo((activeIndex + 1) % total, 'next'), [activeIndex, total, goTo])
+
+  // Scroll reveal observer
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setIsVisible(true); obs.disconnect() }
+    }, { threshold: 0.15 })
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
+
+  // Auto-rotate
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => {
+        const next = (prev + 1) % total
+        setDirection('next')
+        setIsTransitioning(true)
+        setTimeout(() => setIsTransitioning(false), 600)
+        setProgressKey((k) => k + 1)
+        return next
+      })
+    }, autoRotateInterval)
+    return () => clearInterval(timer)
+  }, [total])
+
+  // Progress bar reset key
+  const [progressKey, setProgressKey] = useState(0)
+  useEffect(() => { setProgressKey((k) => k + 1) }, [activeIndex])
+
+  // Inline keyframes injected once
+  const keyframesId = `prisme-testimonial-kf-${sectionId}`
+
+  return (
+    <section
+      ref={sectionRef}
+      {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')}
+      style={{ backgroundColor: navy, color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}
+    >
+      <style>{`
+        @keyframes ${keyframesId}-progress {
+          from { transform: scaleX(0); }
+          to   { transform: scaleX(1); }
+        }
+        @keyframes ${keyframesId}-star {
+          0%   { opacity: 0.15; transform: scale(0.5); }
+          100% { opacity: 1;    transform: scale(1); }
+        }
+        @keyframes ${keyframesId}-quoteScale {
+          0%   { opacity: 0; transform: scale(0.5); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        @media (max-width: 768px) {
+          .prisme-testimonial-split { flex-direction: column !important; }
+          .prisme-testimonial-split > div { flex: 1 1 100% !important; min-height: 50vh; }
+        }
+      `}</style>
+      <div
+        {...elementProps(sectionId, 'splitLayout', 'container', 'Split Layout')}
+        className="prisme-testimonial-split flex flex-row w-full"
+        style={{ minHeight: '620px' }}
+      >
+        {/* LEFT — Quote (50%) */}
+        <div
+          {...elementProps(sectionId, 'contentPanel', 'container', 'Content Panel')}
+          className="flex flex-col"
+          style={{
+            flex: '1 1 50%',
+            backgroundColor: 'rgba(15, 25, 35, 0.88)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            border: '1px solid rgba(184, 212, 227, 0.06)',
+            color: '#FFFFFF',
+            padding: '60px',
+          }}
+        >
+          {/* Top label — staggered reveal */}
+          <p
+            {...elementProps(sectionId, 'eyebrow', 'text')}
+            style={{
+              fontSize: '14px',
+              fontWeight: 500,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: iceBlue,
+              marginBottom: 'auto',
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateY(0)' : 'translateY(18px)',
+              transition: 'opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1)',
+              transitionDelay: '0.1s',
+            }}
+          >
+            {content.eyebrow || content.title || 'T\u00E9moignages'}
+          </p>
+
+          {/* Main content — staggered reveal */}
+          <div
+            className="flex flex-col"
+            style={{
+              maxWidth: '536px',
+              marginTop: 'auto',
+              marginLeft: 'auto',
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateY(0)' : 'translateY(24px)',
+              transition: 'opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1)',
+              transitionDelay: '0.35s',
+            }}
+          >
+            <div style={{ marginTop: 'auto', marginBottom: '40px', marginLeft: 'auto', position: 'relative' }}>
+              {quotes.map((quote, i) => {
+                const isActive = i === activeIndex
+                const slideX = direction === 'next' ? 30 : -30
+                return (
+                  <div
+                    key={items[i]?.id ?? i}
+                    style={{
+                      position: i === 0 ? 'relative' : 'absolute',
+                      top: i === 0 ? undefined : 0,
+                      left: i === 0 ? undefined : 0,
+                      right: i === 0 ? undefined : 0,
+                      opacity: isActive ? 1 : 0,
+                      transform: isActive ? 'translateX(0)' : `translateX(${slideX}px)`,
+                      transition: 'opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)',
+                      pointerEvents: isActive ? 'auto' : 'none',
+                      visibility: isActive ? 'visible' : 'hidden',
+                    }}
+                  >
+                    {/* Animated opening quote mark */}
+                    <div
+                      style={{
+                        color: iceBlue,
+                        fontSize: '96px',
+                        lineHeight: '0.6',
+                        marginBottom: '24px',
+                        fontFamily: 'Georgia, serif',
+                        animation: isActive ? `${keyframesId}-quoteScale 0.5s cubic-bezier(0.22,1,0.36,1) forwards` : 'none',
+                        opacity: isActive ? undefined : 0,
+                        transformOrigin: 'left center',
+                      }}
+                    >
+                      &ldquo;
+                    </div>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.quote`, 'text')}
+                      style={{
+                        fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                        fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
+                        fontWeight: 300,
+                        fontStyle: 'italic',
+                        lineHeight: '135%',
+                        color: '#FFFFFF',
+                      }}
+                    >
+                      {quote}
+                    </p>
+                    {/* Author */}
+                    <div style={{ marginTop: '24px' }}>
+                      <p
+                        {...elementProps(sectionId, `items.${i}.author`, 'text')}
+                        style={{ fontSize: '16px', fontWeight: 600, color: '#FFFFFF' }}
+                      >
+                        {authors[i]?.name}
+                      </p>
+                      <p
+                        {...elementProps(sectionId, `items.${i}.role`, 'text')}
+                        style={{ fontSize: '14px', fontWeight: 400, color: 'rgba(184, 212, 227, 0.7)', marginTop: '4px' }}
+                      >
+                        {authors[i]?.role}
+                      </p>
+                      {/* Animated star fill — sequential 0.1s delay, ice blue */}
+                      <div style={{ display: 'flex', gap: '4px', marginTop: '12px' }}>
+                        {Array.from({ length: 5 }).map((_, s) => (
+                          <span
+                            key={s}
+                            style={{
+                              color: iceBlue,
+                              fontSize: '16px',
+                              display: 'inline-block',
+                              animation: isActive ? `${keyframesId}-star 0.35s cubic-bezier(0.22,1,0.36,1) forwards` : 'none',
+                              animationDelay: isActive ? `${0.15 + s * 0.1}s` : '0s',
+                              opacity: isActive ? undefined : 0.15,
+                              transform: isActive ? undefined : 'scale(0.5)',
+                            }}
+                          >
+                            &#9733;
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Navigation dots + progress bar + arrows */}
+            {total > 1 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div {...elementProps(sectionId, 'navDots', 'container', 'Nav Dots')} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                  {Array.from({ length: total }).map((_, i) => (
+                    <div
+                      key={i}
+                      role="button"
+                      onClick={() => goTo(i, i > activeIndex ? 'next' : 'prev')}
+                      style={{
+                        width: i === activeIndex ? '32px' : '8px',
+                        height: '8px',
+                        borderRadius: '4px',
+                        backgroundColor: i === activeIndex ? iceBlue : 'rgba(255, 255, 255, 0.2)',
+                        cursor: 'pointer',
+                        transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.25)' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
+                    />
+                  ))}
+                  <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={goPrev}
+                      style={{
+                        width: '36px', height: '36px', borderRadius: '50%',
+                        background: 'transparent',
+                        border: '1px solid rgba(184, 212, 227, 0.3)',
+                        color: iceBlue,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s cubic-bezier(0.22,1,0.36,1)',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(184, 212, 227, 0.15)'; e.currentTarget.style.borderColor = iceBlue }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(184, 212, 227, 0.3)' }}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                    </button>
+                    <button
+                      onClick={goNext}
+                      style={{
+                        width: '36px', height: '36px', borderRadius: '50%',
+                        background: iceBlue,
+                        border: `1px solid ${iceBlue}`,
+                        color: navy,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s cubic-bezier(0.22,1,0.36,1)',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = '#d0e4ef'; e.currentTarget.style.transform = 'scale(1.08)' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = iceBlue; e.currentTarget.style.transform = 'scale(1)' }}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                    </button>
+                  </div>
+                </div>
+                {/* Progress bar indicator */}
+                <div style={{ width: '100%', height: '2px', backgroundColor: 'rgba(184, 212, 227, 0.12)', borderRadius: '1px', overflow: 'hidden' }}>
+                  <div
+                    key={progressKey}
+                    style={{
+                      height: '100%',
+                      backgroundColor: iceBlue,
+                      transformOrigin: 'left',
+                      animation: `${keyframesId}-progress ${autoRotateInterval}ms linear forwards`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT — Large Initial / Photo (50%) with cross-fade */}
+        <div
+          {...elementProps(sectionId, 'imagePanel', 'container', 'Initials Panel')}
+          className="relative overflow-hidden flex items-center justify-center"
+          style={{
+            flex: '1 1 50%',
+            backgroundColor: warmCream,
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'opacity 0.9s cubic-bezier(0.22,1,0.36,1) 0.5s, transform 0.9s cubic-bezier(0.22,1,0.36,1) 0.5s',
+          }}
+        >
+          {Array.from({ length: total }).map((_, i) => {
+            const item = items[i]
+            const initial = (item?.author || authors[i]?.name || 'P').charAt(0).toUpperCase()
+            const isActive = i === activeIndex
+            const slideX = direction === 'next' ? 20 : -20
+            return (
+              <div
+                key={item?.id ?? i}
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  backgroundColor: warmCream,
+                  opacity: isActive ? 1 : 0,
+                  transform: isActive ? 'translateX(0) scale(1)' : `translateX(${slideX}px) scale(1.02)`,
+                  zIndex: isActive ? 2 : 0,
+                  transition: 'opacity 0.55s cubic-bezier(0.22,1,0.36,1) 0.15s, transform 0.55s cubic-bezier(0.22,1,0.36,1) 0.15s',
+                }}
+              >
+                {item?.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    {...elementProps(sectionId, `items.${i}.avatar`, 'image')}
+                    src={item.avatar}
+                    alt={item.author || ''}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(8rem, 6rem + 10vw, 16rem)',
+                      fontWeight: 200,
+                      color: navy,
+                      lineHeight: 1,
+                      userSelect: 'none',
+                      opacity: 0.08,
+                    }}
+                  >
+                    {initial}
+                  </span>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function PetaleFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const richBlack = '#1A1A1A'
+  const roseGold = '#D4A574'
+  const softCream = '#F5EDE4'
+
+  const defaultQuotes = [
+    'Les compositions florales pour notre mariage étaient d\'une beauté à couper le souffle. Chaque bouquet racontait une histoire, avec une sensibilité artistique rare.',
+    'Je commande mes fleurs ici chaque semaine depuis deux ans. La fraîcheur est incomparable et les associations de couleurs sont toujours surprenantes et élégantes.',
+    'L\'arrangement pour la vitrine de notre boutique a transformé l\'espace. Les clients s\'arrêtent devant, émerveillés. Un vrai talent de mise en scène végétale.',
+  ]
+
+  const defaultAuthors = [
+    { name: 'Camille B.', role: 'Mariage champêtre' },
+    { name: 'Nathalie V.', role: 'Abonnement hebdomadaire' },
+    { name: 'Antoine D.', role: 'Décoration boutique' },
+  ]
+
+  const quotes = items.length > 0
+    ? items.map((item, i) => item.quote || defaultQuotes[i % defaultQuotes.length])
+    : defaultQuotes
+
+  const authors = items.length > 0
+    ? items.map((item, i) => ({ name: item.author || defaultAuthors[i % defaultAuthors.length].name, role: item.role || defaultAuthors[i % defaultAuthors.length].role }))
+    : defaultAuthors
+
+  const total = quotes.length
+
+  const [isInView, setIsInView] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const sectionRef = useRef<HTMLElement>(null)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const progressRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const forestGreen = '#2D5016'
+  const AUTOPLAY_MS = 7000
+  const PROGRESS_TICK = 50
+
+  const goPrev = useCallback(() => {
+    setActiveIndex((prev) => (prev - 1 + total) % total)
+    setProgress(0)
+  }, [total])
+  const goNext = useCallback(() => {
+    setActiveIndex((prev) => (prev + 1) % total)
+    setProgress(0)
+  }, [total])
+
+  // Intersection observer for scroll reveal
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) setIsInView(true)
+    }, { threshold: 0.15 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
+  // Auto-rotate with progress
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % total)
+      setProgress(0)
+    }, AUTOPLAY_MS)
+    progressRef.current = setInterval(() => {
+      setProgress((p) => Math.min(p + (PROGRESS_TICK / AUTOPLAY_MS) * 100, 100))
+    }, PROGRESS_TICK)
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+      if (progressRef.current) clearInterval(progressRef.current)
+    }
+  }, [total])
+
+  // Reset progress on index change
+  useEffect(() => { setProgress(0) }, [activeIndex])
+
+  // Botanical ornamental quote mark SVG
+  const renderQuoteMark = (active: boolean) => (
+    <svg
+      width="72" height="72" viewBox="0 0 72 72" fill="none"
+      style={{
+        transform: active ? 'scale(1) rotate(0deg)' : 'scale(0.5) rotate(-10deg)',
+        opacity: active ? 1 : 0,
+        transition: 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease',
+        marginBottom: '20px',
+      }}
+    >
+      <path d="M12 52 C12 52, 8 40, 16 30 C24 20, 34 22, 36 28" stroke={roseGold} strokeWidth="1" fill="none" opacity="0.5" />
+      <path d="M60 52 C60 52, 64 40, 56 30 C48 20, 38 22, 36 28" stroke={roseGold} strokeWidth="1" fill="none" opacity="0.5" />
+      <path d="M10 48 C10 48, 6 42, 10 36 C14 30, 18 34, 16 40 Z" fill={forestGreen} opacity="0.25" />
+      <path d="M62 48 C62 48, 66 42, 62 36 C58 30, 54 34, 56 40 Z" fill={forestGreen} opacity="0.25" />
+      <text x="18" y="56" fontFamily="Georgia, serif" fontSize="52" fontWeight="400" fill={roseGold}>&ldquo;</text>
+    </svg>
+  )
+
+  return (
+    <section
+      ref={sectionRef}
+      {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')}
+      style={{ backgroundColor: richBlack, color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}
+    >
+      <style>{`
+        @media (max-width: 768px) {
+          .petale-testimonial-split { flex-direction: column !important; }
+          .petale-testimonial-split > div { flex: 1 1 100% !important; min-height: 50vh; }
+        }
+        @keyframes petale-star-fill {
+          0% { opacity: 0; transform: scale(0.3); }
+          60% { opacity: 1; transform: scale(1.15); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes petale-dot-pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.3); }
+        }
+      `}</style>
+      <div {...elementProps(sectionId, 'splitLayout', 'container', 'Split Layout')} className="petale-testimonial-split flex flex-row w-full" style={{ minHeight: '620px' }}>
+        {/* LEFT — Quote (50%) with warm glassmorphism */}
+        <div
+          {...elementProps(sectionId, 'contentPanel', 'container', 'Content Panel')}
+          className="flex flex-col"
+          style={{
+            flex: '1 1 50%',
+            background: 'linear-gradient(170deg, rgba(34, 28, 23, 0.98) 0%, rgba(26, 26, 26, 0.99) 100%)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            color: '#FFFFFF',
+            padding: '60px',
+          }}
+        >
+          {/* Top label — scroll reveal drift in */}
+          <p
+            {...elementProps(sectionId, 'eyebrow', 'text')}
+            style={{
+              fontSize: '14px',
+              fontWeight: 500,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: roseGold,
+              marginBottom: 'auto',
+              opacity: isInView ? 1 : 0,
+              transform: isInView ? 'translateX(0)' : 'translateX(-16px)',
+              transition: 'opacity 0.7s ease 0.1s, transform 0.7s ease 0.1s',
+            }}
+          >
+            {content.eyebrow || content.title || 'T\u00e9moignages'}
+          </p>
+
+          {/* Main content */}
+          <div className="flex flex-col" style={{ maxWidth: '536px', marginTop: 'auto', marginLeft: 'auto' }}>
+            <div style={{ marginTop: 'auto', marginBottom: '40px', marginLeft: 'auto', position: 'relative' }}>
+              {quotes.map((quote, i) => {
+                const isActive = i === activeIndex
+                return (
+                  <div
+                    key={items[i]?.id ?? i}
+                    style={{
+                      position: i === 0 ? 'relative' : 'absolute',
+                      top: i === 0 ? undefined : 0,
+                      left: i === 0 ? undefined : 0,
+                      right: i === 0 ? undefined : 0,
+                      opacity: isActive ? 1 : 0,
+                      transform: isActive ? 'translateY(0) scale(1)' : 'translateY(12px) scale(0.98)',
+                      filter: isActive ? 'blur(0px)' : 'blur(3px)',
+                      transition: 'opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), filter 0.7s ease',
+                      pointerEvents: isActive ? 'auto' : 'none',
+                    }}
+                  >
+                    {/* Botanical ornamental quote mark */}
+                    {renderQuoteMark(isActive && isInView)}
+                    <p
+                      {...elementProps(sectionId, `items.${i}.quote`, 'text')}
+                      style={{
+                        fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                        fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
+                        fontWeight: 300,
+                        fontStyle: 'italic',
+                        lineHeight: '135%',
+                        color: softCream,
+                      }}
+                    >
+                      {quote}
+                    </p>
+                    {/* Author */}
+                    <div style={{ marginTop: '24px' }}>
+                      <p
+                        {...elementProps(sectionId, `items.${i}.author`, 'text')}
+                        style={{ fontSize: '16px', fontWeight: 600, color: softCream }}
+                      >
+                        {authors[i]?.name}
+                      </p>
+                      <p
+                        {...elementProps(sectionId, `items.${i}.role`, 'text')}
+                        style={{ fontSize: '14px', fontWeight: 400, color: 'rgba(212, 165, 116, 0.7)', marginTop: '4px' }}
+                      >
+                        {authors[i]?.role}
+                      </p>
+                      {/* Rose gold stars — sequential light-up with 0.1s delay */}
+                      <div style={{ display: 'flex', gap: '4px', marginTop: '12px' }}>
+                        {Array.from({ length: 5 }).map((_, s) => (
+                          <span
+                            key={s}
+                            style={{
+                              color: roseGold,
+                              fontSize: '16px',
+                              display: 'inline-block',
+                              animation: isActive ? `petale-star-fill 0.5s ease ${s * 0.1}s both` : 'none',
+                              opacity: isActive ? undefined : 0,
+                            }}
+                          >
+                            &#9733;
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Navigation: progress arc + dots + arrows */}
+            {total > 1 && (
+              <div
+                {...elementProps(sectionId, 'navDots', 'container', 'Nav Dots')}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: '8px',
+                  opacity: isInView ? 1 : 0,
+                  transform: isInView ? 'translateY(0)' : 'translateY(12px)',
+                  transition: 'opacity 0.7s ease 0.6s, transform 0.7s ease 0.6s',
+                }}
+              >
+                {/* Organic progress indicator — thin rose gold arc */}
+                <div style={{ position: 'relative', width: '28px', height: '28px', marginRight: '4px', flexShrink: 0 }}>
+                  <svg width="28" height="28" viewBox="0 0 28 28" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="14" cy="14" r="12" fill="none" stroke="rgba(212, 165, 116, 0.15)" strokeWidth="1.5" />
+                    <circle
+                      cx="14" cy="14" r="12" fill="none" stroke={roseGold} strokeWidth="1.5"
+                      strokeDasharray={`${2 * Math.PI * 12}`}
+                      strokeDashoffset={`${2 * Math.PI * 12 * (1 - progress / 100)}`}
+                      strokeLinecap="round"
+                      style={{ transition: 'stroke-dashoffset 0.05s linear' }}
+                    />
+                  </svg>
+                  <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: 600, color: roseGold }}>
+                    {activeIndex + 1}
+                  </span>
+                </div>
+
+                {/* Dots with scale pulse */}
+                {Array.from({ length: total }).map((_, i) => (
+                  <div
+                    key={i}
+                    role="button"
+                    onClick={() => { setActiveIndex(i); setProgress(0) }}
+                    style={{
+                      width: i === activeIndex ? '32px' : '8px',
+                      height: '8px',
+                      borderRadius: '4px',
+                      backgroundColor: i === activeIndex ? roseGold : 'rgba(255, 255, 255, 0.2)',
+                      cursor: 'pointer',
+                      transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                      animation: i === activeIndex ? 'petale-dot-pulse 0.5s ease' : 'none',
+                    }}
+                  />
+                ))}
+
+                {/* Arrows with warm hover */}
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={goPrev}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'transparent', border: '1px solid rgba(212, 165, 116, 0.4)', color: roseGold, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.35s ease' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(212, 165, 116, 0.12)'; e.currentTarget.style.borderColor = roseGold; e.currentTarget.style.transform = 'scale(1.08)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(212, 165, 116, 0.4)'; e.currentTarget.style.transform = 'scale(1)' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                  </button>
+                  <button
+                    onClick={goNext}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: roseGold, border: `1px solid ${roseGold}`, color: richBlack, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.35s ease' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(212, 165, 116, 0.35)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT — Glass card with photo / initial (50%) */}
+        <div
+          {...elementProps(sectionId, 'imagePanel', 'container', 'Initials Panel')}
+          className="relative overflow-hidden flex items-center justify-center"
+          style={{ flex: '1 1 50%', backgroundColor: '#221C17' }}
+        >
+          {/* Warm glassmorphism overlay */}
+          <div style={{
+            position: 'absolute',
+            inset: '40px',
+            borderRadius: '24px',
+            background: 'rgba(212, 165, 116, 0.04)',
+            backdropFilter: 'blur(40px)',
+            WebkitBackdropFilter: 'blur(40px)',
+            border: '1px solid rgba(212, 165, 116, 0.08)',
+            zIndex: 3,
+            pointerEvents: 'none',
+            boxShadow: 'inset 0 1px 0 rgba(212, 165, 116, 0.1), 0 20px 60px rgba(0,0,0,0.3)',
+          }} />
+
+          {Array.from({ length: total }).map((_, i) => {
+            const item = items[i]
+            const initial = (item?.author || authors[i]?.name || 'P').charAt(0).toUpperCase()
+            const isActive = i === activeIndex
+            return (
+              <div
+                key={item?.id ?? i}
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  backgroundColor: '#221C17',
+                  opacity: isActive ? 1 : 0,
+                  transform: isActive ? 'scale(1)' : 'scale(1.04)',
+                  filter: isActive ? 'blur(0px)' : 'blur(2px)',
+                  zIndex: isActive ? 2 : 0,
+                  transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s ease',
+                }}
+              >
+                {item?.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    {...elementProps(sectionId, `items.${i}.avatar`, 'image')}
+                    src={item.avatar}
+                    alt={item.author || ''}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(8rem, 6rem + 10vw, 16rem)',
+                      fontWeight: 200,
+                      color: roseGold,
+                      lineHeight: 1,
+                      userSelect: 'none',
+                      opacity: 0.1,
+                    }}
+                  >
+                    {initial}
+                  </span>
+                )}
+              </div>
+            )
+          })}
+
+          {/* Subtle decorative botanical SVG in corner */}
+          <svg
+            width="120" height="120" viewBox="0 0 120 120" fill="none"
+            style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 4, opacity: 0.08, pointerEvents: 'none' }}
+          >
+            <path d="M60 110 C60 110, 30 80, 20 50 C10 20, 40 5, 60 20 C80 5, 110 20, 100 50 C90 80, 60 110, 60 110 Z" fill={roseGold} />
+            <path d="M60 20 L60 110" stroke={roseGold} strokeWidth="0.5" />
+            <path d="M40 50 C40 50, 50 45, 60 50" stroke={roseGold} strokeWidth="0.5" fill="none" />
+            <path d="M80 50 C80 50, 70 45, 60 50" stroke={roseGold} strokeWidth="0.5" fill="none" />
+            <path d="M45 70 C45 70, 52 65, 60 70" stroke={roseGold} strokeWidth="0.5" fill="none" />
+            <path d="M75 70 C75 70, 68 65, 60 70" stroke={roseGold} strokeWidth="0.5" fill="none" />
+          </svg>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // SLIDER variants (one per universe) — embla carousel
 // ─────────────────────────────────────────────
 
@@ -3615,6 +4363,8 @@ const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsConten
   'ascent-featured': AscentFeatured,
   'zenith-featured': ZenithFeatured,
   'miel-featured': MielFeatured,
+  'prisme-featured': PrismeFeatured,
+  'petale-featured': PetaleFeatured,
 }
 
 export function TestimonialsSection({ config }: TestimonialsSectionProps) {
@@ -3649,6 +4399,8 @@ export function TestimonialsSection({ config }: TestimonialsSectionProps) {
     ascent: '#E0B870',
     zenith: '#A8C5A0',
     miel: '#E8C17A',
+    prisme: '#B8D4E3',
+    petale: '#D4A574',
   }
   const accent = accentColor ?? defaultAccents[universe] ?? '#6366f1'
 
@@ -3685,6 +4437,8 @@ export const testimonialsMeta = {
     'ascent-featured',
     'zenith-featured',
     'miel-featured',
+    'prisme-featured',
+    'petale-featured',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

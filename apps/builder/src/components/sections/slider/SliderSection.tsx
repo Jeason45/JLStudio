@@ -8,7 +8,7 @@ import { useSectionCarousel } from '@/hooks/useSectionCarousel'
 import { ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react'
 import { EditablePlaceholder } from '../_EditablePlaceholder'
 import { BrixsaViewCursor } from '../_BrixsaViewCursor'
-import { useEffect, useCallback, useRef } from 'react'
+import { useEffect, useCallback, useRef, useState } from 'react'
 import type { SectionMeta } from '@/components/sections'
 
 // ═══════════════════════════════════════════════════
@@ -2395,6 +2395,720 @@ function MielFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: SlideIt
   )
 }
 
+function PrismeFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: SlideItem; idx: number; sectionId: string; isEditing?: boolean }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+  const lensRef = useRef<HTMLDivElement>(null)
+  const progressRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [isInView, setIsInView] = useState(false)
+
+  // JS fallback for editor mode only
+  useEffect(() => {
+    if (!isEditing) return
+    const wrap = wrapRef.current
+    const img = imgRef.current
+    if (!wrap || !img) return
+
+    let scroller: HTMLElement | null = wrap.parentElement
+    while (scroller) {
+      const ov = getComputedStyle(scroller).overflowY
+      if (ov === 'auto' || ov === 'scroll') break
+      scroller = scroller.parentElement
+    }
+    if (!scroller) return
+
+    let accOffset = 0
+    let el: HTMLElement | null = wrap
+    while (el && el !== scroller) {
+      accOffset += el.offsetTop
+      el = el.offsetParent as HTMLElement | null
+    }
+
+    const setSize = () => { img.style.height = `${scroller!.clientHeight}px` }
+    setSize()
+
+    const onScroll = () => {
+      img.style.transform = `translate3d(0,${-(accOffset - scroller!.scrollTop)}px,0)`
+    }
+
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+
+    const ro = new ResizeObserver(setSize)
+    ro.observe(scroller)
+
+    return () => {
+      scroller!.removeEventListener('scroll', onScroll)
+      ro.disconnect()
+    }
+  }, [isEditing])
+
+  // Scroll-based lens rotation, progress indicator & content reveal
+  useEffect(() => {
+    const wrap = wrapRef.current
+    const lens = lensRef.current
+    const progress = progressRef.current
+    const content = contentRef.current
+    if (!wrap) return
+
+    // Find the scroll container
+    let scroller: HTMLElement | Window = window
+    if (isEditing) {
+      let el: HTMLElement | null = wrap.parentElement
+      while (el) {
+        const ov = getComputedStyle(el).overflowY
+        if (ov === 'auto' || ov === 'scroll') { scroller = el; break }
+        el = el.parentElement
+      }
+    }
+
+    const getScrollTop = () => scroller instanceof Window ? window.scrollY : scroller.scrollTop
+    const getViewH = () => scroller instanceof Window ? window.innerHeight : scroller.clientHeight
+
+    let rafId = 0
+    const onScroll = () => {
+      cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(() => {
+        const rect = wrap.getBoundingClientRect()
+        const viewH = getViewH()
+
+        // Progress within this slide (0 at top of viewport, 1 at bottom)
+        const slideProgress = Math.max(0, Math.min(1, 1 - (rect.bottom / (viewH + rect.height))))
+
+        // Lens rotation (slow — maps 0..1 to 0..180deg)
+        if (lens) {
+          lens.style.transform = `translate3d(0,0,0) rotate(${slideProgress * 180}deg)`
+        }
+
+        // Progress bar at bottom of slide
+        if (progress) {
+          progress.style.transform = `scaleX(${slideProgress})`
+        }
+
+        // Content reveal when slide enters view
+        const enteredView = rect.top < viewH * 0.7
+        if (enteredView && !isInView) {
+          setIsInView(true)
+        }
+      })
+    }
+
+    const target = scroller instanceof Window ? window : scroller
+    target.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+
+    // IntersectionObserver for in-view detection
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) setIsInView(true)
+    }, { threshold: 0.25 })
+    obs.observe(wrap)
+
+    return () => {
+      target.removeEventListener('scroll', onScroll)
+      cancelAnimationFrame(rafId)
+      obs.disconnect()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditing])
+
+  const navy = '#0F1923'
+  const iceBlue = '#B8D4E3'
+
+  // Decorative lens SVG
+  const lensDecoration = (
+    <div
+      ref={lensRef}
+      style={{
+        position: 'absolute',
+        right: 'clamp(40px, 8vw, 120px)',
+        top: '50%',
+        marginTop: '-120px',
+        width: '240px',
+        height: '240px',
+        zIndex: 1,
+        pointerEvents: 'none',
+        opacity: 0.07,
+        willChange: 'transform',
+      }}
+    >
+      <svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
+        <circle cx="120" cy="120" r="110" stroke={iceBlue} strokeWidth="1" />
+        <circle cx="120" cy="120" r="85" stroke={iceBlue} strokeWidth="0.5" />
+        <circle cx="120" cy="120" r="55" stroke={iceBlue} strokeWidth="0.5" />
+        <line x1="120" y1="10" x2="120" y2="230" stroke={iceBlue} strokeWidth="0.3" />
+        <line x1="10" y1="120" x2="230" y2="120" stroke={iceBlue} strokeWidth="0.3" />
+        <line x1="42" y1="42" x2="198" y2="198" stroke={iceBlue} strokeWidth="0.3" />
+        <line x1="198" y1="42" x2="42" y2="198" stroke={iceBlue} strokeWidth="0.3" />
+      </svg>
+    </div>
+  )
+
+  // Shared content block
+  const contentBlock = (
+    <div
+      ref={contentRef}
+      {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')}
+      style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}
+    >
+      <div style={{ maxWidth: '680px' }}>
+        {/* Badge — staggered reveal 0.3s */}
+        {slide.badge && (
+          <div
+            {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')}
+            style={{
+              display: 'inline-block',
+              padding: '8px 20px',
+              borderRadius: 4,
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              background: 'rgba(184, 212, 227, 0.12)',
+              color: iceBlue,
+              fontSize: 14,
+              fontWeight: 500,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase' as const,
+              border: '1px solid rgba(184, 212, 227, 0.3)',
+              marginBottom: '20px',
+              opacity: isInView ? 1 : 0,
+              transform: isInView ? 'translateY(0)' : 'translateY(-12px)',
+              transition: 'opacity 0.5s cubic-bezier(0.22,1,0.36,1) 0.3s, transform 0.5s cubic-bezier(0.22,1,0.36,1) 0.3s',
+            }}
+          >
+            {slide.badge}
+          </div>
+        )}
+        {/* Title — staggered reveal 0.5s */}
+        <h2
+          {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+          style={{
+            fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+            fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+            fontWeight: 300,
+            lineHeight: '110%',
+            color: iceBlue,
+            marginBottom: 20,
+            opacity: isInView ? 1 : 0,
+            transform: isInView ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 0.6s cubic-bezier(0.22,1,0.36,1) 0.5s, transform 0.6s cubic-bezier(0.22,1,0.36,1) 0.5s',
+          }}
+        >
+          {slide.title}
+        </h2>
+        {/* Subtitle — staggered reveal 0.7s */}
+        <p
+          {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+          style={{
+            fontSize: 16,
+            lineHeight: '150%',
+            color: 'rgba(255,255,255,0.72)',
+            opacity: isInView ? 1 : 0,
+            transform: isInView ? 'translateY(0)' : 'translateY(16px)',
+            transition: 'opacity 0.6s cubic-bezier(0.22,1,0.36,1) 0.7s, transform 0.6s cubic-bezier(0.22,1,0.36,1) 0.7s',
+          }}
+        >
+          {slide.subtitle}
+        </p>
+        {slide.ctaLabel && (
+          <a
+            {...elementProps(sectionId, `slides.${idx}.cta`, 'button')}
+            href={slide.ctaHref ?? '#'}
+            style={{
+              display: 'inline-block',
+              marginTop: '28px',
+              padding: '12px 28px',
+              background: iceBlue,
+              color: navy,
+              fontSize: '15px',
+              fontWeight: 500,
+              textDecoration: 'none',
+              letterSpacing: '0.03em',
+              transition: 'background 0.3s ease, transform 0.3s ease',
+              opacity: isInView ? 1 : 0,
+              transform: isInView ? 'translateY(0)' : 'translateY(12px)',
+            }}
+          >
+            {slide.ctaLabel}
+          </a>
+        )}
+      </div>
+    </div>
+  )
+
+  // Scroll progress line at the bottom of each slide
+  const progressLine = (
+    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', zIndex: 3, backgroundColor: 'rgba(184, 212, 227, 0.08)' }}>
+      <div
+        ref={progressRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: iceBlue,
+          transformOrigin: 'left',
+          transform: 'scaleX(0)',
+          willChange: 'transform',
+        }}
+      />
+    </div>
+  )
+
+  // Preview mode: pure CSS background-attachment: fixed
+  if (!isEditing) {
+    return (
+      <div
+        ref={wrapRef}
+        {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+        style={{
+          display: 'block',
+          minHeight: '100svh',
+          position: 'relative',
+          overflow: 'hidden',
+          color: '#FFFFFF',
+          willChange: 'transform',
+          ...(slide.image ? {
+            backgroundImage: `url(${slide.image})`,
+            backgroundAttachment: 'fixed',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundColor: navy,
+          } : { backgroundColor: navy }),
+        }}
+      >
+        {/* Layer 1: Bottom-heavy gradient for text readability */}
+        <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(15, 25, 35, 0.92) 14%, rgba(15, 25, 35, 0.35) 60%, rgba(15, 25, 35, 0.10) 100%)' }} />
+        {/* Layer 2: Diagonal geometric gradient (lens / prism theme) */}
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(135deg, rgba(184, 212, 227, 0.06) 0%, transparent 35%, rgba(184, 212, 227, 0.03) 65%, transparent 100%)' }} />
+        {/* Layer 3: Subtle vignette */}
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'radial-gradient(ellipse at center, transparent 50%, rgba(15, 25, 35, 0.4) 100%)' }} />
+        {/* Slide number top-right */}
+        <div style={{ position: 'absolute', right: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', zIndex: 2, fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: '12px', fontWeight: 500, color: iceBlue, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+          {String(idx + 1).padStart(2, '0')}
+        </div>
+        {/* Decorative lens circle */}
+        {lensDecoration}
+        {contentBlock}
+        {progressLine}
+      </div>
+    )
+  }
+
+  // Editor mode: JS-based scroll compensation with <img> tag
+  return (
+    <div
+      ref={wrapRef}
+      {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+      style={{ minHeight: '100svh', position: 'relative', overflow: 'hidden', backgroundColor: navy, color: '#FFFFFF', willChange: 'transform' }}
+    >
+      {slide.image && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          ref={imgRef}
+          {...elementProps(sectionId, `slides.${idx}.image`, 'image', 'Slide Image')}
+          src={slide.image}
+          alt=""
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', objectFit: 'cover', objectPosition: 'center', pointerEvents: 'none', willChange: 'transform', backfaceVisibility: 'hidden', transform: 'translate3d(0,0,0)' }}
+        />
+      )}
+      {/* Layer 1: Bottom-heavy gradient */}
+      <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(15, 25, 35, 0.92) 14%, rgba(15, 25, 35, 0.35) 60%, rgba(15, 25, 35, 0.10) 100%)' }} />
+      {/* Layer 2: Diagonal geometric gradient */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(135deg, rgba(184, 212, 227, 0.06) 0%, transparent 35%, rgba(184, 212, 227, 0.03) 65%, transparent 100%)' }} />
+      {/* Layer 3: Subtle vignette */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'radial-gradient(ellipse at center, transparent 50%, rgba(15, 25, 35, 0.4) 100%)' }} />
+      {/* Slide number */}
+      <div style={{ position: 'absolute', right: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', zIndex: 2, fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: '12px', fontWeight: 500, color: iceBlue, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+        {String(idx + 1).padStart(2, '0')}
+      </div>
+      {/* Decorative lens circle */}
+      {lensDecoration}
+      {contentBlock}
+      {progressLine}
+    </div>
+  )
+}
+
+/* Petale parallax slide — Same technique as Miel but florist / botanical themed.
+   - Preview mode (!isEditing): native CSS background-attachment:fixed.
+   - Editor mode (isEditing): JS scroll-based fallback. */
+function PetaleFixedBgSlide({ slide, idx, sectionId, isEditing, totalSlides }: { slide: SlideItem; idx: number; sectionId: string; isEditing?: boolean; totalSlides?: number }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  // JS fallback for editor mode only
+  useEffect(() => {
+    if (!isEditing) return
+    const wrap = wrapRef.current
+    const img = imgRef.current
+    if (!wrap || !img) return
+
+    let scroller: HTMLElement | null = wrap.parentElement
+    while (scroller) {
+      const ov = getComputedStyle(scroller).overflowY
+      if (ov === 'auto' || ov === 'scroll') break
+      scroller = scroller.parentElement
+    }
+    if (!scroller) return
+
+    let accOffset = 0
+    let el: HTMLElement | null = wrap
+    while (el && el !== scroller) {
+      accOffset += el.offsetTop
+      el = el.offsetParent as HTMLElement | null
+    }
+
+    const setSize = () => { img.style.height = `${scroller!.clientHeight}px` }
+    setSize()
+
+    const onScroll = () => {
+      img.style.transform = `translate3d(0,${-(accOffset - scroller!.scrollTop)}px,0)`
+    }
+
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+
+    const ro = new ResizeObserver(setSize)
+    ro.observe(scroller)
+
+    return () => {
+      scroller!.removeEventListener('scroll', onScroll)
+      ro.disconnect()
+    }
+  }, [isEditing])
+
+  const richBlack = '#1A1A1A'
+  const roseGold = '#D4A574'
+  const forestGreen = '#2D5016'
+  const total = totalSlides ?? 3
+  const progressFraction = (idx + 1) / total
+
+  // Floating leaf/petal SVG decorative elements
+  const FloatingPetals = () => (
+    <>
+      {/* Floating leaf — top right, gentle drift */}
+      <svg
+        width="60" height="80" viewBox="0 0 60 80" fill="none"
+        style={{
+          position: 'absolute',
+          top: '15%',
+          right: '8%',
+          zIndex: 2,
+          opacity: 0.12,
+          pointerEvents: 'none',
+          animation: 'petale-leaf-drift-1 12s ease-in-out infinite',
+        }}
+      >
+        <path d="M30 0 C30 0, 60 20, 55 50 C50 80, 30 80, 30 80 C30 80, 10 80, 5 50 C0 20, 30 0, 30 0 Z" fill={roseGold} />
+        <path d="M30 10 L30 70" stroke="rgba(255,255,255,0.15)" strokeWidth="0.5" />
+        <path d="M18 30 C18 30, 24 28, 30 32" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" fill="none" />
+        <path d="M42 30 C42 30, 36 28, 30 32" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" fill="none" />
+      </svg>
+      {/* Small petal — left side */}
+      <svg
+        width="35" height="45" viewBox="0 0 35 45" fill="none"
+        style={{
+          position: 'absolute',
+          top: '35%',
+          left: '5%',
+          zIndex: 2,
+          opacity: 0.08,
+          pointerEvents: 'none',
+          animation: 'petale-leaf-drift-2 15s ease-in-out infinite',
+          transform: 'rotate(25deg)',
+        }}
+      >
+        <path d="M17 0 C17 0, 35 12, 32 28 C29 45, 17 45, 17 45 C17 45, 5 45, 2 28 C-1 12, 17 0, 17 0 Z" fill={forestGreen} />
+      </svg>
+      {/* Tiny accent petal — bottom right */}
+      <svg
+        width="25" height="35" viewBox="0 0 25 35" fill="none"
+        style={{
+          position: 'absolute',
+          bottom: '25%',
+          right: '15%',
+          zIndex: 2,
+          opacity: 0.06,
+          pointerEvents: 'none',
+          animation: 'petale-leaf-drift-3 18s ease-in-out infinite',
+          transform: 'rotate(-15deg)',
+        }}
+      >
+        <path d="M12 0 C12 0, 25 10, 23 22 C21 35, 12 35, 12 35 C12 35, 3 35, 1 22 C-1 10, 12 0, 12 0 Z" fill={roseGold} />
+      </svg>
+    </>
+  )
+
+  // Season progress indicator — thin organic arc on right side
+  const SeasonProgress = () => (
+    <div style={{
+      position: 'absolute',
+      right: 'clamp(20px, 5vw, 60px)',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      zIndex: 3,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: '8px',
+    }}>
+      {/* Thin vertical progress line */}
+      <div style={{ width: '1px', height: '80px', background: 'rgba(212, 165, 116, 0.15)', position: 'relative', borderRadius: '1px' }}>
+        <div style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          width: '1px',
+          height: `${progressFraction * 100}%`,
+          background: roseGold,
+          borderRadius: '1px',
+          transition: 'height 0.5s ease',
+        }} />
+      </div>
+      {/* Season badge */}
+      {slide.badge && (
+        <span style={{
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+          fontSize: '10px',
+          fontWeight: 500,
+          color: roseGold,
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          writingMode: 'vertical-rl',
+          textOrientation: 'mixed',
+          opacity: 0.7,
+        }}>
+          {slide.badge}
+        </span>
+      )}
+    </div>
+  )
+
+  // Shared overlays for both modes
+  const renderOverlays = () => (
+    <>
+      {/* Layer 1: Bottom warm gradient for text readability */}
+      <div
+        {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')}
+        style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
+          background: 'linear-gradient(0deg, rgba(26, 26, 26, 0.95) 0%, rgba(26, 26, 26, 0.7) 25%, rgba(26, 26, 26, 0.2) 50%, rgba(26, 26, 26, 0.05) 100%)',
+        }}
+      />
+      {/* Layer 2: Organic curved gradient (botanical feel) */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
+        background: 'radial-gradient(ellipse 120% 60% at 20% 100%, rgba(45, 80, 22, 0.12) 0%, transparent 60%), linear-gradient(135deg, rgba(45, 80, 22, 0.06) 0%, transparent 40%)',
+      }} />
+      {/* Layer 3: Soft warm vignette */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
+        background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(26, 26, 26, 0.4) 100%)',
+      }} />
+    </>
+  )
+
+  // Shared content block for both modes
+  const renderContent = () => (
+    <>
+      <FloatingPetals />
+      {renderOverlays()}
+      <SeasonProgress />
+
+      {/* Slide number top-right */}
+      <div style={{
+        position: 'absolute',
+        right: 'clamp(20px, 5vw, 60px)',
+        top: 'clamp(50px, 8vw, 100px)',
+        zIndex: 2,
+        fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        fontSize: '12px',
+        fontWeight: 500,
+        color: roseGold,
+        letterSpacing: '0.15em',
+        textTransform: 'uppercase',
+      }}>
+        {String(idx + 1).padStart(2, '0')}
+      </div>
+
+      {slide.badge && (
+        <div
+          {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')}
+          style={{
+            position: 'absolute',
+            left: 'clamp(20px, 5vw, 60px)',
+            top: 'clamp(50px, 8vw, 100px)',
+            padding: '8px 20px',
+            borderRadius: 4,
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            background: 'rgba(212, 165, 116, 0.12)',
+            color: roseGold,
+            fontSize: 14,
+            fontWeight: 500,
+            zIndex: 2,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            border: '1px solid rgba(212, 165, 116, 0.3)',
+            opacity: 0,
+            transform: 'translateX(-12px)',
+            animation: 'petale-badge-drift 0.6s ease 0.3s forwards',
+          }}
+        >
+          {slide.badge}
+        </div>
+      )}
+
+      <div
+        {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')}
+        style={{
+          position: 'absolute', inset: 0,
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          paddingBottom: 'clamp(40px, 8vw, 100px)',
+          display: 'flex', alignItems: 'flex-end', zIndex: 2,
+        }}
+      >
+        <div style={{ maxWidth: '680px' }}>
+          <h2
+            {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+            style={{
+              fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+              fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+              fontWeight: 300,
+              lineHeight: '110%',
+              color: roseGold,
+              marginBottom: 20,
+              opacity: 0,
+              transform: 'translateY(20px) scale(0.97)',
+              animation: 'petale-title-bloom 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards',
+            }}
+          >
+            {slide.title}
+          </h2>
+          <p
+            {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+            style={{
+              fontSize: 16,
+              lineHeight: '150%',
+              color: 'rgba(255,255,255,0.72)',
+              opacity: 0,
+              animation: 'petale-subtitle-fade 0.6s ease 0.7s forwards',
+            }}
+          >
+            {slide.subtitle}
+          </p>
+          {slide.ctaLabel && (
+            <a
+              {...elementProps(sectionId, `slides.${idx}.cta`, 'button')}
+              href={slide.ctaHref ?? '#'}
+              style={{
+                display: 'inline-block',
+                marginTop: '28px',
+                padding: '12px 28px',
+                background: forestGreen,
+                color: '#FFFFFF',
+                fontSize: '15px',
+                fontWeight: 500,
+                textDecoration: 'none',
+                letterSpacing: '0.03em',
+                transition: 'background 0.3s ease, transform 0.3s ease',
+                opacity: 0,
+                animation: 'petale-subtitle-fade 0.5s ease 0.9s forwards',
+              }}
+            >
+              {slide.ctaLabel}
+            </a>
+          )}
+        </div>
+      </div>
+    </>
+  )
+
+  // Keyframes injected inline (only once per slide — lightweight)
+  const keyframesStyle = (
+    <style>{`
+      @keyframes petale-leaf-drift-1 {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(12px) rotate(3deg); }
+      }
+      @keyframes petale-leaf-drift-2 {
+        0%, 100% { transform: translateY(0) rotate(25deg); }
+        50% { transform: translateY(-10px) rotate(30deg); }
+      }
+      @keyframes petale-leaf-drift-3 {
+        0%, 100% { transform: translateY(0) rotate(-15deg); }
+        50% { transform: translateY(8px) rotate(-10deg); }
+      }
+      @keyframes petale-badge-drift {
+        to { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes petale-title-bloom {
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      @keyframes petale-subtitle-fade {
+        to { opacity: 1; }
+      }
+    `}</style>
+  )
+
+  // Preview mode: pure CSS background-attachment: fixed with will-change + transform3d
+  if (!isEditing) {
+    return (
+      <div
+        {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+        style={{
+          display: 'block',
+          minHeight: '100svh',
+          position: 'relative',
+          overflow: 'hidden',
+          color: '#FFFFFF',
+          willChange: 'transform',
+          transform: 'translate3d(0,0,0)',
+          ...(slide.image ? {
+            backgroundImage: `url(${slide.image})`,
+            backgroundAttachment: 'fixed',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundColor: richBlack,
+          } : { backgroundColor: richBlack }),
+        }}
+      >
+        {keyframesStyle}
+        {renderContent()}
+      </div>
+    )
+  }
+
+  // Editor mode: JS-based scroll compensation with <img> tag
+  return (
+    <div
+      ref={wrapRef}
+      {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+      style={{
+        minHeight: '100svh',
+        position: 'relative',
+        overflow: 'hidden',
+        backgroundColor: richBlack,
+        color: '#FFFFFF',
+        willChange: 'transform',
+        transform: 'translate3d(0,0,0)',
+      }}
+    >
+      {keyframesStyle}
+      {slide.image && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          ref={imgRef}
+          {...elementProps(sectionId, `slides.${idx}.image`, 'image', 'Slide Image')}
+          src={slide.image}
+          alt=""
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', objectFit: 'cover', objectPosition: 'center', pointerEvents: 'none', willChange: 'transform', backfaceVisibility: 'hidden' }}
+        />
+      )}
+      {renderContent()}
+    </div>
+  )
+}
+
 export function SliderSection({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
   const content = config.content as SliderContent
   const { universe, layout } = parseVariant(config.variant || 'startup-hero')
@@ -2670,6 +3384,24 @@ export function SliderSection({ config, isEditing }: { config: SectionConfig; is
     )
   }
 
+  // ── prisme-parallax: Fullscreen parallax optician / eyewear showcase ──
+  if (config.variant === 'prisme-parallax') {
+    const defaultSlides = [
+      { id: '1', title: 'L\'Atelier Optique', badge: 'Expertise', subtitle: 'Un espace d\u00E9di\u00E9 o\u00F9 la pr\u00E9cision rencontre l\u2019\u00E9l\u00E9gance. Nos opticiens experts r\u00E9alisent chaque montage avec un soin m\u00E9ticuleux', image: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=1920&q=85' } as SlideItem,
+      { id: '2', title: 'Showroom Collections', badge: 'S\u00E9lection', subtitle: 'Plus de 2000 montures des plus grandes maisons. Un choix curat\u00E9 entre cr\u00E9ateurs ind\u00E9pendants et marques iconiques', image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=1920&q=85' } as SlideItem,
+      { id: '3', title: 'Centre de Vision', badge: 'Technologie', subtitle: 'Les derni\u00E8res technologies d\u2019examen visuel pour un diagnostic pr\u00E9cis et une correction optimale de votre vue', image: 'https://images.unsplash.com/photo-1577803645773-f96470509666?w=1920&q=85' } as SlideItem,
+    ] as SlideItem[]
+    const items = slides.length > 0 ? slides : defaultSlides
+
+    return (
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Parallax Section')} style={{ width: '100%' }}>
+        {items.map((slide, i) => (
+          <PrismeFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={config.id} isEditing={isEditing} />
+        ))}
+      </section>
+    )
+  }
+
   // ── miel-parallax: Fullscreen parallax patisserie / bakery gallery ──
   if (config.variant === 'miel-parallax') {
     const defaultSlides = [
@@ -2683,6 +3415,24 @@ export function SliderSection({ config, isEditing }: { config: SectionConfig; is
       <section {...elementProps(config.id, 'wrapper', 'container', 'Parallax Section')} style={{ width: '100%' }}>
         {items.map((slide, i) => (
           <MielFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={config.id} isEditing={isEditing} />
+        ))}
+      </section>
+    )
+  }
+
+  // ── petale-parallax: Fullscreen parallax florist / seasonal flowers gallery ──
+  if (config.variant === 'petale-parallax') {
+    const defaultSlides = [
+      { id: '1', title: 'L\u2019Atelier Floral', badge: 'Printemps', subtitle: 'Chaque matin, nos fleuristes composent des bouquets uniques avec des fleurs fra\u00EEches s\u00E9lectionn\u00E9es aupr\u00E8s des meilleurs producteurs locaux', image: 'https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=1920&q=85' } as SlideItem,
+      { id: '2', title: 'Les Saisons', badge: '\u00C9t\u00E9', subtitle: 'Nous suivons le rythme de la nature. Chaque saison apporte ses tr\u00E9sors floraux que nous mettons en sc\u00E8ne avec passion', image: 'https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=1920&q=85' } as SlideItem,
+      { id: '3', title: 'L\u2019\u00C9motion V\u00E9g\u00E9tale', badge: 'Automne', subtitle: 'Un bouquet est bien plus que des fleurs. C\u2019est un message, une \u00E9motion, un souvenir que nous fa\u00E7onnons pour vous', image: 'https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=1920&q=85' } as SlideItem,
+    ] as SlideItem[]
+    const items = slides.length > 0 ? slides : defaultSlides
+
+    return (
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Parallax Section')} style={{ width: '100%' }}>
+        {items.map((slide, i) => (
+          <PetaleFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={config.id} isEditing={isEditing} totalSlides={items.length} />
         ))}
       </section>
     )
@@ -2817,6 +3567,8 @@ export const sliderMeta: SectionMeta = {
     'ascent-parallax',
     'zenith-parallax',
     'miel-parallax',
+    'prisme-parallax',
+    'petale-parallax',
   ],
   defaultVariant: 'startup-hero',
   defaultContent: {},

@@ -21,6 +21,8 @@ const POPULAR_IDS = [
   'coach-ascent',
   'yoga-zenith',
   'patisserie-miel',
+  'opticien-prisme',
+  'fleuriste-petale',
 ]
 
 export function PopularTemplates() {

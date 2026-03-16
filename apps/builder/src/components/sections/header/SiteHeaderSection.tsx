@@ -409,6 +409,18 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
     return <MielHeader config={config} logo={logo} ctaLabel={ctaLabel} links={links} />
   }
 
+  // ─── VARIANT: prisme ───
+  // Opticien premium : transparent glassmorphism header, off-canvas fullscreen menu, ice blue accents #B8D4E3
+  if (variant === 'prisme') {
+    return <PrismeHeader config={config} logo={logo} ctaLabel={ctaLabel} links={links} />
+  }
+
+  // ─── VARIANT: petale ───
+  // Fleuriste premium : transparent glassmorphism header, off-canvas fullscreen menu, rose gold accents #D4A574
+  if (variant === 'petale') {
+    return <PetaleHeader config={config} logo={logo} ctaLabel={ctaLabel} links={links} />
+  }
+
   // fallback → startup
   return <SiteHeaderSection config={{ ...config, variant: 'startup' }} />
 }
@@ -6135,11 +6147,1046 @@ function MielHeader({ config, logo, ctaLabel, links }: { config: SectionConfig; 
   )
 }
 
+function PrismeHeader({ config, logo, ctaLabel, links }: { config: SectionConfig; logo: string; ctaLabel?: string; links: NavLink[] }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  const navy = '#0F1923'
+  const iceBlue = '#B8D4E3'
+  const warmCream = '#E8DED0'
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = '' }
+    }
+  }, [menuOpen])
+
+  // Close on Escape
+  useEffect(() => {
+    if (!menuOpen) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [menuOpen])
+
+  // Glassmorphism on scroll
+  useEffect(() => {
+    const canvasEl = document.getElementById('site-canvas')
+    if (!canvasEl) return
+    let scrollParent: HTMLElement | null = canvasEl.parentElement
+    while (scrollParent) {
+      const style = getComputedStyle(scrollParent)
+      if (style.overflowY === 'auto' || style.overflowY === 'scroll' || style.overflow === 'auto') break
+      scrollParent = scrollParent.parentElement
+    }
+    if (!scrollParent) return
+    const onScroll = () => {
+      setScrolled(scrollParent!.scrollTop > 40)
+    }
+    scrollParent.addEventListener('scroll', onScroll, { passive: true })
+    return () => { scrollParent!.removeEventListener('scroll', onScroll) }
+  }, [])
+
+  const toggleMenu = useCallback(() => setMenuOpen(prev => !prev), [])
+
+  const menuLinks: { label: string; href: string }[] = links.length > 0
+    ? links.map(l => ({ label: l.label, href: l.href }))
+    : [
+        { label: 'Nos montures', href: '/montures' },
+        { label: 'Examen de vue', href: '/examen' },
+        { label: 'Lentilles', href: '/lentilles' },
+        { label: 'Notre expertise', href: '/expertise' },
+        { label: 'Contact', href: '/contact' },
+      ]
+
+  const socials = [
+    { label: 'Instagram', href: '#', icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+    )},
+    { label: 'Facebook', href: '#', icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    )},
+  ]
+
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: `
+        .prisme-nav-link { position: relative; display: inline-block; }
+        .prisme-nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 0;
+          height: 1.5px;
+          background: ${iceBlue};
+          transition: width 0.3s ease;
+        }
+        .prisme-nav-link:hover::after { width: 100%; }
+        .prisme-cta-btn {
+          position: relative;
+          overflow: hidden;
+          z-index: 1;
+        }
+        .prisme-cta-btn::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: ${iceBlue};
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          z-index: -1;
+        }
+        .prisme-cta-btn:hover::before { transform: scaleX(1); }
+        .prisme-cta-btn:hover { color: ${navy} !important; }
+        @media (max-width: 768px) {
+          .prisme-resp-menu-grid { grid-template-columns: 1fr !important; }
+          .prisme-resp-menu-right { display: none !important; }
+          .prisme-desktop-nav { display: none !important; }
+          .prisme-desktop-cta { display: none !important; }
+          .prisme-mobile-menu-btn { display: flex !important; }
+        }
+        @media (min-width: 769px) {
+          .prisme-mobile-menu-btn { display: none !important; }
+        }
+      ` }} />
+      {/* ─── NAVBAR ─── */}
+      <header
+        {...elementProps(config.id, 'wrapper', 'container', 'Header')}
+        className="absolute top-0 left-0 w-full flex items-center"
+        style={{
+          zIndex: 888,
+          backgroundColor: scrolled ? 'rgba(15, 25, 35, 0.85)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(184, 212, 227, 0.1)' : '1px solid transparent',
+          minHeight: '72px',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+          transition: 'background-color 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease',
+        }}
+      >
+        <div
+          {...elementProps(config.id, 'navGrid', 'container', 'Nav Grid')}
+          className="grid items-center w-full"
+          style={{
+            gridTemplateColumns: '1fr auto auto',
+            gap: '16px',
+          }}
+        >
+          {/* LEFT — Logo in ice blue with letter-spacing hover */}
+          <div
+            {...elementProps(config.id, 'logo', 'image')}
+            style={{
+              maxWidth: '160px',
+              fontSize: '20px',
+              fontWeight: 300,
+              color: iceBlue,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+              transition: 'letter-spacing 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+              cursor: 'pointer',
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.letterSpacing = '0.2em' }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.letterSpacing = '0.12em' }}
+          >
+            {renderLogo(logo, 'font-light text-lg tracking-widest')}
+          </div>
+
+          {/* CENTER — Nav links (desktop) with ice blue underline from left */}
+          <nav className="hidden md:flex items-center prisme-desktop-nav" style={{ gap: '32px' }}>
+            {menuLinks.slice(0, 4).map((link, i) => (
+              <a
+                key={link.label}
+                {...elementProps(config.id, `links.${i}.label`, 'link', link.label)}
+                href={link.href}
+                className="prisme-nav-link"
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 400,
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  textDecoration: 'none',
+                  letterSpacing: '0.04em',
+                  transition: 'color 0.3s ease',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = iceBlue }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255, 255, 255, 0.7)' }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* RIGHT — CTA + Menu button */}
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            {/* CTA Button — outline with fill sweep on hover */}
+            <a
+              {...elementProps(config.id, 'ctaLabel', 'button')}
+              href="/rendez-vous"
+              className="hidden md:flex items-center prisme-desktop-cta prisme-cta-btn"
+              style={{
+                borderRadius: '999px',
+                backgroundColor: 'transparent',
+                color: iceBlue,
+                paddingLeft: '24px',
+                paddingRight: '24px',
+                paddingTop: '10px',
+                paddingBottom: '10px',
+                fontSize: '13px',
+                fontWeight: 600,
+                letterSpacing: '0.04em',
+                textDecoration: 'none',
+                border: `1.5px solid ${iceBlue}`,
+                transition: 'color 0.4s ease',
+              }}
+            >
+              {ctaLabel || 'Prendre RDV'}
+            </a>
+
+            {/* Menu button (glassmorphism) — mobile */}
+            <div
+              role="button"
+              onClick={toggleMenu}
+              className="flex items-center cursor-pointer prisme-mobile-menu-btn"
+              style={{
+                borderRadius: '999px',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                backgroundColor: 'rgba(184, 212, 227, 0.12)',
+                color: '#FFFFFF',
+                paddingLeft: '20px',
+                paddingRight: '20px',
+                paddingTop: '10px',
+                paddingBottom: '10px',
+                fontSize: '14px',
+                fontWeight: 500,
+                border: '1px solid rgba(184, 212, 227, 0.2)',
+                gap: '10px',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(184, 212, 227, 0.22)' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(184, 212, 227, 0.12)' }}
+            >
+              <span>Menu</span>
+              <span className="flex flex-col items-center" style={{ gap: '4px' }}>
+                <span style={{
+                  width: '18px', height: '1.5px', display: 'block', backgroundColor: iceBlue,
+                  transition: 'transform 0.3s ease, opacity 0.3s ease',
+                  transform: menuOpen ? 'translateY(2.75px) rotate(45deg)' : 'none',
+                }} />
+                <span style={{
+                  width: '18px', height: '1.5px', display: 'block', backgroundColor: iceBlue,
+                  transition: 'transform 0.3s ease, opacity 0.3s ease',
+                  transform: menuOpen ? 'translateY(-2.75px) rotate(-45deg)' : 'none',
+                }} />
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ─── FULL-SCREEN MENU OVERLAY ─── */}
+      <div
+        {...elementProps(config.id, 'offCanvas', 'container', 'Off-Canvas Menu')}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          visibility: menuOpen ? 'visible' : 'hidden',
+          opacity: menuOpen ? 1 : 0,
+          transition: 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s',
+          pointerEvents: menuOpen ? 'auto' : 'none',
+        }}
+      >
+        {/* Glass background */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundColor: 'rgba(15, 25, 35, 0.95)',
+            backdropFilter: 'blur(40px)',
+            WebkitBackdropFilter: 'blur(40px)',
+          }}
+        />
+
+        <div
+          {...elementProps(config.id, 'offCanvasGrid', 'container', 'Menu Grid')}
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+          }}
+          className="prisme-resp-menu-grid"
+        >
+          {/* LEFT COLUMN — Navigation */}
+          <div
+            {...elementProps(config.id, 'offCanvasNav', 'container', 'Menu Navigation')}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              padding: 'clamp(20px, 5vw, 60px)',
+              paddingTop: 'clamp(40px, 8vw, 80px)',
+            }}
+          >
+            {/* Top — Logo + Close */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '48px' }}>
+              <div
+                {...elementProps(config.id, 'offCanvasLogo', 'text', 'Menu Logo')}
+                style={{
+                  fontSize: '20px',
+                  fontWeight: 300,
+                  color: iceBlue,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {renderLogo(logo)}
+              </div>
+              <div
+                {...elementProps(config.id, 'closeButton', 'button', 'Close Button')}
+                role="button"
+                onClick={toggleMenu}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  borderRadius: '999px',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  backgroundColor: 'rgba(184, 212, 227, 0.12)',
+                  color: iceBlue,
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                  paddingTop: '10px',
+                  paddingBottom: '10px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  border: '1px solid rgba(184, 212, 227, 0.2)',
+                  cursor: 'pointer',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  transition: 'background-color 0.3s ease',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(184, 212, 227, 0.22)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(184, 212, 227, 0.12)' }}
+              >
+                <span>Fermer</span>
+                <X size={18} strokeWidth={1.5} />
+              </div>
+            </div>
+
+            {/* Navigation links — staggered reveals */}
+            <nav
+              {...elementProps(config.id, 'offCanvasLinks', 'container', 'Menu Links')}
+              style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}
+            >
+              {menuLinks.map((link, i) => (
+                <a
+                  key={link.label}
+                  {...elementProps(config.id, `menuLinks.${i}`, 'link', link.label)}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="prisme-nav-link"
+                  style={{
+                    fontSize: 'clamp(28px, 5vw, 52px)',
+                    fontWeight: 300,
+                    color: '#FFFFFF',
+                    textDecoration: 'none',
+                    padding: '8px 0',
+                    transition: `color 0.3s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1) ${i * 0.1}s, opacity 0.5s ease ${i * 0.1}s`,
+                    display: 'inline-block',
+                    letterSpacing: '0.01em',
+                    lineHeight: 1.15,
+                    transform: menuOpen ? 'translateY(0)' : 'translateY(30px)',
+                    opacity: menuOpen ? 1 : 0,
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = iceBlue }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#FFFFFF' }}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+
+            {/* Bottom — Social Icons + CTA */}
+            <div
+              {...elementProps(config.id, 'offCanvasBottom', 'container', 'Menu Bottom')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: '32px',
+                borderTop: '1px solid rgba(184, 212, 227, 0.12)',
+              }}
+            >
+              <div style={{ display: 'flex', gap: '16px' }}>
+                {socials.map((s, i) => (
+                  <a
+                    key={s.label}
+                    {...elementProps(config.id, `social.${i}`, 'link', s.label)}
+                    href={s.href}
+                    style={{
+                      color: 'rgba(255, 255, 255, 0.4)',
+                      transition: 'color 0.3s, border-color 0.3s, background-color 0.3s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      border: `1px solid rgba(184, 212, 227, 0.2)`,
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = navy; (e.currentTarget as HTMLElement).style.borderColor = iceBlue; (e.currentTarget as HTMLElement).style.backgroundColor = iceBlue }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255, 255, 255, 0.4)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(184, 212, 227, 0.2)'; (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+                  >
+                    {s.icon}
+                  </a>
+                ))}
+              </div>
+
+              {/* CTA in menu */}
+              <a
+                {...elementProps(config.id, 'offCanvasCta', 'button', 'Prendre RDV')}
+                href="/rendez-vous"
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '12px 28px',
+                  backgroundColor: iceBlue,
+                  color: navy,
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  borderRadius: '999px',
+                  letterSpacing: '0.02em',
+                  transition: 'background-color 0.3s, transform 0.3s',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = warmCream; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = iceBlue; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)' }}
+              >
+                {ctaLabel || 'Prendre RDV'}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN — Decorative atmosphere */}
+          <div
+            {...elementProps(config.id, 'offCanvasImage', 'image', 'Menu Image')}
+            className="prisme-resp-menu-right"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              backgroundColor: navy,
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `linear-gradient(135deg, ${navy} 0%, rgba(184, 212, 227, 0.04) 40%, ${navy} 100%)`,
+              }}
+            />
+            {/* Decorative lens circles */}
+            <svg
+              width="100%" height="100%" viewBox="0 0 600 800"
+              style={{ position: 'absolute', inset: 0, opacity: 0.04 }}
+            >
+              <circle cx="300" cy="400" r="250" stroke={iceBlue} strokeWidth="1" fill="none" />
+              <circle cx="300" cy="400" r="180" stroke={iceBlue} strokeWidth="0.5" fill="none" />
+              <circle cx="300" cy="400" r="110" stroke={iceBlue} strokeWidth="0.3" fill="none" />
+            </svg>
+            {/* Optics quote */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 'clamp(40px, 8vw, 80px)',
+                left: 'clamp(30px, 5vw, 60px)',
+                right: 'clamp(30px, 5vw, 60px)',
+              }}
+            >
+              <div style={{
+                width: '32px',
+                height: '2px',
+                backgroundColor: iceBlue,
+                marginBottom: '20px',
+                opacity: menuOpen ? 1 : 0,
+                transform: menuOpen ? 'scaleX(1)' : 'scaleX(0)',
+                transformOrigin: 'left',
+                transition: 'opacity 0.5s 0.3s, transform 0.5s 0.3s cubic-bezier(0.23, 1, 0.32, 1)',
+              }} />
+              <p style={{
+                color: 'rgba(255,255,255,0.55)',
+                fontSize: 'clamp(13px, 1.5vw, 16px)',
+                fontStyle: 'italic',
+                lineHeight: 1.6,
+                opacity: menuOpen ? 1 : 0,
+                transform: menuOpen ? 'translateY(0)' : 'translateY(12px)',
+                transition: 'opacity 0.5s 0.35s, transform 0.5s 0.35s cubic-bezier(0.23, 1, 0.32, 1)',
+              }}>
+                &laquo;&nbsp;La vision est l&apos;art de voir ce qui est invisible aux autres.&nbsp;&raquo;
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+// ─── Petale Off-Canvas Menu ───
+
+function PetaleHeader({ config, logo, ctaLabel, links }: { config: SectionConfig; logo: string; ctaLabel?: string; links: NavLink[] }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  const richBlack = '#1A1A1A'
+  const roseGold = '#D4A574'
+  const warmCream = '#F5EDE4'
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = '' }
+    }
+  }, [menuOpen])
+
+  // Close on Escape
+  useEffect(() => {
+    if (!menuOpen) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [menuOpen])
+
+  // Glassmorphism on scroll
+  useEffect(() => {
+    const canvasEl = document.getElementById('site-canvas')
+    if (!canvasEl) return
+    let scrollParent: HTMLElement | null = canvasEl.parentElement
+    while (scrollParent) {
+      const style = getComputedStyle(scrollParent)
+      if (style.overflowY === 'auto' || style.overflowY === 'scroll' || style.overflow === 'auto') break
+      scrollParent = scrollParent.parentElement
+    }
+    if (!scrollParent) return
+    const onScroll = () => {
+      setScrolled(scrollParent!.scrollTop > 40)
+    }
+    scrollParent.addEventListener('scroll', onScroll, { passive: true })
+    return () => { scrollParent!.removeEventListener('scroll', onScroll) }
+  }, [])
+
+  const toggleMenu = useCallback(() => setMenuOpen(prev => !prev), [])
+
+  // Default nav links for florist
+  const menuLinks: { label: string; href: string }[] = links.length > 0
+    ? links.map(l => ({ label: l.label, href: l.href }))
+    : [
+        { label: 'Nos Compositions', href: '/compositions' },
+        { label: 'La Boutique', href: '/boutique' },
+        { label: 'Abonnements', href: '/abonnements' },
+        { label: 'Mariages', href: '/mariages' },
+        { label: 'Contact', href: '/contact' },
+      ]
+
+  const socials = [
+    { label: 'Instagram', href: '#', icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+    )},
+    { label: 'Facebook', href: '#', icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    )},
+    { label: 'Pinterest', href: '#', icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+    )},
+  ]
+
+  return (
+    <>
+      {/* Petale header responsive styles + premium animations */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .petale-nav-link { position: relative; display: inline-block; }
+        .petale-nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          width: 0;
+          height: 1.5px;
+          background: ${roseGold};
+          transition: width 0.3s ease, left 0.3s ease;
+        }
+        .petale-nav-link:hover::after { width: 100%; left: 0; }
+        .petale-cta-btn {
+          position: relative;
+          overflow: hidden;
+          z-index: 1;
+        }
+        .petale-cta-btn::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          background: ${roseGold};
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          transition: width 0.5s ease, height 0.5s ease;
+          z-index: -1;
+        }
+        .petale-cta-btn:hover::before { width: 300%; height: 300%; }
+        .petale-cta-btn:hover { color: ${richBlack} !important; }
+        @media (max-width: 768px) {
+          .petale-resp-menu-grid { grid-template-columns: 1fr !important; }
+          .petale-resp-menu-right { display: none !important; }
+          .petale-desktop-nav { display: none !important; }
+          .petale-desktop-cta { display: none !important; }
+          .petale-mobile-menu-btn { display: flex !important; }
+        }
+        @media (min-width: 769px) {
+          .petale-mobile-menu-btn { display: none !important; }
+        }
+      ` }} />
+      {/* ─── NAVBAR ─── */}
+      <header
+        {...elementProps(config.id, 'wrapper', 'container', 'Header')}
+        className={cn('absolute top-0 left-0 w-full flex items-center')}
+        style={{
+          zIndex: 888,
+          backgroundColor: scrolled ? 'rgba(26, 26, 26, 0.85)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(212, 165, 116, 0.15)' : '1px solid transparent',
+          minHeight: '72px',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+          transition: 'background-color 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease',
+        }}
+      >
+        <div
+          {...elementProps(config.id, 'navGrid', 'container', 'Nav Grid')}
+          className={cn('grid items-center w-full')}
+          style={{
+            gridTemplateColumns: '1fr auto auto',
+            justifyContent: 'space-between',
+            gap: '16px',
+          }}
+        >
+          {/* LEFT — Logo in rose gold with elegant hover glow */}
+          <div
+            {...elementProps(config.id, 'logo', 'image')}
+            className="tracking-wide"
+            style={{
+              maxWidth: '160px',
+              fontSize: '20px',
+              fontWeight: 600,
+              color: roseGold,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+              transition: 'text-shadow 0.4s ease, letter-spacing 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+              cursor: 'pointer',
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.textShadow = `0 0 20px rgba(212, 165, 116, 0.4)`; (e.currentTarget as HTMLElement).style.letterSpacing = '0.14em' }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.textShadow = 'none'; (e.currentTarget as HTMLElement).style.letterSpacing = '0.08em' }}
+          >
+            {renderLogo(logo, 'font-semibold text-lg tracking-wide')}
+          </div>
+
+          {/* CENTER — Nav links (desktop) with rose gold center-out underline */}
+          <nav className="hidden md:flex items-center petale-desktop-nav" style={{ gap: '32px' }}>
+            {menuLinks.slice(0, 4).map((link, i) => (
+              <a
+                key={link.label}
+                {...elementProps(config.id, `links.${i}.label`, 'link', link.label)}
+                href={link.href}
+                className="petale-nav-link"
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 400,
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  textDecoration: 'none',
+                  letterSpacing: '0.04em',
+                  transition: 'color 0.3s ease',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = warmCream }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255, 255, 255, 0.7)' }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* RIGHT — CTA + Menu button */}
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            {/* CTA Button — rose gold filled with organic hover */}
+            <a
+              {...elementProps(config.id, 'ctaLabel', 'button')}
+              href="/rendez-vous"
+              className="hidden md:flex items-center petale-desktop-cta petale-cta-btn"
+              style={{
+                borderRadius: '999px',
+                backgroundColor: 'transparent',
+                color: roseGold,
+                paddingLeft: '24px',
+                paddingRight: '24px',
+                paddingTop: '10px',
+                paddingBottom: '10px',
+                fontSize: '13px',
+                fontWeight: 600,
+                letterSpacing: '0.04em',
+                textDecoration: 'none',
+                border: `1.5px solid ${roseGold}`,
+                transition: 'color 0.4s ease',
+              }}
+            >
+              {ctaLabel || 'Nous contacter'}
+            </a>
+
+            {/* Menu button (glassmorphism rose gold tint) — mobile */}
+            <div
+              role="button"
+              onClick={toggleMenu}
+              className={cn('flex items-center cursor-pointer petale-mobile-menu-btn')}
+              style={{
+                borderRadius: '999px',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                backgroundColor: 'rgba(212, 165, 116, 0.15)',
+                color: '#FFFFFF',
+                paddingLeft: '20px',
+                paddingRight: '20px',
+                paddingTop: '10px',
+                paddingBottom: '10px',
+                fontSize: '14px',
+                fontWeight: 500,
+                fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+                border: '1px solid rgba(212, 165, 116, 0.3)',
+                gap: '10px',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(212, 165, 116, 0.28)' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(212, 165, 116, 0.15)' }}
+            >
+              <span {...elementProps(config.id, 'menuLabel', 'text', 'Menu Label')}>{ctaLabel || 'Menu'}</span>
+              {/* Hamburger icon — animated lines */}
+              <span
+                {...elementProps(config.id, 'menuIcon', 'icon', 'Menu Icon')}
+                className={cn('flex flex-col items-center')}
+                style={{ gap: '4px' }}
+              >
+                <span style={{
+                  width: '18px', height: '1.5px', display: 'block', backgroundColor: roseGold,
+                  transition: 'transform 0.3s ease, opacity 0.3s ease',
+                  transform: menuOpen ? 'translateY(2.75px) rotate(45deg)' : 'none',
+                }} />
+                <span style={{
+                  width: '18px', height: '1.5px', display: 'block', backgroundColor: roseGold,
+                  transition: 'transform 0.3s ease, opacity 0.3s ease',
+                  transform: menuOpen ? 'translateY(-2.75px) rotate(-45deg)' : 'none',
+                }} />
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ─── FULL-SCREEN MENU OVERLAY ─── */}
+      <div
+        {...elementProps(config.id, 'offCanvas', 'container', 'Off-Canvas Menu')}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          visibility: menuOpen ? 'visible' : 'hidden',
+          opacity: menuOpen ? 1 : 0,
+          transition: 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s',
+          pointerEvents: menuOpen ? 'auto' : 'none',
+        }}
+      >
+        {/* Warm glass background */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundColor: 'rgba(26, 26, 26, 0.95)',
+            backdropFilter: 'blur(40px)',
+            WebkitBackdropFilter: 'blur(40px)',
+          }}
+        />
+
+        {/* Menu content grid */}
+        <div
+          {...elementProps(config.id, 'offCanvasGrid', 'container', 'Menu Grid')}
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+          }}
+          className="petale-resp-menu-grid"
+        >
+          {/* LEFT COLUMN — Navigation */}
+          <div
+            {...elementProps(config.id, 'offCanvasNav', 'container', 'Menu Navigation')}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              padding: 'clamp(20px, 5vw, 60px)',
+              paddingTop: 'clamp(40px, 8vw, 80px)',
+            }}
+          >
+            {/* Top — Logo + Close */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '48px' }}>
+              <div
+                {...elementProps(config.id, 'offCanvasLogo', 'text', 'Menu Logo')}
+                style={{
+                  fontSize: '20px',
+                  fontWeight: 600,
+                  color: roseGold,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+                }}
+              >
+                {renderLogo(logo)}
+              </div>
+              <div
+                {...elementProps(config.id, 'closeButton', 'button', 'Close Button')}
+                role="button"
+                onClick={toggleMenu}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  borderRadius: '999px',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  backgroundColor: 'rgba(212, 165, 116, 0.15)',
+                  color: roseGold,
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                  paddingTop: '10px',
+                  paddingBottom: '10px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  border: '1px solid rgba(212, 165, 116, 0.3)',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  transition: 'background-color 0.3s ease',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(212, 165, 116, 0.28)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(212, 165, 116, 0.15)' }}
+              >
+                <span>Fermer</span>
+                <X size={18} strokeWidth={1.5} />
+              </div>
+            </div>
+
+            {/* Navigation links — organic staggered reveals */}
+            <nav
+              {...elementProps(config.id, 'offCanvasLinks', 'container', 'Menu Links')}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+                flex: 1,
+              }}
+            >
+              {menuLinks.map((link, i) => (
+                <a
+                  key={link.label}
+                  {...elementProps(config.id, `menuLinks.${i}`, 'link', link.label)}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="petale-nav-link"
+                  style={{
+                    fontSize: 'clamp(28px, 5vw, 52px)',
+                    fontWeight: 300,
+                    color: warmCream,
+                    textDecoration: 'none',
+                    padding: '8px 0',
+                    transition: `color 0.3s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1) ${i * 0.1}s, opacity 0.5s ease ${i * 0.1}s`,
+                    display: 'inline-block',
+                    fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+                    letterSpacing: '0.01em',
+                    lineHeight: 1.15,
+                    transform: menuOpen ? 'translateY(0)' : 'translateY(30px)',
+                    opacity: menuOpen ? 1 : 0,
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = roseGold }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = warmCream }}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+
+            {/* Bottom — Social Icons + CTA */}
+            <div
+              {...elementProps(config.id, 'offCanvasBottom', 'container', 'Menu Bottom')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: '32px',
+                borderTop: '1px solid rgba(212, 165, 116, 0.15)',
+              }}
+            >
+              {/* Social icons */}
+              <div
+                {...elementProps(config.id, 'offCanvasSocials', 'container', 'Social Icons')}
+                style={{ display: 'flex', gap: '16px' }}
+              >
+                {socials.map((s, i) => (
+                  <a
+                    key={s.label}
+                    {...elementProps(config.id, `social.${i}`, 'link', s.label)}
+                    href={s.href}
+                    style={{
+                      color: 'rgba(255, 255, 255, 0.4)',
+                      transition: 'color 0.3s, border-color 0.3s, background-color 0.3s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      border: '1px solid rgba(212, 165, 116, 0.2)',
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = richBlack; (e.currentTarget as HTMLElement).style.borderColor = roseGold; (e.currentTarget as HTMLElement).style.backgroundColor = roseGold }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255, 255, 255, 0.4)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212, 165, 116, 0.2)'; (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+                  >
+                    {s.icon}
+                  </a>
+                ))}
+              </div>
+
+              {/* CTA in menu */}
+              <a
+                {...elementProps(config.id, 'offCanvasCta', 'button', 'Nous contacter')}
+                href="/contact"
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '12px 28px',
+                  backgroundColor: roseGold,
+                  color: richBlack,
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  borderRadius: '999px',
+                  letterSpacing: '0.02em',
+                  transition: 'background-color 0.3s, transform 0.3s',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = warmCream; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = roseGold; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)' }}
+              >
+                {ctaLabel || 'Nous contacter'}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN — Decorative floral atmosphere */}
+          <div
+            {...elementProps(config.id, 'offCanvasImage', 'image', 'Menu Image')}
+            className="petale-resp-menu-right"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              backgroundColor: richBlack,
+            }}
+          >
+            {/* Warm rose gold gradient */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(135deg, #1A1A1A 0%, #2A2020 40%, #332828 100%)',
+              }}
+            />
+            {/* Rose gold diagonal accent */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(135deg, transparent 40%, rgba(212, 165, 116, 0.06) 60%, transparent 80%)',
+                transform: menuOpen ? 'scale(1)' : 'scale(1.1)',
+                transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            />
+            {/* Artisan quote */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 'clamp(40px, 8vw, 80px)',
+                left: 'clamp(30px, 5vw, 60px)',
+                right: 'clamp(30px, 5vw, 60px)',
+              }}
+            >
+              <div style={{
+                width: '32px',
+                height: '2px',
+                backgroundColor: roseGold,
+                marginBottom: '20px',
+                opacity: menuOpen ? 1 : 0,
+                transform: menuOpen ? 'scaleX(1)' : 'scaleX(0)',
+                transformOrigin: 'left',
+                transition: 'opacity 0.5s 0.3s, transform 0.5s 0.3s cubic-bezier(0.23, 1, 0.32, 1)',
+              }} />
+              <p style={{
+                color: 'rgba(255,255,255,0.55)',
+                fontSize: 'clamp(13px, 1.5vw, 16px)',
+                fontStyle: 'italic',
+                lineHeight: 1.6,
+                fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+                opacity: menuOpen ? 1 : 0,
+                transform: menuOpen ? 'translateY(0)' : 'translateY(12px)',
+                transition: 'opacity 0.5s 0.35s, transform 0.5s 0.35s cubic-bezier(0.23, 1, 0.32, 1)',
+              }}>
+                &laquo;&nbsp;Chaque fleur est une invitation &agrave; contempler la beaut&eacute; du monde.&nbsp;&raquo;
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export const siteHeaderMeta = {
   type: 'site-header',
   label: 'Header',
   icon: '🧭',
-  variants: ['startup', 'corporate', 'luxe-transparent', 'luxe', 'creative', 'ecommerce', 'glass', 'nacre', 'brixsa', 'obscura', 'zmr-agency', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith', 'miel'],
+  variants: ['startup', 'corporate', 'luxe-transparent', 'luxe', 'creative', 'ecommerce', 'glass', 'nacre', 'brixsa', 'obscura', 'zmr-agency', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith', 'miel', 'prisme', 'petale'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

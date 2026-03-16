@@ -6315,8 +6315,1500 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     return <MielHeroSlider config={config} isEditing={isEditing} />
   }
 
+  // ─── VARIANT: prisme ───
+  // Opticien premium : fullscreen iris-wipe slider, glassmorphism frame finder, multi-layer parallax, scroll reveals
+  if (variant === 'prisme') {
+    const navy = '#0F1923'
+    const iceBlue = '#B8D4E3'
+    const warmCream = '#E8DED0'
+
+    const defaultHeroImages = [
+      'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=1920&q=85',
+      'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=1920&q=85',
+      'https://images.unsplash.com/photo-1577803645773-f96470509666?w=1920&q=85',
+    ]
+
+    const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+    const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+
+    const slides = [
+      { name: 'Collection Optique', location: 'Verres Progressifs', image: heroImages?.[0] ?? (heroImage || defaultHeroImages[0]) },
+      { name: 'Solaire Premium', location: 'Protection UV', image: heroImages?.[1] ?? defaultHeroImages[1] },
+      { name: 'Sport & Performance', location: 'Vision Active', image: heroImages?.[2] ?? defaultHeroImages[2] },
+    ]
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [prismeActiveSlide, setPrismeActiveSlide] = useState(0)
+    const prismePrevSlideRef = useRef(0)
+    const prismeTitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const prismeSubtitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const prismeButtonRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const prismeFilterRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const [prismeMousePos, setPrismeMousePos] = useState({ x: 0.5, y: 0.5 })
+
+    const prismeGoNext = useCallback(() => {
+      setPrismeActiveSlide((prev) => {
+        prismePrevSlideRef.current = prev
+        return (prev + 1) % slides.length
+      })
+    }, [])
+
+    const prismeGoPrev = useCallback(() => {
+      setPrismeActiveSlide((prev) => {
+        prismePrevSlideRef.current = prev
+        return (prev - 1 + slides.length) % slides.length
+      })
+    }, [])
+
+    useEffect(() => {
+      const interval = setInterval(prismeGoNext, 6000)
+      return () => clearInterval(interval)
+    }, [prismeGoNext])
+
+    // Mouse parallax for decorative lens SVGs
+    const handlePrismeMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect()
+      setPrismeMousePos({
+        x: (e.clientX - rect.left) / rect.width,
+        y: (e.clientY - rect.top) / rect.height,
+      })
+    }, [])
+
+    // Filter pills state (visual only)
+    const [prismeActiveFilter, setPrismeActiveFilter] = useState<string | null>(null)
+    const filterOptions: Record<string, string[]> = {
+      Forme: ['Ronde', 'Rectangulaire', 'Aviateur', 'Papillon', 'Ovale', 'Cat-eye'],
+      Marque: ['Ray-Ban', 'Tom Ford', 'Gucci', 'Dior', 'Prada', 'Chanel'],
+      Budget: ['< 150\u20AC', '150\u20AC - 300\u20AC', '300\u20AC - 500\u20AC', '500\u20AC+'],
+    }
+    const [prismeSelectedFilters, setPrismeSelectedFilters] = useState<Record<string, string | null>>({
+      Forme: null, Marque: null, Budget: null,
+    })
+    const prismeFiltersRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+      if (!prismeActiveFilter) return
+      const handleClickOutside = (e: MouseEvent) => {
+        if (prismeFiltersRef.current && !prismeFiltersRef.current.contains(e.target as Node)) {
+          setPrismeActiveFilter(null)
+        }
+      }
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [prismeActiveFilter])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    // Chevron SVG for filter dropdowns
+    const PrismeChevron = () => (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3.5 5.25L7 8.75L10.5 5.25" stroke={iceBlue} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    )
+
+    const currentPrismeSlide = slides[prismeActiveSlide]
+
+    return (
+      <>
+        <style dangerouslySetInnerHTML={{ __html: `
+          @media (max-width: 768px) {
+            .prisme-resp-hero-grid { grid-template-columns: 1fr !important; }
+            .prisme-resp-hero-title { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
+            .prisme-resp-hero-image { min-height: 400px !important; }
+            .prisme-resp-decorative { display: none !important; }
+            .prisme-resp-filter-bar { display: none !important; }
+            .prisme-resp-slide-nav { display: none !important; }
+          }
+          /* Iris/circular wipe keyframes */
+          @keyframes prisme-iris-open {
+            0% { clip-path: circle(0% at 50% 50%); }
+            100% { clip-path: circle(150% at 50% 50%); }
+          }
+          @keyframes prisme-iris-hold {
+            0%, 100% { clip-path: circle(150% at 50% 50%); }
+          }
+          /* Ken Burns subtle drift */
+          @keyframes prisme-ken-burns {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.06) translate(-0.5%, -0.3%); }
+            100% { transform: scale(1.03) translate(0.3%, 0.2%); }
+          }
+          /* Eyebrow fade-in-up */
+          @keyframes prisme-fade-in-up {
+            0% { opacity: 0; transform: translateY(16px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          /* Scroll indicator bounce */
+          @keyframes prisme-scroll-bounce {
+            0%, 100% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(8px); opacity: 1; }
+          }
+          /* CTA button sweep fill */
+          .prisme-hero-cta {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: color 0.5s ease, box-shadow 0.5s ease;
+          }
+          .prisme-hero-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: ${navy};
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+            z-index: -1;
+          }
+          .prisme-hero-cta:hover::before {
+            transform: scaleX(1);
+          }
+          .prisme-hero-cta:hover {
+            color: ${iceBlue} !important;
+            box-shadow: 0 0 60px rgba(184, 212, 227, 0.4), 0 0 120px rgba(184, 212, 227, 0.15) !important;
+          }
+          /* Secondary CTA outline */
+          .prisme-hero-cta-secondary {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: color 0.5s ease, border-color 0.5s ease;
+          }
+          .prisme-hero-cta-secondary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: ${iceBlue};
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+            z-index: -1;
+          }
+          .prisme-hero-cta-secondary:hover::before {
+            transform: scaleX(1);
+          }
+          .prisme-hero-cta-secondary:hover {
+            color: ${navy} !important;
+            border-color: ${iceBlue} !important;
+          }
+        ` }} />
+        <section
+          {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+          className="relative overflow-hidden"
+          onMouseMove={handlePrismeMouseMove}
+          style={{
+            height: '100vh',
+            backgroundColor: navy,
+            color: '#FFFFFF',
+            fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+          }}
+        >
+          {/* ── Slide images with iris (circular) wipe transition ── */}
+          {slides.map((slide, i) => {
+            const isActive = prismeActiveSlide === i
+            const isPrev = prismePrevSlideRef.current === i && !isActive
+
+            // Iris wipe: circle expands from center
+            // Active slide: circle opens from 0% to 150% radius
+            // Previous slide: full coverage, sits behind
+            // Others: hidden (circle at 0%)
+            return (
+              <div
+                key={i}
+                className="absolute inset-0"
+                style={{
+                  clipPath: isActive
+                    ? 'circle(150% at 50% 50%)'
+                    : isPrev
+                      ? 'circle(150% at 50% 50%)'
+                      : 'circle(0% at 50% 50%)',
+                  opacity: isActive || isPrev ? 1 : 0,
+                  transition: isActive
+                    ? 'clip-path 1.4s cubic-bezier(0.76, 0, 0.24, 1), opacity 0s'
+                    : isPrev
+                      ? 'none'
+                      : 'clip-path 0s 1.5s, opacity 0s 1.5s',
+                  zIndex: isActive ? 2 : isPrev ? 1 : 0,
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                    animation: isActive ? 'prisme-ken-burns 12s ease-in-out infinite' : 'none',
+                  }}
+                />
+              </div>
+            )
+          })}
+
+          {/* ── Multi-layer gradient overlays ── */}
+          {/* Layer 1: Diagonal sweep from left */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `linear-gradient(135deg, ${navy} 0%, rgba(15, 25, 35, 0.85) 35%, rgba(15, 25, 35, 0.3) 60%, transparent 100%)`,
+              zIndex: 3,
+            }}
+          />
+          {/* Layer 2: Bottom fade for text readability */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `linear-gradient(to top, ${navy} 0%, rgba(15, 25, 35, 0.5) 30%, transparent 60%)`,
+              zIndex: 3,
+            }}
+          />
+          {/* Layer 3: Subtle vignette */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse at center, transparent 50%, rgba(15, 25, 35, 0.4) 100%)',
+              zIndex: 3,
+            }}
+          />
+
+          {/* ── Decorative SVG lens circles with mouse parallax ── */}
+          <div className="prisme-resp-decorative absolute inset-0 pointer-events-none" style={{ zIndex: 4 }}>
+            {/* Large lens outline - top right, parallax */}
+            <svg
+              width="500" height="500" viewBox="0 0 500 500"
+              style={{
+                position: 'absolute',
+                top: '-80px',
+                right: '-120px',
+                opacity: 0.08,
+                transform: `translate(${(prismeMousePos.x - 0.5) * -20}px, ${(prismeMousePos.y - 0.5) * -15}px)`,
+                transition: 'transform 0.3s ease-out',
+              }}
+            >
+              <circle cx="250" cy="250" r="220" stroke={iceBlue} strokeWidth="1" fill="none" />
+              <circle cx="250" cy="250" r="180" stroke={iceBlue} strokeWidth="0.5" fill="none" />
+              <circle cx="250" cy="250" r="140" stroke={iceBlue} strokeWidth="0.3" fill="none" />
+              {/* Lens refraction lines */}
+              <line x1="100" y1="250" x2="400" y2="250" stroke={iceBlue} strokeWidth="0.2" opacity="0.5" />
+              <line x1="250" y1="100" x2="250" y2="400" stroke={iceBlue} strokeWidth="0.2" opacity="0.5" />
+            </svg>
+            {/* Small lens outline - bottom left, parallax (opposite direction) */}
+            <svg
+              width="300" height="300" viewBox="0 0 300 300"
+              style={{
+                position: 'absolute',
+                bottom: '80px',
+                left: '-60px',
+                opacity: 0.05,
+                transform: `translate(${(prismeMousePos.x - 0.5) * 15}px, ${(prismeMousePos.y - 0.5) * 12}px)`,
+                transition: 'transform 0.3s ease-out',
+              }}
+            >
+              <circle cx="150" cy="150" r="130" stroke={warmCream} strokeWidth="1" fill="none" />
+              <circle cx="150" cy="150" r="90" stroke={warmCream} strokeWidth="0.5" fill="none" />
+            </svg>
+            {/* Medium lens - center right, stronger parallax */}
+            <svg
+              width="200" height="200" viewBox="0 0 200 200"
+              style={{
+                position: 'absolute',
+                top: '40%',
+                right: '15%',
+                opacity: 0.04,
+                transform: `translate(${(prismeMousePos.x - 0.5) * 25}px, ${(prismeMousePos.y - 0.5) * 20}px)`,
+                transition: 'transform 0.3s ease-out',
+              }}
+            >
+              <circle cx="100" cy="100" r="80" stroke={iceBlue} strokeWidth="0.5" fill="none" />
+              <circle cx="100" cy="100" r="50" stroke={iceBlue} strokeWidth="0.3" fill="none" />
+            </svg>
+            {/* Diagonal refraction lines */}
+            <svg
+              width="100%" height="100%" viewBox="0 0 1920 1080"
+              style={{ position: 'absolute', inset: 0, opacity: 0.03 }}
+            >
+              <line x1="0" y1="1080" x2="960" y2="0" stroke={iceBlue} strokeWidth="1" />
+              <line x1="960" y1="1080" x2="1920" y2="0" stroke={iceBlue} strokeWidth="0.5" />
+            </svg>
+          </div>
+
+          {/* ── Main content ── */}
+          <div
+            {...elementProps(config.id, 'centerContent', 'container', 'Hero Content')}
+            className="relative z-10 flex flex-col h-full"
+            style={{ zIndex: 5 }}
+          >
+            {/* Content grid - diagonal split layout */}
+            <div
+              {...elementProps(config.id, 'contentGrid', 'container', 'Content Grid')}
+              className="prisme-resp-hero-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                flex: 1,
+                minHeight: 0,
+              }}
+            >
+              {/* Left - Text content with staggered scroll reveals */}
+              <div
+                {...elementProps(config.id, 'textContent', 'container', 'Text Content')}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  padding: 'clamp(40px, 8vw, 120px) clamp(20px, 5vw, 80px)',
+                }}
+              >
+                {/* Eyebrow with fade-in-up animation */}
+                <div ref={prismeTitleRevealRef}>
+                  <span
+                    {...elementProps(config.id, 'eyebrow', 'text')}
+                    style={{
+                      display: 'inline-block',
+                      fontSize: 12,
+                      fontWeight: 500,
+                      letterSpacing: '3px',
+                      textTransform: 'uppercase',
+                      color: iceBlue,
+                      marginBottom: 24,
+                      animation: 'prisme-fade-in-up 0.6s ease-out 0.3s both',
+                    }}
+                  >
+                    {(content as Record<string, unknown>).eyebrow as string || 'Opticien'}
+                  </span>
+
+                  {/* Title */}
+                  <h1
+                    {...elementProps(config.id, 'title', 'heading')}
+                    className="prisme-resp-hero-title"
+                    style={{
+                      fontSize: 'clamp(2.875rem, 1.6429rem + 5.4762vw, 5.75rem)',
+                      fontWeight: 300,
+                      lineHeight: '105%',
+                      letterSpacing: '-0.02em',
+                      color: '#FFFFFF',
+                      margin: 0,
+                      marginBottom: 20,
+                    }}
+                  >
+                    {title || "L'Art de la Vision"}
+                  </h1>
+                </div>
+
+                {/* Subtitle with staggered reveal */}
+                <div ref={prismeSubtitleRevealRef}>
+                  <p
+                    {...elementProps(config.id, 'subtitle', 'text')}
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 400,
+                      lineHeight: '160%',
+                      color: 'rgba(184, 212, 227, 0.7)',
+                      maxWidth: 460,
+                      marginBottom: 40,
+                    }}
+                  >
+                    {subtitle || 'Votre vision, notre expertise'}
+                  </p>
+                </div>
+
+                {/* CTA Buttons with sweep fill animation */}
+                <div ref={prismeButtonRevealRef} className="flex items-center" style={{ gap: 16 }}>
+                  <a
+                    {...elementProps(config.id, 'primaryButton', 'button')}
+                    href={content.primaryButton?.href ?? '/rendez-vous'}
+                    className="prisme-hero-cta"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      backgroundColor: iceBlue,
+                      color: navy,
+                      padding: '16px 40px',
+                      fontSize: 14,
+                      fontWeight: 600,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      textDecoration: 'none',
+                      boxShadow: '0 0 30px rgba(184, 212, 227, 0.2)',
+                    }}
+                  >
+                    {content.primaryButton?.label ?? 'Prendre rendez-vous'}
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </a>
+                  <a
+                    {...elementProps(config.id, 'secondaryButton', 'button')}
+                    href={content.secondaryButton?.href ?? '#collections'}
+                    className="prisme-hero-cta-secondary"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      backgroundColor: 'transparent',
+                      color: iceBlue,
+                      padding: '16px 32px',
+                      fontSize: 14,
+                      fontWeight: 500,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      textDecoration: 'none',
+                      border: `1px solid rgba(184, 212, 227, 0.3)`,
+                    }}
+                  >
+                    {content.secondaryButton?.label ?? 'Nos collections'}
+                  </a>
+                </div>
+              </div>
+
+              {/* Right - Image area with clip-path (visual only, images behind via absolute) */}
+              <div
+                {...elementProps(config.id, 'imageContainer', 'container', 'Image Container')}
+                className="relative prisme-resp-hero-image"
+                style={{ minHeight: '100vh' }}
+              />
+            </div>
+
+            {/* ── Glassmorphism "Trouver ma monture" filter bar ── */}
+            <div
+              ref={prismeFilterRevealRef}
+              className="prisme-resp-filter-bar"
+              style={{
+                position: 'absolute',
+                bottom: '100px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '100%',
+                maxWidth: '680px',
+                zIndex: 10,
+              }}
+            >
+              <div
+                {...elementProps(config.id, 'filterBar', 'container', 'Frame Finder')}
+                ref={prismeFiltersRef}
+                style={{
+                  borderRadius: '999px',
+                  backdropFilter: 'blur(24px)',
+                  WebkitBackdropFilter: 'blur(24px)',
+                  backgroundColor: 'rgba(15, 25, 35, 0.5)',
+                  border: '1px solid rgba(184, 212, 227, 0.12)',
+                  padding: '6px 6px 6px 28px',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                {/* Label */}
+                <span
+                  {...elementProps(config.id, 'filterLabel', 'text', 'Filter Label')}
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 500,
+                    color: 'rgba(184, 212, 227, 0.6)',
+                    marginRight: 20,
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                  }}
+                >
+                  Trouver ma monture
+                </span>
+
+                {/* Filter pills */}
+                <div className="flex items-center" style={{ flexShrink: 0 }}>
+                  {(['Forme', 'Marque', 'Budget'] as const).map((label, i) => (
+                    <div
+                      key={label}
+                      style={{
+                        position: 'relative',
+                        paddingRight: i < 2 ? '14px' : '0',
+                        marginRight: i < 2 ? '14px' : '0',
+                        borderRight: i < 2 ? '1px solid rgba(184, 212, 227, 0.15)' : 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span
+                        {...elementProps(config.id, `filters.${i}.label`, 'text')}
+                        onClick={() => setPrismeActiveFilter(prismeActiveFilter === label ? null : label)}
+                        style={{
+                          color: prismeSelectedFilters[label] ? iceBlue : 'rgba(184, 212, 227, 0.8)',
+                          fontSize: '13px',
+                          gap: '5px',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap',
+                          display: 'flex',
+                          alignItems: 'center',
+                          userSelect: 'none',
+                          fontWeight: prismeSelectedFilters[label] ? 500 : 400,
+                        }}
+                      >
+                        {prismeSelectedFilters[label] ?? label}
+                        <span
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            transition: 'transform 0.2s ease',
+                            transform: prismeActiveFilter === label ? 'rotate(180deg)' : 'rotate(0deg)',
+                          }}
+                        >
+                          <PrismeChevron />
+                        </span>
+                      </span>
+                      {prismeActiveFilter === label && (
+                        <div
+                          {...elementProps(config.id, `filters.${i}.dropdown`, 'container', `${label} Dropdown`)}
+                          style={{
+                            position: 'absolute',
+                            bottom: '100%',
+                            left: 0,
+                            marginBottom: '12px',
+                            minWidth: '160px',
+                            zIndex: 100,
+                            backgroundColor: 'rgba(15, 25, 35, 0.85)',
+                            backdropFilter: 'blur(24px)',
+                            WebkitBackdropFilter: 'blur(24px)',
+                            border: '1px solid rgba(184, 212, 227, 0.12)',
+                            borderRadius: '8px',
+                            padding: '6px',
+                          }}
+                        >
+                          {filterOptions[label].map((option) => (
+                            <div
+                              key={option}
+                              {...elementProps(config.id, `filters.${i}.option.${option}`, 'text', option)}
+                              onClick={() => {
+                                setPrismeSelectedFilters((prev) => ({ ...prev, [label]: prev[label] === option ? null : option }))
+                                setPrismeActiveFilter(null)
+                              }}
+                              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(184, 212, 227, 0.08)' }}
+                              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+                              style={{
+                                padding: '8px 14px',
+                                color: prismeSelectedFilters[label] === option ? iceBlue : 'rgba(184, 212, 227, 0.8)',
+                                fontSize: '13px',
+                                cursor: 'pointer',
+                                borderRadius: '4px',
+                                transition: 'background-color 0.15s ease',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {option}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Search button */}
+                <div style={{ flex: '1 1 auto' }} />
+                <div
+                  {...elementProps(config.id, 'filterSearchBtn', 'button', 'Search Button')}
+                  role="button"
+                  style={{
+                    backgroundColor: iceBlue,
+                    color: navy,
+                    borderRadius: '999px',
+                    padding: '10px 24px',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                    letterSpacing: '0.03em',
+                  }}
+                >
+                  Rechercher
+                </div>
+              </div>
+            </div>
+
+            {/* ── Bottom-left slide meta badge ── */}
+            <div
+              {...elementProps(config.id, 'slideMeta', 'container', 'Slide Info')}
+              className="absolute z-10"
+              style={{
+                bottom: '24px',
+                left: 'clamp(16px, 4vw, 60px)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                backgroundColor: 'rgba(15, 25, 35, 0.5)',
+                border: '1px solid rgba(184, 212, 227, 0.1)',
+                borderRadius: '4px',
+                padding: '12px 20px',
+              }}
+            >
+              <div className="flex items-center" style={{ gap: '16px' }}>
+                <span
+                  {...elementProps(config.id, `slides.${prismeActiveSlide}.name`, 'text')}
+                  style={{ fontSize: 'clamp(13px, 1.5vw, 16px)', fontWeight: 500, color: '#ffffff' }}
+                >
+                  {currentPrismeSlide.name}
+                </span>
+                <span style={{ color: 'rgba(184, 212, 227, 0.4)', fontSize: '14px' }}>&middot;</span>
+                <span
+                  {...elementProps(config.id, `slides.${prismeActiveSlide}.location`, 'text')}
+                  style={{ color: 'rgba(184, 212, 227, 0.6)', fontSize: '13px' }}
+                >
+                  {currentPrismeSlide.location}
+                </span>
+              </div>
+            </div>
+
+            {/* ── Nav arrows ── */}
+            <div
+              {...elementProps(config.id, 'prevButton', 'button')}
+              role="button"
+              onClick={prismeGoPrev}
+              className="absolute z-10 flex items-center justify-center prisme-resp-slide-nav"
+              style={{
+                left: 'clamp(16px, 4vw, 60px)',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: 'clamp(40px, 5vw, 52px)',
+                height: 'clamp(40px, 5vw, 52px)',
+                borderRadius: '50%',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                backgroundColor: 'rgba(15, 25, 35, 0.4)',
+                border: '1px solid rgba(184, 212, 227, 0.1)',
+                cursor: 'pointer',
+                transition: 'transform 0.5s ease, background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(184, 212, 227, 0.15)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(15, 25, 35, 0.4)' }}
+              aria-label="Previous slide"
+            >
+              <ChevronLeft style={{ width: '20px', height: '20px', color: iceBlue }} />
+            </div>
+
+            <div
+              {...elementProps(config.id, 'nextButton', 'button')}
+              role="button"
+              onClick={prismeGoNext}
+              className="absolute z-10 flex items-center justify-center prisme-resp-slide-nav"
+              style={{
+                right: 'clamp(16px, 4vw, 60px)',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: 'clamp(40px, 5vw, 52px)',
+                height: 'clamp(40px, 5vw, 52px)',
+                borderRadius: '50%',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                backgroundColor: 'rgba(15, 25, 35, 0.4)',
+                border: '1px solid rgba(184, 212, 227, 0.1)',
+                cursor: 'pointer',
+                transition: 'transform 0.5s ease, background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(184, 212, 227, 0.15)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(15, 25, 35, 0.4)' }}
+              aria-label="Next slide"
+            >
+              <ChevronRight style={{ width: '20px', height: '20px', color: iceBlue }} />
+            </div>
+
+            {/* ── Bottom-right thumbnail dots ── */}
+            <div
+              {...elementProps(config.id, 'slideNav', 'container', 'Slide Nav')}
+              className="absolute z-10 flex prisme-resp-slide-nav"
+              style={{ bottom: '24px', right: 'clamp(16px, 4vw, 60px)', gap: '16px' }}
+            >
+              {slides.map((slide, i) => (
+                <div
+                  key={i}
+                  role="button"
+                  onClick={() => { prismePrevSlideRef.current = prismeActiveSlide; setPrismeActiveSlide(i) }}
+                  className="overflow-hidden relative"
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    opacity: prismeActiveSlide === i ? 1 : 0.4,
+                    border: prismeActiveSlide === i ? `2px solid ${iceBlue}` : '2px solid transparent',
+                    cursor: 'pointer',
+                    transition: 'opacity 0.3s ease, border-color 0.3s ease, transform 0.3s ease',
+                    transform: prismeActiveSlide === i ? 'scale(1.1)' : 'scale(1)',
+                    padding: 0,
+                  }}
+                  aria-label={`Slide ${i + 1}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={slide.image} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ borderRadius: '50%' }} />
+                </div>
+              ))}
+            </div>
+
+            {/* ── Scroll indicator "Defiler" ── */}
+            <div
+              {...elementProps(config.id, 'scrollIndicator', 'container', 'Scroll Indicator')}
+              className="absolute z-10"
+              style={{
+                bottom: '28px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '6px',
+                opacity: 0.6,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 10,
+                  fontWeight: 500,
+                  letterSpacing: '2px',
+                  textTransform: 'uppercase',
+                  color: iceBlue,
+                }}
+              >
+                D\u00E9filer
+              </span>
+              <svg
+                width="16" height="24" viewBox="0 0 16 24" fill="none"
+                style={{ animation: 'prisme-scroll-bounce 2s ease-in-out infinite' }}
+              >
+                <path d="M8 4L8 18M4 14L8 18L12 14" stroke={iceBlue} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
+        </section>
+      </>
+    )
+  }
+
+  // ─── VARIANT: petale ───
+  // Fleuriste premium : full viewport hero with organic flowing shapes, asymmetric layout, botanical pattern overlay, rose gold accents #D4A574
+  if (variant === 'petale') {
+    return <PetaleHero config={config} isEditing={isEditing} />
+  }
+
   // fallback → startup
   return <HeroSection config={{ ...config, variant: 'startup' }} isEditing={isEditing} />
+}
+
+// ─── PETALE HERO ───
+// Fleuriste premium : fullscreen bloom-wipe slider, Ken Burns parallax, glassmorphism bouquet selector,
+// mouse-reactive floating petals, staggered scroll reveals, multi-layer botanical overlays
+// Colors: rose gold #D4A574, forest green #2D5016, rich black #1A1A1A
+function PetaleHero({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
+  const hero = config as HeroConfig
+  const content = (hero.content ?? {}) as Partial<HeroContent>
+  const { accentColor } = config.style
+
+  const title = content.title ?? "L\u2019art floral d\u2019exception"
+  const subtitle = content.subtitle ?? "L\u2019art floral au service de vos \u00E9motions"
+  const roseGold = accentColor ?? '#D4A574'
+  const forestGreen = '#2D5016'
+  const richBlack = '#1A1A1A'
+  const btnLabel = content.primaryButton?.label ?? 'D\u00E9couvrir nos cr\u00E9ations'
+  const btnHref = content.primaryButton?.href ?? '#'
+  const secondaryBtnLabel = content.secondaryButton?.label ?? 'Nos collections'
+
+  // Hero images for bloom-wipe slider
+  const defaultHeroImages = [
+    'https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=1920&q=85',
+    'https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=1920&q=85',
+    'https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=1920&q=85',
+  ]
+  const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+  const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+  const singleImage = content.image?.src
+
+  const slides = [
+    { image: heroImages?.[0] ?? singleImage ?? defaultHeroImages[0] },
+    { image: heroImages?.[1] ?? defaultHeroImages[1] },
+    { image: heroImages?.[2] ?? defaultHeroImages[2] },
+  ]
+
+  /* eslint-disable react-hooks/rules-of-hooks */
+  const [activeSlide, setActiveSlide] = useState(0)
+  const prevSlideRef = useRef(0)
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 })
+  const sectionRef = useRef<HTMLElement>(null)
+  const [scrollY, setScrollY] = useState(0)
+
+  // Staggered scroll reveal refs
+  const titleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+  const subtitleRevealRef = useBrixsaScrollReveal({ threshold: 0.1, disabled: isEditing })
+  const buttonsRevealRef = useBrixsaScrollReveal({ threshold: 0.1, disabled: isEditing })
+  const selectorRevealRef = useBrixsaScrollReveal({ threshold: 0.1, disabled: isEditing })
+
+  // Glassmorphism bouquet selector state
+  const [activePill, setActivePill] = useState<string | null>(null)
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, string | null>>({
+    Occasion: null,
+    Style: null,
+    Budget: null,
+  })
+  const filterOptionsRef = useRef<HTMLDivElement>(null)
+
+  const filterOptions: Record<string, string[]> = {
+    Occasion: ['Mariage', 'Anniversaire', 'D\u00E9coration'],
+    Style: ['Champ\u00EAtre', 'Romantique', 'Moderne'],
+    Budget: ['50-100\u20AC', '100-200\u20AC', '200\u20AC+'],
+  }
+
+  // Auto-advance slides
+  const goNext = useCallback(() => {
+    setActiveSlide((prev) => {
+      prevSlideRef.current = prev
+      return (prev + 1) % slides.length
+    })
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(goNext, 6000)
+    return () => clearInterval(interval)
+  }, [goNext])
+
+  // Mouse tracking for petal parallax
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect()
+      setMousePos({
+        x: (e.clientX - rect.left) / rect.width,
+        y: (e.clientY - rect.top) / rect.height,
+      })
+    }
+    el.addEventListener('mousemove', handleMouseMove)
+    return () => el.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
+  // Scroll parallax for image depth
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Close bouquet selector dropdown on outside click
+  useEffect(() => {
+    if (!activePill) return
+    const handleClickOutside = (e: MouseEvent) => {
+      if (filterOptionsRef.current && !filterOptionsRef.current.contains(e.target as Node)) {
+        setActivePill(null)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [activePill])
+  /* eslint-enable react-hooks/rules-of-hooks */
+
+  const parallaxOffset = scrollY * 0.3
+
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes petale-float {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          25% { transform: translate(6px, -14px) rotate(5deg); }
+          50% { transform: translate(-4px, -22px) rotate(-3deg); }
+          75% { transform: translate(8px, -10px) rotate(7deg); }
+        }
+        @keyframes petale-float-2 {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          33% { transform: translate(-8px, -18px) rotate(-6deg); }
+          66% { transform: translate(5px, -28px) rotate(4deg); }
+        }
+        @keyframes petale-float-3 {
+          0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+          50% { transform: translate(10px, -16px) rotate(8deg) scale(1.05); }
+        }
+        @keyframes petale-shimmer {
+          0% { opacity: 0.4; }
+          50% { opacity: 0.85; }
+          100% { opacity: 0.4; }
+        }
+        @keyframes petale-ken-burns-1 {
+          0% { transform: scale(1) translate(0, 0); }
+          100% { transform: scale(1.12) translate(-1.5%, -1%); }
+        }
+        @keyframes petale-ken-burns-2 {
+          0% { transform: scale(1.05) translate(1%, 0.5%); }
+          100% { transform: scale(1.15) translate(-0.5%, -1.5%); }
+        }
+        @keyframes petale-ken-burns-3 {
+          0% { transform: scale(1) translate(0.5%, 1%); }
+          100% { transform: scale(1.1) translate(-1%, 0%); }
+        }
+        @keyframes petale-subtitle-in {
+          0% { opacity: 0; transform: translateY(20px) rotate(-0.5deg); }
+          100% { opacity: 1; transform: translateY(0) rotate(0deg); }
+        }
+        @keyframes petale-scroll-bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(8px); }
+        }
+        @keyframes petale-fill-sweep {
+          0% { background-position: 200% center; }
+          100% { background-position: 0% center; }
+        }
+        .petale-hero-btn {
+          position: relative;
+          overflow: hidden;
+          z-index: 1;
+        }
+        .petale-hero-btn::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent 0%, rgba(212, 165, 116, 0.3) 40%, rgba(255, 220, 180, 0.5) 50%, rgba(212, 165, 116, 0.3) 60%, transparent 100%);
+          background-size: 200% 100%;
+          background-position: 200% center;
+          z-index: -1;
+          transition: none;
+          border-radius: inherit;
+        }
+        .petale-hero-btn:hover::before {
+          animation: petale-fill-sweep 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .petale-hero-btn:hover {
+          box-shadow: 0 0 40px rgba(212, 165, 116, 0.45), 0 0 80px rgba(212, 165, 116, 0.15) !important;
+          transform: translateY(-2px) !important;
+        }
+        .petale-hero-btn-secondary {
+          position: relative;
+          overflow: hidden;
+        }
+        .petale-hero-btn-secondary:hover {
+          background-color: rgba(212, 165, 116, 0.12) !important;
+          border-color: rgba(212, 165, 116, 0.6) !important;
+          transform: translateY(-1px) !important;
+        }
+        .petale-selector-pill {
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+          user-select: none;
+        }
+        .petale-selector-pill:hover {
+          background-color: rgba(212, 165, 116, 0.15) !important;
+          border-color: rgba(212, 165, 116, 0.5) !important;
+        }
+        @media (max-width: 968px) {
+          .petale-hero-grid { grid-template-columns: 1fr !important; text-align: center; }
+          .petale-hero-text { align-items: center !important; }
+          .petale-hero-image { min-height: 400px !important; margin-top: 40px; }
+          .petale-selector-bar { max-width: 100% !important; flex-direction: column !important; gap: 8px !important; }
+        }
+        @media (max-width: 480px) {
+          .petale-hero-title { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
+          .petale-scroll-indicator { display: none !important; }
+        }
+      ` }} />
+      <section
+        ref={sectionRef}
+        {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+        className="relative overflow-hidden"
+        style={{
+          minHeight: '100vh',
+          backgroundColor: richBlack,
+          color: '#FFFFFF',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        {/* ═══ BLOOM-WIPE SLIDER — radial circle reveal like a flower opening ═══ */}
+        {slides.map((slide, i) => {
+          const isActive = activeSlide === i
+          const isPrev = prevSlideRef.current === i && !isActive
+
+          return (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                clipPath: isActive
+                  ? 'circle(150% at 50% 50%)'
+                  : isPrev
+                    ? 'circle(150% at 50% 50%)'
+                    : 'circle(0% at 50% 50%)',
+                opacity: isActive || isPrev ? 1 : 0,
+                transition: isActive
+                  ? 'clip-path 1.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0s'
+                  : isPrev
+                    ? 'opacity 0.6s ease 1.4s'
+                    : 'clip-path 0s 2s, opacity 0s 2s',
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              }}
+            >
+              {slide.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.image}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    animation: isActive ? `petale-ken-burns-${(i % 3) + 1} 12s ease-out forwards` : undefined,
+                    transform: !isActive ? 'scale(1.12)' : undefined,
+                    willChange: 'transform',
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{ background: `linear-gradient(135deg, ${richBlack} 0%, #2a2520 50%, ${richBlack} 100%)` }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* ═══ MULTI-LAYER BOTANICAL GRADIENTS ═══ */}
+        {/* Soft vignette */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 3, background: 'radial-gradient(ellipse at center, transparent 40%, rgba(26, 26, 26, 0.5) 100%)' }} />
+        {/* Bottom gradient for content readability */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 3, background: 'linear-gradient(to top, rgba(26, 26, 26, 0.85) 0%, rgba(26, 26, 26, 0.3) 35%, transparent 60%)' }} />
+        {/* Subtle warm tone wash */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 3, background: 'linear-gradient(135deg, rgba(212, 165, 116, 0.06) 0%, transparent 40%, rgba(45, 80, 22, 0.04) 100%)' }} />
+
+        {/* Botanical pattern overlay */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 4, opacity: 0.035 }}>
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="petale-botanical" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+                <path d="M60 10 C40 30 20 50 60 70 C100 50 80 30 60 10Z" fill={roseGold} opacity="0.5" />
+                <path d="M30 80 C20 60 40 50 30 80 C40 100 20 100 30 80Z" fill={forestGreen} opacity="0.3" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#petale-botanical)" />
+          </svg>
+        </div>
+
+        {/* Rose gold glow — top right */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 4, background: `radial-gradient(ellipse at 75% 25%, rgba(212, 165, 116, 0.1) 0%, transparent 55%)` }} />
+
+        {/* ═══ MOUSE-REACTIVE FLOATING PETALS ═══ */}
+        {[
+          { top: '12%', left: '6%', size: 44, rot: -30, dur: '7s', delay: '0s', anim: 'petale-float' },
+          { top: '25%', right: '10%', size: 36, rot: 45, dur: '9s', delay: '1.5s', anim: 'petale-float-2' },
+          { bottom: '28%', left: '14%', size: 28, rot: 15, dur: '8s', delay: '3s', anim: 'petale-float-3' },
+          { bottom: '18%', right: '8%', size: 38, rot: -55, dur: '10s', delay: '0.5s', anim: 'petale-float' },
+          { top: '55%', left: '3%', size: 24, rot: 70, dur: '11s', delay: '2s', anim: 'petale-float-2' },
+          { top: '8%', right: '25%', size: 20, rot: -15, dur: '8.5s', delay: '4s', anim: 'petale-float-3' },
+        ].map((petal, i) => {
+          const mouseOffsetX = (mousePos.x - 0.5) * (12 + i * 4)
+          const mouseOffsetY = (mousePos.y - 0.5) * (8 + i * 3)
+          const pos: Record<string, string | number | undefined> = {
+            top: (petal as Record<string, unknown>).top as string | undefined,
+            left: (petal as Record<string, unknown>).left as string | undefined,
+            right: (petal as Record<string, unknown>).right as string | undefined,
+            bottom: (petal as Record<string, unknown>).bottom as string | undefined,
+          }
+          return (
+            <div
+              key={i}
+              className="absolute pointer-events-none"
+              style={{
+                zIndex: 5,
+                ...pos,
+                width: petal.size,
+                height: petal.size,
+                opacity: 0.1 + i * 0.015,
+                animation: `${petal.anim} ${petal.dur} ease-in-out ${petal.delay} infinite`,
+                transform: `translate(${mouseOffsetX}px, ${mouseOffsetY}px)`,
+                transition: 'transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
+              }}
+            >
+              <svg viewBox="0 0 40 40" fill={i % 2 === 0 ? roseGold : forestGreen} opacity={i % 2 === 0 ? 1 : 0.7}>
+                <ellipse cx="20" cy="20" rx="11" ry="17" transform={`rotate(${petal.rot} 20 20)`} />
+              </svg>
+            </div>
+          )
+        })}
+
+        {/* ═══ CONTENT GRID ═══ */}
+        <div
+          {...elementProps(config.id, 'contentGrid', 'container', 'Hero Content')}
+          className="relative w-full petale-hero-grid"
+          style={{
+            zIndex: 10,
+            display: 'grid',
+            gridTemplateColumns: '50% 50%',
+            maxWidth: '1400px',
+            margin: '0 auto',
+            padding: 'clamp(100px, 15vh, 160px) clamp(20px, 5vw, 60px) clamp(60px, 10vh, 120px)',
+            alignItems: 'center',
+            gap: 'clamp(24px, 4vw, 60px)',
+          }}
+        >
+          {/* Left — Text with staggered scroll reveals */}
+          <div
+            {...elementProps(config.id, 'textContent', 'container', 'Text Content')}
+            className="flex flex-col petale-hero-text"
+            style={{ alignItems: 'flex-start' }}
+          >
+            {/* Eyebrow + Title — scroll reveal (0.6s) */}
+            <div ref={titleRevealRef}>
+              <span
+                {...elementProps(config.id, 'eyebrow', 'text')}
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  letterSpacing: '0.25em',
+                  textTransform: 'uppercase',
+                  color: roseGold,
+                  marginBottom: '24px',
+                  display: 'inline-block',
+                  animation: 'petale-shimmer 4s ease-in-out infinite',
+                }}
+              >
+                {content.badge ?? 'ARTISAN FLEURISTE'}
+              </span>
+
+              <h1
+                {...elementProps(config.id, 'title', 'heading')}
+                className="petale-hero-title"
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.75rem, 1.5rem + 5.5vw, 5.5rem)',
+                  fontWeight: 300,
+                  lineHeight: '108%',
+                  letterSpacing: '-0.02em',
+                  color: '#FFFFFF',
+                  margin: 0,
+                  marginBottom: '24px',
+                }}
+              >
+                {title}
+              </h1>
+            </div>
+
+            {/* Subtitle — scroll reveal (0.8s) with elegant rotation */}
+            <div ref={subtitleRevealRef}>
+              <p
+                {...elementProps(config.id, 'subtitle', 'text')}
+                style={{
+                  fontSize: 'clamp(16px, 1.2vw, 20px)',
+                  fontWeight: 400,
+                  lineHeight: '165%',
+                  color: 'rgba(255, 255, 255, 0.55)',
+                  maxWidth: '460px',
+                  marginBottom: '40px',
+                  animation: isEditing ? undefined : 'petale-subtitle-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both',
+                }}
+              >
+                {subtitle}
+              </p>
+            </div>
+
+            {/* Buttons — scroll reveal (1.0s) */}
+            <div ref={buttonsRevealRef} className="flex items-center" style={{ gap: '16px', flexWrap: 'wrap' }}>
+              {/* Primary CTA — rose gold fill sweep on hover */}
+              <a
+                {...elementProps(config.id, 'primaryButton', 'button')}
+                href={btnHref}
+                className="petale-hero-btn"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '16px 40px',
+                  backgroundColor: roseGold,
+                  color: richBlack,
+                  borderRadius: '999px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 24px rgba(212, 165, 116, 0.25)',
+                  transition: 'box-shadow 0.5s ease, transform 0.3s ease',
+                  cursor: 'pointer',
+                }}
+              >
+                {btnLabel}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+
+              {/* Secondary CTA — ghost outline button */}
+              <a
+                {...elementProps(config.id, 'secondaryButton', 'button')}
+                href="#collections"
+                className="petale-hero-btn-secondary"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '15px 32px',
+                  backgroundColor: 'transparent',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  border: '1px solid rgba(212, 165, 116, 0.3)',
+                  borderRadius: '999px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  letterSpacing: '0.04em',
+                  textDecoration: 'none',
+                  transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
+                  cursor: 'pointer',
+                }}
+              >
+                {secondaryBtnLabel}
+              </a>
+            </div>
+          </div>
+
+          {/* Right — Asymmetric botanical image with parallax depth */}
+          <div
+            {...elementProps(config.id, 'imageContainer', 'container', 'Image Container')}
+            className="relative petale-hero-image"
+            style={{
+              minHeight: '520px',
+              borderRadius: '40% 60% 55% 45% / 55% 45% 60% 40%',
+              overflow: 'hidden',
+              boxShadow: `0 30px 80px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(212, 165, 116, 0.15), 0 0 120px rgba(212, 165, 116, 0.06)`,
+              transform: `translateY(${-parallaxOffset * 0.15}px)`,
+              transition: 'transform 0.1s linear',
+            }}
+          >
+            {slides[activeSlide]?.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                {...elementProps(config.id, 'image', 'image')}
+                src={slides[activeSlide].image}
+                alt={content.image?.alt ?? ''}
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  animation: `petale-ken-burns-${(activeSlide % 3) + 1} 12s ease-out forwards`,
+                  willChange: 'transform',
+                }}
+              />
+            ) : isEditing ? (
+              <EditablePlaceholder sectionId={config.id} contentPath="image.src" type="image" className="w-full h-full" />
+            ) : (
+              <div
+                className="w-full h-full flex items-center justify-center"
+                style={{ background: `linear-gradient(135deg, ${richBlack} 0%, #2a2520 50%, ${richBlack} 100%)` }}
+              >
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" opacity="0.15">
+                  <ellipse cx="30" cy="25" rx="10" ry="18" fill={roseGold} transform="rotate(-15 30 25)" />
+                  <ellipse cx="30" cy="25" rx="10" ry="18" fill={roseGold} transform="rotate(15 30 25)" />
+                  <ellipse cx="30" cy="25" rx="10" ry="18" fill={roseGold} transform="rotate(45 30 25)" />
+                  <line x1="30" y1="30" x2="30" y2="55" stroke={forestGreen} strokeWidth="2" />
+                </svg>
+              </div>
+            )}
+            {/* Organic overlay border glow */}
+            <div className="absolute inset-0 pointer-events-none" style={{ boxShadow: 'inset 0 0 80px rgba(212, 165, 116, 0.1), inset 0 0 30px rgba(0,0,0,0.3)' }} />
+          </div>
+        </div>
+
+        {/* Slide indicator dots */}
+        <div className="absolute z-10 flex" style={{ bottom: '110px', left: '50%', transform: 'translateX(-50%)', gap: '12px' }}>
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              role="button"
+              onClick={() => { prevSlideRef.current = activeSlide; setActiveSlide(i) }}
+              style={{
+                width: activeSlide === i ? '32px' : '8px',
+                height: '8px',
+                borderRadius: '4px',
+                backgroundColor: activeSlide === i ? roseGold : 'rgba(255,255,255,0.3)',
+                cursor: 'pointer',
+                transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
+              }}
+            />
+          ))}
+        </div>
+
+        {/* ═══ GLASSMORPHISM "Creer mon bouquet" SELECTOR — scroll reveal (1.2s) ═══ */}
+        <div
+          ref={selectorRevealRef}
+          {...elementProps(config.id, 'bouquetSelector', 'container', 'Bouquet Selector')}
+          className="absolute z-10"
+          style={{
+            bottom: 'clamp(40px, 6vh, 70px)',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '100%',
+            maxWidth: '680px',
+            padding: '0 20px',
+          }}
+        >
+          <div
+            ref={filterOptionsRef}
+            className="petale-selector-bar"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '10px 16px',
+              borderRadius: '999px',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+              backgroundColor: 'rgba(26, 26, 26, 0.45)',
+              border: '1px solid rgba(212, 165, 116, 0.15)',
+              boxShadow: '0 8px 40px rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            {/* Label */}
+            <span
+              {...elementProps(config.id, 'selectorLabel', 'text', 'Selector Label')}
+              style={{
+                fontSize: '13px',
+                fontWeight: 600,
+                color: roseGold,
+                letterSpacing: '0.04em',
+                whiteSpace: 'nowrap',
+                paddingLeft: '8px',
+                flexShrink: 0,
+              }}
+            >
+              Cr\u00E9er mon bouquet
+            </span>
+
+            {/* Divider */}
+            <div style={{ width: '1px', height: '28px', backgroundColor: 'rgba(212, 165, 116, 0.2)', flexShrink: 0 }} />
+
+            {/* Filter pills */}
+            {['Occasion', 'Style', 'Budget'].map((label) => (
+              <div key={label} style={{ position: 'relative', flexShrink: 0 }}>
+                <div
+                  className="petale-selector-pill"
+                  onClick={() => setActivePill(activePill === label ? null : label)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 16px',
+                    borderRadius: '999px',
+                    backgroundColor: selectedFilters[label] ? 'rgba(212, 165, 116, 0.12)' : 'rgba(255,255,255,0.05)',
+                    border: `1px solid ${selectedFilters[label] ? 'rgba(212, 165, 116, 0.35)' : 'rgba(255,255,255,0.1)'}`,
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    color: selectedFilters[label] ? roseGold : 'rgba(255,255,255,0.7)',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {selectedFilters[label] ?? label}
+                  <svg
+                    width="12" height="12" viewBox="0 0 16 16" fill="none"
+                    style={{ transition: 'transform 0.2s ease', transform: activePill === label ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                  >
+                    <path d="M4 6L8 10L12 6" stroke={selectedFilters[label] ? roseGold : 'rgba(255,255,255,0.5)'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                {/* Dropdown */}
+                {activePill === label && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '100%',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      marginBottom: '8px',
+                      minWidth: '160px',
+                      zIndex: 100,
+                      backgroundColor: 'rgba(26, 26, 26, 0.85)',
+                      backdropFilter: 'blur(24px)',
+                      WebkitBackdropFilter: 'blur(24px)',
+                      border: '1px solid rgba(212, 165, 116, 0.2)',
+                      borderRadius: '12px',
+                      padding: '6px',
+                      boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
+                    }}
+                  >
+                    {filterOptions[label].map((option) => (
+                      <div
+                        key={option}
+                        onClick={() => {
+                          setSelectedFilters((prev) => ({ ...prev, [label]: prev[label] === option ? null : option }))
+                          setActivePill(null)
+                        }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(212, 165, 116, 0.1)' }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+                        style={{
+                          padding: '8px 14px',
+                          color: selectedFilters[label] === option ? roseGold : 'rgba(255,255,255,0.7)',
+                          fontSize: '13px',
+                          cursor: 'pointer',
+                          borderRadius: '6px',
+                          transition: 'background-color 0.15s ease',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {option}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* Spacer */}
+            <div style={{ flex: '1 1 auto' }} />
+
+            {/* CTA mini button */}
+            <div
+              {...elementProps(config.id, 'selectorCta', 'button', 'Selector CTA')}
+              role="button"
+              style={{
+                padding: '10px 20px',
+                borderRadius: '999px',
+                backgroundColor: roseGold,
+                color: richBlack,
+                fontSize: '12px',
+                fontWeight: 600,
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                flexShrink: 0,
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(212, 165, 116, 0.4)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none' }}
+            >
+              Voir
+            </div>
+          </div>
+        </div>
+
+        {/* ═══ SCROLL INDICATOR — "Decouvrir" with bouncing arrow ═══ */}
+        <div
+          className="absolute z-10 flex flex-col items-center petale-scroll-indicator"
+          style={{
+            bottom: 'clamp(130px, 15vh, 160px)',
+            right: 'clamp(24px, 4vw, 60px)',
+            gap: '8px',
+          }}
+        >
+          <span
+            style={{
+              fontSize: '11px',
+              fontWeight: 500,
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              color: 'rgba(255, 255, 255, 0.4)',
+              writingMode: 'vertical-rl',
+              textOrientation: 'mixed',
+              marginBottom: '12px',
+            }}
+          >
+            D\u00E9couvrir
+          </span>
+          <svg
+            width="16" height="24" viewBox="0 0 16 24" fill="none"
+            style={{ animation: 'petale-scroll-bounce 2s ease-in-out infinite' }}
+          >
+            <path d="M8 2L8 20" stroke={roseGold} strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M3 16L8 21L13 16" stroke={roseGold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+
+        {/* Organic curve SVG divider at bottom */}
+        <div className="absolute bottom-0 left-0 w-full" style={{ zIndex: 5, lineHeight: 0 }}>
+          <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style={{ width: '100%', height: '80px', display: 'block' }}>
+            <path d="M0 40 C360 80 720 0 1080 40 C1260 60 1380 50 1440 40 L1440 80 L0 80 Z" fill={richBlack} fillOpacity="0.6" />
+            <path d="M0 50 C360 90 720 10 1080 50 C1260 70 1380 60 1440 50 L1440 80 L0 80 Z" fill={richBlack} />
+          </svg>
+        </div>
+      </section>
+    </>
+  )
 }
 
 // ─── MIEL HERO SLIDER ───
@@ -7314,7 +8806,7 @@ export const heroMeta = {
   type: 'hero',
   label: 'Hero',
   icon: '⚡',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith', 'miel'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith', 'miel', 'prisme'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

@@ -4727,6 +4727,695 @@ export function GallerySection({ config }: { config: SectionConfig }) {
     )
   }
 
+  // ─── VARIANT: prisme-collection ───
+  // Opticien premium : 3-column eyewear collection grid, glass effect cards, dark navy background
+  // Premium features: IntersectionObserver scroll reveal with stagger, image dezoom on reveal,
+  // Ken Burns hover, multi-layer hover (gradient shift + description slide-up + border glow pulse),
+  // "Découvrir" button with fill sweep, enhanced glassmorphism, category filter pills
+  if (variant === 'prisme-collection') {
+    const navy = '#0F1923'
+    const iceBlue = '#B8D4E3'
+    const warmCream = '#E8DED0'
+
+    const filterCategories = ['Toutes', 'Optique', 'Solaire', 'Sport', 'Luxe']
+
+    const defaultPrismeItems = [
+      { id: '1', title: 'Heritage Classic', duration: 'Italie \u2014 Ray-Ban', price: '\u00C0 partir de 189\u20AC', description: 'Monture ac\u00E9tate intemporelle avec verres anti-reflets premium. Finition polie \u00E0 la main, charni\u00E8res flex.', image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&q=85' },
+      { id: '2', title: 'Signature Titanium', duration: 'Japon \u2014 Tom Ford', price: '\u00C0 partir de 320\u20AC', description: 'Titane ultra-l\u00E9ger, design \u00E9pur\u00E9. Branches grav\u00E9es au laser, plaquettes ajustables en silicone.', image: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=800&q=85' },
+      { id: '3', title: 'Air Rimless', duration: 'Danemark \u2014 Lindberg', price: '\u00C0 partir de 450\u20AC', description: 'Sans monture, \u00E0 peine 1.9g. Technologie brevet\u00E9e de fixation invisible, personnalisable sur 200+ combinaisons.', image: 'https://images.unsplash.com/photo-1577803645773-f96470509666?w=800&q=85' },
+      { id: '4', title: 'Optique Couture', duration: 'France \u2014 Chanel', price: '\u00C0 partir de 280\u20AC', description: 'Collection haute couture avec d\u00E9tails matelass\u00E9s signature. Verres progressifs Essilor int\u00E9gr\u00E9s.', image: 'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?w=800&q=85' },
+      { id: '5', title: 'Sport Performance', duration: 'USA \u2014 Oakley', price: '\u00C0 partir de 220\u20AC', description: 'Monture Prizm avec technologie O-Matter. Grip Unobtainium, ventilation optimis\u00E9e pour le sport intense.', image: '' },
+      { id: '6', title: 'Vintage Revival', duration: 'Angleterre \u2014 Oliver Peoples', price: '\u00C0 partir de 350\u20AC', description: 'R\u00E9\u00E9dition fid\u00E8le des classiques ann\u00E9es 60. Ac\u00E9tate \u00E9caille de tortue, verres min\u00E9raux teint\u00E9s.', image: '' },
+    ]
+
+    const rawContentItems = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; duration?: string;
+      price?: string; description?: string; image?: string;
+    }> | undefined
+
+    const prismeItems = rawContentItems && rawContentItems.length > 0
+      ? rawContentItems.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultPrismeItems[i % defaultPrismeItems.length].title,
+          duration: item.duration ?? defaultPrismeItems[i % defaultPrismeItems.length].duration,
+          price: item.price ?? defaultPrismeItems[i % defaultPrismeItems.length].price,
+          description: item.description ?? defaultPrismeItems[i % defaultPrismeItems.length].description,
+          image: item.image ?? defaultPrismeItems[i % defaultPrismeItems.length].image,
+        }))
+      : defaultPrismeItems
+
+    // Staggered scroll-reveal: each card scales from 0.95 + fades in with 0.15s delay between cards
+    const prismeCardRevealRef = (index: number) => (el: HTMLDivElement | null) => {
+      if (!el) return
+      const delay = index * 0.15
+      el.style.opacity = '0'
+      el.style.transform = 'scale(0.95)'
+      el.style.transition = `opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${delay}s, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${delay}s`
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'scale(1)'
+          // Trigger image dezoom
+          const img = el.querySelector('.prisme-img-dezoom')
+          if (img) (img as HTMLElement).classList.add('prisme-revealed')
+          obs.disconnect()
+        }
+      }, { threshold: 0.1 })
+      obs.observe(el)
+    }
+
+    const prismeHeaderRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(30px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Collection Section')}
+        style={{
+          backgroundColor: navy,
+          padding: 'clamp(60px, 10vw, 120px) clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <style>{`
+          @media (max-width: 768px) {
+            .prisme-collection-grid { grid-template-columns: 1fr !important; }
+            .prisme-filter-bar { gap: 6px !important; }
+            .prisme-filter-pill { padding: 6px 14px !important; font-size: 11px !important; }
+          }
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .prisme-collection-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+          /* Card base transitions */
+          .prisme-collection-card {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease, border-color 0.5s ease;
+          }
+          .prisme-collection-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(184, 212, 227, 0.3) !important;
+          }
+          /* Border glow pulse on hover */
+          @keyframes prisme-border-glow {
+            0%, 100% { box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(184, 212, 227, 0.12); }
+            50% { box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 60px rgba(184, 212, 227, 0.2), 0 0 100px rgba(184, 212, 227, 0.08); }
+          }
+          .prisme-collection-card:hover {
+            animation: prisme-border-glow 2s ease-in-out infinite;
+          }
+          /* Image dezoom on scroll reveal (scale 1.08 -> 1.0) */
+          .prisme-img-dezoom { transform: scale(1.08); transition: transform 1.2s ease-out; }
+          .prisme-img-dezoom.prisme-revealed { transform: scale(1); }
+          /* Ken Burns slow zoom on hover */
+          @keyframes prisme-ken-burns {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.06); }
+          }
+          .prisme-collection-card:hover .prisme-card-img {
+            animation: prisme-ken-burns 4s ease-out forwards;
+          }
+          /* Overlay gradient shift on hover */
+          .prisme-card-overlay-hover {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+          }
+          .prisme-collection-card:hover .prisme-card-overlay-hover {
+            opacity: 1;
+          }
+          /* Description slide-up reveal on hover */
+          .prisme-card-desc-reveal {
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+          }
+          .prisme-collection-card:hover .prisme-card-desc-reveal {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          /* "Découvrir" button: appears on hover with fill sweep from left */
+          .prisme-discover-btn {
+            position: relative;
+            overflow: hidden;
+            color: #B8D4E3;
+            border: 1px solid rgba(184, 212, 227, 0.3);
+            background: transparent;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.35s ease 0.15s, transform 0.35s ease 0.15s, color 0.4s ease, border-color 0.4s ease;
+          }
+          .prisme-collection-card:hover .prisme-discover-btn {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          .prisme-discover-fill {
+            position: absolute;
+            inset: 0;
+            background: #B8D4E3;
+            transform: translateX(-102%);
+            transition: transform 0.4s ease;
+          }
+          .prisme-discover-btn:hover .prisme-discover-fill {
+            transform: translateX(0);
+          }
+          .prisme-discover-btn:hover {
+            color: #0F1923;
+            border-color: #B8D4E3;
+          }
+          /* Filter pills */
+          .prisme-filter-pill {
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            border: 1px solid rgba(184, 212, 227, 0.15);
+            background: transparent;
+            color: rgba(184, 212, 227, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+          }
+          .prisme-filter-pill:hover {
+            border-color: rgba(184, 212, 227, 0.4);
+            color: rgba(184, 212, 227, 0.8);
+          }
+          .prisme-filter-active {
+            background: rgba(184, 212, 227, 0.12) !important;
+            border-color: rgba(184, 212, 227, 0.4) !important;
+            color: #B8D4E3 !important;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+          }
+        `}</style>
+        <div style={{ maxWidth: 1320, margin: '0 auto' }}>
+          {/* Header with scroll reveal */}
+          <div ref={prismeHeaderRevealRef}>
+            {content.title ? (
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 300,
+                  lineHeight: '110%',
+                  color: warmCream,
+                  textAlign: 'center',
+                  marginBottom: 16,
+                }}
+              >
+                {String(content.title)}
+              </h2>
+            ) : null}
+            {(() => {
+              const sub = (content as Record<string, unknown>).subtitle
+              return sub ? (
+                <p
+                  {...elementProps(config.id, 'subtitle', 'text')}
+                  style={{
+                    fontSize: 'clamp(1rem, 0.9rem + 0.5vw, 1.125rem)',
+                    fontWeight: 400,
+                    lineHeight: '160%',
+                    color: 'rgba(184, 212, 227, 0.5)',
+                    textAlign: 'center',
+                    maxWidth: 600,
+                    margin: '0 auto',
+                    marginBottom: 20,
+                  }}
+                >
+                  {String(sub)}
+                </p>
+              ) : null
+            })()}
+          </div>
+
+          {/* Category filter pills */}
+          <div
+            {...elementProps(config.id, 'filters', 'container', 'Filter Bar')}
+            className="prisme-filter-bar"
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 10,
+              marginBottom: 'clamp(40px, 6vw, 70px)',
+              flexWrap: 'wrap',
+            }}
+          >
+            {filterCategories.map((cat, i) => (
+              <button
+                key={cat}
+                {...elementProps(config.id, `filter.${i}`, 'button', `Filter ${cat}`)}
+                className={cn('prisme-filter-pill', i === 0 && 'prisme-filter-active')}
+                type="button"
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* 3-column Grid */}
+          <div
+            {...elementProps(config.id, 'grid', 'container', 'Collection Grid')}
+            className="prisme-collection-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: 'clamp(16px, 3vw, 28px)',
+            }}
+          >
+            {prismeItems.map((item, i) => (
+              <div
+                key={item.id}
+                ref={prismeCardRevealRef(i)}
+                {...elementProps(config.id, `items.${i}`, 'container', 'Collection Card')}
+                className="prisme-collection-card"
+                style={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  borderRadius: 12,
+                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(12px) saturate(1.2)',
+                  WebkitBackdropFilter: 'blur(12px) saturate(1.2)',
+                  border: '1px solid rgba(184, 212, 227, 0.08)',
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(184, 212, 227, 0.06)',
+                }}
+              >
+                {/* Image with dezoom on reveal + Ken Burns on hover + gradient overlays */}
+                <div style={{ aspectRatio: '4/3', overflow: 'hidden', position: 'relative' }}>
+                  {item.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={item.image}
+                      alt={item.title}
+                      className="prisme-card-img prisme-img-dezoom"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                      }}
+                    />
+                  ) : (
+                    <div
+                      className="prisme-card-img prisme-img-dezoom"
+                      style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: `linear-gradient(135deg, ${navy}, rgba(184,212,227,0.05))` }}
+                    >
+                      <Image className="w-8 h-8" style={{ color: 'rgba(184, 212, 227, 0.2)' }} />
+                    </div>
+                  )}
+                  {/* 3 gradient overlays — bottom fade (always), diagonal sweep + vignette (on hover) */}
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,25,35,0.7) 0%, transparent 50%)', pointerEvents: 'none' }} />
+                  <div className="prisme-card-overlay-hover" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(184,212,227,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
+                  <div className="prisme-card-overlay-hover" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, transparent 40%, rgba(15,25,35,0.3) 100%)', pointerEvents: 'none' }} />
+                </div>
+                {/* Card info */}
+                <div style={{ padding: 'clamp(16px, 3vw, 24px)' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 600,
+                      color: warmCream,
+                      margin: 0,
+                      marginBottom: 4,
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.duration`, 'text')}
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 400,
+                      color: 'rgba(184, 212, 227, 0.5)',
+                      margin: 0,
+                      marginBottom: 10,
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {item.duration}
+                  </p>
+                  {/* Description — slides up on hover */}
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    className="prisme-card-desc-reveal"
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 400,
+                      lineHeight: '155%',
+                      color: 'rgba(232, 222, 208, 0.45)',
+                      margin: 0,
+                      marginBottom: 14,
+                      maxHeight: 60,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {item.description}
+                  </p>
+                  {/* Price + Discover button row */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                    <span
+                      {...elementProps(config.id, `items.${i}.price`, 'text')}
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 500,
+                        color: iceBlue,
+                        letterSpacing: '0.03em',
+                      }}
+                    >
+                      {item.price}
+                    </span>
+                    <button
+                      type="button"
+                      className="prisme-discover-btn"
+                      style={{
+                        padding: '6px 16px',
+                        borderRadius: 4,
+                        fontSize: 12,
+                        fontWeight: 500,
+                        letterSpacing: '0.06em',
+                        textTransform: 'uppercase',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      <span className="prisme-discover-fill" />
+                      <span style={{ position: 'relative', zIndex: 1 }}>D&#233;couvrir</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // PETALE-CREATIONS — Fleuriste premium gallery :
+  // 3-column grid, dark bg (#1A1A1A), rose gold (#D4A574) badges,
+  // organic scale hover with shadow bloom, scroll-reveal
+  // ═══════════════════════════════════════════════════════
+  if (variant === 'petale-creations') {
+    const staggeredRevealRef = (index: number) => (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px) scale(0.95)'
+      el.style.transition = `opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${index * 0.15}s, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${index * 0.15}s`
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0) scale(1)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.1 })
+      obs.observe(el)
+    }
+
+    const headerRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(30px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Bouquet Ros\u00E9e du Matin', category: 'Bouquets', description: 'Une composition d\u00E9licate de roses anciennes et pivoines, agr\u00E9ment\u00E9e de feuillages d\u2019eucalyptus pour une fra\u00EEcheur naturelle.', price: '\u00E0 partir de 45\u20AC', image: '' },
+      { id: '2', title: 'Composition Jardin Sauvage', category: 'Bouquets', description: 'Un m\u00E9lange champ\u00EAtre de fleurs des champs, dahlias et gramin\u00E9es dans un vase en c\u00E9ramique artisanale.', price: '\u00E0 partir de 65\u20AC', image: '' },
+      { id: '3', title: 'Couronne V\u00E9g\u00E9tale', category: 'Mariages', description: 'Couronne de fleurs fra\u00EEches pour mariages et c\u00E9r\u00E9monies. Cr\u00E9ation sur-mesure selon votre th\u00E8me.', price: 'Sur devis', image: '' },
+      { id: '4', title: 'Abonnement Floral Mensuel', category: 'Abonnements', description: 'Chaque mois, un bouquet de saison livr\u00E9 chez vous. Des fleurs fra\u00EEches et \u00E9thiques, s\u00E9lectionn\u00E9es avec soin.', price: '39\u20AC/mois', image: '' },
+    ]
+
+    const filterCategories = ['Toutes', 'Bouquets', 'Mariages', 'Abonnements', 'D\u00E9coration']
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; category?: string;
+      description?: string; price?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 4].title,
+          category: item.category ?? defaultCards[i % 4].category,
+          description: item.description ?? defaultCards[i % 4].description,
+          price: item.price ?? defaultCards[i % 4].price,
+          image: item.image ?? defaultCards[i % 4].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Cr\u00E9ations Section')}
+        style={{
+          background: '#1A1A1A',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <style>{`
+          /* Image: gentle dezoom on reveal */
+          .petale-img-dezoom { transform: scale(1.08); transition: transform 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+          .petale-img-dezoom.revealed { transform: scale(1); }
+          /* Image: slow organic zoom + slight rotation on hover */
+          .petale-card:hover .petale-img-zoom { transform: scale(1.06) rotate(1.5deg) !important; }
+          /* Card hover: rose gold border glow */
+          .petale-card { border: 1px solid transparent; transition: box-shadow 0.5s ease, border-color 0.5s ease; }
+          .petale-card:hover { box-shadow: 0 20px 60px rgba(212, 165, 116, 0.15), 0 0 30px rgba(212, 165, 116, 0.08) !important; border-color: rgba(212, 165, 116, 0.35) !important; }
+          /* Warm overlay on hover */
+          .petale-overlay { opacity: 0; transition: opacity 0.5s ease; }
+          .petale-card:hover .petale-overlay { opacity: 1; }
+          /* Description slide-up on hover */
+          .petale-desc-slide { transform: translateY(12px); opacity: 0; transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.45s ease; }
+          .petale-card:hover .petale-desc-slide { transform: translateY(0); opacity: 1; }
+          /* Commander button: organic fill animation */
+          .petale-order-btn { position: relative; overflow: hidden; color: #D4A574; border: 1px solid rgba(212, 165, 116, 0.4); background: transparent; transition: color 0.4s ease, border-color 0.4s ease; }
+          .petale-order-btn .petale-btn-fill { position: absolute; inset: 0; background: linear-gradient(135deg, #D4A574, #c4955e); transform: translateX(-102%); transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+          .petale-card:hover .petale-order-btn .petale-btn-fill { transform: translateX(0); }
+          .petale-card:hover .petale-order-btn { color: #1A1A1A; border-color: #D4A574; }
+          /* Filter pills */
+          .petale-filter-pill { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.5); transition: all 0.35s ease; cursor: pointer; }
+          .petale-filter-pill:hover { background: rgba(212, 165, 116, 0.1); border-color: rgba(212, 165, 116, 0.3); color: rgba(255, 255, 255, 0.8); }
+          .petale-filter-pill.active { background: rgba(212, 165, 116, 0.15); border-color: #D4A574; color: #D4A574; }
+          /* Responsive */
+          @media (max-width: 768px) {
+            .petale-resp-creations-grid { grid-template-columns: 1fr !important; }
+            .petale-resp-creations-header { flex-direction: column; align-items: flex-start !important; }
+            .petale-filter-wrap { flex-wrap: wrap; }
+          }
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .petale-resp-creations-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+        `}</style>
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div ref={headerRevealRef} {...elementProps(config.id, 'header', 'container', 'Header')} className="petale-resp-creations-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px', marginBottom: '28px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#FFFFFF',
+                }}
+              >
+                {(content as Record<string, unknown>).title as string ?? 'Nos cr\u00E9ations florales'}
+              </h2>
+            </div>
+            {/* Category filter pills */}
+            <div {...elementProps(config.id, 'filters', 'container', 'Filters')} className="flex petale-filter-wrap" style={{ gap: '10px' }}>
+              {filterCategories.map((cat, fi) => (
+                <span
+                  key={cat}
+                  {...elementProps(config.id, `filter.${fi}`, 'button')}
+                  className={`petale-filter-pill${fi === 0 ? ' active' : ''}`}
+                  style={{
+                    padding: '8px 20px',
+                    borderRadius: '100px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    letterSpacing: '0.01em',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {cat}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Grid */}
+          <div {...elementProps(config.id, 'grid', 'container', 'Cr\u00E9ations Grid')} className="grid grid-cols-3 petale-resp-creations-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={staggeredRevealRef(i)}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="petale-card"
+                style={{ color: 'inherit', borderRadius: '14px', overflow: 'hidden', background: 'rgba(255,255,255,0.02)' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.petale-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '4/5', borderRadius: '12px 12px 0 0' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="petale-img-zoom petale-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="petale-img-zoom petale-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #2a2520, #1A1A1A)', transition: 'transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)' }}
+                    >
+                      <svg width="40" height="40" viewBox="0 0 60 60" fill="none" opacity="0.2">
+                        <ellipse cx="30" cy="25" rx="8" ry="15" fill="#D4A574" transform="rotate(-15 30 25)" />
+                        <ellipse cx="30" cy="25" rx="8" ry="15" fill="#D4A574" transform="rotate(15 30 25)" />
+                        <line x1="30" y1="30" x2="30" y2="50" stroke="#2D5016" strokeWidth="1.5" />
+                      </svg>
+                    </div>
+                  )}
+                  {/* Warm overlay gradient on hover */}
+                  <div
+                    className="petale-overlay absolute inset-0 pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(to top, rgba(212, 165, 116, 0.25) 0%, rgba(45, 80, 22, 0.1) 40%, transparent 70%)',
+                      zIndex: 1,
+                    }}
+                  />
+                  {/* Glassmorphism badge: category — warm-tinted */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      right: '16px',
+                      background: 'rgba(212, 165, 116, 0.15)',
+                      backdropFilter: 'blur(20px) saturate(1.2)',
+                      WebkitBackdropFilter: 'blur(20px) saturate(1.2)',
+                      borderRadius: '6px',
+                      padding: '6px 14px',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      color: '#D4A574',
+                      zIndex: 2,
+                      border: '1px solid rgba(212, 165, 116, 0.3)',
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {card.category}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ padding: '18px 16px 20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
+                    <h3
+                      {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                      style={{
+                        fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                        fontSize: '18px',
+                        fontWeight: 600,
+                        lineHeight: '140%',
+                        color: '#FFFFFF',
+                      }}
+                    >
+                      {card.title}
+                    </h3>
+                    <span
+                      {...elementProps(config.id, `items.${i}.price`, 'text')}
+                      style={{ fontSize: '14px', fontWeight: 500, color: '#D4A574', whiteSpace: 'nowrap', marginLeft: '12px' }}
+                    >
+                      {card.price}
+                    </span>
+                  </div>
+                  {/* Description slides up on hover */}
+                  <div className="petale-desc-slide">
+                    <p
+                      {...elementProps(config.id, `items.${i}.description`, 'text')}
+                      style={{
+                        fontSize: '14px',
+                        lineHeight: '155%',
+                        color: 'rgba(255,255,255,0.5)',
+                        marginBottom: '16px',
+                      }}
+                    >
+                      {card.description}
+                    </p>
+                    {/* Commander button with organic fill */}
+                    <span
+                      {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                      className="petale-order-btn"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 20px',
+                        borderRadius: '6px',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        letterSpacing: '0.03em',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span className="petale-btn-fill" />
+                      <span style={{ position: 'relative', zIndex: 2 }}>Commander</span>
+                      <svg style={{ position: 'relative', zIndex: 2 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback to startup-grid
   return (
     <>
@@ -5498,6 +6187,8 @@ export const galleryMeta = {
     'ascent-interventions',
     'zenith-cours',
     'miel-creations',
+    'prisme-collection',
+    'petale-creations',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

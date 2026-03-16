@@ -3631,6 +3631,575 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
     )
   }
 
+  // ─── VARIANT: prisme-story ───
+  // Opticien premium : 55/45 split, lens clip-path with animated border, parallax image, geometric decorations, count-up, fill sweep CTA
+  if (variant === 'prisme-story') {
+    const statNumberStyle = {
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+      fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+      fontWeight: 300,
+      lineHeight: '110%',
+      color: '#B8D4E3',
+    } as const
+
+    const paraStyle = {
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '170%',
+      color: '#6B7B8D',
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+    } as const
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const titleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const imageRevealRef = useBrixsaScrollReveal({ threshold: 0.1, disabled: isEditing })
+    const counter15Ref = useBrixsaCounter(15, { disabled: isEditing })
+    const counter3000Ref = useBrixsaCounter(3000, { disabled: isEditing })
+    const counter98Ref = useBrixsaCounter(98, { disabled: isEditing })
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'About Section')}
+        style={{
+          backgroundColor: '#E8DED0',
+          padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+          overflow: 'hidden',
+        }}
+      >
+        <style>{`
+          @media (max-width: 968px) {
+            .prisme-story-grid { grid-template-columns: 1fr !important; }
+            .prisme-story-image { min-height: 400px !important; }
+          }
+          @keyframes prisme-border-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+          @keyframes prisme-sweep-fill { from { background-position: 200% center; } to { background-position: 0% center; } }
+          .prisme-story-image:hover .prisme-story-img { transform: scale(1.03) translateY(var(--prisme-parallax, 0px)) !important; }
+          .prisme-story-cta {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+          }
+          .prisme-story-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #B8D4E3;
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+          }
+          .prisme-story-cta:hover::before {
+            transform: scaleX(1);
+          }
+          .prisme-story-cta:hover {
+            color: #0F1923 !important;
+            border-color: #B8D4E3 !important;
+          }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'container', 'container', 'Container')}
+          className="mx-auto prisme-story-grid"
+          style={{
+            maxWidth: '1320px',
+            display: 'grid',
+            gridTemplateColumns: '55% 45%',
+            gap: 'clamp(32px, 5vw, 80px)',
+            alignItems: 'center',
+            position: 'relative',
+          }}
+        >
+          {/* Geometric line decorations (optician precision theme) */}
+          <svg style={{ position: 'absolute', top: -40, left: -20, opacity: 0.12, pointerEvents: 'none' }} width="120" height="120" viewBox="0 0 120 120" fill="none">
+            <circle cx="60" cy="60" r="58" stroke="#B8D4E3" strokeWidth="0.5" />
+            <circle cx="60" cy="60" r="42" stroke="#B8D4E3" strokeWidth="0.5" />
+            <circle cx="60" cy="60" r="26" stroke="#B8D4E3" strokeWidth="0.5" />
+            <line x1="2" y1="60" x2="118" y2="60" stroke="#B8D4E3" strokeWidth="0.3" />
+            <line x1="60" y1="2" x2="60" y2="118" stroke="#B8D4E3" strokeWidth="0.3" />
+            <line x1="17" y1="17" x2="103" y2="103" stroke="#B8D4E3" strokeWidth="0.2" />
+            <line x1="103" y1="17" x2="17" y2="103" stroke="#B8D4E3" strokeWidth="0.2" />
+          </svg>
+          <svg style={{ position: 'absolute', bottom: -30, right: 40, opacity: 0.08, pointerEvents: 'none' }} width="80" height="80" viewBox="0 0 80 80" fill="none">
+            <rect x="10" y="10" width="60" height="60" stroke="#0F1923" strokeWidth="0.5" />
+            <line x1="10" y1="40" x2="70" y2="40" stroke="#0F1923" strokeWidth="0.3" />
+            <line x1="40" y1="10" x2="40" y2="70" stroke="#0F1923" strokeWidth="0.3" />
+          </svg>
+
+          {/* Left — Image with lens-shaped clip-path + animated border + parallax */}
+          <div
+            ref={imageRevealRef}
+            {...elementProps(config.id, 'imageContainer', 'container', 'Image Container')}
+            className="prisme-story-image"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              minHeight: 600,
+              borderRadius: '16px',
+              clipPath: 'ellipse(95% 100% at 50% 50%)',
+            }}
+          >
+            {/* Animated lens border */}
+            <div style={{
+              position: 'absolute',
+              inset: -2,
+              borderRadius: '50%',
+              background: 'conic-gradient(from 0deg, transparent, #B8D4E3, transparent, #B8D4E3, transparent)',
+              opacity: 0.3,
+              animation: 'prisme-border-rotate 12s linear infinite',
+              zIndex: 3,
+              pointerEvents: 'none',
+              mixBlendMode: 'overlay',
+            }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              {...elementProps(config.id, 'image', 'image', 'Optician Image')}
+              src={content.image || 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=1200&q=85'}
+              alt={content.title || 'Notre savoir-faire optique'}
+              className="prisme-story-img"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '110%',
+                top: '-5%',
+                objectFit: 'cover',
+                transform: 'scale(1.08)',
+                transition: 'transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              }}
+            />
+            {/* Ice blue gradient overlay at bottom */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '80px',
+                background: 'linear-gradient(to top, rgba(184, 212, 227, 0.15), transparent)',
+                zIndex: 2,
+                pointerEvents: 'none',
+              }}
+            />
+            {/* Geometric crosshair decoration on image */}
+            <svg style={{ position: 'absolute', bottom: 24, right: 24, zIndex: 2, opacity: 0.35 }} width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <circle cx="24" cy="24" r="22" stroke="#B8D4E3" strokeWidth="0.5" />
+              <circle cx="24" cy="24" r="12" stroke="#B8D4E3" strokeWidth="0.5" />
+              <line x1="2" y1="24" x2="46" y2="24" stroke="#B8D4E3" strokeWidth="0.3" />
+              <line x1="24" y1="2" x2="24" y2="46" stroke="#B8D4E3" strokeWidth="0.3" />
+            </svg>
+          </div>
+
+          {/* Right — Text content with staggered reveal */}
+          <div
+            ref={titleRevealRef}
+            {...elementProps(config.id, 'textContent', 'container', 'Text Content')}
+            style={{ display: 'flex', flexDirection: 'column', gap: 0 }}
+          >
+            {/* Ice blue accent line above heading */}
+            <div
+              style={{
+                width: 48,
+                height: 3,
+                backgroundColor: '#B8D4E3',
+                marginBottom: 20,
+              }}
+            />
+
+            {/* Eyebrow */}
+            <span
+              {...elementProps(config.id, 'eyebrow', 'text')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 12,
+                fontWeight: 500,
+                letterSpacing: '3px',
+                textTransform: 'uppercase' as const,
+                color: '#B8D4E3',
+                marginBottom: 20,
+              }}
+            >
+              {content.eyebrow || 'Notre expertise'}
+            </span>
+
+            {/* Title */}
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 'clamp(2rem, 1.3rem + 3.2vw, 3.5rem)',
+                fontWeight: 300,
+                lineHeight: '115%',
+                color: customTextColor ?? '#0F1923',
+                margin: 0,
+                marginBottom: 24,
+              }}
+            >
+              {content.title || 'Notre savoir-faire optique'}
+            </h2>
+
+            {/* Body text */}
+            <p
+              {...elementProps(config.id, 'body', 'text')}
+              style={{
+                ...paraStyle,
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+                maxWidth: 480,
+              }}
+            >
+              {content.body || "Depuis plus de 15 ans, notre \u00E9quipe d'opticiens dipl\u00F4m\u00E9s vous accompagne avec passion et pr\u00E9cision. Des examens de vue aux montures haute couture, nous mettons la technologie au service de votre confort visuel."}
+            </p>
+
+            {/* Counter stats — animated count-up */}
+            <div
+              {...elementProps(config.id, 'statsRow', 'container', 'Stats Row')}
+              style={{
+                display: 'flex',
+                gap: 'clamp(24px, 4vw, 48px)',
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+              }}
+            >
+              <div {...elementProps(config.id, 'stat1', 'container', 'Stat Block')}>
+                <div
+                  {...elementProps(config.id, 'stat1Value', 'text')}
+                  className="flex items-baseline"
+                  style={statNumberStyle}
+                >
+                  <span ref={counter15Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(15, 25, 35, 0.4)', letterSpacing: '0.5px' }}>
+                  ann&eacute;es d&apos;exp&eacute;rience
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat2', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat2Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter3000Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(15, 25, 35, 0.4)', letterSpacing: '0.5px' }}>
+                  clients satisfaits
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat3', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat3Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter98Ref}>0</span>
+                  <span>%</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(15, 25, 35, 0.4)', letterSpacing: '0.5px' }}>
+                  taux de satisfaction
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Button — fill sweep animation */}
+            <a
+              {...elementProps(config.id, 'primaryButton', 'link')}
+              href={content.primaryButton?.href ?? '#'}
+              className="prisme-story-cta"
+              style={{
+                display: 'inline-block',
+                border: '1px solid #B8D4E3',
+                backgroundColor: 'transparent',
+                color: '#0F1923',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontWeight: 500,
+                fontSize: 14,
+                letterSpacing: '1.5px',
+                textTransform: 'uppercase' as const,
+                padding: '16px 40px',
+                textDecoration: 'none',
+                transition: 'color 0.4s ease, border-color 0.4s ease',
+                alignSelf: 'flex-start',
+              }}
+            >
+              {content.primaryButton?.label ?? "D\u00E9couvrir notre expertise"}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ─── VARIANT: petale-story ───
+  // Fleuriste premium : 55/45 split, organic blob clip-path with breathing animation, botanical decorations, count-up, fill sweep CTA
+  if (variant === 'petale-story') {
+    const statNumberStyle = {
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+      fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+      fontWeight: 500,
+      lineHeight: '110%',
+      color: '#D4A574',
+    } as const
+
+    const paraStyle = {
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '170%',
+      color: 'rgba(255, 255, 255, 0.5)',
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+    } as const
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const titleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const imageRevealRef = useBrixsaScrollReveal({ threshold: 0.1, disabled: isEditing })
+    const counter500Ref = useBrixsaCounter(500, { disabled: isEditing })
+    const counter15Ref = useBrixsaCounter(15, { disabled: isEditing })
+    const counter98Ref = useBrixsaCounter(98, { disabled: isEditing })
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'About Section')}
+        style={{
+          backgroundColor: '#1A1A1A',
+          padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+          overflow: 'hidden',
+        }}
+      >
+        <style>{`
+          @media (max-width: 968px) {
+            .petale-story-grid { grid-template-columns: 1fr !important; }
+            .petale-story-image { min-height: 400px !important; }
+          }
+          @keyframes petale-blob-breathe {
+            0%, 100% { clip-path: ellipse(85% 48% at 45% 50%); }
+            50% { clip-path: ellipse(87% 50% at 47% 50%); }
+          }
+          .petale-story-image {
+            animation: petale-blob-breathe 8s ease-in-out infinite;
+          }
+          .petale-story-image:hover .petale-story-img { transform: scale(1.03) !important; }
+          .petale-story-cta {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+          }
+          .petale-story-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #D4A574, #E8C9A8);
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+          }
+          .petale-story-cta:hover::before {
+            transform: scaleX(1);
+          }
+          .petale-story-cta:hover {
+            color: #1A1A1A !important;
+            border-color: #D4A574 !important;
+          }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'container', 'container', 'Container')}
+          className="mx-auto petale-story-grid"
+          style={{
+            maxWidth: '1320px',
+            display: 'grid',
+            gridTemplateColumns: '55% 45%',
+            gap: 'clamp(32px, 5vw, 80px)',
+            alignItems: 'center',
+            position: 'relative',
+          }}
+        >
+          {/* Botanical vine decoration — top left */}
+          <svg style={{ position: 'absolute', top: -50, left: -10, opacity: 0.1, pointerEvents: 'none' }} width="140" height="180" viewBox="0 0 140 180" fill="none">
+            <path d="M70 180C70 180 70 120 70 90" stroke="#D4A574" strokeWidth="0.6" />
+            <path d="M70 140C60 130 40 125 30 115C42 120 58 125 70 140Z" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+            <path d="M70 140C80 130 100 125 110 115C98 120 82 125 70 140Z" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+            <path d="M70 115C55 105 35 100 25 88C40 95 57 100 70 115Z" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+            <path d="M70 115C85 105 105 100 115 88C100 95 83 100 70 115Z" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+            <path d="M70 90C58 78 38 72 28 60C43 68 58 74 70 90Z" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+            <path d="M70 90C82 78 102 72 112 60C97 68 82 74 70 90Z" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+            <circle cx="70" cy="25" r="16" stroke="#D4A574" strokeWidth="0.5" fill="none" />
+            <circle cx="70" cy="25" r="8" stroke="#D4A574" strokeWidth="0.4" fill="none" />
+            <circle cx="70" cy="25" r="3" fill="#D4A574" opacity="0.15" />
+            <path d="M54 25C54 16 62 9 70 9" stroke="#D4A574" strokeWidth="0.4" fill="none" />
+            <path d="M86 25C86 16 78 9 70 9" stroke="#D4A574" strokeWidth="0.4" fill="none" />
+          </svg>
+          {/* Small botanical leaf — bottom right */}
+          <svg style={{ position: 'absolute', bottom: -20, right: 20, opacity: 0.07, pointerEvents: 'none' }} width="60" height="80" viewBox="0 0 60 80" fill="none">
+            <path d="M30 80V40" stroke="#2D5016" strokeWidth="0.6" />
+            <path d="M30 40C20 30 5 25 0 15C12 20 25 28 30 40Z" stroke="#2D5016" strokeWidth="0.5" fill="none" />
+            <path d="M30 40C40 30 55 25 60 15C48 20 35 28 30 40Z" stroke="#2D5016" strokeWidth="0.5" fill="none" />
+            <path d="M30 55C22 48 10 44 5 36C15 40 25 46 30 55Z" stroke="#2D5016" strokeWidth="0.5" fill="none" />
+            <path d="M30 55C38 48 50 44 55 36C45 40 35 46 30 55Z" stroke="#2D5016" strokeWidth="0.5" fill="none" />
+          </svg>
+
+          {/* Left — Image with organic blob-shaped clip-path + breathing animation + parallax */}
+          <div
+            ref={imageRevealRef}
+            {...elementProps(config.id, 'imageContainer', 'container', 'Image Container')}
+            className="petale-story-image"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              minHeight: 600,
+              borderRadius: 0,
+              clipPath: 'ellipse(85% 48% at 45% 50%)',
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              {...elementProps(config.id, 'image', 'image', 'Floral Image')}
+              src={content.image || 'https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=1200&q=85'}
+              alt={content.title || 'Notre passion florale'}
+              className="petale-story-img"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '110%',
+                top: '-5%',
+                objectFit: 'cover',
+                transform: 'scale(1.08)',
+                transition: 'transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              }}
+            />
+            {/* Warm gradient overlay at bottom */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '80px',
+                background: 'linear-gradient(to top, rgba(212, 165, 116, 0.12), transparent)',
+                zIndex: 2,
+                pointerEvents: 'none',
+              }}
+            />
+          </div>
+
+          {/* Right — Text content with staggered reveal */}
+          <div
+            ref={titleRevealRef}
+            {...elementProps(config.id, 'textContent', 'container', 'Text Content')}
+            style={{ display: 'flex', flexDirection: 'column', gap: 0 }}
+          >
+            {/* Rose gold accent line above heading */}
+            <div style={{ width: 48, height: 2, backgroundColor: '#D4A574', marginBottom: 20 }} />
+
+            {/* Eyebrow */}
+            <span
+              {...elementProps(config.id, 'eyebrow', 'text')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 12,
+                fontWeight: 500,
+                letterSpacing: '3px',
+                textTransform: 'uppercase' as const,
+                color: '#D4A574',
+                marginBottom: 20,
+              }}
+            >
+              {content.eyebrow || 'Notre atelier'}
+            </span>
+
+            {/* Title */}
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 'clamp(2rem, 1.3rem + 3.2vw, 3.5rem)',
+                fontWeight: 500,
+                lineHeight: '115%',
+                color: customTextColor ?? '#FFFFFF',
+                margin: 0,
+                marginBottom: 24,
+              }}
+            >
+              {content.title || 'Notre passion florale'}
+            </h2>
+
+            {/* Body text */}
+            <p
+              {...elementProps(config.id, 'body', 'text')}
+              style={{
+                ...paraStyle,
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+                maxWidth: 480,
+              }}
+            >
+              {content.body || "Depuis plus de 15 ans, notre atelier perp\u00E9tue l\u2019art floral avec passion et cr\u00E9ativit\u00E9. Chaque composition est une \u0153uvre unique, r\u00E9alis\u00E9e \u00E0 la main avec des fleurs fra\u00EEches s\u00E9lectionn\u00E9es aupr\u00E8s des meilleurs producteurs."}
+            </p>
+
+            {/* Counter stats — animated count-up with rose gold */}
+            <div
+              {...elementProps(config.id, 'statsRow', 'container', 'Stats Row')}
+              style={{
+                display: 'flex',
+                gap: 'clamp(24px, 4vw, 48px)',
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+              }}
+            >
+              <div {...elementProps(config.id, 'stat1', 'container', 'Stat Block')}>
+                <div
+                  {...elementProps(config.id, 'stat1Value', 'text')}
+                  className="flex items-baseline"
+                  style={statNumberStyle}
+                >
+                  <span ref={counter500Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  bouquets par mois
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat2', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat2Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter15Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  {"ann\u00E9es d\u2019exp\u00E9rience"}
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat3', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat3Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter98Ref}>0</span>
+                  <span>%</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  clients satisfaits
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Button — organic rose gold fill sweep on hover */}
+            <a
+              {...elementProps(config.id, 'primaryButton', 'link')}
+              href={content.primaryButton?.href ?? '#'}
+              className="petale-story-cta"
+              style={{
+                display: 'inline-block',
+                border: '1px solid #D4A574',
+                backgroundColor: 'transparent',
+                color: '#D4A574',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontWeight: 500,
+                fontSize: 14,
+                letterSpacing: '1.5px',
+                textTransform: 'uppercase' as const,
+                padding: '16px 40px',
+                textDecoration: 'none',
+                transition: 'color 0.4s ease, border-color 0.4s ease',
+                alignSelf: 'flex-start',
+              }}
+            >
+              {content.primaryButton?.label ?? "D\u00E9couvrir notre atelier"}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback to startup-image-right
   return <ImageTextSection config={{ ...config, variant: 'startup-image-right' }} isEditing={isEditing} />
 }
@@ -3662,6 +4231,8 @@ export const imageTextMeta = {
     'ascent-story',
     'zenith-story',
     'miel-story',
+    'prisme-story',
+    'petale-story',
   ],
   defaultVariant: 'startup-image-right',
   defaultContent: {},
