@@ -2902,6 +2902,195 @@ function SaveurFeatured({ content, items, sectionId }: { content: Partial<Testim
 }
 
 // ─────────────────────────────────────────────
+// ASCENT — Business / Life Coach Featured Testimonials (50/50 split)
+// Dark navy background, luminous gold accents
+// ─────────────────────────────────────────────
+
+function AscentFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const defaultQuotes = [
+    'En 6 mois de coaching, j\'ai doublé le chiffre d\'affaires de mon entreprise. Mais surtout, j\'ai retrouvé un équilibre de vie que je pensais impossible.',
+    'Son approche est unique : à la fois stratégique et profondément humaine. Elle m\'a aidée à prendre confiance pour demander et obtenir ma promotion.',
+    'Le séminaire de leadership a transformé la dynamique de notre comité de direction. Les résultats sont visibles au quotidien.',
+  ]
+
+  const defaultAuthors = [
+    { name: 'Laurent M.', role: 'CEO Startup Tech' },
+    { name: 'Sarah K.', role: 'Directrice Marketing' },
+    { name: 'Marc D.', role: 'DRH Groupe International' },
+  ]
+
+  const quotes = items.length > 0
+    ? items.map((item, i) => item.quote || defaultQuotes[i % defaultQuotes.length])
+    : defaultQuotes
+
+  const authors = items.length > 0
+    ? items.map((item, i) => ({ name: item.author || defaultAuthors[i % defaultAuthors.length].name, role: item.role || defaultAuthors[i % defaultAuthors.length].role }))
+    : defaultAuthors
+
+  const total = quotes.length
+
+  const goPrev = () => setActiveIndex((prev) => (prev - 1 + total) % total)
+  const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % total)
+    }, 7000)
+    return () => clearInterval(timer)
+  }, [total])
+
+  return (
+    <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#111827', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .ascent-testimonial-split { flex-direction: column !important; }
+          .ascent-testimonial-split > div { flex: 1 1 100% !important; min-height: 50vh; }
+        }
+      `}</style>
+      <div {...elementProps(sectionId, 'splitLayout', 'container', 'Split Layout')} className="ascent-testimonial-split flex flex-row w-full" style={{ minHeight: '620px' }}>
+        {/* LEFT — Quote (50%) */}
+        <div {...elementProps(sectionId, 'contentPanel', 'container', 'Content Panel')} className="flex flex-col" style={{ flex: '1 1 50%', backgroundColor: '#0D1520', color: '#FFFFFF', padding: '60px' }}>
+          {/* Top label */}
+          <p
+            {...elementProps(sectionId, 'eyebrow', 'text')}
+            style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#E0B870', marginBottom: 'auto' }}
+          >
+            {content.eyebrow || content.title || 'Témoignages'}
+          </p>
+
+          {/* Main content */}
+          <div className="flex flex-col" style={{ maxWidth: '536px', marginTop: 'auto', marginLeft: 'auto' }}>
+            {/* Quote text wrap */}
+            <div style={{ marginTop: 'auto', marginBottom: '40px', marginLeft: 'auto' }}>
+              {quotes.map((quote, i) => (
+                <div key={items[i]?.id ?? i} style={{ display: i === activeIndex ? 'block' : 'none' }}>
+                  {/* Gold quote mark */}
+                  <div style={{ color: '#E0B870', fontSize: '80px', lineHeight: '0.6', marginBottom: '24px', fontFamily: 'Georgia, serif' }}>&ldquo;</div>
+                  <p
+                    {...elementProps(sectionId, `items.${i}.quote`, 'text')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
+                      fontWeight: 400,
+                      fontStyle: 'italic',
+                      lineHeight: '135%',
+                      color: '#FFFFFF',
+                    }}
+                  >
+                    {quote}
+                  </p>
+                  {/* Author */}
+                  <div style={{ marginTop: '24px' }}>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.author`, 'text')}
+                      style={{ fontSize: '16px', fontWeight: 600, color: '#FFFFFF' }}
+                    >
+                      {authors[i]?.name}
+                    </p>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.role`, 'text')}
+                      style={{ fontSize: '14px', fontWeight: 400, color: 'rgba(224, 184, 112, 0.7)', marginTop: '4px' }}
+                    >
+                      {authors[i]?.role}
+                    </p>
+                    {/* Gold stars */}
+                    <div style={{ display: 'flex', gap: '4px', marginTop: '12px' }}>
+                      {Array.from({ length: 5 }).map((_, s) => (
+                        <span key={s} style={{ color: '#E0B870', fontSize: '14px' }}>&#9733;</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigation dots + arrows */}
+            {total > 1 && (
+              <div {...elementProps(sectionId, 'navDots', 'container', 'Nav Dots')} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                {Array.from({ length: total }).map((_, i) => (
+                  <div
+                    key={i}
+                    role="button"
+                    onClick={() => setActiveIndex(i)}
+                    style={{
+                      width: i === activeIndex ? '32px' : '8px',
+                      height: '8px',
+                      borderRadius: '4px',
+                      backgroundColor: i === activeIndex ? '#E0B870' : 'rgba(255, 255, 255, 0.2)',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                    }}
+                  />
+                ))}
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={goPrev}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'transparent', border: '1px solid rgba(224, 184, 112, 0.4)', color: '#E0B870', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                  </button>
+                  <button
+                    onClick={goNext}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#E0B870', border: '1px solid #E0B870', color: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT — Large Initial / Photo (50%) */}
+        <div {...elementProps(sectionId, 'imagePanel', 'container', 'Initials Panel')} className="relative overflow-hidden flex items-center justify-center" style={{ flex: '1 1 50%', backgroundColor: '#111827' }}>
+          {Array.from({ length: total }).map((_, i) => {
+            const item = items[i]
+            const initial = (item?.author || authors[i]?.name || 'A').charAt(0).toUpperCase()
+            return (
+              <div
+                key={item?.id ?? i}
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  backgroundColor: '#111827',
+                  opacity: i === activeIndex ? 1 : 0,
+                  zIndex: i === activeIndex ? 2 : 0,
+                  transition: 'opacity 0.6s ease',
+                }}
+              >
+                {item?.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    {...elementProps(sectionId, `items.${i}.avatar`, 'image')}
+                    src={item.avatar}
+                    alt={item.author || ''}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(8rem, 6rem + 10vw, 16rem)',
+                      fontWeight: 700,
+                      color: '#E0B870',
+                      lineHeight: 1,
+                      userSelect: 'none',
+                      opacity: 0.12,
+                    }}
+                  >
+                    {initial}
+                  </span>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // SLIDER variants (one per universe) — embla carousel
 // ─────────────────────────────────────────────
 
@@ -3048,6 +3237,7 @@ const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsConten
   'serenite-featured': SereniteFeature,
   'pulse-featured': PulseFeatured,
   'saveur-featured': SaveurFeatured,
+  'ascent-featured': AscentFeatured,
 }
 
 export function TestimonialsSection({ config }: TestimonialsSectionProps) {
@@ -3079,6 +3269,7 @@ export function TestimonialsSection({ config }: TestimonialsSectionProps) {
     serenite: '#D4B896',
     pulse: '#00E5FF',
     saveur: '#C8A97E',
+    ascent: '#E0B870',
   }
   const accent = accentColor ?? defaultAccents[universe] ?? '#6366f1'
 
@@ -3112,6 +3303,7 @@ export const testimonialsMeta = {
     'serenite-featured',
     'pulse-featured',
     'saveur-featured',
+    'ascent-featured',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

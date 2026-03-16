@@ -4026,6 +4026,240 @@ export function GallerySection({ config }: { config: SectionConfig }) {
     )
   }
 
+  // ═══════════════════════════════════════════════════════
+  // ASCENT-INTERVENTIONS — Business / Life Coach gallery :
+  // 3:4 cards, dark navy (#111827) bg, gold (#E0B870) badges,
+  // glassmorphism overlay, scroll-reveal animation
+  // ═══════════════════════════════════════════════════════
+  if (variant === 'ascent-interventions') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Coaching Dirigeant', category: 'Individuel', description: 'Un accompagnement sur-mesure pour les leaders qui souhaitent franchir un nouveau palier dans leur parcours professionnel et personnel.', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&q=85' },
+      { id: '2', title: 'Team Building Leadership', category: 'Équipe', description: 'Des ateliers immersifs pour souder vos équipes, développer la cohésion et faire émerger les leaders naturels au sein de votre organisation.', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=85' },
+      { id: '3', title: 'Conférence TEDx', category: 'Conférence', description: 'Des interventions inspirantes devant des centaines de personnes — des idées puissantes qui changent la perspective et déclenchent l\'action.', image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=85' },
+      { id: '4', title: 'Séminaire Stratégique', category: 'Séminaire', description: 'Deux jours d\'immersion totale pour aligner votre vision, définir votre stratégie de croissance et repartir avec un plan d\'action concret.', image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&q=85' },
+      { id: '5', title: 'Workshop Innovation', category: 'Workshop', description: 'Des sessions hands-on pour débloquer la créativité de vos équipes, challenger vos modèles établis et concevoir des solutions nouvelles.', image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=85' },
+      { id: '6', title: 'Masterclass Mindset', category: 'Masterclass', description: 'Une immersion profonde dans les ressorts psychologiques de la haute performance — les outils mentaux des leaders d\'exception.', image: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&q=85' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; category?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          category: item.category ?? defaultCards[i % 6].category,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image ?? defaultCards[i % 6].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Interventions Section')}
+        style={{
+          background: '#111827',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <style>{`
+          .ascent-card:hover .ascent-img-zoom { transform: scale(1.05) !important; }
+          .ascent-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
+          .ascent-img-dezoom.revealed { transform: scale(1); }
+          .ascent-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+          .ascent-btn:hover .ascent-btn-fill { transform: translateX(0); }
+          .ascent-btn:hover .ascent-btn-label { color: #111827; }
+          .ascent-btn-label { transition: color 0.4s; }
+          .ascent-link { color: transparent; transition: color 0.3s; font-size: 14px; font-weight: 500; }
+          .ascent-card:hover .ascent-link { color: #E0B870; }
+          @media (max-width: 768px) {
+            .ascent-resp-interventions-grid { grid-template-columns: 1fr !important; }
+            .ascent-resp-interventions-header { flex-direction: column; align-items: flex-start !important; }
+          }
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .ascent-resp-interventions-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+        `}</style>
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end ascent-resp-interventions-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#FFFFFF',
+                }}
+              >
+                {(content as Record<string, unknown>).title as string ?? 'Interventions'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="#contact"
+              className="ascent-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#FFFFFF', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="ascent-btn-label relative" style={{ zIndex: 10 }}>Voir toutes les interventions</span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#E0B870',
+                  color: '#111827',
+                  borderRadius: '4px',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
+                <span className="ascent-btn-fill" style={{ display: 'block', background: '#E0B870', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Grid */}
+          <div {...elementProps(config.id, 'grid', 'container', 'Interventions Grid')} className="grid grid-cols-3 ascent-resp-interventions-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="ascent-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.ascent-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="ascent-img-zoom ascent-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="ascent-img-zoom ascent-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #1E2A3A, #111827)', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-8 h-8 text-white/40" />
+                    </div>
+                  )}
+                  {/* Glassmorphism badge: category */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      right: '16px',
+                      background: 'rgba(224, 184, 112, 0.2)',
+                      backdropFilter: 'blur(15px)',
+                      WebkitBackdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      padding: '6px 14px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#E0B870',
+                      zIndex: 2,
+                      border: '1px solid rgba(224, 184, 112, 0.4)',
+                    }}
+                  >
+                    {card.category}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#FFFFFF',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: 'rgba(255,255,255,0.45)',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                  <span
+                    {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                    className="ascent-link"
+                  >
+                    Découvrir l'intervention &rarr;
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback to startup-grid
   return (
     <>
@@ -4794,6 +5028,7 @@ export const galleryMeta = {
     'serenite-soins',
     'pulse-events',
     'saveur-creations',
+    'ascent-interventions',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

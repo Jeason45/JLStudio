@@ -2128,6 +2128,134 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
     )
   }
 
+  // ─── VARIANT: ascent ───
+  // Univers coach business / life coach : fond navy foncé #111827, blanc #FFFFFF, or lumineux #E0B870, slate #2D3748, text-mask hover
+  if (variant === 'ascent') {
+    const headingFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const bodyFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const navy = '#111827'
+    const white = '#FFFFFF'
+    const gold = '#E0B870'
+    const slate = '#2D3748'
+    const textMuted = 'rgba(224,184,112,0.5)'
+    return (
+      <footer
+        {...elementProps(config.id, 'wrapper', 'container', 'Footer')}
+        className="relative"
+        style={{ backgroundColor: navy, color: white, fontFamily: bodyFont }}
+      >
+        {/* Inject hover animations for text-mask effect */}
+        <style>{`
+          .ascent-link-mask { overflow: hidden; height: 1.5em; position: relative; display: block; }
+          .ascent-link-mask .ascent-text-main { display: block; transition: transform 0.3s ease; }
+          .ascent-link-mask .ascent-text-alt { position: absolute; top: 100%; left: 0; display: block; transition: transform 0.3s ease; color: ${gold}; }
+          .ascent-link-mask:hover .ascent-text-main,
+          .ascent-link-mask:hover .ascent-text-alt { transform: translateY(-100%); }
+          @media (max-width: 768px) {
+            .ascent-resp-footer-cols { flex-direction: column !important; gap: 32px !important; }
+          }
+        `}</style>
+
+        <div {...elementProps(config.id, 'footerInner', 'container', 'Footer Inner')} style={{ paddingTop: 'clamp(60px, 10vw, 100px)', paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)' }}>
+          {/* Logo + gold separator */}
+          <div {...elementProps(config.id, 'brandArea', 'container', 'Brand Area')} className="flex flex-col items-center" style={{ marginBottom: 48 }}>
+            <p
+              {...elementProps(config.id, 'logo', 'image')}
+              style={{ fontFamily: headingFont, fontSize: 32, fontWeight: 600, color: gold, letterSpacing: '0.05em', marginBottom: 20 }}
+            >
+              {renderLogo(logo)}
+            </p>
+            <div style={{ width: 60, height: 1, backgroundColor: gold }} />
+          </div>
+
+          {/* 3 Columns */}
+          <div {...elementProps(config.id, 'columnsArea', 'container', 'Columns Area')} className="flex flex-row justify-center ascent-resp-footer-cols" style={{ gap: 'clamp(40px, 8vw, 120px)', paddingBottom: 48 }}>
+            {columns.map((col, ci) => (
+              <div key={col.id || `col-${ci}`} className="flex flex-col" style={{ minWidth: 140 }}>
+                <p
+                  {...elementProps(config.id, `columns.${ci}.title`, 'heading')}
+                  style={{ fontFamily: headingFont, fontSize: 13, fontWeight: 600, color: gold, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}
+                >
+                  {col.title}
+                </p>
+                <div className="flex flex-col" style={{ gap: 6 }}>
+                  {col.links.map((link, li) => (
+                    <a
+                      key={link.id || `${ci}-${li}`}
+                      {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')}
+                      href={link.href}
+                      className="ascent-link-mask"
+                      style={{ color: white, textDecoration: 'none', fontSize: 14, fontWeight: 400 }}
+                    >
+                      <span className="ascent-text-main">{link.label}</span>
+                      <span className="ascent-text-alt">{link.label}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          {...elementProps(config.id, 'bottomBar', 'container', 'Footer Bottom')}
+          className="flex flex-wrap items-center justify-between"
+          style={{ borderTop: `1px solid rgba(224,184,112,0.2)`, padding: '24px clamp(20px, 5vw, 60px)', gap: 16 }}
+        >
+          <p
+            {...elementProps(config.id, 'copyright', 'text')}
+            style={{ color: textMuted, fontSize: 13 }}
+          >
+            {content.copyright ?? `\u00A9 ${new Date().getFullYear()} Ascent. Tous droits r\u00E9serv\u00E9s.`}
+          </p>
+          {/* Social icons */}
+          <div {...elementProps(config.id, 'socialsRow', 'container', 'Social Icons')} className="flex flex-row items-center" style={{ gap: 16 }}>
+            {/* LinkedIn */}
+            <a
+              {...elementProps(config.id, 'socials.linkedin', 'link')}
+              href={socials.linkedin ?? '#'}
+              aria-label="LinkedIn"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = gold }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+              </svg>
+            </a>
+            {/* Instagram */}
+            <a
+              {...elementProps(config.id, 'socials.instagram', 'link')}
+              href={socials.instagram ?? '#'}
+              aria-label="Instagram"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = gold }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <circle cx="12" cy="12" r="5" />
+                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+              </svg>
+            </a>
+            {/* YouTube */}
+            <a
+              {...elementProps(config.id, 'socials.youtube', 'link')}
+              href={(socials as Record<string, string | undefined>).youtube ?? '#'}
+              aria-label="YouTube"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = gold }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+          </div>
+        </div>
+      </footer>
+    )
+  }
+
   // fallback → startup
   return <SiteFooterSection config={{ ...config, variant: 'startup' }} />
 }
@@ -2136,7 +2264,7 @@ export const siteFooterMeta = {
   type: 'site-footer',
   label: 'Footer',
   icon: '🔻',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency', 'atelier', 'encre', 'serenite', 'pulse', 'saveur'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

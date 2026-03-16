@@ -5868,6 +5868,441 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     )
   }
 
+  // ─── VARIANT: ascent ───
+  // Business coach / life coach premium : fullscreen diagonal-wipe slider, glassmorphism booking bar, luminous gold accents #E0B870
+  if (variant === 'ascent') {
+    const defaultHeroImages = [
+      '', // placeholder — gradient fallback
+      '', // placeholder — gradient fallback
+      '', // placeholder — gradient fallback
+    ]
+
+    const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+    const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+
+    const slides = [
+      { name: 'Lib\u00E9rez votre potentiel', style: 'Coaching Business', bg: 'linear-gradient(135deg, #111827 0%, #1a2540 50%, #111827 100%)', image: heroImages?.[0] ?? defaultHeroImages[0] },
+      { name: 'Le succ\u00E8s commence par une d\u00E9cision', style: 'D\u00E9veloppement Personnel', bg: 'linear-gradient(135deg, #161f2e 0%, #111827 50%, #1e2d45 100%)', image: heroImages?.[1] ?? defaultHeroImages[1] },
+      { name: 'Votre transformation commence ici', style: 'Life Coaching', bg: 'linear-gradient(135deg, #111827 0%, #1e2d45 50%, #161f2e 100%)', image: heroImages?.[2] ?? defaultHeroImages[2] },
+    ]
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [ascentActiveSlide, setAscentActiveSlide] = useState(0)
+    const ascentPrevSlideRef = useRef(0)
+    const ascentTitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const ascentProgressRef = useRef<HTMLDivElement>(null)
+
+    const ascentGoNext = useCallback(() => {
+      setAscentActiveSlide((prev) => {
+        ascentPrevSlideRef.current = prev
+        return (prev + 1) % slides.length
+      })
+    }, [])
+
+    const ascentGoPrev = useCallback(() => {
+      setAscentActiveSlide((prev) => {
+        ascentPrevSlideRef.current = prev
+        return (prev - 1 + slides.length) % slides.length
+      })
+    }, [])
+
+    useEffect(() => {
+      const interval = setInterval(ascentGoNext, 5000)
+      return () => clearInterval(interval)
+    }, [ascentGoNext])
+
+    // Reset progress bar animation on slide change
+    useEffect(() => {
+      if (ascentProgressRef.current) {
+        ascentProgressRef.current.style.transition = 'none'
+        ascentProgressRef.current.style.width = '0%'
+        // Force reflow
+        void ascentProgressRef.current.offsetWidth
+        ascentProgressRef.current.style.transition = 'width 5s linear'
+        ascentProgressRef.current.style.width = '100%'
+      }
+    }, [ascentActiveSlide])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    const ascentCurrentSlide = slides[ascentActiveSlide]
+    const ascentBtnLabel = content.primaryButton?.label || 'R\u00E9server un appel d\u00E9couverte'
+
+    return (
+      <>
+      {/* Ascent hero responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .ascent-resp-bookingbar { flex-direction: column !important; padding: 16px !important; border-radius: 16px !important; max-width: 90% !important; }
+          .ascent-resp-filters { flex-direction: column !important; gap: 12px !important; width: 100% !important; }
+          .ascent-resp-filter-divider { display: none !important; }
+          .ascent-resp-reserve-btn { width: 100% !important; margin-left: 0 !important; margin-top: 8px !important; justify-content: center !important; }
+          .ascent-resp-hero-title { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
+          .ascent-resp-hero-subtitle { font-size: 12px !important; }
+          .ascent-resp-nav-arrows { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .ascent-resp-bookingbar { margin: 0 16px; max-width: calc(100% - 32px) !important; }
+        }
+      ` }} />
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+        className="relative overflow-hidden"
+        style={{
+          height: '100vh',
+          backgroundColor: '#111827',
+          color: '#FFFFFF',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        {/* Diagonal wipe — parallelogram translates uniformly */}
+        {slides.map((slide, i) => {
+          const isActive = ascentActiveSlide === i
+          const isPrev = ascentPrevSlideRef.current === i && !isActive
+
+          const visible = 'polygon(0% 0%, 130% 0%, 130% 100%, -20% 100%)'
+          const hidden  = 'polygon(120% 0%, 250% 0%, 250% 100%, 100% 100%)'
+          const full    = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+
+          return (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                clipPath: isActive ? visible : isPrev ? full : hidden,
+                opacity: isActive || isPrev ? 1 : 0,
+                transition: isActive
+                  ? 'clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1), opacity 0s'
+                  : isPrev
+                    ? 'none'
+                    : 'clip-path 0s 1.3s, opacity 0s 1.3s',
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              }}
+            >
+              {slide.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: slide.bg,
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* Dark navy overlay */}
+        <div {...elementProps(config.id, 'overlay', 'container', 'Overlay')} className="absolute inset-0" style={{ backgroundColor: 'rgba(17, 24, 39, 0.38)', zIndex: 3 }} />
+        {/* Gold glow — bottom left */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 4, background: 'radial-gradient(ellipse at 10% 90%, rgba(224, 184, 112, 0.08) 0%, transparent 55%)' }} />
+
+        {/* Content — bottom-left title + subtitle */}
+        <div {...elementProps(config.id, 'centerContent', 'container', 'Hero Content')} className="relative flex flex-col justify-end h-full px-6" style={{ zIndex: 10, paddingBottom: '140px', paddingLeft: 'clamp(20px, 5vw, 80px)' }}>
+          <div ref={ascentTitleRevealRef}>
+            {/* Subtitle above title — slate, wide tracking */}
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              className="ascent-resp-hero-subtitle"
+              style={{
+                color: '#2D3748',
+                fontSize: '13px',
+                fontWeight: 600,
+                letterSpacing: '0.32em',
+                textTransform: 'uppercase',
+                marginBottom: '18px',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                textShadow: '0 1px 8px rgba(17, 24, 39, 0.5)',
+              }}
+            >
+              {subtitle || 'COACH BUSINESS & D\u00C9VELOPPEMENT'}
+            </p>
+            {/* H1 title — confident, professional, with gold accent on key words */}
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              className="ascent-resp-hero-title"
+              style={{
+                color: '#FFFFFF',
+                fontWeight: 300,
+                fontSize: 'clamp(2.875rem, 1.6429rem + 5.4762vw, 5.75rem)',
+                lineHeight: '105%',
+                maxWidth: '860px',
+                textAlign: 'left',
+                marginBottom: '0',
+                marginTop: 0,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {title ? (
+                title
+              ) : (
+                <>
+                  {ascentCurrentSlide.name.split(' ').slice(0, -1).join(' ')}{' '}
+                  <span style={{ color: '#E0B870', fontWeight: 400 }}>{ascentCurrentSlide.name.split(' ').slice(-1)[0]}</span>
+                </>
+              )}
+            </h1>
+          </div>
+        </div>
+
+        {/* Glassmorphism booking bar at bottom */}
+        <div
+          {...elementProps(config.id, 'bookingBar', 'container', 'Booking Bar')}
+          className="absolute z-10 flex items-center ascent-resp-bookingbar"
+          style={{
+            bottom: '40px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            borderRadius: '999px',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(17, 24, 39, 0.60)',
+            padding: '6px 6px 6px 28px',
+            gap: '0',
+            maxWidth: '780px',
+            width: '90%',
+            border: '1px solid rgba(224, 184, 112, 0.22)',
+          }}
+        >
+          {/* Booking fields */}
+          <div {...elementProps(config.id, 'filtersRow', 'container', 'Booking Fields')} className="flex items-center ascent-resp-filters" style={{ flexShrink: 0 }}>
+            {['Nom', 'Email', 'Objectif'].map((label, i) => (
+              <div
+                key={label}
+                style={{
+                  position: 'relative',
+                  paddingRight: i < 2 ? '14px' : '0',
+                  marginRight: i < 2 ? '14px' : '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                {i < 2 && (
+                  <span className="ascent-resp-filter-divider" style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '1px',
+                    height: '20px',
+                    backgroundColor: 'rgba(224, 184, 112, 0.2)',
+                  }} />
+                )}
+                <span
+                  {...elementProps(config.id, `filters.${i}.label`, 'text')}
+                  style={{
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    fontSize: '14px',
+                    cursor: 'default',
+                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                    userSelect: 'none',
+                    fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                    gap: '6px',
+                  }}
+                >
+                  {label === 'Nom' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  )}
+                  {label === 'Email' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  )}
+                  {label === 'Objectif' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                  )}
+                  {label}
+                  {label === 'Objectif' && (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '2px', opacity: 0.6 }}><polyline points="6 9 12 15 18 9"/></svg>
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA button */}
+          <div className="ascent-resp-reserve-btn" style={{ flex: '1 1 auto', minWidth: '0', display: 'flex', justifyContent: 'flex-end', marginLeft: '16px' }}>
+            <div
+              {...elementProps(config.id, 'primaryButton', 'button')}
+              role="button"
+              style={{
+                backgroundColor: '#E0B870',
+                color: '#111827',
+                borderRadius: '999px',
+                paddingLeft: '28px',
+                paddingRight: '28px',
+                paddingTop: '12px',
+                paddingBottom: '12px',
+                fontSize: '14px',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.03em',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#ECC882' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#E0B870' }}
+            >
+              {ascentBtnLabel}
+            </div>
+          </div>
+        </div>
+
+        {/* Prev button */}
+        <div
+          {...elementProps(config.id, 'prevButton', 'button')}
+          role="button"
+          onClick={ascentGoPrev}
+          className="absolute z-10 flex items-center justify-center ascent-resp-nav-arrows"
+          style={{
+            left: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(224, 184, 112, 0.12)',
+            border: '1px solid rgba(224, 184, 112, 0.22)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(224, 184, 112, 0.28)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(224, 184, 112, 0.12)' }}
+          aria-label="Previous slide"
+        >
+          <span {...elementProps(config.id, 'prevIcon', 'icon', 'Chevron Left')}><ChevronLeft style={{ width: '24px', height: '24px', color: '#E0B870' }} /></span>
+        </div>
+
+        {/* Next button */}
+        <div
+          {...elementProps(config.id, 'nextButton', 'button')}
+          role="button"
+          onClick={ascentGoNext}
+          className="absolute z-10 flex items-center justify-center ascent-resp-nav-arrows"
+          style={{
+            right: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(224, 184, 112, 0.12)',
+            border: '1px solid rgba(224, 184, 112, 0.22)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(224, 184, 112, 0.28)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(224, 184, 112, 0.12)' }}
+          aria-label="Next slide"
+        >
+          <span {...elementProps(config.id, 'nextIcon', 'icon', 'Chevron Right')}><ChevronRight style={{ width: '24px', height: '24px', color: '#E0B870' }} /></span>
+        </div>
+
+        {/* Bottom-left meta badge */}
+        <div
+          {...elementProps(config.id, 'slideMeta', 'container', 'Slide Info')}
+          className="absolute z-10"
+          style={{
+            bottom: '100px',
+            left: 'clamp(16px, 4vw, 80px)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(224, 184, 112, 0.08)',
+            borderRadius: '4px',
+            padding: '10px 18px',
+            border: '1px solid rgba(224, 184, 112, 0.18)',
+          }}
+        >
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            <span
+              {...elementProps(config.id, `slides.${ascentActiveSlide}.name`, 'text')}
+              style={{ fontSize: 'clamp(13px, 1.5vw, 16px)', fontWeight: 400, color: '#FFFFFF', letterSpacing: '0.01em' }}
+            >
+              {ascentCurrentSlide.name}
+            </span>
+            <span {...elementProps(config.id, 'slideDivider', 'text', 'Divider')} style={{ color: 'rgba(255, 255, 255, 0.3)', fontSize: '14px' }}>
+              &middot;
+            </span>
+            <span
+              {...elementProps(config.id, `slides.${ascentActiveSlide}.style`, 'text')}
+              className="flex items-center"
+              style={{ color: '#E0B870', fontSize: '13px', gap: '4px', fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase' }}
+            >
+              {ascentCurrentSlide.style}
+            </span>
+          </div>
+        </div>
+
+        {/* Progress bar at very bottom */}
+        <div
+          {...elementProps(config.id, 'progressBar', 'container', 'Progress Bar')}
+          className="absolute z-10"
+          style={{
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            backgroundColor: 'rgba(224, 184, 112, 0.12)',
+          }}
+        >
+          <div
+            ref={ascentProgressRef}
+            style={{
+              height: '100%',
+              backgroundColor: '#E0B870',
+              width: '0%',
+              transition: 'width 5s linear',
+            }}
+          />
+        </div>
+
+        {/* Bottom-right slide counter dots */}
+        <div
+          {...elementProps(config.id, 'slideNav', 'container', 'Slide Nav')}
+          className="absolute z-10 flex"
+          style={{ bottom: '100px', right: 'clamp(16px, 4vw, 80px)', gap: '8px', alignItems: 'center' }}
+        >
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              {...elementProps(config.id, `slides.${i}.dot`, 'button')}
+              role="button"
+              onClick={() => setAscentActiveSlide(i)}
+              style={{
+                width: ascentActiveSlide === i ? '28px' : '6px',
+                height: '6px',
+                borderRadius: '999px',
+                backgroundColor: ascentActiveSlide === i ? '#E0B870' : 'rgba(255, 255, 255, 0.25)',
+                cursor: 'pointer',
+                transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease',
+              }}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+      </>
+    )
+  }
+
   // fallback → startup
   return <HeroSection config={{ ...config, variant: 'startup' }} isEditing={isEditing} />
 }
@@ -5943,7 +6378,7 @@ export const heroMeta = {
   type: 'hero',
   label: 'Hero',
   icon: '⚡',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

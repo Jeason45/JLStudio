@@ -2964,6 +2964,229 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
     )
   }
 
+  // ═══════════════════════════════════════════
+  // COACH ASCENT — Business / Life Coach 55/45 Story Split
+  // ═══════════════════════════════════════════
+
+  if (variant === 'ascent-story') {
+    const statNumberStyle = {
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+      fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+      fontWeight: 500,
+      lineHeight: '110%',
+      color: '#E0B870',
+    } as const
+
+    const paraStyle = {
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '170%',
+      color: 'rgba(255, 255, 255, 0.65)',
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+    } as const
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const titleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const imageRevealRef = useBrixsaScrollReveal({ threshold: 0.1, disabled: isEditing })
+    const counter500Ref = useBrixsaCounter(500, { disabled: isEditing })
+    const counter15Ref = useBrixsaCounter(15, { disabled: isEditing })
+    const counter98Ref = useBrixsaCounter(98, { disabled: isEditing })
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'About Section')}
+        style={{
+          backgroundColor: '#111827',
+          padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <style>{`
+          @media (max-width: 968px) {
+            .ascent-story-grid { grid-template-columns: 1fr !important; }
+            .ascent-story-image { min-height: 400px !important; }
+          }
+          .ascent-story-image:hover .ascent-story-img { transform: scale(1.03) !important; }
+          .ascent-story-cta:hover {
+            background-color: #E0B870 !important;
+            color: #111827 !important;
+          }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'container', 'container', 'Container')}
+          className="mx-auto ascent-story-grid"
+          style={{
+            maxWidth: '1320px',
+            display: 'grid',
+            gridTemplateColumns: '55% 45%',
+            gap: 'clamp(32px, 5vw, 80px)',
+            alignItems: 'center',
+          }}
+        >
+          {/* Left — Image with scroll reveal dezoom */}
+          <div
+            ref={imageRevealRef}
+            {...elementProps(config.id, 'imageContainer', 'container', 'Image Container')}
+            className="ascent-story-image"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              minHeight: 600,
+              borderRadius: 0,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              {...elementProps(config.id, 'image', 'image', 'Coach Image')}
+              src={content.image || 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=1200&q=85'}
+              alt={content.title || 'Votre réussite est ma mission'}
+              className="ascent-story-img"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                transform: 'scale(1.08)',
+                transition: 'transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              }}
+            />
+            {/* Gold accent line overlay at bottom */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '3px',
+                backgroundColor: '#E0B870',
+                zIndex: 2,
+              }}
+            />
+          </div>
+
+          {/* Right — Text content */}
+          <div
+            ref={titleRevealRef}
+            {...elementProps(config.id, 'textContent', 'container', 'Text Content')}
+            style={{ display: 'flex', flexDirection: 'column', gap: 0 }}
+          >
+            {/* Eyebrow */}
+            <span
+              {...elementProps(config.id, 'eyebrow', 'text')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 12,
+                fontWeight: 500,
+                letterSpacing: '3px',
+                textTransform: 'uppercase' as const,
+                color: '#E0B870',
+                marginBottom: 20,
+              }}
+            >
+              {content.eyebrow || 'Mon approche'}
+            </span>
+
+            {/* Title */}
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 'clamp(2rem, 1.3rem + 3.2vw, 3.5rem)',
+                fontWeight: 500,
+                lineHeight: '115%',
+                color: customTextColor ?? '#FFFFFF',
+                margin: 0,
+                marginBottom: 24,
+              }}
+            >
+              {content.title || 'Votre réussite est ma mission'}
+            </h2>
+
+            {/* Body text */}
+            <p
+              {...elementProps(config.id, 'body', 'text')}
+              style={{
+                ...paraStyle,
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+                maxWidth: 480,
+              }}
+            >
+              {content.body || 'Après 15 ans dans le monde de l\'entreprise et des centaines de dirigeants accompagnés, j\'ai développé une méthode unique qui allie stratégie business, intelligence émotionnelle et leadership authentique. Chaque parcours est conçu sur mesure pour vous mener exactement là où vous voulez aller.'}
+            </p>
+
+            {/* Counter stats */}
+            <div
+              {...elementProps(config.id, 'statsRow', 'container', 'Stats Row')}
+              style={{
+                display: 'flex',
+                gap: 'clamp(24px, 4vw, 48px)',
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+              }}
+            >
+              <div {...elementProps(config.id, 'stat1', 'container', 'Stat Block')}>
+                <div
+                  {...elementProps(config.id, 'stat1Value', 'text')}
+                  className="flex items-baseline"
+                  style={statNumberStyle}
+                >
+                  <span ref={counter500Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  clients accompagnés
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat2', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat2Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter15Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  années d&apos;expérience
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat3', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat3Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter98Ref}>0</span>
+                  <span>%</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  taux de satisfaction
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Button — gold outline → fill on hover */}
+            <a
+              {...elementProps(config.id, 'primaryButton', 'link')}
+              href={content.primaryButton?.href ?? '#'}
+              className="ascent-story-cta"
+              style={{
+                display: 'inline-block',
+                border: '1px solid #E0B870',
+                backgroundColor: 'transparent',
+                color: '#E0B870',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontWeight: 500,
+                fontSize: 14,
+                letterSpacing: '1.5px',
+                textTransform: 'uppercase' as const,
+                padding: '16px 40px',
+                textDecoration: 'none',
+                transition: 'background-color 0.4s ease, color 0.4s ease',
+                alignSelf: 'flex-start',
+              }}
+            >
+              {content.primaryButton?.label ?? 'Prendre rendez-vous'}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback to startup-image-right
   return <ImageTextSection config={{ ...config, variant: 'startup-image-right' }} isEditing={isEditing} />
 }
@@ -2992,6 +3215,7 @@ export const imageTextMeta = {
     'brixsa-about',
     'brixsa-privacy',
     'saveur-story',
+    'ascent-story',
   ],
   defaultVariant: 'startup-image-right',
   defaultContent: {},

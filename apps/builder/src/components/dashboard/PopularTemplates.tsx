@@ -18,6 +18,7 @@ const POPULAR_IDS = [
   'spa-serenite',
   'dj-pulse',
   'traiteur-saveur',
+  'coach-ascent',
 ]
 
 export function PopularTemplates() {
