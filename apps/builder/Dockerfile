@@ -39,10 +39,10 @@ COPY --from=builder /app/apps/builder/public ./public
 COPY --from=builder /app/apps/builder/.next/standalone ./
 COPY --from=builder /app/apps/builder/.next/static ./.next/static
 
-# Prisma runtime
+# Prisma runtime (generated client is in src/generated/prisma, .prisma is hoisted to root node_modules)
 COPY --from=builder /app/apps/builder/prisma ./prisma
-COPY --from=builder /app/apps/builder/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/apps/builder/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
 USER nextjs
 
