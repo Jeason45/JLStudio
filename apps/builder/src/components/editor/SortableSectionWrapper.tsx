@@ -166,7 +166,7 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
       onClick={handleClick}
       className={cn(
         'relative group transition-all',
-        !isTransparentHeader && 'overflow-hidden',
+        !isTransparentHeader && !isBrixsaCta && 'overflow-hidden',
         overrides.className,
         !section.visible && 'opacity-40',
         !previewMode && !isSelected && 'hover:outline hover:outline-1 hover:outline-wf-blue/30 hover:outline-offset-[-1px]',

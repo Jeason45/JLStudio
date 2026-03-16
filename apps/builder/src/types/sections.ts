@@ -19,7 +19,7 @@ export interface ImageConfig {
 // HERO
 // ─────────────────────────────────────────────
 
-export type HeroVariant = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass' | 'brixsa' | 'brixsa-page' | 'zmr-agency' | 'zmr-talent-profile'
+export type HeroVariant = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass' | 'obscura' | 'canopy' | 'nacre' | 'brixsa' | 'brixsa-page' | 'zmr-agency' | 'zmr-talent-profile'
 
 export interface HeroContent {
   eyebrow?: string
@@ -56,12 +56,15 @@ export type FeaturesVariant =
   | 'creative-grid' | 'creative-bento' | 'creative-list'
   | 'ecommerce-grid' | 'ecommerce-bento' | 'ecommerce-list'
   | 'glass-grid' | 'glass-bento' | 'glass-list'
+  | 'nacre-accordion'
+  | 'obscura-accordion'
   | 'brixsa-accordion'
   | 'brixsa-services'
   | 'brixsa-location'
   | 'zmr-events'
   | 'zmr-measurements'
   | 'zmr-experience'
+  | 'canopy-values'
 
 export interface FeatureItem {
   id: string

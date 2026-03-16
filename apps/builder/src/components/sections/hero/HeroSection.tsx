@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { elementProps } from '@/lib/elementHelpers'
 import type { HeroConfig, HeroContent } from '@/types/sections'
 import type { SectionConfig } from '@/types/site'
-import { Play, ShieldCheck, Star, Truck, ArrowRight, ChevronLeft, ChevronRight, MapPin, Search, User } from 'lucide-react'
+import { Play, ShieldCheck, Star, Truck, ArrowRight, ChevronLeft, ChevronRight, MapPin, Search, User, Check } from 'lucide-react'
 import { getTitleSizeClass, getTextAlignClass } from '../_utils'
 import { EditablePlaceholder } from '../_EditablePlaceholder'
 import { useBrixsaScrollReveal } from '@/hooks/useBrixsaScrollReveal'
@@ -707,6 +707,1155 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
           Scroll to Explore
         </p>
       </section>
+    )
+  }
+
+  // ─── VARIANT: obscura ───
+  // Photographer premium : fullscreen diagonal-wipe slider, gold counter, progress bar, centered title
+  if (variant === 'obscura') {
+    const defaultHeroImages = [
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1920&q=85',
+      'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=1920&q=85',
+      'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1920&q=85',
+    ]
+
+    const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+    const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+
+    const slides = [
+      { name: 'Portrait', counter: '01', image: heroImages?.[0] ?? defaultHeroImages[0] },
+      { name: 'Mariage', counter: '02', image: heroImages?.[1] ?? defaultHeroImages[1] },
+      { name: 'Événement', counter: '03', image: heroImages?.[2] ?? defaultHeroImages[2] },
+    ]
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [obscuraActiveSlide, setObscuraActiveSlide] = useState(0)
+    const obscuraPrevSlideRef = useRef(0)
+    const obscuraTitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+
+    const obscuraGoNext = useCallback(() => {
+      setObscuraActiveSlide((prev) => {
+        obscuraPrevSlideRef.current = prev
+        return (prev + 1) % slides.length
+      })
+    }, [])
+
+    const obscuraGoPrev = useCallback(() => {
+      setObscuraActiveSlide((prev) => {
+        obscuraPrevSlideRef.current = prev
+        return (prev - 1 + slides.length) % slides.length
+      })
+    }, [])
+
+    useEffect(() => {
+      const interval = setInterval(obscuraGoNext, 6000)
+      return () => clearInterval(interval)
+    }, [obscuraGoNext])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    const obscuraCurrentSlide = slides[obscuraActiveSlide]
+
+    return (
+      <>
+      {/* Obscura hero responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .obscura-resp-arrows { display: none !important; }
+          .obscura-resp-meta { left: 50% !important; transform: translateX(-50%) !important; text-align: center !important; }
+        }
+        @media (max-width: 480px) {
+          .obscura-resp-progress { max-width: 200px !important; }
+        }
+      ` }} />
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+        className="relative overflow-hidden"
+        style={{
+          height: '100vh',
+          backgroundColor: '#0A0A0A',
+          color: '#E8E4DF',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        {/* Diagonal wipe — parallelogram translates uniformly so the oblique angle
+            NEVER changes during the sweep (no "book opening" distortion).
+            All 4 polygon points shift by exactly 120% horizontally.
+            Left edge skew = 20% (top is 20% further right than bottom). */}
+        {slides.map((slide, i) => {
+          const isActive = obscuraActiveSlide === i
+          const isPrev = obscuraPrevSlideRef.current === i && !isActive
+
+          const visible = 'polygon(0% 0%, 130% 0%, 130% 100%, -20% 100%)'
+          const hidden  = 'polygon(120% 0%, 250% 0%, 250% 100%, 100% 100%)'
+          const full    = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+
+          return (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                clipPath: isActive ? visible : isPrev ? full : hidden,
+                opacity: isActive || isPrev ? 1 : 0,
+                transition: isActive
+                  ? 'clip-path 1.4s cubic-bezier(0.76, 0, 0.24, 1), opacity 0s'
+                  : isPrev
+                    ? 'none'
+                    : 'clip-path 0s 1.5s, opacity 0s 1.5s',
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              }}
+            >
+              {slide.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: '#0A0A0A',
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* Dark overlay */}
+        <div {...elementProps(config.id, 'overlay', 'container', 'Overlay')} className="absolute inset-0" style={{ backgroundColor: 'rgba(10, 10, 10, 0.4)', zIndex: 3 }} />
+
+        {/* Center content — title + subtitle */}
+        <div {...elementProps(config.id, 'centerContent', 'container', 'Hero Content')} className="relative flex flex-col items-center justify-center h-full px-6" style={{ zIndex: 10 }}>
+          <div ref={obscuraTitleRevealRef}>
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                color: '#E8E4DF',
+                fontWeight: 500,
+                fontSize: 'clamp(3rem, 2rem + 5vw, 6rem)',
+                lineHeight: '110%',
+                maxWidth: '1000px',
+                textAlign: 'center',
+                letterSpacing: '0.05em',
+                marginBottom: '16px',
+                marginTop: 0,
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+              }}
+            >
+              {title}
+            </h1>
+          </div>
+          {/* Subtitle */}
+          <p
+            {...elementProps(config.id, 'subtitle', 'text')}
+            style={{
+              color: 'rgba(232, 228, 223, 0.4)',
+              fontSize: '14px',
+              fontWeight: 400,
+              textTransform: 'uppercase',
+              letterSpacing: '0.2em',
+              margin: 0,
+              textAlign: 'center',
+              fontFamily: "'Inter Variable', 'Inter', sans-serif",
+            }}
+          >
+            {subtitle}
+          </p>
+        </div>
+
+        {/* Bottom-left: category + counter */}
+        <div
+          {...elementProps(config.id, 'slideMeta', 'container', 'Slide Info')}
+          className="absolute z-10 obscura-resp-meta"
+          style={{
+            bottom: '40px',
+            left: 'clamp(24px, 5vw, 60px)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '20px',
+          }}
+        >
+          <span
+            {...elementProps(config.id, `slides.${obscuraActiveSlide}.name`, 'text')}
+            style={{
+              fontSize: '14px',
+              fontWeight: 500,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: '#E8E4DF',
+              fontFamily: "'Inter Variable', 'Inter', sans-serif",
+            }}
+          >
+            {obscuraCurrentSlide.name}
+          </span>
+          <span
+            {...elementProps(config.id, 'slideCounter', 'text', 'Slide Counter')}
+            style={{
+              fontSize: '14px',
+              fontWeight: 400,
+              letterSpacing: '0.05em',
+              color: '#D4A853',
+              fontFamily: "'Inter Variable', 'Inter', sans-serif",
+            }}
+          >
+            {obscuraCurrentSlide.counter} / {String(slides.length).padStart(2, '0')}
+          </span>
+        </div>
+
+        {/* Bottom center: progress bar */}
+        <div
+          {...elementProps(config.id, 'progressBar', 'container', 'Progress Bar')}
+          className="absolute z-10 obscura-resp-progress"
+          style={{
+            bottom: '40px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '240px',
+            height: '2px',
+            backgroundColor: 'rgba(232, 228, 223, 0.15)',
+            borderRadius: '1px',
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            style={{
+              height: '100%',
+              width: `${((obscuraActiveSlide + 1) / slides.length) * 100}%`,
+              backgroundColor: '#D4A853',
+              borderRadius: '1px',
+              transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          />
+        </div>
+
+        {/* Side arrows — subtle thin circles */}
+        <div
+          {...elementProps(config.id, 'prevButton', 'button')}
+          role="button"
+          onClick={obscuraGoPrev}
+          className="absolute z-10 flex items-center justify-center obscura-resp-arrows"
+          style={{
+            left: 'clamp(16px, 4vw, 48px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            border: '1px solid rgba(232, 228, 223, 0.15)',
+            backgroundColor: 'transparent',
+            cursor: 'pointer',
+            transition: 'border-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#D4A853' }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(232, 228, 223, 0.15)' }}
+          aria-label="Previous slide"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8E4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </div>
+
+        <div
+          {...elementProps(config.id, 'nextButton', 'button')}
+          role="button"
+          onClick={obscuraGoNext}
+          className="absolute z-10 flex items-center justify-center obscura-resp-arrows"
+          style={{
+            right: 'clamp(16px, 4vw, 48px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            border: '1px solid rgba(232, 228, 223, 0.15)',
+            backgroundColor: 'transparent',
+            cursor: 'pointer',
+            transition: 'border-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#D4A853' }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(232, 228, 223, 0.15)' }}
+          aria-label="Next slide"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8E4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </div>
+      </section>
+      </>
+    )
+  }
+
+  // ─── VARIANT: canopy ───
+  // Eco e-commerce premium : fullscreen diagonal-wipe slider, glassmorphism shop bar, Brixsa-level
+  if (variant === 'canopy') {
+    const defaultHeroImages = [
+      'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1920&q=80',
+      'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=1920&q=80',
+      'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=1920&q=80',
+    ]
+
+    const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+    const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+
+    const slides = [
+      { name: 'Tree Runner', location: 'Eucalyptus', image: heroImages?.[0] ?? defaultHeroImages[0] },
+      { name: 'Wool Collection', location: 'Mérinos', image: heroImages?.[1] ?? defaultHeroImages[1] },
+      { name: 'Trail Runner', location: 'Bio-based', image: heroImages?.[2] ?? defaultHeroImages[2] },
+    ]
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [activeSlide, setActiveSlide] = useState(0)
+    const prevSlideRef = useRef(0)
+    const heroTitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+
+    const goNext = useCallback(() => {
+      setActiveSlide((prev) => {
+        prevSlideRef.current = prev
+        return (prev + 1) % slides.length
+      })
+    }, [])
+
+    const goPrev = useCallback(() => {
+      setActiveSlide((prev) => {
+        prevSlideRef.current = prev
+        return (prev - 1 + slides.length) % slides.length
+      })
+    }, [])
+
+    useEffect(() => {
+      const interval = setInterval(goNext, 5000)
+      return () => clearInterval(interval)
+    }, [goNext])
+
+    const shopBtnLabel = content.primaryButton?.label || 'ACHETER'
+    const currentSlide = slides[activeSlide]
+
+    // Chevron SVG for filter dropdowns
+    const CanopyChevronDown = () => (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6L8 10L12 6" stroke="#E8E8E5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    )
+
+    // Filter dropdowns state
+    const filterOptions: Record<string, string[]> = {
+      'Catégorie': ['Chaussures', 'Vêtements', 'Accessoires', 'Sous-vêtements', 'Chaussettes'],
+      'Taille': ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+      'Matière': ['Eucalyptus', 'Mérinos', 'Coton bio', 'Trino', 'Recyclé'],
+    }
+    const [openFilter, setOpenFilter] = useState<string | null>(null)
+    const [selectedFilters, setSelectedFilters] = useState<Record<string, string | null>>({
+      'Catégorie': null,
+      'Taille': null,
+      'Matière': null,
+    })
+    const filtersContainerRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+      if (!openFilter) return
+      const handleClickOutside = (e: MouseEvent) => {
+        if (filtersContainerRef.current && !filtersContainerRef.current.contains(e.target as Node)) {
+          setOpenFilter(null)
+        }
+      }
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [openFilter])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    return (
+      <>
+      {/* Canopy hero responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .canopy-resp-shopbar { padding: 6px !important; max-width: 100% !important; }
+          .canopy-resp-filters { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .canopy-resp-shopbar { margin: 0 16px; }
+        }
+      ` }} />
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+        className="relative overflow-hidden"
+        style={{
+          height: '100vh',
+          backgroundColor: '#1A1A1A',
+          color: '#FAFAF8',
+          fontFamily: "'Inter Variable', 'Inter', system-ui, sans-serif",
+        }}
+      >
+        {/* Diagonal wipe — parallelogram translates uniformly so the oblique angle
+            NEVER changes during the sweep (no "book opening" distortion).
+            All 4 polygon points shift by exactly 120% horizontally.
+            Left edge skew = 20% (top is 20% further right than bottom). */}
+        {slides.map((slide, i) => {
+          const isActive = activeSlide === i
+          const isPrev = prevSlideRef.current === i && !isActive
+
+          const visible = 'polygon(0% 0%, 130% 0%, 130% 100%, -20% 100%)'
+          const hidden  = 'polygon(120% 0%, 250% 0%, 250% 100%, 100% 100%)'
+          const full    = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+
+          return (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                clipPath: isActive ? visible : isPrev ? full : hidden,
+                opacity: isActive || isPrev ? 1 : 0,
+                transition: isActive
+                  ? 'clip-path 1.4s cubic-bezier(0.76, 0, 0.24, 1), opacity 0s'
+                  : isPrev
+                    ? 'none'
+                    : 'clip-path 0s 1.5s, opacity 0s 1.5s',
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              }}
+            >
+              {slide.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: '#1A1A1A',
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* Dark overlay */}
+        <div {...elementProps(config.id, 'overlay', 'container', 'Overlay')} className="absolute inset-0" style={{ backgroundColor: 'rgba(26, 26, 26, 0.35)', zIndex: 3 }} />
+
+        {/* Center content */}
+        <div {...elementProps(config.id, 'centerContent', 'container', 'Hero Content')} className="relative flex flex-col items-center justify-center h-full px-6" style={{ zIndex: 10 }}>
+          {/* H1 title */}
+          <div ref={heroTitleRevealRef}>
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                color: '#FAFAF8',
+                fontWeight: 700,
+                fontSize: 'clamp(2.875rem, 1.6429rem + 5.4762vw, 5.75rem)',
+                lineHeight: '110%',
+                maxWidth: '928px',
+                textAlign: 'center',
+                marginBottom: '40px',
+                marginTop: 0,
+                fontFamily: "'Inter Variable', system-ui, sans-serif",
+              }}
+            >
+              {title}
+            </h1>
+          </div>
+
+          {/* Glassmorphism shop pill — Filters LEFT, Buy button RIGHT */}
+          <div
+            {...elementProps(config.id, 'shopBar', 'container', 'Shop Bar')}
+            className={cn('flex items-center', 'canopy-resp-shopbar')}
+            style={{
+              borderRadius: '999px',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              backgroundColor: 'rgba(45, 80, 22, 0.35)',
+              padding: '6px 6px 6px 24px',
+              gap: '0',
+              maxWidth: '720px',
+              width: '100%',
+            }}
+          >
+            {/* Left: 3 filter dropdowns */}
+            <div ref={filtersContainerRef} {...elementProps(config.id, 'filtersRow', 'container', 'Filters')} className="flex items-center canopy-resp-filters" style={{ flexShrink: 0 }}>
+              {['Catégorie', 'Taille', 'Matière'].map((label, i) => (
+                <div
+                  key={label}
+                  style={{
+                    position: 'relative',
+                    paddingRight: i < 2 ? '14px' : '0',
+                    marginRight: i < 2 ? '14px' : '0',
+                    borderRight: i < 2 ? '1px solid rgba(232, 232, 229, 0.25)' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span
+                    {...elementProps(config.id, `filters.${i}.label`, 'text')}
+                    onClick={() => setOpenFilter(openFilter === label ? null : label)}
+                    style={{
+                      color: selectedFilters[label] ? '#A8D98A' : '#E8E8E5',
+                      fontSize: '14px',
+                      gap: '6px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      display: 'flex',
+                      alignItems: 'center',
+                      userSelect: 'none',
+                    }}
+                  >
+                    {selectedFilters[label] ?? label}
+                    <span {...elementProps(config.id, `filters.${i}.caret`, 'icon', `${label} Caret`)} style={{ display: 'flex', alignItems: 'center', transition: 'transform 0.2s ease', transform: openFilter === label ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                      <CanopyChevronDown />
+                    </span>
+                  </span>
+                  {openFilter === label && (
+                    <div
+                      {...elementProps(config.id, `filters.${i}.dropdown`, 'container', `${label} Dropdown`)}
+                      style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        marginTop: '12px',
+                        minWidth: '180px',
+                        zIndex: 100,
+                        backgroundColor: 'rgba(45, 80, 22, 0.5)',
+                        backdropFilter: 'blur(20px)',
+                        WebkitBackdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                        borderRadius: '8px',
+                        padding: '6px',
+                        fontFamily: "'Inter Variable', Inter, sans-serif",
+                      }}
+                    >
+                      {filterOptions[label].map((option) => (
+                        <div
+                          key={option}
+                          {...elementProps(config.id, `filters.${i}.option.${option}`, 'text', option)}
+                          onClick={() => {
+                            setSelectedFilters((prev) => ({ ...prev, [label]: prev[label] === option ? null : option }))
+                            setOpenFilter(null)
+                          }}
+                          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255,255,255,0.1)' }}
+                          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+                          style={{
+                            padding: '8px 14px',
+                            color: selectedFilters[label] === option ? '#A8D98A' : '#E8E8E5',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            borderRadius: '4px',
+                            transition: 'background-color 0.15s ease',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {option}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Right: spacer + buy button */}
+            <div style={{ flex: '1 1 auto', minWidth: '0', marginLeft: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+              <div
+                {...elementProps(config.id, 'primaryButton', 'button')}
+                role="button"
+                className="text-white"
+                style={{
+                  backgroundColor: '#2D5016',
+                  borderRadius: '0',
+                  paddingLeft: '24px',
+                  paddingRight: '24px',
+                  paddingTop: '12px',
+                  paddingBottom: '12px',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {shopBtnLabel}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom-left meta badge */}
+        <div
+          {...elementProps(config.id, 'slideMeta', 'container', 'Slide Info')}
+          className="absolute"
+          style={{
+            bottom: '24px',
+            left: 'clamp(16px, 4vw, 60px)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(45, 80, 22, 0.35)',
+            borderRadius: '4px',
+            padding: '12px 20px',
+            zIndex: 10,
+          }}
+        >
+          <div className="flex items-center" style={{ gap: '16px' }}>
+            <span
+              {...elementProps(config.id, `slides.${activeSlide}.name`, 'text')}
+              style={{ fontSize: 'clamp(14px, 1.5vw, 18px)', fontWeight: 500, color: '#FAFAF8' }}
+            >
+              {currentSlide.name}
+            </span>
+            <span {...elementProps(config.id, 'slideDivider', 'text', 'Divider')} style={{ color: 'rgba(250,250,248,0.6)', fontSize: '14px' }}>
+              &middot;
+            </span>
+            <span
+              {...elementProps(config.id, `slides.${activeSlide}.location`, 'text')}
+              className="flex items-center"
+              style={{ color: '#A8D98A', fontSize: '14px', gap: '4px' }}
+            >
+              Eco
+              <span style={{ color: 'rgba(250,250,248,0.6)', margin: '0 4px' }}>&middot;</span>
+              {currentSlide.location}
+            </span>
+          </div>
+        </div>
+
+        {/* Prev button */}
+        <div
+          {...elementProps(config.id, 'prevButton', 'button')}
+          role="button"
+          onClick={goPrev}
+          className="absolute flex items-center justify-center"
+          style={{
+            left: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 60px)',
+            height: 'clamp(40px, 6vw, 60px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(45, 80, 22, 0.35)',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease',
+            zIndex: 10,
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)' }}
+          aria-label="Previous slide"
+        >
+          <span {...elementProps(config.id, 'prevIcon', 'icon', 'Chevron Left')}><ChevronLeft style={{ width: '24px', height: '24px', color: '#FAFAF8' }} /></span>
+        </div>
+
+        {/* Next button */}
+        <div
+          {...elementProps(config.id, 'nextButton', 'button')}
+          role="button"
+          onClick={goNext}
+          className="absolute flex items-center justify-center"
+          style={{
+            right: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 60px)',
+            height: 'clamp(40px, 6vw, 60px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(45, 80, 22, 0.35)',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease',
+            zIndex: 10,
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)' }}
+          aria-label="Next slide"
+        >
+          <span {...elementProps(config.id, 'nextIcon', 'icon', 'Chevron Right')}><ChevronRight style={{ width: '24px', height: '24px', color: '#FAFAF8' }} /></span>
+        </div>
+
+        {/* Bottom-right thumbnail dots */}
+        <div
+          {...elementProps(config.id, 'slideNav', 'container', 'Slide Nav')}
+          className="absolute flex"
+          style={{ bottom: '24px', right: 'clamp(16px, 4vw, 60px)', gap: '24px', zIndex: 10 }}
+        >
+          {slides.map((slide, i) => (
+            <div
+              key={i}
+              {...elementProps(config.id, `slides.${i}.thumbnail`, 'image')}
+              role="button"
+              onClick={() => {
+                prevSlideRef.current = activeSlide
+                setActiveSlide(i)
+              }}
+              className="overflow-hidden relative"
+              style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '4px',
+                opacity: activeSlide === i ? 1 : 0.5,
+                border: activeSlide === i ? '2px solid #FAFAF8' : '2px solid transparent',
+                cursor: 'pointer',
+                transition: 'opacity 0.3s ease, border-color 0.3s ease',
+                padding: 0,
+              }}
+              aria-label={`Slide ${i + 1}`}
+            >
+              {slide.image && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={slide.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+      </>
+    )
+  }
+
+  // ─── VARIANT: nacre ───
+  // Nail salon premium : fullscreen diagonal-wipe slider, glassmorphism booking bar, centered title
+  if (variant === 'nacre') {
+    const defaultHeroImages = [
+      'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1920&q=80',
+      'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=1920&q=80',
+      'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=1920&q=80',
+    ]
+
+    const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+    const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+
+    const slides = [
+      { name: 'French Elegance', location: 'Nail Art', bg: 'linear-gradient(135deg, #2A1A1E 0%, #3D2630 50%, #1E1215 100%)', image: heroImages?.[0] ?? defaultHeroImages[0] },
+      { name: 'Baby Boomer', location: 'Tendance', bg: 'linear-gradient(135deg, #1E1215 0%, #2A1A1E 50%, #3D2630 100%)', image: heroImages?.[1] ?? defaultHeroImages[1] },
+      { name: 'Gel Artistique', location: 'Creation', bg: 'linear-gradient(135deg, #3D2630 0%, #1E1215 50%, #2A1A1E 100%)', image: heroImages?.[2] ?? defaultHeroImages[2] },
+    ]
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [nacreActiveSlide, setNacreActiveSlide] = useState(0)
+    const nacrePrevSlideRef = useRef(0)
+    const nacreTitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+
+    const nacreGoNext = useCallback(() => {
+      setNacreActiveSlide((prev) => {
+        nacrePrevSlideRef.current = prev
+        return (prev + 1) % slides.length
+      })
+    }, [])
+
+    const nacreGoPrev = useCallback(() => {
+      setNacreActiveSlide((prev) => {
+        nacrePrevSlideRef.current = prev
+        return (prev - 1 + slides.length) % slides.length
+      })
+    }, [])
+
+    useEffect(() => {
+      const interval = setInterval(nacreGoNext, 5000)
+      return () => clearInterval(interval)
+    }, [nacreGoNext])
+
+    // Booking bar state
+    const bookingOptions: Record<string, string[]> = {
+      Prestation: ['Pose gel', 'French manucure', 'Baby boomer', 'Nail art', 'Manucure classique', 'Pose faux ongles'],
+      Date: ['Aujourd\'hui', 'Demain', 'Cette semaine', 'Semaine prochaine', 'Choisir une date'],
+      Heure: ['9h00', '10h00', '11h00', '14h00', '15h00', '16h00', '17h00'],
+    }
+    const [nacreOpenFilter, setNacreOpenFilter] = useState<string | null>(null)
+    const [nacreSelectedFilters, setNacreSelectedFilters] = useState<Record<string, string | null>>({
+      Prestation: null,
+      Date: null,
+      Heure: null,
+    })
+    const nacreFiltersRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+      if (!nacreOpenFilter) return
+      const handleClickOutside = (e: MouseEvent) => {
+        if (nacreFiltersRef.current && !nacreFiltersRef.current.contains(e.target as Node)) {
+          setNacreOpenFilter(null)
+        }
+      }
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [nacreOpenFilter])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    const currentSlide = slides[nacreActiveSlide]
+    const bookingBtnLabel = content.primaryButton?.label || 'Reserver'
+
+    // Chevron SVG for dropdowns
+    const NacreChevronDown = () => (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6L8 10L12 6" stroke="#F0E0DA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    )
+
+    return (
+      <>
+      {/* Nacre hero responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .nacre-resp-bookingbar { padding: 6px !important; max-width: 100% !important; }
+          .nacre-resp-filters { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .nacre-resp-bookingbar { margin: 0 16px; }
+        }
+      ` }} />
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+        className="relative overflow-hidden"
+        style={{
+          height: '100vh',
+          backgroundColor: '#2A1A1E',
+          color: '#F0E0DA',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        {/* Diagonal wipe — parallelogram translates uniformly so the oblique angle
+            NEVER changes during the sweep (no "book opening" distortion).
+            All 4 polygon points shift by exactly 120% horizontally.
+            Left edge skew = 20% (top is 20% further right than bottom). */}
+        {slides.map((slide, i) => {
+          const isActive = nacreActiveSlide === i
+          const isPrev = nacrePrevSlideRef.current === i && !isActive
+
+          const visible = 'polygon(0% 0%, 130% 0%, 130% 100%, -20% 100%)'
+          const hidden  = 'polygon(120% 0%, 250% 0%, 250% 100%, 100% 100%)'
+          const full    = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+
+          return (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                clipPath: isActive ? visible : isPrev ? full : hidden,
+                opacity: isActive || isPrev ? 1 : 0,
+                transition: isActive
+                  ? 'clip-path 1.4s cubic-bezier(0.76, 0, 0.24, 1), opacity 0s'
+                  : isPrev
+                    ? 'none'
+                    : 'clip-path 0s 1.5s, opacity 0s 1.5s',
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              }}
+            >
+              {slide.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: slide.bg,
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* Dark overlay with rose tint */}
+        <div {...elementProps(config.id, 'overlay', 'container', 'Overlay')} className="absolute inset-0" style={{ backgroundColor: 'rgba(42, 26, 30, 0.4)' }} />
+
+        {/* Center content */}
+        <div {...elementProps(config.id, 'centerContent', 'container', 'Hero Content')} className="relative z-10 flex flex-col items-center justify-center h-full px-6">
+          {/* H1 title */}
+          <div ref={nacreTitleRevealRef}>
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                color: '#F0E0DA',
+                fontWeight: 500,
+                fontSize: 'clamp(2.875rem, 1.6429rem + 5.4762vw, 5.75rem)',
+                lineHeight: '110%',
+                maxWidth: '928px',
+                textAlign: 'center',
+                textTransform: 'capitalize',
+                marginBottom: '40px',
+                marginTop: 0,
+              }}
+            >
+              {title}
+            </h1>
+          </div>
+
+          {/* Glassmorphism booking pill — 3 selectors LEFT, Reserver button RIGHT */}
+          <div
+            {...elementProps(config.id, 'bookingBar', 'container', 'Booking Bar')}
+            className={cn('flex items-center', 'nacre-resp-bookingbar')}
+            style={{
+              borderRadius: '999px',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              backgroundColor: 'rgba(197, 169, 110, 0.3)',
+              padding: '6px 6px 6px 24px',
+              gap: '0',
+              maxWidth: '720px',
+              width: '100%',
+            }}
+          >
+            {/* Left: 3 booking dropdowns */}
+            <div ref={nacreFiltersRef} {...elementProps(config.id, 'filtersRow', 'container', 'Booking Filters')} className="flex items-center nacre-resp-filters" style={{ flexShrink: 0 }}>
+              {['Prestation', 'Date', 'Heure'].map((label, i) => (
+                <div
+                  key={label}
+                  style={{
+                    position: 'relative',
+                    paddingRight: i < 2 ? '14px' : '0',
+                    marginRight: i < 2 ? '14px' : '0',
+                    borderRight: i < 2 ? '1px solid rgba(240, 224, 218, 0.25)' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span
+                    {...elementProps(config.id, `filters.${i}.label`, 'text')}
+                    onClick={() => setNacreOpenFilter(nacreOpenFilter === label ? null : label)}
+                    style={{
+                      color: nacreSelectedFilters[label] ? '#C9A96E' : '#F0E0DA',
+                      fontSize: '14px',
+                      gap: '6px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      display: 'flex',
+                      alignItems: 'center',
+                      userSelect: 'none',
+                      fontFamily: "'Inter Variable', Inter, sans-serif",
+                    }}
+                  >
+                    {nacreSelectedFilters[label] ?? label}
+                    <span {...elementProps(config.id, `filters.${i}.caret`, 'icon', `${label} Caret`)} style={{ display: 'flex', alignItems: 'center', transition: 'transform 0.2s ease', transform: nacreOpenFilter === label ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                      <NacreChevronDown />
+                    </span>
+                  </span>
+                  {nacreOpenFilter === label && (
+                    <div
+                      {...elementProps(config.id, `filters.${i}.dropdown`, 'container', `${label} Dropdown`)}
+                      style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        marginTop: '12px',
+                        minWidth: '180px',
+                        zIndex: 100,
+                        backgroundColor: 'rgba(197, 169, 110, 0.3)',
+                        backdropFilter: 'blur(20px)',
+                        WebkitBackdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(240, 224, 218, 0.15)',
+                        borderRadius: '8px',
+                        padding: '6px',
+                        fontFamily: "'Inter Variable', Inter, sans-serif",
+                      }}
+                    >
+                      {bookingOptions[label].map((option) => (
+                        <div
+                          key={option}
+                          {...elementProps(config.id, `filters.${i}.option.${option}`, 'text', option)}
+                          onClick={() => {
+                            setNacreSelectedFilters((prev) => ({ ...prev, [label]: prev[label] === option ? null : option }))
+                            setNacreOpenFilter(null)
+                          }}
+                          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(240, 224, 218, 0.1)' }}
+                          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+                          style={{
+                            padding: '8px 14px',
+                            color: nacreSelectedFilters[label] === option ? '#C9A96E' : '#F0E0DA',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            borderRadius: '4px',
+                            transition: 'background-color 0.15s ease',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {option}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Right: Reserver button */}
+            <div style={{ flex: '1 1 auto', minWidth: '0', display: 'flex', justifyContent: 'flex-end', marginLeft: '16px' }}>
+              <div
+                {...elementProps(config.id, 'primaryButton', 'button')}
+                role="button"
+                style={{
+                  backgroundColor: '#C9A96E',
+                  color: '#2A1A1E',
+                  borderRadius: '999px',
+                  paddingLeft: '28px',
+                  paddingRight: '28px',
+                  paddingTop: '12px',
+                  paddingBottom: '12px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  letterSpacing: '0.02em',
+                  fontFamily: "'Inter Variable', Inter, sans-serif",
+                  transition: 'background-color 0.3s ease',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#D4B88E' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#C9A96E' }}
+              >
+                {bookingBtnLabel}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom-left meta badge */}
+        <div
+          {...elementProps(config.id, 'slideMeta', 'container', 'Slide Info')}
+          className="absolute z-10"
+          style={{
+            bottom: '24px',
+            left: 'clamp(16px, 4vw, 60px)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(197, 169, 110, 0.3)',
+            borderRadius: '4px',
+            padding: '12px 20px',
+          }}
+        >
+          <div className="flex items-center" style={{ gap: '16px' }}>
+            <span
+              {...elementProps(config.id, `slides.${nacreActiveSlide}.name`, 'text')}
+              style={{ fontSize: 'clamp(14px, 1.5vw, 18px)', fontWeight: 500, color: '#F0E0DA' }}
+            >
+              {currentSlide.name}
+            </span>
+            <span {...elementProps(config.id, 'slideDivider', 'text', 'Divider')} style={{ color: 'rgba(240, 224, 218, 0.5)', fontSize: '14px' }}>
+              &middot;
+            </span>
+            <span
+              {...elementProps(config.id, `slides.${nacreActiveSlide}.location`, 'text')}
+              className="flex items-center"
+              style={{ color: 'rgba(240, 224, 218, 0.5)', fontSize: '14px', gap: '4px' }}
+            >
+              {currentSlide.location}
+            </span>
+          </div>
+        </div>
+
+        {/* Prev button */}
+        <div
+          {...elementProps(config.id, 'prevButton', 'button')}
+          role="button"
+          onClick={nacreGoPrev}
+          className="absolute z-10 flex items-center justify-center"
+          style={{
+            left: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 60px)',
+            height: 'clamp(40px, 6vw, 60px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(197, 169, 110, 0.3)',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)' }}
+          aria-label="Previous slide"
+        >
+          <span {...elementProps(config.id, 'prevIcon', 'icon', 'Chevron Left')}><ChevronLeft style={{ width: '24px', height: '24px', color: '#F0E0DA' }} /></span>
+        </div>
+
+        {/* Next button */}
+        <div
+          {...elementProps(config.id, 'nextButton', 'button')}
+          role="button"
+          onClick={nacreGoNext}
+          className="absolute z-10 flex items-center justify-center"
+          style={{
+            right: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 60px)',
+            height: 'clamp(40px, 6vw, 60px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(197, 169, 110, 0.3)',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)' }}
+          aria-label="Next slide"
+        >
+          <span {...elementProps(config.id, 'nextIcon', 'icon', 'Chevron Right')}><ChevronRight style={{ width: '24px', height: '24px', color: '#F0E0DA' }} /></span>
+        </div>
+
+        {/* Bottom-right thumbnail dots */}
+        <div
+          {...elementProps(config.id, 'slideNav', 'container', 'Slide Nav')}
+          className="absolute z-10 flex"
+          style={{ bottom: '24px', right: 'clamp(16px, 4vw, 60px)', gap: '24px' }}
+        >
+          {slides.map((slide, i) => (
+            <div
+              key={i}
+              {...elementProps(config.id, `slides.${i}.thumbnail`, 'image')}
+              role="button"
+              onClick={() => setNacreActiveSlide(i)}
+              className="overflow-hidden relative"
+              style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '4px',
+                opacity: nacreActiveSlide === i ? 1 : 0.5,
+                border: nacreActiveSlide === i ? '2px solid #C9A96E' : '2px solid transparent',
+                background: slide.image ? undefined : slide.bg,
+                cursor: 'pointer',
+                transition: 'opacity 0.3s ease, border-color 0.3s ease',
+                padding: 0,
+              }}
+              aria-label={`Slide ${i + 1}`}
+            >
+              {slide.image && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={slide.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+      </>
     )
   }
 

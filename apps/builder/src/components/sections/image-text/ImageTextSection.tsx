@@ -479,6 +479,478 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
   }
 
   // ═══════════════════════════════════════════
+  // OBSCURA — About the Photographer
+  // ═══════════════════════════════════════════
+
+  if (variant === 'obscura-about') {
+    const statNumberStyle = {
+      fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)",
+      fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+      fontWeight: 400,
+      lineHeight: '110%',
+      color: '#D4A853',
+    } as const
+
+    const paraStyle = {
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '160%',
+      color: '#8A8480',
+      fontFamily: "'Inter Variable', var(--font-body, sans-serif)",
+    } as const
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const titleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const counter500Ref = useBrixsaCounter(500, { disabled: isEditing })
+    const counter12Ref = useBrixsaCounter(12, { disabled: isEditing })
+    const counter50Ref = useBrixsaCounter(50, { disabled: isEditing })
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'About Section')}
+        style={{ backgroundColor: '#0A0A0A', padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)', fontFamily: 'var(--font-body, inherit)' }}
+      >
+        <style>{`
+          @media (max-width: 768px) {
+            .obscura-resp-text-cols { grid-template-columns: 1fr !important; }
+            .obscura-resp-stats { grid-template-columns: 1fr !important; }
+          }
+          .obscura-cta-btn {
+            border: 1px solid #D4A853;
+            background: transparent;
+            color: #D4A853;
+            padding: 14px 32px;
+            font-family: "Inter Variable", sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.4s ease, color 0.4s ease;
+            text-decoration: none;
+            display: inline-block;
+          }
+          .obscura-cta-btn:hover {
+            background: #D4A853;
+            color: #0A0A0A;
+          }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'container', 'container', 'Container')}
+          className="mx-auto"
+          style={{ maxWidth: '1320px' }}
+        >
+          {/* Title — full width, large asymmetric */}
+          <h2
+            {...elementProps(config.id, 'title', 'heading')}
+            ref={titleRevealRef}
+            style={{
+              fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)",
+              fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+              fontWeight: 400,
+              lineHeight: '110%',
+              color: customTextColor ?? '#E8E4DF',
+              maxWidth: '680px',
+              margin: 0,
+            }}
+          >
+            {content.title || 'Capturer l\u2019Essence de Chaque Instant, Avec Passion et Pr\u00e9cision'}
+          </h2>
+
+          {/* Two paragraphs side by side — offset right */}
+          <div
+            {...elementProps(config.id, 'textRow', 'container', 'Text Row')}
+            className="grid grid-cols-2 obscura-resp-text-cols"
+            style={{ gap: 'clamp(16px, 3vw, 32px)', marginTop: 'clamp(60px, 8vw, 120px)', marginLeft: 'auto', maxWidth: '780px' }}
+          >
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              style={paraStyle}
+            >
+              {content.subtitle || 'Chaque image raconte une histoire unique. Mon approche allie technique ma\u00eetris\u00e9e et sensibilit\u00e9 artistique pour cr\u00e9er des photographies qui transcendent le simple souvenir et deviennent de v\u00e9ritables \u0153uvres intemporelles.'}
+            </p>
+            <p
+              {...elementProps(config.id, 'body', 'text')}
+              style={paraStyle}
+            >
+              {content.body || 'De la lumi\u00e8re naturelle aux compositions soign\u00e9es, je m\u2019attache \u00e0 r\u00e9v\u00e9ler la beaut\u00e9 authentique de chaque sujet. Portraits, mariages, \u00e9v\u00e9nements \u2014 chaque projet est une nouvelle opportunit\u00e9 de repousser les limites de la cr\u00e9ativit\u00e9.'}
+            </p>
+          </div>
+
+          {/* Stats — 3 columns, offset right */}
+          <div
+            {...elementProps(config.id, 'statsRow', 'container', 'Stats Row')}
+            className="grid grid-cols-3 obscura-resp-stats"
+            style={{ gap: 'clamp(16px, 3vw, 32px)', marginTop: 'clamp(40px, 6vw, 80px)', marginLeft: 'auto', maxWidth: '780px' }}
+          >
+            <div {...elementProps(config.id, 'stat1', 'container', 'Stat Block')}>
+              <div
+                {...elementProps(config.id, 'stat1Value', 'text', 'Stat Value')}
+                className="flex items-baseline"
+                style={statNumberStyle}
+              >
+                <span ref={counter500Ref}>0</span>
+                <span>+</span>
+              </div>
+              <p style={{ marginTop: '4px', fontSize: '14px', fontWeight: 400, color: '#8A8480', fontFamily: "'Inter Variable', sans-serif" }}>
+                Projets r\u00e9alis\u00e9s
+              </p>
+            </div>
+            <div {...elementProps(config.id, 'stat2', 'container', 'Stat Block')}>
+              <div
+                {...elementProps(config.id, 'stat2Value', 'text', 'Stat Value')}
+                className="flex items-baseline"
+                style={statNumberStyle}
+              >
+                <span ref={counter12Ref}>0</span>
+              </div>
+              <p style={{ marginTop: '4px', fontSize: '14px', fontWeight: 400, color: '#8A8480', fontFamily: "'Inter Variable', sans-serif" }}>
+                Ann\u00e9es d\u2019exp\u00e9rience
+              </p>
+            </div>
+            <div {...elementProps(config.id, 'stat3', 'container', 'Stat Block')}>
+              <div
+                {...elementProps(config.id, 'stat3Value', 'text', 'Stat Value')}
+                className="flex items-baseline"
+                style={statNumberStyle}
+              >
+                <span ref={counter50Ref}>0</span>
+                <span>+</span>
+              </div>
+              <p style={{ marginTop: '4px', fontSize: '14px', fontWeight: 400, color: '#8A8480', fontFamily: "'Inter Variable', sans-serif" }}>
+                Mariages photographi\u00e9s
+              </p>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div
+            {...elementProps(config.id, 'ctaRow', 'container', 'CTA Row')}
+            style={{ marginTop: 'clamp(40px, 6vw, 80px)', marginLeft: 'auto', maxWidth: '780px' }}
+          >
+            <a
+              {...elementProps(config.id, 'ctaButton', 'button', 'CTA Button')}
+              href="/contact"
+              className="obscura-cta-btn"
+            >
+              {(content as Record<string, unknown>).ctaLabel as string ?? 'Me contacter'}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // CANOPY STORY — Sustainability Storytelling
+  // ═══════════════════════════════════════════
+
+  if (variant === 'canopy-story') {
+    const forestGreen = '#2D5016'
+    const taupe = '#8B7355'
+
+    const paraStyle = {
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '150%',
+      color: '#1A1A1A',
+      fontFamily: "'Inter Variable', var(--font-body, sans-serif)",
+    } as const
+
+    const statNumberStyle = {
+      fontFamily: "'Inter Variable', var(--font-heading, sans-serif)",
+      fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+      fontWeight: 700,
+      lineHeight: '110%',
+      color: forestGreen,
+    } as const
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const titleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const counter95Ref = useBrixsaCounter(95, { disabled: isEditing })
+    const counter60Ref = useBrixsaCounter(60, { disabled: isEditing })
+    const counter100Ref = useBrixsaCounter(100, { disabled: isEditing })
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Canopy Story Section')}
+        style={{ backgroundColor: '#FAFAF8', padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)', fontFamily: "'Inter Variable', var(--font-body, sans-serif)" }}
+      >
+        <style>{`
+          @media (max-width: 768px) {
+            .canopy-story-text-cols { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'container', 'container', 'Container')}
+          className="mx-auto"
+          style={{ maxWidth: '1320px' }}
+        >
+          {/* Title — full width, big asymmetric (brixsa-about layout) */}
+          <div ref={titleRevealRef}>
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontFamily: "'Inter Variable', var(--font-heading, sans-serif)",
+                fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                fontWeight: 700,
+                lineHeight: '110%',
+                letterSpacing: '-0.02em',
+                color: customTextColor ?? '#1A1A1A',
+                maxWidth: '680px',
+              }}
+            >
+              {content.title || 'Des matériaux qui changent tout pour la planète'}
+            </h2>
+          </div>
+
+          {/* Two paragraphs side by side — offset right */}
+          <div
+            {...elementProps(config.id, 'textRow', 'container', 'Text Row')}
+            className="grid grid-cols-2 canopy-story-text-cols"
+            style={{ gap: 'clamp(16px, 3vw, 32px)', marginTop: 'clamp(60px, 8vw, 120px)', marginLeft: 'auto', maxWidth: '780px' }}
+          >
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              style={paraStyle}
+            >
+              {content.subtitle || 'Nous croyons que les meilleurs produits sont ceux qui sont bons pour vous et pour la planète. Chaque paire est conçue avec des matériaux naturels — laine mérinos, fibre d\'eucalyptus, mousse de canne à sucre.'}
+            </p>
+            <p
+              {...elementProps(config.id, 'body', 'text')}
+              style={paraStyle}
+            >
+              {content.body || 'Un confort inégalé et une empreinte carbone réduite. Nos procédés de fabrication privilégient les circuits courts et les énergies renouvelables pour minimiser notre impact à chaque étape.'}
+            </p>
+          </div>
+
+          {/* Counter stats — offset right */}
+          <div
+            {...elementProps(config.id, 'statsRow', 'container', 'Stats Row')}
+            className="grid grid-cols-3"
+            style={{ gap: 'clamp(16px, 3vw, 32px)', marginTop: 'clamp(40px, 6vw, 80px)', marginLeft: 'auto', maxWidth: '780px' }}
+          >
+            <div {...elementProps(config.id, 'stat1', 'container', 'Stat Block')}>
+              <div
+                {...elementProps(config.id, 'stat1Value', 'text')}
+                className="flex items-baseline"
+                style={statNumberStyle}
+              >
+                <span ref={counter95Ref}>0</span>
+                <span>%</span>
+              </div>
+              <p style={{ marginTop: '4px', fontSize: '16px', fontWeight: 400, color: taupe }}>
+                Matériaux naturels
+              </p>
+            </div>
+            <div {...elementProps(config.id, 'stat2', 'container', 'Stat Block')}>
+              <div
+                {...elementProps(config.id, 'stat2Value', 'text')}
+                className="flex items-baseline"
+                style={statNumberStyle}
+              >
+                <span ref={counter60Ref}>0</span>
+                <span>%</span>
+              </div>
+              <p style={{ marginTop: '4px', fontSize: '16px', fontWeight: 400, color: taupe }}>
+                Moins de CO₂
+              </p>
+            </div>
+            <div {...elementProps(config.id, 'stat3', 'container', 'Stat Block')}>
+              <div
+                {...elementProps(config.id, 'stat3Value', 'text')}
+                className="flex items-baseline"
+                style={statNumberStyle}
+              >
+                <span ref={counter100Ref}>0</span>
+                <span>%</span>
+              </div>
+              <p style={{ marginTop: '4px', fontSize: '16px', fontWeight: 400, color: taupe }}>
+                Recyclable
+              </p>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          {content.primaryButton && (
+            <div style={{ marginTop: 'clamp(40px, 6vw, 80px)', marginLeft: 'auto', maxWidth: '780px' }}>
+              <a
+                {...elementProps(config.id, 'primaryButton', 'button')}
+                href={content.primaryButton.href}
+                style={{
+                  display: 'inline-block',
+                  padding: '16px 36px',
+                  background: '#1A1A1A',
+                  color: '#fff',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  textDecoration: 'none',
+                  border: 'none',
+                  transition: 'background 0.3s ease',
+                }}
+              >
+                {content.primaryButton.label}
+              </a>
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // NACRE ABOUT — Asymmetric Layout with Counters (Nail Salon)
+  // ═══════════════════════════════════════════
+
+  if (variant === 'nacre-about') {
+    const statNumberStyle = {
+      fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)",
+      fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+      fontWeight: 500,
+      lineHeight: '110%',
+      color: '#2A1A1E',
+    } as const
+
+    const paraStyle = {
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '150%',
+      color: '#2A1A1E',
+      fontFamily: "'Inter Variable', var(--font-body, sans-serif)",
+    } as const
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const titleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const counter500Ref = useBrixsaCounter(500, { disabled: isEditing })
+    const counter8Ref = useBrixsaCounter(8, { disabled: isEditing })
+    const counter15Ref = useBrixsaCounter(15, { disabled: isEditing })
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'About Section')}
+        style={{ backgroundColor: '#F5E6E0', padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)', fontFamily: 'var(--font-body, inherit)' }}
+      >
+        <style>{`
+          @media (max-width: 768px) {
+            .nacre-resp-text-cols { grid-template-columns: 1fr !important; }
+            .nacre-resp-stats { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'container', 'container', 'Container')}
+          className="mx-auto"
+          style={{ maxWidth: '1320px' }}
+        >
+          {/* Title — full width */}
+          <h2
+            ref={titleRevealRef}
+            {...elementProps(config.id, 'title', 'heading')}
+            style={{
+              fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)",
+              fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+              fontWeight: 500,
+              lineHeight: '110%',
+              textTransform: 'capitalize',
+              color: customTextColor ?? '#2A1A1E',
+              maxWidth: '680px',
+            }}
+          >
+            {content.title || 'Un savoir-faire d\u2019exception au service de votre beaut\u00e9'}
+          </h2>
+
+          {/* Two paragraphs side by side — offset right */}
+          <div
+            {...elementProps(config.id, 'textRow', 'container', 'Text Row')}
+            className="grid grid-cols-2 nacre-resp-text-cols"
+            style={{ gap: 'clamp(16px, 3vw, 32px)', marginTop: 'clamp(60px, 8vw, 120px)', marginLeft: 'auto', maxWidth: '780px' }}
+          >
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              style={paraStyle}
+            >
+              {content.subtitle || 'Notre institut allie techniques innovantes et produits haut de gamme pour sublimer vos mains et vos pieds. Chaque prestation est r\u00e9alis\u00e9e dans un cadre raffin\u00e9, pens\u00e9 pour votre bien-\u00eatre.'}
+            </p>
+            <p
+              {...elementProps(config.id, 'body', 'text')}
+              style={paraStyle}
+            >
+              {content.body || 'De la manucure classique au nail art cr\u00e9atif, en passant par les soins des ongles et les extensions gel, nous proposons une gamme compl\u00e8te de prestations personnalis\u00e9es selon vos envies et votre style.'}
+            </p>
+          </div>
+
+          {/* Stats — offset right */}
+          <div
+            {...elementProps(config.id, 'statsRow', 'container', 'Stats Row')}
+            className="grid grid-cols-3 nacre-resp-stats"
+            style={{ gap: 'clamp(16px, 3vw, 32px)', marginTop: 'clamp(40px, 6vw, 80px)', marginLeft: 'auto', maxWidth: '780px' }}
+          >
+            <div {...elementProps(config.id, 'stat1', 'container', 'Stat Block')}>
+              <div
+                {...elementProps(config.id, 'stat1Value', 'text')}
+                className="flex items-baseline"
+                style={statNumberStyle}
+              >
+                <span ref={counter500Ref}>0</span>
+                <span>+</span>
+              </div>
+              <p style={{ marginTop: '4px', fontSize: '16px', fontWeight: 400, color: '#8A7A75' }}>
+                Clientes fid\u00e8les
+              </p>
+            </div>
+            <div {...elementProps(config.id, 'stat2', 'container', 'Stat Block')}>
+              <div {...elementProps(config.id, 'stat2Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                <span ref={counter8Ref}>0</span>
+              </div>
+              <p style={{ marginTop: '4px', fontSize: '16px', fontWeight: 400, color: '#8A7A75' }}>
+                Ans d&apos;exp\u00e9rience
+              </p>
+            </div>
+            <div {...elementProps(config.id, 'stat3', 'container', 'Stat Block')}>
+              <div {...elementProps(config.id, 'stat3Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                <span ref={counter15Ref}>0</span>
+                <span>+</span>
+              </div>
+              <p style={{ marginTop: '4px', fontSize: '16px', fontWeight: 400, color: '#8A7A75' }}>
+                Prestations
+              </p>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          {content.primaryButton && (
+            <div style={{ marginTop: 'clamp(40px, 6vw, 80px)', marginLeft: 'auto', maxWidth: '780px' }}>
+              <a
+                {...elementProps(config.id, 'primaryButton', 'link')}
+                href={content.primaryButton.href ?? '#'}
+                style={{
+                  display: 'inline-block',
+                  backgroundColor: '#C9A96E',
+                  color: '#2A1A1E',
+                  fontFamily: "'GeneralSans Variable', sans-serif",
+                  fontWeight: 500,
+                  fontSize: 16,
+                  padding: '16px 40px',
+                  textDecoration: 'none',
+                  transition: 'opacity 0.3s ease',
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.85' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
+              >
+                {content.primaryButton.label ?? 'D\u00e9couvrir nos soins'}
+              </a>
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
   // BRIXSA ABOUT — Asymmetric Layout with Counters
   // ═══════════════════════════════════════════
 
@@ -776,6 +1248,9 @@ export const imageTextMeta = {
     'creative-image-right', 'creative-image-left',
     'ecommerce-image-right', 'ecommerce-image-left',
     'glass-image-right', 'glass-image-left',
+    'canopy-story',
+    'obscura-about',
+    'nacre-about',
     'brixsa-about',
     'brixsa-privacy',
   ],

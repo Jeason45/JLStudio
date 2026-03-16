@@ -758,6 +758,372 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
   }
 
   // ═══════════════════════════════════════════
+  // CANOPY — Nature / Organique premium
+  // ═══════════════════════════════════════════
+
+  if (variant === 'canopy-banner') {
+    const scrollRevealRef = (delay: number) => (el: HTMLElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(24px)'
+      el.style.transition = `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    return (
+      <>
+        <style dangerouslySetInnerHTML={{ __html: `
+          .canopy-cta-btn {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+          }
+          .canopy-cta-btn:hover {
+            background-color: #F0EDE8 !important;
+            transform: scale(1.02);
+          }
+        ` }} />
+        <section
+          {...elementProps(config.id, 'wrapper', 'container', 'CTA Section')}
+          style={{
+            backgroundColor: '#2D5016',
+            padding: 'clamp(60px, 10vw, 120px) 24px',
+            fontFamily: 'var(--font-body, inherit)',
+          }}
+        >
+          <div style={{ maxWidth: 700, marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
+            <h2
+              ref={scrollRevealRef(0)}
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontSize: 'clamp(36px, 5vw, 44px)',
+                fontWeight: 700,
+                color: '#FFFFFF',
+                lineHeight: 1.15,
+                letterSpacing: '-0.02em',
+                marginBottom: 16,
+              }}
+            >
+              {title}
+            </h2>
+            {subtitle && (
+              <p
+                ref={scrollRevealRef(0.15)}
+                {...elementProps(config.id, 'subtitle', 'text')}
+                style={{
+                  fontSize: 16,
+                  color: 'rgba(255,255,255,0.8)',
+                  lineHeight: 1.6,
+                  marginBottom: 32,
+                }}
+              >
+                {subtitle}
+              </p>
+            )}
+            {content.primaryButton && (
+              <div ref={scrollRevealRef(0.3)}>
+                <a
+                  {...elementProps(config.id, 'primaryButton', 'button')}
+                  href={content.primaryButton.href}
+                  className="canopy-cta-btn"
+                  style={{
+                    display: 'inline-block',
+                    backgroundColor: '#FFFFFF',
+                    color: '#2D5016',
+                    padding: '16px 40px',
+                    fontSize: 14,
+                    fontWeight: 600,
+                    textTransform: 'uppercase' as const,
+                    letterSpacing: '0.1em',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    border: 'none',
+                  }}
+                >
+                  {content.primaryButton.label || 'Commencer'}
+                </a>
+              </div>
+            )}
+          </div>
+        </section>
+      </>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // NACRE — Nail Salon CTA
+  // ═══════════════════════════════════════════
+
+  if (variant === 'obscura-centered') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const scrollRevealDelayRef = (delay: number) => (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(30px)'
+      el.style.transition = `opacity 0.8s ease ${delay}s, transform 0.8s ease ${delay}s`
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const bgImage = (content as Record<string, unknown>).backgroundImage as string | undefined
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'CTA Section')}
+        style={{
+          position: 'relative',
+          minHeight: '70vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: 'var(--font-body, inherit)',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Background image */}
+        <div {...elementProps(config.id, 'bgWrapper', 'container', 'Background')} style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          {bgImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={bgImage}
+              alt=""
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+            />
+          ) : (
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1a1a18, #0A0A0A, #0d0d0a)' }} />
+          )}
+          {/* Overlay */}
+          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(10, 10, 10, 0.7)' }} />
+        </div>
+
+        {/* Content */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 2,
+            maxWidth: '700px',
+            textAlign: 'center',
+            padding: 'clamp(40px, 8vw, 100px) clamp(20px, 5vw, 60px)',
+          }}
+        >
+          <div ref={scrollRevealRef}>
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              className={cn(titleSize && getTitleSizeClass(titleSize))}
+              style={{
+                fontFamily: '"GeneralSans Variable", sans-serif',
+                fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                fontWeight: 500,
+                lineHeight: '115%',
+                color: textColor ?? '#E8E4DF',
+                marginBottom: '20px',
+              }}
+            >
+              {content.title || 'Racontons votre histoire'}
+            </h2>
+          </div>
+          <div ref={scrollRevealDelayRef(0.15)}>
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              style={{
+                fontSize: '18px',
+                fontWeight: 400,
+                lineHeight: '160%',
+                color: 'rgba(232, 228, 223, 0.6)',
+                marginBottom: '40px',
+              }}
+            >
+              {subtitle || 'Chaque image mérite d\'être exceptionnelle'}
+            </p>
+          </div>
+          <div ref={scrollRevealDelayRef(0.3)}>
+            <a
+              {...elementProps(config.id, 'primaryButton', 'button')}
+              href={content.primaryButton?.href ?? '/contact'}
+              style={{
+                display: 'inline-block',
+                backgroundColor: 'transparent',
+                color: '#D4A853',
+                border: '1px solid #D4A853',
+                borderRadius: '0px',
+                padding: '14px 36px',
+                fontSize: '14px',
+                fontWeight: 500,
+                fontFamily: '"Inter Variable", var(--font-body, sans-serif)',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s, color 0.3s',
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#D4A853'; e.currentTarget.style.color = '#0A0A0A' }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#D4A853' }}
+            >
+              {content.primaryButton?.label || 'Réserver une séance'}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (variant === 'nacre-centered') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const scrollRevealDelayRef = (delay: number) => (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(30px)'
+      el.style.transition = `opacity 0.8s ease ${delay}s, transform 0.8s ease ${delay}s`
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const bgImage = (content as Record<string, unknown>).backgroundImage as string | undefined
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'CTA Section')}
+        style={{
+          position: 'relative',
+          minHeight: '70vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: 'var(--font-body, inherit)',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Background image */}
+        <div {...elementProps(config.id, 'bgWrapper', 'container', 'Background')} style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          {bgImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={bgImage}
+              alt=""
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+            />
+          ) : (
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #3d2228, #2A1A1E, #1d1015)' }} />
+          )}
+          {/* Overlay — bordeaux tint */}
+          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(42, 26, 30, 0.7)' }} />
+        </div>
+
+        {/* Content */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 2,
+            maxWidth: '700px',
+            textAlign: 'center',
+            padding: 'clamp(40px, 8vw, 100px) clamp(20px, 5vw, 60px)',
+          }}
+        >
+          <div ref={scrollRevealRef}>
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              className={cn(titleSize && getTitleSizeClass(titleSize))}
+              style={{
+                fontFamily: '"GeneralSans Variable", sans-serif',
+                fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                fontWeight: 500,
+                lineHeight: '115%',
+                color: textColor ?? '#F0E0DA',
+                marginBottom: '20px',
+              }}
+            >
+              {content.title || 'Prenez soin de vous'}
+            </h2>
+          </div>
+          <div ref={scrollRevealDelayRef(0.15)}>
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              style={{
+                fontSize: '18px',
+                fontWeight: 400,
+                lineHeight: '160%',
+                color: 'rgba(240, 224, 218, 0.7)',
+                marginBottom: '40px',
+              }}
+            >
+              {subtitle || 'R\u00E9servez votre moment de d\u00E9tente'}
+            </p>
+          </div>
+          <div ref={scrollRevealDelayRef(0.3)}>
+            <a
+              {...elementProps(config.id, 'primaryButton', 'button')}
+              href={content.primaryButton?.href ?? '/reservation'}
+              style={{
+                display: 'inline-block',
+                backgroundColor: '#C9A96E',
+                color: '#2A1A1E',
+                borderRadius: '4px',
+                padding: '14px 36px',
+                fontSize: '16px',
+                fontWeight: 600,
+                fontFamily: '"Inter Variable", var(--font-body, sans-serif)',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s, transform 0.3s',
+                textDecoration: 'none',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#b8953d' }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#C9A96E' }}
+            >
+              {content.primaryButton?.label || 'R\u00E9server maintenant'}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
   // BRIXSA — Agence / Dark premium
   // ═══════════════════════════════════════════
 
@@ -926,6 +1292,9 @@ export const ctaMeta = {
     'creative-centered', 'creative-split', 'creative-card',
     'ecommerce-centered', 'ecommerce-split', 'ecommerce-card',
     'glass-centered', 'glass-split', 'glass-card',
+    'canopy-banner',
+    'obscura-centered',
+    'nacre-centered',
     'brixsa-centered',
   ],
   defaultVariant: 'startup-centered',

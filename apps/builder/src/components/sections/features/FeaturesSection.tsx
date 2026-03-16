@@ -687,6 +687,600 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
   }
 
   // ═══════════════════════════════════════════
+  // CANOPY — Brand Pillars / Eco Values
+  // ═══════════════════════════════════════════
+
+  if (variant === 'canopy-values') {
+    const defaultItems: FeatureItem[] = [
+      { id: 'canopy-1', icon: '🌿', title: 'Sustainable Materials', description: 'Every material is chosen with intention — renewable, responsibly sourced, and designed to leave the lightest footprint possible.' },
+      { id: 'canopy-2', icon: '🌎', title: 'Carbon Neutral', description: 'We offset 100% of our carbon emissions across our entire supply chain, from raw materials to your doorstep.' },
+      { id: 'canopy-3', icon: '♻️', title: 'Circular Design', description: 'Products built to last, and when they reach end of life, every component can be recycled or composted.' },
+    ]
+
+    const resolvedItems = items.length > 0 ? items : defaultItems
+
+    const cardRevealRef = (delay: number) => (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(32px)'
+      el.style.transition = `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Values Section')}
+        style={{
+          position: 'relative',
+          fontFamily: 'var(--font-body, inherit)',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Split background */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 0,
+          }}
+        >
+          <div style={{ height: '50%', backgroundColor: '#FFFFFF' }} />
+          <div style={{ height: '50%', backgroundColor: '#F0EDE8' }} />
+        </div>
+
+        <style>{`
+          .canopy-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
+          .canopy-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important;
+          }
+          .canopy-card:hover .canopy-icon-wrap {
+            transform: scale(1.05);
+          }
+          .canopy-icon-wrap {
+            transition: transform 0.3s ease;
+          }
+          @media (max-width: 767px) {
+            .canopy-grid {
+              grid-template-columns: 1fr !important;
+              max-width: 400px !important;
+              margin-left: auto !important;
+              margin-right: auto !important;
+            }
+          }
+        `}</style>
+
+        <div
+          {...elementProps(config.id, 'inner', 'container', 'Inner Container')}
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            maxWidth: 1100,
+            margin: '0 auto',
+            padding: 'clamp(80px, 12vw, 160px) 24px',
+          }}
+        >
+          {/* Header */}
+          <div
+            {...elementProps(config.id, 'headerArea', 'container', 'Header Area')}
+            style={{
+              textAlign: 'center',
+              marginBottom: 64,
+            }}
+          >
+            {(title || eyebrow) && (
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                className={cn(titleSize && getTitleSizeClass(titleSize))}
+                style={{
+                  fontSize: 'clamp(32px, 4vw, 40px)',
+                  fontWeight: 700,
+                  lineHeight: 1.2,
+                  margin: '0 0 16px 0',
+                  ...(customTextColor ? { color: customTextColor } : { color: '#1A1A1A' }),
+                }}
+              >
+                {title || eyebrow}
+              </h2>
+            )}
+            {subtitle && (
+              <p
+                {...elementProps(config.id, 'subtitle', 'text')}
+                style={{
+                  fontSize: 16,
+                  fontWeight: 400,
+                  lineHeight: 1.6,
+                  color: '#666666',
+                  maxWidth: 600,
+                  margin: '0 auto',
+                }}
+              >
+                {subtitle}
+              </p>
+            )}
+          </div>
+
+          {/* Cards Grid */}
+          <div
+            {...elementProps(config.id, 'grid', 'container', 'Cards Grid')}
+            className="canopy-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: 40,
+            }}
+          >
+            {resolvedItems.map((item, i) => (
+              <div
+                key={item.id}
+                ref={cardRevealRef(i * 0.15)}
+                {...elementProps(config.id, `items.${i}`, 'container', 'Value Card')}
+                className="canopy-card"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: 0,
+                  boxShadow: '0 2px 20px rgba(0,0,0,0.06)',
+                  padding: 40,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                }}
+              >
+                {/* Icon circle */}
+                <div
+                  {...elementProps(config.id, `items.${i}.iconWrap`, 'container', 'Icon Container')}
+                  className="canopy-icon-wrap"
+                  style={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: '50%',
+                    backgroundColor: '#F0EDE8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 28,
+                    lineHeight: 1,
+                  }}
+                >
+                  {item.icon || defaultItems[i % defaultItems.length]?.icon || '✦'}
+                </div>
+
+                {/* Title */}
+                <h3
+                  {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 700,
+                    color: '#1A1A1A',
+                    marginTop: 24,
+                    marginBottom: 12,
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {item.title || `Value ${i + 1}`}
+                </h3>
+
+                {/* Description */}
+                <p
+                  {...elementProps(config.id, `items.${i}.description`, 'text')}
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 400,
+                    color: '#666666',
+                    lineHeight: 1.7,
+                    margin: 0,
+                  }}
+                >
+                  {item.description || 'Description of this core value and what it means for our commitment.'}
+                </p>
+
+                {/* Bottom accent line */}
+                <div
+                  {...elementProps(config.id, `items.${i}.accent`, 'container', 'Accent Line')}
+                  style={{
+                    width: 48,
+                    height: 2,
+                    backgroundColor: accentColor ?? '#2D5016',
+                    marginTop: 24,
+                    borderRadius: 1,
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // OBSCURA — Photographer Services Accordion
+  // ═══════════════════════════════════════════
+
+  if (variant === 'obscura-accordion') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const panelImages = [
+      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1200&q=85',
+      'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1200&q=85',
+      'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200&q=85',
+    ]
+
+    const defaultPanelLabels = [
+      { title: 'Portrait', description: 'Séances photo individuelles et professionnelles' },
+      { title: 'Mariage', description: 'Reportage complet de votre plus beau jour' },
+      { title: 'Événement', description: 'Couverture corporate et événementielle' },
+    ]
+
+    const resolvedPanels = items.length > 0
+      ? items.map((item, i) => ({
+          title: item.title || defaultPanelLabels[i % defaultPanelLabels.length].title,
+          description: (item as unknown as Record<string, unknown>).description as string || defaultPanelLabels[i % defaultPanelLabels.length].description,
+          image: (item as unknown as Record<string, unknown>).image as string || panelImages[i % panelImages.length],
+          id: item.id,
+        }))
+      : defaultPanelLabels.map((label, i) => ({ ...label, image: panelImages[i], id: `default-${i}` }))
+
+    return (
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Services Section')} className="overflow-hidden" style={{ backgroundColor: '#0A0A0A', fontFamily: 'var(--font-body, inherit)' }}>
+        {/* Header area */}
+        <div {...elementProps(config.id, 'headerArea', 'container', 'Header Area')} style={{ padding: '0 60px' }}>
+          <div style={{ maxWidth: 1320, margin: '0 auto', textAlign: 'center' }}>
+            {title && (
+              <div>
+                <h2
+                  {...elementProps(config.id, 'title', 'heading')}
+                  className={cn(titleSize && getTitleSizeClass(titleSize))}
+                  style={{
+                    maxWidth: 700,
+                    margin: '0 auto',
+                    fontFamily: '"GeneralSans Variable", sans-serif',
+                    fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                    fontWeight: 400,
+                    lineHeight: '110%',
+                    textTransform: 'capitalize' as const,
+                    marginBottom: 60,
+                    color: customTextColor ?? '#E8E4DF',
+                  }}
+                >
+                  {title}
+                </h2>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 3 equal panels — image zoom on hover */}
+        <style>{`
+          .obscura-panel:hover .obscura-panel-img { transform: scale(1.08) !important; }
+          .obscura-panel:hover .obscura-panel-overlay { background-color: rgba(10,10,10,0.2) !important; }
+          .obscura-panel:hover .obscura-panel-arrow { opacity: 1 !important; top: calc(100% + 16px) !important; }
+          .obscura-panel:hover .obscura-panel-desc { opacity: 0.7 !important; transform: translateY(0) !important; }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'panelsRow', 'container', 'Panels Row')}
+          className="flex flex-row"
+          style={{ minHeight: 700 }}
+        >
+          {resolvedPanels.map((panel, i) => (
+            <div
+              key={panel.id}
+              {...elementProps(config.id, `panels.${i}`, 'container', 'Panel')}
+              className="obscura-panel relative overflow-hidden cursor-pointer"
+              style={{
+                flex: '1 1 0%',
+                minHeight: 700,
+                backgroundColor: '#0A0A0A',
+                color: '#E8E4DF',
+              }}
+            >
+              {/* Background image */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                {...elementProps(config.id, `panels.${i}.image`, 'image', 'Panel Image')}
+                src={panel.image}
+                alt={panel.title}
+                className="obscura-panel-img absolute inset-0 w-full h-full object-cover"
+                style={{ transition: 'transform 0.7s ease' }}
+              />
+
+              {/* Overlay */}
+              <div
+                {...elementProps(config.id, `panels.${i}.overlay`, 'container', 'Overlay')}
+                className="obscura-panel-overlay absolute inset-0"
+                style={{
+                  backgroundColor: 'rgba(10,10,10,0.5)',
+                  zIndex: 1,
+                  transition: 'background-color 0.4s',
+                }}
+              />
+
+              {/* Content */}
+              <div
+                className="absolute inset-0 flex items-center justify-center"
+                style={{ zIndex: 2 }}
+              >
+                <div className="relative flex flex-col items-center" style={{ gap: 40, textAlign: 'center', padding: '0 24px' }}>
+                  <h4
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: '"GeneralSans Variable", sans-serif',
+                      fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
+                      fontWeight: 400,
+                      textTransform: 'capitalize' as const,
+                      color: '#E8E4DF',
+                      textAlign: 'center',
+                      margin: 0,
+                    }}
+                  >
+                    {panel.title}
+                  </h4>
+
+                  {/* Description — slides up on hover */}
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    className="obscura-panel-desc"
+                    style={{
+                      fontFamily: '"Inter Variable", sans-serif',
+                      fontSize: '14px',
+                      fontWeight: 400,
+                      lineHeight: '160%',
+                      color: '#8A8480',
+                      margin: 0,
+                      maxWidth: 280,
+                      opacity: 0,
+                      transform: 'translateY(12px)',
+                      transition: 'opacity 0.5s ease, transform 0.5s ease',
+                    }}
+                  >
+                    {panel.description}
+                  </p>
+
+                  {/* Arrow icon */}
+                  <div
+                    {...elementProps(config.id, `panels.${i}.arrow`, 'icon', 'Arrow Icon')}
+                    className="obscura-panel-arrow"
+                    style={{
+                      position: 'absolute',
+                      top: 'calc(100% + 40px)',
+                      opacity: 0,
+                      transition: 'top 0.5s ease, opacity 0.5s ease',
+                      width: 40,
+                      height: 40,
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(212, 168, 83, 0.2)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3 8h10M9 4l4 4-4 4" stroke="#D4A853" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // NACRE — Horizontal Accordion (Nail Salon)
+  // ═══════════════════════════════════════════
+
+  if (variant === 'nacre-accordion') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const panelImages = [
+      'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1200&q=80',
+      'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=1200&q=80',
+      'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=1200&q=80',
+    ]
+
+    const defaultPanelData = [
+      { title: 'Manucure', description: 'Pose de vernis, french, nail art personnalis\u00e9' },
+      { title: 'P\u00e9dicure', description: 'Soin complet des pieds, vernis semi-permanent' },
+      { title: 'Extensions', description: 'Pose gel, r\u00e9sine, capsules sur-mesure' },
+    ]
+
+    const resolvedPanels = items.length > 0
+      ? items.map((item, i) => ({
+          title: item.title || defaultPanelData[i % defaultPanelData.length].title,
+          description: (item as unknown as Record<string, unknown>).description as string || defaultPanelData[i % defaultPanelData.length].description,
+          image: (item as unknown as Record<string, unknown>).image as string || panelImages[i % panelImages.length],
+          id: item.id,
+        }))
+      : defaultPanelData.map((data, i) => ({ ...data, image: panelImages[i], id: `default-${i}` }))
+
+    return (
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Services Section')} className="overflow-hidden" style={{ backgroundColor: '#2A1A1E', fontFamily: 'var(--font-body, inherit)' }}>
+        {/* Header area */}
+        <div {...elementProps(config.id, 'headerArea', 'container', 'Header Area')} style={{ padding: '0 60px' }}>
+          <div style={{ maxWidth: 1320, margin: '0 auto', textAlign: 'center' }}>
+            {title && (
+              <div>
+                <h2
+                  {...elementProps(config.id, 'title', 'heading')}
+                  className={cn(titleSize && getTitleSizeClass(titleSize))}
+                  style={{
+                    maxWidth: 700,
+                    margin: '0 auto',
+                    fontFamily: '"GeneralSans Variable", sans-serif',
+                    fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                    fontWeight: 500,
+                    lineHeight: '110%',
+                    textTransform: 'capitalize' as const,
+                    marginBottom: 60,
+                    color: '#F0E0DA',
+                  }}
+                >
+                  {title}
+                </h2>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 3 equal panels — only image zooms on hover, panels stay same size */}
+        <style>{`
+          .nacre-panel:hover .nacre-panel-img { transform: scale(1.08) !important; }
+          .nacre-panel:hover .nacre-panel-overlay { background-color: rgba(0,0,0,0.2) !important; }
+          .nacre-panel:hover .nacre-panel-arrow { opacity: 1 !important; top: calc(100% + 16px) !important; }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'panelsRow', 'container', 'Panels Row')}
+          className="flex flex-row"
+          style={{ minHeight: 700 }}
+        >
+          {resolvedPanels.map((panel, i) => (
+            <div
+              key={panel.id}
+              {...elementProps(config.id, `panels.${i}`, 'container', 'Panel')}
+              className="nacre-panel relative overflow-hidden cursor-pointer"
+              style={{
+                flex: '1 1 0%',
+                minHeight: 700,
+                backgroundColor: '#2A1A1E',
+                color: '#F0E0DA',
+              }}
+            >
+              {/* Background image */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                {...elementProps(config.id, `panels.${i}.image`, 'image', 'Panel Image')}
+                src={panel.image}
+                alt={panel.title}
+                className="nacre-panel-img absolute inset-0 w-full h-full object-cover"
+                style={{ transition: 'transform 0.7s ease' }}
+              />
+
+              {/* Overlay */}
+              <div
+                {...elementProps(config.id, `panels.${i}.overlay`, 'container', 'Overlay')}
+                className="nacre-panel-overlay absolute inset-0"
+                style={{
+                  backgroundColor: 'rgba(0,0,0,0.4)',
+                  zIndex: 1,
+                  transition: 'background-color 0.4s',
+                }}
+              />
+
+              {/* Content */}
+              <div
+                className="absolute inset-0 flex items-center justify-center"
+                style={{ zIndex: 2 }}
+              >
+                <div className="relative flex flex-col items-center" style={{ gap: 40 }}>
+                  <h4
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: '"GeneralSans Variable", sans-serif',
+                      fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
+                      fontWeight: 500,
+                      textTransform: 'capitalize' as const,
+                      color: '#ffffff',
+                      textAlign: 'center',
+                      margin: 0,
+                    }}
+                  >
+                    {panel.title}
+                  </h4>
+
+                  {/* Description */}
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontFamily: "'Inter Variable', sans-serif",
+                      fontSize: 14,
+                      fontWeight: 400,
+                      color: 'rgba(240, 224, 218, 0.7)',
+                      textAlign: 'center',
+                      margin: 0,
+                      maxWidth: 220,
+                      lineHeight: '150%',
+                    }}
+                  >
+                    {panel.description}
+                  </p>
+
+                  {/* Arrow icon */}
+                  <div
+                    {...elementProps(config.id, `panels.${i}.arrow`, 'icon', 'Arrow Icon')}
+                    className="nacre-panel-arrow"
+                    style={{
+                      position: 'absolute',
+                      top: 'calc(100% + 40px)',
+                      opacity: 0,
+                      transition: 'top 0.5s ease, opacity 0.5s ease',
+                      width: 40,
+                      height: 40,
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(201, 169, 110, 0.3)',
+                      backdropFilter: 'blur(20px)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3 8h10M9 4l4 4-4 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
   // BRIXSA — Split Layout Accordion
   // ═══════════════════════════════════════════
 
@@ -1442,6 +2036,9 @@ export const featuresMeta = {
     'creative-grid', 'creative-bento', 'creative-list',
     'ecommerce-grid', 'ecommerce-bento', 'ecommerce-list',
     'glass-grid', 'glass-bento', 'glass-list',
+    'canopy-values',
+    'nacre-accordion',
+    'obscura-accordion',
     'brixsa-accordion',
     'brixsa-services',
     'brixsa-location',

@@ -743,6 +743,556 @@ function GlassMarquee({ content, items, accent, styleOverrides, sectionId }: { c
 // BRIXSA — 50/50 Image + Quote Slider, warm black bg
 // ─────────────────────────────────────────────
 
+function CanopyCards({ content, items, sectionId, styleOverrides }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const displayItems = items.slice(0, 6)
+
+  const scrollRevealRef = (index: number) => (el: HTMLDivElement | null) => {
+    if (!el) return
+    el.style.opacity = '0'
+    el.style.transform = 'translateY(30px)'
+    el.style.transition = `opacity 0.6s ease ${index * 0.15}s, transform 0.6s ease ${index * 0.15}s`
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        el.style.opacity = '1'
+        el.style.transform = 'translateY(0)'
+        obs.disconnect()
+      }
+    }, { threshold: 0.1 })
+    obs.observe(el)
+  }
+
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: `
+        .canopy-testimonial-card {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .canopy-testimonial-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+        }
+        @media (max-width: 768px) {
+          .canopy-testimonials-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      ` }} />
+      <section
+        {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')}
+        style={{
+          backgroundColor: '#F0EDE8',
+          padding: 'clamp(60px, 8vw, 100px) 24px',
+          fontFamily: 'var(--font-body, inherit)',
+        }}
+      >
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: 48, maxWidth: 700, marginLeft: 'auto', marginRight: 'auto' }}>
+          <h2
+            {...elementProps(sectionId, 'title', 'heading')}
+            style={{
+              fontSize: 32,
+              fontWeight: 700,
+              color: styleOverrides?.textColor ?? '#1A1A1A',
+              lineHeight: 1.2,
+              marginBottom: 12,
+            }}
+          >
+            {content.title || 'Ce que disent nos clients'}
+          </h2>
+          {content.subtitle && (
+            <p
+              {...elementProps(sectionId, 'subtitle', 'text')}
+              style={{ fontSize: 16, color: '#666', lineHeight: 1.6 }}
+            >
+              {content.subtitle}
+            </p>
+          )}
+        </div>
+
+        {/* Cards grid */}
+        <div
+          className="canopy-testimonials-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 24,
+            maxWidth: 1100,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}
+        >
+          {displayItems.map((item, i) => {
+            const rating = item.rating ?? 5
+            return (
+              <div
+                key={item.id ?? i}
+                ref={scrollRevealRef(i)}
+                className="canopy-testimonial-card"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  padding: 32,
+                  boxShadow: '0 1px 10px rgba(0,0,0,0.05)',
+                }}
+              >
+                {/* Stars */}
+                <div style={{ marginBottom: 16 }}>
+                  {Array.from({ length: 5 }).map((_, si) => (
+                    <span key={si} style={{ color: si < rating ? '#D4A853' : '#E0E0E0', fontSize: 18, marginRight: 2 }}>&#9733;</span>
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <p
+                  {...elementProps(sectionId, `items.${i}.quote`, 'text')}
+                  style={{
+                    fontSize: 16,
+                    color: '#333',
+                    fontStyle: 'italic',
+                    lineHeight: 1.6,
+                    marginBottom: 20,
+                  }}
+                >
+                  &ldquo;{item.quote || 'Une experience exceptionnelle.'}&rdquo;
+                </p>
+
+                {/* Divider */}
+                <div style={{ height: 1, backgroundColor: '#E8E8E5', marginBottom: 16 }} />
+
+                {/* Author */}
+                <p
+                  {...elementProps(sectionId, `items.${i}.author`, 'text')}
+                  style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', marginBottom: 2 }}
+                >
+                  {item.author || 'Client'}
+                </p>
+                <p
+                  {...elementProps(sectionId, `items.${i}.role`, 'text')}
+                  style={{ fontSize: 13, color: '#666' }}
+                >
+                  {item.role || ''}
+                </p>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+    </>
+  )
+}
+
+function ObscuraFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const defaultQuotes = [
+    'Chaque image raconte une histoire unique. Le regard artistique et la sensibilité de ce photographe ont sublimé notre mariage.',
+    'Un professionnel d\'exception qui sait capturer l\'essence d\'un instant. Les portraits sont d\'une qualité remarquable.',
+    'La séance photo a été un moment magique. Le résultat dépasse toutes nos attentes, chaque cliché est une oeuvre d\'art.',
+  ]
+
+  const quotes = items.length > 0
+    ? items.map((item, i) => item.quote || defaultQuotes[i % defaultQuotes.length])
+    : defaultQuotes
+
+  const authors = items.length > 0
+    ? items.map((item, i) => ({ name: item.author || ['Alexandre M.', 'Claire D.', 'Thomas B.'][i % 3], role: item.role || 'Client' }))
+    : [
+        { name: 'Alexandre M.', role: 'Portrait studio' },
+        { name: 'Claire D.', role: 'Mariage' },
+        { name: 'Thomas B.', role: 'Événement corporate' },
+      ]
+
+  const total = quotes.length
+
+  const goPrev = () => setActiveIndex((prev) => (prev - 1 + total) % total)
+  const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % total)
+    }, 7000)
+    return () => clearInterval(timer)
+  }, [total])
+
+  const initialsGradients = [
+    'linear-gradient(135deg, #1a1a18 0%, #2a2520 50%, #1a1510 100%)',
+    'linear-gradient(135deg, #1a1a1a 0%, #252018 50%, #181510 100%)',
+    'linear-gradient(135deg, #181818 0%, #22201a 50%, #161410 100%)',
+  ]
+
+  return (
+    <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#0A0A0A', color: '#E8E4DF', fontFamily: 'var(--font-body, inherit)' }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .obscura-testimonial-split { flex-direction: column !important; }
+          .obscura-testimonial-split > div { flex: 1 1 100% !important; min-height: 50vh; }
+        }
+      `}</style>
+      <div {...elementProps(sectionId, 'splitLayout', 'container', 'Split Layout')} className="obscura-testimonial-split flex flex-row w-full" style={{ minHeight: '620px' }}>
+        {/* LEFT — Initials (50%) */}
+        <div {...elementProps(sectionId, 'imagePanel', 'container', 'Initials Panel')} className="relative overflow-hidden flex items-center justify-center" style={{ flex: '1 1 50%', backgroundColor: '#0A0A0A' }}>
+          {Array.from({ length: total }).map((_, i) => {
+            const item = items[i]
+            const gradIdx = i % initialsGradients.length
+            const initials = (item?.author || authors[i]?.name || 'CL').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+            return (
+              <div
+                key={item?.id ?? i}
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  background: initialsGradients[gradIdx],
+                  opacity: i === activeIndex ? 1 : 0,
+                  zIndex: i === activeIndex ? 2 : 0,
+                  transition: 'opacity 0.6s ease',
+                }}
+              >
+                {item?.avatar ? (
+                  <img
+                    {...elementProps(sectionId, `items.${i}.avatar`, 'image')}
+                    src={item.avatar}
+                    alt={item.author || ''}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: '"GeneralSans Variable", sans-serif',
+                      fontSize: 'clamp(6rem, 4rem + 8vw, 12rem)',
+                      fontWeight: 700,
+                      color: '#D4A853',
+                      lineHeight: 1,
+                      userSelect: 'none',
+                    }}
+                  >
+                    {initials}
+                  </span>
+                )}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* RIGHT — Content (50%) */}
+        <div {...elementProps(sectionId, 'contentPanel', 'container', 'Content Panel')} className="flex flex-col" style={{ flex: '1 1 50%', backgroundColor: '#111111', color: '#E8E4DF', padding: '60px' }}>
+          {/* Top label */}
+          <p
+            {...elementProps(sectionId, 'eyebrow', 'text')}
+            style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#D4A853', marginBottom: 'auto' }}
+          >
+            {content.eyebrow || content.title || 'Témoignages'}
+          </p>
+
+          {/* Main content */}
+          <div className="flex flex-col" style={{ maxWidth: '536px', marginTop: 'auto', marginLeft: 'auto' }}>
+            {/* Quote text wrap */}
+            <div style={{ marginTop: 'auto', marginBottom: '40px', marginLeft: 'auto' }}>
+              {quotes.map((quote, i) => (
+                <div key={items[i]?.id ?? i} style={{ display: i === activeIndex ? 'block' : 'none' }}>
+                  <p
+                    {...elementProps(sectionId, `items.${i}.quote`, 'text')}
+                    style={{
+                      fontFamily: '"GeneralSans Variable", var(--font-body, sans-serif)',
+                      fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
+                      fontWeight: 400,
+                      fontStyle: 'italic',
+                      lineHeight: '135%',
+                      color: '#E8E4DF',
+                    }}
+                  >
+                    &ldquo;{quote}&rdquo;
+                  </p>
+                  {/* Author */}
+                  <div style={{ marginTop: '24px' }}>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.author`, 'text')}
+                      style={{ fontSize: '16px', fontWeight: 600, color: '#E8E4DF' }}
+                    >
+                      {authors[i]?.name}
+                    </p>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.role`, 'text')}
+                      style={{ fontSize: '14px', fontWeight: 400, color: '#8A8480', marginTop: '4px' }}
+                    >
+                      {authors[i]?.role}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigation arrows */}
+            {total > 1 && (
+              <div {...elementProps(sectionId, 'navArrows', 'container', 'Nav Arrows')} style={{ display: 'flex', flexDirection: 'row', gap: '12px' }}>
+                <div
+                  {...elementProps(sectionId, 'prevButton', 'button', 'Previous')}
+                  role="button"
+                  onClick={goPrev}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    border: '1px solid rgba(212, 168, 83, 0.4)',
+                    backgroundColor: 'transparent',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s, border-color 0.3s',
+                    padding: 0,
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(212, 168, 83, 0.15)'; e.currentTarget.style.borderColor = 'rgba(212, 168, 83, 0.7)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = 'rgba(212, 168, 83, 0.4)' }}
+                >
+                  <span {...elementProps(sectionId, 'prevIcon', 'icon', 'Previous Arrow')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ display: 'block' }}>
+                      <path d="M15 6L9 12L15 18" stroke="#D4A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </div>
+                <div
+                  {...elementProps(sectionId, 'nextButton', 'button', 'Next')}
+                  role="button"
+                  onClick={goNext}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    border: '1px solid rgba(212, 168, 83, 0.4)',
+                    backgroundColor: 'transparent',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s, border-color 0.3s',
+                    padding: 0,
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(212, 168, 83, 0.15)'; e.currentTarget.style.borderColor = 'rgba(212, 168, 83, 0.7)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = 'rgba(212, 168, 83, 0.4)' }}
+                >
+                  <span {...elementProps(sectionId, 'nextIcon', 'icon', 'Next Arrow')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ display: 'block' }}>
+                      <path d="M9 6L15 12L9 18" stroke="#D4A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function NacreFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const defaultQuotes = [
+    'Un moment de d\u00E9tente absolu. Mes ongles n\'ont jamais \u00E9t\u00E9 aussi beaux, le nail art est une vraie \u0153uvre d\'art\u00A0!',
+    'L\'\u00E9quipe est aux petits soins, l\'ambiance est zen et le r\u00E9sultat toujours impeccable. Mon adresse beaut\u00E9 pr\u00E9f\u00E9r\u00E9e.',
+    'Je recommande les yeux ferm\u00E9s\u00A0! La pose de gel tient 3 semaines sans probl\u00E8me et les finitions sont parfaites.',
+    'Un salon qui allie expertise et raffinement. Chaque visite est un vrai moment de plaisir.',
+  ]
+
+  const quotes = items.length > 0
+    ? items.map((item, i) => item.quote || defaultQuotes[i % defaultQuotes.length])
+    : defaultQuotes
+
+  const authors = items.length > 0
+    ? items.map((item, i) => ({ name: item.author || ['Camille L.', 'Sophie M.', 'Isabelle R.', 'Marie D.'][i % 4], role: item.role || 'Cliente fid\u00E8le' }))
+    : [
+        { name: 'Camille L.', role: 'Cliente fid\u00E8le' },
+        { name: 'Sophie M.', role: 'Abonn\u00E9e annuelle' },
+        { name: 'Isabelle R.', role: 'Nouvelle cliente' },
+        { name: 'Marie D.', role: 'Cliente VIP' },
+      ]
+
+  const total = quotes.length
+
+  const goPrev = () => setActiveIndex((prev) => (prev - 1 + total) % total)
+  const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % total)
+    }, 7000)
+    return () => clearInterval(timer)
+  }, [total])
+
+  const initialsGradients = [
+    'linear-gradient(135deg, #e8d5cd 0%, #d4bfb5 50%, #c4a99c 100%)',
+    'linear-gradient(135deg, #dcc8be 0%, #c9b3a8 50%, #b89e92 100%)',
+    'linear-gradient(135deg, #e2cfc5 0%, #d1bab0 50%, #c0a59a 100%)',
+    'linear-gradient(135deg, #ddc5bc 0%, #ccb0a5 50%, #bb9b8e 100%)',
+  ]
+
+  return (
+    <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#2A1A1E', color: '#F0E0DA', fontFamily: 'var(--font-body, inherit)' }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .nacre-testimonial-split { flex-direction: column !important; }
+          .nacre-testimonial-split > div { flex: 1 1 100% !important; min-height: 50vh; }
+        }
+      `}</style>
+      <div {...elementProps(sectionId, 'splitLayout', 'container', 'Split Layout')} className="nacre-testimonial-split flex flex-row w-full" style={{ minHeight: '620px' }}>
+        {/* LEFT — Initials (50%) */}
+        <div {...elementProps(sectionId, 'imagePanel', 'container', 'Initials Panel')} className="relative overflow-hidden flex items-center justify-center" style={{ flex: '1 1 50%', backgroundColor: '#F5E6E0' }}>
+          {Array.from({ length: total }).map((_, i) => {
+            const item = items[i]
+            const gradIdx = i % initialsGradients.length
+            const initials = (item?.author || authors[i]?.name || 'CL').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+            return (
+              <div
+                key={item?.id ?? i}
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  background: initialsGradients[gradIdx],
+                  opacity: i === activeIndex ? 1 : 0,
+                  zIndex: i === activeIndex ? 2 : 0,
+                  transition: 'opacity 0.6s ease',
+                }}
+              >
+                {item?.avatar ? (
+                  <img
+                    {...elementProps(sectionId, `items.${i}.avatar`, 'image')}
+                    src={item.avatar}
+                    alt={item.author || ''}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: '"GeneralSans Variable", sans-serif',
+                      fontSize: 'clamp(6rem, 4rem + 8vw, 12rem)',
+                      fontWeight: 700,
+                      color: '#C9A96E',
+                      lineHeight: 1,
+                      userSelect: 'none',
+                    }}
+                  >
+                    {initials}
+                  </span>
+                )}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* RIGHT — Content (50%) */}
+        <div {...elementProps(sectionId, 'contentPanel', 'container', 'Content Panel')} className="flex flex-col" style={{ flex: '1 1 50%', backgroundColor: '#2A1A1E', color: '#F0E0DA', padding: '60px' }}>
+          {/* Top label */}
+          <p
+            {...elementProps(sectionId, 'eyebrow', 'text')}
+            style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C9A96E', marginBottom: 'auto' }}
+          >
+            {content.eyebrow || content.title || 'Ce que disent nos clientes'}
+          </p>
+
+          {/* Main content */}
+          <div className="flex flex-col" style={{ maxWidth: '536px', marginTop: 'auto', marginLeft: 'auto' }}>
+            {/* Quote text wrap */}
+            <div style={{ marginTop: 'auto', marginBottom: '40px', marginLeft: 'auto' }}>
+              {quotes.map((quote, i) => (
+                <div key={items[i]?.id ?? i} style={{ display: i === activeIndex ? 'block' : 'none' }}>
+                  <p
+                    {...elementProps(sectionId, `items.${i}.quote`, 'text')}
+                    style={{
+                      fontFamily: '"GeneralSans Variable", var(--font-body, sans-serif)',
+                      fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
+                      fontWeight: 400,
+                      fontStyle: 'italic',
+                      lineHeight: '135%',
+                      color: '#F0E0DA',
+                    }}
+                  >
+                    &ldquo;{quote}&rdquo;
+                  </p>
+                  {/* Author */}
+                  <div style={{ marginTop: '24px' }}>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.author`, 'text')}
+                      style={{ fontSize: '16px', fontWeight: 600, color: '#F0E0DA' }}
+                    >
+                      {authors[i]?.name}
+                    </p>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.role`, 'text')}
+                      style={{ fontSize: '14px', fontWeight: 400, color: '#8A7A75', marginTop: '4px' }}
+                    >
+                      {authors[i]?.role}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigation arrows */}
+            {total > 1 && (
+              <div {...elementProps(sectionId, 'navArrows', 'container', 'Nav Arrows')} style={{ display: 'flex', flexDirection: 'row', gap: '12px' }}>
+                <div
+                  {...elementProps(sectionId, 'prevButton', 'button', 'Previous')}
+                  role="button"
+                  onClick={goPrev}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(197, 169, 110, 0.3)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s',
+                    padding: 0,
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(197, 169, 110, 0.5)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(197, 169, 110, 0.3)' }}
+                >
+                  <span {...elementProps(sectionId, 'prevIcon', 'icon', 'Previous Arrow')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ display: 'block' }}>
+                      <path d="M15 6L9 12L15 18" stroke="#F0E0DA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </div>
+                <div
+                  {...elementProps(sectionId, 'nextButton', 'button', 'Next')}
+                  role="button"
+                  onClick={goNext}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(197, 169, 110, 0.3)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s',
+                    padding: 0,
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(197, 169, 110, 0.5)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(197, 169, 110, 0.3)' }}
+                >
+                  <span {...elementProps(sectionId, 'nextIcon', 'icon', 'Next Arrow')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ display: 'block' }}>
+                      <path d="M9 6L15 12L9 18" stroke="#F0E0DA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function BrixsaFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -1040,6 +1590,9 @@ const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsConten
   'creative-slider': CreativeSlider,
   'ecommerce-slider': EcommerceSlider,
   'glass-slider': GlassSlider,
+  'canopy-cards': CanopyCards,
+  'obscura-featured': ObscuraFeatured,
+  'nacre-featured': NacreFeatured,
   'brixsa-featured': BrixsaFeatured,
 }
 
@@ -1060,6 +1613,9 @@ export function TestimonialsSection({ config }: TestimonialsSectionProps) {
     creative: '#18181b',
     ecommerce: '#059669',
     glass: '#6366f1',
+    canopy: '#D4A853',
+    obscura: '#D4A853',
+    nacre: '#C9A96E',
     brixsa: '#e1e1e1',
   }
   const accent = accentColor ?? defaultAccents[universe] ?? '#6366f1'
@@ -1082,6 +1638,9 @@ export const testimonialsMeta = {
     'glass-grid', 'glass-featured', 'glass-marquee',
     'startup-slider', 'corporate-slider', 'luxe-slider',
     'creative-slider', 'ecommerce-slider', 'glass-slider',
+    'canopy-cards',
+    'obscura-featured',
+    'nacre-featured',
     'brixsa-featured',
   ],
   defaultVariant: 'startup-grid',

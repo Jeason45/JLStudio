@@ -533,6 +533,143 @@ export function NewsletterSection({ config, isEditing }: { config: SectionConfig
     )
   }
 
+  // ═══════════════════════════════════════════
+  // CANOPY — Nature / Organique premium
+  // ═══════════════════════════════════════════
+
+  if (universe === 'canopy') {
+    const scrollRevealRef = (delay: number) => (el: HTMLElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(20px)'
+      el.style.transition = `opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s`
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const inputEl = (
+      <input
+        {...elementProps(config.id, 'placeholder', 'text')}
+        type="email"
+        placeholder={placeholder}
+        disabled={isEditing}
+        style={{
+          flex: 1,
+          height: 48,
+          padding: '0 0 0 4px',
+          fontSize: 14,
+          backgroundColor: 'transparent',
+          color: '#FFFFFF',
+          border: 'none',
+          borderBottom: '1px solid #FFFFFF',
+          outline: 'none',
+        }}
+      />
+    )
+
+    const buttonEl = (
+      <button
+        {...elementProps(config.id, 'buttonLabel', 'button')}
+        disabled={isEditing}
+        className="canopy-newsletter-btn"
+        style={{
+          height: 48,
+          padding: '0 28px',
+          backgroundColor: '#2D5016',
+          color: '#FFFFFF',
+          fontSize: 13,
+          fontWeight: 600,
+          textTransform: 'uppercase' as const,
+          letterSpacing: '0.1em',
+          border: 'none',
+          cursor: 'pointer',
+          whiteSpace: 'nowrap' as const,
+        }}
+      >
+        {buttonLabel}
+      </button>
+    )
+
+    return (
+      <>
+        <style dangerouslySetInnerHTML={{ __html: `
+          .canopy-newsletter-btn {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+          }
+          .canopy-newsletter-btn:hover {
+            background-color: #3a6b1e !important;
+            transform: scale(1.02);
+          }
+          .canopy-newsletter-input::placeholder {
+            color: #888 !important;
+          }
+          @media (max-width: 640px) {
+            .canopy-newsletter-form {
+              flex-direction: column !important;
+            }
+          }
+        ` }} />
+        <section
+          style={{
+            backgroundColor: '#1A1A1A',
+            padding: 'clamp(60px, 8vw, 100px) 24px',
+            fontFamily: 'var(--font-body, inherit)',
+          }}
+        >
+          <div style={{ maxWidth: 600, marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
+            <h2
+              ref={scrollRevealRef(0)}
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontSize: 28,
+                fontWeight: 700,
+                color: '#FFFFFF',
+                lineHeight: 1.3,
+                marginBottom: 10,
+              }}
+            >
+              {title}
+            </h2>
+            {subtitle && (
+              <p
+                ref={scrollRevealRef(0.1)}
+                {...elementProps(config.id, 'subtitle', 'text')}
+                style={{
+                  fontSize: 14,
+                  color: 'rgba(255,255,255,0.6)',
+                  lineHeight: 1.6,
+                  marginBottom: 28,
+                }}
+              >
+                {subtitle}
+              </p>
+            )}
+            <div
+              ref={scrollRevealRef(0.2)}
+              className="canopy-newsletter-form"
+              style={{ display: 'flex', gap: 0, marginBottom: 16 }}
+            >
+              {inputEl}
+              {buttonEl}
+            </div>
+            <p
+              ref={scrollRevealRef(0.3)}
+              style={{ fontSize: 12, color: '#666', marginTop: 12 }}
+            >
+              Pas de spam. Desabonnement en un clic.
+            </p>
+          </div>
+        </section>
+      </>
+    )
+  }
+
   // Fallback -> startup-centered
   return <NewsletterSection config={{ ...config, variant: 'startup-centered' }} />
 }
@@ -548,6 +685,7 @@ export const newsletterMeta = {
     'creative-centered', 'creative-split',
     'ecommerce-centered', 'ecommerce-split',
     'glass-centered', 'glass-split',
+    'canopy-minimal',
   ],
   defaultVariant: 'startup-centered',
   defaultContent: {},

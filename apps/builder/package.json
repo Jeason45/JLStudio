@@ -87,7 +87,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "prisma": "6.8.2",
-    "puppeteer": "^24.39.0",
     "shadcn": "^3.8.5",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
@@ -103,7 +102,6 @@
       "prisma"
     ],
     "ignoredBuiltDependencies": [
-      "puppeteer",
       "sharp",
       "unrs-resolver"
     ]

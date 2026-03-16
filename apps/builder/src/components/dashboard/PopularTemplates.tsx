@@ -5,7 +5,12 @@ import { cn } from '@/lib/utils'
 import { PAGE_TEMPLATES, UNIVERSE_COLORS, type PageTemplate } from '@/data/templates'
 import { MiniSectionPreview } from '@/components/editor/MiniSectionPreview'
 
-const POPULAR_IDS = ['saas-landing', 'agency-creative', 'startup-app', 'ecommerce-boutique']
+const POPULAR_IDS = [
+  'real-estate-brixsa',
+  'ecommerce-canopy',
+  'nail-salon-nacre',
+  'photographe-obscura',
+]
 
 export function PopularTemplates() {
   const [creating, setCreating] = useState<string | null>(null)

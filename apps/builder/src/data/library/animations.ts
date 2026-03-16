@@ -451,6 +451,18 @@ const IMAGE_HOVERS: LibraryElementItem[] = [
       defaultContent: { html: '<div style="transform:matrix(1, 0, 0, 1, 0, 0);color:rgb(255, 255, 255);border-color:rgb(255, 255, 255);transition:transform, color, borderColor 0.3s ease;padding:1.25rem;border-radius:.75rem;background:rgba(74,39,17,.12);border:1px solid rgba(200,169,126,.2);color:#f6efe5;font-size:.875rem;text-align:center;cursor:pointer" onmouseover="Object.assign(this.style,{\'transform\':\'matrix(-1, 0, 0, -1, 0, 0)\',\'color\':\'rgb(222, 199, 166)\',\'border-color\':\'rgb(222, 199, 166)\'})" onmouseout="Object.assign(this.style,{\'transform\':\'matrix(1, 0, 0, 1, 0, 0)\',\'color\':\'rgb(255, 255, 255)\',\'border-color\':\'rgb(255, 255, 255)\'})">Hover Effect &mdash; transform + color + borderColor</div>' },
     },
   },
+  {
+    id: 'hover-scan-83dc4850240d',
+    label: 'Hover opacity',
+    category: 'animations', subcategory: 'hovers',
+    tags: ['hover', 'opacity'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Hover opacity',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: { html: "<style>.hoverscan83dc4850240d{opacity:1;transition:opacity 0.3s ease;padding:1.25rem;border-radius:.75rem;background:rgba(74,39,17,.12);border:1px solid rgba(200,169,126,.2);color:#f6efe5;font-size:.875rem;text-align:center;cursor:pointer}.hoverscan83dc4850240d:hover{opacity:0.9}</style><div class=\"hoverscan83dc4850240d\">Hover Effect &mdash; opacity</div>" },
+    },
+  },
 ]
 
 // ─── HOVER EFFECTS (UI) ───

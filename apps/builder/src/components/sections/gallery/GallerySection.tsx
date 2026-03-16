@@ -563,6 +563,769 @@ export function GallerySection({ config }: { config: SectionConfig }) {
   }
 
   // ═══════════════════════════════════════════
+  // OBSCURA — Photographer Portfolio Grid
+  // ═══════════════════════════════════════════
+
+  if (variant === 'obscura-portfolio') {
+    const defaultItems = [
+      { id: '1', title: 'Lumière Dorée', category: 'Portrait', image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&q=85' },
+      { id: '2', title: 'Le Grand Jour', category: 'Mariage', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=85' },
+      { id: '3', title: 'Gala Annuel', category: 'Événement', image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=85' },
+      { id: '4', title: 'Horizon Lointain', category: 'Paysage', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=85' },
+      { id: '5', title: 'Vie Urbaine', category: 'Street', image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800&q=85' },
+      { id: '6', title: 'Haute Couture', category: 'Éditorial', image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&q=85' },
+    ]
+
+    const rawItems = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; category?: string; image?: string
+    }> | undefined
+
+    const cards = rawItems && rawItems.length > 0
+      ? rawItems.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultItems[i % defaultItems.length].title,
+          category: item.category ?? defaultItems[i % defaultItems.length].category,
+          image: item.image ?? defaultItems[i % defaultItems.length].image,
+        }))
+      : defaultItems
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Portfolio Section')}
+        style={{
+          background: '#0A0A0A',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: 'var(--font-body, inherit)',
+        }}
+      >
+        <style>{`
+          .obscura-img-dezoom { transform: scale(1.15); transition: transform 1.2s ease-out; }
+          .obscura-img-dezoom.obscura-revealed { transform: scale(1); }
+          .obscura-card:hover .obscura-img-zoom { transform: scale(1.05) !important; }
+          .obscura-card:hover .obscura-overlay { opacity: 1 !important; }
+          .obscura-card:hover .obscura-hover-label { opacity: 1 !important; transform: translateY(0) !important; }
+          @media (max-width: 768px) {
+            .obscura-resp-grid { grid-template-columns: 1fr !important; }
+            .obscura-resp-grid > * { grid-row: span 1 !important; }
+            .obscura-resp-header { flex-direction: column; align-items: flex-start !important; }
+          }
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .obscura-resp-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+        `}</style>
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div
+            {...elementProps(config.id, 'header', 'container', 'Header')}
+            className="flex justify-between items-end obscura-resp-header"
+            style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}
+          >
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontFamily: '"GeneralSans Variable", sans-serif',
+                fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                fontWeight: 400,
+                lineHeight: '110%',
+                color: '#E8E4DF',
+                margin: 0,
+              }}
+            >
+              {content.title ?? 'Portfolio'}
+            </h2>
+            <a
+              {...elementProps(config.id, 'viewAllLink', 'text', 'View All Link')}
+              href="/portfolio"
+              style={{
+                fontFamily: '"Inter Variable", sans-serif',
+                fontSize: '14px',
+                fontWeight: 400,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase' as const,
+                color: '#8A8480',
+                textDecoration: 'none',
+                transition: 'color 0.3s',
+                whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#D4A853' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#8A8480' }}
+            >
+              Voir tout &rarr;
+            </a>
+          </div>
+
+          {/* Grid — alternating heights for masonry effect */}
+          <div
+            {...elementProps(config.id, 'grid', 'container', 'Portfolio Grid')}
+            className="grid obscura-resp-grid"
+            style={{
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '12px',
+            }}
+          >
+            {cards.map((card, i) => {
+              // Alternating tall/short pattern: row 1 = tall-short-tall, row 2 = short-tall-short
+              const rowIndex = Math.floor(i / 3)
+              const colIndex = i % 3
+              const isTall = (rowIndex % 2 === 0) ? (colIndex % 2 === 0) : (colIndex % 2 === 1)
+
+              return (
+                <div
+                  key={card.id}
+                  {...elementProps(config.id, `items.${i}`, 'container', 'Portfolio Item')}
+                  className="obscura-card relative cursor-pointer"
+                  style={{
+                    gridRow: isTall ? 'span 2' : 'span 1',
+                    overflow: 'hidden',
+                    borderRadius: '4px',
+                    minHeight: isTall ? '500px' : '240px',
+                  }}
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.obscura-img-dezoom')
+                        if (img) img.classList.add('obscura-revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                  {/* Image */}
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="obscura-img-zoom obscura-img-dezoom"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        position: 'absolute',
+                        inset: 0,
+                        transition: 'transform 0.6s ease',
+                      }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="obscura-img-zoom obscura-img-dezoom"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(to bottom, #1a1a1a, #0d0d0d)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'transform 0.6s ease',
+                      }}
+                    >
+                      <Image className="w-8 h-8" style={{ color: 'rgba(212, 168, 83, 0.3)' }} />
+                    </div>
+                  )}
+
+                  {/* Hover overlay */}
+                  <div
+                    className="obscura-overlay absolute inset-0"
+                    style={{
+                      backgroundColor: 'rgba(10, 10, 10, 0.4)',
+                      opacity: 0,
+                      transition: 'opacity 0.4s ease',
+                      zIndex: 1,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    <span
+                      className="obscura-hover-label"
+                      style={{
+                        fontSize: '14px',
+                        fontWeight: 400,
+                        letterSpacing: '0.15em',
+                        textTransform: 'uppercase' as const,
+                        color: '#D4A853',
+                        opacity: 0,
+                        transform: 'translateY(8px)',
+                        transition: 'opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s',
+                      }}
+                    >
+                      Voir
+                    </span>
+                    <span
+                      className="obscura-hover-label"
+                      style={{
+                        fontSize: '11px',
+                        fontWeight: 400,
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase' as const,
+                        color: '#8A8480',
+                        opacity: 0,
+                        transform: 'translateY(8px)',
+                        transition: 'opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s',
+                      }}
+                    >
+                      {card.category}
+                    </span>
+                  </div>
+
+                  {/* Bottom title (subtle) */}
+                  <div
+                    {...elementProps(config.id, `items.${i}.meta`, 'container', 'Item Meta')}
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      padding: '40px 16px 16px',
+                      background: 'linear-gradient(to top, rgba(10,10,10,0.6), transparent)',
+                      zIndex: 2,
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    <span
+                      {...elementProps(config.id, `items.${i}.title`, 'text')}
+                      style={{
+                        fontFamily: '"Inter Variable", sans-serif',
+                        fontSize: '12px',
+                        fontWeight: 400,
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase' as const,
+                        color: 'rgba(232, 228, 223, 0.6)',
+                      }}
+                    >
+                      {card.title}
+                    </span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // CANOPY — E-commerce Product Grid
+  // ═══════════════════════════════════════════
+
+  if (variant === 'canopy-products') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultProducts = [
+      { id: '1', title: 'Tree Runner', subtitle: 'Chaussure de running légère', price: '130 €', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80', badge: 'Nouveau' },
+      { id: '2', title: 'Wool Lounger', subtitle: 'Confort naturel au quotidien', price: '110 €', image: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&q=80' },
+      { id: '3', title: 'Tree Dasher', subtitle: 'Performance et durabilité', price: '145 €', image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800&q=80', badge: 'Best-seller' },
+      { id: '4', title: 'Wool Runner', subtitle: 'Le classique en laine mérinos', price: '120 €', image: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&q=80' },
+      { id: '5', title: 'Trail Runner', subtitle: 'Traction tout-terrain', price: '155 €', image: 'https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=800&q=80', badge: 'Nouveau' },
+      { id: '6', title: 'Pacer', subtitle: 'Énergie à chaque foulée', price: '135 €', image: 'https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=80' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; subtitle?: string; price?: string;
+      image?: string; badge?: string;
+    }> | undefined
+
+    const products = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultProducts[i % defaultProducts.length].title,
+          subtitle: item.subtitle ?? defaultProducts[i % defaultProducts.length].subtitle,
+          price: item.price ?? defaultProducts[i % defaultProducts.length].price,
+          image: item.image,
+          badge: item.badge,
+        }))
+      : defaultProducts
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Products Section')}
+        style={{
+          background: '#FAFAF8',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'Inter Variable', var(--font-body, sans-serif)",
+        }}
+      >
+        <style>{`
+          .canopy-card:hover .canopy-img-zoom { transform: scale(1.05) !important; }
+          .canopy-img-dezoom { transform: scale(1.15); transition: transform 1.2s ease-out; }
+          .canopy-img-dezoom.canopy-revealed { transform: scale(1); }
+          .canopy-card:hover .canopy-text-slide { transform: translateY(-36px) !important; }
+          .canopy-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+          .canopy-btn:hover .canopy-btn-fill { transform: translateX(0); }
+          .canopy-btn:hover .canopy-btn-label { color: #fff; }
+          .canopy-btn-label { transition: color 0.4s; }
+          .canopy-link { text-decoration: none; color: inherit; display: block; }
+          .canopy-link:hover { text-decoration: none; }
+          @media (max-width: 768px) {
+            .canopy-grid { grid-template-columns: 1fr !important; }
+            .canopy-resp-header { flex-direction: column; align-items: flex-start !important; }
+          }
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .canopy-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+        `}</style>
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header — title left + button right (brixsa layout) */}
+          <div
+            {...elementProps(config.id, 'header', 'container', 'Header')}
+            className="flex justify-between items-end canopy-resp-header"
+            style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}
+          >
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'Inter Variable', var(--font-heading, sans-serif)",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 700,
+                  lineHeight: '110%',
+                  color: '#1A1A1A',
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                {content.title ?? 'Nos produits'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="#"
+              className="canopy-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#1A1A1A', padding: '10px 12px 10px 20px', gap: '10px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="canopy-btn-label relative" style={{ zIndex: 10 }}>
+                {(content as Record<string, unknown>).subtitle as string ?? 'Voir tout'}
+              </span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#2D5016',
+                  color: '#fff',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left on hover */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden' }}>
+                <span className="canopy-btn-fill" style={{ display: 'block', background: '#2D5016', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Product Grid */}
+          <div
+            {...elementProps(config.id, 'grid', 'container', 'Product Grid')}
+            className="canopy-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              columnGap: 'clamp(16px, 2vw, 24px)',
+              rowGap: 'clamp(30px, 5vw, 60px)',
+            }}
+          >
+            {products.map((product, i) => (
+              <a
+                key={product.id}
+                {...elementProps(config.id, `items.${i}`, 'text')}
+                href="#"
+                className="canopy-card block w-full canopy-link"
+              >
+                {/* Image with dezoom on scroll reveal */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.canopy-img-dezoom')
+                        if (img) img.classList.add('canopy-revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden" style={{ aspectRatio: '4/5', position: 'relative' }}>
+                  {product.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={product.image}
+                      alt={product.title}
+                      className="canopy-img-zoom canopy-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="canopy-img-zoom canopy-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: '#F0EDE8', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-10 h-10" style={{ color: '#C4BFB6' }} />
+                    </div>
+                  )}
+                  {/* Glassmorphism badge top-left */}
+                  {product.badge && (
+                    <span
+                      {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                      style={{
+                        position: 'absolute',
+                        top: '16px',
+                        left: '16px',
+                        background: 'rgba(0,0,0,0.45)',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        color: '#fff',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        letterSpacing: '0.05em',
+                        textTransform: 'uppercase',
+                        padding: '6px 14px',
+                        lineHeight: 1,
+                        zIndex: 2,
+                      }}
+                    >
+                      {product.badge}
+                    </span>
+                  )}
+                </div>
+                </div>
+
+                {/* Product Info — text slides up on hover to reveal price */}
+                <div style={{ marginTop: '16px' }}>
+                  <div style={{ overflow: 'hidden', height: '36px' }}>
+                    <div
+                      className="canopy-text-slide"
+                      style={{ transition: 'transform 0.4s ease' }}
+                    >
+                      <h3
+                        {...elementProps(config.id, `items.${i}.title`, 'text')}
+                        style={{
+                          fontSize: '24px',
+                          fontWeight: 500,
+                          lineHeight: '36px',
+                          color: '#1A1A1A',
+                          fontFamily: "'Inter Variable', sans-serif",
+                          margin: 0,
+                        }}
+                      >
+                        {product.title}
+                      </h3>
+                      <span
+                        {...elementProps(config.id, `items.${i}.price`, 'text')}
+                        style={{
+                          fontSize: '24px',
+                          fontWeight: 500,
+                          lineHeight: '36px',
+                          color: '#1A1A1A',
+                          display: 'block',
+                        }}
+                      >
+                        {product.price}
+                      </span>
+                    </div>
+                  </div>
+                  {/* Subtitle — stays in place */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.subtitle`, 'text')}
+                    style={{ fontSize: '16px', fontWeight: 400, color: '#8B7355', marginTop: '4px', display: 'block' }}
+                  >
+                    {product.subtitle}
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // NACRE — Nail Salon Services Grid
+  // ═══════════════════════════════════════════
+
+  if (variant === 'nacre-services') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Manucure Classique', duration: '30 min', price: '25\u20AC', description: 'Limage, cuticules, vernis couleur au choix', image: '' },
+      { id: '2', title: 'Pose Gel Compl\u00E8te', duration: '1h30', price: '55\u20AC', description: 'Pr\u00E9paration, pose gel UV, modelage, finition', image: '' },
+      { id: '3', title: 'Nail Art Premium', duration: '2h', price: '75\u20AC', description: 'Cr\u00E9ation sur-mesure, strass, d\u00E9grad\u00E9s, motifs', image: '' },
+      { id: '4', title: 'P\u00E9dicure Spa', duration: '1h', price: '45\u20AC', description: 'Bain relaxant, gommage, soin, vernis', image: '' },
+      { id: '5', title: 'Semi-Permanent', duration: '45 min', price: '35\u20AC', description: 'Vernis longue tenue 2-3 semaines', image: '' },
+      { id: '6', title: 'Soin Paraffine', duration: '30 min', price: '30\u20AC', description: 'Hydratation intense, bain paraffine ti\u00E8de', image: '' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; duration?: string; price?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          duration: item.duration ?? defaultCards[i % 6].duration,
+          price: item.price ?? defaultCards[i % 6].price,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Services Section')}
+        style={{
+          background: '#F5E6E0',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: 'var(--font-body, inherit)',
+        }}
+      >
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end nacre-resp-services-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: '"GeneralSans Variable", sans-serif',
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#2A1A1E',
+                }}
+              >
+                {content.title ?? 'Nos Prestations'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="/tarifs"
+              className="nacre-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#2A1A1E', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="nacre-btn-label relative" style={{ zIndex: 10 }}>Voir les tarifs</span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#C9A96E',
+                  color: '#2A1A1E',
+                  borderRadius: '4px',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
+                <span className="nacre-btn-fill" style={{ display: 'block', background: '#C9A96E', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Grid */}
+          <style>{`
+            .nacre-card:hover .nacre-img-zoom { transform: scale(1.05) !important; }
+            .nacre-img-dezoom { transform: scale(1.15); transition: transform 1.2s ease-out; }
+            .nacre-img-dezoom.revealed { transform: scale(1); }
+            .nacre-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+            .nacre-btn:hover .nacre-btn-fill { transform: translateX(0); }
+            .nacre-btn:hover .nacre-btn-label { color: #2A1A1E; }
+            .nacre-btn-label { transition: color 0.4s; }
+            .nacre-reserve-btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 8px; }
+            .nacre-reserve-fill { position: absolute; inset: 0; background: #C9A96E; transform: translateX(102%); transition: transform 0.4s ease; }
+            .nacre-reserve-btn:hover .nacre-reserve-fill { transform: translateX(0); }
+            .nacre-reserve-btn:hover .nacre-reserve-label { color: #2A1A1E; }
+            .nacre-reserve-label { transition: color 0.4s; }
+            @media (max-width: 768px) {
+              .nacre-resp-services-grid { grid-template-columns: 1fr !important; }
+              .nacre-resp-services-header { flex-direction: column; align-items: flex-start !important; }
+            }
+            @media (min-width: 769px) and (max-width: 1024px) {
+              .nacre-resp-services-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            }
+          `}</style>
+          <div {...elementProps(config.id, 'grid', 'container', 'Services Grid')} className="grid grid-cols-3 nacre-resp-services-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="nacre-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.nacre-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="nacre-img-zoom nacre-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="nacre-img-zoom nacre-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #d4bfb5, #c4a99c)', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-8 h-8 text-white/40" />
+                    </div>
+                  )}
+                  {/* Glass badge: duration + price */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      left: '16px',
+                      background: 'rgba(197, 169, 110, 0.3)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      borderRadius: '4px',
+                      padding: '6px 14px',
+                      fontSize: '13px',
+                      fontWeight: 500,
+                      color: '#fff',
+                      gap: '8px',
+                      zIndex: 2,
+                    }}
+                  >
+                    {card.duration} &middot; {card.price}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: '"GeneralSans Variable", sans-serif',
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#2A1A1E',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontFamily: '"Inter Variable", Inter, sans-serif',
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: '#8A7A75',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                  <a
+                    {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                    href="/reservation"
+                    className="nacre-reserve-btn"
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      color: '#C9A96E',
+                      padding: '8px 18px',
+                      borderRadius: '4px',
+                      border: '1px solid #C9A96E',
+                      textDecoration: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <span className="nacre-reserve-fill" />
+                    <span className="nacre-reserve-label relative" style={{ zIndex: 1 }}>R&eacute;server</span>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
   // BRIXSA — Property Listing
   // ═══════════════════════════════════════════
 
@@ -2159,6 +2922,9 @@ export const galleryMeta = {
     'creative-grid', 'creative-masonry',
     'ecommerce-grid', 'ecommerce-masonry',
     'glass-grid', 'glass-masonry',
+    'canopy-products',
+    'nacre-services',
+    'obscura-portfolio',
     'brixsa-listing',
     'brixsa-detail',
     'zmr-agency-grid',

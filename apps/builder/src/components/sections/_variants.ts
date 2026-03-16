@@ -16,6 +16,8 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'ecommerce', label: 'E-commerce', description: 'Produit, prix, confiance', previewStyle: { background: 'white', paddingY: 'md' } },
     { id: 'glass', label: 'Glass / Tech', description: 'Glassmorphism, grid, glow', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'brixsa', label: 'Brixsa — Immobilier', description: 'Slider plein écran, searchbox glassmorphism, crème', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'obscura', label: 'Obscura — Photographe', description: 'Slider plein écran, diagonal wipe, compteur doré, barre de progression', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'canopy', label: 'Canopy — Eco E-commerce', description: 'Split produit, coins carrés, vert forêt, éco-minimaliste', previewStyle: { background: 'white', paddingY: 'md' } },
   ],
   features: [
     // Startup / SaaS
@@ -44,6 +46,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'glass-list', label: 'Glass — Liste', description: 'Liste dark, gradient text', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'brixsa-accordion', label: 'Brixsa — Accordéon', description: 'Accordéon horizontal, 3 panneaux image, hover expand', previewStyle: { background: 'white', paddingY: 'md' } },
     { id: 'brixsa-location', label: 'Brixsa — Location', description: 'Villes en gros H2, hover image portrait, dark atmosphérique', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'canopy-values', label: 'Canopy — Valeurs', description: 'Piliers éco-responsables, icônes rondes, coins carrés', previewStyle: { background: 'white', paddingY: 'md' } },
   ],
   cta: [
     // Startup
@@ -70,7 +73,10 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'glass-centered', label: 'Glass — Centré', description: 'Dark, glow, gradient text', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass-split', label: 'Glass — Split', description: 'Glassmorphism split', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass-card', label: 'Glass — Carte', description: 'Carte glassmorphism, glow', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'obscura-centered', label: 'Obscura — Centré', description: 'CTA image fond, overlay noir, bouton or outline, photographe', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'nacre-centered', label: 'Nacre — Centr\u00E9', description: 'CTA image fond, overlay bordeaux, dor\u00E9/rose poudr\u00E9', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'brixsa-centered', label: 'Brixsa — Centré', description: 'CTA image fond, overlay noir, crème/brun', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'canopy-banner', label: 'Canopy — Bannière', description: 'Bannière éco pleine largeur, vert forêt, coins carrés', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   stats: [
     { id: 'startup-simple', label: 'Startup — Simple', description: 'Chiffres en ligne, moderne', previewStyle: { background: 'light', paddingY: 'md' } },
@@ -125,7 +131,10 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'creative-slider', label: 'Creatif — Slider', description: 'Carousel temoignages brutaliste', previewStyle: { background: 'white', paddingY: 'md' } },
     { id: 'ecommerce-slider', label: 'E-commerce — Slider', description: 'Carousel avis clients', previewStyle: { background: 'white', paddingY: 'md' } },
     { id: 'glass-slider', label: 'Glass — Slider', description: 'Carousel temoignages glass', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'obscura-featured', label: 'Obscura — Featured', description: '50/50 initiales or + citation, noir profond/or chaud', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'nacre-featured', label: 'Nacre — Featured', description: '50/50 initiales dor\u00E9es + citation, rose poudr\u00E9/bordeaux', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'brixsa-featured', label: 'Brixsa — Featured', description: '50/50 image + citation, fond noir, crème', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'canopy-cards', label: 'Canopy — Cards', description: 'Avis clients, cards blanches, coins carrés, étoiles', previewStyle: { background: 'white', paddingY: 'md' } },
   ],
   pricing: [
     // Startup
@@ -278,6 +287,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'ecommerce-masonry', label: 'E-commerce — Masonry', description: 'Vert, masonry produits', previewStyle: { background: 'white', paddingY: 'md' } },
     { id: 'glass-grid', label: 'Glass — Grille', description: 'Dark, glass grille', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass-masonry', label: 'Glass — Masonry', description: 'Glass, masonry glow', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'nacre-services', label: 'Nacre — Services', description: 'Grid 3 colonnes, cards services salon ongles, rose poudr\u00E9', previewStyle: { background: 'white', paddingY: 'md' } },
     { id: 'brixsa-listing', label: 'Brixsa — Property Listing', description: 'Grid 3 colonnes, cards portrait, badges, crème', previewStyle: { background: 'white', paddingY: 'md' } },
   ],
   'image-text': [
@@ -329,6 +339,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     // Glass
     { id: 'glass-centered', label: 'Glass — Centré', description: 'Dark, glassmorphism, centré', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass-split', label: 'Glass — Split', description: 'Dark, glass, texte + champ', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'canopy-minimal', label: 'Canopy — Minimal', description: 'Inscription éco, coins carrés, vert forêt', previewStyle: { background: 'white', paddingY: 'md' } },
   ],
   'site-header': [
     { id: 'startup', label: 'Startup / SaaS', description: 'Nav pilules, CTA gradient, moderne', previewStyle: { background: 'white', paddingY: 'sm' } },
@@ -346,6 +357,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'creative', label: 'Créatif', description: 'Néobrutalist, typo XXL, crème', previewStyle: { background: 'white', paddingY: 'md' } },
     { id: 'ecommerce', label: 'E-commerce', description: 'Newsletter + moyens de paiement', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass', label: 'Glass / Tech', description: 'Card glassmorphism, glow', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'obscura', label: 'Obscura — Photographe', description: 'Multi-colonne, noir profond, or chaud, text-mask hover', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'brixsa', label: 'Brixsa — Immobilier', description: 'Multi-colonne, liens H2, crème/brun', previewStyle: { background: 'white', paddingY: 'md' } },
   ],
   tabs: [
@@ -424,6 +436,9 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'glass-hero', label: 'Glass — Hero', description: 'Slider hero glass', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass-cards', label: 'Glass — Cards', description: 'Cards glassmorphism', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass-thumbnails', label: 'Glass — Thumbnails', description: 'Thumbnails glass', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'obscura-parallax', label: 'Obscura — Parallax Portfolio', description: 'Portfolio photo plein écran avec parallax, badges or glassmorphism, noir profond', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'nacre-parallax', label: 'Nacre — Parallax Gallery', description: 'Galerie nail art plein \u00E9cran avec parallax, badges glassmorphism, rose/dor\u00E9', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'canopy-parallax', label: 'Canopy — Parallax Products', description: 'Produits éco plein écran avec parallax, badges glassmorphism vert forêt', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'brixsa-parallax', label: 'Brixsa — Parallax Featured', description: 'Propriétés plein écran avec parallax, badge Featured, prix', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   dropdown: [

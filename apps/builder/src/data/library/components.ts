@@ -306,6 +306,44 @@ const BUTTONS: LibraryElementItem[] = [
       defaultContent: { label: 'Button', href: '#' },
     },
   },
+  {
+    id: 'btn-scan-02226ac5e215',
+    label: 'Button sm bold',
+    category: 'components',
+    subcategory: 'buttons',
+    tags: ['button', 'bold'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Button sm bold',
+      defaultStyle: {
+        display: 'inline-block', padding: '10px 25px',
+        backgroundColor: '#333333', color: '#ffffff',
+        borderRadius: '2px', fontSize: '14px', fontWeight: 700,
+        cursor: 'pointer', textAlign: 'center',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'Button', href: '#' },
+    },
+  },
+  {
+    id: 'btn-scan-464ec5de232e',
+    label: 'Button sm normal',
+    category: 'components',
+    subcategory: 'buttons',
+    tags: ['button'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Button sm normal',
+      defaultStyle: {
+        display: 'inline-block', padding: '10px 25px',
+        backgroundColor: '#333333', color: '#ffffff',
+        borderRadius: '2px', fontSize: '14px', fontWeight: 400,
+        cursor: 'pointer', textAlign: 'center',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'Button', href: '#' },
+    },
+  },
 ]
 
 // ─── BADGES (10 styles) ───
