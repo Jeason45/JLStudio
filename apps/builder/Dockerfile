@@ -35,13 +35,13 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/apps/builder/public ./public
 COPY --from=builder /app/apps/builder/.next/standalone ./
-COPY --from=builder /app/apps/builder/.next/static ./.next/static
+COPY --from=builder /app/apps/builder/public ./apps/builder/public
+COPY --from=builder /app/apps/builder/.next/static ./apps/builder/.next/static
 
-# Prisma schema + generated client (output goes to src/generated/prisma via prisma generate)
-COPY --from=builder /app/apps/builder/prisma ./prisma
-COPY --from=builder /app/apps/builder/src/generated ./src/generated
+# Prisma schema + generated client
+COPY --from=builder /app/apps/builder/prisma ./apps/builder/prisma
+COPY --from=builder /app/apps/builder/src/generated ./apps/builder/src/generated
 
 USER nextjs
 
@@ -50,4 +50,4 @@ EXPOSE 3001
 ENV PORT=3001
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["node", "apps/builder/server.js"]
