@@ -3091,6 +3091,191 @@ function AscentFeatured({ content, items, sectionId }: { content: Partial<Testim
   )
 }
 
+function ZenithFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const defaultQuotes = [
+    'Le vinyasa ici m\'a transformée. En 6 mois, j\'ai retrouvé une souplesse que je pensais perdue et une sérénité dans mon quotidien qui change tout.',
+    'Les cours de pilates sont exceptionnels. Mon mal de dos chronique a disparu et je me sens plus forte que jamais à 55 ans.',
+    'L\'ambiance du studio est unique. On sent qu\'on entre dans une bulle de calme dès la porte franchie. Les profs sont bienveillants et à l\'écoute.',
+  ]
+
+  const defaultAuthors = [
+    { name: 'Marie L.', role: 'Vinyasa Flow' },
+    { name: 'Catherine D.', role: 'Pilates Mat' },
+    { name: 'Julie R.', role: 'Méditation & Yin' },
+  ]
+
+  const quotes = items.length > 0
+    ? items.map((item, i) => item.quote || defaultQuotes[i % defaultQuotes.length])
+    : defaultQuotes
+
+  const authors = items.length > 0
+    ? items.map((item, i) => ({ name: item.author || defaultAuthors[i % defaultAuthors.length].name, role: item.role || defaultAuthors[i % defaultAuthors.length].role }))
+    : defaultAuthors
+
+  const total = quotes.length
+
+  const goPrev = () => setActiveIndex((prev) => (prev - 1 + total) % total)
+  const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % total)
+    }, 7000)
+    return () => clearInterval(timer)
+  }, [total])
+
+  return (
+    <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#1A1A1A', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .zenith-testimonial-split { flex-direction: column !important; }
+          .zenith-testimonial-split > div { flex: 1 1 100% !important; min-height: 50vh; }
+        }
+      `}</style>
+      <div {...elementProps(sectionId, 'splitLayout', 'container', 'Split Layout')} className="zenith-testimonial-split flex flex-row w-full" style={{ minHeight: '620px' }}>
+        {/* LEFT — Quote (50%) */}
+        <div {...elementProps(sectionId, 'contentPanel', 'container', 'Content Panel')} className="flex flex-col" style={{ flex: '1 1 50%', backgroundColor: '#111111', color: '#FFFFFF', padding: '60px' }}>
+          {/* Top label */}
+          <p
+            {...elementProps(sectionId, 'eyebrow', 'text')}
+            style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#A8C5A0', marginBottom: 'auto' }}
+          >
+            {content.eyebrow || content.title || 'Témoignages'}
+          </p>
+
+          {/* Main content */}
+          <div className="flex flex-col" style={{ maxWidth: '536px', marginTop: 'auto', marginLeft: 'auto' }}>
+            {/* Quote text wrap */}
+            <div style={{ marginTop: 'auto', marginBottom: '40px', marginLeft: 'auto' }}>
+              {quotes.map((quote, i) => (
+                <div key={items[i]?.id ?? i} style={{ display: i === activeIndex ? 'block' : 'none' }}>
+                  {/* Sage green quote mark */}
+                  <div style={{ color: '#A8C5A0', fontSize: '80px', lineHeight: '0.6', marginBottom: '24px', fontFamily: 'Georgia, serif' }}>&ldquo;</div>
+                  <p
+                    {...elementProps(sectionId, `items.${i}.quote`, 'text')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
+                      fontWeight: 400,
+                      fontStyle: 'italic',
+                      lineHeight: '135%',
+                      color: '#FFFFFF',
+                    }}
+                  >
+                    {quote}
+                  </p>
+                  {/* Author */}
+                  <div style={{ marginTop: '24px' }}>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.author`, 'text')}
+                      style={{ fontSize: '16px', fontWeight: 600, color: '#FFFFFF' }}
+                    >
+                      {authors[i]?.name}
+                    </p>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.role`, 'text')}
+                      style={{ fontSize: '14px', fontWeight: 400, color: 'rgba(255,255,255,0.45)', marginTop: '4px' }}
+                    >
+                      {authors[i]?.role}
+                    </p>
+                    {/* Sage stars */}
+                    <div style={{ display: 'flex', gap: '4px', marginTop: '12px' }}>
+                      {Array.from({ length: 5 }).map((_, s) => (
+                        <span key={s} style={{ color: '#A8C5A0', fontSize: '14px' }}>&#9733;</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigation dots + arrows */}
+            {total > 1 && (
+              <div {...elementProps(sectionId, 'navDots', 'container', 'Nav Dots')} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                {Array.from({ length: total }).map((_, i) => (
+                  <div
+                    key={i}
+                    role="button"
+                    onClick={() => setActiveIndex(i)}
+                    style={{
+                      width: i === activeIndex ? '32px' : '8px',
+                      height: '8px',
+                      borderRadius: '4px',
+                      backgroundColor: i === activeIndex ? '#A8C5A0' : 'rgba(255, 255, 255, 0.2)',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                    }}
+                  />
+                ))}
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={goPrev}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'transparent', border: '1px solid rgba(168, 197, 160, 0.4)', color: '#A8C5A0', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                  </button>
+                  <button
+                    onClick={goNext}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#A8C5A0', border: '1px solid #A8C5A0', color: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT — Large Initial / Photo (50%) */}
+        <div {...elementProps(sectionId, 'imagePanel', 'container', 'Initials Panel')} className="relative overflow-hidden flex items-center justify-center" style={{ flex: '1 1 50%', backgroundColor: '#1A1A1A' }}>
+          {Array.from({ length: total }).map((_, i) => {
+            const item = items[i]
+            const initial = (item?.author || authors[i]?.name || 'Z').charAt(0).toUpperCase()
+            return (
+              <div
+                key={item?.id ?? i}
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  backgroundColor: '#1A1A1A',
+                  opacity: i === activeIndex ? 1 : 0,
+                  zIndex: i === activeIndex ? 2 : 0,
+                  transition: 'opacity 0.6s ease',
+                }}
+              >
+                {item?.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    {...elementProps(sectionId, `items.${i}.avatar`, 'image')}
+                    src={item.avatar}
+                    alt={item.author || ''}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(8rem, 6rem + 10vw, 16rem)',
+                      fontWeight: 700,
+                      color: '#A8C5A0',
+                      lineHeight: 1,
+                      userSelect: 'none',
+                      opacity: 0.12,
+                    }}
+                  >
+                    {initial}
+                  </span>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // SLIDER variants (one per universe) — embla carousel
 // ─────────────────────────────────────────────
 
@@ -3238,6 +3423,7 @@ const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsConten
   'pulse-featured': PulseFeatured,
   'saveur-featured': SaveurFeatured,
   'ascent-featured': AscentFeatured,
+  'zenith-featured': ZenithFeatured,
 }
 
 export function TestimonialsSection({ config }: TestimonialsSectionProps) {
@@ -3270,6 +3456,7 @@ export function TestimonialsSection({ config }: TestimonialsSectionProps) {
     pulse: '#00E5FF',
     saveur: '#C8A97E',
     ascent: '#E0B870',
+    zenith: '#A8C5A0',
   }
   const accent = accentColor ?? defaultAccents[universe] ?? '#6366f1'
 
@@ -3304,6 +3491,7 @@ export const testimonialsMeta = {
     'pulse-featured',
     'saveur-featured',
     'ascent-featured',
+    'zenith-featured',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

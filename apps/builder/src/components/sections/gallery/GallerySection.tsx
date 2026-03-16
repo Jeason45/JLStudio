@@ -4260,6 +4260,239 @@ export function GallerySection({ config }: { config: SectionConfig }) {
     )
   }
 
+  // ═══════════════════════════════════════════════════════
+  // ZENITH-COURS — Yoga / Pilates studio : 3:4 cards, soft black bg,
+  // sage green glassmorphism badges, scroll-reveal stagger
+  // ═══════════════════════════════════════════════════════
+  if (variant === 'zenith-cours') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Vinyasa Flow', category: 'Vinyasa', description: 'Un enchaînement fluide de postures synchronisées avec le souffle pour renforcer le corps et libérer l\'esprit.', image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=85' },
+      { id: '2', title: 'Hatha Doux', category: 'Hatha', description: 'Postures maintenues, alignement précis et respiration consciente pour une pratique accessible à tous.', image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=85' },
+      { id: '3', title: 'Pilates Reformer', category: 'Pilates', description: 'Travail en profondeur sur machine Reformer pour sculpter la silhouette, corriger la posture et renforcer le gainage.', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=85' },
+      { id: '4', title: 'Yin Yoga', category: 'Yin', description: 'Postures tenues longuement pour relâcher les fascias profonds, apaiser le système nerveux et cultiver la pleine conscience.', image: 'https://images.unsplash.com/photo-1552196563-55cd4e45efb3?w=800&q=85' },
+      { id: '5', title: 'Ashtanga', category: 'Ashtanga', description: 'Une série codifiée et dynamique qui développe la force, la flexibilité et la concentration à travers une pratique régulière et exigeante.', image: 'https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=800&q=85' },
+      { id: '6', title: 'Yoga Prénatal', category: 'Prénatal', description: 'Un accompagnement doux et bienveillant tout au long de la grossesse pour rester connectée à son corps et préparer l\'accouchement.', image: 'https://images.unsplash.com/photo-1559595500-e15296bdbb48?w=800&q=85' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; category?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          category: item.category ?? defaultCards[i % 6].category,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image ?? defaultCards[i % 6].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Cours Section')}
+        style={{
+          background: '#1A1A1A',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end zenith-resp-cours-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#FFFFFF',
+                }}
+              >
+                {content.title ?? 'Nos cours'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="/cours"
+              className="zenith-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#FFFFFF', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="zenith-btn-label relative" style={{ zIndex: 10 }}>Découvrir tous les cours</span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#A8C5A0',
+                  color: '#1A1A1A',
+                  borderRadius: '4px',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
+                <span className="zenith-btn-fill" style={{ display: 'block', background: '#A8C5A0', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Grid */}
+          <style>{`
+            .zenith-card:hover .zenith-img-zoom { transform: scale(1.05) !important; }
+            .zenith-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
+            .zenith-img-dezoom.revealed { transform: scale(1); }
+            .zenith-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+            .zenith-btn:hover .zenith-btn-fill { transform: translateX(0); }
+            .zenith-btn:hover .zenith-btn-label { color: #1A1A1A; }
+            .zenith-btn-label { transition: color 0.4s; }
+            .zenith-link { color: transparent; transition: color 0.3s; font-size: 14px; font-weight: 500; }
+            .zenith-card:hover .zenith-link { color: #A8C5A0; }
+            @media (max-width: 768px) {
+              .zenith-resp-cours-grid { grid-template-columns: 1fr !important; }
+              .zenith-resp-cours-header { flex-direction: column; align-items: flex-start !important; }
+            }
+            @media (min-width: 769px) and (max-width: 1024px) {
+              .zenith-resp-cours-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            }
+          `}</style>
+          <div {...elementProps(config.id, 'grid', 'container', 'Cours Grid')} className="grid grid-cols-3 zenith-resp-cours-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="zenith-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.zenith-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="zenith-img-zoom zenith-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="zenith-img-zoom zenith-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #2A2A2A, #1A1A1A)', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-8 h-8 text-white/40" />
+                    </div>
+                  )}
+                  {/* Glassmorphism badge: category */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      right: '16px',
+                      background: 'rgba(168, 197, 160, 0.25)',
+                      backdropFilter: 'blur(15px)',
+                      WebkitBackdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      padding: '6px 14px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#A8C5A0',
+                      zIndex: 2,
+                      border: '1px solid rgba(168, 197, 160, 0.4)',
+                    }}
+                  >
+                    {card.category}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#FFFFFF',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: 'rgba(255,255,255,0.45)',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                  <span
+                    {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                    className="zenith-link"
+                  >
+                    Découvrir le cours &rarr;
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback to startup-grid
   return (
     <>
@@ -5029,6 +5262,7 @@ export const galleryMeta = {
     'pulse-events',
     'saveur-creations',
     'ascent-interventions',
+    'zenith-cours',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

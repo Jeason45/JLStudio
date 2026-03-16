@@ -19,6 +19,7 @@ const POPULAR_IDS = [
   'dj-pulse',
   'traiteur-saveur',
   'coach-ascent',
+  'yoga-zenith',
 ]
 
 export function PopularTemplates() {

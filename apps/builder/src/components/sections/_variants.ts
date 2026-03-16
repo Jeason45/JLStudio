@@ -27,6 +27,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'pulse', label: 'Pulse (DJ)', description: 'Slider plein \u00E9cran, noir absolu, cyan n\u00E9on/magenta, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'saveur', label: 'Saveur (Traiteur)', description: 'Slider plein \u00E9cran, brun-noir, or antique/sienne, traiteur & chef', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ascent', label: 'Ascent (Coach Business)', description: 'Slider plein \u00E9cran, navy foncé, or lumineux, coach business & life coach', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'zenith', label: 'Z\u00E9nith (Yoga)', description: 'Slider plein \u00E9cran, noir doux, sauge/beige, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   features: [
     // Startup / SaaS
@@ -65,6 +66,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'pulse-accordion', label: 'Pulse Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, DJ & musicien, noir absolu/cyan n\u00E9on', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'saveur-accordion', label: 'Saveur Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, traiteur & chef, brun-noir/or antique', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'ascent-accordion', label: 'Ascent Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, coach business & life coach, navy/or lumineux', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'zenith-accordion', label: 'Z\u00E9nith Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, studio yoga & pilates, noir doux/sauge', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   cta: [
     // Startup
@@ -162,6 +164,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'pulse-featured', label: 'Pulse Featured', description: '50/50 initiales cyan + citation, noir absolu/cyan n\u00E9on, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'saveur-featured', label: 'Saveur Featured', description: '50/50 initiales dor\u00E9es + citation, brun-noir/or antique, traiteur & chef', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ascent-featured', label: 'Ascent Featured', description: '50/50 initiales dorées + citation, navy foncé/or lumineux, coach business & life coach', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'zenith-featured', label: 'Z\u00E9nith Featured', description: '50/50 initiales sauge + citation, noir doux/sauge/beige, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   pricing: [
     // Startup
@@ -325,6 +328,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'pulse-events', label: 'Pulse Events', description: 'Grid 3 colonnes, galerie \u00E9v\u00E9nements DJ, noir absolu/cyan n\u00E9on, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'saveur-creations', label: 'Saveur Cr\u00E9ations', description: 'Grid 3 colonnes, galerie cr\u00E9ations culinaires, brun-noir/or antique, traiteur', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ascent-interventions', label: 'Ascent Interventions', description: 'Grid 3 colonnes, galerie interventions & programmes, navy foncé/or lumineux, coach business', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'zenith-cours', label: 'Z\u00E9nith Cours', description: 'Grid 3 colonnes, galerie cours yoga & pilates, noir doux/sauge, studio wellness', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'image-text': [
     { id: 'startup-image-right', label: 'Startup — Image droite', description: 'Indigo, texte + image', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -350,6 +354,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'pulse-story', label: 'Pulse Story', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, noir absolu/cyan n\u00E9on, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'saveur-story', label: 'Saveur Story', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, brun-noir/or antique, traiteur & chef', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ascent-story', label: 'Ascent Story', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, navy foncé/or lumineux, coach business & life coach', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'zenith-story', label: 'Z\u00E9nith Story', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, noir doux/sauge, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'product-grid': [
     { id: 'startup-grid', label: 'Startup — Grille', description: 'Cards produits indigo', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -403,6 +408,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'pulse', label: 'Pulse (DJ)', description: 'Transparent, noir absolu, cyan n\u00E9on/magenta, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'sm' } },
     { id: 'saveur', label: 'Saveur (Traiteur)', description: 'Transparent, brun-noir, or antique, traiteur & chef \u00E0 domicile', previewStyle: { background: 'dark', paddingY: 'sm' } },
     { id: 'ascent', label: 'Ascent (Coach Business)', description: 'Transparent, navy foncé, or lumineux, coach business & life coach', previewStyle: { background: 'dark', paddingY: 'sm' } },
+    { id: 'zenith', label: 'Z\u00E9nith (Yoga)', description: 'Transparent, noir doux, sauge/beige, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'sm' } },
   ],
   'site-footer': [
     { id: 'startup', label: 'Startup / SaaS', description: 'Moderne, colonnes, status', previewStyle: { background: 'dark', paddingY: 'md' } },
@@ -422,6 +428,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'pulse', label: 'Pulse (DJ)', description: 'Logo centr\u00E9, 3 colonnes, noir absolu/cyan n\u00E9on, Instagram/SoundCloud/Spotify', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'saveur', label: 'Saveur (Traiteur)', description: 'Logo centr\u00E9, 3 colonnes, brun-noir/or antique, Instagram/Facebook/Pinterest', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ascent', label: 'Ascent (Coach Business)', description: 'Logo centr\u00E9, 3 colonnes, navy foncé/or lumineux, text-mask hover, LinkedIn/Instagram/YouTube', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'zenith', label: 'Z\u00E9nith (Yoga)', description: 'Logo centr\u00E9, 3 colonnes, noir doux/sauge, text-mask hover, Instagram/YouTube/Facebook', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   tabs: [
     { id: 'startup-horizontal', label: 'Startup — Horizontal', description: 'Tabs pill indigo, horizontal', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -512,6 +519,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'pulse-parallax', label: 'Pulse Parallax', description: 'Ambiance DJ plein \u00E9cran avec parallax, noir absolu/cyan n\u00E9on, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'saveur-parallax', label: 'Saveur Parallax', description: 'Ambiances culinaires plein \u00E9cran avec parallax, brun-noir/or antique, traiteur', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'ascent-parallax', label: 'Ascent Parallax', description: 'Moments & parcours client plein \u00E9cran avec parallax, navy foncé/or lumineux, coach business', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'zenith-parallax', label: 'Z\u00E9nith Parallax', description: 'Espaces & moments de pratique plein \u00E9cran avec parallax, noir doux/sauge, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   dropdown: [
     { id: 'startup-simple', label: 'Startup — Simple', description: 'Dropdown simple indigo', previewStyle: { background: 'white', paddingY: 'md' } },

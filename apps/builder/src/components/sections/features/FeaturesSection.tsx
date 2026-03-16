@@ -4400,6 +4400,282 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
     )
   }
 
+  // YOGA ZENITH — Horizontal Accordion (Yoga / Pilates Studio)
+  // ═══════════════════════════════════════════════════════════
+
+  if (variant === 'zenith-accordion') {
+    const [activePanel, setActivePanel] = useState(0)
+
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const panelImages = [
+      'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&q=85',
+      'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=85',
+      'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1200&q=85',
+    ]
+
+    const defaultPanelData = [
+      { title: 'Yoga Vinyasa', description: 'Un flow dynamique qui synchronise mouvement et respiration. Renforcez votre corps, libérez votre esprit et développez une souplesse profonde.' },
+      { title: 'Pilates Mat', description: 'Des exercices au sol ciblés pour sculpter votre silhouette, renforcer votre centre et améliorer votre posture au quotidien.' },
+      { title: 'Méditation & Yin', description: 'Ralentissez, respirez et reconnectez-vous à vous-même. Des pratiques douces pour apaiser le mental et relâcher les tensions profondes.' },
+    ]
+
+    const resolvedPanels = items.length > 0
+      ? items.map((item, i) => ({
+          title: item.title || defaultPanelData[i % defaultPanelData.length].title,
+          description: (item as unknown as Record<string, unknown>).description as string || defaultPanelData[i % defaultPanelData.length].description,
+          image: (item as unknown as Record<string, unknown>).image as string || panelImages[i % panelImages.length],
+          id: item.id,
+        }))
+      : defaultPanelData.map((data, i) => ({ ...data, image: panelImages[i], id: `default-${i}` }))
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Services Section')}
+        ref={scrollRevealRef}
+        className="overflow-hidden"
+        style={{ backgroundColor: '#1A1A1A', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}
+      >
+        {/* Header area */}
+        <div {...elementProps(config.id, 'headerArea', 'container', 'Header Area')} style={{ padding: '0 60px', paddingTop: 'clamp(60px, 10vw, 120px)' }}>
+          <div style={{ maxWidth: 1320, margin: '0 auto', textAlign: 'center' }}>
+            {title && (
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                className={cn(titleSize && getTitleSizeClass(titleSize))}
+                style={{
+                  maxWidth: 700,
+                  margin: '0 auto',
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize' as const,
+                  marginBottom: 60,
+                  color: customTextColor ?? '#A8C5A0',
+                }}
+              >
+                {title}
+              </h2>
+            )}
+          </div>
+        </div>
+
+        {/* 3 horizontal accordion panels */}
+        <style>{`
+          .zenith-panel-collapsed:hover { background-color: rgba(26, 26, 26, 0.85) !important; }
+          .zenith-panel-expanded:hover .zenith-panel-img { transform: scale(1.04) !important; }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'panelsRow', 'container', 'Panels Row')}
+          className="flex flex-row"
+          style={{ minHeight: 700 }}
+        >
+          {resolvedPanels.map((panel, i) => {
+            const isExpanded = activePanel === i
+
+            return (
+              <div
+                key={panel.id}
+                {...elementProps(config.id, `panels.${i}`, 'container', 'Panel')}
+                className={cn(
+                  'relative overflow-hidden cursor-pointer',
+                  isExpanded ? 'zenith-panel-expanded' : 'zenith-panel-collapsed'
+                )}
+                style={{
+                  flex: isExpanded ? '3 1 0%' : '0.5 1 0%',
+                  minHeight: 700,
+                  backgroundColor: '#1A1A1A',
+                  transition: 'flex 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+                onClick={() => setActivePanel(i)}
+              >
+                {/* Background image — visible when expanded */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  {...elementProps(config.id, `panels.${i}.image`, 'image', 'Panel Image')}
+                  src={panel.image}
+                  alt={panel.title}
+                  className="zenith-panel-img absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    opacity: isExpanded ? 1 : 0,
+                    transition: 'opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s ease',
+                  }}
+                />
+
+                {/* Gradient overlay — expanded */}
+                <div
+                  {...elementProps(config.id, `panels.${i}.overlay`, 'container', 'Overlay')}
+                  className="absolute inset-0"
+                  style={{
+                    background: isExpanded
+                      ? 'linear-gradient(to top, rgba(26, 26, 26, 0.92) 0%, rgba(26, 26, 26, 0.45) 40%, transparent 70%)'
+                      : 'none',
+                    zIndex: 1,
+                    transition: 'opacity 0.5s ease',
+                  }}
+                />
+
+                {/* Glassmorphism overlay strip (collapsed) */}
+                {!isExpanded && (
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: 'rgba(26, 26, 26, 0.65)',
+                      backdropFilter: 'blur(2px)',
+                      WebkitBackdropFilter: 'blur(2px)',
+                      zIndex: 1,
+                    }}
+                  />
+                )}
+
+                {/* Collapsed state — number + vertical text */}
+                <div
+                  className="absolute inset-0 flex flex-col items-center justify-center"
+                  style={{
+                    zIndex: 2,
+                    opacity: isExpanded ? 0 : 1,
+                    transition: 'opacity 0.4s ease',
+                    pointerEvents: isExpanded ? 'none' : 'auto',
+                  }}
+                >
+                  {/* Sage number */}
+                  <span
+                    {...elementProps(config.id, `panels.${i}.number`, 'text', 'Panel Number')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(3rem, 2rem + 4vw, 6rem)',
+                      fontWeight: 300,
+                      color: '#A8C5A0',
+                      lineHeight: 1,
+                      marginBottom: 32,
+                      opacity: 0.7,
+                    }}
+                  >
+                    0{i + 1}
+                  </span>
+
+                  {/* Vertical text */}
+                  <span
+                    {...elementProps(config.id, `panels.${i}.verticalTitle`, 'text', 'Vertical Title')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      letterSpacing: '3px',
+                      textTransform: 'uppercase' as const,
+                      color: '#FFFFFF',
+                      writingMode: 'vertical-rl',
+                      textOrientation: 'mixed',
+                    }}
+                  >
+                    {panel.title}
+                  </span>
+                </div>
+
+                {/* Expanded state — title + description + arrow */}
+                <div
+                  className="absolute inset-0 flex flex-col justify-end"
+                  style={{
+                    zIndex: 2,
+                    opacity: isExpanded ? 1 : 0,
+                    transition: 'opacity 0.5s ease 0.2s',
+                    pointerEvents: isExpanded ? 'auto' : 'none',
+                    padding: 'clamp(30px, 5vw, 60px)',
+                  }}
+                >
+                  {/* Sage number — expanded */}
+                  <span
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 13,
+                      fontWeight: 500,
+                      letterSpacing: '3px',
+                      color: '#A8C5A0',
+                      marginBottom: 12,
+                      textTransform: 'uppercase' as const,
+                    }}
+                  >
+                    0{i + 1}
+                  </span>
+
+                  <h4
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(1.75rem, 1.2rem + 2.4vw, 3rem)',
+                      fontWeight: 500,
+                      textTransform: 'capitalize' as const,
+                      color: '#FFFFFF',
+                      margin: 0,
+                      marginBottom: 12,
+                    }}
+                  >
+                    {panel.title}
+                  </h4>
+
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 15,
+                      fontWeight: 400,
+                      color: '#D4C5B0',
+                      opacity: 0.95,
+                      margin: 0,
+                      maxWidth: 400,
+                      lineHeight: '160%',
+                      marginBottom: 24,
+                    }}
+                  >
+                    {panel.description}
+                  </p>
+
+                  {/* Sage glassmorphism arrow button */}
+                  <div
+                    {...elementProps(config.id, `panels.${i}.arrow`, 'icon', 'Arrow Icon')}
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(168, 197, 160, 0.2)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(168, 197, 160, 0.5)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'background-color 0.3s ease',
+                    }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(168, 197, 160, 0.45)' }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(168, 197, 160, 0.2)' }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3 8h10M9 4l4 4-4 4" stroke="#A8C5A0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+    )
+  }
+
   // fallback → startup-grid
   return <FeaturesSection config={{ ...config, variant: 'startup-grid' }} />
 }
@@ -4433,6 +4709,7 @@ export const featuresMeta = {
     'zmr-experience',
     'saveur-accordion',
     'ascent-accordion',
+    'zenith-accordion',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

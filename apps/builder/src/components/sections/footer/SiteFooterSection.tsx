@@ -2256,6 +2256,142 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
     )
   }
 
+  // ─── VARIANT: zenith ───
+  // Univers yoga & pilates studio : fond noir doux #1A1A1A, sauge #A8C5A0, beige #D4C5B0, text-mask hover
+  if (variant === 'zenith') {
+    const headingFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const bodyFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const softBlack = '#1A1A1A'
+    const white = '#FFFFFF'
+    const sage = '#A8C5A0'
+    const beige = '#D4C5B0'
+    const textMuted = 'rgba(212,197,176,0.5)'
+    return (
+      <footer
+        {...elementProps(config.id, 'wrapper', 'container', 'Footer')}
+        className="relative"
+        style={{ backgroundColor: softBlack, color: white, fontFamily: bodyFont }}
+      >
+        {/* Inject hover animations for text-mask effect */}
+        <style>{`
+          .zenith-link-mask { overflow: hidden; height: 1.5em; position: relative; display: block; }
+          .zenith-link-mask .zenith-text-main { display: block; transition: transform 0.3s ease; }
+          .zenith-link-mask .zenith-text-alt { position: absolute; top: 100%; left: 0; display: block; transition: transform 0.3s ease; color: ${beige}; }
+          .zenith-link-mask:hover .zenith-text-main,
+          .zenith-link-mask:hover .zenith-text-alt { transform: translateY(-100%); }
+          @media (max-width: 768px) {
+            .zenith-resp-footer-cols { flex-direction: column !important; gap: 32px !important; }
+          }
+        `}</style>
+
+        <div {...elementProps(config.id, 'footerInner', 'container', 'Footer Inner')} style={{ paddingTop: 'clamp(60px, 10vw, 100px)', paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)' }}>
+          {/* Logo + sage separator */}
+          <div {...elementProps(config.id, 'brandArea', 'container', 'Brand Area')} className="flex flex-col items-center" style={{ marginBottom: 48 }}>
+            <p
+              {...elementProps(config.id, 'logo', 'image')}
+              style={{ fontFamily: headingFont, fontSize: 32, fontWeight: 300, color: sage, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 20 }}
+            >
+              {renderLogo(logo)}
+            </p>
+            <div style={{ width: 60, height: 1, backgroundColor: sage }} />
+            {content.tagline && (
+              <p
+                {...elementProps(config.id, 'tagline', 'text')}
+                style={{ fontFamily: bodyFont, fontSize: 14, fontWeight: 300, color: textMuted, letterSpacing: '0.06em', marginTop: 16, textAlign: 'center' }}
+              >
+                {content.tagline}
+              </p>
+            )}
+          </div>
+
+          {/* 3 Columns */}
+          <div {...elementProps(config.id, 'columnsArea', 'container', 'Columns Area')} className="flex flex-row justify-center zenith-resp-footer-cols" style={{ gap: 'clamp(40px, 8vw, 120px)', paddingBottom: 48 }}>
+            {columns.map((col, ci) => (
+              <div key={col.id || `col-${ci}`} className="flex flex-col" style={{ minWidth: 140 }}>
+                <p
+                  {...elementProps(config.id, `columns.${ci}.title`, 'heading')}
+                  style={{ fontFamily: headingFont, fontSize: 11, fontWeight: 500, color: sage, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 16 }}
+                >
+                  {col.title}
+                </p>
+                <div className="flex flex-col" style={{ gap: 6 }}>
+                  {col.links.map((link, li) => (
+                    <a
+                      key={link.id || `${ci}-${li}`}
+                      {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')}
+                      href={link.href}
+                      className="zenith-link-mask"
+                      style={{ color: white, textDecoration: 'none', fontSize: 14, fontWeight: 300 }}
+                    >
+                      <span className="zenith-text-main">{link.label}</span>
+                      <span className="zenith-text-alt">{link.label}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          {...elementProps(config.id, 'bottomBar', 'container', 'Footer Bottom')}
+          className="flex flex-wrap items-center justify-between"
+          style={{ borderTop: `1px solid rgba(168,197,160,0.2)`, padding: '24px clamp(20px, 5vw, 60px)', gap: 16 }}
+        >
+          <p
+            {...elementProps(config.id, 'copyright', 'text')}
+            style={{ color: textMuted, fontSize: 13 }}
+          >
+            {content.copyright ?? `\u00A9 ${new Date().getFullYear()} Z\u00E9nith. Tous droits r\u00E9serv\u00E9s.`}
+          </p>
+          {/* Social icons */}
+          <div {...elementProps(config.id, 'socialsRow', 'container', 'Social Icons')} className="flex flex-row items-center" style={{ gap: 16 }}>
+            {/* Instagram */}
+            <a
+              {...elementProps(config.id, 'socials.instagram', 'link')}
+              href={socials.instagram ?? '#'}
+              aria-label="Instagram"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = sage }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <circle cx="12" cy="12" r="5" />
+                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+              </svg>
+            </a>
+            {/* YouTube */}
+            <a
+              {...elementProps(config.id, 'socials.youtube', 'link')}
+              href={(socials as Record<string, string | undefined>).youtube ?? '#'}
+              aria-label="YouTube"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = sage }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+            {/* Facebook */}
+            <a
+              {...elementProps(config.id, 'socials.facebook', 'link')}
+              href={(socials as Record<string, string | undefined>).facebook ?? '#'}
+              aria-label="Facebook"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = sage }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </footer>
+    )
+  }
+
   // fallback → startup
   return <SiteFooterSection config={{ ...config, variant: 'startup' }} />
 }
@@ -2264,7 +2400,7 @@ export const siteFooterMeta = {
   type: 'site-footer',
   label: 'Footer',
   icon: '🔻',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

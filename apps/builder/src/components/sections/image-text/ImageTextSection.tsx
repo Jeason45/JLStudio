@@ -3187,6 +3187,228 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
     )
   }
 
+  // YOGA ZENITH — Story Split Layout (Yoga / Pilates Studio)
+  // ═══════════════════════════════════════════════════════
+
+  if (variant === 'zenith-story') {
+    const statNumberStyle = {
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+      fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+      fontWeight: 500,
+      lineHeight: '110%',
+      color: '#A8C5A0',
+    } as const
+
+    const paraStyle = {
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '170%',
+      color: '#D4C5B0',
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+    } as const
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const titleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const imageRevealRef = useBrixsaScrollReveal({ threshold: 0.1, disabled: isEditing })
+    const counter1200Ref = useBrixsaCounter(1200, { disabled: isEditing })
+    const counter30Ref = useBrixsaCounter(30, { disabled: isEditing })
+    const counter10Ref = useBrixsaCounter(10, { disabled: isEditing })
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'About Section')}
+        style={{
+          backgroundColor: '#1A1A1A',
+          padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <style>{`
+          @media (max-width: 968px) {
+            .zenith-story-grid { grid-template-columns: 1fr !important; }
+            .zenith-story-image { min-height: 400px !important; }
+          }
+          .zenith-story-image:hover .zenith-story-img { transform: scale(1.03) !important; }
+          .zenith-story-cta:hover {
+            background-color: #A8C5A0 !important;
+            color: #1A1A1A !important;
+          }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'container', 'container', 'Container')}
+          className="mx-auto zenith-story-grid"
+          style={{
+            maxWidth: '1320px',
+            display: 'grid',
+            gridTemplateColumns: '55% 45%',
+            gap: 'clamp(32px, 5vw, 80px)',
+            alignItems: 'center',
+          }}
+        >
+          {/* Left — Image with scroll reveal dezoom */}
+          <div
+            ref={imageRevealRef}
+            {...elementProps(config.id, 'imageContainer', 'container', 'Image Container')}
+            className="zenith-story-image"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              minHeight: 600,
+              borderRadius: 0,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              {...elementProps(config.id, 'image', 'image', 'Studio Image')}
+              src={content.image || 'https://images.unsplash.com/photo-1588286840104-8957b019727f?w=1200&q=85'}
+              alt={content.title || 'Un espace dédié à votre bien-être'}
+              className="zenith-story-img"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                transform: 'scale(1.08)',
+                transition: 'transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              }}
+            />
+            {/* Sage accent line overlay at bottom */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '3px',
+                backgroundColor: '#A8C5A0',
+                zIndex: 2,
+              }}
+            />
+          </div>
+
+          {/* Right — Text content */}
+          <div
+            ref={titleRevealRef}
+            {...elementProps(config.id, 'textContent', 'container', 'Text Content')}
+            style={{ display: 'flex', flexDirection: 'column', gap: 0 }}
+          >
+            {/* Eyebrow */}
+            <span
+              {...elementProps(config.id, 'eyebrow', 'text')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 12,
+                fontWeight: 500,
+                letterSpacing: '3px',
+                textTransform: 'uppercase' as const,
+                color: '#A8C5A0',
+                marginBottom: 20,
+              }}
+            >
+              {content.eyebrow || 'Notre studio'}
+            </span>
+
+            {/* Title */}
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 'clamp(2rem, 1.3rem + 3.2vw, 3.5rem)',
+                fontWeight: 500,
+                lineHeight: '115%',
+                color: customTextColor ?? '#FFFFFF',
+                margin: 0,
+                marginBottom: 24,
+              }}
+            >
+              {content.title || 'Un espace dédié à votre bien-être'}
+            </h2>
+
+            {/* Body text */}
+            <p
+              {...elementProps(config.id, 'body', 'text')}
+              style={{
+                ...paraStyle,
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+                maxWidth: 480,
+              }}
+            >
+              {content.body || 'Depuis plus de 10 ans, notre studio est un refuge pour ceux qui cherchent l\'équilibre. Nos professeurs certifiés vous guident avec bienveillance dans une pratique adaptée à votre niveau, dans un espace baigné de lumière naturelle et pensé pour la sérénité.'}
+            </p>
+
+            {/* Counter stats */}
+            <div
+              {...elementProps(config.id, 'statsRow', 'container', 'Stats Row')}
+              style={{
+                display: 'flex',
+                gap: 'clamp(24px, 4vw, 48px)',
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+              }}
+            >
+              <div {...elementProps(config.id, 'stat1', 'container', 'Stat Block')}>
+                <div
+                  {...elementProps(config.id, 'stat1Value', 'text')}
+                  className="flex items-baseline"
+                  style={statNumberStyle}
+                >
+                  <span ref={counter1200Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(212, 197, 176, 0.7)', letterSpacing: '0.5px' }}>
+                  élèves accompagnés
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat2', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat2Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter30Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(212, 197, 176, 0.7)', letterSpacing: '0.5px' }}>
+                  cours par semaine
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat3', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat3Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter10Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(212, 197, 176, 0.7)', letterSpacing: '0.5px' }}>
+                  années d&apos;expérience
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Button — sage outline → fill on hover */}
+            <a
+              {...elementProps(config.id, 'primaryButton', 'link')}
+              href={content.primaryButton?.href ?? '#'}
+              className="zenith-story-cta"
+              style={{
+                display: 'inline-block',
+                border: '1px solid #A8C5A0',
+                backgroundColor: 'transparent',
+                color: '#A8C5A0',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontWeight: 500,
+                fontSize: 14,
+                letterSpacing: '1.5px',
+                textTransform: 'uppercase' as const,
+                padding: '16px 40px',
+                textDecoration: 'none',
+                transition: 'background-color 0.4s ease, color 0.4s ease',
+                alignSelf: 'flex-start',
+              }}
+            >
+              {content.primaryButton?.label ?? 'Découvrir nos cours'}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback to startup-image-right
   return <ImageTextSection config={{ ...config, variant: 'startup-image-right' }} isEditing={isEditing} />
 }
@@ -3216,6 +3438,7 @@ export const imageTextMeta = {
     'brixsa-privacy',
     'saveur-story',
     'ascent-story',
+    'zenith-story',
   ],
   defaultVariant: 'startup-image-right',
   defaultContent: {},
