@@ -5434,6 +5434,440 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     )
   }
 
+  // ─── VARIANT: saveur ───
+  // Traiteur & chef à domicile premium : fullscreen diagonal-wipe slider, glassmorphism booking bar, accents or antique + sienna
+  if (variant === 'saveur') {
+    const defaultHeroImages = [
+      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=85',
+      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1920&q=85',
+      'https://images.unsplash.com/photo-1555244162-803834f70033?w=1920&q=85',
+    ]
+
+    const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+    const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+
+    const slides = [
+      { name: "L\u2019art de recevoir", style: 'Traiteur \u00C9v\u00E9nementiel', bg: 'linear-gradient(135deg, #1C1917 0%, #2D2420 50%, #1C1917 100%)', image: heroImages?.[0] ?? defaultHeroImages[0] },
+      { name: 'Une cuisine d\u2019exception \u00E0 votre table', style: 'Chef \u00C0 Domicile', bg: 'linear-gradient(135deg, #241E1B 0%, #1C1917 50%, #2A1F1A 100%)', image: heroImages?.[1] ?? defaultHeroImages[1] },
+      { name: 'Chaque \u00E9v\u00E9nement m\u00E9rite le meilleur', style: 'Buffet & Cocktail', bg: 'linear-gradient(135deg, #1C1917 0%, #2A1F1A 50%, #241E1B 100%)', image: heroImages?.[2] ?? defaultHeroImages[2] },
+    ]
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [saveurActiveSlide, setSaveurActiveSlide] = useState(0)
+    const saveurPrevSlideRef = useRef(0)
+    const saveurTitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const saveurProgressRef = useRef<HTMLDivElement>(null)
+
+    const saveurGoNext = useCallback(() => {
+      setSaveurActiveSlide((prev) => {
+        saveurPrevSlideRef.current = prev
+        return (prev + 1) % slides.length
+      })
+    }, [])
+
+    const saveurGoPrev = useCallback(() => {
+      setSaveurActiveSlide((prev) => {
+        saveurPrevSlideRef.current = prev
+        return (prev - 1 + slides.length) % slides.length
+      })
+    }, [])
+
+    useEffect(() => {
+      const interval = setInterval(saveurGoNext, 5000)
+      return () => clearInterval(interval)
+    }, [saveurGoNext])
+
+    // Reset progress bar animation on slide change
+    useEffect(() => {
+      if (saveurProgressRef.current) {
+        saveurProgressRef.current.style.transition = 'none'
+        saveurProgressRef.current.style.width = '0%'
+        // Force reflow
+        void saveurProgressRef.current.offsetWidth
+        saveurProgressRef.current.style.transition = 'width 5s linear'
+        saveurProgressRef.current.style.width = '100%'
+      }
+    }, [saveurActiveSlide])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    const saveurCurrentSlide = slides[saveurActiveSlide]
+    const saveurBtnLabel = content.primaryButton?.label || 'Demander un devis'
+
+    return (
+      <>
+      {/* Saveur hero responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .saveur-resp-bookingbar { flex-direction: column !important; padding: 16px !important; border-radius: 16px !important; max-width: 90% !important; }
+          .saveur-resp-filters { flex-direction: column !important; gap: 12px !important; width: 100% !important; }
+          .saveur-resp-filter-divider { display: none !important; }
+          .saveur-resp-reserve-btn { width: 100% !important; margin-left: 0 !important; margin-top: 8px !important; justify-content: center !important; }
+          .saveur-resp-hero-title { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
+          .saveur-resp-hero-subtitle { font-size: 12px !important; }
+          .saveur-resp-nav-arrows { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .saveur-resp-bookingbar { margin: 0 16px; max-width: calc(100% - 32px) !important; }
+        }
+      ` }} />
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+        className="relative overflow-hidden"
+        style={{
+          height: '100vh',
+          backgroundColor: '#1C1917',
+          color: '#FFFFFF',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        {/* Diagonal wipe — parallelogram translates uniformly */}
+        {slides.map((slide, i) => {
+          const isActive = saveurActiveSlide === i
+          const isPrev = saveurPrevSlideRef.current === i && !isActive
+
+          const visible = 'polygon(0% 0%, 130% 0%, 130% 100%, -20% 100%)'
+          const hidden  = 'polygon(120% 0%, 250% 0%, 250% 100%, 100% 100%)'
+          const full    = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+
+          return (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                clipPath: isActive ? visible : isPrev ? full : hidden,
+                opacity: isActive || isPrev ? 1 : 0,
+                transition: isActive
+                  ? 'clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1), opacity 0s'
+                  : isPrev
+                    ? 'none'
+                    : 'clip-path 0s 1.3s, opacity 0s 1.3s',
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              }}
+            >
+              {slide.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: slide.bg,
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* Dark overlay with subtle warm tint */}
+        <div {...elementProps(config.id, 'overlay', 'container', 'Overlay')} className="absolute inset-0" style={{ backgroundColor: 'rgba(28, 25, 23, 0.42)', zIndex: 3 }} />
+        {/* Warm gold glow — bottom left */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 4, background: 'radial-gradient(ellipse at 15% 85%, rgba(200, 169, 126, 0.1) 0%, transparent 55%)' }} />
+
+        {/* Content — bottom-left title + subtitle */}
+        <div {...elementProps(config.id, 'centerContent', 'container', 'Hero Content')} className="relative flex flex-col justify-end h-full px-6" style={{ zIndex: 10, paddingBottom: '140px', paddingLeft: 'clamp(20px, 5vw, 80px)' }}>
+          <div ref={saveurTitleRevealRef}>
+            {/* Subtitle above title — sienna, wide tracking */}
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              className="saveur-resp-hero-subtitle"
+              style={{
+                color: '#6B4C3B',
+                fontSize: '13px',
+                fontWeight: 500,
+                letterSpacing: '0.32em',
+                textTransform: 'uppercase',
+                marginBottom: '18px',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+              }}
+            >
+              {subtitle || 'TRAITEUR & CHEF \u00C0 DOMICILE'}
+            </p>
+            {/* H1 title — elegant, warm, with gold accent on last word */}
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              className="saveur-resp-hero-title"
+              style={{
+                color: '#FFFFFF',
+                fontWeight: 300,
+                fontSize: 'clamp(2.875rem, 1.6429rem + 5.4762vw, 5.75rem)',
+                lineHeight: '105%',
+                maxWidth: '860px',
+                textAlign: 'left',
+                marginBottom: '0',
+                marginTop: 0,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {title ? (
+                title
+              ) : (
+                <>
+                  {saveurCurrentSlide.name.split(' ').slice(0, -1).join(' ')}{' '}
+                  <span style={{ color: '#C8A97E', fontWeight: 400 }}>{saveurCurrentSlide.name.split(' ').slice(-1)[0]}</span>
+                </>
+              )}
+            </h1>
+          </div>
+        </div>
+
+        {/* Glassmorphism booking bar at bottom */}
+        <div
+          {...elementProps(config.id, 'bookingBar', 'container', 'Booking Bar')}
+          className="absolute z-10 flex items-center saveur-resp-bookingbar"
+          style={{
+            bottom: '40px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            borderRadius: '999px',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(28, 25, 23, 0.55)',
+            padding: '6px 6px 6px 28px',
+            gap: '0',
+            maxWidth: '760px',
+            width: '90%',
+            border: '1px solid rgba(200, 169, 126, 0.22)',
+          }}
+        >
+          {/* Booking fields */}
+          <div {...elementProps(config.id, 'filtersRow', 'container', 'Booking Fields')} className="flex items-center saveur-resp-filters" style={{ flexShrink: 0 }}>
+            {['Nom', 'Email', "Type d'\u00E9v\u00E9nement"].map((label, i) => (
+              <div
+                key={label}
+                style={{
+                  position: 'relative',
+                  paddingRight: i < 2 ? '14px' : '0',
+                  marginRight: i < 2 ? '14px' : '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                {i < 2 && (
+                  <span className="saveur-resp-filter-divider" style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '1px',
+                    height: '20px',
+                    backgroundColor: 'rgba(200, 169, 126, 0.2)',
+                  }} />
+                )}
+                <span
+                  {...elementProps(config.id, `filters.${i}.label`, 'text')}
+                  style={{
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    fontSize: '14px',
+                    cursor: 'default',
+                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                    userSelect: 'none',
+                    fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                    gap: '6px',
+                  }}
+                >
+                  {label === 'Nom' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  )}
+                  {label === 'Email' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  )}
+                  {label === "Type d'\u00E9v\u00E9nement" && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                  )}
+                  {label}
+                  {label === "Type d'\u00E9v\u00E9nement" && (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '2px', opacity: 0.6 }}><polyline points="6 9 12 15 18 9"/></svg>
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA button */}
+          <div className="saveur-resp-reserve-btn" style={{ flex: '1 1 auto', minWidth: '0', display: 'flex', justifyContent: 'flex-end', marginLeft: '16px' }}>
+            <div
+              {...elementProps(config.id, 'primaryButton', 'button')}
+              role="button"
+              style={{
+                backgroundColor: '#C8A97E',
+                color: '#1C1917',
+                borderRadius: '999px',
+                paddingLeft: '28px',
+                paddingRight: '28px',
+                paddingTop: '12px',
+                paddingBottom: '12px',
+                fontSize: '14px',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.03em',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#D9BB94' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#C8A97E' }}
+            >
+              {saveurBtnLabel}
+            </div>
+          </div>
+        </div>
+
+        {/* Prev button */}
+        <div
+          {...elementProps(config.id, 'prevButton', 'button')}
+          role="button"
+          onClick={saveurGoPrev}
+          className="absolute z-10 flex items-center justify-center saveur-resp-nav-arrows"
+          style={{
+            left: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(200, 169, 126, 0.15)',
+            border: '1px solid rgba(200, 169, 126, 0.22)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(200, 169, 126, 0.32)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(200, 169, 126, 0.15)' }}
+          aria-label="Previous slide"
+        >
+          <span {...elementProps(config.id, 'prevIcon', 'icon', 'Chevron Left')}><ChevronLeft style={{ width: '24px', height: '24px', color: '#C8A97E' }} /></span>
+        </div>
+
+        {/* Next button */}
+        <div
+          {...elementProps(config.id, 'nextButton', 'button')}
+          role="button"
+          onClick={saveurGoNext}
+          className="absolute z-10 flex items-center justify-center saveur-resp-nav-arrows"
+          style={{
+            right: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(200, 169, 126, 0.15)',
+            border: '1px solid rgba(200, 169, 126, 0.22)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(200, 169, 126, 0.32)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(200, 169, 126, 0.15)' }}
+          aria-label="Next slide"
+        >
+          <span {...elementProps(config.id, 'nextIcon', 'icon', 'Chevron Right')}><ChevronRight style={{ width: '24px', height: '24px', color: '#C8A97E' }} /></span>
+        </div>
+
+        {/* Bottom-left meta badge */}
+        <div
+          {...elementProps(config.id, 'slideMeta', 'container', 'Slide Info')}
+          className="absolute z-10"
+          style={{
+            bottom: '100px',
+            left: 'clamp(16px, 4vw, 80px)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(200, 169, 126, 0.1)',
+            borderRadius: '4px',
+            padding: '10px 18px',
+            border: '1px solid rgba(200, 169, 126, 0.2)',
+          }}
+        >
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            <span
+              {...elementProps(config.id, `slides.${saveurActiveSlide}.name`, 'text')}
+              style={{ fontSize: 'clamp(13px, 1.5vw, 16px)', fontWeight: 400, color: '#FFFFFF', letterSpacing: '0.01em' }}
+            >
+              {saveurCurrentSlide.name}
+            </span>
+            <span {...elementProps(config.id, 'slideDivider', 'text', 'Divider')} style={{ color: 'rgba(255, 255, 255, 0.3)', fontSize: '14px' }}>
+              &middot;
+            </span>
+            <span
+              {...elementProps(config.id, `slides.${saveurActiveSlide}.style`, 'text')}
+              className="flex items-center"
+              style={{ color: '#C8A97E', fontSize: '13px', gap: '4px', fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase' }}
+            >
+              {saveurCurrentSlide.style}
+            </span>
+          </div>
+        </div>
+
+        {/* Progress bar at very bottom */}
+        <div
+          {...elementProps(config.id, 'progressBar', 'container', 'Progress Bar')}
+          className="absolute z-10"
+          style={{
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            backgroundColor: 'rgba(200, 169, 126, 0.15)',
+          }}
+        >
+          <div
+            ref={saveurProgressRef}
+            style={{
+              height: '100%',
+              backgroundColor: '#C8A97E',
+              width: '0%',
+              transition: 'width 5s linear',
+            }}
+          />
+        </div>
+
+        {/* Bottom-right slide counter dots */}
+        <div
+          {...elementProps(config.id, 'slideNav', 'container', 'Slide Nav')}
+          className="absolute z-10 flex"
+          style={{ bottom: '100px', right: 'clamp(16px, 4vw, 80px)', gap: '8px', alignItems: 'center' }}
+        >
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              {...elementProps(config.id, `slides.${i}.dot`, 'button')}
+              role="button"
+              onClick={() => setSaveurActiveSlide(i)}
+              style={{
+                width: saveurActiveSlide === i ? '28px' : '6px',
+                height: '6px',
+                borderRadius: '999px',
+                backgroundColor: saveurActiveSlide === i ? '#C8A97E' : 'rgba(255, 255, 255, 0.25)',
+                cursor: 'pointer',
+                transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease',
+              }}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+      </>
+    )
+  }
+
   // fallback → startup
   return <HeroSection config={{ ...config, variant: 'startup' }} isEditing={isEditing} />
 }
@@ -5509,7 +5943,7 @@ export const heroMeta = {
   type: 'hero',
   label: 'Hero',
   icon: '⚡',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

@@ -3793,6 +3793,239 @@ export function GallerySection({ config }: { config: SectionConfig }) {
     return <ZmrShowcase config={config} images={images} />
   }
 
+  // ═══════════════════════════════════════════════════════
+  // SAVEUR-CREATIONS — Traiteur / Private Chef gallery : 3:4 cards,
+  // brown black bg (#1C1917), gold glassmorphism badges, scroll-reveal
+  // ═══════════════════════════════════════════════════════
+  if (variant === 'saveur-creations') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Cocktail Prestige', category: 'Cocktail', description: 'Un cocktail d\'exception pour marquer les esprits — bouchées signatures, boissons artisanales et mise en scène soignée.', image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=85' },
+      { id: '2', title: 'Dîner Gastronomique', category: 'Gastronomique', description: 'Un voyage culinaire en plusieurs actes, entre produits de saison sublimés et techniques de haute gastronomie.', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=85' },
+      { id: '3', title: 'Buffet Royal', category: 'Buffet', description: 'Une table généreuse et raffinée, où chaque mets raconte une histoire et invite à la convivialité la plus élégante.', image: 'https://images.unsplash.com/photo-1555244162-803834f70033?w=800&q=85' },
+      { id: '4', title: 'Mariage Champêtre', category: 'Mariage', description: 'Le menu de votre plus beau jour — mets délicats, accords parfaits et service attentionné pour 200 convives et plus.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&q=85' },
+      { id: '5', title: 'Brunch Dominical', category: 'Brunch', description: 'La douceur d\'un dimanche matin élevée au rang d\'art — viennoiseries maison, œufs cuisinés minute et fruits de saison.', image: 'https://images.unsplash.com/photo-1551218808-94e220e084d2?w=800&q=85' },
+      { id: '6', title: 'Gala Corporate', category: 'Corporate', description: 'Un dîner corporate à la hauteur de vos ambitions — standing irréprochable, coordination millimétrée, résultats mémorables.', image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=85' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; category?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          category: item.category ?? defaultCards[i % 6].category,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image ?? defaultCards[i % 6].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Créations Section')}
+        style={{
+          background: '#1C1917',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <style>{`
+          .saveur-card:hover .saveur-img-zoom { transform: scale(1.05) !important; }
+          .saveur-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
+          .saveur-img-dezoom.revealed { transform: scale(1); }
+          .saveur-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+          .saveur-btn:hover .saveur-btn-fill { transform: translateX(0); }
+          .saveur-btn:hover .saveur-btn-label { color: #1C1917; }
+          .saveur-btn-label { transition: color 0.4s; }
+          .saveur-link { color: transparent; transition: color 0.3s; font-size: 14px; font-weight: 500; }
+          .saveur-card:hover .saveur-link { color: #C8A97E; }
+          @media (max-width: 768px) {
+            .saveur-resp-creations-grid { grid-template-columns: 1fr !important; }
+            .saveur-resp-creations-header { flex-direction: column; align-items: flex-start !important; }
+          }
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .saveur-resp-creations-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+        `}</style>
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end saveur-resp-creations-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#FFFFFF',
+                }}
+              >
+                {content.title ?? 'Nos créations'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="/creations"
+              className="saveur-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#FFFFFF', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="saveur-btn-label relative" style={{ zIndex: 10 }}>Voir toutes les créations</span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#C8A97E',
+                  color: '#1C1917',
+                  borderRadius: '4px',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
+                <span className="saveur-btn-fill" style={{ display: 'block', background: '#C8A97E', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Grid */}
+          <div {...elementProps(config.id, 'grid', 'container', 'Créations Grid')} className="grid grid-cols-3 saveur-resp-creations-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="saveur-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.saveur-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="saveur-img-zoom saveur-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="saveur-img-zoom saveur-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #2A1F1A, #1C1917)', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-8 h-8 text-white/40" />
+                    </div>
+                  )}
+                  {/* Glassmorphism badge: category */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      right: '16px',
+                      background: 'rgba(200, 169, 126, 0.25)',
+                      backdropFilter: 'blur(15px)',
+                      WebkitBackdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      padding: '6px 14px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#C8A97E',
+                      zIndex: 2,
+                      border: '1px solid rgba(200, 169, 126, 0.4)',
+                    }}
+                  >
+                    {card.category}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#FFFFFF',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: 'rgba(255,255,255,0.45)',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                  <span
+                    {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                    className="saveur-link"
+                  >
+                    Découvrir la prestation &rarr;
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback to startup-grid
   return (
     <>
@@ -4560,6 +4793,7 @@ export const galleryMeta = {
     'encre-portfolio',
     'serenite-soins',
     'pulse-events',
+    'saveur-creations',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

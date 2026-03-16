@@ -17,6 +17,7 @@ const POPULAR_IDS = [
   'tatoueur-encre',
   'spa-serenite',
   'dj-pulse',
+  'traiteur-saveur',
 ]
 
 export function PopularTemplates() {
