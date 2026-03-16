@@ -13,6 +13,7 @@ const POPULAR_IDS = [
   'restaurant-braise',
   'coach-forge',
   'coiffeur-ciseaux',
+  'architecte-atelier',
 ]
 
 export function PopularTemplates() {
@@ -46,7 +47,7 @@ export function PopularTemplates() {
   return (
     <section className="mb-10">
       <h2 className="text-lg font-semibold mb-4">Templates populaires</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {popular.map(template => {
           const universe = UNIVERSE_COLORS[template.universe]
           return (

@@ -361,6 +361,12 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
     return <CiseauxHeader config={config} logo={logo} ctaLabel={ctaLabel} links={links} />
   }
 
+  // ─── VARIANT: atelier ───
+  // Architecte d'intérieur premium : transparent glassmorphism header, off-canvas fullscreen menu, sand/bronze accent
+  if (variant === 'atelier') {
+    return <AtelierHeader config={config} logo={logo} ctaLabel={ctaLabel} links={links} />
+  }
+
   // fallback → startup
   return <SiteHeaderSection config={{ ...config, variant: 'startup' }} />
 }
@@ -3118,11 +3124,371 @@ function CiseauxHeader({ config, logo, ctaLabel, links }: { config: SectionConfi
   )
 }
 
+// ─── Atelier Off-Canvas Menu (Architecte d'intérieur Premium) ───
+
+function AtelierHeader({ config, logo, ctaLabel, links }: { config: SectionConfig; logo: string; ctaLabel?: string; links: NavLink[] }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = '' }
+    }
+  }, [menuOpen])
+
+  // Close on Escape
+  useEffect(() => {
+    if (!menuOpen) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [menuOpen])
+
+  const toggleMenu = useCallback(() => setMenuOpen(prev => !prev), [])
+
+  // Default nav links for interior architect
+  const menuLinks: { label: string; href: string }[] = links.length > 0
+    ? links.map(l => ({ label: l.label, href: l.href }))
+    : [
+        { label: 'Projets', href: '/projets' },
+        { label: 'Services', href: '/services' },
+        { label: '\u00C0 propos', href: '/a-propos' },
+        { label: 'R\u00E9alisations', href: '/realisations' },
+        { label: 'Contact', href: '/contact' },
+      ]
+
+  const socials = [
+    { label: 'Instagram', href: '#', icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+    )},
+    { label: 'Pinterest', href: '#', icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345c-.091.379-.293 1.194-.333 1.361-.052.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+    )},
+    { label: 'Houzz', href: '#', icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7.5V22h7v-7h6v7h7V7.5L12 2zm0 2.236l8 4.618V20h-3v-7H7v7H4V8.854l8-4.618z"/></svg>
+    )},
+  ]
+
+  return (
+    <>
+      {/* Atelier header responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .atelier-resp-menu-grid { grid-template-columns: 1fr !important; }
+          .atelier-resp-menu-right { display: none !important; }
+        }
+      ` }} />
+      {/* ─── NAVBAR ─── */}
+      <header
+        {...elementProps(config.id, 'wrapper', 'container', 'Header')}
+        className={cn('absolute top-0 left-0 w-full flex items-center')}
+        style={{
+          zIndex: 888,
+          backgroundColor: 'transparent',
+          minHeight: '72px',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <div
+          {...elementProps(config.id, 'navGrid', 'container', 'Nav Grid')}
+          className={cn('grid items-center w-full')}
+          style={{
+            gridTemplateColumns: '.375fr minmax(min-content, max-content)',
+            justifyContent: 'space-between',
+            gap: '16px',
+          }}
+        >
+          {/* LEFT — Logo in sand color */}
+          <div
+            {...elementProps(config.id, 'logo', 'image')}
+            className="tracking-wide"
+            style={{
+              maxWidth: '160px',
+              fontSize: '18px',
+              fontWeight: 500,
+              color: '#C4B5A0',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+            }}
+          >
+            {renderLogo(logo, 'font-medium text-lg tracking-wider')}
+          </div>
+
+          {/* RIGHT — Menu button (glassmorphism sand/bronze tint) */}
+          <div
+            {...elementProps(config.id, 'ctaLabel', 'button')}
+            role="button"
+            onClick={toggleMenu}
+            className={cn('flex items-center cursor-pointer')}
+            style={{
+              borderRadius: '999px',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              backgroundColor: 'rgba(139, 115, 85, 0.25)',
+              color: '#FFFFFF',
+              paddingLeft: '20px',
+              paddingRight: '20px',
+              paddingTop: '10px',
+              paddingBottom: '10px',
+              fontSize: '14px',
+              fontWeight: 500,
+              fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+              border: '1px solid rgba(196, 181, 160, 0.2)',
+              gap: '10px',
+              whiteSpace: 'nowrap',
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              transition: 'background-color 0.3s ease',
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(139, 115, 85, 0.4)' }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(139, 115, 85, 0.25)' }}
+          >
+            <span {...elementProps(config.id, 'menuLabel', 'text', 'Menu Label')}>{ctaLabel || 'Menu'}</span>
+            {/* Hamburger icon — animated lines */}
+            <span
+              {...elementProps(config.id, 'menuIcon', 'icon', 'Menu Icon')}
+              className={cn('flex flex-col items-center')}
+              style={{ gap: '4px' }}
+            >
+              <span style={{
+                width: '18px', height: '1.5px', display: 'block', backgroundColor: '#C4B5A0',
+                transition: 'transform 0.3s ease, opacity 0.3s ease',
+                transform: menuOpen ? 'translateY(2.75px) rotate(45deg)' : 'none',
+              }} />
+              <span style={{
+                width: '18px', height: '1.5px', display: 'block', backgroundColor: '#C4B5A0',
+                transition: 'transform 0.3s ease, opacity 0.3s ease',
+                transform: menuOpen ? 'translateY(-2.75px) rotate(-45deg)' : 'none',
+              }} />
+            </span>
+          </div>
+        </div>
+      </header>
+
+      {/* ─── OFF-CANVAS MENU OVERLAY ─── */}
+      <div
+        {...elementProps(config.id, 'offCanvas', 'container', 'Off-Canvas Menu')}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          visibility: menuOpen ? 'visible' : 'hidden',
+          opacity: menuOpen ? 1 : 0,
+          transition: 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s',
+          pointerEvents: menuOpen ? 'auto' : 'none',
+        }}
+      >
+        {/* Dark charcoal background with glassmorphism */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundColor: 'rgba(26, 26, 26, 0.97)',
+            backdropFilter: 'blur(30px)',
+            WebkitBackdropFilter: 'blur(30px)',
+          }}
+        />
+
+        {/* Menu content grid */}
+        <div
+          {...elementProps(config.id, 'offCanvasGrid', 'container', 'Menu Grid')}
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+          }}
+          className="atelier-resp-menu-grid"
+        >
+          {/* LEFT COLUMN — Navigation */}
+          <div
+            {...elementProps(config.id, 'offCanvasNav', 'container', 'Menu Navigation')}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              padding: 'clamp(20px, 5vw, 60px)',
+              paddingTop: 'clamp(40px, 8vw, 80px)',
+            }}
+          >
+            {/* Top — Logo + Close */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '48px' }}>
+              <div
+                {...elementProps(config.id, 'offCanvasLogo', 'text', 'Menu Logo')}
+                style={{
+                  fontSize: '18px',
+                  fontWeight: 500,
+                  color: '#C4B5A0',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+                }}
+              >
+                {renderLogo(logo)}
+              </div>
+              <div
+                {...elementProps(config.id, 'closeButton', 'button', 'Close Button')}
+                role="button"
+                onClick={toggleMenu}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  borderRadius: '999px',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  backgroundColor: 'rgba(139, 115, 85, 0.25)',
+                  color: '#C4B5A0',
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                  paddingTop: '10px',
+                  paddingBottom: '10px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  border: '1px solid rgba(196, 181, 160, 0.2)',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  transition: 'background-color 0.3s ease',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(139, 115, 85, 0.4)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(139, 115, 85, 0.25)' }}
+              >
+                <span>Fermer</span>
+                <X size={18} strokeWidth={1.5} />
+              </div>
+            </div>
+
+            {/* Navigation links — staggered slide-in from left */}
+            <nav
+              {...elementProps(config.id, 'offCanvasLinks', 'container', 'Menu Links')}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+                flex: 1,
+              }}
+            >
+              {menuLinks.map((link, i) => (
+                <a
+                  key={link.label}
+                  {...elementProps(config.id, `menuLinks.${i}`, 'link', link.label)}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  style={{
+                    fontSize: 'clamp(28px, 5vw, 52px)',
+                    fontWeight: 400,
+                    color: '#FFFFFF',
+                    textDecoration: 'none',
+                    padding: '8px 0',
+                    transition: 'color 0.3s, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s',
+                    display: 'block',
+                    fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+                    letterSpacing: '-0.01em',
+                    lineHeight: 1.15,
+                    transform: menuOpen ? 'translateX(0)' : 'translateX(-30px)',
+                    opacity: menuOpen ? 1 : 0,
+                    transitionDelay: `${i * 0.05}s`,
+                  }}
+                  onMouseEnter={(e) => { (e.target as HTMLElement).style.color = '#C4B5A0' }}
+                  onMouseLeave={(e) => { (e.target as HTMLElement).style.color = '#FFFFFF' }}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+
+            {/* Bottom — Social Icons */}
+            <div
+              {...elementProps(config.id, 'offCanvasBottom', 'container', 'Menu Bottom')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                paddingTop: '32px',
+                borderTop: '1px solid rgba(196, 181, 160, 0.12)',
+              }}
+            >
+              {/* Social icons */}
+              <div
+                {...elementProps(config.id, 'offCanvasSocials', 'container', 'Social Icons')}
+                style={{ display: 'flex', gap: '16px' }}
+              >
+                {socials.map((s, i) => (
+                  <a
+                    key={s.label}
+                    {...elementProps(config.id, `social.${i}`, 'link', s.label)}
+                    href={s.href}
+                    style={{
+                      color: 'rgba(196, 181, 160, 0.5)',
+                      transition: 'color 0.3s, border-color 0.3s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      border: '1px solid rgba(196, 181, 160, 0.15)',
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#C4B5A0'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(196, 181, 160, 0.4)' }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(196, 181, 160, 0.5)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(196, 181, 160, 0.15)' }}
+                  >
+                    {s.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN — Decorative interior design image */}
+          <div
+            {...elementProps(config.id, 'offCanvasImage', 'image', 'Menu Image')}
+            className="atelier-resp-menu-right"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              backgroundColor: '#1A1A1A',
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=85"
+              alt="Architecture intérieure"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                opacity: 0.7,
+                transform: menuOpen ? 'scale(1)' : 'scale(1.1)',
+                transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            />
+            {/* Sand/bronze tint overlay */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.55) 0%, rgba(139, 115, 85, 0.15) 60%, transparent 100%)',
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export const siteHeaderMeta = {
   type: 'site-header',
   label: 'Header',
   icon: '🧭',
-  variants: ['startup', 'corporate', 'luxe-transparent', 'luxe', 'creative', 'ecommerce', 'glass', 'nacre', 'brixsa', 'obscura', 'zmr-agency', 'braise', 'forge', 'ciseaux'],
+  variants: ['startup', 'corporate', 'luxe-transparent', 'luxe', 'creative', 'ecommerce', 'glass', 'nacre', 'brixsa', 'obscura', 'zmr-agency', 'braise', 'forge', 'ciseaux', 'atelier'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

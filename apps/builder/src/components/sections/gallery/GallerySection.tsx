@@ -2849,6 +2849,239 @@ export function GallerySection({ config }: { config: SectionConfig }) {
     )
   }
 
+  // ═══════════════════════════════════════════
+  // ATELIER — Interior Architecture Projects Grid
+  // ═══════════════════════════════════════════
+
+  if (variant === 'atelier-projets') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Appartement Haussmannien', category: 'R\u00e9sidentiel', description: 'R\u00e9novation compl\u00e8te d\'un appartement parisien de 120m\u00b2, m\u00ealant moulures classiques et mobilier contemporain.', image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&q=85' },
+      { id: '2', title: 'Loft Industriel', category: 'Commercial', description: 'Transformation d\'un ancien espace industriel en loft de caract\u00e8re, conservant les \u00e9l\u00e9ments architecturaux d\'origine.', image: 'https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=800&q=85' },
+      { id: '3', title: 'Suite H\u00f4teli\u00e8re', category: 'H\u00f4tellerie', description: 'Conception d\'une suite de luxe alliant confort absolu et esth\u00e9tique raffin\u00e9e pour une exp\u00e9rience sensorielle unique.', image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=85' },
+      { id: '4', title: 'Bureau Design', category: 'Bureau', description: 'Am\u00e9nagement d\'un espace de travail inspirant, favorisant la cr\u00e9ativit\u00e9 et le bien-\u00eatre des collaborateurs.', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=85' },
+      { id: '5', title: 'Penthouse Moderne', category: 'Loft', description: 'Design \u00e9pur\u00e9 et mati\u00e8res nobles pour ce penthouse parisien aux volumes exceptionnels et \u00e0 la luminosit\u00e9 optimis\u00e9e.', image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=85' },
+      { id: '6', title: 'Villa M\u00e9diterran\u00e9enne', category: 'Villa', description: 'Int\u00e9rieurs lumineux inspir\u00e9s du bassin m\u00e9diterran\u00e9en, \u00e9quilibre parfait entre tradition locale et modernit\u00e9.', image: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&q=85' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; category?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          category: item.category ?? defaultCards[i % 6].category,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image ?? defaultCards[i % 6].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Réalisations Section')}
+        style={{
+          background: '#1A1A1A',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end atelier-resp-projets-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#FFFFFF',
+                }}
+              >
+                {content.title ?? 'Nos r\u00e9alisations'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="/realisations"
+              className="atelier-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#FFFFFF', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="atelier-btn-label relative" style={{ zIndex: 10 }}>Tous nos projets</span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#C4B5A0',
+                  color: '#1A1A1A',
+                  borderRadius: '4px',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
+                <span className="atelier-btn-fill" style={{ display: 'block', background: '#C4B5A0', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Grid */}
+          <style>{`
+            .atelier-card:hover .atelier-img-zoom { transform: scale(1.05) !important; }
+            .atelier-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
+            .atelier-img-dezoom.revealed { transform: scale(1); }
+            .atelier-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+            .atelier-btn:hover .atelier-btn-fill { transform: translateX(0); }
+            .atelier-btn:hover .atelier-btn-label { color: #1A1A1A; }
+            .atelier-btn-label { transition: color 0.4s; }
+            .atelier-link { color: transparent; transition: color 0.3s; font-size: 14px; font-weight: 500; }
+            .atelier-card:hover .atelier-link { color: #C4B5A0; }
+            @media (max-width: 768px) {
+              .atelier-resp-projets-grid { grid-template-columns: 1fr !important; }
+              .atelier-resp-projets-header { flex-direction: column; align-items: flex-start !important; }
+            }
+            @media (min-width: 769px) and (max-width: 1024px) {
+              .atelier-resp-projets-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            }
+          `}</style>
+          <div {...elementProps(config.id, 'grid', 'container', 'Projets Grid')} className="grid grid-cols-3 atelier-resp-projets-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="atelier-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.atelier-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="atelier-img-zoom atelier-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="atelier-img-zoom atelier-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #2A2A2A, #1A1A1A)', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-8 h-8 text-white/40" />
+                    </div>
+                  )}
+                  {/* Glass badge: category */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      right: '16px',
+                      background: 'rgba(196, 181, 160, 0.25)',
+                      backdropFilter: 'blur(15px)',
+                      WebkitBackdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      padding: '6px 14px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#FFFFFF',
+                      zIndex: 2,
+                      border: '1px solid rgba(196, 181, 160, 0.3)',
+                    }}
+                  >
+                    {card.category}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#FFFFFF',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: '#8B8B8B',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                  <span
+                    {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                    className="atelier-link"
+                  >
+                    Voir le projet &rarr;
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // ═══════════════════════════════════════════════════════
   // ZMR-AGENCY — Grille talent modeling : cards 3:4, fond noir,
   // nom sous l'image, hover image swap, style minimaliste
@@ -3628,6 +3861,7 @@ export const galleryMeta = {
     'ciseaux-realisations',
     'zmr-agency-grid',
     'zmr-showcase',
+    'atelier-projets',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

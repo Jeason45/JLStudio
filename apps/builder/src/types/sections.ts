@@ -19,7 +19,7 @@ export interface ImageConfig {
 // HERO
 // ─────────────────────────────────────────────
 
-export type HeroVariant = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass' | 'obscura' | 'canopy' | 'nacre' | 'brixsa' | 'brixsa-page' | 'braise' | 'forge' | 'ciseaux' | 'zmr-agency' | 'zmr-talent-profile'
+export type HeroVariant = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass' | 'obscura' | 'canopy' | 'nacre' | 'brixsa' | 'brixsa-page' | 'braise' | 'forge' | 'ciseaux' | 'zmr-agency' | 'zmr-talent-profile' | 'atelier'
 
 export interface HeroContent {
   eyebrow?: string
@@ -68,6 +68,7 @@ export type FeaturesVariant =
   | 'zmr-measurements'
   | 'zmr-experience'
   | 'canopy-values'
+  | 'atelier-accordion'
 
 export interface FeatureItem {
   id: string
@@ -915,6 +916,7 @@ export type SliderVariant =
   | 'braise-parallax'
   | 'forge-parallax'
   | 'ciseaux-parallax'
+  | 'atelier-parallax'
 
 export type SliderEffect = 'slide' | 'fade' | 'scale'
 

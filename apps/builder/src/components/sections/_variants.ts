@@ -21,6 +21,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'braise', label: 'Braise — Restaurant', description: 'Slider plein \u00E9cran, noir profond, or chaud, gastronomique', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'forge', label: 'Forge — Coach Sportif', description: 'Slider plein \u00E9cran, noir profond, orange \u00E9lectrique, fitness', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ciseaux', label: 'Ciseaux — Salon de Coiffure', description: 'Slider plein \u00E9cran, noir profond, cuivr\u00E9 rose gold, coiffure', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'atelier', label: 'Atelier — Architecte d\u2019int\u00E9rieur', description: 'Slider plein \u00E9cran, charcoal, sable/bronze, architecture int\u00E9rieure', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   features: [
     // Startup / SaaS
@@ -53,6 +54,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'braise-accordion', label: 'Braise — Accord\u00E9on Menu', description: 'Accord\u00E9on horizontal, 3 panneaux plats, restaurant gastronomique, noir/or', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'forge-accordion', label: 'Forge — Accord\u00E9on Coach', description: 'Accord\u00E9on horizontal, 3 panneaux, coach sportif, noir/orange', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'ciseaux-accordion', label: 'Ciseaux — Accord\u00E9on Coiffure', description: 'Accord\u00E9on horizontal, 3 panneaux, salon de coiffure, noir/cuivr\u00E9', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'atelier-accordion', label: 'Atelier — Accord\u00E9on Services', description: 'Accord\u00E9on horizontal, 3 panneaux, architecture int\u00E9rieure, charcoal/sable', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   cta: [
     // Startup
@@ -144,6 +146,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'braise-featured', label: 'Braise — T\u00E9moignages', description: '50/50 initiales or + citation, noir profond/or chaud, restaurant', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'forge-featured', label: 'Forge — T\u00E9moignages', description: '50/50 initiales orange + citation, noir profond/orange, coach sportif', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ciseaux-featured', label: 'Ciseaux — T\u00E9moignages', description: '50/50 initiales cuivr\u00E9es + citation, noir profond/cuivr\u00E9, salon coiffure', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'atelier-featured', label: 'Atelier — T\u00E9moignages', description: '50/50 initiales sable + citation, charcoal/sable, architecte int\u00E9rieur', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   pricing: [
     // Startup
@@ -301,6 +304,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'braise-menu', label: 'Braise — Carte du Restaurant', description: 'Grid 3 colonnes, cards plats, noir profond/or, glassmorphism', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'forge-programs', label: 'Forge — Programmes', description: 'Grid 3 colonnes, cards programmes fitness, noir/orange', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ciseaux-realisations', label: 'Ciseaux — R\u00E9alisations', description: 'Grid 3 colonnes, galerie coiffures, noir profond/cuivr\u00E9', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'atelier-projets', label: 'Atelier — Projets', description: 'Grid 3 colonnes, galerie projets architecture int\u00E9rieure, charcoal/sable', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'image-text': [
     { id: 'startup-image-right', label: 'Startup — Image droite', description: 'Indigo, texte + image', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -320,6 +324,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'braise-story', label: 'Braise — Histoire du Chef', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, noir profond/or', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'forge-story', label: 'Forge — Bio du Coach', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, noir profond/orange', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ciseaux-story', label: 'Ciseaux — Histoire du Salon', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, noir profond/cuivr\u00E9', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'atelier-story', label: 'Atelier — Histoire du Studio', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, charcoal/sable, architecte', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'product-grid': [
     { id: 'startup-grid', label: 'Startup — Grille', description: 'Cards produits indigo', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -367,6 +372,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'braise', label: 'Braise — Restaurant', description: 'Transparent, noir profond, or chaud, gastronomique', previewStyle: { background: 'dark', paddingY: 'sm' } },
     { id: 'forge', label: 'Forge — Coach Sportif', description: 'Transparent, noir profond, orange \u00E9lectrique, fitness', previewStyle: { background: 'dark', paddingY: 'sm' } },
     { id: 'ciseaux', label: 'Ciseaux — Salon de Coiffure', description: 'Transparent, noir profond, cuivr\u00E9 rose gold, coiffure', previewStyle: { background: 'dark', paddingY: 'sm' } },
+    { id: 'atelier', label: 'Atelier — Architecte d\u2019int\u00E9rieur', description: 'Transparent, charcoal, sable/bronze, architecture int\u00E9rieure', previewStyle: { background: 'dark', paddingY: 'sm' } },
   ],
   'site-footer': [
     { id: 'startup', label: 'Startup / SaaS', description: 'Moderne, colonnes, status', previewStyle: { background: 'dark', paddingY: 'md' } },
@@ -380,6 +386,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'braise', label: 'Braise — Restaurant', description: 'Logo centr\u00E9, 3 colonnes, noir profond/or, TripAdvisor', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'forge', label: 'Forge — Coach Sportif', description: 'Logo centr\u00E9, 3 colonnes, noir profond/orange, YouTube/TikTok', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ciseaux', label: 'Ciseaux — Salon de Coiffure', description: 'Logo centr\u00E9, 3 colonnes, noir profond/cuivr\u00E9, Pinterest', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'atelier', label: 'Atelier — Architecte d\u2019int\u00E9rieur', description: 'Logo centr\u00E9, 3 colonnes, charcoal/sable, Instagram/Pinterest/Houzz', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   tabs: [
     { id: 'startup-horizontal', label: 'Startup — Horizontal', description: 'Tabs pill indigo, horizontal', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -464,6 +471,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'braise-parallax', label: 'Braise — Parallax Ambiance', description: 'Ambiance restaurant plein \u00E9cran avec parallax, noir profond/or', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'forge-parallax', label: 'Forge — Parallax Training', description: 'Ambiance fitness plein \u00E9cran avec parallax, noir profond/orange', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'ciseaux-parallax', label: 'Ciseaux — Parallax Salon', description: 'Ambiance salon coiffure plein \u00E9cran avec parallax, noir profond/cuivr\u00E9', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'atelier-parallax', label: 'Atelier — Parallax Int\u00E9rieur', description: 'Ambiance architecture int\u00E9rieure plein \u00E9cran avec parallax, charcoal/sable', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   dropdown: [
     { id: 'startup-simple', label: 'Startup — Simple', description: 'Dropdown simple indigo', previewStyle: { background: 'white', paddingY: 'md' } },

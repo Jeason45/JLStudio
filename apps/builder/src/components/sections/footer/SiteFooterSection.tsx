@@ -1490,6 +1490,132 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
     )
   }
 
+  // ─── VARIANT: atelier ───
+  // Univers architecte d'intérieur premium : fond charcoal #1A1A1A, sable #C4B5A0, bronze #8B7355, text-mask hover
+  if (variant === 'atelier') {
+    const headingFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const bodyFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const nearBlack = '#1A1A1A'
+    const white = '#FFFFFF'
+    const sand = '#C4B5A0'
+    const bronze = '#8B7355'
+    const textMuted = 'rgba(196,181,160,0.5)'
+    return (
+      <footer
+        {...elementProps(config.id, 'wrapper', 'container', 'Footer')}
+        className="relative"
+        style={{ backgroundColor: nearBlack, color: white, fontFamily: bodyFont }}
+      >
+        {/* Inject hover animations for text-mask effect */}
+        <style>{`
+          .atelier-link-mask { overflow: hidden; height: 1.5em; position: relative; display: block; }
+          .atelier-link-mask .atelier-text-main { display: block; transition: transform 0.3s ease; }
+          .atelier-link-mask .atelier-text-alt { position: absolute; top: 100%; left: 0; display: block; transition: transform 0.3s ease; }
+          .atelier-link-mask:hover .atelier-text-main,
+          .atelier-link-mask:hover .atelier-text-alt { transform: translateY(-100%); }
+          @media (max-width: 768px) {
+            .atelier-resp-footer-cols { flex-direction: column !important; gap: 32px !important; }
+          }
+        `}</style>
+
+        <div {...elementProps(config.id, 'footerInner', 'container', 'Footer Inner')} style={{ paddingTop: 'clamp(60px, 10vw, 100px)', paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)' }}>
+          {/* Logo + sand separator */}
+          <div {...elementProps(config.id, 'brandArea', 'container', 'Brand Area')} className="flex flex-col items-center" style={{ marginBottom: 48 }}>
+            <p
+              {...elementProps(config.id, 'logo', 'image')}
+              style={{ fontFamily: headingFont, fontSize: 32, fontWeight: 600, color: sand, letterSpacing: '0.05em', marginBottom: 20 }}
+            >
+              {renderLogo(logo)}
+            </p>
+            <div style={{ width: 60, height: 1, backgroundColor: bronze }} />
+          </div>
+
+          {/* 3 Columns */}
+          <div {...elementProps(config.id, 'columnsArea', 'container', 'Columns Area')} className="flex flex-row justify-center atelier-resp-footer-cols" style={{ gap: 'clamp(40px, 8vw, 120px)', paddingBottom: 48 }}>
+            {columns.map((col, ci) => (
+              <div key={col.id || `col-${ci}`} className="flex flex-col" style={{ minWidth: 140 }}>
+                <p
+                  {...elementProps(config.id, `columns.${ci}.title`, 'heading')}
+                  style={{ fontFamily: headingFont, fontSize: 13, fontWeight: 600, color: bronze, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}
+                >
+                  {col.title}
+                </p>
+                <div className="flex flex-col" style={{ gap: 6 }}>
+                  {col.links.map((link, li) => (
+                    <a
+                      key={link.id || `${ci}-${li}`}
+                      {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')}
+                      href={link.href}
+                      className="atelier-link-mask"
+                      style={{ color: sand, textDecoration: 'none', fontSize: 14, fontWeight: 400 }}
+                    >
+                      <span className="atelier-text-main">{link.label}</span>
+                      <span className="atelier-text-alt">{link.label}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          {...elementProps(config.id, 'bottomBar', 'container', 'Footer Bottom')}
+          className="flex flex-wrap items-center justify-between"
+          style={{ borderTop: `1px solid rgba(139,115,85,0.25)`, padding: '24px clamp(20px, 5vw, 60px)', gap: 16 }}
+        >
+          <p
+            {...elementProps(config.id, 'copyright', 'text')}
+            style={{ color: textMuted, fontSize: 13 }}
+          >
+            {content.copyright ?? `\u00A9 ${new Date().getFullYear()} Atelier. Tous droits r\u00E9serv\u00E9s.`}
+          </p>
+          {/* Social icons */}
+          <div {...elementProps(config.id, 'socialsRow', 'container', 'Social Icons')} className="flex flex-row items-center" style={{ gap: 16 }}>
+            {/* Instagram */}
+            <a
+              {...elementProps(config.id, 'socials.instagram', 'link')}
+              href={socials.instagram ?? '#'}
+              aria-label="Instagram"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = bronze }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <circle cx="12" cy="12" r="5" />
+                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+              </svg>
+            </a>
+            {/* Pinterest */}
+            <a
+              {...elementProps(config.id, 'socials.pinterest', 'link')}
+              href={(socials as Record<string, string | undefined>).pinterest ?? '#'}
+              aria-label="Pinterest"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = bronze }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.373 23.18c-.1-.937-.19-2.376.04-3.4.21-.93 1.353-5.73 1.353-5.73s-.346-.69-.346-1.71c0-1.6.928-2.8 2.083-2.8.983 0 1.457.737 1.457 1.62 0 .988-.63 2.464-.953 3.833-.27 1.143.574 2.074 1.703 2.074 2.043 0 3.613-2.249 3.613-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+            </a>
+            {/* Houzz */}
+            <a
+              {...elementProps(config.id, 'socials.houzz', 'link')}
+              href={(socials as Record<string, string | undefined>).houzz ?? '#'}
+              aria-label="Houzz"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = bronze }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 2L3 8.5V22h7v-7h5v7h6V8.5L12.5 2zm5 18h-3v-7H9.5v7h-3V9.5l6-4.2 5 3.5V20z"/></svg>
+            </a>
+          </div>
+        </div>
+      </footer>
+    )
+  }
+
   // fallback → startup
   return <SiteFooterSection config={{ ...config, variant: 'startup' }} />
 }
@@ -1498,7 +1624,7 @@ export const siteFooterMeta = {
   type: 'site-footer',
   label: 'Footer',
   icon: '🔻',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency', 'atelier'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

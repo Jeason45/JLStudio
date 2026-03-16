@@ -1969,6 +1969,193 @@ function CiseauxFeatured({ content, items, sectionId }: { content: Partial<Testi
 }
 
 // ─────────────────────────────────────────────
+// ATELIER — Interior Architecture Featured Testimonial
+// ─────────────────────────────────────────────
+
+function AtelierFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const defaultQuotes = [
+    'Notre appartement a \u00e9t\u00e9 compl\u00e8tement m\u00e9tamorphos\u00e9. L\u2019\u00e9quipe a su capturer notre vision et la transcender. Chaque pi\u00e8ce raconte une histoire.',
+    'Un suivi impeccable du d\u00e9but \u00e0 la fin. Le r\u00e9sultat d\u00e9passe nos attentes les plus folles.',
+    'Ils ont transform\u00e9 notre h\u00f4tel en une exp\u00e9rience sensorielle unique. Nos clients sont \u00e9merveill\u00e9s.',
+  ]
+
+  const defaultAuthors = [
+    { name: 'Marie & Philippe D.', role: 'R\u00e9novation Haussmannien' },
+    { name: 'Sophie L.', role: 'Am\u00e9nagement Loft' },
+    { name: 'Antoine R.', role: 'Suite H\u00f4teli\u00e8re' },
+  ]
+
+  const quotes = items.length > 0
+    ? items.map((item, i) => item.quote || defaultQuotes[i % defaultQuotes.length])
+    : defaultQuotes
+
+  const authors = items.length > 0
+    ? items.map((item, i) => ({ name: item.author || defaultAuthors[i % defaultAuthors.length].name, role: item.role || defaultAuthors[i % defaultAuthors.length].role }))
+    : defaultAuthors
+
+  const total = quotes.length
+
+  const goPrev = () => setActiveIndex((prev) => (prev - 1 + total) % total)
+  const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % total)
+    }, 7000)
+    return () => clearInterval(timer)
+  }, [total])
+
+  return (
+    <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#1A1A1A', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .atelier-testimonial-split { flex-direction: column !important; }
+          .atelier-testimonial-split > div { flex: 1 1 100% !important; min-height: 50vh; }
+        }
+      `}</style>
+      <div {...elementProps(sectionId, 'splitLayout', 'container', 'Split Layout')} className="atelier-testimonial-split flex flex-row w-full" style={{ minHeight: '620px' }}>
+        {/* LEFT — Quote (50%) */}
+        <div {...elementProps(sectionId, 'contentPanel', 'container', 'Content Panel')} className="flex flex-col" style={{ flex: '1 1 50%', backgroundColor: '#F8F6F3', color: '#1A1A1A', padding: '60px' }}>
+          {/* Top label */}
+          <p
+            {...elementProps(sectionId, 'eyebrow', 'text')}
+            style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C4B5A0', marginBottom: 'auto' }}
+          >
+            {content.eyebrow || content.title || 'T\u00e9moignages'}
+          </p>
+
+          {/* Main content */}
+          <div className="flex flex-col" style={{ maxWidth: '536px', marginTop: 'auto', marginLeft: 'auto' }}>
+            {/* Quote text wrap */}
+            <div style={{ marginTop: 'auto', marginBottom: '40px', marginLeft: 'auto' }}>
+              {quotes.map((quote, i) => (
+                <div key={items[i]?.id ?? i} style={{ display: i === activeIndex ? 'block' : 'none' }}>
+                  <p
+                    {...elementProps(sectionId, `items.${i}.quote`, 'text')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
+                      fontWeight: 400,
+                      fontStyle: 'italic',
+                      lineHeight: '135%',
+                      color: '#1A1A1A',
+                    }}
+                  >
+                    &ldquo;{quote}&rdquo;
+                  </p>
+                  {/* Author */}
+                  <div style={{ marginTop: '24px' }}>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.author`, 'text')}
+                      style={{ fontSize: '16px', fontWeight: 600, color: '#1A1A1A' }}
+                    >
+                      {authors[i]?.name}
+                    </p>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.role`, 'text')}
+                      style={{ fontSize: '14px', fontWeight: 400, color: '#8B7355', marginTop: '4px' }}
+                    >
+                      {authors[i]?.role}
+                    </p>
+                    {/* Sand stars */}
+                    <div style={{ display: 'flex', gap: '4px', marginTop: '12px' }}>
+                      {Array.from({ length: 5 }).map((_, s) => (
+                        <span key={s} style={{ color: '#C4B5A0', fontSize: '14px' }}>&#9733;</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigation dots + arrows */}
+            {total > 1 && (
+              <div {...elementProps(sectionId, 'navDots', 'container', 'Nav Dots')} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                {Array.from({ length: total }).map((_, i) => (
+                  <div
+                    key={i}
+                    role="button"
+                    onClick={() => setActiveIndex(i)}
+                    style={{
+                      width: i === activeIndex ? '32px' : '8px',
+                      height: '8px',
+                      borderRadius: '4px',
+                      backgroundColor: i === activeIndex ? '#C4B5A0' : 'rgba(26, 26, 26, 0.2)',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                    }}
+                  />
+                ))}
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={goPrev}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'transparent', border: '1px solid rgba(139, 115, 85, 0.4)', color: '#8B7355', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                  </button>
+                  <button
+                    onClick={goNext}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#8B7355', border: '1px solid #8B7355', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT — Large Initial / Photo (50%) */}
+        <div {...elementProps(sectionId, 'imagePanel', 'container', 'Initials Panel')} className="relative overflow-hidden flex items-center justify-center" style={{ flex: '1 1 50%', backgroundColor: '#1A1A1A' }}>
+          {Array.from({ length: total }).map((_, i) => {
+            const item = items[i]
+            const initial = (item?.author || authors[i]?.name || 'M').charAt(0).toUpperCase()
+            return (
+              <div
+                key={item?.id ?? i}
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  backgroundColor: '#1A1A1A',
+                  opacity: i === activeIndex ? 1 : 0,
+                  zIndex: i === activeIndex ? 2 : 0,
+                  transition: 'opacity 0.6s ease',
+                }}
+              >
+                {item?.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    {...elementProps(sectionId, `items.${i}.avatar`, 'image')}
+                    src={item.avatar}
+                    alt={item.author || ''}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(8rem, 6rem + 10vw, 16rem)',
+                      fontWeight: 700,
+                      color: '#C4B5A0',
+                      lineHeight: 1,
+                      userSelect: 'none',
+                      opacity: 0.9,
+                    }}
+                  >
+                    {initial}
+                  </span>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────
 // SLIDER variants (one per universe) — embla carousel
 // ─────────────────────────────────────────────
 
@@ -2110,6 +2297,7 @@ const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsConten
   'braise-featured': BraiseFeatured,
   'forge-featured': ForgeFeatured,
   'ciseaux-featured': CiseauxFeatured,
+  'atelier-featured': AtelierFeatured,
 }
 
 export function TestimonialsSection({ config }: TestimonialsSectionProps) {
@@ -2136,6 +2324,7 @@ export function TestimonialsSection({ config }: TestimonialsSectionProps) {
     braise: '#C8A96E',
     forge: '#FF4D00',
     ciseaux: '#B76E79',
+    atelier: '#C4B5A0',
   }
   const accent = accentColor ?? defaultAccents[universe] ?? '#6366f1'
 
@@ -2164,6 +2353,7 @@ export const testimonialsMeta = {
     'braise-featured',
     'forge-featured',
     'ciseaux-featured',
+    'atelier-featured',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},
