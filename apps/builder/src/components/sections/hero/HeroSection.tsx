@@ -748,7 +748,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
-      const interval = setInterval(obscuraGoNext, 6000)
+      const interval = setInterval(obscuraGoNext, 5000)
       return () => clearInterval(interval)
     }, [obscuraGoNext])
     /* eslint-enable react-hooks/rules-of-hooks */
@@ -2425,6 +2425,1279 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     )
   }
 
+  // ─── VARIANT: braise ───
+  // Restaurant gastronomique premium : fullscreen diagonal-wipe slider, glassmorphism reservation bar, scroll reveal
+  if (variant === 'braise') {
+    const defaultHeroImages = [
+      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=85',
+      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1920&q=85',
+      'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=85',
+    ]
+
+    const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+    const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+
+    const slides = [
+      { name: 'Fine Dining', location: 'Paris 8e', bg: 'linear-gradient(135deg, #1A1209 0%, #2A1D10 50%, #0F0B06 100%)', image: heroImages?.[0] ?? defaultHeroImages[0] },
+      { name: 'Cuisine d\'Exception', location: 'Saison', bg: 'linear-gradient(135deg, #0F0B06 0%, #1A1209 50%, #2A1D10 100%)', image: heroImages?.[1] ?? defaultHeroImages[1] },
+      { name: 'Ambiance Intime', location: 'Interieur', bg: 'linear-gradient(135deg, #2A1D10 0%, #0F0B06 50%, #1A1209 100%)', image: heroImages?.[2] ?? defaultHeroImages[2] },
+    ]
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [braiseActiveSlide, setBraiseActiveSlide] = useState(0)
+    const braisePrevSlideRef = useRef(0)
+    const braiseTitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const braiseProgressRef = useRef<HTMLDivElement>(null)
+
+    const braiseGoNext = useCallback(() => {
+      setBraiseActiveSlide((prev) => {
+        braisePrevSlideRef.current = prev
+        return (prev + 1) % slides.length
+      })
+    }, [])
+
+    const braiseGoPrev = useCallback(() => {
+      setBraiseActiveSlide((prev) => {
+        braisePrevSlideRef.current = prev
+        return (prev - 1 + slides.length) % slides.length
+      })
+    }, [])
+
+    useEffect(() => {
+      const interval = setInterval(braiseGoNext, 5000)
+      return () => clearInterval(interval)
+    }, [braiseGoNext])
+
+    // Reset progress bar animation on slide change
+    useEffect(() => {
+      if (braiseProgressRef.current) {
+        braiseProgressRef.current.style.transition = 'none'
+        braiseProgressRef.current.style.width = '0%'
+        // Force reflow
+        void braiseProgressRef.current.offsetWidth
+        braiseProgressRef.current.style.transition = 'width 5s linear'
+        braiseProgressRef.current.style.width = '100%'
+      }
+    }, [braiseActiveSlide])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    const braiseCurrentSlide = slides[braiseActiveSlide]
+    const braiseReserveBtnLabel = content.primaryButton?.label || 'Réserver'
+
+    return (
+      <>
+      {/* Braise hero responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .braise-resp-bookingbar { flex-direction: column !important; padding: 16px !important; border-radius: 16px !important; max-width: 90% !important; }
+          .braise-resp-filters { flex-direction: column !important; gap: 12px !important; width: 100% !important; }
+          .braise-resp-filter-divider { display: none !important; }
+          .braise-resp-reserve-btn { width: 100% !important; margin-left: 0 !important; margin-top: 8px !important; justify-content: center !important; }
+          .braise-resp-hero-title { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
+          .braise-resp-hero-subtitle { font-size: 12px !important; }
+          .braise-resp-nav-arrows { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .braise-resp-bookingbar { margin: 0 16px; max-width: calc(100% - 32px) !important; }
+        }
+      ` }} />
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+        className="relative overflow-hidden"
+        style={{
+          height: '100vh',
+          backgroundColor: '#1A1209',
+          color: '#E8E4DF',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        {/* Diagonal wipe — parallelogram translates uniformly */}
+        {slides.map((slide, i) => {
+          const isActive = braiseActiveSlide === i
+          const isPrev = braisePrevSlideRef.current === i && !isActive
+
+          const visible = 'polygon(0% 0%, 130% 0%, 130% 100%, -20% 100%)'
+          const hidden  = 'polygon(120% 0%, 250% 0%, 250% 100%, 100% 100%)'
+          const full    = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+
+          return (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                clipPath: isActive ? visible : isPrev ? full : hidden,
+                opacity: isActive || isPrev ? 1 : 0,
+                transition: isActive
+                  ? 'clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1), opacity 0s'
+                  : isPrev
+                    ? 'none'
+                    : 'clip-path 0s 1.3s, opacity 0s 1.3s',
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              }}
+            >
+              {slide.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: slide.bg,
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* Dark overlay with warm tint */}
+        <div {...elementProps(config.id, 'overlay', 'container', 'Overlay')} className="absolute inset-0" style={{ backgroundColor: 'rgba(26, 18, 9, 0.45)', zIndex: 3 }} />
+
+        {/* Content — bottom-left title + subtitle */}
+        <div {...elementProps(config.id, 'centerContent', 'container', 'Hero Content')} className="relative flex flex-col justify-end h-full px-6" style={{ zIndex: 10, paddingBottom: '140px', paddingLeft: 'clamp(20px, 5vw, 80px)' }}>
+          <div ref={braiseTitleRevealRef}>
+            {/* Subtitle above title */}
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              className="braise-resp-hero-subtitle"
+              style={{
+                color: '#C8A96E',
+                fontSize: '14px',
+                fontWeight: 500,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                marginBottom: '16px',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+              }}
+            >
+              {subtitle || 'RESTAURANT GASTRONOMIQUE — PARIS'}
+            </p>
+            {/* H1 title */}
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              className="braise-resp-hero-title"
+              style={{
+                color: '#F5F0E8',
+                fontWeight: 500,
+                fontSize: 'clamp(2.875rem, 1.6429rem + 5.4762vw, 5.75rem)',
+                lineHeight: '105%',
+                maxWidth: '800px',
+                textAlign: 'left',
+                marginBottom: '0',
+                marginTop: 0,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {title || "L'Art de la Gastronomie"}
+            </h1>
+          </div>
+        </div>
+
+        {/* Glassmorphism reservation bar at bottom */}
+        <div
+          {...elementProps(config.id, 'bookingBar', 'container', 'Reservation Bar')}
+          className="absolute z-10 flex items-center braise-resp-bookingbar"
+          style={{
+            bottom: '40px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            borderRadius: '999px',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(26, 18, 9, 0.4)',
+            padding: '6px 6px 6px 28px',
+            gap: '0',
+            maxWidth: '600px',
+            width: '90%',
+            border: '1px solid rgba(200, 169, 110, 0.15)',
+          }}
+        >
+          {/* Reservation fields */}
+          <div {...elementProps(config.id, 'filtersRow', 'container', 'Reservation Fields')} className="flex items-center braise-resp-filters" style={{ flexShrink: 0 }}>
+            {['Date', 'Heure', 'Convives'].map((label, i) => (
+              <div
+                key={label}
+                style={{
+                  position: 'relative',
+                  paddingRight: i < 2 ? '14px' : '0',
+                  marginRight: i < 2 ? '14px' : '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                {i < 2 && (
+                  <span className="braise-resp-filter-divider" style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '1px',
+                    height: '20px',
+                    backgroundColor: 'rgba(232, 228, 223, 0.2)',
+                  }} />
+                )}
+                <span
+                  {...elementProps(config.id, `filters.${i}.label`, 'text')}
+                  style={{
+                    color: 'rgba(232, 228, 223, 0.7)',
+                    fontSize: '14px',
+                    cursor: 'default',
+                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                    userSelect: 'none',
+                    fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                    gap: '6px',
+                  }}
+                >
+                  {label === 'Date' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  )}
+                  {label === 'Heure' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  )}
+                  {label === 'Convives' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                  )}
+                  {label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Reserve button */}
+          <div className="braise-resp-reserve-btn" style={{ flex: '1 1 auto', minWidth: '0', display: 'flex', justifyContent: 'flex-end', marginLeft: '16px' }}>
+            <div
+              {...elementProps(config.id, 'primaryButton', 'button')}
+              role="button"
+              style={{
+                backgroundColor: '#C8A96E',
+                color: '#1A1209',
+                borderRadius: '999px',
+                paddingLeft: '28px',
+                paddingRight: '28px',
+                paddingTop: '12px',
+                paddingBottom: '12px',
+                fontSize: '14px',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.02em',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#D4BC86' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#C8A96E' }}
+            >
+              {braiseReserveBtnLabel}
+            </div>
+          </div>
+        </div>
+
+        {/* Prev button */}
+        <div
+          {...elementProps(config.id, 'prevButton', 'button')}
+          role="button"
+          onClick={braiseGoPrev}
+          className="absolute z-10 flex items-center justify-center braise-resp-nav-arrows"
+          style={{
+            left: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(114, 47, 55, 0.25)',
+            border: '1px solid rgba(114, 47, 55, 0.15)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(114, 47, 55, 0.4)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(114, 47, 55, 0.25)' }}
+          aria-label="Previous slide"
+        >
+          <span {...elementProps(config.id, 'prevIcon', 'icon', 'Chevron Left')}><ChevronLeft style={{ width: '24px', height: '24px', color: '#E8E4DF' }} /></span>
+        </div>
+
+        {/* Next button */}
+        <div
+          {...elementProps(config.id, 'nextButton', 'button')}
+          role="button"
+          onClick={braiseGoNext}
+          className="absolute z-10 flex items-center justify-center braise-resp-nav-arrows"
+          style={{
+            right: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(114, 47, 55, 0.25)',
+            border: '1px solid rgba(114, 47, 55, 0.15)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(114, 47, 55, 0.4)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(114, 47, 55, 0.25)' }}
+          aria-label="Next slide"
+        >
+          <span {...elementProps(config.id, 'nextIcon', 'icon', 'Chevron Right')}><ChevronRight style={{ width: '24px', height: '24px', color: '#E8E4DF' }} /></span>
+        </div>
+
+        {/* Bottom-left meta badge */}
+        <div
+          {...elementProps(config.id, 'slideMeta', 'container', 'Slide Info')}
+          className="absolute z-10"
+          style={{
+            bottom: '100px',
+            left: 'clamp(16px, 4vw, 80px)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(114, 47, 55, 0.2)',
+            borderRadius: '4px',
+            padding: '10px 18px',
+            border: '1px solid rgba(114, 47, 55, 0.15)',
+          }}
+        >
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            <span
+              {...elementProps(config.id, `slides.${braiseActiveSlide}.name`, 'text')}
+              style={{ fontSize: 'clamp(13px, 1.5vw, 16px)', fontWeight: 500, color: '#E8E4DF' }}
+            >
+              {braiseCurrentSlide.name}
+            </span>
+            <span {...elementProps(config.id, 'slideDivider', 'text', 'Divider')} style={{ color: 'rgba(232, 228, 223, 0.4)', fontSize: '14px' }}>
+              &middot;
+            </span>
+            <span
+              {...elementProps(config.id, `slides.${braiseActiveSlide}.location`, 'text')}
+              className="flex items-center"
+              style={{ color: '#C8A96E', fontSize: '13px', gap: '4px', fontWeight: 500 }}
+            >
+              {braiseCurrentSlide.location}
+            </span>
+          </div>
+        </div>
+
+        {/* Progress bar at very bottom */}
+        <div
+          {...elementProps(config.id, 'progressBar', 'container', 'Progress Bar')}
+          className="absolute z-10"
+          style={{
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '3px',
+            backgroundColor: 'rgba(200, 169, 110, 0.15)',
+          }}
+        >
+          <div
+            ref={braiseProgressRef}
+            style={{
+              height: '100%',
+              backgroundColor: '#C8A96E',
+              width: '0%',
+              transition: 'width 5s linear',
+            }}
+          />
+        </div>
+
+        {/* Bottom-right slide dots */}
+        <div
+          {...elementProps(config.id, 'slideNav', 'container', 'Slide Nav')}
+          className="absolute z-10 flex"
+          style={{ bottom: '100px', right: 'clamp(16px, 4vw, 80px)', gap: '8px', alignItems: 'center' }}
+        >
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              {...elementProps(config.id, `slides.${i}.dot`, 'button')}
+              role="button"
+              onClick={() => setBraiseActiveSlide(i)}
+              style={{
+                width: braiseActiveSlide === i ? '32px' : '8px',
+                height: '8px',
+                borderRadius: '999px',
+                backgroundColor: braiseActiveSlide === i ? '#C8A96E' : 'rgba(232, 228, 223, 0.3)',
+                cursor: 'pointer',
+                transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease',
+              }}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+      </>
+    )
+  }
+
+  // ─── VARIANT: forge ───
+  // Coach sportif premium : fullscreen diagonal-wipe slider, glassmorphism booking bar, scroll reveal
+  if (variant === 'forge') {
+    const defaultHeroImages = [
+      'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920&q=85',
+      'https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=1920&q=85',
+      'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1920&q=85',
+    ]
+
+    const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+    const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+
+    const slides = [
+      { name: 'Salle Premium', location: 'Paris', bg: 'linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0A0A0A 100%)', image: heroImages?.[0] ?? defaultHeroImages[0] },
+      { name: 'Entraînement Intensif', location: 'Coaching', bg: 'linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0F0F0F 100%)', image: heroImages?.[1] ?? defaultHeroImages[1] },
+      { name: 'Outdoor Training', location: 'Plein Air', bg: 'linear-gradient(135deg, #1A1A1A 0%, #0A0A0A 50%, #1A1A1A 100%)', image: heroImages?.[2] ?? defaultHeroImages[2] },
+    ]
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [forgeActiveSlide, setForgeActiveSlide] = useState(0)
+    const forgePrevSlideRef = useRef(0)
+    const forgeTitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const forgeProgressRef = useRef<HTMLDivElement>(null)
+
+    const forgeGoNext = useCallback(() => {
+      setForgeActiveSlide((prev) => {
+        forgePrevSlideRef.current = prev
+        return (prev + 1) % slides.length
+      })
+    }, [])
+
+    const forgeGoPrev = useCallback(() => {
+      setForgeActiveSlide((prev) => {
+        forgePrevSlideRef.current = prev
+        return (prev - 1 + slides.length) % slides.length
+      })
+    }, [])
+
+    useEffect(() => {
+      const interval = setInterval(forgeGoNext, 5000)
+      return () => clearInterval(interval)
+    }, [forgeGoNext])
+
+    // Reset progress bar animation on slide change
+    useEffect(() => {
+      if (forgeProgressRef.current) {
+        forgeProgressRef.current.style.transition = 'none'
+        forgeProgressRef.current.style.width = '0%'
+        // Force reflow
+        void forgeProgressRef.current.offsetWidth
+        forgeProgressRef.current.style.transition = 'width 5s linear'
+        forgeProgressRef.current.style.width = '100%'
+      }
+    }, [forgeActiveSlide])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    const forgeCurrentSlide = slides[forgeActiveSlide]
+    const forgeBtnLabel = content.primaryButton?.label || 'Essai gratuit'
+
+    return (
+      <>
+      {/* Forge hero responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .forge-resp-bookingbar { flex-direction: column !important; padding: 16px !important; border-radius: 16px !important; max-width: 90% !important; }
+          .forge-resp-filters { flex-direction: column !important; gap: 12px !important; width: 100% !important; }
+          .forge-resp-filter-divider { display: none !important; }
+          .forge-resp-reserve-btn { width: 100% !important; margin-left: 0 !important; margin-top: 8px !important; justify-content: center !important; }
+          .forge-resp-hero-title { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
+          .forge-resp-hero-subtitle { font-size: 12px !important; }
+          .forge-resp-nav-arrows { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .forge-resp-bookingbar { margin: 0 16px; max-width: calc(100% - 32px) !important; }
+        }
+      ` }} />
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+        className="relative overflow-hidden"
+        style={{
+          height: '100vh',
+          backgroundColor: '#0A0A0A',
+          color: '#E8E8E8',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        {/* Diagonal wipe — parallelogram translates uniformly */}
+        {slides.map((slide, i) => {
+          const isActive = forgeActiveSlide === i
+          const isPrev = forgePrevSlideRef.current === i && !isActive
+
+          const visible = 'polygon(0% 0%, 130% 0%, 130% 100%, -20% 100%)'
+          const hidden  = 'polygon(120% 0%, 250% 0%, 250% 100%, 100% 100%)'
+          const full    = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+
+          return (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                clipPath: isActive ? visible : isPrev ? full : hidden,
+                opacity: isActive || isPrev ? 1 : 0,
+                transition: isActive
+                  ? 'clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1), opacity 0s'
+                  : isPrev
+                    ? 'none'
+                    : 'clip-path 0s 1.3s, opacity 0s 1.3s',
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              }}
+            >
+              {slide.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: slide.bg,
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* Dark overlay */}
+        <div {...elementProps(config.id, 'overlay', 'container', 'Overlay')} className="absolute inset-0" style={{ backgroundColor: 'rgba(10, 10, 10, 0.45)', zIndex: 3 }} />
+
+        {/* Content — bottom-left title + subtitle */}
+        <div {...elementProps(config.id, 'centerContent', 'container', 'Hero Content')} className="relative flex flex-col justify-end h-full px-6" style={{ zIndex: 10, paddingBottom: '140px', paddingLeft: 'clamp(20px, 5vw, 80px)' }}>
+          <div ref={forgeTitleRevealRef}>
+            {/* Subtitle above title */}
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              className="forge-resp-hero-subtitle"
+              style={{
+                color: '#FF4D00',
+                fontSize: '14px',
+                fontWeight: 500,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                marginBottom: '16px',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+              }}
+            >
+              {subtitle || 'COACH SPORTIF — PARIS'}
+            </p>
+            {/* H1 title */}
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              className="forge-resp-hero-title"
+              style={{
+                color: '#E8E8E8',
+                fontWeight: 500,
+                fontSize: 'clamp(2.875rem, 1.6429rem + 5.4762vw, 5.75rem)',
+                lineHeight: '105%',
+                maxWidth: '800px',
+                textAlign: 'left',
+                marginBottom: '0',
+                marginTop: 0,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {title || 'Forgez Votre Meilleure Version'}
+            </h1>
+          </div>
+        </div>
+
+        {/* Glassmorphism booking bar at bottom */}
+        <div
+          {...elementProps(config.id, 'bookingBar', 'container', 'Booking Bar')}
+          className="absolute z-10 flex items-center forge-resp-bookingbar"
+          style={{
+            bottom: '40px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            borderRadius: '999px',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(10, 10, 10, 0.4)',
+            padding: '6px 6px 6px 28px',
+            gap: '0',
+            maxWidth: '700px',
+            width: '90%',
+            border: '1px solid rgba(255, 77, 0, 0.15)',
+          }}
+        >
+          {/* Booking fields */}
+          <div {...elementProps(config.id, 'filtersRow', 'container', 'Booking Fields')} className="flex items-center forge-resp-filters" style={{ flexShrink: 0 }}>
+            {['Objectif', 'Niveau', 'Créneau'].map((label, i) => {
+              const options: Record<string, string[]> = {
+                Objectif: ['Perte de poids', 'Prise de masse', 'Remise en forme'],
+                Niveau: ['Débutant', 'Intermédiaire', 'Confirmé'],
+                Créneau: ['Matin', 'Midi', 'Soir'],
+              }
+              return (
+                <div
+                  key={label}
+                  style={{
+                    position: 'relative',
+                    paddingRight: i < 2 ? '14px' : '0',
+                    marginRight: i < 2 ? '14px' : '0',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  {i < 2 && (
+                    <span className="forge-resp-filter-divider" style={{
+                      position: 'absolute',
+                      right: 0,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: '1px',
+                      height: '20px',
+                      backgroundColor: 'rgba(232, 232, 232, 0.2)',
+                    }} />
+                  )}
+                  <span
+                    {...elementProps(config.id, `filters.${i}.label`, 'text')}
+                    style={{
+                      color: 'rgba(232, 232, 232, 0.7)',
+                      fontSize: '14px',
+                      cursor: 'default',
+                      whiteSpace: 'nowrap',
+                      display: 'flex',
+                      alignItems: 'center',
+                      userSelect: 'none',
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      gap: '6px',
+                    }}
+                  >
+                    {label === 'Objectif' && (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                    )}
+                    {label === 'Niveau' && (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 20h4V8H2zM9 20h4V4H9zM16 20h4v-8h-4z"/></svg>
+                    )}
+                    {label === 'Créneau' && (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    )}
+                    {label}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* CTA button */}
+          <div className="forge-resp-reserve-btn" style={{ flex: '1 1 auto', minWidth: '0', display: 'flex', justifyContent: 'flex-end', marginLeft: '16px' }}>
+            <div
+              {...elementProps(config.id, 'primaryButton', 'button')}
+              role="button"
+              style={{
+                backgroundColor: '#FF4D00',
+                color: '#FFFFFF',
+                borderRadius: '999px',
+                paddingLeft: '28px',
+                paddingRight: '28px',
+                paddingTop: '12px',
+                paddingBottom: '12px',
+                fontSize: '14px',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.02em',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#FF6A2B' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#FF4D00' }}
+            >
+              {forgeBtnLabel}
+            </div>
+          </div>
+        </div>
+
+        {/* Prev button */}
+        <div
+          {...elementProps(config.id, 'prevButton', 'button')}
+          role="button"
+          onClick={forgeGoPrev}
+          className="absolute z-10 flex items-center justify-center forge-resp-nav-arrows"
+          style={{
+            left: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(255, 77, 0, 0.2)',
+            border: '1px solid rgba(255, 77, 0, 0.15)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(255, 77, 0, 0.35)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(255, 77, 0, 0.2)' }}
+          aria-label="Previous slide"
+        >
+          <span {...elementProps(config.id, 'prevIcon', 'icon', 'Chevron Left')}><ChevronLeft style={{ width: '24px', height: '24px', color: '#E8E8E8' }} /></span>
+        </div>
+
+        {/* Next button */}
+        <div
+          {...elementProps(config.id, 'nextButton', 'button')}
+          role="button"
+          onClick={forgeGoNext}
+          className="absolute z-10 flex items-center justify-center forge-resp-nav-arrows"
+          style={{
+            right: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(255, 77, 0, 0.2)',
+            border: '1px solid rgba(255, 77, 0, 0.15)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(255, 77, 0, 0.35)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(255, 77, 0, 0.2)' }}
+          aria-label="Next slide"
+        >
+          <span {...elementProps(config.id, 'nextIcon', 'icon', 'Chevron Right')}><ChevronRight style={{ width: '24px', height: '24px', color: '#E8E8E8' }} /></span>
+        </div>
+
+        {/* Bottom-left meta badge */}
+        <div
+          {...elementProps(config.id, 'slideMeta', 'container', 'Slide Info')}
+          className="absolute z-10"
+          style={{
+            bottom: '100px',
+            left: 'clamp(16px, 4vw, 80px)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(255, 77, 0, 0.15)',
+            borderRadius: '4px',
+            padding: '10px 18px',
+            border: '1px solid rgba(255, 77, 0, 0.15)',
+          }}
+        >
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            <span
+              {...elementProps(config.id, `slides.${forgeActiveSlide}.name`, 'text')}
+              style={{ fontSize: 'clamp(13px, 1.5vw, 16px)', fontWeight: 500, color: '#E8E8E8' }}
+            >
+              {forgeCurrentSlide.name}
+            </span>
+            <span {...elementProps(config.id, 'slideDivider', 'text', 'Divider')} style={{ color: 'rgba(232, 232, 232, 0.4)', fontSize: '14px' }}>
+              &middot;
+            </span>
+            <span
+              {...elementProps(config.id, `slides.${forgeActiveSlide}.location`, 'text')}
+              className="flex items-center"
+              style={{ color: '#FF4D00', fontSize: '13px', gap: '4px', fontWeight: 500 }}
+            >
+              {forgeCurrentSlide.location}
+            </span>
+          </div>
+        </div>
+
+        {/* Progress bar at very bottom */}
+        <div
+          {...elementProps(config.id, 'progressBar', 'container', 'Progress Bar')}
+          className="absolute z-10"
+          style={{
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '3px',
+            backgroundColor: 'rgba(255, 77, 0, 0.15)',
+          }}
+        >
+          <div
+            ref={forgeProgressRef}
+            style={{
+              height: '100%',
+              backgroundColor: '#FF4D00',
+              width: '0%',
+              transition: 'width 5s linear',
+            }}
+          />
+        </div>
+
+        {/* Bottom-right slide dots */}
+        <div
+          {...elementProps(config.id, 'slideNav', 'container', 'Slide Nav')}
+          className="absolute z-10 flex"
+          style={{ bottom: '100px', right: 'clamp(16px, 4vw, 80px)', gap: '8px', alignItems: 'center' }}
+        >
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              {...elementProps(config.id, `slides.${i}.dot`, 'button')}
+              role="button"
+              onClick={() => setForgeActiveSlide(i)}
+              style={{
+                width: forgeActiveSlide === i ? '32px' : '8px',
+                height: '8px',
+                borderRadius: '999px',
+                backgroundColor: forgeActiveSlide === i ? '#FF4D00' : 'rgba(232, 232, 232, 0.3)',
+                cursor: 'pointer',
+                transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease',
+              }}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+      </>
+    )
+  }
+
+  // ─── VARIANT: ciseaux ───
+  // Salon de coiffure premium : fullscreen diagonal-wipe slider, glassmorphism booking bar, scroll reveal
+  if (variant === 'ciseaux') {
+    const defaultHeroImages = [
+      'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1920&q=85',
+      'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=1920&q=85',
+      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1920&q=85',
+    ]
+
+    const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+    const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+
+    const slides = [
+      { name: 'Salon Interior', location: 'Paris', bg: 'linear-gradient(135deg, #0B0B0B 0%, #1A1A1A 50%, #0B0B0B 100%)', image: heroImages?.[0] ?? defaultHeroImages[0] },
+      { name: 'Coiffure Experte', location: 'Styling', bg: 'linear-gradient(135deg, #0B0B0B 0%, #1A1A1A 50%, #0F0F0F 100%)', image: heroImages?.[1] ?? defaultHeroImages[1] },
+      { name: 'R\u00E9sultat Sublime', location: 'Beaut\u00E9', bg: 'linear-gradient(135deg, #1A1A1A 0%, #0B0B0B 50%, #1A1A1A 100%)', image: heroImages?.[2] ?? defaultHeroImages[2] },
+    ]
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [ciseauxActiveSlide, setCiseauxActiveSlide] = useState(0)
+    const ciseauxPrevSlideRef = useRef(0)
+    const ciseauxTitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const ciseauxProgressRef = useRef<HTMLDivElement>(null)
+
+    const ciseauxGoNext = useCallback(() => {
+      setCiseauxActiveSlide((prev) => {
+        ciseauxPrevSlideRef.current = prev
+        return (prev + 1) % slides.length
+      })
+    }, [])
+
+    const ciseauxGoPrev = useCallback(() => {
+      setCiseauxActiveSlide((prev) => {
+        ciseauxPrevSlideRef.current = prev
+        return (prev - 1 + slides.length) % slides.length
+      })
+    }, [])
+
+    useEffect(() => {
+      const interval = setInterval(ciseauxGoNext, 5000)
+      return () => clearInterval(interval)
+    }, [ciseauxGoNext])
+
+    // Reset progress bar animation on slide change
+    useEffect(() => {
+      if (ciseauxProgressRef.current) {
+        ciseauxProgressRef.current.style.transition = 'none'
+        ciseauxProgressRef.current.style.width = '0%'
+        // Force reflow
+        void ciseauxProgressRef.current.offsetWidth
+        ciseauxProgressRef.current.style.transition = 'width 5s linear'
+        ciseauxProgressRef.current.style.width = '100%'
+      }
+    }, [ciseauxActiveSlide])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    const ciseauxCurrentSlide = slides[ciseauxActiveSlide]
+    const ciseauxBtnLabel = content.primaryButton?.label || 'R\u00E9server'
+
+    return (
+      <>
+      {/* Ciseaux hero responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .ciseaux-resp-bookingbar { flex-direction: column !important; padding: 16px !important; border-radius: 16px !important; max-width: 90% !important; }
+          .ciseaux-resp-filters { flex-direction: column !important; gap: 12px !important; width: 100% !important; }
+          .ciseaux-resp-filter-divider { display: none !important; }
+          .ciseaux-resp-reserve-btn { width: 100% !important; margin-left: 0 !important; margin-top: 8px !important; justify-content: center !important; }
+          .ciseaux-resp-hero-title { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
+          .ciseaux-resp-hero-subtitle { font-size: 12px !important; }
+          .ciseaux-resp-nav-arrows { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .ciseaux-resp-bookingbar { margin: 0 16px; max-width: calc(100% - 32px) !important; }
+        }
+      ` }} />
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+        className="relative overflow-hidden"
+        style={{
+          height: '100vh',
+          backgroundColor: '#0B0B0B',
+          color: '#FFFFFF',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        {/* Diagonal wipe — parallelogram translates uniformly */}
+        {slides.map((slide, i) => {
+          const isActive = ciseauxActiveSlide === i
+          const isPrev = ciseauxPrevSlideRef.current === i && !isActive
+
+          const visible = 'polygon(0% 0%, 130% 0%, 130% 100%, -20% 100%)'
+          const hidden  = 'polygon(120% 0%, 250% 0%, 250% 100%, 100% 100%)'
+          const full    = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+
+          return (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                clipPath: isActive ? visible : isPrev ? full : hidden,
+                opacity: isActive || isPrev ? 1 : 0,
+                transition: isActive
+                  ? 'clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1), opacity 0s'
+                  : isPrev
+                    ? 'none'
+                    : 'clip-path 0s 1.3s, opacity 0s 1.3s',
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              }}
+            >
+              {slide.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: slide.bg,
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* Dark overlay */}
+        <div {...elementProps(config.id, 'overlay', 'container', 'Overlay')} className="absolute inset-0" style={{ backgroundColor: 'rgba(11, 11, 11, 0.45)', zIndex: 3 }} />
+
+        {/* Content — bottom-left title + subtitle */}
+        <div {...elementProps(config.id, 'centerContent', 'container', 'Hero Content')} className="relative flex flex-col justify-end h-full px-6" style={{ zIndex: 10, paddingBottom: '140px', paddingLeft: 'clamp(20px, 5vw, 80px)' }}>
+          <div ref={ciseauxTitleRevealRef}>
+            {/* Subtitle above title */}
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              className="ciseaux-resp-hero-subtitle"
+              style={{
+                color: '#B76E79',
+                fontSize: '14px',
+                fontWeight: 500,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                marginBottom: '16px',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+              }}
+            >
+              {subtitle || 'SALON DE COIFFURE \u2014 PARIS'}
+            </p>
+            {/* H1 title */}
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              className="ciseaux-resp-hero-title"
+              style={{
+                color: '#FFFFFF',
+                fontWeight: 500,
+                fontSize: 'clamp(2.875rem, 1.6429rem + 5.4762vw, 5.75rem)',
+                lineHeight: '105%',
+                maxWidth: '800px',
+                textAlign: 'left',
+                marginBottom: '0',
+                marginTop: 0,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {title || "L\u2019\u00C9l\u00E9gance au Naturel"}
+            </h1>
+          </div>
+        </div>
+
+        {/* Glassmorphism booking bar at bottom */}
+        <div
+          {...elementProps(config.id, 'bookingBar', 'container', 'Booking Bar')}
+          className="absolute z-10 flex items-center ciseaux-resp-bookingbar"
+          style={{
+            bottom: '40px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            borderRadius: '999px',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(11, 11, 11, 0.4)',
+            padding: '6px 6px 6px 28px',
+            gap: '0',
+            maxWidth: '700px',
+            width: '90%',
+            border: '1px solid rgba(183, 110, 121, 0.15)',
+          }}
+        >
+          {/* Booking fields */}
+          <div {...elementProps(config.id, 'filtersRow', 'container', 'Booking Fields')} className="flex items-center ciseaux-resp-filters" style={{ flexShrink: 0 }}>
+            {['Prestation', 'Date', 'Coiffeur'].map((label, i) => (
+              <div
+                key={label}
+                style={{
+                  position: 'relative',
+                  paddingRight: i < 2 ? '14px' : '0',
+                  marginRight: i < 2 ? '14px' : '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                {i < 2 && (
+                  <span className="ciseaux-resp-filter-divider" style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '1px',
+                    height: '20px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  }} />
+                )}
+                <span
+                  {...elementProps(config.id, `filters.${i}.label`, 'text')}
+                  style={{
+                    color: 'rgba(181, 176, 168, 0.9)',
+                    fontSize: '14px',
+                    cursor: 'default',
+                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                    userSelect: 'none',
+                    fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                    gap: '6px',
+                  }}
+                >
+                  {label === 'Prestation' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.121 14.121A3 3 0 1 0 9.879 9.879M6.343 6.343a8 8 0 0 0 11.314 11.314"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
+                  )}
+                  {label === 'Date' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  )}
+                  {label === 'Coiffeur' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  )}
+                  {label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Reserve button */}
+          <div className="ciseaux-resp-reserve-btn" style={{ flex: '1 1 auto', minWidth: '0', display: 'flex', justifyContent: 'flex-end', marginLeft: '16px' }}>
+            <div
+              {...elementProps(config.id, 'primaryButton', 'button')}
+              role="button"
+              style={{
+                backgroundColor: '#B76E79',
+                color: '#FFFFFF',
+                borderRadius: '999px',
+                paddingLeft: '28px',
+                paddingRight: '28px',
+                paddingTop: '12px',
+                paddingBottom: '12px',
+                fontSize: '14px',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.02em',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#C98490' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#B76E79' }}
+            >
+              {ciseauxBtnLabel}
+            </div>
+          </div>
+        </div>
+
+        {/* Prev button */}
+        <div
+          {...elementProps(config.id, 'prevButton', 'button')}
+          role="button"
+          onClick={ciseauxGoPrev}
+          className="absolute z-10 flex items-center justify-center ciseaux-resp-nav-arrows"
+          style={{
+            left: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(183, 110, 121, 0.2)',
+            border: '1px solid rgba(183, 110, 121, 0.15)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(183, 110, 121, 0.35)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(183, 110, 121, 0.2)' }}
+          aria-label="Previous slide"
+        >
+          <span {...elementProps(config.id, 'prevIcon', 'icon', 'Chevron Left')}><ChevronLeft style={{ width: '24px', height: '24px', color: '#FFFFFF' }} /></span>
+        </div>
+
+        {/* Next button */}
+        <div
+          {...elementProps(config.id, 'nextButton', 'button')}
+          role="button"
+          onClick={ciseauxGoNext}
+          className="absolute z-10 flex items-center justify-center ciseaux-resp-nav-arrows"
+          style={{
+            right: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(183, 110, 121, 0.2)',
+            border: '1px solid rgba(183, 110, 121, 0.15)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(183, 110, 121, 0.35)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(183, 110, 121, 0.2)' }}
+          aria-label="Next slide"
+        >
+          <span {...elementProps(config.id, 'nextIcon', 'icon', 'Chevron Right')}><ChevronRight style={{ width: '24px', height: '24px', color: '#FFFFFF' }} /></span>
+        </div>
+
+        {/* Bottom-left meta badge */}
+        <div
+          {...elementProps(config.id, 'slideMeta', 'container', 'Slide Info')}
+          className="absolute z-10"
+          style={{
+            bottom: '100px',
+            left: 'clamp(16px, 4vw, 80px)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(183, 110, 121, 0.15)',
+            borderRadius: '4px',
+            padding: '10px 18px',
+            border: '1px solid rgba(183, 110, 121, 0.15)',
+          }}
+        >
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            <span
+              {...elementProps(config.id, `slides.${ciseauxActiveSlide}.name`, 'text')}
+              style={{ fontSize: 'clamp(13px, 1.5vw, 16px)', fontWeight: 500, color: '#FFFFFF' }}
+            >
+              {ciseauxCurrentSlide.name}
+            </span>
+            <span {...elementProps(config.id, 'slideDivider', 'text', 'Divider')} style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '14px' }}>
+              &middot;
+            </span>
+            <span
+              {...elementProps(config.id, `slides.${ciseauxActiveSlide}.location`, 'text')}
+              className="flex items-center"
+              style={{ color: '#B76E79', fontSize: '13px', gap: '4px', fontWeight: 500 }}
+            >
+              {ciseauxCurrentSlide.location}
+            </span>
+          </div>
+        </div>
+
+        {/* Progress bar at very bottom */}
+        <div
+          {...elementProps(config.id, 'progressBar', 'container', 'Progress Bar')}
+          className="absolute z-10"
+          style={{
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '3px',
+            backgroundColor: 'rgba(183, 110, 121, 0.15)',
+          }}
+        >
+          <div
+            ref={ciseauxProgressRef}
+            style={{
+              height: '100%',
+              backgroundColor: '#B76E79',
+              width: '0%',
+              transition: 'width 5s linear',
+            }}
+          />
+        </div>
+
+        {/* Bottom-right slide dots */}
+        <div
+          {...elementProps(config.id, 'slideNav', 'container', 'Slide Nav')}
+          className="absolute z-10 flex"
+          style={{ bottom: '100px', right: 'clamp(16px, 4vw, 80px)', gap: '8px', alignItems: 'center' }}
+        >
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              {...elementProps(config.id, `slides.${i}.dot`, 'button')}
+              role="button"
+              onClick={() => setCiseauxActiveSlide(i)}
+              style={{
+                width: ciseauxActiveSlide === i ? '32px' : '8px',
+                height: '8px',
+                borderRadius: '999px',
+                backgroundColor: ciseauxActiveSlide === i ? '#B76E79' : 'rgba(255, 255, 255, 0.3)',
+                cursor: 'pointer',
+                transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease',
+              }}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+      </>
+    )
+  }
+
   // fallback → startup
   return <HeroSection config={{ ...config, variant: 'startup' }} isEditing={isEditing} />
 }
@@ -2500,7 +3773,7 @@ export const heroMeta = {
   type: 'hero',
   label: 'Hero',
   icon: '⚡',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

@@ -18,6 +18,9 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'brixsa', label: 'Brixsa — Immobilier', description: 'Slider plein écran, searchbox glassmorphism, crème', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'obscura', label: 'Obscura — Photographe', description: 'Slider plein écran, diagonal wipe, compteur doré, barre de progression', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'canopy', label: 'Canopy — Eco E-commerce', description: 'Split produit, coins carrés, vert forêt, éco-minimaliste', previewStyle: { background: 'white', paddingY: 'md' } },
+    { id: 'braise', label: 'Braise — Restaurant', description: 'Slider plein \u00E9cran, noir profond, or chaud, gastronomique', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'forge', label: 'Forge — Coach Sportif', description: 'Slider plein \u00E9cran, noir profond, orange \u00E9lectrique, fitness', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'ciseaux', label: 'Ciseaux — Salon de Coiffure', description: 'Slider plein \u00E9cran, noir profond, cuivr\u00E9 rose gold, coiffure', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   features: [
     // Startup / SaaS
@@ -47,6 +50,9 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'brixsa-accordion', label: 'Brixsa — Accordéon', description: 'Accordéon horizontal, 3 panneaux image, hover expand', previewStyle: { background: 'white', paddingY: 'md' } },
     { id: 'brixsa-location', label: 'Brixsa — Location', description: 'Villes en gros H2, hover image portrait, dark atmosphérique', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'canopy-values', label: 'Canopy — Valeurs', description: 'Piliers éco-responsables, icônes rondes, coins carrés', previewStyle: { background: 'white', paddingY: 'md' } },
+    { id: 'braise-accordion', label: 'Braise — Accord\u00E9on Menu', description: 'Accord\u00E9on horizontal, 3 panneaux plats, restaurant gastronomique, noir/or', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'forge-accordion', label: 'Forge — Accord\u00E9on Coach', description: 'Accord\u00E9on horizontal, 3 panneaux, coach sportif, noir/orange', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'ciseaux-accordion', label: 'Ciseaux — Accord\u00E9on Coiffure', description: 'Accord\u00E9on horizontal, 3 panneaux, salon de coiffure, noir/cuivr\u00E9', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   cta: [
     // Startup
@@ -134,7 +140,10 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'obscura-featured', label: 'Obscura — Featured', description: '50/50 initiales or + citation, noir profond/or chaud', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'nacre-featured', label: 'Nacre — Featured', description: '50/50 initiales dor\u00E9es + citation, rose poudr\u00E9/bordeaux', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'brixsa-featured', label: 'Brixsa — Featured', description: '50/50 image + citation, fond noir, crème', previewStyle: { background: 'dark', paddingY: 'md' } },
-    { id: 'canopy-cards', label: 'Canopy — Cards', description: 'Avis clients, cards blanches, coins carrés, étoiles', previewStyle: { background: 'white', paddingY: 'md' } },
+    { id: 'canopy-cards', label: 'Canopy — Cards', description: 'Avis clients, cards blanches, coins carr\u00E9s, \u00E9toiles', previewStyle: { background: 'white', paddingY: 'md' } },
+    { id: 'braise-featured', label: 'Braise — T\u00E9moignages', description: '50/50 initiales or + citation, noir profond/or chaud, restaurant', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'forge-featured', label: 'Forge — T\u00E9moignages', description: '50/50 initiales orange + citation, noir profond/orange, coach sportif', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'ciseaux-featured', label: 'Ciseaux — T\u00E9moignages', description: '50/50 initiales cuivr\u00E9es + citation, noir profond/cuivr\u00E9, salon coiffure', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   pricing: [
     // Startup
@@ -288,7 +297,10 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'glass-grid', label: 'Glass — Grille', description: 'Dark, glass grille', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass-masonry', label: 'Glass — Masonry', description: 'Glass, masonry glow', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'nacre-services', label: 'Nacre — Services', description: 'Grid 3 colonnes, cards services salon ongles, rose poudr\u00E9', previewStyle: { background: 'white', paddingY: 'md' } },
-    { id: 'brixsa-listing', label: 'Brixsa — Property Listing', description: 'Grid 3 colonnes, cards portrait, badges, crème', previewStyle: { background: 'white', paddingY: 'md' } },
+    { id: 'brixsa-listing', label: 'Brixsa — Property Listing', description: 'Grid 3 colonnes, cards portrait, badges, cr\u00E8me', previewStyle: { background: 'white', paddingY: 'md' } },
+    { id: 'braise-menu', label: 'Braise — Carte du Restaurant', description: 'Grid 3 colonnes, cards plats, noir profond/or, glassmorphism', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'forge-programs', label: 'Forge — Programmes', description: 'Grid 3 colonnes, cards programmes fitness, noir/orange', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'ciseaux-realisations', label: 'Ciseaux — R\u00E9alisations', description: 'Grid 3 colonnes, galerie coiffures, noir profond/cuivr\u00E9', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'image-text': [
     { id: 'startup-image-right', label: 'Startup — Image droite', description: 'Indigo, texte + image', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -304,7 +316,10 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'glass-image-right', label: 'Glass — Image droite', description: 'Dark, texte + image', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass-image-left', label: 'Glass — Image gauche', description: 'Dark, image + texte', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'brixsa-about', label: 'Brixsa — About', description: 'Layout asymétrique, counters animés, crème', previewStyle: { background: 'white', paddingY: 'md' } },
-    { id: 'brixsa-privacy', label: 'Brixsa — Privacy / Legal', description: 'Rich text, fond crème, sections numérotées, listes', previewStyle: { background: 'white', paddingY: 'md' } },
+    { id: 'brixsa-privacy', label: 'Brixsa — Privacy / Legal', description: 'Rich text, fond cr\u00E8me, sections num\u00E9rot\u00E9es, listes', previewStyle: { background: 'white', paddingY: 'md' } },
+    { id: 'braise-story', label: 'Braise — Histoire du Chef', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, noir profond/or', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'forge-story', label: 'Forge — Bio du Coach', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, noir profond/orange', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'ciseaux-story', label: 'Ciseaux — Histoire du Salon', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, noir profond/cuivr\u00E9', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'product-grid': [
     { id: 'startup-grid', label: 'Startup — Grille', description: 'Cards produits indigo', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -348,7 +363,10 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'creative', label: 'Créatif', description: 'Néobrutalist, bold, audacieux', previewStyle: { background: 'white', paddingY: 'sm' } },
     { id: 'ecommerce', label: 'E-commerce', description: 'Recherche, panier, catégories', previewStyle: { background: 'white', paddingY: 'sm' } },
     { id: 'glass', label: 'Glass / Tech', description: 'Glassmorphism, dark, futuriste', previewStyle: { background: 'dark', paddingY: 'sm' } },
-    { id: 'brixsa', label: 'Brixsa — Immobilier', description: 'Transparent, glassmorphism menu, crème', previewStyle: { background: 'dark', paddingY: 'sm' } },
+    { id: 'brixsa', label: 'Brixsa — Immobilier', description: 'Transparent, glassmorphism menu, cr\u00E8me', previewStyle: { background: 'dark', paddingY: 'sm' } },
+    { id: 'braise', label: 'Braise — Restaurant', description: 'Transparent, noir profond, or chaud, gastronomique', previewStyle: { background: 'dark', paddingY: 'sm' } },
+    { id: 'forge', label: 'Forge — Coach Sportif', description: 'Transparent, noir profond, orange \u00E9lectrique, fitness', previewStyle: { background: 'dark', paddingY: 'sm' } },
+    { id: 'ciseaux', label: 'Ciseaux — Salon de Coiffure', description: 'Transparent, noir profond, cuivr\u00E9 rose gold, coiffure', previewStyle: { background: 'dark', paddingY: 'sm' } },
   ],
   'site-footer': [
     { id: 'startup', label: 'Startup / SaaS', description: 'Moderne, colonnes, status', previewStyle: { background: 'dark', paddingY: 'md' } },
@@ -358,7 +376,10 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'ecommerce', label: 'E-commerce', description: 'Newsletter + moyens de paiement', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass', label: 'Glass / Tech', description: 'Card glassmorphism, glow', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'obscura', label: 'Obscura — Photographe', description: 'Multi-colonne, noir profond, or chaud, text-mask hover', previewStyle: { background: 'dark', paddingY: 'md' } },
-    { id: 'brixsa', label: 'Brixsa — Immobilier', description: 'Multi-colonne, liens H2, crème/brun', previewStyle: { background: 'white', paddingY: 'md' } },
+    { id: 'brixsa', label: 'Brixsa — Immobilier', description: 'Multi-colonne, liens H2, cr\u00E8me/brun', previewStyle: { background: 'white', paddingY: 'md' } },
+    { id: 'braise', label: 'Braise — Restaurant', description: 'Logo centr\u00E9, 3 colonnes, noir profond/or, TripAdvisor', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'forge', label: 'Forge — Coach Sportif', description: 'Logo centr\u00E9, 3 colonnes, noir profond/orange, YouTube/TikTok', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'ciseaux', label: 'Ciseaux — Salon de Coiffure', description: 'Logo centr\u00E9, 3 colonnes, noir profond/cuivr\u00E9, Pinterest', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   tabs: [
     { id: 'startup-horizontal', label: 'Startup — Horizontal', description: 'Tabs pill indigo, horizontal', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -439,7 +460,10 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'obscura-parallax', label: 'Obscura — Parallax Portfolio', description: 'Portfolio photo plein écran avec parallax, badges or glassmorphism, noir profond', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'nacre-parallax', label: 'Nacre — Parallax Gallery', description: 'Galerie nail art plein \u00E9cran avec parallax, badges glassmorphism, rose/dor\u00E9', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'canopy-parallax', label: 'Canopy — Parallax Products', description: 'Produits éco plein écran avec parallax, badges glassmorphism vert forêt', previewStyle: { background: 'dark', paddingY: 'lg' } },
-    { id: 'brixsa-parallax', label: 'Brixsa — Parallax Featured', description: 'Propriétés plein écran avec parallax, badge Featured, prix', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'brixsa-parallax', label: 'Brixsa — Parallax Featured', description: 'Propri\u00E9t\u00E9s plein \u00E9cran avec parallax, badge Featured, prix', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'braise-parallax', label: 'Braise — Parallax Ambiance', description: 'Ambiance restaurant plein \u00E9cran avec parallax, noir profond/or', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'forge-parallax', label: 'Forge — Parallax Training', description: 'Ambiance fitness plein \u00E9cran avec parallax, noir profond/orange', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'ciseaux-parallax', label: 'Ciseaux — Parallax Salon', description: 'Ambiance salon coiffure plein \u00E9cran avec parallax, noir profond/cuivr\u00E9', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   dropdown: [
     { id: 'startup-simple', label: 'Startup — Simple', description: 'Dropdown simple indigo', previewStyle: { background: 'white', paddingY: 'md' } },

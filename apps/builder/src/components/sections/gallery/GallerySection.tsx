@@ -1326,6 +1326,470 @@ export function GallerySection({ config }: { config: SectionConfig }) {
   }
 
   // ═══════════════════════════════════════════
+  // BRAISE — Restaurant Menu Grid
+  // ═══════════════════════════════════════════
+
+  if (variant === 'braise-menu') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Filet de Boeuf Rossini', price: '48\u20AC', description: 'Foie gras po\u00EAl\u00E9, sauce P\u00E9rigueux, pommes fondantes', image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=85' },
+      { id: '2', title: 'Homard Bleu R\u00F4ti', price: '62\u20AC', description: 'Bisque cr\u00E9meuse, l\u00E9gumes de saison, beurre corail', image: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=85' },
+      { id: '3', title: 'Risotto aux Truffes', price: '38\u20AC', description: 'Truffe noire du P\u00E9rigord, parmesan 24 mois, huile de truffe', image: 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=800&q=85' },
+      { id: '4', title: 'Saint-Jacques Snack\u00E9es', price: '42\u20AC', description: 'Pur\u00E9e de c\u00E9leri, noisettes torr\u00E9fi\u00E9es, jus de viande', image: 'https://images.unsplash.com/photo-1535140728325-a4d3707eee61?w=800&q=85' },
+      { id: '5', title: 'Souffl\u00E9 au Chocolat', price: '18\u20AC', description: 'Grand cru Valrhona, cr\u00E8me anglaise \u00E0 la vanille', image: 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?w=800&q=85' },
+      { id: '6', title: 'Tarte Tatin', price: '16\u20AC', description: 'Pommes caram\u00E9lis\u00E9es, cr\u00E8me fra\u00EEche \u00E9paisse, glace vanille', image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&q=85' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; price?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          price: item.price ?? defaultCards[i % 6].price,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image ?? defaultCards[i % 6].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Menu Section')}
+        style={{
+          background: '#F5F0E8',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end braise-resp-menu-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#1A1209',
+                }}
+              >
+                {content.title ?? 'Nos Plats Signatures'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="/carte"
+              className="braise-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#1A1209', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="braise-btn-label relative" style={{ zIndex: 10 }}>Voir la carte</span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#C8A96E',
+                  color: '#1A1209',
+                  borderRadius: '4px',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
+                <span className="braise-btn-fill" style={{ display: 'block', background: '#C8A96E', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Grid */}
+          <style>{`
+            .braise-card:hover .braise-img-zoom { transform: scale(1.05) !important; }
+            .braise-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
+            .braise-img-dezoom.revealed { transform: scale(1); }
+            .braise-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+            .braise-btn:hover .braise-btn-fill { transform: translateX(0); }
+            .braise-btn:hover .braise-btn-label { color: #1A1209; }
+            .braise-btn-label { transition: color 0.4s; }
+            .braise-link { color: transparent; transition: color 0.3s; font-size: 14px; font-weight: 500; }
+            .braise-card:hover .braise-link { color: #C8A96E; }
+            @media (max-width: 768px) {
+              .braise-resp-menu-grid { grid-template-columns: 1fr !important; }
+              .braise-resp-menu-header { flex-direction: column; align-items: flex-start !important; }
+            }
+            @media (min-width: 769px) and (max-width: 1024px) {
+              .braise-resp-menu-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            }
+          `}</style>
+          <div {...elementProps(config.id, 'grid', 'container', 'Menu Grid')} className="grid grid-cols-3 braise-resp-menu-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="braise-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.braise-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="braise-img-zoom braise-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="braise-img-zoom braise-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #2A1F14, #1A1209)', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-8 h-8 text-white/40" />
+                    </div>
+                  )}
+                  {/* Glass badge: price */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      right: '16px',
+                      background: 'rgba(26, 18, 9, 0.6)',
+                      backdropFilter: 'blur(15px)',
+                      WebkitBackdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      padding: '6px 14px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#F5F0E8',
+                      zIndex: 2,
+                    }}
+                  >
+                    {card.price}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#1A1209',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: '#6B5D4F',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                  <span
+                    {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                    className="braise-link"
+                  >
+                    Voir la carte &rarr;
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // FORGE — Sports Coach Programs Grid
+  // ═══════════════════════════════════════════
+
+  if (variant === 'forge-programs') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Perte de Poids', duration: '12 semaines', description: 'Programme intensif combinant HIIT, musculation et plan nutritionnel personnalisé pour des résultats durables.', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=85' },
+      { id: '2', title: 'Prise de Masse', duration: '16 semaines', description: 'Hypertrophie ciblée avec progression de charge, récupération optimisée et suivi macro-nutritionnel.', image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=85' },
+      { id: '3', title: 'HIIT & Cardio', duration: '8 semaines', description: 'Entraînements haute intensité pour booster votre métabolisme et votre endurance cardiovasculaire.', image: 'https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=800&q=85' },
+      { id: '4', title: 'Remise en Forme', duration: '10 semaines', description: 'Reprise progressive adaptée à votre niveau avec renforcement musculaire et mobilité articulaire.', image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=85' },
+      { id: '5', title: 'Prépa Sportive', duration: '6 semaines', description: 'Préparation physique spécifique pour compétition, sport collectif ou défi personnel.', image: 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=800&q=85' },
+      { id: '6', title: 'Coaching Nutrition', duration: '8 semaines', description: 'Plan alimentaire sur-mesure, suivi hebdomadaire et éducation nutritionnelle pour transformer vos habitudes.', image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=85' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; duration?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          duration: item.duration ?? defaultCards[i % 6].duration,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image ?? defaultCards[i % 6].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Programs Section')}
+        style={{
+          background: '#0A0A0A',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end forge-resp-programs-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#E8E8E8',
+                }}
+              >
+                {content.title ?? 'Nos Programmes'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="/programmes"
+              className="forge-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#E8E8E8', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="forge-btn-label relative" style={{ zIndex: 10 }}>Tous les programmes</span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#FF4D00',
+                  color: '#FFFFFF',
+                  borderRadius: '4px',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
+                <span className="forge-btn-fill" style={{ display: 'block', background: '#FF4D00', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Grid */}
+          <style>{`
+            .forge-card:hover .forge-img-zoom { transform: scale(1.05) !important; }
+            .forge-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
+            .forge-img-dezoom.revealed { transform: scale(1); }
+            .forge-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+            .forge-btn:hover .forge-btn-fill { transform: translateX(0); }
+            .forge-btn:hover .forge-btn-label { color: #FFFFFF; }
+            .forge-btn-label { transition: color 0.4s; }
+            .forge-link { color: transparent; transition: color 0.3s; font-size: 14px; font-weight: 500; }
+            .forge-card:hover .forge-link { color: #FF4D00; }
+            @media (max-width: 768px) {
+              .forge-resp-programs-grid { grid-template-columns: 1fr !important; }
+              .forge-resp-programs-header { flex-direction: column; align-items: flex-start !important; }
+            }
+            @media (min-width: 769px) and (max-width: 1024px) {
+              .forge-resp-programs-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            }
+          `}</style>
+          <div {...elementProps(config.id, 'grid', 'container', 'Programs Grid')} className="grid grid-cols-3 forge-resp-programs-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="forge-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.forge-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="forge-img-zoom forge-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="forge-img-zoom forge-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #1A1A1A, #0A0A0A)', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-8 h-8 text-white/40" />
+                    </div>
+                  )}
+                  {/* Glass badge: duration */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      right: '16px',
+                      background: 'rgba(255, 77, 0, 0.3)',
+                      backdropFilter: 'blur(15px)',
+                      WebkitBackdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      padding: '6px 14px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#FFFFFF',
+                      zIndex: 2,
+                    }}
+                  >
+                    {card.duration}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#E8E8E8',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: '#888888',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                  <span
+                    {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                    className="forge-link"
+                  >
+                    En savoir plus &rarr;
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
   // BRIXSA — Property Listing
   // ═══════════════════════════════════════════
 
@@ -2153,6 +2617,238 @@ export function GallerySection({ config }: { config: SectionConfig }) {
     )
   }
 
+  // ═══════════════════════════════════════════
+  // CISEAUX — Hair Salon Réalisations Grid
+  // ═══════════════════════════════════════════
+
+  if (variant === 'ciseaux-realisations') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Balayage Californien', category: 'Coloration', description: 'Un balayage lumineux et naturel pour un effet sun-kissed irrésistible.', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=85' },
+      { id: '2', title: 'Coupe Structurée', category: 'Coupe', description: 'Des lignes nettes et un volume maîtrisé pour un look affirmé.', image: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=800&q=85' },
+      { id: '3', title: 'Blond Polaire', category: 'Coloration', description: 'Un blond glacé d\'une pureté absolue, sans compromis sur la brillance.', image: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=800&q=85' },
+      { id: '4', title: 'Coupe Homme Tendance', category: 'Coupe', description: 'Dégradé précis et texture travaillée pour un style contemporain.', image: 'https://images.unsplash.com/photo-1503951914875-452d3d18fc80?w=800&q=85' },
+      { id: '5', title: 'Chignon Mariage', category: 'Événement', description: 'Une coiffure élégante et tenue pour le plus beau jour de votre vie.', image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=800&q=85' },
+      { id: '6', title: 'Soin Kératine', category: 'Soin', description: 'Un soin profond qui restaure la fibre et sublime la brillance naturelle.', image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=85' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; category?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          category: item.category ?? defaultCards[i % 6].category,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image ?? defaultCards[i % 6].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Réalisations Section')}
+        style={{
+          background: '#FFFFFF',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end ciseaux-resp-realisations-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#0B0B0B',
+                }}
+              >
+                {content.title ?? 'Nos Réalisations'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="/realisations"
+              className="ciseaux-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#0B0B0B', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="ciseaux-btn-label relative" style={{ zIndex: 10 }}>Toutes nos réalisations</span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#B76E79',
+                  color: '#FFFFFF',
+                  borderRadius: '4px',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
+                <span className="ciseaux-btn-fill" style={{ display: 'block', background: '#B76E79', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Grid */}
+          <style>{`
+            .ciseaux-card:hover .ciseaux-img-zoom { transform: scale(1.05) !important; }
+            .ciseaux-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
+            .ciseaux-img-dezoom.revealed { transform: scale(1); }
+            .ciseaux-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+            .ciseaux-btn:hover .ciseaux-btn-fill { transform: translateX(0); }
+            .ciseaux-btn:hover .ciseaux-btn-label { color: #FFFFFF; }
+            .ciseaux-btn-label { transition: color 0.4s; }
+            .ciseaux-link { color: transparent; transition: color 0.3s; font-size: 14px; font-weight: 500; }
+            .ciseaux-card:hover .ciseaux-link { color: #B76E79; }
+            @media (max-width: 768px) {
+              .ciseaux-resp-realisations-grid { grid-template-columns: 1fr !important; }
+              .ciseaux-resp-realisations-header { flex-direction: column; align-items: flex-start !important; }
+            }
+            @media (min-width: 769px) and (max-width: 1024px) {
+              .ciseaux-resp-realisations-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            }
+          `}</style>
+          <div {...elementProps(config.id, 'grid', 'container', 'Réalisations Grid')} className="grid grid-cols-3 ciseaux-resp-realisations-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="ciseaux-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.ciseaux-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="ciseaux-img-zoom ciseaux-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="ciseaux-img-zoom ciseaux-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #1A1A1A, #0B0B0B)', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-8 h-8 text-white/40" />
+                    </div>
+                  )}
+                  {/* Glass badge: category */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      right: '16px',
+                      background: 'rgba(11, 11, 11, 0.6)',
+                      backdropFilter: 'blur(15px)',
+                      WebkitBackdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      padding: '6px 14px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#FFFFFF',
+                      zIndex: 2,
+                    }}
+                  >
+                    {card.category}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#0B0B0B',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: '#B5B0A8',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                  <span
+                    {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                    className="ciseaux-link"
+                  >
+                    Voir plus &rarr;
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // ═══════════════════════════════════════════════════════
   // ZMR-AGENCY — Grille talent modeling : cards 3:4, fond noir,
   // nom sous l'image, hover image swap, style minimaliste
@@ -2927,6 +3623,9 @@ export const galleryMeta = {
     'obscura-portfolio',
     'brixsa-listing',
     'brixsa-detail',
+    'braise-menu',
+    'forge-programs',
+    'ciseaux-realisations',
     'zmr-agency-grid',
     'zmr-showcase',
   ],

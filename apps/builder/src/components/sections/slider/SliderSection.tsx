@@ -715,6 +715,417 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
   )
 }
 
+/* Braise parallax slide — Same technique as Nacre but restaurant themed.
+   - Preview mode (!isEditing): native CSS background-attachment:fixed.
+   - Editor mode (isEditing): JS scroll-based fallback with translate3d GPU acceleration. */
+function BraiseFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: SlideItem; idx: number; sectionId: string; isEditing?: boolean }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  // JS fallback for editor mode only
+  useEffect(() => {
+    if (!isEditing) return
+    const wrap = wrapRef.current
+    const img = imgRef.current
+    if (!wrap || !img) return
+
+    let scroller: HTMLElement | null = wrap.parentElement
+    while (scroller) {
+      const ov = getComputedStyle(scroller).overflowY
+      if (ov === 'auto' || ov === 'scroll') break
+      scroller = scroller.parentElement
+    }
+    if (!scroller) return
+
+    let accOffset = 0
+    let el: HTMLElement | null = wrap
+    while (el && el !== scroller) {
+      accOffset += el.offsetTop
+      el = el.offsetParent as HTMLElement | null
+    }
+
+    const setSize = () => { img.style.height = `${scroller!.clientHeight}px` }
+    setSize()
+
+    const onScroll = () => {
+      img.style.transform = `translate3d(0,${-(accOffset - scroller!.scrollTop)}px,0)`
+    }
+
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+
+    const ro = new ResizeObserver(setSize)
+    ro.observe(scroller)
+
+    return () => {
+      scroller!.removeEventListener('scroll', onScroll)
+      ro.disconnect()
+    }
+  }, [isEditing])
+
+  // Preview mode: pure CSS background-attachment: fixed
+  if (!isEditing) {
+    return (
+      <div
+        {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+        style={{
+          display: 'block',
+          minHeight: '100svh',
+          position: 'relative',
+          overflow: 'hidden',
+          color: '#E8E4DF',
+          ...(slide.image ? {
+            backgroundImage: `url(${slide.image})`,
+            backgroundAttachment: 'fixed',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundColor: '#1A1209',
+          } : { backgroundColor: '#1A1209' }),
+        }}
+      >
+        <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(26, 18, 9, 0.85) 14%, rgba(255, 255, 255, 0) 39%)' }} />
+        {slide.badge && (
+          <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(114, 47, 55, 0.3)', color: '#E8E4DF', fontSize: 14, fontWeight: 500, zIndex: 2, letterSpacing: '0.05em' }}>
+            {slide.badge}
+          </div>
+        )}
+        <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+          <div style={{ maxWidth: '680px' }}>
+            <h2
+              {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+              style={{ fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#F5F0E8', textTransform: 'capitalize', marginBottom: 20 }}
+            >
+              {slide.title}
+            </h2>
+            <p
+              {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+              style={{ fontSize: 16, lineHeight: '150%', color: 'rgba(232, 228, 223, 0.8)' }}
+            >
+              {slide.subtitle}
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Editor mode: JS-based scroll compensation with <img> tag
+  return (
+    <div
+      ref={wrapRef}
+      {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+      style={{ minHeight: '100svh', position: 'relative', overflow: 'hidden', backgroundColor: '#1A1209', color: '#E8E4DF' }}
+    >
+      {slide.image && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          ref={imgRef}
+          {...elementProps(sectionId, `slides.${idx}.image`, 'image', 'Slide Image')}
+          src={slide.image}
+          alt=""
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', objectFit: 'cover', objectPosition: 'center', pointerEvents: 'none', willChange: 'transform', backfaceVisibility: 'hidden' }}
+        />
+      )}
+      <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(26, 18, 9, 0.85) 14%, rgba(255, 255, 255, 0) 39%)' }} />
+      {slide.badge && (
+        <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(114, 47, 55, 0.3)', color: '#E8E4DF', fontSize: 14, fontWeight: 500, zIndex: 2, letterSpacing: '0.05em' }}>
+          {slide.badge}
+        </div>
+      )}
+      <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+        <div style={{ maxWidth: '680px' }}>
+          <h2
+            {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+            style={{ fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#F5F0E8', textTransform: 'capitalize', marginBottom: 20 }}
+          >
+            {slide.title}
+          </h2>
+          <p
+            {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+            style={{ fontSize: 16, lineHeight: '150%', color: 'rgba(232, 228, 223, 0.8)' }}
+          >
+            {slide.subtitle}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* Forge parallax slide — Same technique as Braise but sports coach themed.
+   - Preview mode (!isEditing): native CSS background-attachment:fixed.
+   - Editor mode (isEditing): JS scroll-based fallback with translate3d GPU acceleration. */
+function ForgeFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: SlideItem; idx: number; sectionId: string; isEditing?: boolean }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  // JS fallback for editor mode only
+  useEffect(() => {
+    if (!isEditing) return
+    const wrap = wrapRef.current
+    const img = imgRef.current
+    if (!wrap || !img) return
+
+    let scroller: HTMLElement | null = wrap.parentElement
+    while (scroller) {
+      const ov = getComputedStyle(scroller).overflowY
+      if (ov === 'auto' || ov === 'scroll') break
+      scroller = scroller.parentElement
+    }
+    if (!scroller) return
+
+    let accOffset = 0
+    let el: HTMLElement | null = wrap
+    while (el && el !== scroller) {
+      accOffset += el.offsetTop
+      el = el.offsetParent as HTMLElement | null
+    }
+
+    const setSize = () => { img.style.height = `${scroller!.clientHeight}px` }
+    setSize()
+
+    const onScroll = () => {
+      img.style.transform = `translate3d(0,${-(accOffset - scroller!.scrollTop)}px,0)`
+    }
+
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+
+    const ro = new ResizeObserver(setSize)
+    ro.observe(scroller)
+
+    return () => {
+      scroller!.removeEventListener('scroll', onScroll)
+      ro.disconnect()
+    }
+  }, [isEditing])
+
+  // Preview mode: pure CSS background-attachment: fixed
+  if (!isEditing) {
+    return (
+      <div
+        {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+        style={{
+          display: 'block',
+          minHeight: '100svh',
+          position: 'relative',
+          overflow: 'hidden',
+          color: '#E8E8E8',
+          ...(slide.image ? {
+            backgroundImage: `url(${slide.image})`,
+            backgroundAttachment: 'fixed',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundColor: '#0A0A0A',
+          } : { backgroundColor: '#0A0A0A' }),
+        }}
+      >
+        <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(10, 10, 10, 0.85) 14%, rgba(255, 255, 255, 0) 39%)' }} />
+        {slide.badge && (
+          <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(255, 77, 0, 0.3)', color: '#E8E8E8', fontSize: 14, fontWeight: 500, zIndex: 2, letterSpacing: '0.05em' }}>
+            {slide.badge}
+          </div>
+        )}
+        <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+          <div style={{ maxWidth: '680px' }}>
+            <h2
+              {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+              style={{ fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#E8E8E8', textTransform: 'capitalize', marginBottom: 20 }}
+            >
+              {slide.title}
+            </h2>
+            <p
+              {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+              style={{ fontSize: 16, lineHeight: '150%', color: 'rgba(232, 232, 232, 0.8)' }}
+            >
+              {slide.subtitle}
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Editor mode: JS-based scroll compensation with <img> tag
+  return (
+    <div
+      ref={wrapRef}
+      {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+      style={{ minHeight: '100svh', position: 'relative', overflow: 'hidden', backgroundColor: '#0A0A0A', color: '#E8E8E8' }}
+    >
+      {slide.image && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          ref={imgRef}
+          {...elementProps(sectionId, `slides.${idx}.image`, 'image', 'Slide Image')}
+          src={slide.image}
+          alt=""
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', objectFit: 'cover', objectPosition: 'center', pointerEvents: 'none', willChange: 'transform', backfaceVisibility: 'hidden' }}
+        />
+      )}
+      <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(10, 10, 10, 0.85) 14%, rgba(255, 255, 255, 0) 39%)' }} />
+      {slide.badge && (
+        <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(255, 77, 0, 0.3)', color: '#E8E8E8', fontSize: 14, fontWeight: 500, zIndex: 2, letterSpacing: '0.05em' }}>
+          {slide.badge}
+        </div>
+      )}
+      <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+        <div style={{ maxWidth: '680px' }}>
+          <h2
+            {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+            style={{ fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#E8E8E8', textTransform: 'capitalize', marginBottom: 20 }}
+          >
+            {slide.title}
+          </h2>
+          <p
+            {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+            style={{ fontSize: 16, lineHeight: '150%', color: 'rgba(232, 232, 232, 0.8)' }}
+          >
+            {slide.subtitle}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* Ciseaux parallax slide — Hair salon themed.
+   - Preview mode (!isEditing): native CSS background-attachment:fixed.
+   - Editor mode (isEditing): JS scroll-based fallback with translate3d GPU acceleration. */
+function CiseauxFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: SlideItem; idx: number; sectionId: string; isEditing?: boolean }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  // JS fallback for editor mode only
+  useEffect(() => {
+    if (!isEditing) return
+    const wrap = wrapRef.current
+    const img = imgRef.current
+    if (!wrap || !img) return
+
+    let scroller: HTMLElement | null = wrap.parentElement
+    while (scroller) {
+      const ov = getComputedStyle(scroller).overflowY
+      if (ov === 'auto' || ov === 'scroll') break
+      scroller = scroller.parentElement
+    }
+    if (!scroller) return
+
+    let accOffset = 0
+    let el: HTMLElement | null = wrap
+    while (el && el !== scroller) {
+      accOffset += el.offsetTop
+      el = el.offsetParent as HTMLElement | null
+    }
+
+    const setSize = () => { img.style.height = `${scroller!.clientHeight}px` }
+    setSize()
+
+    const onScroll = () => {
+      img.style.transform = `translate3d(0,${-(accOffset - scroller!.scrollTop)}px,0)`
+    }
+
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+
+    const ro = new ResizeObserver(setSize)
+    ro.observe(scroller)
+
+    return () => {
+      scroller!.removeEventListener('scroll', onScroll)
+      ro.disconnect()
+    }
+  }, [isEditing])
+
+  // Preview mode: pure CSS background-attachment: fixed
+  if (!isEditing) {
+    return (
+      <div
+        {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+        style={{
+          display: 'block',
+          minHeight: '100svh',
+          position: 'relative',
+          overflow: 'hidden',
+          color: '#FFFFFF',
+          ...(slide.image ? {
+            backgroundImage: `url(${slide.image})`,
+            backgroundAttachment: 'fixed',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundColor: '#0B0B0B',
+          } : { backgroundColor: '#0B0B0B' }),
+        }}
+      >
+        <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(11, 11, 11, 0.8) 14%, rgba(255, 255, 255, 0) 39%)' }} />
+        {slide.badge && (
+          <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(183, 110, 121, 0.3)', color: '#FFFFFF', fontSize: 14, fontWeight: 500, zIndex: 2, letterSpacing: '0.05em' }}>
+            {slide.badge}
+          </div>
+        )}
+        <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+          <div style={{ maxWidth: '680px' }}>
+            <h2
+              {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+              style={{ fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#FFFFFF', textTransform: 'capitalize', marginBottom: 20 }}
+            >
+              {slide.title}
+            </h2>
+            <p
+              {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+              style={{ fontSize: 16, lineHeight: '150%', color: 'rgba(255, 255, 255, 0.8)' }}
+            >
+              {slide.subtitle}
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Editor mode: JS-based scroll compensation with <img> tag
+  return (
+    <div
+      ref={wrapRef}
+      {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+      style={{ minHeight: '100svh', position: 'relative', overflow: 'hidden', backgroundColor: '#0B0B0B', color: '#FFFFFF' }}
+    >
+      {slide.image && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          ref={imgRef}
+          {...elementProps(sectionId, `slides.${idx}.image`, 'image', 'Slide Image')}
+          src={slide.image}
+          alt=""
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', objectFit: 'cover', objectPosition: 'center', pointerEvents: 'none', willChange: 'transform', backfaceVisibility: 'hidden' }}
+        />
+      )}
+      <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(11, 11, 11, 0.8) 14%, rgba(255, 255, 255, 0) 39%)' }} />
+      {slide.badge && (
+        <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(183, 110, 121, 0.3)', color: '#FFFFFF', fontSize: 14, fontWeight: 500, zIndex: 2, letterSpacing: '0.05em' }}>
+          {slide.badge}
+        </div>
+      )}
+      <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+        <div style={{ maxWidth: '680px' }}>
+          <h2
+            {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+            style={{ fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#FFFFFF', textTransform: 'capitalize', marginBottom: 20 }}
+          >
+            {slide.title}
+          </h2>
+          <p
+            {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+            style={{ fontSize: 16, lineHeight: '150%', color: 'rgba(255, 255, 255, 0.8)' }}
+          >
+            {slide.subtitle}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function SliderSection({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
   const content = config.content as SliderContent
   const { universe, layout } = parseVariant(config.variant || 'startup-hero')
@@ -805,6 +1216,60 @@ export function SliderSection({ config, isEditing }: { config: SectionConfig; is
       <section {...elementProps(config.id, 'wrapper', 'container', 'Parallax Section')} style={{ width: '100%' }}>
         {items.map((slide, i) => (
           <BrixsaFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={config.id} isEditing={isEditing} />
+        ))}
+      </section>
+    )
+  }
+
+  // ── braise-parallax: Fullscreen parallax restaurant gallery ──
+  if (config.variant === 'braise-parallax') {
+    const defaultSlides = [
+      { id: '1', title: 'Cuisine Ouverte', badge: 'En vedette', subtitle: 'Notre chef orchestre une symphonie de saveurs dans une cuisine ouverte sur la salle', image: 'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=1920&q=85' } as SlideItem,
+      { id: '2', title: 'Cave \u00E0 Vins', badge: 'S\u00E9lection', subtitle: 'Plus de 300 r\u00E9f\u00E9rences soigneusement s\u00E9lectionn\u00E9es par notre sommelier', image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1920&q=85' } as SlideItem,
+      { id: '3', title: 'Terrasse Secr\u00E8te', badge: 'Exclusif', subtitle: 'Un \u00E9crin de verdure cach\u00E9 au c\u0153ur de la ville pour des soir\u00E9es inoubliables', image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=85' } as SlideItem,
+    ] as SlideItem[]
+    const items = slides.length > 0 ? slides : defaultSlides
+
+    return (
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Parallax Section')} style={{ width: '100%' }}>
+        {items.map((slide, i) => (
+          <BraiseFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={config.id} isEditing={isEditing} />
+        ))}
+      </section>
+    )
+  }
+
+  // ── forge-parallax: Fullscreen parallax sports coach gallery ──
+  if (config.variant === 'forge-parallax') {
+    const defaultSlides = [
+      { id: '1', title: 'La Salle', badge: 'Équipement Pro', subtitle: 'Un espace de 500m² équipé des meilleures machines pour repousser vos limites', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920&q=85' } as SlideItem,
+      { id: '2', title: 'Outdoor Training', badge: 'En plein air', subtitle: 'Des séances en extérieur pour varier les plaisirs et profiter du grand air', image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1920&q=85' } as SlideItem,
+      { id: '3', title: 'Transformations', badge: 'Résultats', subtitle: 'Des centaines de transformations réussies grâce à un accompagnement sur-mesure', image: 'https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=1920&q=85' } as SlideItem,
+    ] as SlideItem[]
+    const items = slides.length > 0 ? slides : defaultSlides
+
+    return (
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Parallax Section')} style={{ width: '100%' }}>
+        {items.map((slide, i) => (
+          <ForgeFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={config.id} isEditing={isEditing} />
+        ))}
+      </section>
+    )
+  }
+
+  // ── ciseaux-parallax: Fullscreen parallax hair salon gallery ──
+  if (config.variant === 'ciseaux-parallax') {
+    const defaultSlides = [
+      { id: '1', title: 'Notre Salon', badge: 'Bienvenue', subtitle: 'Un espace lumineux et raffiné dédié à votre beauté et votre bien-être', image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1920&q=85' } as SlideItem,
+      { id: '2', title: 'Les Produits', badge: 'Premium', subtitle: 'Des soins et colorations haut de gamme pour sublimer chaque chevelure', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1920&q=85' } as SlideItem,
+      { id: '3', title: 'L\'Expérience', badge: 'Exclusif', subtitle: 'Un moment de détente unique, pensé dans les moindres détails pour vous', image: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=1920&q=85' } as SlideItem,
+    ] as SlideItem[]
+    const items = slides.length > 0 ? slides : defaultSlides
+
+    return (
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Parallax Section')} style={{ width: '100%' }}>
+        {items.map((slide, i) => (
+          <CiseauxFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={config.id} isEditing={isEditing} />
         ))}
       </section>
     )
@@ -928,6 +1393,9 @@ export const sliderMeta: SectionMeta = {
     'obscura-parallax',
     'canopy-parallax',
     'brixsa-parallax',
+    'braise-parallax',
+    'forge-parallax',
+    'ciseaux-parallax',
   ],
   defaultVariant: 'startup-hero',
   defaultContent: {},

@@ -47,7 +47,7 @@ export function MiniSectionPreview({ sectionType, variant, content, style, scale
   return (
     <PreviewErrorBoundary fallback={fallback}>
       <div className="w-full bg-white overflow-hidden" style={{ height: '140px' }}>
-        <div style={{ width: '1280px', transform: `scale(${scale})`, transformOrigin: 'top left', pointerEvents: 'none', userSelect: 'none' }}>
+        <div style={{ width: `${100 / scale}%`, transform: `scale(${scale})`, transformOrigin: 'top left', pointerEvents: 'none', userSelect: 'none' }}>
           <SectionComponent config={config} isEditing={false} />
         </div>
       </div>
