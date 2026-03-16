@@ -15,6 +15,7 @@ const POPULAR_IDS = [
   'coiffeur-ciseaux',
   'architecte-atelier',
   'tatoueur-encre',
+  'spa-serenite',
 ]
 
 export function PopularTemplates() {

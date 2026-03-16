@@ -3316,6 +3316,239 @@ export function GallerySection({ config }: { config: SectionConfig }) {
   }
 
   // ═══════════════════════════════════════════════════════
+  // SERENITE — Spa & Beauty Institute Grid
+  // Deep navy background, gold glassmorphism badges on hover
+  // ═══════════════════════════════════════════════════════
+  if (variant === 'serenite-soins') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Soin Éclat Absolu', category: 'Visage', description: 'Un rituel luminosité d\'exception combinant actifs précieux et techniques ancestrales pour une peau radieuse et régénérée.', image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=85' },
+      { id: '2', title: 'Enveloppement Royal', category: 'Corps', description: 'Un cocon de douceur enveloppant tout le corps dans des argiles précieuses et huiles essentielles revitalisantes.', image: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=800&q=85' },
+      { id: '3', title: 'Massage Pierres Chaudes', category: 'Massage', description: 'Des pierres volcaniques polies glissent sur le corps pour dénouer les tensions profondes et libérer l\'énergie vitale.', image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=85' },
+      { id: '4', title: 'Rituel Hammam', category: 'Hammam', description: 'Un voyage sensoriel au cœur de la tradition orientale — vapeurs chaudes, savon noir et gommage au kessa.', image: 'https://images.unsplash.com/photo-1531901599143-df5010ab9438?w=800&q=85' },
+      { id: '5', title: 'Manucure Spa', category: 'Manucure', description: 'Un soin complet des mains alliant bain aromatique, modelage et finition impeccable pour des mains sublimées.', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800&q=85' },
+      { id: '6', title: 'Rituel Lune de Miel', category: 'Rituel', description: 'Un duo de soins enchanteurs pensé pour les couples, entre massages en cabine privative et bain de fleurs pétillant.', image: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=800&q=85' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; category?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          category: item.category ?? defaultCards[i % 6].category,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image ?? defaultCards[i % 6].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Soins Section')}
+        style={{
+          background: '#1B1B2F',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end serenite-resp-soins-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#FFFFFF',
+                }}
+              >
+                {content.title ?? 'Nos soins'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="/soins"
+              className="serenite-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#FFFFFF', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="serenite-btn-label relative" style={{ zIndex: 10 }}>Découvrir tous les soins</span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#D4B896',
+                  color: '#1B1B2F',
+                  borderRadius: '4px',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
+                <span className="serenite-btn-fill" style={{ display: 'block', background: '#D4B896', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Grid */}
+          <style>{`
+            .serenite-card:hover .serenite-img-zoom { transform: scale(1.05) !important; }
+            .serenite-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
+            .serenite-img-dezoom.revealed { transform: scale(1); }
+            .serenite-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+            .serenite-btn:hover .serenite-btn-fill { transform: translateX(0); }
+            .serenite-btn:hover .serenite-btn-label { color: #1B1B2F; }
+            .serenite-btn-label { transition: color 0.4s; }
+            .serenite-link { color: transparent; transition: color 0.3s; font-size: 14px; font-weight: 500; }
+            .serenite-card:hover .serenite-link { color: #D4B896; }
+            @media (max-width: 768px) {
+              .serenite-resp-soins-grid { grid-template-columns: 1fr !important; }
+              .serenite-resp-soins-header { flex-direction: column; align-items: flex-start !important; }
+            }
+            @media (min-width: 769px) and (max-width: 1024px) {
+              .serenite-resp-soins-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            }
+          `}</style>
+          <div {...elementProps(config.id, 'grid', 'container', 'Soins Grid')} className="grid grid-cols-3 serenite-resp-soins-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="serenite-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.serenite-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="serenite-img-zoom serenite-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="serenite-img-zoom serenite-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #2A2A45, #1B1B2F)', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-8 h-8 text-white/40" />
+                    </div>
+                  )}
+                  {/* Glassmorphism badge: category */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      right: '16px',
+                      background: 'rgba(212, 184, 150, 0.25)',
+                      backdropFilter: 'blur(15px)',
+                      WebkitBackdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      padding: '6px 14px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#D4B896',
+                      zIndex: 2,
+                      border: '1px solid rgba(212, 184, 150, 0.4)',
+                    }}
+                  >
+                    {card.category}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#FFFFFF',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: '#7B6F8A',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                  <span
+                    {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                    className="serenite-link"
+                  >
+                    Découvrir le soin &rarr;
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════
   // ZMR-AGENCY — Grille talent modeling : cards 3:4, fond noir,
   // nom sous l'image, hover image swap, style minimaliste
   // ═══════════════════════════════════════════════════════
@@ -4096,6 +4329,7 @@ export const galleryMeta = {
     'zmr-showcase',
     'atelier-projets',
     'encre-portfolio',
+    'serenite-soins',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

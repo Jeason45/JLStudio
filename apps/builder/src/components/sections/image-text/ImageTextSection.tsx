@@ -2297,6 +2297,229 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
     )
   }
 
+  // ═══════════════════════════════════════════
+  // SERENITE — Story / About (Spa / Beauty Institute)
+  // ═══════════════════════════════════════════
+
+  if (variant === 'serenite-story') {
+    const statNumberStyle = {
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+      fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+      fontWeight: 500,
+      lineHeight: '110%',
+      color: '#D4B896',
+    } as const
+
+    const paraStyle = {
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '170%',
+      color: '#7B6F8A',
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+    } as const
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const titleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const imageRevealRef = useBrixsaScrollReveal({ threshold: 0.1, disabled: isEditing })
+    const counter5000Ref = useBrixsaCounter(5000, { disabled: isEditing })
+    const counter18Ref = useBrixsaCounter(18, { disabled: isEditing })
+    const counter100Ref = useBrixsaCounter(100, { disabled: isEditing })
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'About Section')}
+        style={{
+          backgroundColor: '#1B1B2F',
+          padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <style>{`
+          @media (max-width: 968px) {
+            .serenite-story-grid { grid-template-columns: 1fr !important; }
+            .serenite-story-image { min-height: 400px !important; }
+          }
+          .serenite-story-image:hover .serenite-story-img { transform: scale(1.03) !important; }
+          .serenite-story-cta:hover {
+            background-color: #D4B896 !important;
+            color: #1B1B2F !important;
+          }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'container', 'container', 'Container')}
+          className="mx-auto serenite-story-grid"
+          style={{
+            maxWidth: '1320px',
+            display: 'grid',
+            gridTemplateColumns: '55% 45%',
+            gap: 'clamp(32px, 5vw, 80px)',
+            alignItems: 'center',
+          }}
+        >
+          {/* Left — Image with scroll reveal dezoom */}
+          <div
+            ref={imageRevealRef}
+            {...elementProps(config.id, 'imageContainer', 'container', 'Image Container')}
+            className="serenite-story-image"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              minHeight: 600,
+              borderRadius: 0,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              {...elementProps(config.id, 'image', 'image', 'Serenite Image')}
+              src={content.image || 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=85'}
+              alt={content.title || 'Le bien-être élevé au rang d\'art'}
+              className="serenite-story-img"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                transform: 'scale(1.08)',
+                transition: 'transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              }}
+            />
+            {/* Gold accent line overlay at bottom */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '3px',
+                backgroundColor: '#D4B896',
+                zIndex: 2,
+              }}
+            />
+          </div>
+
+          {/* Right — Text content */}
+          <div
+            ref={titleRevealRef}
+            {...elementProps(config.id, 'textContent', 'container', 'Text Content')}
+            style={{ display: 'flex', flexDirection: 'column', gap: 0 }}
+          >
+            {/* Eyebrow */}
+            <span
+              {...elementProps(config.id, 'eyebrow', 'text')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 12,
+                fontWeight: 500,
+                letterSpacing: '3px',
+                textTransform: 'uppercase' as const,
+                color: '#D4B896',
+                marginBottom: 20,
+              }}
+            >
+              {content.eyebrow || 'NOTRE INSTITUT'}
+            </span>
+
+            {/* Title */}
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 'clamp(2rem, 1.3rem + 3.2vw, 3.5rem)',
+                fontWeight: 500,
+                lineHeight: '115%',
+                color: customTextColor ?? '#FFFFFF',
+                margin: 0,
+                marginBottom: 24,
+              }}
+            >
+              {content.title || 'Le bien-être élevé au rang d\'art'}
+            </h2>
+
+            {/* Body text */}
+            <p
+              {...elementProps(config.id, 'body', 'text')}
+              style={{
+                ...paraStyle,
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+                maxWidth: 480,
+              }}
+            >
+              {content.body || 'Depuis plus de 18 ans, notre institut est un havre de paix dédié à votre bien-être. Chaque soin est une expérience sensorielle unique, alliant techniques ancestrales et innovations cosmétiques pour sublimer votre beauté naturelle.'}
+            </p>
+
+            {/* Counter stats */}
+            <div
+              {...elementProps(config.id, 'statsRow', 'container', 'Stats Row')}
+              style={{
+                display: 'flex',
+                gap: 'clamp(24px, 4vw, 48px)',
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+              }}
+            >
+              <div {...elementProps(config.id, 'stat1', 'container', 'Stat Block')}>
+                <div
+                  {...elementProps(config.id, 'stat1Value', 'text')}
+                  className="flex items-baseline"
+                  style={statNumberStyle}
+                >
+                  <span ref={counter5000Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(123, 111, 138, 0.7)', letterSpacing: '0.5px' }}>
+                  Soins réalisés
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat2', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat2Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter18Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(123, 111, 138, 0.7)', letterSpacing: '0.5px' }}>
+                  Années d&apos;expérience
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat3', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat3Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter100Ref}>0</span>
+                  <span>%</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(123, 111, 138, 0.7)', letterSpacing: '0.5px' }}>
+                  Produits bio &amp; naturels
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Button — gold outline → fill on hover */}
+            <a
+              {...elementProps(config.id, 'primaryButton', 'link')}
+              href={content.primaryButton?.href ?? '#'}
+              className="serenite-story-cta"
+              style={{
+                display: 'inline-block',
+                border: '1px solid #D4B896',
+                backgroundColor: 'transparent',
+                color: '#D4B896',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontWeight: 500,
+                fontSize: 14,
+                letterSpacing: '1.5px',
+                textTransform: 'uppercase' as const,
+                padding: '16px 40px',
+                textDecoration: 'none',
+                transition: 'background-color 0.4s ease, color 0.4s ease',
+                alignSelf: 'flex-start',
+              }}
+            >
+              {content.primaryButton?.label ?? 'Découvrir nos soins'}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback to startup-image-right
   return <ImageTextSection config={{ ...config, variant: 'startup-image-right' }} isEditing={isEditing} />
 }
@@ -2320,6 +2543,7 @@ export const imageTextMeta = {
     'ciseaux-story',
     'atelier-story',
     'encre-story',
+    'serenite-story',
     'brixsa-about',
     'brixsa-privacy',
   ],

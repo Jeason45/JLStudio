@@ -1746,6 +1746,134 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
     )
   }
 
+  // ─── VARIANT: serenite ───
+  // Univers institut de beauté & spa : fond navy profond #1B1B2F, blanc #FFFFFF, or chaud #D4B896, lavande #7B6F8A, text-mask hover
+  if (variant === 'serenite') {
+    const headingFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const bodyFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const deepNavy = '#1B1B2F'
+    const white = '#FFFFFF'
+    const gold = '#D4B896'
+    const lavender = '#7B6F8A'
+    const textMuted = 'rgba(212,184,150,0.5)'
+    return (
+      <footer
+        {...elementProps(config.id, 'wrapper', 'container', 'Footer')}
+        className="relative"
+        style={{ backgroundColor: deepNavy, color: white, fontFamily: bodyFont }}
+      >
+        {/* Inject hover animations for text-mask effect */}
+        <style>{`
+          .serenite-link-mask { overflow: hidden; height: 1.5em; position: relative; display: block; }
+          .serenite-link-mask .serenite-text-main { display: block; transition: transform 0.3s ease; }
+          .serenite-link-mask .serenite-text-alt { position: absolute; top: 100%; left: 0; display: block; transition: transform 0.3s ease; }
+          .serenite-link-mask:hover .serenite-text-main,
+          .serenite-link-mask:hover .serenite-text-alt { transform: translateY(-100%); }
+          @media (max-width: 768px) {
+            .serenite-resp-footer-cols { flex-direction: column !important; gap: 32px !important; }
+          }
+        `}</style>
+
+        <div {...elementProps(config.id, 'footerInner', 'container', 'Footer Inner')} style={{ paddingTop: 'clamp(60px, 10vw, 100px)', paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)' }}>
+          {/* Logo + gold separator */}
+          <div {...elementProps(config.id, 'brandArea', 'container', 'Brand Area')} className="flex flex-col items-center" style={{ marginBottom: 48 }}>
+            <p
+              {...elementProps(config.id, 'logo', 'image')}
+              style={{ fontFamily: headingFont, fontSize: 32, fontWeight: 600, color: gold, letterSpacing: '0.05em', marginBottom: 20 }}
+            >
+              {renderLogo(logo)}
+            </p>
+            <div style={{ width: 60, height: 1, backgroundColor: gold }} />
+          </div>
+
+          {/* 3 Columns */}
+          <div {...elementProps(config.id, 'columnsArea', 'container', 'Columns Area')} className="flex flex-row justify-center serenite-resp-footer-cols" style={{ gap: 'clamp(40px, 8vw, 120px)', paddingBottom: 48 }}>
+            {columns.map((col, ci) => (
+              <div key={col.id || `col-${ci}`} className="flex flex-col" style={{ minWidth: 140 }}>
+                <p
+                  {...elementProps(config.id, `columns.${ci}.title`, 'heading')}
+                  style={{ fontFamily: headingFont, fontSize: 13, fontWeight: 600, color: gold, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}
+                >
+                  {col.title}
+                </p>
+                <div className="flex flex-col" style={{ gap: 6 }}>
+                  {col.links.map((link, li) => (
+                    <a
+                      key={link.id || `${ci}-${li}`}
+                      {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')}
+                      href={link.href}
+                      className="serenite-link-mask"
+                      style={{ color: white, textDecoration: 'none', fontSize: 14, fontWeight: 400 }}
+                    >
+                      <span className="serenite-text-main">{link.label}</span>
+                      <span className="serenite-text-alt" style={{ color: lavender }}>{link.label}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          {...elementProps(config.id, 'bottomBar', 'container', 'Footer Bottom')}
+          className="flex flex-wrap items-center justify-between"
+          style={{ borderTop: `1px solid rgba(212,184,150,0.25)`, padding: '24px clamp(20px, 5vw, 60px)', gap: 16 }}
+        >
+          <p
+            {...elementProps(config.id, 'copyright', 'text')}
+            style={{ color: textMuted, fontSize: 13 }}
+          >
+            {content.copyright ?? `\u00A9 ${new Date().getFullYear()} S\u00E9r\u00E9nit\u00E9. Tous droits r\u00E9serv\u00E9s.`}
+          </p>
+          {/* Social icons */}
+          <div {...elementProps(config.id, 'socialsRow', 'container', 'Social Icons')} className="flex flex-row items-center" style={{ gap: 16 }}>
+            {/* Instagram */}
+            <a
+              {...elementProps(config.id, 'socials.instagram', 'link')}
+              href={socials.instagram ?? '#'}
+              aria-label="Instagram"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = gold }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <circle cx="12" cy="12" r="5" />
+                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+              </svg>
+            </a>
+            {/* Facebook */}
+            <a
+              {...elementProps(config.id, 'socials.facebook', 'link')}
+              href={(socials as Record<string, string | undefined>).facebook ?? '#'}
+              aria-label="Facebook"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = gold }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+              </svg>
+            </a>
+            {/* Pinterest */}
+            <a
+              {...elementProps(config.id, 'socials.pinterest', 'link')}
+              href={(socials as Record<string, string | undefined>).pinterest ?? '#'}
+              aria-label="Pinterest"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = gold }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" /></svg>
+            </a>
+          </div>
+        </div>
+      </footer>
+    )
+  }
+
   // fallback → startup
   return <SiteFooterSection config={{ ...config, variant: 'startup' }} />
 }
@@ -1754,7 +1882,7 @@ export const siteFooterMeta = {
   type: 'site-footer',
   label: 'Footer',
   icon: '🔻',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency', 'atelier', 'encre'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency', 'atelier', 'encre', 'serenite'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

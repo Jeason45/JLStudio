@@ -4562,6 +4562,438 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     )
   }
 
+  // ─── VARIANT: serenite ───
+  // Institut de beauté & spa premium : fullscreen diagonal-wipe slider, glassmorphism booking bar, scroll reveal
+  if (variant === 'serenite') {
+    const defaultHeroImages = [
+      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1920&q=85',
+      'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=1920&q=85',
+      'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=1920&q=85',
+    ]
+
+    const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+    const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+
+    const slides = [
+      { name: 'Un sanctuaire de bien-\u00EAtre', style: 'Soin Signature', bg: 'linear-gradient(135deg, #1B1B2F 0%, #2A2440 50%, #1B1B2F 100%)', image: heroImages?.[0] ?? defaultHeroImages[0] },
+      { name: "L\u2019art du soin sur mesure", style: 'Massage Premium', bg: 'linear-gradient(135deg, #22213A 0%, #1B1B2F 50%, #251F38 100%)', image: heroImages?.[1] ?? defaultHeroImages[1] },
+      { name: '\u00C9veillez vos sens', style: 'Rituel Spa', bg: 'linear-gradient(135deg, #1B1B2F 0%, #251F38 50%, #22213A 100%)', image: heroImages?.[2] ?? defaultHeroImages[2] },
+    ]
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const [sereniteActiveSlide, setSereniteActiveSlide] = useState(0)
+    const serenitePrevSlideRef = useRef(0)
+    const sereniteTitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const sereniteProgressRef = useRef<HTMLDivElement>(null)
+
+    const sereniteGoNext = useCallback(() => {
+      setSereniteActiveSlide((prev) => {
+        serenitePrevSlideRef.current = prev
+        return (prev + 1) % slides.length
+      })
+    }, [])
+
+    const sereniteGoPrev = useCallback(() => {
+      setSereniteActiveSlide((prev) => {
+        serenitePrevSlideRef.current = prev
+        return (prev - 1 + slides.length) % slides.length
+      })
+    }, [])
+
+    useEffect(() => {
+      const interval = setInterval(sereniteGoNext, 5000)
+      return () => clearInterval(interval)
+    }, [sereniteGoNext])
+
+    // Reset progress bar animation on slide change
+    useEffect(() => {
+      if (sereniteProgressRef.current) {
+        sereniteProgressRef.current.style.transition = 'none'
+        sereniteProgressRef.current.style.width = '0%'
+        // Force reflow
+        void sereniteProgressRef.current.offsetWidth
+        sereniteProgressRef.current.style.transition = 'width 5s linear'
+        sereniteProgressRef.current.style.width = '100%'
+      }
+    }, [sereniteActiveSlide])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    const sereniteCurrentSlide = slides[sereniteActiveSlide]
+    const sereniteBtnLabel = content.primaryButton?.label || 'R\u00E9server un soin'
+
+    return (
+      <>
+      {/* Serenite hero responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .serenite-resp-bookingbar { flex-direction: column !important; padding: 16px !important; border-radius: 16px !important; max-width: 90% !important; }
+          .serenite-resp-filters { flex-direction: column !important; gap: 12px !important; width: 100% !important; }
+          .serenite-resp-filter-divider { display: none !important; }
+          .serenite-resp-reserve-btn { width: 100% !important; margin-left: 0 !important; margin-top: 8px !important; justify-content: center !important; }
+          .serenite-resp-hero-title { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
+          .serenite-resp-hero-subtitle { font-size: 12px !important; }
+          .serenite-resp-nav-arrows { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .serenite-resp-bookingbar { margin: 0 16px; max-width: calc(100% - 32px) !important; }
+        }
+      ` }} />
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+        className="relative overflow-hidden"
+        style={{
+          height: '100vh',
+          backgroundColor: '#1B1B2F',
+          color: '#FFFFFF',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        {/* Diagonal wipe — parallelogram translates uniformly */}
+        {slides.map((slide, i) => {
+          const isActive = sereniteActiveSlide === i
+          const isPrev = serenitePrevSlideRef.current === i && !isActive
+
+          const visible = 'polygon(0% 0%, 130% 0%, 130% 100%, -20% 100%)'
+          const hidden  = 'polygon(120% 0%, 250% 0%, 250% 100%, 100% 100%)'
+          const full    = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+
+          return (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                clipPath: isActive ? visible : isPrev ? full : hidden,
+                opacity: isActive || isPrev ? 1 : 0,
+                transition: isActive
+                  ? 'clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1), opacity 0s'
+                  : isPrev
+                    ? 'none'
+                    : 'clip-path 0s 1.3s, opacity 0s 1.3s',
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              }}
+            >
+              {slide.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: slide.bg,
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* Dark overlay with subtle navy tint */}
+        <div {...elementProps(config.id, 'overlay', 'container', 'Overlay')} className="absolute inset-0" style={{ backgroundColor: 'rgba(27, 27, 47, 0.45)', zIndex: 3 }} />
+
+        {/* Content — bottom-left title + subtitle */}
+        <div {...elementProps(config.id, 'centerContent', 'container', 'Hero Content')} className="relative flex flex-col justify-end h-full px-6" style={{ zIndex: 10, paddingBottom: '140px', paddingLeft: 'clamp(20px, 5vw, 80px)' }}>
+          <div ref={sereniteTitleRevealRef}>
+            {/* Subtitle above title — lavender, wide tracking */}
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              className="serenite-resp-hero-subtitle"
+              style={{
+                color: '#7B6F8A',
+                fontSize: '13px',
+                fontWeight: 500,
+                letterSpacing: '0.28em',
+                textTransform: 'uppercase',
+                marginBottom: '18px',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+              }}
+            >
+              {subtitle || 'INSTITUT DE BEAUT\u00C9 & SPA'}
+            </p>
+            {/* H1 title with gold accent on last word */}
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              className="serenite-resp-hero-title"
+              style={{
+                color: '#FFFFFF',
+                fontWeight: 300,
+                fontSize: 'clamp(2.875rem, 1.6429rem + 5.4762vw, 5.75rem)',
+                lineHeight: '105%',
+                maxWidth: '820px',
+                textAlign: 'left',
+                marginBottom: '0',
+                marginTop: 0,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {title ? (
+                title
+              ) : (
+                <>
+                  {sereniteCurrentSlide.name.split(' ').slice(0, -1).join(' ')}{' '}
+                  <span style={{ color: '#D4B896', fontWeight: 500 }}>{sereniteCurrentSlide.name.split(' ').slice(-1)[0]}</span>
+                </>
+              )}
+            </h1>
+          </div>
+        </div>
+
+        {/* Glassmorphism booking bar at bottom */}
+        <div
+          {...elementProps(config.id, 'bookingBar', 'container', 'Booking Bar')}
+          className="absolute z-10 flex items-center serenite-resp-bookingbar"
+          style={{
+            bottom: '40px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            borderRadius: '999px',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(27, 27, 47, 0.5)',
+            padding: '6px 6px 6px 28px',
+            gap: '0',
+            maxWidth: '720px',
+            width: '90%',
+            border: '1px solid rgba(212, 184, 150, 0.2)',
+          }}
+        >
+          {/* Booking fields */}
+          <div {...elementProps(config.id, 'filtersRow', 'container', 'Booking Fields')} className="flex items-center serenite-resp-filters" style={{ flexShrink: 0 }}>
+            {['Nom', 'Email', 'Type de soin'].map((label, i) => (
+              <div
+                key={label}
+                style={{
+                  position: 'relative',
+                  paddingRight: i < 2 ? '14px' : '0',
+                  marginRight: i < 2 ? '14px' : '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                {i < 2 && (
+                  <span className="serenite-resp-filter-divider" style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '1px',
+                    height: '20px',
+                    backgroundColor: 'rgba(212, 184, 150, 0.2)',
+                  }} />
+                )}
+                <span
+                  {...elementProps(config.id, `filters.${i}.label`, 'text')}
+                  style={{
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    fontSize: '14px',
+                    cursor: 'default',
+                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                    userSelect: 'none',
+                    fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                    gap: '6px',
+                  }}
+                >
+                  {label === 'Nom' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  )}
+                  {label === 'Email' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  )}
+                  {label === 'Type de soin' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                  )}
+                  {label}
+                  {label === 'Type de soin' && (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '2px', opacity: 0.6 }}><polyline points="6 9 12 15 18 9"/></svg>
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA button */}
+          <div className="serenite-resp-reserve-btn" style={{ flex: '1 1 auto', minWidth: '0', display: 'flex', justifyContent: 'flex-end', marginLeft: '16px' }}>
+            <div
+              {...elementProps(config.id, 'primaryButton', 'button')}
+              role="button"
+              style={{
+                backgroundColor: '#D4B896',
+                color: '#1B1B2F',
+                borderRadius: '999px',
+                paddingLeft: '28px',
+                paddingRight: '28px',
+                paddingTop: '12px',
+                paddingBottom: '12px',
+                fontSize: '14px',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.02em',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#E0C8A8' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#D4B896' }}
+            >
+              {sereniteBtnLabel}
+            </div>
+          </div>
+        </div>
+
+        {/* Prev button */}
+        <div
+          {...elementProps(config.id, 'prevButton', 'button')}
+          role="button"
+          onClick={sereniteGoPrev}
+          className="absolute z-10 flex items-center justify-center serenite-resp-nav-arrows"
+          style={{
+            left: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(212, 184, 150, 0.15)',
+            border: '1px solid rgba(212, 184, 150, 0.2)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(212, 184, 150, 0.32)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(212, 184, 150, 0.15)' }}
+          aria-label="Previous slide"
+        >
+          <span {...elementProps(config.id, 'prevIcon', 'icon', 'Chevron Left')}><ChevronLeft style={{ width: '24px', height: '24px', color: '#D4B896' }} /></span>
+        </div>
+
+        {/* Next button */}
+        <div
+          {...elementProps(config.id, 'nextButton', 'button')}
+          role="button"
+          onClick={sereniteGoNext}
+          className="absolute z-10 flex items-center justify-center serenite-resp-nav-arrows"
+          style={{
+            right: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(212, 184, 150, 0.15)',
+            border: '1px solid rgba(212, 184, 150, 0.2)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(212, 184, 150, 0.32)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(212, 184, 150, 0.15)' }}
+          aria-label="Next slide"
+        >
+          <span {...elementProps(config.id, 'nextIcon', 'icon', 'Chevron Right')}><ChevronRight style={{ width: '24px', height: '24px', color: '#D4B896' }} /></span>
+        </div>
+
+        {/* Bottom-left meta badge */}
+        <div
+          {...elementProps(config.id, 'slideMeta', 'container', 'Slide Info')}
+          className="absolute z-10"
+          style={{
+            bottom: '100px',
+            left: 'clamp(16px, 4vw, 80px)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(212, 184, 150, 0.12)',
+            borderRadius: '4px',
+            padding: '10px 18px',
+            border: '1px solid rgba(212, 184, 150, 0.2)',
+          }}
+        >
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            <span
+              {...elementProps(config.id, `slides.${sereniteActiveSlide}.name`, 'text')}
+              style={{ fontSize: 'clamp(13px, 1.5vw, 16px)', fontWeight: 500, color: '#FFFFFF', letterSpacing: '0.01em' }}
+            >
+              {sereniteCurrentSlide.name}
+            </span>
+            <span {...elementProps(config.id, 'slideDivider', 'text', 'Divider')} style={{ color: 'rgba(255, 255, 255, 0.3)', fontSize: '14px' }}>
+              &middot;
+            </span>
+            <span
+              {...elementProps(config.id, `slides.${sereniteActiveSlide}.style`, 'text')}
+              className="flex items-center"
+              style={{ color: '#D4B896', fontSize: '13px', gap: '4px', fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase' }}
+            >
+              {sereniteCurrentSlide.style}
+            </span>
+          </div>
+        </div>
+
+        {/* Progress bar at very bottom */}
+        <div
+          {...elementProps(config.id, 'progressBar', 'container', 'Progress Bar')}
+          className="absolute z-10"
+          style={{
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            backgroundColor: 'rgba(212, 184, 150, 0.15)',
+          }}
+        >
+          <div
+            ref={sereniteProgressRef}
+            style={{
+              height: '100%',
+              backgroundColor: '#D4B896',
+              width: '0%',
+              transition: 'width 5s linear',
+            }}
+          />
+        </div>
+
+        {/* Bottom-right slide dots */}
+        <div
+          {...elementProps(config.id, 'slideNav', 'container', 'Slide Nav')}
+          className="absolute z-10 flex"
+          style={{ bottom: '100px', right: 'clamp(16px, 4vw, 80px)', gap: '8px', alignItems: 'center' }}
+        >
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              {...elementProps(config.id, `slides.${i}.dot`, 'button')}
+              role="button"
+              onClick={() => setSereniteActiveSlide(i)}
+              style={{
+                width: sereniteActiveSlide === i ? '28px' : '6px',
+                height: '6px',
+                borderRadius: '999px',
+                backgroundColor: sereniteActiveSlide === i ? '#D4B896' : 'rgba(255, 255, 255, 0.25)',
+                cursor: 'pointer',
+                transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease',
+              }}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+      </>
+    )
+  }
+
   // fallback → startup
   return <HeroSection config={{ ...config, variant: 'startup' }} isEditing={isEditing} />
 }
@@ -4637,7 +5069,7 @@ export const heroMeta = {
   type: 'hero',
   label: 'Hero',
   icon: '⚡',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite'],
   defaultVariant: 'startup',
   defaultContent: {},
 }
