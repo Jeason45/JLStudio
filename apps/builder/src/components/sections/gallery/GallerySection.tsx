@@ -3083,6 +3083,239 @@ export function GallerySection({ config }: { config: SectionConfig }) {
   }
 
   // ═══════════════════════════════════════════════════════
+  // ENCRE — Tattoo Artist Portfolio Grid
+  // Deep black background, crimson accents, glassmorphism hover badges
+  // ═══════════════════════════════════════════════════════
+  if (variant === 'encre-portfolio') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Portrait Réaliste', category: 'Réalisme', description: 'Un portrait hyperréaliste aux détails saisissants, capturant chaque nuance de la peau et du regard.', image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=85' },
+      { id: '2', title: 'Dragon Japonais', category: 'Japonais', description: 'Un dragon traditionnel japonais aux couleurs vives et aux écailles minutieusement détaillées.', image: 'https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=800&q=85' },
+      { id: '3', title: 'Mandala Géométrique', category: 'Géométrique', description: 'Mandala aux lignes parfaites et à la symétrie absolue, créant un effet hypnotique sur la peau.', image: 'https://images.unsplash.com/photo-1565073624497-7144969d0a8c?w=800&q=85' },
+      { id: '4', title: 'Rose Old School', category: 'Old School', description: 'Une rose classique aux contours épais et aux couleurs saturées, hommage au tatouage traditionnel.', image: 'https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=800&q=85' },
+      { id: '5', title: 'Lion Dotwork', category: 'Dotwork', description: 'Majestueux lion réalisé entièrement en pointillisme, créant profondeur et texture par accumulation.', image: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=85' },
+      { id: '6', title: 'Sleeve Blackwork', category: 'Blackwork', description: 'Sleeve couvrant l\'avant-bras en noir profond, motifs entrelacés et ornementaux d\'une rare précision.', image: 'https://images.unsplash.com/photo-1568515045052-f9a854d70bfd?w=800&q=85' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; category?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          category: item.category ?? defaultCards[i % 6].category,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image ?? defaultCards[i % 6].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Portfolio Section')}
+        style={{
+          background: '#0A0A0A',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end encre-resp-portfolio-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#FFFFFF',
+                }}
+              >
+                {content.title ?? 'Portfolio'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="/portfolio"
+              className="encre-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#FFFFFF', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="encre-btn-label relative" style={{ zIndex: 10 }}>Voir tout le portfolio</span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#C41E3A',
+                  color: '#FFFFFF',
+                  borderRadius: '4px',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
+                <span className="encre-btn-fill" style={{ display: 'block', background: '#C41E3A', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Grid */}
+          <style>{`
+            .encre-card:hover .encre-img-zoom { transform: scale(1.05) !important; }
+            .encre-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
+            .encre-img-dezoom.revealed { transform: scale(1); }
+            .encre-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+            .encre-btn:hover .encre-btn-fill { transform: translateX(0); }
+            .encre-btn:hover .encre-btn-label { color: #FFFFFF; }
+            .encre-btn-label { transition: color 0.4s; }
+            .encre-link { color: transparent; transition: color 0.3s; font-size: 14px; font-weight: 500; }
+            .encre-card:hover .encre-link { color: #C41E3A; }
+            @media (max-width: 768px) {
+              .encre-resp-portfolio-grid { grid-template-columns: 1fr !important; }
+              .encre-resp-portfolio-header { flex-direction: column; align-items: flex-start !important; }
+            }
+            @media (min-width: 769px) and (max-width: 1024px) {
+              .encre-resp-portfolio-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            }
+          `}</style>
+          <div {...elementProps(config.id, 'grid', 'container', 'Portfolio Grid')} className="grid grid-cols-3 encre-resp-portfolio-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="encre-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.encre-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="encre-img-zoom encre-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="encre-img-zoom encre-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #1A1A1A, #0A0A0A)', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-8 h-8 text-white/40" />
+                    </div>
+                  )}
+                  {/* Glassmorphism badge: category */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      right: '16px',
+                      background: 'rgba(196, 30, 58, 0.3)',
+                      backdropFilter: 'blur(15px)',
+                      WebkitBackdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      padding: '6px 14px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#FFFFFF',
+                      zIndex: 2,
+                      border: '1px solid rgba(196, 30, 58, 0.4)',
+                    }}
+                  >
+                    {card.category}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#FFFFFF',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: '#8C8C8C',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                  <span
+                    {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                    className="encre-link"
+                  >
+                    Voir le tatouage &rarr;
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════
   // ZMR-AGENCY — Grille talent modeling : cards 3:4, fond noir,
   // nom sous l'image, hover image swap, style minimaliste
   // ═══════════════════════════════════════════════════════
@@ -3862,6 +4095,7 @@ export const galleryMeta = {
     'zmr-agency-grid',
     'zmr-showcase',
     'atelier-projets',
+    'encre-portfolio',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},
