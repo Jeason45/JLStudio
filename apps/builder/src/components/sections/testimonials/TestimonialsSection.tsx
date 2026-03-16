@@ -2535,6 +2535,182 @@ function SereniteFeature({ content, items, sectionId }: { content: Partial<Testi
   )
 }
 
+function PulseFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const defaultQuotes = [
+    "Il a transformé notre festival en une expérience inoubliable. La montée en puissance de son set de clôture a laissé 10 000 personnes sans voix.",
+    "Trois années consécutives qu'il assure nos soirées corporate. Professionnel, à l'écoute et toujours dans le bon tempo pour nos événements.",
+    "Le meilleur DJ résident qu'on ait eu. Il lit la foule comme personne et sait exactement quand lâcher le drop.",
+  ]
+
+  const defaultAuthors = [
+    { name: 'Marc D.', role: 'Directeur Artistique Festival' },
+    { name: 'Sophie L.', role: 'Event Manager' },
+    { name: 'Antoine R.', role: 'Gérant de Club' },
+  ]
+
+  const defaultAvatars = [
+    'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=900&q=85',
+    'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=900&q=85',
+    'https://images.unsplash.com/photo-1571266028243-d220c6a6dee1?w=900&q=85',
+  ]
+
+  const quotes = items.length > 0
+    ? items.map((item, i) => item.quote || defaultQuotes[i % defaultQuotes.length])
+    : defaultQuotes
+
+  const authors = items.length > 0
+    ? items.map((item, i) => ({ name: item.author || defaultAuthors[i % defaultAuthors.length].name, role: item.role || defaultAuthors[i % defaultAuthors.length].role }))
+    : defaultAuthors
+
+  const avatars = items.length > 0
+    ? items.map((item, i) => item.avatar || defaultAvatars[i % defaultAvatars.length])
+    : defaultAvatars
+
+  const total = quotes.length
+
+  const goPrev = () => setActiveIndex((prev) => (prev - 1 + total) % total)
+  const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % total)
+    }, 7000)
+    return () => clearInterval(timer)
+  }, [total])
+
+  return (
+    <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#0D0D0D', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .pulse-testimonial-split { flex-direction: column !important; }
+          .pulse-testimonial-split > div { flex: 1 1 100% !important; min-height: 50vh; }
+        }
+      `}</style>
+      <div {...elementProps(sectionId, 'splitLayout', 'container', 'Split Layout')} className="pulse-testimonial-split flex flex-row w-full" style={{ minHeight: '620px' }}>
+        {/* LEFT — Quote (50%) */}
+        <div {...elementProps(sectionId, 'contentPanel', 'container', 'Content Panel')} className="flex flex-col" style={{ flex: '1 1 50%', backgroundColor: '#0A0A0A', color: '#FFFFFF', padding: '60px' }}>
+          {/* Top label */}
+          <p
+            {...elementProps(sectionId, 'eyebrow', 'text')}
+            style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#00E5FF', marginBottom: 'auto' }}
+          >
+            {content.eyebrow || content.title || 'Témoignages'}
+          </p>
+
+          {/* Main content */}
+          <div className="flex flex-col" style={{ maxWidth: '536px', marginTop: 'auto', marginLeft: 'auto' }}>
+            {/* Quote text wrap */}
+            <div style={{ marginTop: 'auto', marginBottom: '40px', marginLeft: 'auto' }}>
+              {quotes.map((quote, i) => (
+                <div key={items[i]?.id ?? i} style={{ display: i === activeIndex ? 'block' : 'none' }}>
+                  {/* Cyan quote mark */}
+                  <div style={{ color: '#00E5FF', fontSize: '80px', lineHeight: '0.6', marginBottom: '24px', fontFamily: 'Georgia, serif' }}>&ldquo;</div>
+                  <p
+                    {...elementProps(sectionId, `items.${i}.quote`, 'text')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
+                      fontWeight: 400,
+                      fontStyle: 'italic',
+                      lineHeight: '135%',
+                      color: '#FFFFFF',
+                    }}
+                  >
+                    {quote}
+                  </p>
+                  {/* Author */}
+                  <div style={{ marginTop: '24px' }}>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.author`, 'text')}
+                      style={{ fontSize: '16px', fontWeight: 600, color: '#FFFFFF' }}
+                    >
+                      {authors[i]?.name}
+                    </p>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.role`, 'text')}
+                      style={{ fontSize: '14px', fontWeight: 400, color: '#FF006E', marginTop: '4px' }}
+                    >
+                      {authors[i]?.role}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigation dots + arrows */}
+            {total > 1 && (
+              <div {...elementProps(sectionId, 'navDots', 'container', 'Nav Dots')} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                {Array.from({ length: total }).map((_, i) => (
+                  <div
+                    key={i}
+                    role="button"
+                    onClick={() => setActiveIndex(i)}
+                    style={{
+                      width: i === activeIndex ? '32px' : '8px',
+                      height: '8px',
+                      borderRadius: '4px',
+                      backgroundColor: i === activeIndex ? '#00E5FF' : 'rgba(255, 255, 255, 0.2)',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                    }}
+                  />
+                ))}
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={goPrev}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'transparent', border: '1px solid rgba(0, 229, 255, 0.4)', color: '#00E5FF', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                  </button>
+                  <button
+                    onClick={goNext}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#00E5FF', border: '1px solid #00E5FF', color: '#0D0D0D', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT — Event/Performance Photo (50%) */}
+        <div {...elementProps(sectionId, 'imagePanel', 'container', 'Image Panel')} className="relative overflow-hidden flex items-center justify-center" style={{ flex: '1 1 50%', backgroundColor: '#0D0D0D' }}>
+          {Array.from({ length: total }).map((_, i) => {
+            const item = items[i]
+            const src = item?.avatar || avatars[i]
+            return (
+              <div
+                key={item?.id ?? i}
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  opacity: i === activeIndex ? 1 : 0,
+                  zIndex: i === activeIndex ? 2 : 0,
+                  transition: 'opacity 0.6s ease',
+                }}
+              >
+                {src ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    {...elementProps(sectionId, `items.${i}.avatar`, 'image')}
+                    src={src}
+                    alt={item?.author || ''}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : null}
+                {/* Subtle cyan gradient overlay on the image */}
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(0,229,255,0.08) 0%, rgba(255,0,110,0.06) 100%)', zIndex: 1 }} />
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ─────────────────────────────────────────────
 // SLIDER variants (one per universe) — embla carousel
 // ─────────────────────────────────────────────
@@ -2680,6 +2856,7 @@ const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsConten
   'atelier-featured': AtelierFeatured,
   'encre-featured': EncreFeatured,
   'serenite-featured': SereniteFeature,
+  'pulse-featured': PulseFeatured,
 }
 
 export function TestimonialsSection({ config }: TestimonialsSectionProps) {
@@ -2709,6 +2886,7 @@ export function TestimonialsSection({ config }: TestimonialsSectionProps) {
     atelier: '#C4B5A0',
     encre: '#C41E3A',
     serenite: '#D4B896',
+    pulse: '#00E5FF',
   }
   const accent = accentColor ?? defaultAccents[universe] ?? '#6366f1'
 
@@ -2740,6 +2918,7 @@ export const testimonialsMeta = {
     'atelier-featured',
     'encre-featured',
     'serenite-featured',
+    'pulse-featured',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

@@ -1874,6 +1874,132 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
     )
   }
 
+  // ─── VARIANT: pulse ───
+  // Univers DJ / musicien : fond noir absolu #0D0D0D, texte blanc #FFFFFF, accent cyan #00E5FF, magenta #FF006E
+  if (variant === 'pulse') {
+    const headingFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const bodyFont = "'GeneralSans Variable', 'General Sans', sans-serif"
+    const absoluteBlack = '#0D0D0D'
+    const white = '#FFFFFF'
+    const cyan = '#00E5FF'
+    const magenta = '#FF006E'
+    const textMuted = 'rgba(255,255,255,0.4)'
+    return (
+      <footer
+        {...elementProps(config.id, 'wrapper', 'container', 'Footer')}
+        className="relative"
+        style={{ backgroundColor: absoluteBlack, color: white, fontFamily: bodyFont }}
+      >
+        {/* Inject hover animations for text-mask effect */}
+        <style>{`
+          .pulse-link-mask { overflow: hidden; height: 1.5em; position: relative; display: block; }
+          .pulse-link-mask .pulse-text-main { display: block; transition: transform 0.3s ease; }
+          .pulse-link-mask .pulse-text-alt { position: absolute; top: 100%; left: 0; display: block; transition: transform 0.3s ease; color: ${magenta}; }
+          .pulse-link-mask:hover .pulse-text-main,
+          .pulse-link-mask:hover .pulse-text-alt { transform: translateY(-100%); }
+          @media (max-width: 768px) {
+            .pulse-resp-footer-cols { flex-direction: column !important; gap: 32px !important; }
+          }
+        `}</style>
+
+        <div {...elementProps(config.id, 'footerInner', 'container', 'Footer Inner')} style={{ paddingTop: 'clamp(60px, 10vw, 100px)', paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)' }}>
+          {/* Logo + cyan separator */}
+          <div {...elementProps(config.id, 'brandArea', 'container', 'Brand Area')} className="flex flex-col items-center" style={{ marginBottom: 48 }}>
+            <p
+              {...elementProps(config.id, 'logo', 'image')}
+              style={{ fontFamily: headingFont, fontSize: 32, fontWeight: 700, color: cyan, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 20 }}
+            >
+              {renderLogo(logo)}
+            </p>
+            <div style={{ width: 60, height: 1, backgroundColor: cyan, boxShadow: `0 0 8px ${cyan}` }} />
+          </div>
+
+          {/* 3 Columns */}
+          <div {...elementProps(config.id, 'columnsArea', 'container', 'Columns Area')} className="flex flex-row justify-center pulse-resp-footer-cols" style={{ gap: 'clamp(40px, 8vw, 120px)', paddingBottom: 48 }}>
+            {columns.map((col, ci) => (
+              <div key={col.id || `col-${ci}`} className="flex flex-col" style={{ minWidth: 140 }}>
+                <p
+                  {...elementProps(config.id, `columns.${ci}.title`, 'heading')}
+                  style={{ fontFamily: headingFont, fontSize: 13, fontWeight: 600, color: cyan, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}
+                >
+                  {col.title}
+                </p>
+                <div className="flex flex-col" style={{ gap: 6 }}>
+                  {col.links.map((link, li) => (
+                    <a
+                      key={link.id || `${ci}-${li}`}
+                      {...elementProps(config.id, `columns.${ci}.links.${li}.label`, 'link')}
+                      href={link.href}
+                      className="pulse-link-mask"
+                      style={{ color: white, textDecoration: 'none', fontSize: 14, fontWeight: 400 }}
+                    >
+                      <span className="pulse-text-main">{link.label}</span>
+                      <span className="pulse-text-alt">{link.label}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          {...elementProps(config.id, 'bottomBar', 'container', 'Footer Bottom')}
+          className="flex flex-wrap items-center justify-between"
+          style={{ borderTop: `1px solid rgba(0,229,255,0.2)`, padding: '24px clamp(20px, 5vw, 60px)', gap: 16 }}
+        >
+          <p
+            {...elementProps(config.id, 'copyright', 'text')}
+            style={{ color: textMuted, fontSize: 13 }}
+          >
+            {content.copyright ?? `\u00A9 ${new Date().getFullYear()} Pulse. Tous droits r\u00E9serv\u00E9s.`}
+          </p>
+          {/* Social icons */}
+          <div {...elementProps(config.id, 'socialsRow', 'container', 'Social Icons')} className="flex flex-row items-center" style={{ gap: 16 }}>
+            {/* Instagram */}
+            <a
+              {...elementProps(config.id, 'socials.instagram', 'link')}
+              href={socials.instagram ?? '#'}
+              aria-label="Instagram"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = cyan }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <circle cx="12" cy="12" r="5" />
+                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+              </svg>
+            </a>
+            {/* SoundCloud */}
+            <a
+              {...elementProps(config.id, 'socials.soundcloud', 'link')}
+              href={(socials as Record<string, string | undefined>).soundcloud ?? '#'}
+              aria-label="SoundCloud"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = cyan }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.56 8.87V17h8.76c1.19-.01 2.17-.99 2.17-2.2 0-1.02-.68-1.87-1.63-2.13.03-.19.05-.38.05-.57 0-1.95-1.58-3.53-3.53-3.53-.39 0-.76.06-1.1.18C15.77 7.58 14.57 7 13.23 7c-.93 0-1.77.34-2.41.9.47.3.74.78.74 1.3v-.33zm-1.5.33c0-.89-.72-1.6-1.6-1.6-.88 0-1.59.71-1.59 1.6v8.8h3.19V9.2zm-3.69.35c-.23-.07-.47-.11-.73-.11-.15 0-.29.01-.43.04C4.3 9.55 3.3 10.4 3 11.52c-.36.15-.6.5-.6.91V17h4.47V9.55z"/></svg>
+            </a>
+            {/* Spotify */}
+            <a
+              {...elementProps(config.id, 'socials.spotify', 'link')}
+              href={(socials as Record<string, string | undefined>).spotify ?? '#'}
+              aria-label="Spotify"
+              style={{ color: textMuted, transition: 'color 0.3s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = cyan }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = textMuted }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            </a>
+          </div>
+        </div>
+      </footer>
+    )
+  }
+
   // fallback → startup
   return <SiteFooterSection config={{ ...config, variant: 'startup' }} />
 }
@@ -1882,7 +2008,7 @@ export const siteFooterMeta = {
   type: 'site-footer',
   label: 'Footer',
   icon: '🔻',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency', 'atelier', 'encre', 'serenite'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'canopy', 'obscura', 'nacre', 'brixsa', 'braise', 'forge', 'ciseaux', 'zmr-agency', 'atelier', 'encre', 'serenite', 'pulse'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

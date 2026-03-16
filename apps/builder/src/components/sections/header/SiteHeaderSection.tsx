@@ -379,6 +379,12 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
     return <SereniteHeader config={config} logo={logo} ctaLabel={ctaLabel} links={links} />
   }
 
+  // ─── VARIANT: pulse ───
+  // DJ / musicien premium : glassmorphism header transparent, off-canvas fullscreen menu, accents cyan néon
+  if (variant === 'pulse') {
+    return <PulseHeader config={config} logo={logo} ctaLabel={ctaLabel} links={links} />
+  }
+
   // fallback → startup
   return <SiteHeaderSection config={{ ...config, variant: 'startup' }} />
 }
@@ -4216,11 +4222,371 @@ function SereniteHeader({ config, logo, ctaLabel, links }: { config: SectionConf
   )
 }
 
+// ─── Pulse Off-Canvas Menu (DJ / Musicien) ───
+
+function PulseHeader({ config, logo, ctaLabel, links }: { config: SectionConfig; logo: string; ctaLabel?: string; links: NavLink[] }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = '' }
+    }
+  }, [menuOpen])
+
+  // Close on Escape
+  useEffect(() => {
+    if (!menuOpen) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [menuOpen])
+
+  const toggleMenu = useCallback(() => setMenuOpen(prev => !prev), [])
+
+  // Default nav links for DJ / musician
+  const menuLinks: { label: string; href: string }[] = links.length > 0
+    ? links.map(l => ({ label: l.label, href: l.href }))
+    : [
+        { label: 'Dates', href: '/dates' },
+        { label: 'Mix', href: '/mix' },
+        { label: 'Productions', href: '/productions' },
+        { label: '\u00C0 propos', href: '/a-propos' },
+        { label: 'Contact', href: '/contact' },
+      ]
+
+  const socials = [
+    { label: 'Instagram', href: '#', icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+    )},
+    { label: 'SoundCloud', href: '#', icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M1.175 12.225c-.015.109-.023.219-.023.33 0 1.217.958 2.184 2.175 2.184.12 0 .238-.01.353-.03H11.3V9.6H3.69a2.526 2.526 0 00-2.515 2.625zm5.808-4.308c-.195-.065-.4-.1-.612-.1-1.094 0-1.985.852-2.025 1.928H11.3V7.617a4.547 4.547 0 00-4.317.3zm7.317 7.508H11.3V9.6h3v5.825zm1.5 0V9.6h1.5v5.825h-1.5zm3 0V9.6h1.5v5.825H18.8zm3 0V9.6h1.5v5.825H21.8zm-3.65-8.8a6.5 6.5 0 00-4.85 2.175V6.1a6.5 6.5 0 019.5 5.8v.7H11.3V9.6h6.5a6.47 6.47 0 00-.65-2.975z"/></svg>
+    )},
+    { label: 'Spotify', href: '#', icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+    )},
+  ]
+
+  return (
+    <>
+      {/* Pulse header responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .pulse-resp-menu-grid { grid-template-columns: 1fr !important; }
+          .pulse-resp-menu-right { display: none !important; }
+        }
+      ` }} />
+      {/* ─── NAVBAR ─── */}
+      <header
+        {...elementProps(config.id, 'wrapper', 'container', 'Header')}
+        className={cn('absolute top-0 left-0 w-full flex items-center')}
+        style={{
+          zIndex: 888,
+          backgroundColor: 'transparent',
+          minHeight: '72px',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <div
+          {...elementProps(config.id, 'navGrid', 'container', 'Nav Grid')}
+          className={cn('grid items-center w-full')}
+          style={{
+            gridTemplateColumns: '.375fr minmax(min-content, max-content)',
+            justifyContent: 'space-between',
+            gap: '16px',
+          }}
+        >
+          {/* LEFT — Logo in neon cyan */}
+          <div
+            {...elementProps(config.id, 'logo', 'image')}
+            className="tracking-wide"
+            style={{
+              maxWidth: '160px',
+              fontSize: '20px',
+              fontWeight: 700,
+              color: '#00E5FF',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+            }}
+          >
+            {renderLogo(logo, 'font-bold text-lg tracking-wide')}
+          </div>
+
+          {/* RIGHT — Menu button (glassmorphism cyan tint) */}
+          <div
+            {...elementProps(config.id, 'ctaLabel', 'button')}
+            role="button"
+            onClick={toggleMenu}
+            className={cn('flex items-center cursor-pointer')}
+            style={{
+              borderRadius: '999px',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              backgroundColor: 'rgba(0, 229, 255, 0.12)',
+              color: '#FFFFFF',
+              paddingLeft: '20px',
+              paddingRight: '20px',
+              paddingTop: '10px',
+              paddingBottom: '10px',
+              fontSize: '14px',
+              fontWeight: 500,
+              fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+              border: '1px solid rgba(0, 229, 255, 0.25)',
+              gap: '10px',
+              whiteSpace: 'nowrap',
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              transition: 'background-color 0.3s ease',
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(0, 229, 255, 0.22)' }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(0, 229, 255, 0.12)' }}
+          >
+            <span {...elementProps(config.id, 'menuLabel', 'text', 'Menu Label')}>{ctaLabel || 'Menu'}</span>
+            {/* Hamburger icon — animated lines */}
+            <span
+              {...elementProps(config.id, 'menuIcon', 'icon', 'Menu Icon')}
+              className={cn('flex flex-col items-center')}
+              style={{ gap: '4px' }}
+            >
+              <span style={{
+                width: '18px', height: '1.5px', display: 'block', backgroundColor: '#00E5FF',
+                transition: 'transform 0.3s ease, opacity 0.3s ease',
+                transform: menuOpen ? 'translateY(2.75px) rotate(45deg)' : 'none',
+              }} />
+              <span style={{
+                width: '18px', height: '1.5px', display: 'block', backgroundColor: '#00E5FF',
+                transition: 'transform 0.3s ease, opacity 0.3s ease',
+                transform: menuOpen ? 'translateY(-2.75px) rotate(-45deg)' : 'none',
+              }} />
+            </span>
+          </div>
+        </div>
+      </header>
+
+      {/* ─── OFF-CANVAS MENU OVERLAY ─── */}
+      <div
+        {...elementProps(config.id, 'offCanvas', 'container', 'Off-Canvas Menu')}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          visibility: menuOpen ? 'visible' : 'hidden',
+          opacity: menuOpen ? 1 : 0,
+          transition: 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s',
+          pointerEvents: menuOpen ? 'auto' : 'none',
+        }}
+      >
+        {/* Absolute black background with glassmorphism */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundColor: 'rgba(13, 13, 13, 0.97)',
+            backdropFilter: 'blur(30px)',
+            WebkitBackdropFilter: 'blur(30px)',
+          }}
+        />
+
+        {/* Menu content grid */}
+        <div
+          {...elementProps(config.id, 'offCanvasGrid', 'container', 'Menu Grid')}
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+          }}
+          className="pulse-resp-menu-grid"
+        >
+          {/* LEFT COLUMN — Navigation */}
+          <div
+            {...elementProps(config.id, 'offCanvasNav', 'container', 'Menu Navigation')}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              padding: 'clamp(20px, 5vw, 60px)',
+              paddingTop: 'clamp(40px, 8vw, 80px)',
+            }}
+          >
+            {/* Top — Logo + Close */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '48px' }}>
+              <div
+                {...elementProps(config.id, 'offCanvasLogo', 'text', 'Menu Logo')}
+                style={{
+                  fontSize: '20px',
+                  fontWeight: 700,
+                  color: '#00E5FF',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+                }}
+              >
+                {renderLogo(logo)}
+              </div>
+              <div
+                {...elementProps(config.id, 'closeButton', 'button', 'Close Button')}
+                role="button"
+                onClick={toggleMenu}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  borderRadius: '999px',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  backgroundColor: 'rgba(0, 229, 255, 0.12)',
+                  color: '#00E5FF',
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                  paddingTop: '10px',
+                  paddingBottom: '10px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  border: '1px solid rgba(0, 229, 255, 0.25)',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  transition: 'background-color 0.3s ease',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(0, 229, 255, 0.22)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(0, 229, 255, 0.12)' }}
+              >
+                <span>Fermer</span>
+                <X size={18} strokeWidth={1.5} />
+              </div>
+            </div>
+
+            {/* Navigation links — staggered slide-in from left */}
+            <nav
+              {...elementProps(config.id, 'offCanvasLinks', 'container', 'Menu Links')}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+                flex: 1,
+              }}
+            >
+              {menuLinks.map((link, i) => (
+                <a
+                  key={link.label}
+                  {...elementProps(config.id, `menuLinks.${i}`, 'link', link.label)}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  style={{
+                    fontSize: 'clamp(28px, 5vw, 52px)',
+                    fontWeight: 700,
+                    color: '#FFFFFF',
+                    textDecoration: 'none',
+                    padding: '8px 0',
+                    transition: 'color 0.3s, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s',
+                    display: 'block',
+                    fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+                    letterSpacing: '-0.01em',
+                    lineHeight: 1.15,
+                    transform: menuOpen ? 'translateX(0)' : 'translateX(-30px)',
+                    opacity: menuOpen ? 1 : 0,
+                    transitionDelay: `${i * 0.05}s`,
+                  }}
+                  onMouseEnter={(e) => { (e.target as HTMLElement).style.color = '#00E5FF' }}
+                  onMouseLeave={(e) => { (e.target as HTMLElement).style.color = '#FFFFFF' }}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+
+            {/* Bottom — Social Icons */}
+            <div
+              {...elementProps(config.id, 'offCanvasBottom', 'container', 'Menu Bottom')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                paddingTop: '32px',
+                borderTop: '1px solid rgba(0, 229, 255, 0.15)',
+              }}
+            >
+              {/* Social icons */}
+              <div
+                {...elementProps(config.id, 'offCanvasSocials', 'container', 'Social Icons')}
+                style={{ display: 'flex', gap: '16px' }}
+              >
+                {socials.map((s, i) => (
+                  <a
+                    key={s.label}
+                    {...elementProps(config.id, `social.${i}`, 'link', s.label)}
+                    href={s.href}
+                    style={{
+                      color: 'rgba(255, 255, 255, 0.4)',
+                      transition: 'color 0.3s, border-color 0.3s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#00E5FF'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0, 229, 255, 0.4)' }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255, 255, 255, 0.4)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.12)' }}
+                  >
+                    {s.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN — Decorative DJ/music image */}
+          <div
+            {...elementProps(config.id, 'offCanvasImage', 'image', 'Menu Image')}
+            className="pulse-resp-menu-right"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              backgroundColor: '#0D0D0D',
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1200&q=80"
+              alt="DJ performance"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                opacity: 0.6,
+                transform: menuOpen ? 'scale(1)' : 'scale(1.1)',
+                transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            />
+            {/* Cyan/magenta tint overlay */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(135deg, rgba(13, 13, 13, 0.7) 0%, rgba(0, 229, 255, 0.08) 50%, rgba(255, 0, 110, 0.06) 100%)',
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export const siteHeaderMeta = {
   type: 'site-header',
   label: 'Header',
   icon: '🧭',
-  variants: ['startup', 'corporate', 'luxe-transparent', 'luxe', 'creative', 'ecommerce', 'glass', 'nacre', 'brixsa', 'obscura', 'zmr-agency', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite'],
+  variants: ['startup', 'corporate', 'luxe-transparent', 'luxe', 'creative', 'ecommerce', 'glass', 'nacre', 'brixsa', 'obscura', 'zmr-agency', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

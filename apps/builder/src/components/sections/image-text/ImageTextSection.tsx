@@ -2520,6 +2520,228 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
     )
   }
 
+  // DJ PULSE — Story Split Layout (DJ / Musician)
+  // ═══════════════════════════════════════════
+
+  if (variant === 'pulse-story') {
+    const statNumberStyle = {
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+      fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+      fontWeight: 500,
+      lineHeight: '110%',
+      color: '#00E5FF',
+    } as const
+
+    const paraStyle = {
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '170%',
+      color: 'rgba(255, 255, 255, 0.55)',
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+    } as const
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const titleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const imageRevealRef = useBrixsaScrollReveal({ threshold: 0.1, disabled: isEditing })
+    const counter500Ref = useBrixsaCounter(500, { disabled: isEditing })
+    const counter15Ref = useBrixsaCounter(15, { disabled: isEditing })
+    const counter50Ref = useBrixsaCounter(50, { disabled: isEditing })
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'About Section')}
+        style={{
+          backgroundColor: '#0D0D0D',
+          padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <style>{`
+          @media (max-width: 968px) {
+            .pulse-story-grid { grid-template-columns: 1fr !important; }
+            .pulse-story-image { min-height: 400px !important; }
+          }
+          .pulse-story-image:hover .pulse-story-img { transform: scale(1.03) !important; }
+          .pulse-story-cta:hover {
+            background-color: #FF006E !important;
+            color: #FFFFFF !important;
+          }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'container', 'container', 'Container')}
+          className="mx-auto pulse-story-grid"
+          style={{
+            maxWidth: '1320px',
+            display: 'grid',
+            gridTemplateColumns: '55% 45%',
+            gap: 'clamp(32px, 5vw, 80px)',
+            alignItems: 'center',
+          }}
+        >
+          {/* Left — Image with scroll reveal dezoom */}
+          <div
+            ref={imageRevealRef}
+            {...elementProps(config.id, 'imageContainer', 'container', 'Image Container')}
+            className="pulse-story-image"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              minHeight: 600,
+              borderRadius: 0,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              {...elementProps(config.id, 'image', 'image', 'Pulse Image')}
+              src={content.image || 'https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=1200&q=85'}
+              alt={content.title || 'Le son qui fait vibrer'}
+              className="pulse-story-img"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                transform: 'scale(1.08)',
+                transition: 'transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              }}
+            />
+            {/* Cyan accent line overlay at bottom */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '3px',
+                backgroundColor: '#00E5FF',
+                zIndex: 2,
+              }}
+            />
+          </div>
+
+          {/* Right — Text content */}
+          <div
+            ref={titleRevealRef}
+            {...elementProps(config.id, 'textContent', 'container', 'Text Content')}
+            style={{ display: 'flex', flexDirection: 'column', gap: 0 }}
+          >
+            {/* Eyebrow */}
+            <span
+              {...elementProps(config.id, 'eyebrow', 'text')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 12,
+                fontWeight: 500,
+                letterSpacing: '3px',
+                textTransform: 'uppercase' as const,
+                color: '#00E5FF',
+                marginBottom: 20,
+              }}
+            >
+              {content.eyebrow || 'L\'ARTISTE'}
+            </span>
+
+            {/* Title */}
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 'clamp(2rem, 1.3rem + 3.2vw, 3.5rem)',
+                fontWeight: 500,
+                lineHeight: '115%',
+                color: customTextColor ?? '#FFFFFF',
+                margin: 0,
+                marginBottom: 24,
+              }}
+            >
+              {content.title || 'Le son qui fait vibrer'}
+            </h2>
+
+            {/* Body text */}
+            <p
+              {...elementProps(config.id, 'body', 'text')}
+              style={{
+                ...paraStyle,
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+                maxWidth: 480,
+              }}
+            >
+              {content.body || 'Depuis plus de 15 ans, la musique est bien plus qu\'une passion — c\'est une obsession. Des clubs underground de Berlin aux festivals internationaux, chaque set est une histoire unique écrite pour le dancefloor. Une énergie brute, un son signature, une connexion instantanée avec le public.'}
+            </p>
+
+            {/* Counter stats */}
+            <div
+              {...elementProps(config.id, 'statsRow', 'container', 'Stats Row')}
+              style={{
+                display: 'flex',
+                gap: 'clamp(24px, 4vw, 48px)',
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+              }}
+            >
+              <div {...elementProps(config.id, 'stat1', 'container', 'Stat Block')}>
+                <div
+                  {...elementProps(config.id, 'stat1Value', 'text')}
+                  className="flex items-baseline"
+                  style={statNumberStyle}
+                >
+                  <span ref={counter500Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  Events
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat2', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat2Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter15Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  Années d&apos;expérience
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat3', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat3Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter50Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  Tracks produites
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Button — magenta outline → fill on hover */}
+            <a
+              {...elementProps(config.id, 'primaryButton', 'link')}
+              href={content.primaryButton?.href ?? '#'}
+              className="pulse-story-cta"
+              style={{
+                display: 'inline-block',
+                border: '1px solid #FF006E',
+                backgroundColor: 'transparent',
+                color: '#FF006E',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontWeight: 500,
+                fontSize: 14,
+                letterSpacing: '1.5px',
+                textTransform: 'uppercase' as const,
+                padding: '16px 40px',
+                textDecoration: 'none',
+                transition: 'background-color 0.4s ease, color 0.4s ease',
+                alignSelf: 'flex-start',
+              }}
+            >
+              {content.primaryButton?.label ?? 'Réserver un set'}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback to startup-image-right
   return <ImageTextSection config={{ ...config, variant: 'startup-image-right' }} isEditing={isEditing} />
 }
@@ -2544,6 +2766,7 @@ export const imageTextMeta = {
     'atelier-story',
     'encre-story',
     'serenite-story',
+    'pulse-story',
     'brixsa-about',
     'brixsa-privacy',
   ],

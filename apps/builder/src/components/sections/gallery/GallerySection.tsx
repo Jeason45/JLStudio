@@ -3549,6 +3549,235 @@ export function GallerySection({ config }: { config: SectionConfig }) {
   }
 
   // ═══════════════════════════════════════════════════════
+  // PULSE-EVENTS — DJ / Music event grid : 3:4 cards, absolute black bg,
+  // cyan glassmorphism badges on hover, neon accent, scroll-reveal
+  // ═══════════════════════════════════════════════════════
+  if (variant === 'pulse-events') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Tomorrowland Main Stage', category: 'Festival', description: 'Face à 50 000 personnes sur le main stage de Tomorrowland — un set de 2h gravé dans les mémoires.', image: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&q=85' },
+      { id: '2', title: 'Berghain Resident Night', category: 'Club', description: 'Nuit de résident au Berghain — 6 heures de techno hypnotique dans le temple berlinois de la musique électronique.', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=85' },
+      { id: '3', title: 'Soirée Privée Monaco', category: 'Privé', description: 'Set exclusif pour 200 invités dans une villa surplombant la Méditerranée — une nuit hors du temps.', image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=85' },
+      { id: '4', title: 'Corporate Gala Paris', category: 'Corporate', description: 'Ambiance soigneusement calibrée pour un gala d\'entreprise — energy parfaite du cocktail à la clôture.', image: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=800&q=85' },
+      { id: '5', title: 'Résidence Ibiza', category: 'Résidence', description: 'Résidence estivale de 8 semaines dans l\'un des clubs les plus prestigieux d\'Ibiza — sold-out chaque soir.', image: 'https://images.unsplash.com/photo-1571266028243-d220c6a6dee1?w=800&q=85' },
+      { id: '6', title: 'Afterparty Fashion Week', category: 'Afterparty', description: 'L\'afterparty officielle de la Fashion Week Paris — créateurs, mannequins et artistes réunis pour une nuit légendaire.', image: 'https://images.unsplash.com/photo-1564679031507-c38c0db01b09?w=800&q=85' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; category?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          category: item.category ?? defaultCards[i % 6].category,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image ?? defaultCards[i % 6].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Events Section')}
+        style={{
+          background: '#0D0D0D',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <style>{`
+          .pulse-card:hover .pulse-img-zoom { transform: scale(1.07) !important; }
+          .pulse-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
+          .pulse-img-dezoom.revealed { transform: scale(1); }
+          .pulse-overlay { opacity: 0; transition: opacity 0.4s ease; }
+          .pulse-card:hover .pulse-overlay { opacity: 1; }
+          .pulse-badge-bottom { transition: opacity 0.3s ease; }
+          .pulse-card:hover .pulse-badge-bottom { opacity: 0; }
+          @media (max-width: 768px) {
+            .pulse-resp-events-grid { grid-template-columns: 1fr !important; }
+            .pulse-resp-events-header { flex-direction: column; align-items: flex-start !important; }
+          }
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .pulse-resp-events-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+        `}</style>
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end pulse-resp-events-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#FFFFFF',
+                }}
+              >
+                {content.title ?? 'Événements'}
+              </h2>
+            </div>
+          </div>
+
+          {/* Grid */}
+          <div {...elementProps(config.id, 'grid', 'container', 'Events Grid')} className="grid grid-cols-3 pulse-resp-events-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="pulse-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.pulse-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                  <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                    {card.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        {...elementProps(config.id, `items.${i}.image`, 'image')}
+                        src={card.image}
+                        alt={card.title}
+                        className="pulse-img-zoom pulse-img-dezoom w-full h-full object-cover"
+                        style={{ transition: 'transform 0.6s ease' }}
+                      />
+                    ) : (
+                      <div
+                        {...elementProps(config.id, `items.${i}.image`, 'image')}
+                        className="pulse-img-zoom pulse-img-dezoom w-full h-full flex items-center justify-center"
+                        style={{ background: 'linear-gradient(to bottom, #1A1A1A, #0D0D0D)', transition: 'transform 0.6s ease' }}
+                      >
+                        <Image className="w-8 h-8 text-white/40" />
+                      </div>
+                    )}
+                    {/* Static bottom badge (category) */}
+                    <span
+                      {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                      className="pulse-badge-bottom flex items-center"
+                      style={{
+                        position: 'absolute',
+                        bottom: '16px',
+                        right: '16px',
+                        background: 'rgba(0, 229, 255, 0.15)',
+                        backdropFilter: 'blur(15px)',
+                        WebkitBackdropFilter: 'blur(15px)',
+                        borderRadius: '4px',
+                        padding: '6px 14px',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        color: '#00E5FF',
+                        zIndex: 2,
+                        border: '1px solid rgba(0, 229, 255, 0.35)',
+                      }}
+                    >
+                      {card.category}
+                    </span>
+                    {/* Hover overlay with title + category */}
+                    <div
+                      className="pulse-overlay absolute inset-0 flex flex-col justify-end"
+                      style={{
+                        background: 'linear-gradient(0deg, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.5) 50%, rgba(13,13,13,0.1) 100%)',
+                        padding: '20px',
+                        zIndex: 3,
+                        borderRadius: '8px',
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          background: 'rgba(0, 229, 255, 0.2)',
+                          backdropFilter: 'blur(15px)',
+                          WebkitBackdropFilter: 'blur(15px)',
+                          border: '1px solid rgba(0, 229, 255, 0.4)',
+                          borderRadius: '4px',
+                          padding: '4px 12px',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          color: '#00E5FF',
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          marginBottom: '10px',
+                          alignSelf: 'flex-start',
+                        }}
+                      >
+                        {card.category}
+                      </span>
+                      <p style={{ fontSize: '16px', fontWeight: 600, color: '#FFFFFF', lineHeight: '130%' }}>
+                        {card.title}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#FFFFFF',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: 'rgba(255,255,255,0.45)',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════
   // ZMR-AGENCY — Grille talent modeling : cards 3:4, fond noir,
   // nom sous l'image, hover image swap, style minimaliste
   // ═══════════════════════════════════════════════════════
@@ -4330,6 +4559,7 @@ export const galleryMeta = {
     'atelier-projets',
     'encre-portfolio',
     'serenite-soins',
+    'pulse-events',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

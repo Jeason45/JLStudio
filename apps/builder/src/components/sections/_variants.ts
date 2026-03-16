@@ -24,6 +24,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'atelier', label: 'Atelier — Architecte d\u2019int\u00E9rieur', description: 'Slider plein \u00E9cran, charcoal, sable/bronze, architecture int\u00E9rieure', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'encre', label: 'Encre (Tatoueur)', description: 'Slider plein \u00E9cran, noir profond, cramoisi, tatoueur', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'serenite', label: 'S\u00E9r\u00E9nit\u00E9 (Spa)', description: 'Slider plein \u00E9cran, navy profond, or chaud/lavande, institut & spa', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'pulse', label: 'Pulse (DJ)', description: 'Slider plein \u00E9cran, noir absolu, cyan n\u00E9on/magenta, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   features: [
     // Startup / SaaS
@@ -59,6 +60,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'atelier-accordion', label: 'Atelier — Accord\u00E9on Services', description: 'Accord\u00E9on horizontal, 3 panneaux, architecture int\u00E9rieure, charcoal/sable', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'encre-accordion', label: 'Encre Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, tatoueur, noir profond/cramoisi', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'serenite-accordion', label: 'S\u00E9r\u00E9nit\u00E9 Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, institut & spa, navy/or chaud', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'pulse-accordion', label: 'Pulse Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, DJ & musicien, noir absolu/cyan n\u00E9on', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   cta: [
     // Startup
@@ -153,6 +155,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'atelier-featured', label: 'Atelier — T\u00E9moignages', description: '50/50 initiales sable + citation, charcoal/sable, architecte int\u00E9rieur', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'encre-featured', label: 'Encre Featured', description: '50/50 initiales cramoisi + citation, noir profond/cramoisi, tatoueur', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'serenite-featured', label: 'S\u00E9r\u00E9nit\u00E9 Featured', description: '50/50 initiales dor\u00E9es + citation, navy profond/or chaud, institut & spa', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'pulse-featured', label: 'Pulse Featured', description: '50/50 initiales cyan + citation, noir absolu/cyan n\u00E9on, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   pricing: [
     // Startup
@@ -313,6 +316,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'atelier-projets', label: 'Atelier — Projets', description: 'Grid 3 colonnes, galerie projets architecture int\u00E9rieure, charcoal/sable', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'encre-portfolio', label: 'Encre Portfolio', description: 'Grid 3 colonnes, galerie tatouages, noir profond/cramoisi', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'serenite-soins', label: 'S\u00E9r\u00E9nit\u00E9 Soins', description: 'Grid 3 colonnes, galerie soins & rituels spa, navy profond/or chaud', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'pulse-events', label: 'Pulse Events', description: 'Grid 3 colonnes, galerie \u00E9v\u00E9nements DJ, noir absolu/cyan n\u00E9on, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'image-text': [
     { id: 'startup-image-right', label: 'Startup — Image droite', description: 'Indigo, texte + image', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -335,6 +339,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'atelier-story', label: 'Atelier — Histoire du Studio', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, charcoal/sable, architecte', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'encre-story', label: 'Encre Story', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, noir profond/cramoisi, tatoueur', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'serenite-story', label: 'S\u00E9r\u00E9nit\u00E9 Story', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, navy profond/or chaud, institut & spa', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'pulse-story', label: 'Pulse Story', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, noir absolu/cyan n\u00E9on, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'product-grid': [
     { id: 'startup-grid', label: 'Startup — Grille', description: 'Cards produits indigo', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -385,6 +390,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'atelier', label: 'Atelier — Architecte d\u2019int\u00E9rieur', description: 'Transparent, charcoal, sable/bronze, architecture int\u00E9rieure', previewStyle: { background: 'dark', paddingY: 'sm' } },
     { id: 'encre', label: 'Encre (Tatoueur)', description: 'Transparent, noir profond, cramoisi, tatoueur', previewStyle: { background: 'dark', paddingY: 'sm' } },
     { id: 'serenite', label: 'S\u00E9r\u00E9nit\u00E9 (Spa)', description: 'Transparent, navy profond, or chaud/lavande, institut & spa', previewStyle: { background: 'dark', paddingY: 'sm' } },
+    { id: 'pulse', label: 'Pulse (DJ)', description: 'Transparent, noir absolu, cyan n\u00E9on/magenta, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'sm' } },
   ],
   'site-footer': [
     { id: 'startup', label: 'Startup / SaaS', description: 'Moderne, colonnes, status', previewStyle: { background: 'dark', paddingY: 'md' } },
@@ -401,6 +407,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'atelier', label: 'Atelier — Architecte d\u2019int\u00E9rieur', description: 'Logo centr\u00E9, 3 colonnes, charcoal/sable, Instagram/Pinterest/Houzz', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'encre', label: 'Encre (Tatoueur)', description: 'Logo centr\u00E9, 3 colonnes, noir profond/cramoisi, Instagram/TikTok/Facebook', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'serenite', label: 'S\u00E9r\u00E9nit\u00E9 (Spa)', description: 'Logo centr\u00E9, 3 colonnes, navy profond/or chaud, Instagram/Facebook/Pinterest', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'pulse', label: 'Pulse (DJ)', description: 'Logo centr\u00E9, 3 colonnes, noir absolu/cyan n\u00E9on, Instagram/SoundCloud/Spotify', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   tabs: [
     { id: 'startup-horizontal', label: 'Startup — Horizontal', description: 'Tabs pill indigo, horizontal', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -488,6 +495,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'atelier-parallax', label: 'Atelier — Parallax Int\u00E9rieur', description: 'Ambiance architecture int\u00E9rieure plein \u00E9cran avec parallax, charcoal/sable', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'encre-parallax', label: 'Encre Parallax', description: 'Ambiance tatoueur plein \u00E9cran avec parallax, noir profond/cramoisi', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'serenite-parallax', label: 'S\u00E9r\u00E9nit\u00E9 Parallax', description: 'Espaces spa plein \u00E9cran avec parallax, navy profond/or chaud, institut & spa', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'pulse-parallax', label: 'Pulse Parallax', description: 'Ambiance DJ plein \u00E9cran avec parallax, noir absolu/cyan n\u00E9on, DJ & musicien', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   dropdown: [
     { id: 'startup-simple', label: 'Startup — Simple', description: 'Dropdown simple indigo', previewStyle: { background: 'white', paddingY: 'md' } },
