@@ -19,7 +19,7 @@ export interface ImageConfig {
 // HERO
 // ─────────────────────────────────────────────
 
-export type HeroVariant = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass' | 'obscura' | 'canopy' | 'nacre' | 'brixsa' | 'brixsa-page' | 'braise' | 'forge' | 'ciseaux' | 'zmr-agency' | 'zmr-talent-profile' | 'atelier' | 'encre' | 'serenite' | 'pulse' | 'saveur' | 'ascent' | 'zenith'
+export type HeroVariant = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass' | 'obscura' | 'canopy' | 'nacre' | 'brixsa' | 'brixsa-page' | 'braise' | 'forge' | 'ciseaux' | 'zmr-agency' | 'zmr-talent-profile' | 'atelier' | 'encre' | 'serenite' | 'pulse' | 'saveur' | 'ascent' | 'zenith' | 'miel'
 
 export interface HeroContent {
   eyebrow?: string
@@ -75,6 +75,7 @@ export type FeaturesVariant =
   | 'saveur-accordion'
   | 'ascent-accordion'
   | 'zenith-accordion'
+  | 'miel-accordion'
 
 export interface FeatureItem {
   id: string
@@ -929,6 +930,7 @@ export type SliderVariant =
   | 'saveur-parallax'
   | 'ascent-parallax'
   | 'zenith-parallax'
+  | 'miel-parallax'
 
 export type SliderEffect = 'slide' | 'fade' | 'scale'
 

@@ -2232,6 +2232,169 @@ function ZenithFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
   )
 }
 
+/* Miel parallax slide — Same technique as Zenith but patisserie / bakery themed.
+   - Preview mode (!isEditing): native CSS background-attachment:fixed.
+   - Editor mode (isEditing): JS scroll-based fallback. */
+function MielFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: SlideItem; idx: number; sectionId: string; isEditing?: boolean }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  // JS fallback for editor mode only
+  useEffect(() => {
+    if (!isEditing) return
+    const wrap = wrapRef.current
+    const img = imgRef.current
+    if (!wrap || !img) return
+
+    let scroller: HTMLElement | null = wrap.parentElement
+    while (scroller) {
+      const ov = getComputedStyle(scroller).overflowY
+      if (ov === 'auto' || ov === 'scroll') break
+      scroller = scroller.parentElement
+    }
+    if (!scroller) return
+
+    let accOffset = 0
+    let el: HTMLElement | null = wrap
+    while (el && el !== scroller) {
+      accOffset += el.offsetTop
+      el = el.offsetParent as HTMLElement | null
+    }
+
+    const setSize = () => { img.style.height = `${scroller!.clientHeight}px` }
+    setSize()
+
+    const onScroll = () => {
+      img.style.transform = `translate3d(0,${-(accOffset - scroller!.scrollTop)}px,0)`
+    }
+
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+
+    const ro = new ResizeObserver(setSize)
+    ro.observe(scroller)
+
+    return () => {
+      scroller!.removeEventListener('scroll', onScroll)
+      ro.disconnect()
+    }
+  }, [isEditing])
+
+  // Preview mode: pure CSS background-attachment: fixed
+  if (!isEditing) {
+    return (
+      <div
+        {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+        style={{
+          display: 'block',
+          minHeight: '100svh',
+          position: 'relative',
+          overflow: 'hidden',
+          color: '#FFFFFF',
+          ...(slide.image ? {
+            backgroundImage: `url(${slide.image})`,
+            backgroundAttachment: 'fixed',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundColor: '#2A1F1A',
+          } : { backgroundColor: '#2A1F1A' }),
+        }}
+      >
+        <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(42, 31, 26, 0.92) 14%, rgba(42, 31, 26, 0.35) 60%, rgba(42, 31, 26, 0.10) 100%)' }} />
+        {/* Slide number top-right */}
+        <div style={{ position: 'absolute', right: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', zIndex: 2, fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: '12px', fontWeight: 500, color: '#E8C17A', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+          {String(idx + 1).padStart(2, '0')}
+        </div>
+        {slide.badge && (
+          <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(232, 193, 122, 0.15)', color: '#E8C17A', fontSize: 14, fontWeight: 500, zIndex: 2, letterSpacing: '0.08em', textTransform: 'uppercase', border: '1px solid rgba(232, 193, 122, 0.4)' }}>
+            {slide.badge}
+          </div>
+        )}
+        <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+          <div style={{ maxWidth: '680px' }}>
+            <h2
+              {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+              style={{ fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#E8C17A', textTransform: 'capitalize', marginBottom: 20 }}
+            >
+              {slide.title}
+            </h2>
+            <p
+              {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+              style={{ fontSize: 16, lineHeight: '150%', color: 'rgba(255,255,255,0.72)' }}
+            >
+              {slide.subtitle}
+            </p>
+            {slide.ctaLabel && (
+              <a
+                {...elementProps(sectionId, `slides.${idx}.cta`, 'button')}
+                href={slide.ctaHref ?? '#'}
+                style={{ display: 'inline-block', marginTop: '28px', padding: '12px 28px', background: '#8B5E3C', color: '#FFFFFF', borderRadius: '4px', fontSize: '15px', fontWeight: 500, textDecoration: 'none', letterSpacing: '0.03em', transition: 'background 0.3s ease' }}
+              >
+                {slide.ctaLabel}
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Editor mode: JS-based scroll compensation with <img> tag
+  return (
+    <div
+      ref={wrapRef}
+      {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+      style={{ minHeight: '100svh', position: 'relative', overflow: 'hidden', backgroundColor: '#2A1F1A', color: '#FFFFFF' }}
+    >
+      {slide.image && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          ref={imgRef}
+          {...elementProps(sectionId, `slides.${idx}.image`, 'image', 'Slide Image')}
+          src={slide.image}
+          alt=""
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', objectFit: 'cover', objectPosition: 'center', pointerEvents: 'none', willChange: 'transform', backfaceVisibility: 'hidden' }}
+        />
+      )}
+      <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(42, 31, 26, 0.92) 14%, rgba(42, 31, 26, 0.35) 60%, rgba(42, 31, 26, 0.10) 100%)' }} />
+      {/* Slide number top-right */}
+      <div style={{ position: 'absolute', right: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', zIndex: 2, fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: '12px', fontWeight: 500, color: '#E8C17A', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+        {String(idx + 1).padStart(2, '0')}
+      </div>
+      {slide.badge && (
+        <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(232, 193, 122, 0.15)', color: '#E8C17A', fontSize: 14, fontWeight: 500, zIndex: 2, letterSpacing: '0.08em', textTransform: 'uppercase', border: '1px solid rgba(232, 193, 122, 0.4)' }}>
+          {slide.badge}
+        </div>
+      )}
+      <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+        <div style={{ maxWidth: '680px' }}>
+          <h2
+            {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+            style={{ fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif", fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#E8C17A', textTransform: 'capitalize', marginBottom: 20 }}
+          >
+            {slide.title}
+          </h2>
+          <p
+            {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+            style={{ fontSize: 16, lineHeight: '150%', color: 'rgba(255,255,255,0.72)' }}
+          >
+            {slide.subtitle}
+          </p>
+          {slide.ctaLabel && (
+            <a
+              {...elementProps(sectionId, `slides.${idx}.cta`, 'button')}
+              href={slide.ctaHref ?? '#'}
+              style={{ display: 'inline-block', marginTop: '28px', padding: '12px 28px', background: '#8B5E3C', color: '#FFFFFF', borderRadius: '4px', fontSize: '15px', fontWeight: 500, textDecoration: 'none', letterSpacing: '0.03em', transition: 'background 0.3s ease' }}
+            >
+              {slide.ctaLabel}
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function SliderSection({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
   const content = config.content as SliderContent
   const { universe, layout } = parseVariant(config.variant || 'startup-hero')
@@ -2507,6 +2670,24 @@ export function SliderSection({ config, isEditing }: { config: SectionConfig; is
     )
   }
 
+  // ── miel-parallax: Fullscreen parallax patisserie / bakery gallery ──
+  if (config.variant === 'miel-parallax') {
+    const defaultSlides = [
+      { id: '1', title: 'Le Fournil', badge: 'Artisanat', subtitle: 'Chaque nuit, nos boulangers donnent vie à la pâte. Four à pierre, levain centenaire et passion intacte depuis 25 ans', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1920&q=85' } as SlideItem,
+      { id: '2', title: 'Le Laboratoire', badge: 'Précision', subtitle: 'Un atelier où la précision rencontre la créativité. Chaque pâtisserie est assemblée à la main avec une attention méticuleuse', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=1920&q=85' } as SlideItem,
+      { id: '3', title: 'La Boutique', badge: 'Accueil', subtitle: 'Un écrin gourmand où nos créations vous accueillent chaque matin dans une atmosphère chaleureuse et parfumée', image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=1920&q=85' } as SlideItem,
+    ] as SlideItem[]
+    const items = slides.length > 0 ? slides : defaultSlides
+
+    return (
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Parallax Section')} style={{ width: '100%' }}>
+        {items.map((slide, i) => (
+          <MielFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={config.id} isEditing={isEditing} />
+        ))}
+      </section>
+    )
+  }
+
   // Thumbnails layout
   const isThumbnails = layout === 'thumbnails'
 
@@ -2635,6 +2816,7 @@ export const sliderMeta: SectionMeta = {
     'saveur-parallax',
     'ascent-parallax',
     'zenith-parallax',
+    'miel-parallax',
   ],
   defaultVariant: 'startup-hero',
   defaultContent: {},

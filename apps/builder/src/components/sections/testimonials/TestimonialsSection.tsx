@@ -3276,6 +3276,196 @@ function ZenithFeatured({ content, items, sectionId }: { content: Partial<Testim
   )
 }
 
+// ─────────────────────────────────────────────
+// MIEL — Patisserie / Bakery Featured Testimonials (50/50 split)
+// Chocolate brown background, honey gold accents
+// ─────────────────────────────────────────────
+
+function MielFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const defaultQuotes = [
+    'Leur Paris-Brest est une pure merveille. Depuis que j\'ai découvert cette pâtisserie, je ne peux plus aller ailleurs. C\'est devenu mon rituel du dimanche.',
+    'Le wedding cake de notre mariage était à couper le souffle. 200 invités unanimes : c\'était le plus beau et le plus délicieux qu\'ils aient jamais goûté.',
+    'Leur pain au levain a changé ma vie. Croûte parfaite, mie alvéolée, goût incomparable. Je fais 20 minutes de route chaque matin pour l\'acheter.',
+  ]
+
+  const defaultAuthors = [
+    { name: 'Isabelle M.', role: 'Cliente fidèle' },
+    { name: 'Claire & Thomas D.', role: 'Mariage' },
+    { name: 'Pierre L.', role: 'Boulangerie' },
+  ]
+
+  const quotes = items.length > 0
+    ? items.map((item, i) => item.quote || defaultQuotes[i % defaultQuotes.length])
+    : defaultQuotes
+
+  const authors = items.length > 0
+    ? items.map((item, i) => ({ name: item.author || defaultAuthors[i % defaultAuthors.length].name, role: item.role || defaultAuthors[i % defaultAuthors.length].role }))
+    : defaultAuthors
+
+  const total = quotes.length
+
+  const goPrev = () => setActiveIndex((prev) => (prev - 1 + total) % total)
+  const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % total)
+    }, 7000)
+    return () => clearInterval(timer)
+  }, [total])
+
+  return (
+    <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#2A1F1A', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .miel-testimonial-split { flex-direction: column !important; }
+          .miel-testimonial-split > div { flex: 1 1 100% !important; min-height: 50vh; }
+        }
+      `}</style>
+      <div {...elementProps(sectionId, 'splitLayout', 'container', 'Split Layout')} className="miel-testimonial-split flex flex-row w-full" style={{ minHeight: '620px' }}>
+        {/* LEFT — Quote (50%) */}
+        <div {...elementProps(sectionId, 'contentPanel', 'container', 'Content Panel')} className="flex flex-col" style={{ flex: '1 1 50%', backgroundColor: '#1E1510', color: '#FFFFFF', padding: '60px' }}>
+          {/* Top label */}
+          <p
+            {...elementProps(sectionId, 'eyebrow', 'text')}
+            style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#E8C17A', marginBottom: 'auto' }}
+          >
+            {content.eyebrow || content.title || 'Témoignages'}
+          </p>
+
+          {/* Main content */}
+          <div className="flex flex-col" style={{ maxWidth: '536px', marginTop: 'auto', marginLeft: 'auto' }}>
+            {/* Quote text wrap */}
+            <div style={{ marginTop: 'auto', marginBottom: '40px', marginLeft: 'auto' }}>
+              {quotes.map((quote, i) => (
+                <div key={items[i]?.id ?? i} style={{ display: i === activeIndex ? 'block' : 'none' }}>
+                  {/* Honey gold quote mark */}
+                  <div style={{ color: '#E8C17A', fontSize: '80px', lineHeight: '0.6', marginBottom: '24px', fontFamily: 'Georgia, serif' }}>&ldquo;</div>
+                  <p
+                    {...elementProps(sectionId, `items.${i}.quote`, 'text')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
+                      fontWeight: 400,
+                      fontStyle: 'italic',
+                      lineHeight: '135%',
+                      color: '#FFFFFF',
+                    }}
+                  >
+                    {quote}
+                  </p>
+                  {/* Author */}
+                  <div style={{ marginTop: '24px' }}>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.author`, 'text')}
+                      style={{ fontSize: '16px', fontWeight: 600, color: '#FFFFFF' }}
+                    >
+                      {authors[i]?.name}
+                    </p>
+                    <p
+                      {...elementProps(sectionId, `items.${i}.role`, 'text')}
+                      style={{ fontSize: '14px', fontWeight: 400, color: 'rgba(232, 193, 122, 0.7)', marginTop: '4px' }}
+                    >
+                      {authors[i]?.role}
+                    </p>
+                    {/* Honey gold stars */}
+                    <div style={{ display: 'flex', gap: '4px', marginTop: '12px' }}>
+                      {Array.from({ length: 5 }).map((_, s) => (
+                        <span key={s} style={{ color: '#E8C17A', fontSize: '14px' }}>&#9733;</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigation dots + arrows */}
+            {total > 1 && (
+              <div {...elementProps(sectionId, 'navDots', 'container', 'Nav Dots')} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                {Array.from({ length: total }).map((_, i) => (
+                  <div
+                    key={i}
+                    role="button"
+                    onClick={() => setActiveIndex(i)}
+                    style={{
+                      width: i === activeIndex ? '32px' : '8px',
+                      height: '8px',
+                      borderRadius: '4px',
+                      backgroundColor: i === activeIndex ? '#E8C17A' : 'rgba(255, 255, 255, 0.2)',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                    }}
+                  />
+                ))}
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={goPrev}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'transparent', border: '1px solid rgba(232, 193, 122, 0.4)', color: '#E8C17A', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                  </button>
+                  <button
+                    onClick={goNext}
+                    style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#E8C17A', border: '1px solid #E8C17A', color: '#2A1F1A', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT — Large Initial / Photo (50%) */}
+        <div {...elementProps(sectionId, 'imagePanel', 'container', 'Initials Panel')} className="relative overflow-hidden flex items-center justify-center" style={{ flex: '1 1 50%', backgroundColor: '#2A1F1A' }}>
+          {Array.from({ length: total }).map((_, i) => {
+            const item = items[i]
+            const initial = (item?.author || authors[i]?.name || 'M').charAt(0).toUpperCase()
+            return (
+              <div
+                key={item?.id ?? i}
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  backgroundColor: '#2A1F1A',
+                  opacity: i === activeIndex ? 1 : 0,
+                  zIndex: i === activeIndex ? 2 : 0,
+                  transition: 'opacity 0.6s ease',
+                }}
+              >
+                {item?.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    {...elementProps(sectionId, `items.${i}.avatar`, 'image')}
+                    src={item.avatar}
+                    alt={item.author || ''}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: 'clamp(8rem, 6rem + 10vw, 16rem)',
+                      fontWeight: 700,
+                      color: '#E8C17A',
+                      lineHeight: 1,
+                      userSelect: 'none',
+                      opacity: 0.15,
+                    }}
+                  >
+                    {initial}
+                  </span>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // SLIDER variants (one per universe) — embla carousel
 // ─────────────────────────────────────────────
 
@@ -3424,6 +3614,7 @@ const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsConten
   'saveur-featured': SaveurFeatured,
   'ascent-featured': AscentFeatured,
   'zenith-featured': ZenithFeatured,
+  'miel-featured': MielFeatured,
 }
 
 export function TestimonialsSection({ config }: TestimonialsSectionProps) {
@@ -3457,6 +3648,7 @@ export function TestimonialsSection({ config }: TestimonialsSectionProps) {
     saveur: '#C8A97E',
     ascent: '#E0B870',
     zenith: '#A8C5A0',
+    miel: '#E8C17A',
   }
   const accent = accentColor ?? defaultAccents[universe] ?? '#6366f1'
 
@@ -3492,6 +3684,7 @@ export const testimonialsMeta = {
     'saveur-featured',
     'ascent-featured',
     'zenith-featured',
+    'miel-featured',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

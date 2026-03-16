@@ -6309,8 +6309,476 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     return <ZenithHeroSlider config={config} isEditing={isEditing} />
   }
 
+  // ─── VARIANT: miel ───
+  // Pâtisserie & boulangerie artisanale premium : fullscreen diagonal-wipe slider, glassmorphism order bar, honey gold accents #E8C17A
+  if (variant === 'miel') {
+    return <MielHeroSlider config={config} isEditing={isEditing} />
+  }
+
   // fallback → startup
   return <HeroSection config={{ ...config, variant: 'startup' }} isEditing={isEditing} />
+}
+
+// ─── MIEL HERO SLIDER ───
+// Pâtisserie & boulangerie artisanale : diagonal-wipe fullscreen slider, honey gold accents #E8C17A, glassmorphism order bar
+function MielHeroSlider({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
+  const hero = config as HeroConfig
+  const content = (hero.content ?? {}) as Partial<HeroContent>
+
+  const defaultHeroImages = [
+    '', // placeholder — gradient fallback
+    '', // placeholder — gradient fallback
+    '', // placeholder — gradient fallback
+  ]
+
+  const rawHeroImages = (content as Record<string, unknown>).heroImages as (string | { id?: string; src?: string; alt?: string })[] | undefined
+  const heroImages = rawHeroImages?.map(img => typeof img === 'string' ? img : img?.src).filter(Boolean) as string[] | undefined
+
+  const slides = [
+    {
+      name: content.title ?? "L\u2019art de la gourmandise",
+      accentWord: 'gourmandise',
+      category: 'P\u00C2TISSERIE & BOULANGERIE ARTISANALE',
+      bg: 'linear-gradient(135deg, #2A1F1A 0%, #3d2a1e 50%, #2A1F1A 100%)',
+      image: heroImages?.[0] ?? defaultHeroImages[0],
+    },
+    {
+      name: 'Du fournil \u00E0 votre table',
+      accentWord: 'table',
+      category: 'P\u00C2TISSERIE & BOULANGERIE ARTISANALE',
+      bg: 'linear-gradient(135deg, #321e16 0%, #2A1F1A 50%, #3a2518 100%)',
+      image: heroImages?.[1] ?? defaultHeroImages[1],
+    },
+    {
+      name: 'Chaque bouch\u00E9e raconte une histoire',
+      accentWord: 'histoire',
+      category: 'P\u00C2TISSERIE & BOULANGERIE ARTISANALE',
+      bg: 'linear-gradient(135deg, #2A1F1A 0%, #3a2518 50%, #321e16 100%)',
+      image: heroImages?.[2] ?? defaultHeroImages[2],
+    },
+  ]
+
+  const subtitle = (content.subtitle as string | undefined) ?? ''
+
+  const [mielActiveSlide, setMielActiveSlide] = useState(0)
+  const mielPrevSlideRef = useRef(0)
+  const mielTitleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+  const mielProgressRef = useRef<HTMLDivElement>(null)
+
+  const mielGoNext = useCallback(() => {
+    setMielActiveSlide((prev) => {
+      mielPrevSlideRef.current = prev
+      return (prev + 1) % slides.length
+    })
+  }, [slides.length])
+
+  const mielGoPrev = useCallback(() => {
+    setMielActiveSlide((prev) => {
+      mielPrevSlideRef.current = prev
+      return (prev - 1 + slides.length) % slides.length
+    })
+  }, [slides.length])
+
+  useEffect(() => {
+    const interval = setInterval(mielGoNext, 5000)
+    return () => clearInterval(interval)
+  }, [mielGoNext])
+
+  // Reset progress bar animation on slide change
+  useEffect(() => {
+    if (mielProgressRef.current) {
+      mielProgressRef.current.style.transition = 'none'
+      mielProgressRef.current.style.width = '0%'
+      void mielProgressRef.current.offsetWidth
+      mielProgressRef.current.style.transition = 'width 5s linear'
+      mielProgressRef.current.style.width = '100%'
+    }
+  }, [mielActiveSlide])
+
+  const mielCurrentSlide = slides[mielActiveSlide]
+  const mielBtnLabel = content.primaryButton?.label || 'Commander en ligne'
+
+  return (
+    <>
+      {/* Miel hero responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .miel-hero-resp-bookingbar { flex-direction: column !important; padding: 16px !important; border-radius: 16px !important; max-width: 90% !important; }
+          .miel-hero-resp-filters { flex-direction: column !important; gap: 12px !important; width: 100% !important; }
+          .miel-hero-resp-filter-divider { display: none !important; }
+          .miel-hero-resp-reserve-btn { width: 100% !important; margin-left: 0 !important; margin-top: 8px !important; justify-content: center !important; }
+          .miel-hero-resp-title { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
+          .miel-hero-resp-subtitle { font-size: 12px !important; }
+          .miel-hero-resp-nav-arrows { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .miel-hero-resp-bookingbar { margin: 0 16px; max-width: calc(100% - 32px) !important; }
+        }
+      ` }} />
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Hero Section')}
+        className="relative overflow-hidden"
+        style={{
+          height: '100vh',
+          backgroundColor: '#2A1F1A',
+          color: '#FFFFFF',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        {/* Diagonal wipe — parallelogram translates uniformly */}
+        {slides.map((slide, i) => {
+          const isActive = mielActiveSlide === i
+          const isPrev = mielPrevSlideRef.current === i && !isActive
+
+          const visible = 'polygon(0% 0%, 130% 0%, 130% 100%, -20% 100%)'
+          const hidden  = 'polygon(120% 0%, 250% 0%, 250% 100%, 100% 100%)'
+          const full    = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+
+          return (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                clipPath: isActive ? visible : isPrev ? full : hidden,
+                opacity: isActive || isPrev ? 1 : 0,
+                transition: isActive
+                  ? 'clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1), opacity 0s'
+                  : isPrev
+                    ? 'none'
+                    : 'clip-path 0s 1.3s, opacity 0s 1.3s',
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              }}
+            >
+              {slide.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: slide.bg,
+                    transform: isActive ? 'scale(1)' : 'scale(1.08)',
+                    transition: 'transform 6s ease-out',
+                  }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* Dark overlay with warm chocolate tint */}
+        <div {...elementProps(config.id, 'overlay', 'container', 'Overlay')} className="absolute inset-0" style={{ backgroundColor: 'rgba(42, 31, 26, 0.38)', zIndex: 3 }} />
+        {/* Honey gold glow — bottom left */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 4, background: 'radial-gradient(ellipse at 15% 85%, rgba(232, 193, 122, 0.1) 0%, transparent 55%)' }} />
+
+        {/* Content — bottom-left title + subtitle */}
+        <div {...elementProps(config.id, 'centerContent', 'container', 'Hero Content')} className="relative flex flex-col justify-end h-full px-6" style={{ zIndex: 10, paddingBottom: '140px', paddingLeft: 'clamp(20px, 5vw, 80px)' }}>
+          <div ref={mielTitleRevealRef}>
+            {/* Subtitle above title — caramel, wide tracking */}
+            <p
+              {...elementProps(config.id, 'subtitle', 'text')}
+              className="miel-hero-resp-subtitle"
+              style={{
+                color: '#8B5E3C',
+                fontSize: '13px',
+                fontWeight: 600,
+                letterSpacing: '0.32em',
+                textTransform: 'uppercase',
+                marginBottom: '18px',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                textShadow: '0 1px 8px rgba(42, 31, 26, 0.5)',
+              }}
+            >
+              {subtitle || mielCurrentSlide.category}
+            </p>
+            {/* H1 title — warm, artisanal, with honey accent on key word */}
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              className="miel-hero-resp-title"
+              style={{
+                color: '#FFFFFF',
+                fontWeight: 300,
+                fontSize: 'clamp(2.875rem, 1.6429rem + 5.4762vw, 5.75rem)',
+                lineHeight: '105%',
+                maxWidth: '860px',
+                textAlign: 'left',
+                marginBottom: '0',
+                marginTop: 0,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {(() => {
+                const titleText = mielCurrentSlide.name
+                const accentWord = mielCurrentSlide.accentWord
+                const idx = titleText.lastIndexOf(accentWord)
+                if (idx === -1) return titleText
+                const before = titleText.slice(0, idx)
+                const after = titleText.slice(idx + accentWord.length)
+                return (
+                  <>
+                    {before}
+                    <span style={{ color: '#E8C17A', fontWeight: 400 }}>{accentWord}</span>
+                    {after}
+                  </>
+                )
+              })()}
+            </h1>
+          </div>
+        </div>
+
+        {/* Glassmorphism order bar at bottom */}
+        <div
+          {...elementProps(config.id, 'bookingBar', 'container', 'Order Bar')}
+          className="absolute z-10 flex items-center miel-hero-resp-bookingbar"
+          style={{
+            bottom: '40px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            borderRadius: '999px',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(42, 31, 26, 0.58)',
+            padding: '6px 6px 6px 28px',
+            gap: '0',
+            maxWidth: '820px',
+            width: '90%',
+            border: '1px solid rgba(232, 193, 122, 0.22)',
+          }}
+        >
+          {/* Order fields */}
+          <div {...elementProps(config.id, 'filtersRow', 'container', 'Order Fields')} className="flex items-center miel-hero-resp-filters" style={{ flexShrink: 0 }}>
+            {['Nom', 'Email', 'Type de commande'].map((label, i) => (
+              <div
+                key={label}
+                style={{
+                  position: 'relative',
+                  paddingRight: i < 2 ? '14px' : '0',
+                  marginRight: i < 2 ? '14px' : '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                {i < 2 && (
+                  <span className="miel-hero-resp-filter-divider" style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '1px',
+                    height: '20px',
+                    backgroundColor: 'rgba(232, 193, 122, 0.2)',
+                  }} />
+                )}
+                <span
+                  {...elementProps(config.id, `filters.${i}.label`, 'text')}
+                  style={{
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    fontSize: '14px',
+                    cursor: 'default',
+                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                    userSelect: 'none',
+                    fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                    gap: '6px',
+                  }}
+                >
+                  {label === 'Nom' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  )}
+                  {label === 'Email' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  )}
+                  {label === 'Type de commande' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                  )}
+                  {label}
+                  {label === 'Type de commande' && (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '2px', opacity: 0.6 }}><polyline points="6 9 12 15 18 9"/></svg>
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA button */}
+          <div className="miel-hero-resp-reserve-btn" style={{ flex: '1 1 auto', minWidth: '0', display: 'flex', justifyContent: 'flex-end', marginLeft: '16px' }}>
+            <div
+              {...elementProps(config.id, 'primaryButton', 'button')}
+              role="button"
+              style={{
+                backgroundColor: '#E8C17A',
+                color: '#2A1F1A',
+                borderRadius: '999px',
+                paddingLeft: '28px',
+                paddingRight: '28px',
+                paddingTop: '12px',
+                paddingBottom: '12px',
+                fontSize: '14px',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.03em',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#F0CF96' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#E8C17A' }}
+            >
+              {mielBtnLabel}
+            </div>
+          </div>
+        </div>
+
+        {/* Prev button */}
+        <div
+          {...elementProps(config.id, 'prevButton', 'button')}
+          role="button"
+          onClick={mielGoPrev}
+          className="absolute z-10 flex items-center justify-center miel-hero-resp-nav-arrows"
+          style={{
+            left: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(232, 193, 122, 0.12)',
+            border: '1px solid rgba(232, 193, 122, 0.22)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(232, 193, 122, 0.28)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(232, 193, 122, 0.12)' }}
+          aria-label="Previous slide"
+        >
+          <span {...elementProps(config.id, 'prevIcon', 'icon', 'Chevron Left')}><ChevronLeft style={{ width: '24px', height: '24px', color: '#E8C17A' }} /></span>
+        </div>
+
+        {/* Next button */}
+        <div
+          {...elementProps(config.id, 'nextButton', 'button')}
+          role="button"
+          onClick={mielGoNext}
+          className="absolute z-10 flex items-center justify-center miel-hero-resp-nav-arrows"
+          style={{
+            right: 'clamp(16px, 4vw, 60px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 'clamp(40px, 6vw, 56px)',
+            height: 'clamp(40px, 6vw, 56px)',
+            borderRadius: '50%',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(232, 193, 122, 0.12)',
+            border: '1px solid rgba(232, 193, 122, 0.22)',
+            cursor: 'pointer',
+            transition: 'transform 0.5s ease, background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.backgroundColor = 'rgba(232, 193, 122, 0.28)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)'; e.currentTarget.style.backgroundColor = 'rgba(232, 193, 122, 0.12)' }}
+          aria-label="Next slide"
+        >
+          <span {...elementProps(config.id, 'nextIcon', 'icon', 'Chevron Right')}><ChevronRight style={{ width: '24px', height: '24px', color: '#E8C17A' }} /></span>
+        </div>
+
+        {/* Bottom-left meta badge */}
+        <div
+          {...elementProps(config.id, 'slideMeta', 'container', 'Slide Info')}
+          className="absolute z-10"
+          style={{
+            bottom: '100px',
+            left: 'clamp(16px, 4vw, 80px)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(232, 193, 122, 0.08)',
+            borderRadius: '4px',
+            padding: '10px 18px',
+            border: '1px solid rgba(232, 193, 122, 0.18)',
+          }}
+        >
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            <span
+              {...elementProps(config.id, `slides.${mielActiveSlide}.name`, 'text')}
+              style={{ fontSize: 'clamp(13px, 1.5vw, 16px)', fontWeight: 400, color: '#FFFFFF', letterSpacing: '0.01em' }}
+            >
+              {mielCurrentSlide.name}
+            </span>
+            <span {...elementProps(config.id, 'slideDivider', 'text', 'Divider')} style={{ color: 'rgba(255, 255, 255, 0.3)', fontSize: '14px' }}>
+              &middot;
+            </span>
+            <span
+              {...elementProps(config.id, `slides.${mielActiveSlide}.category`, 'text')}
+              className="flex items-center"
+              style={{ color: '#E8C17A', fontSize: '13px', gap: '4px', fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase' }}
+            >
+              {mielCurrentSlide.category}
+            </span>
+          </div>
+        </div>
+
+        {/* Progress bar at very bottom */}
+        <div
+          {...elementProps(config.id, 'progressBar', 'container', 'Progress Bar')}
+          className="absolute z-10"
+          style={{
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            backgroundColor: 'rgba(232, 193, 122, 0.12)',
+          }}
+        >
+          <div
+            ref={mielProgressRef}
+            style={{
+              height: '100%',
+              backgroundColor: '#E8C17A',
+              width: '0%',
+              transition: 'width 5s linear',
+            }}
+          />
+        </div>
+
+        {/* Bottom-right slide counter dots */}
+        <div
+          {...elementProps(config.id, 'slideNav', 'container', 'Slide Nav')}
+          className="absolute z-10 flex"
+          style={{ bottom: '100px', right: 'clamp(16px, 4vw, 80px)', gap: '8px', alignItems: 'center' }}
+        >
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              {...elementProps(config.id, `slides.${i}.dot`, 'button')}
+              role="button"
+              onClick={() => setMielActiveSlide(i)}
+              style={{
+                width: mielActiveSlide === i ? '28px' : '6px',
+                height: '6px',
+                borderRadius: '999px',
+                backgroundColor: mielActiveSlide === i ? '#E8C17A' : 'rgba(255, 255, 255, 0.25)',
+                cursor: 'pointer',
+                transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease',
+              }}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+    </>
+  )
 }
 
 // ─── ZENITH HERO SLIDER ───
@@ -6846,7 +7314,7 @@ export const heroMeta = {
   type: 'hero',
   label: 'Hero',
   icon: '⚡',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith', 'miel'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

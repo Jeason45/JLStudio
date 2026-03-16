@@ -19,18 +19,24 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://jlstudio.dev"),
-  title: "JL Studio | Développeur Web Freelance - Sites & Applications Sur Mesure",
+  title: "JL Studio | Création de Sites Web Premium — Bordeaux",
   description:
-    "JL Studio - Développement web freelance. Sites vitrine, e-commerce, applications web sur mesure. Design premium, performances optimales, SEO intégré.",
+    "Studio de création web sur mesure. Sites vitrine, e-commerce et applications haut de gamme. Design soigné, performances optimales, accompagnement personnalisé.",
   keywords:
-    "développeur web, freelance, site vitrine, e-commerce, application web, Next.js, React, design, SEO",
+    "création site web, développeur web Bordeaux, site vitrine premium, e-commerce sur mesure, application web, freelance, agence web Bordeaux",
   openGraph: {
-    title: "JL Studio | Développeur Web Freelance",
+    title: "JL Studio | Création de Sites Web Premium — Bordeaux",
     description:
-      "Sites vitrine, e-commerce et applications web sur mesure. Design premium et performances optimales.",
+      "Studio de création web sur mesure. Sites vitrine, e-commerce et applications haut de gamme. Design soigné et performances optimales.",
     type: "website",
     locale: "fr_FR",
     siteName: "JL Studio",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "JL Studio | Création de Sites Web Premium — Bordeaux",
+    description:
+      "Studio de création web sur mesure. Sites vitrine, e-commerce et applications haut de gamme.",
   },
 };
 
@@ -41,7 +47,7 @@ const jsonLd = {
   url: "https://jlstudio.dev",
   logo: "https://jlstudio.dev/images/logo-jlstudio.png",
   description:
-    "Développeur web freelance à Bordeaux. Sites vitrine, e-commerce et applications web sur mesure.",
+    "Studio de création web sur mesure à Bordeaux. Sites vitrine, e-commerce et applications haut de gamme.",
   address: {
     "@type": "PostalAddress",
     streetAddress: "35 quai Deschamps",

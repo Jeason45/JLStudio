@@ -4027,6 +4027,240 @@ export function GallerySection({ config }: { config: SectionConfig }) {
   }
 
   // ═══════════════════════════════════════════════════════
+  // MIEL-CREATIONS — Patisserie / Bakery gallery :
+  // 3:4 cards, chocolate brown (#2A1F1A) bg, honey gold (#E8C17A) badges,
+  // glassmorphism overlay, scroll-reveal animation
+  // ═══════════════════════════════════════════════════════
+  if (variant === 'miel-creations') {
+    const scrollRevealRef = (el: HTMLDivElement | null) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+          obs.disconnect()
+        }
+      }, { threshold: 0.15 })
+      obs.observe(el)
+    }
+
+    const defaultCards = [
+      { id: '1', title: 'Paris-Brest Revisité', category: 'Gâteaux', description: 'Notre réinterprétation du grand classique — pâte à choux aérienne, praliné noisette maison et finitions dorées à la feuille d\'or.', image: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=800&q=85' },
+      { id: '2', title: 'Croissant Pur Beurre', category: 'Viennoiseries', description: 'Feuilletage délicat réalisé avec un beurre de qualité supérieure — 27 couches pour une texture incomparable, croustillante et fondante.', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800&q=85' },
+      { id: '3', title: 'Collection Macarons', category: 'Macarons', description: 'Coquilles de meringue française parfaitement lisses, garnitures de ganaches et crèmes artisanales en douze saveurs exclusives.', image: 'https://images.unsplash.com/photo-1558326567-98166e232c52?w=800&q=85' },
+      { id: '4', title: 'Pain au Levain', category: 'Pain', description: 'Levain centenaire, farine de tradition française, cuisson sur sole en pierre — une mie alvéolée et une croûte chantante à chaque fournée.', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=85' },
+      { id: '5', title: 'Wedding Cake Royal', category: 'Wedding Cake', description: 'Une pièce maîtresse pour votre plus beau jour — quatre étages habillés de fleurs en sucre soufflé, réalisés à la main par notre chef.', image: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800&q=85' },
+      { id: '6', title: 'Tablette Chocolat Grand Cru', category: 'Chocolat', description: 'Cacao sélectionné à la source, torréfié dans notre atelier — tablettes aux notes florales, fruitées et épicées pour les fins connaisseurs.', image: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?w=800&q=85' },
+    ]
+
+    const items = (content as Record<string, unknown>).items as Array<{
+      id?: string; title?: string; category?: string;
+      description?: string; image?: string;
+    }> | undefined
+
+    const cards = items && items.length > 0
+      ? items.map((item, i) => ({
+          id: item.id ?? String(i),
+          title: item.title ?? defaultCards[i % 6].title,
+          category: item.category ?? defaultCards[i % 6].category,
+          description: item.description ?? defaultCards[i % 6].description,
+          image: item.image ?? defaultCards[i % 6].image,
+        }))
+      : defaultCards
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Créations Section')}
+        style={{
+          background: '#2A1F1A',
+          paddingTop: 'clamp(60px, 12vw, 180px)',
+          paddingBottom: 'clamp(60px, 12vw, 180px)',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <style>{`
+          .miel-card:hover .miel-img-zoom { transform: scale(1.05) !important; }
+          .miel-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
+          .miel-img-dezoom.revealed { transform: scale(1); }
+          .miel-btn-fill { transform: translateX(102%); transition: transform 0.4s ease; }
+          .miel-btn:hover .miel-btn-fill { transform: translateX(0); }
+          .miel-btn:hover .miel-btn-label { color: #2A1F1A; }
+          .miel-btn-label { transition: color 0.4s; }
+          .miel-link { color: transparent; transition: color 0.3s; font-size: 14px; font-weight: 500; }
+          .miel-card:hover .miel-link { color: #E8C17A; }
+          @media (max-width: 768px) {
+            .miel-resp-creations-grid { grid-template-columns: 1fr !important; }
+            .miel-resp-creations-header { flex-direction: column; align-items: flex-start !important; }
+          }
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .miel-resp-creations-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+        `}</style>
+        <div {...elementProps(config.id, 'container', 'container', 'Container')} style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          {/* Header */}
+          <div {...elementProps(config.id, 'header', 'container', 'Header')} className="flex justify-between items-end miel-resp-creations-header" style={{ marginBottom: 'clamp(30px, 5vw, 60px)', gap: '24px' }}>
+            <div style={{ maxWidth: '760px' }}>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
+                style={{
+                  fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                  fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+                  fontWeight: 500,
+                  lineHeight: '110%',
+                  textTransform: 'capitalize',
+                  color: '#FFFFFF',
+                }}
+              >
+                {(content as Record<string, unknown>).title as string ?? 'Nos créations'}
+              </h2>
+            </div>
+            <a
+              {...elementProps(config.id, 'subtitle', 'text')}
+              href="/creations"
+              className="miel-btn flex items-center relative overflow-hidden"
+              style={{ fontSize: '20px', fontWeight: 500, color: '#FFFFFF', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+            >
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="miel-btn-label relative" style={{ zIndex: 10 }}>Voir toutes les créations</span>
+              <span
+                {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
+                className="flex items-center justify-center"
+                style={{
+                  background: '#E8C17A',
+                  color: '#2A1F1A',
+                  borderRadius: '4px',
+                  width: '28px',
+                  height: '28px',
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+              {/* Animated bg — fills from right to left */}
+              <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
+                <span className="miel-btn-fill" style={{ display: 'block', background: '#E8C17A', width: '100%', height: '100%' }} />
+              </span>
+            </a>
+          </div>
+
+          {/* Grid */}
+          <div {...elementProps(config.id, 'grid', 'container', 'Créations Grid')} className="grid grid-cols-3 miel-resp-creations-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
+            {cards.map((card, i) => (
+              <div
+                key={card.id}
+                ref={scrollRevealRef}
+                {...elementProps(config.id, `items.${i}`, 'container')}
+                className="miel-card"
+                style={{ color: 'inherit' }}
+              >
+                {/* Image */}
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return
+                    const obs = new IntersectionObserver(([entry]) => {
+                      if (entry.isIntersecting) {
+                        const img = el.querySelector('.miel-img-dezoom')
+                        if (img) img.classList.add('revealed')
+                        obs.disconnect()
+                      }
+                    }, { threshold: 0.15 })
+                    obs.observe(el)
+                  }}
+                >
+                <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '8px' }}>
+                  {card.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      src={card.image}
+                      alt={card.title}
+                      className="miel-img-zoom miel-img-dezoom w-full h-full object-cover"
+                      style={{ transition: 'transform 0.6s ease' }}
+                    />
+                  ) : (
+                    <div
+                      {...elementProps(config.id, `items.${i}.image`, 'image')}
+                      className="miel-img-zoom miel-img-dezoom w-full h-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(to bottom, #3D2B22, #2A1F1A)', transition: 'transform 0.6s ease' }}
+                    >
+                      <Image className="w-8 h-8 text-white/40" />
+                    </div>
+                  )}
+                  {/* Glassmorphism badge: category */}
+                  <span
+                    {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                    className="flex items-center"
+                    style={{
+                      position: 'absolute',
+                      bottom: '16px',
+                      right: '16px',
+                      background: 'rgba(232, 193, 122, 0.2)',
+                      backdropFilter: 'blur(15px)',
+                      WebkitBackdropFilter: 'blur(15px)',
+                      borderRadius: '4px',
+                      padding: '6px 14px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#E8C17A',
+                      zIndex: 2,
+                      border: '1px solid rgba(232, 193, 122, 0.4)',
+                    }}
+                  >
+                    {card.category}
+                  </span>
+                </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ marginTop: '16px' }}>
+                  <h3
+                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                    style={{
+                      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      lineHeight: '140%',
+                      color: '#FFFFFF',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    {...elementProps(config.id, `items.${i}.description`, 'text')}
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: 'rgba(255,255,255,0.45)',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                  <span
+                    {...elementProps(config.id, `items.${i}.cta`, 'button')}
+                    className="miel-link"
+                  >
+                    Découvrir la création &rarr;
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════
   // ASCENT-INTERVENTIONS — Business / Life Coach gallery :
   // 3:4 cards, dark navy (#111827) bg, gold (#E0B870) badges,
   // glassmorphism overlay, scroll-reveal animation
@@ -5263,6 +5497,7 @@ export const galleryMeta = {
     'saveur-creations',
     'ascent-interventions',
     'zenith-cours',
+    'miel-creations',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

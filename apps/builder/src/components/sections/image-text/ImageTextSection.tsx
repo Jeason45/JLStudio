@@ -3409,6 +3409,228 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
     )
   }
 
+  // PATISSERIE MIEL — 55/45 Story Split (Pastry Shop / Bakery)
+  // ═══════════════════════════════════════════
+
+  if (variant === 'miel-story') {
+    const statNumberStyle = {
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+      fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
+      fontWeight: 500,
+      lineHeight: '110%',
+      color: '#E8C17A',
+    } as const
+
+    const paraStyle = {
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '170%',
+      color: '#8B5E3C',
+      fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+    } as const
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const titleRevealRef = useBrixsaScrollReveal({ threshold: 0.15, disabled: isEditing })
+    const imageRevealRef = useBrixsaScrollReveal({ threshold: 0.1, disabled: isEditing })
+    const counter200Ref = useBrixsaCounter(200, { disabled: isEditing })
+    const counter85Ref = useBrixsaCounter(85, { disabled: isEditing })
+    const counter25Ref = useBrixsaCounter(25, { disabled: isEditing })
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'About Section')}
+        style={{
+          backgroundColor: '#2A1F1A',
+          padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)',
+          fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+        }}
+      >
+        <style>{`
+          @media (max-width: 968px) {
+            .miel-story-grid { grid-template-columns: 1fr !important; }
+            .miel-story-image { min-height: 400px !important; }
+          }
+          .miel-story-image:hover .miel-story-img { transform: scale(1.03) !important; }
+          .miel-story-cta:hover {
+            background-color: #E8C17A !important;
+            color: #2A1F1A !important;
+          }
+        `}</style>
+        <div
+          {...elementProps(config.id, 'container', 'container', 'Container')}
+          className="mx-auto miel-story-grid"
+          style={{
+            maxWidth: '1320px',
+            display: 'grid',
+            gridTemplateColumns: '55% 45%',
+            gap: 'clamp(32px, 5vw, 80px)',
+            alignItems: 'center',
+          }}
+        >
+          {/* Left — Image with scroll reveal dezoom */}
+          <div
+            ref={imageRevealRef}
+            {...elementProps(config.id, 'imageContainer', 'container', 'Image Container')}
+            className="miel-story-image"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              minHeight: 600,
+              borderRadius: 0,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              {...elementProps(config.id, 'image', 'image', 'Patisserie Image')}
+              src={content.image || 'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=1200&q=85'}
+              alt={content.title || 'La tradition au service de la gourmandise'}
+              className="miel-story-img"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                transform: 'scale(1.08)',
+                transition: 'transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              }}
+            />
+            {/* Honey accent line overlay at bottom */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '3px',
+                backgroundColor: '#E8C17A',
+                zIndex: 2,
+              }}
+            />
+          </div>
+
+          {/* Right — Text content */}
+          <div
+            ref={titleRevealRef}
+            {...elementProps(config.id, 'textContent', 'container', 'Text Content')}
+            style={{ display: 'flex', flexDirection: 'column', gap: 0 }}
+          >
+            {/* Eyebrow */}
+            <span
+              {...elementProps(config.id, 'eyebrow', 'text')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 12,
+                fontWeight: 500,
+                letterSpacing: '3px',
+                textTransform: 'uppercase' as const,
+                color: '#E8C17A',
+                marginBottom: 20,
+              }}
+            >
+              {content.eyebrow || 'Notre maison'}
+            </span>
+
+            {/* Title */}
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontSize: 'clamp(2rem, 1.3rem + 3.2vw, 3.5rem)',
+                fontWeight: 500,
+                lineHeight: '115%',
+                color: customTextColor ?? '#FFFFFF',
+                margin: 0,
+                marginBottom: 24,
+              }}
+            >
+              {content.title || 'La tradition au service de la gourmandise'}
+            </h2>
+
+            {/* Body text */}
+            <p
+              {...elementProps(config.id, 'body', 'text')}
+              style={{
+                ...paraStyle,
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+                maxWidth: 480,
+              }}
+            >
+              {content.body || 'Depuis plus de 25 ans, notre maison perpétue l\'art de la pâtisserie et de la boulangerie artisanale. Chaque matin, nos artisans donnent vie à des créations qui éveillent les sens, avec des ingrédients soigneusement sélectionnés et un savoir-faire transmis de génération en génération.'}
+            </p>
+
+            {/* Counter stats */}
+            <div
+              {...elementProps(config.id, 'statsRow', 'container', 'Stats Row')}
+              style={{
+                display: 'flex',
+                gap: 'clamp(24px, 4vw, 48px)',
+                marginBottom: 'clamp(32px, 5vw, 56px)',
+              }}
+            >
+              <div {...elementProps(config.id, 'stat1', 'container', 'Stat Block')}>
+                <div
+                  {...elementProps(config.id, 'stat1Value', 'text')}
+                  className="flex items-baseline"
+                  style={statNumberStyle}
+                >
+                  <span ref={counter200Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  créations par jour
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat2', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat2Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter85Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  recettes signature
+                </p>
+              </div>
+              <div {...elementProps(config.id, 'stat3', 'container', 'Stat Block')}>
+                <div {...elementProps(config.id, 'stat3Value', 'text')} className="flex items-baseline" style={statNumberStyle}>
+                  <span ref={counter25Ref}>0</span>
+                  <span>+</span>
+                </div>
+                <p style={{ marginTop: '4px', fontSize: '13px', fontWeight: 400, color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.5px' }}>
+                  années de passion
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Button — honey outline → fill on hover */}
+            <a
+              {...elementProps(config.id, 'primaryButton', 'link')}
+              href={content.primaryButton?.href ?? '#'}
+              className="miel-story-cta"
+              style={{
+                display: 'inline-block',
+                border: '1px solid #E8C17A',
+                backgroundColor: 'transparent',
+                color: '#E8C17A',
+                fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
+                fontWeight: 500,
+                fontSize: 14,
+                letterSpacing: '1.5px',
+                textTransform: 'uppercase' as const,
+                padding: '16px 40px',
+                textDecoration: 'none',
+                transition: 'background-color 0.4s ease, color 0.4s ease',
+                alignSelf: 'flex-start',
+              }}
+            >
+              {content.primaryButton?.label ?? 'Découvrir nos créations'}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback to startup-image-right
   return <ImageTextSection config={{ ...config, variant: 'startup-image-right' }} isEditing={isEditing} />
 }
@@ -3439,6 +3661,7 @@ export const imageTextMeta = {
     'saveur-story',
     'ascent-story',
     'zenith-story',
+    'miel-story',
   ],
   defaultVariant: 'startup-image-right',
   defaultContent: {},

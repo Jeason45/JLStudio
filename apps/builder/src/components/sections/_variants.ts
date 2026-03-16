@@ -28,6 +28,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'saveur', label: 'Saveur (Traiteur)', description: 'Slider plein \u00E9cran, brun-noir, or antique/sienne, traiteur & chef', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ascent', label: 'Ascent (Coach Business)', description: 'Slider plein \u00E9cran, navy foncé, or lumineux, coach business & life coach', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'zenith', label: 'Z\u00E9nith (Yoga)', description: 'Slider plein \u00E9cran, noir doux, sauge/beige, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'miel', label: 'Miel (P\u00E2tisserie)', description: 'Slider plein \u00E9cran, chocolat profond, or miel/caramel, p\u00E2tisserie & boulangerie', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   features: [
     // Startup / SaaS
@@ -67,6 +68,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'saveur-accordion', label: 'Saveur Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, traiteur & chef, brun-noir/or antique', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'ascent-accordion', label: 'Ascent Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, coach business & life coach, navy/or lumineux', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'zenith-accordion', label: 'Z\u00E9nith Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, studio yoga & pilates, noir doux/sauge', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'miel-accordion', label: 'Miel Accordion', description: 'Accord\u00E9on horizontal, 3 panneaux, p\u00E2tisserie & boulangerie, chocolat/or miel', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   cta: [
     // Startup
@@ -165,6 +167,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'saveur-featured', label: 'Saveur Featured', description: '50/50 initiales dor\u00E9es + citation, brun-noir/or antique, traiteur & chef', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ascent-featured', label: 'Ascent Featured', description: '50/50 initiales dorées + citation, navy foncé/or lumineux, coach business & life coach', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'zenith-featured', label: 'Z\u00E9nith Featured', description: '50/50 initiales sauge + citation, noir doux/sauge/beige, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'miel-featured', label: 'Miel Featured', description: '50/50 initiales dor\u00E9es + citation, chocolat profond/or miel, p\u00E2tisserie & boulangerie', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   pricing: [
     // Startup
@@ -329,6 +332,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'saveur-creations', label: 'Saveur Cr\u00E9ations', description: 'Grid 3 colonnes, galerie cr\u00E9ations culinaires, brun-noir/or antique, traiteur', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ascent-interventions', label: 'Ascent Interventions', description: 'Grid 3 colonnes, galerie interventions & programmes, navy foncé/or lumineux, coach business', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'zenith-cours', label: 'Z\u00E9nith Cours', description: 'Grid 3 colonnes, galerie cours yoga & pilates, noir doux/sauge, studio wellness', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'miel-creations', label: 'Miel Cr\u00E9ations', description: 'Grid 3 colonnes, galerie p\u00E2tisseries & viennoiseries, chocolat profond/or miel', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'image-text': [
     { id: 'startup-image-right', label: 'Startup — Image droite', description: 'Indigo, texte + image', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -355,6 +359,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'saveur-story', label: 'Saveur Story', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, brun-noir/or antique, traiteur & chef', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ascent-story', label: 'Ascent Story', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, navy foncé/or lumineux, coach business & life coach', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'zenith-story', label: 'Z\u00E9nith Story', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, noir doux/sauge, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'miel-story', label: 'Miel Story', description: 'Layout asym\u00E9trique, compteurs anim\u00E9s, chocolat profond/or miel, p\u00E2tisserie & boulangerie', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'product-grid': [
     { id: 'startup-grid', label: 'Startup — Grille', description: 'Cards produits indigo', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -409,6 +414,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'saveur', label: 'Saveur (Traiteur)', description: 'Transparent, brun-noir, or antique, traiteur & chef \u00E0 domicile', previewStyle: { background: 'dark', paddingY: 'sm' } },
     { id: 'ascent', label: 'Ascent (Coach Business)', description: 'Transparent, navy foncé, or lumineux, coach business & life coach', previewStyle: { background: 'dark', paddingY: 'sm' } },
     { id: 'zenith', label: 'Z\u00E9nith (Yoga)', description: 'Transparent, noir doux, sauge/beige, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'sm' } },
+    { id: 'miel', label: 'Miel (P\u00E2tisserie)', description: 'Transparent, chocolat profond, or miel/caramel, p\u00E2tisserie & boulangerie', previewStyle: { background: 'dark', paddingY: 'sm' } },
   ],
   'site-footer': [
     { id: 'startup', label: 'Startup / SaaS', description: 'Moderne, colonnes, status', previewStyle: { background: 'dark', paddingY: 'md' } },
@@ -429,6 +435,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'saveur', label: 'Saveur (Traiteur)', description: 'Logo centr\u00E9, 3 colonnes, brun-noir/or antique, Instagram/Facebook/Pinterest', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'ascent', label: 'Ascent (Coach Business)', description: 'Logo centr\u00E9, 3 colonnes, navy foncé/or lumineux, text-mask hover, LinkedIn/Instagram/YouTube', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'zenith', label: 'Z\u00E9nith (Yoga)', description: 'Logo centr\u00E9, 3 colonnes, noir doux/sauge, text-mask hover, Instagram/YouTube/Facebook', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'miel', label: 'Miel (P\u00E2tisserie)', description: 'Logo centr\u00E9, 3 colonnes, chocolat profond/or miel, text-mask hover, Instagram/Facebook/Pinterest', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   tabs: [
     { id: 'startup-horizontal', label: 'Startup — Horizontal', description: 'Tabs pill indigo, horizontal', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -520,6 +527,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'saveur-parallax', label: 'Saveur Parallax', description: 'Ambiances culinaires plein \u00E9cran avec parallax, brun-noir/or antique, traiteur', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'ascent-parallax', label: 'Ascent Parallax', description: 'Moments & parcours client plein \u00E9cran avec parallax, navy foncé/or lumineux, coach business', previewStyle: { background: 'dark', paddingY: 'lg' } },
     { id: 'zenith-parallax', label: 'Z\u00E9nith Parallax', description: 'Espaces & moments de pratique plein \u00E9cran avec parallax, noir doux/sauge, studio yoga & pilates', previewStyle: { background: 'dark', paddingY: 'lg' } },
+    { id: 'miel-parallax', label: 'Miel Parallax', description: 'Ambiances artisanales plein \u00E9cran avec parallax, chocolat profond/or miel, p\u00E2tisserie & boulangerie', previewStyle: { background: 'dark', paddingY: 'lg' } },
   ],
   dropdown: [
     { id: 'startup-simple', label: 'Startup — Simple', description: 'Dropdown simple indigo', previewStyle: { background: 'white', paddingY: 'md' } },
