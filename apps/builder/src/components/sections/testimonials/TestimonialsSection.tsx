@@ -880,7 +880,7 @@ function CanopyCards({ content, items, sectionId, styleOverrides }: { content: P
   )
 }
 
-function ObscuraFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function ObscuraFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -907,11 +907,12 @@ function ObscuraFeatured({ content, items, sectionId }: { content: Partial<Testi
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   const initialsGradients = [
     'linear-gradient(135deg, #1a1a18 0%, #2a2520 50%, #1a1510 100%)',
@@ -1083,7 +1084,7 @@ function ObscuraFeatured({ content, items, sectionId }: { content: Partial<Testi
   )
 }
 
-function NacreFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function NacreFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -1112,11 +1113,12 @@ function NacreFeatured({ content, items, sectionId }: { content: Partial<Testimo
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   const initialsGradients = [
     'linear-gradient(135deg, #e8d5cd 0%, #d4bfb5 50%, #c4a99c 100%)',
@@ -1293,7 +1295,7 @@ function NacreFeatured({ content, items, sectionId }: { content: Partial<Testimo
   )
 }
 
-function BrixsaFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function BrixsaFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -1314,11 +1316,12 @@ function BrixsaFeatured({ content, items, sectionId }: { content: Partial<Testim
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   const imageGradients = [
     'linear-gradient(135deg, #3a2a1a 0%, #5c4033 50%, #2a1a0a 100%)',
@@ -1459,7 +1462,7 @@ function BrixsaFeatured({ content, items, sectionId }: { content: Partial<Testim
 // BRAISE — Restaurant Featured Testimonial
 // ─────────────────────────────────────────────
 
-function BraiseFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function BraiseFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -1488,11 +1491,12 @@ function BraiseFeatured({ content, items, sectionId }: { content: Partial<Testim
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   return (
     <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#1A1209', color: '#E8E4DF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
@@ -1632,7 +1636,7 @@ function BraiseFeatured({ content, items, sectionId }: { content: Partial<Testim
 // FORGE — Sports Coach Featured Testimonial
 // ─────────────────────────────────────────────
 
-function ForgeFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function ForgeFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -1658,11 +1662,12 @@ function ForgeFeatured({ content, items, sectionId }: { content: Partial<Testimo
   const total = quotes.length
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   return (
     <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#0A0A0A', color: '#E8E8E8', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
@@ -1802,7 +1807,7 @@ function ForgeFeatured({ content, items, sectionId }: { content: Partial<Testimo
 // CISEAUX — Hair Salon Featured Testimonial
 // ─────────────────────────────────────────────
 
-function CiseauxFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function CiseauxFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -1828,11 +1833,12 @@ function CiseauxFeatured({ content, items, sectionId }: { content: Partial<Testi
   const total = quotes.length
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   return (
     <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#0B0B0B', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
@@ -1972,7 +1978,7 @@ function CiseauxFeatured({ content, items, sectionId }: { content: Partial<Testi
 // ATELIER — Interior Architecture Featured Testimonial
 // ─────────────────────────────────────────────
 
-function AtelierFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function AtelierFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -2001,11 +2007,12 @@ function AtelierFeatured({ content, items, sectionId }: { content: Partial<Testi
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   return (
     <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#1A1A1A', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
@@ -2160,7 +2167,7 @@ function AtelierFeatured({ content, items, sectionId }: { content: Partial<Testi
 // Deep black background, crimson accents
 // ─────────────────────────────────────────────
 
-function EncreFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function EncreFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -2189,11 +2196,12 @@ function EncreFeatured({ content, items, sectionId }: { content: Partial<Testimo
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   return (
     <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#0A0A0A', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
@@ -2350,7 +2358,7 @@ function EncreFeatured({ content, items, sectionId }: { content: Partial<Testimo
 // Deep navy background, warm gold accents, lavender secondary text
 // ─────────────────────────────────────────────
 
-function SereniteFeature({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function SereniteFeature({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -2379,11 +2387,12 @@ function SereniteFeature({ content, items, sectionId }: { content: Partial<Testi
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   return (
     <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#1B1B2F', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
@@ -2535,7 +2544,7 @@ function SereniteFeature({ content, items, sectionId }: { content: Partial<Testi
   )
 }
 
-function PulseFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function PulseFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -2574,11 +2583,12 @@ function PulseFeatured({ content, items, sectionId }: { content: Partial<Testimo
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   return (
     <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#0D0D0D', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
@@ -2716,7 +2726,7 @@ function PulseFeatured({ content, items, sectionId }: { content: Partial<Testimo
 // Brown black background, antique gold accents
 // ─────────────────────────────────────────────
 
-function SaveurFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function SaveurFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -2745,11 +2755,12 @@ function SaveurFeatured({ content, items, sectionId }: { content: Partial<Testim
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   return (
     <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#1C1917', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
@@ -2906,7 +2917,7 @@ function SaveurFeatured({ content, items, sectionId }: { content: Partial<Testim
 // Dark navy background, luminous gold accents
 // ─────────────────────────────────────────────
 
-function AscentFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function AscentFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -2935,11 +2946,12 @@ function AscentFeatured({ content, items, sectionId }: { content: Partial<Testim
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   return (
     <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#111827', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
@@ -3091,7 +3103,7 @@ function AscentFeatured({ content, items, sectionId }: { content: Partial<Testim
   )
 }
 
-function ZenithFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function ZenithFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -3120,11 +3132,12 @@ function ZenithFeatured({ content, items, sectionId }: { content: Partial<Testim
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   return (
     <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#1A1A1A', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
@@ -3281,7 +3294,7 @@ function ZenithFeatured({ content, items, sectionId }: { content: Partial<Testim
 // Chocolate brown background, honey gold accents
 // ─────────────────────────────────────────────
 
-function MielFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function MielFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const defaultQuotes = [
@@ -3310,11 +3323,12 @@ function MielFeatured({ content, items, sectionId }: { content: Partial<Testimon
   const goNext = () => setActiveIndex((prev) => (prev + 1) % total)
 
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
     }, 7000)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   return (
     <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#2A1F1A', color: '#FFFFFF', fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif" }}>
@@ -3466,7 +3480,7 @@ function MielFeatured({ content, items, sectionId }: { content: Partial<Testimon
   )
 }
 
-function PrismeFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function PrismeFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [direction, setDirection] = useState<'next' | 'prev'>('next')
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -3524,6 +3538,7 @@ function PrismeFeatured({ content, items, sectionId }: { content: Partial<Testim
 
   // Auto-rotate
   useEffect(() => {
+    if (isEditing) return
     const timer = setInterval(() => {
       setActiveIndex((prev) => {
         const next = (prev + 1) % total
@@ -3535,7 +3550,7 @@ function PrismeFeatured({ content, items, sectionId }: { content: Partial<Testim
       })
     }, autoRotateInterval)
     return () => clearInterval(timer)
-  }, [total])
+  }, [total, isEditing])
 
   // Progress bar reset key
   const [progressKey, setProgressKey] = useState(0)
@@ -3839,7 +3854,7 @@ function PrismeFeatured({ content, items, sectionId }: { content: Partial<Testim
   )
 }
 
-function PetaleFeatured({ content, items, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+function PetaleFeatured({ content, items, sectionId, isEditing }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const richBlack = '#1A1A1A'
@@ -3899,6 +3914,7 @@ function PetaleFeatured({ content, items, sectionId }: { content: Partial<Testim
 
   // Auto-rotate with progress
   useEffect(() => {
+    if (isEditing) return
     timerRef.current = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total)
       setProgress(0)
@@ -3910,7 +3926,7 @@ function PetaleFeatured({ content, items, sectionId }: { content: Partial<Testim
       if (timerRef.current) clearInterval(timerRef.current)
       if (progressRef.current) clearInterval(progressRef.current)
     }
-  }, [total])
+  }, [total, isEditing])
 
   // Reset progress on index change
   useEffect(() => { setProgress(0) }, [activeIndex])
@@ -4323,7 +4339,7 @@ const GlassSlider = makeSliderVariant('glass',
 
 interface StyleOverrides { titleSize?: SectionTitleSize; textAlign?: SectionTextAlign; textColor?: string }
 
-const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }>> = {
+const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }>> = {
   'startup-grid': StartupGrid,
   'startup-featured': StartupFeatured,
   'startup-marquee': StartupMarquee,
@@ -4367,7 +4383,7 @@ const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsConten
   'petale-featured': PetaleFeatured,
 }
 
-export function TestimonialsSection({ config }: TestimonialsSectionProps) {
+export function TestimonialsSection({ config, isEditing }: TestimonialsSectionProps) {
   const content = (config.content ?? {}) as Partial<TestimonialsContent>
   const variant = config.variant ?? 'startup-grid'
   const { accentColor, titleSize, textAlign, textColor } = config.style
@@ -4406,7 +4422,7 @@ export function TestimonialsSection({ config }: TestimonialsSectionProps) {
 
   const Variant = VARIANT_MAP[variant] ?? VARIANT_MAP['startup-grid']!
 
-  return <Variant content={content} items={items} accent={accent} styleOverrides={{ titleSize, textAlign, textColor }} sectionId={config.id} />
+  return <Variant content={content} items={items} accent={accent} styleOverrides={{ titleSize, textAlign, textColor }} sectionId={config.id} isEditing={isEditing} />
 }
 
 export const testimonialsMeta = {

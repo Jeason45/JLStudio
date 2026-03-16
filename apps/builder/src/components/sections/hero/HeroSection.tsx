@@ -748,9 +748,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(obscuraGoNext, 5000)
       return () => clearInterval(interval)
-    }, [obscuraGoNext])
+    }, [obscuraGoNext, isEditing])
     /* eslint-enable react-hooks/rules-of-hooks */
 
     const obscuraCurrentSlide = slides[obscuraActiveSlide]
@@ -1031,9 +1032,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(goNext, 5000)
       return () => clearInterval(interval)
-    }, [goNext])
+    }, [goNext, isEditing])
 
     const shopBtnLabel = content.primaryButton?.label || 'ACHETER'
     const currentSlide = slides[activeSlide]
@@ -1465,9 +1467,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(nacreGoNext, 5000)
       return () => clearInterval(interval)
-    }, [nacreGoNext])
+    }, [nacreGoNext, isEditing])
 
     // Booking bar state
     const bookingOptions: Record<string, string[]> = {
@@ -1898,9 +1901,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(goNext, 5000)
       return () => clearInterval(interval)
-    }, [goNext])
+    }, [goNext, isEditing])
 
     const searchPlaceholder = subtitle || 'Search by location, type, or keyword...'
     const searchBtnLabel = content.primaryButton?.label || 'Search'
@@ -2464,9 +2468,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(braiseGoNext, 5000)
       return () => clearInterval(interval)
-    }, [braiseGoNext])
+    }, [braiseGoNext, isEditing])
 
     // Reset progress bar animation on slide change
     useEffect(() => {
@@ -2886,9 +2891,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(forgeGoNext, 5000)
       return () => clearInterval(interval)
-    }, [forgeGoNext])
+    }, [forgeGoNext, isEditing])
 
     // Reset progress bar animation on slide change
     useEffect(() => {
@@ -3315,9 +3321,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(ciseauxGoNext, 5000)
       return () => clearInterval(interval)
-    }, [ciseauxGoNext])
+    }, [ciseauxGoNext, isEditing])
 
     // Reset progress bar animation on slide change
     useEffect(() => {
@@ -3737,9 +3744,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(atelierGoNext, 5000)
       return () => clearInterval(interval)
-    }, [atelierGoNext])
+    }, [atelierGoNext, isEditing])
 
     // Reset progress bar animation on slide change
     useEffect(() => {
@@ -4169,9 +4177,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(encreGoNext, 5000)
       return () => clearInterval(interval)
-    }, [encreGoNext])
+    }, [encreGoNext, isEditing])
 
     // Reset progress bar animation on slide change
     useEffect(() => {
@@ -4601,9 +4610,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(sereniteGoNext, 5000)
       return () => clearInterval(interval)
-    }, [sereniteGoNext])
+    }, [sereniteGoNext, isEditing])
 
     // Reset progress bar animation on slide change
     useEffect(() => {
@@ -5033,9 +5043,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(pulseGoNext, 5000)
       return () => clearInterval(interval)
-    }, [pulseGoNext])
+    }, [pulseGoNext, isEditing])
 
     // Reset progress bar animation on slide change
     useEffect(() => {
@@ -5473,9 +5484,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(saveurGoNext, 5000)
       return () => clearInterval(interval)
-    }, [saveurGoNext])
+    }, [saveurGoNext, isEditing])
 
     // Reset progress bar animation on slide change
     useEffect(() => {
@@ -5907,9 +5919,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(ascentGoNext, 5000)
       return () => clearInterval(interval)
-    }, [ascentGoNext])
+    }, [ascentGoNext, isEditing])
 
     // Reset progress bar animation on slide change
     useEffect(() => {
@@ -6361,9 +6374,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     }, [])
 
     useEffect(() => {
+      if (isEditing) return
       const interval = setInterval(prismeGoNext, 6000)
       return () => clearInterval(interval)
-    }, [prismeGoNext])
+    }, [prismeGoNext, isEditing])
 
     // Mouse parallax for decorative lens SVGs
     const handlePrismeMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
@@ -7158,9 +7172,10 @@ function PetaleHero({ config, isEditing }: { config: SectionConfig; isEditing?: 
   }, [])
 
   useEffect(() => {
+    if (isEditing) return
     const interval = setInterval(goNext, 6000)
     return () => clearInterval(interval)
-  }, [goNext])
+  }, [goNext, isEditing])
 
   // Mouse tracking for petal parallax
   useEffect(() => {
@@ -7872,9 +7887,10 @@ function MielHeroSlider({ config, isEditing }: { config: SectionConfig; isEditin
   }, [slides.length])
 
   useEffect(() => {
+    if (isEditing) return
     const interval = setInterval(mielGoNext, 5000)
     return () => clearInterval(interval)
-  }, [mielGoNext])
+  }, [mielGoNext, isEditing])
 
   // Reset progress bar animation on slide change
   useEffect(() => {
@@ -8334,9 +8350,10 @@ function ZenithHeroSlider({ config, isEditing }: { config: SectionConfig; isEdit
   }, [slides.length])
 
   useEffect(() => {
+    if (isEditing) return
     const interval = setInterval(zenithGoNext, 5000)
     return () => clearInterval(interval)
-  }, [zenithGoNext])
+  }, [zenithGoNext, isEditing])
 
   // Reset progress bar animation on slide change
   useEffect(() => {
