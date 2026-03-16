@@ -1,6 +1,6 @@
 import type { SectionConfig, Brand } from '@/types/site'
 
-export type TemplateUniverse = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass'
+export type TemplateUniverse = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass' | 'bold'
 
 export interface TemplatePageDef {
   slug: string
@@ -30,6 +30,7 @@ export const UNIVERSE_COLORS: Record<TemplateUniverse, { bg: string; text: strin
   creative: { bg: 'bg-rose-500/15', text: 'text-rose-400', label: 'Créatif' },
   ecommerce: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', label: 'E-commerce' },
   glass: { bg: 'bg-cyan-500/15', text: 'text-cyan-400', label: 'Glass' },
+  bold: { bg: 'bg-red-500/15', text: 'text-red-400', label: 'Bold' },
 }
 
 const year = new Date().getFullYear()
