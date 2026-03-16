@@ -166,7 +166,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
   // ─── 13. Real Estate — Brixsa ───
   {
     id: 'real-estate-brixsa',
-    name: 'Brixsa',
+    name: 'Brixsa — Immobilier',
     description: 'Template immobilier luxe — crème/brun, GeneralSans, glassmorphism, slider hero, accordéon services',
     category: 'real-estate',
     universe: 'luxe',
@@ -1256,7 +1256,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
   // ─── 26. E-commerce Éco — Canopy ───
   {
     id: 'ecommerce-canopy',
-    name: 'Canopy',
+    name: 'Canopy — E-commerce',
     description: 'Template e-commerce éco-responsable — blanc chaud, vert forêt, coins carrés, minimaliste',
     category: 'ecommerce',
     universe: 'ecommerce',
@@ -1279,7 +1279,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
 
 {
     id: 'nail-salon-nacre',
-    name: 'Nacre',
+    name: 'Nacre — Salon de beauté',
     description: 'Template nail studio premium — rose poudré, doré, glassmorphism, slider hero diagonal wipe, accordéon services',
     category: 'beaute',
     universe: 'luxe',
@@ -1302,7 +1302,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
   // ─── Obscura — Photographe Premium ───
   {
     id: 'photographe-obscura',
-    name: 'Obscura',
+    name: 'Obscura — Photographe',
     description: 'Template photographe premium — noir profond, or chaud, slider diagonal wipe, galerie cinématique',
     category: 'photographe',
     universe: 'luxe',
@@ -1325,7 +1325,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
   // ─── Braise — Restaurant Gastronomique ───
   {
     id: 'restaurant-braise',
-    name: 'Braise',
+    name: 'Braise — Restaurant',
     description: 'Template restaurant gastronomique \u2014 noir profond, or chaud, glassmorphism, slider diagonal wipe, accord\u00E9on menu',
     category: 'restaurant',
     universe: 'luxe',
@@ -1347,7 +1347,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
   // ─── Forge — Coach Sportif ───
   {
     id: 'coach-forge',
-    name: 'Forge',
+    name: 'Forge — Coach sportif',
     description: 'Template coach sportif premium \u2014 noir profond, orange \u00E9lectrique, glassmorphism, slider diagonal wipe, programmes fitness',
     category: 'coach',
     universe: 'luxe' as TemplateUniverse,
@@ -1369,7 +1369,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
   // ─── Ciseaux — Salon de Coiffure ───
   {
     id: 'coiffeur-ciseaux',
-    name: 'Ciseaux',
+    name: 'Ciseaux — Coiffeur',
     description: 'Template salon de coiffure premium \u2014 noir profond, cuivr\u00E9 rose gold, glassmorphism, slider diagonal wipe, galerie r\u00E9alisations',
     category: 'coiffeur',
     universe: 'luxe' as TemplateUniverse,
@@ -1391,7 +1391,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
   // ─── Atelier — Architecte d'intérieur ───
   {
     id: 'architecte-atelier',
-    name: 'Atelier \u2014 Architecture d\u2019int\u00E9rieur',
+    name: 'Atelier — Architecte d\'intérieur',
     description: 'Template premium pour architecte d\u2019int\u00E9rieur avec design \u00E9pur\u00E9 et sophistiqu\u00E9',
     category: 'architecte',
     universe: 'luxe' as TemplateUniverse,
@@ -1413,7 +1413,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
   // ─── Encre — Tatoueur ───
   {
     id: 'tatoueur-encre',
-    name: 'Encre \u2014 Tattoo Artist',
+    name: 'Encre — Tatoueur',
     description: 'Template premium pour tatoueur avec design dark et artistique',
     category: 'tatoueur',
     universe: 'bold' as TemplateUniverse,
