@@ -1,0 +1,7 @@
+node_modules
+.next
+.git
+*.md
+.env*
+apps/web
+apps/portal
