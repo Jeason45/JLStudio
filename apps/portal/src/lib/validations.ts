@@ -7,6 +7,12 @@ export const loginSchema = z.object({
   siteSlug: z.string().min(1, 'Site requis'),
 });
 
+export const adminLoginSchema = z.object({
+  email: z.string().email('Email invalide'),
+  password: z.string().min(1, 'Mot de passe requis'),
+  siteId: z.string().optional(),
+});
+
 // ─── Portal Users ───────────────────────────
 export const portalUserCreateSchema = z.object({
   email: z.string().email('Email invalide'),
