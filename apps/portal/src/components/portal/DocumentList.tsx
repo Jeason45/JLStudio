@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, FileText } from 'lucide-react';
+import { Plus, FileText, Download, Send, X, PenTool } from 'lucide-react';
+import { useSidebar } from './SidebarContext';
 import type { DocumentData } from '@/types/portal';
 
 const STATUS_LABELS: Record<string, string> = {
@@ -28,9 +29,20 @@ const TYPE_LABELS: Record<string, { singular: string; plural: string }> = {
 
 export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FACTURE' | 'CONTRAT'; createHref: string }) {
   const router = useRouter();
+  const { userRole } = useSidebar();
+  const isClient = userRole === 'CLIENT';
   const [documents, setDocuments] = useState<DocumentData[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
+  const [sendModal, setSendModal] = useState<DocumentData | null>(null);
+  const [signModal, setSignModal] = useState<DocumentData | null>(null);
+
+  const refreshDocuments = async () => {
+    const params = new URLSearchParams({ type });
+    if (statusFilter) params.set('status', statusFilter);
+    const res = await fetch(`/api/portal/documents?${params}`);
+    setDocuments(await res.json());
+  };
 
   useEffect(() => {
     const params = new URLSearchParams({ type });
@@ -47,10 +59,24 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status }),
     });
-    const params = new URLSearchParams({ type });
-    if (statusFilter) params.set('status', statusFilter);
-    const res = await fetch(`/api/portal/documents?${params}`);
-    setDocuments(await res.json());
+    await refreshDocuments();
+  };
+
+  const handleDownloadPDF = async (doc: DocumentData) => {
+    try {
+      const res = await fetch(`/api/portal/documents/${doc.id}/pdf`);
+      if (!res.ok) return;
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = window.document.createElement('a');
+      const typePrefix = doc.type === 'DEVIS' ? 'Devis' : doc.type === 'FACTURE' ? 'Facture' : 'Contrat';
+      a.href = url;
+      a.download = `${typePrefix}_${doc.documentNumber || doc.id}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      // silent
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -75,12 +101,14 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
         <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>{TYPE_LABELS[type].plural}</h1>
-        <button onClick={() => router.push(createHref)} style={{
-          display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-          background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500,
-        }}>
-          <Plus size={16} /> Nouveau {TYPE_LABELS[type].singular.toLowerCase()}
-        </button>
+        {!isClient && (
+          <button onClick={() => router.push(createHref)} style={{
+            display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
+            background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500,
+          }}>
+            <Plus size={16} /> Nouveau {TYPE_LABELS[type].singular.toLowerCase()}
+          </button>
+        )}
       </div>
 
       {/* Stats */}
@@ -127,7 +155,7 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
         <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)', overflow: 'hidden' }}>
           {/* Table header */}
           <div style={{
-            display: 'grid', gridTemplateColumns: '1fr 140px 100px 100px 100px',
+            display: 'grid', gridTemplateColumns: '1fr 140px 100px 100px 140px',
             padding: '10px 16px', background: 'var(--bg-secondary)',
             borderBottom: '1px solid var(--border)',
           }}>
@@ -139,7 +167,7 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
           </div>
           {documents.map((doc, idx) => (
             <div key={doc.id} style={{
-              display: 'grid', gridTemplateColumns: '1fr 140px 100px 100px 100px',
+              display: 'grid', gridTemplateColumns: '1fr 140px 100px 100px 140px',
               alignItems: 'center', padding: '12px 16px',
               borderBottom: idx < documents.length - 1 ? '1px solid var(--border-light)' : 'none',
               transition: 'background 0.1s',
@@ -164,31 +192,303 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
               <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', textAlign: 'right' }}>
                 {doc.totalAmount != null ? formatCurrency(doc.totalAmount) : '—'}
               </span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', justifyContent: 'flex-end' }}>
-                <select
-                  value={doc.status}
-                  onChange={(e) => handleStatusChange(doc.id, e.target.value)}
-                  style={{
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end' }}>
+                {!isClient && (
+                  <select
+                    value={doc.status}
+                    onChange={(e) => handleStatusChange(doc.id, e.target.value)}
+                    style={{
+                      padding: '4px 6px', borderRadius: '6px', fontSize: '11px',
+                      background: 'var(--bg-input)', border: '1px solid var(--border-input)',
+                      color: 'var(--text-secondary)', cursor: 'pointer', outline: 'none',
+                    }}
+                  >
+                    {statuses.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
+                  </select>
+                )}
+                {!isClient && doc.type !== 'FACTURE' && doc.status !== 'SIGNED' && (
+                  <button onClick={() => setSignModal(doc)} title="Demander signature" style={{
                     padding: '4px 6px', borderRadius: '6px', fontSize: '11px',
-                    background: 'var(--bg-input)', border: '1px solid var(--border-input)',
-                    color: 'var(--text-secondary)', cursor: 'pointer', outline: 'none',
+                    background: 'transparent', color: 'var(--text-tertiary)', border: 'none', cursor: 'pointer',
+                    transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: '2px',
                   }}
-                >
-                  {statuses.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
-                </select>
-                <button onClick={() => handleDelete(doc.id)} style={{
-                  padding: '4px 8px', borderRadius: '6px', fontSize: '11px',
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--success-light)'; e.currentTarget.style.color = 'var(--success)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
+                  ><PenTool size={12} /></button>
+                )}
+                {!isClient && (
+                  <button onClick={() => setSendModal(doc)} title="Envoyer par email" style={{
+                    padding: '4px 6px', borderRadius: '6px', fontSize: '11px',
+                    background: 'transparent', color: 'var(--text-tertiary)', border: 'none', cursor: 'pointer',
+                    transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: '2px',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent-light)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
+                  ><Send size={12} /></button>
+                )}
+                <button onClick={() => handleDownloadPDF(doc)} title="Telecharger PDF" style={{
+                  padding: '4px 6px', borderRadius: '6px', fontSize: '11px',
                   background: 'transparent', color: 'var(--text-tertiary)', border: 'none', cursor: 'pointer',
-                  transition: 'all 0.15s',
+                  transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: '2px',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--danger-light)'; e.currentTarget.style.color = 'var(--danger)'; }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent-light)'; e.currentTarget.style.color = 'var(--accent)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
-                >Suppr.</button>
+                ><Download size={12} /></button>
+                {!isClient && (
+                  <button onClick={() => handleDelete(doc.id)} title="Supprimer" style={{
+                    padding: '4px 6px', borderRadius: '6px', fontSize: '11px',
+                    background: 'transparent', color: 'var(--text-tertiary)', border: 'none', cursor: 'pointer',
+                    transition: 'all 0.15s',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--danger-light)'; e.currentTarget.style.color = 'var(--danger)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
+                  ><X size={12} /></button>
+                )}
               </div>
             </div>
           ))}
         </div>
       )}
+
+      {/* Send Modal */}
+      {sendModal && (
+        <SendDocumentModal
+          document={sendModal}
+          onClose={() => setSendModal(null)}
+          onSent={() => { setSendModal(null); refreshDocuments(); }}
+        />
+      )}
+
+      {/* Sign Request Modal */}
+      {signModal && (
+        <SignRequestModal
+          document={signModal}
+          onClose={() => setSignModal(null)}
+          onSent={() => { setSignModal(null); refreshDocuments(); }}
+        />
+      )}
+    </div>
+  );
+}
+
+// ─── Send Modal ──────────────────────────────
+function SendDocumentModal({ document, onClose, onSent }: { document: DocumentData; onClose: () => void; onSent: () => void }) {
+  const [to, setTo] = useState(document.contact?.email || '');
+  const [recipientName, setRecipientName] = useState(
+    [document.contact?.firstName, document.contact?.lastName].filter(Boolean).join(' ') || ''
+  );
+  const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const handleSend = async () => {
+    if (!to || !recipientName) {
+      setError('Email et nom du destinataire requis');
+      return;
+    }
+    setSending(true);
+    setError('');
+    try {
+      const res = await fetch(`/api/portal/documents/${document.id}/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to, recipientName, message: message || undefined }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Erreur lors de l\'envoi');
+        return;
+      }
+      setSuccess(true);
+      setTimeout(onSent, 1500);
+    } catch {
+      setError('Erreur reseau');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%', padding: '8px 12px', borderRadius: '8px', fontSize: '13px',
+    background: 'var(--bg-input)', border: '1px solid var(--border-input)',
+    color: 'var(--text-primary)', outline: 'none',
+  };
+
+  const labelStyle: React.CSSProperties = {
+    fontSize: '12px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '4px', display: 'block',
+  };
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
+    }} onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div style={{
+        background: 'var(--bg-card)', borderRadius: '16px', padding: '24px', width: '100%', maxWidth: '440px',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.2)', border: '1px solid var(--border)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
+            Envoyer {document.documentNumber || document.title}
+          </h2>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', padding: '4px' }}>
+            <X size={18} />
+          </button>
+        </div>
+
+        {success ? (
+          <div style={{ textAlign: 'center', padding: '24px 0' }}>
+            <div style={{ fontSize: '32px', marginBottom: '8px' }}>&#10003;</div>
+            <p style={{ fontSize: '14px', color: 'var(--success)', fontWeight: 500 }}>Document envoye avec succes</p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div>
+              <label style={labelStyle}>Email du destinataire</label>
+              <input type="email" value={to} onChange={(e) => setTo(e.target.value)} placeholder="client@email.com" style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>Nom du destinataire</label>
+              <input type="text" value={recipientName} onChange={(e) => setRecipientName(e.target.value)} placeholder="Jean Dupont" style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>Message personnalise (optionnel)</label>
+              <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Veuillez trouver ci-joint..." rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
+            </div>
+
+            {error && (
+              <p style={{ fontSize: '12px', color: 'var(--danger)', margin: 0 }}>{error}</p>
+            )}
+
+            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '4px' }}>
+              <button onClick={onClose} style={{
+                padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: 500,
+                background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: 'none', cursor: 'pointer',
+              }}>Annuler</button>
+              <button onClick={handleSend} disabled={sending} style={{
+                padding: '8px 20px', borderRadius: '8px', fontSize: '13px', fontWeight: 500,
+                background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer',
+                opacity: sending ? 0.6 : 1, display: 'flex', alignItems: 'center', gap: '6px',
+              }}>
+                <Send size={14} /> {sending ? 'Envoi...' : 'Envoyer'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Sign Request Modal ─────────────────────
+function SignRequestModal({ document, onClose, onSent }: { document: DocumentData; onClose: () => void; onSent: () => void }) {
+  const [email, setEmail] = useState(document.contact?.email || '');
+  const [recipientName, setRecipientName] = useState(
+    [document.contact?.firstName, document.contact?.lastName].filter(Boolean).join(' ') || ''
+  );
+  const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const handleSend = async () => {
+    if (!email || !recipientName) {
+      setError('Email et nom du signataire requis');
+      return;
+    }
+    setSending(true);
+    setError('');
+    try {
+      const res = await fetch(`/api/portal/documents/${document.id}/sign-request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, recipientName, message: message || undefined }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Erreur lors de l\'envoi');
+        return;
+      }
+      setSuccess(true);
+      setTimeout(onSent, 1500);
+    } catch {
+      setError('Erreur reseau');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%', padding: '8px 12px', borderRadius: '8px', fontSize: '13px',
+    background: 'var(--bg-input)', border: '1px solid var(--border-input)',
+    color: 'var(--text-primary)', outline: 'none',
+  };
+
+  const labelStyle: React.CSSProperties = {
+    fontSize: '12px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '4px', display: 'block',
+  };
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
+    }} onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div style={{
+        background: 'var(--bg-card)', borderRadius: '16px', padding: '24px', width: '100%', maxWidth: '440px',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.2)', border: '1px solid var(--border)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
+            Demander une signature
+          </h2>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', padding: '4px' }}>
+            <X size={18} />
+          </button>
+        </div>
+
+        <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '16px' }}>
+          {document.documentNumber || document.title} — Un lien de signature sera envoye par email
+        </p>
+
+        {success ? (
+          <div style={{ textAlign: 'center', padding: '24px 0' }}>
+            <div style={{ fontSize: '32px', marginBottom: '8px' }}>&#9997;</div>
+            <p style={{ fontSize: '14px', color: 'var(--success)', fontWeight: 500 }}>Demande de signature envoyee</p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div>
+              <label style={labelStyle}>Email du signataire</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="client@email.com" style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>Nom du signataire</label>
+              <input type="text" value={recipientName} onChange={(e) => setRecipientName(e.target.value)} placeholder="Jean Dupont" style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>Message personnalise (optionnel)</label>
+              <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Merci de bien vouloir signer..." rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
+            </div>
+
+            {error && (
+              <p style={{ fontSize: '12px', color: 'var(--danger)', margin: 0 }}>{error}</p>
+            )}
+
+            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '4px' }}>
+              <button onClick={onClose} style={{
+                padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: 500,
+                background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: 'none', cursor: 'pointer',
+              }}>Annuler</button>
+              <button onClick={handleSend} disabled={sending} style={{
+                padding: '8px 20px', borderRadius: '8px', fontSize: '13px', fontWeight: 500,
+                background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer',
+                opacity: sending ? 0.6 : 1, display: 'flex', alignItems: 'center', gap: '6px',
+              }}>
+                <PenTool size={14} /> {sending ? 'Envoi...' : 'Envoyer la demande'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

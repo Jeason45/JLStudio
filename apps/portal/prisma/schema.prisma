@@ -47,6 +47,7 @@ model Site {
   portalMailLogs         PortalMailLog[]
   portalInteractions     PortalInteraction[]
   portalAppointments     PortalAppointment[]
+  portalProjects         PortalProject[]
   portalCompanySettings  PortalCompanySettings?
   activities             Activity[]
 
@@ -92,6 +93,8 @@ model Contact {
   portalDocuments    PortalDocument[]
   portalInteractions PortalInteraction[]
   portalAppointments PortalAppointment[]
+  portalProjects     PortalProject[]
+  portalUsers        PortalUser[]
 
   @@unique([siteId, email])
   @@index([siteId, status])
@@ -418,15 +421,18 @@ model PortalUser {
   firstName String?
   lastName  String?
   role      PortalUserRole @default(CLIENT)
+  contactId String?
   active    Boolean        @default(true)
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
 
   site       Site       @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  contact    Contact?   @relation(fields: [contactId], references: [id], onDelete: SetNull)
   activities Activity[]
 
   @@unique([siteId, email])
   @@index([siteId])
+  @@index([contactId])
 }
 
 model PortalConfig {
@@ -595,6 +601,53 @@ model PortalAppointment {
 
   @@index([siteId, startTime])
   @@index([contactId])
+}
+
+model PortalProject {
+  id          String               @id @default(cuid())
+  siteId      String
+  name        String
+  description String?
+  status      PortalProjectStatus  @default(IN_PROGRESS)
+  contactId   String?
+  dueDate     DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  site    Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  contact Contact?          @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  tasks   PortalProjectTask[]
+
+  @@index([siteId, status])
+  @@index([siteId, createdAt])
+  @@index([contactId])
+}
+
+model PortalProjectTask {
+  id        String                  @id @default(cuid())
+  projectId String
+  title     String
+  status    PortalProjectTaskStatus @default(TODO)
+  order     Int                     @default(0)
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+
+  project PortalProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, order])
+}
+
+enum PortalProjectStatus {
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+  CANCELLED
+}
+
+enum PortalProjectTaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
 }
 
 model PortalCompanySettings {

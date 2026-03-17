@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { extractSiteId, extractUserId } from '@/lib/auth';
+import { extractSiteId, extractUserId, extractUserRole, extractContactId } from '@/lib/auth';
 import { logActivity } from '@/lib/activity';
 
 export async function GET(
@@ -8,11 +8,19 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const siteId = extractSiteId(req.headers);
+  const role = extractUserRole(req.headers);
+  const userContactId = extractContactId(req.headers);
   const { id } = await params;
   if (!siteId) return NextResponse.json({ error: 'Non autorise' }, { status: 401 });
 
+  const where: Record<string, unknown> = { id, siteId };
+  // CLIENT can only access their own documents
+  if (role === 'CLIENT' && userContactId) {
+    where.contactId = userContactId;
+  }
+
   const document = await prisma.portalDocument.findFirst({
-    where: { id, siteId },
+    where,
     include: {
       contact: { select: { id: true, firstName: true, lastName: true, email: true, company: true } },
       signature: true,
@@ -29,8 +37,14 @@ export async function PATCH(
 ) {
   const siteId = extractSiteId(req.headers);
   const userId = extractUserId(req.headers);
+  const role = extractUserRole(req.headers);
   const { id } = await params;
   if (!siteId) return NextResponse.json({ error: 'Non autorise' }, { status: 401 });
+
+  // CLIENT cannot modify documents
+  if (role === 'CLIENT') {
+    return NextResponse.json({ error: 'Acces refuse' }, { status: 403 });
+  }
 
   const body = await req.json();
 
@@ -71,8 +85,14 @@ export async function DELETE(
 ) {
   const siteId = extractSiteId(req.headers);
   const userId = extractUserId(req.headers);
+  const role = extractUserRole(req.headers);
   const { id } = await params;
   if (!siteId) return NextResponse.json({ error: 'Non autorise' }, { status: 401 });
+
+  // CLIENT cannot delete documents
+  if (role === 'CLIENT') {
+    return NextResponse.json({ error: 'Acces refuse' }, { status: 403 });
+  }
 
   await prisma.portalDocument.delete({ where: { id, siteId } });
   await logActivity(siteId, userId, 'delete', 'document', id);

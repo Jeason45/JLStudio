@@ -103,6 +103,29 @@ export interface AppointmentData {
   contact?: { id: string; firstName: string | null; lastName: string | null; email: string } | null;
 }
 
+export interface ProjectTaskData {
+  id: string;
+  projectId: string;
+  title: string;
+  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
+  order: number;
+  createdAt: string;
+}
+
+export interface ProjectData {
+  id: string;
+  name: string;
+  description: string | null;
+  status: 'IN_PROGRESS' | 'COMPLETED' | 'ON_HOLD' | 'CANCELLED';
+  contactId: string | null;
+  dueDate: string | null;
+  createdAt: string;
+  contact?: { id: string; firstName: string | null; lastName: string | null; email: string } | null;
+  tasks?: ProjectTaskData[];
+  _count?: { tasks: number };
+  _tasksDone?: number;
+}
+
 export interface CompanySettingsData {
   id: string;
   companyName: string | null;

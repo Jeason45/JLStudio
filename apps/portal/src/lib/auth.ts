@@ -11,6 +11,7 @@ export interface TokenPayload {
   email: string;
   siteId: string;
   role: 'ADMIN' | 'CLIENT' | 'EDITOR';
+  contactId?: string | null;
 }
 
 export async function signToken(payload: TokenPayload): Promise<string> {
@@ -36,4 +37,27 @@ export function extractUserRole(headers: Headers): string | null {
 
 export function extractUserId(headers: Headers): string | null {
   return headers.get('x-portal-user-id');
+}
+
+export function extractContactId(headers: Headers): string | null {
+  return headers.get('x-portal-contact-id');
+}
+
+// Role-based access helpers
+export function requireAdmin(headers: Headers): { siteId: string } | null {
+  const siteId = extractSiteId(headers);
+  const role = extractUserRole(headers);
+  if (!siteId || role !== 'ADMIN') return null;
+  return { siteId };
+}
+
+export function requireEditor(headers: Headers): { siteId: string; role: string } | null {
+  const siteId = extractSiteId(headers);
+  const role = extractUserRole(headers);
+  if (!siteId || !role || role === 'CLIENT') return null;
+  return { siteId, role };
+}
+
+export function isClient(headers: Headers): boolean {
+  return extractUserRole(headers) === 'CLIENT';
 }

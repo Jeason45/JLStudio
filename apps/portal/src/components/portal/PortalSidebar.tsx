@@ -30,21 +30,29 @@ export default function PortalSidebar() {
   }, [isMobile, isMobileMenuOpen]);
 
   // Navigation items (used for mobile menu only)
+  // CLIENT can only see dashboard + documents
+  const clientOnlyModules = ['moduleDevis', 'moduleFactures', 'moduleContrats'];
+
   const allNavItems = [
     { href: '/dashboard', icon: <LayoutDashboard size={18} />, label: 'Dashboard', exact: true, always: true },
-    { href: '/crm', icon: <Users size={18} />, label: 'CRM', module: 'moduleCRM' as const },
+    { href: '/crm', icon: <Users size={18} />, label: 'CRM', module: 'moduleCRM' as const, adminOnly: true },
     { href: '/devis', icon: <FileText size={18} />, label: 'Devis', module: 'moduleDevis' as const },
     { href: '/factures', icon: <Receipt size={18} />, label: 'Factures', module: 'moduleFactures' as const },
     { href: '/contrats', icon: <FileSignature size={18} />, label: 'Contrats', module: 'moduleContrats' as const },
-    { href: '/projets', icon: <FolderKanban size={18} />, label: 'Projets', module: 'moduleProjets' as const },
-    { href: '/cms', icon: <Newspaper size={18} />, label: 'CMS', module: 'moduleCMS' as const },
-    { href: '/calendrier', icon: <Calendar size={18} />, label: 'Calendrier', module: 'moduleCalendrier' as const },
+    { href: '/projets', icon: <FolderKanban size={18} />, label: 'Projets', module: 'moduleProjets' as const, adminOnly: true },
+    { href: '/cms', icon: <Newspaper size={18} />, label: 'CMS', module: 'moduleCMS' as const, adminOnly: true },
+    { href: '/calendrier', icon: <Calendar size={18} />, label: 'Calendrier', module: 'moduleCalendrier' as const, adminOnly: true },
   ];
 
   const navItems = allNavItems.filter((item) => {
     if (item.always) return true;
     if (!item.module || !config) return false;
-    return config[item.module];
+    if (!config[item.module]) return false;
+    // CLIENT role: hide admin-only modules
+    if (userRole === 'CLIENT' && item.adminOnly) return false;
+    // CLIENT role: only show document modules they have access to
+    if (userRole === 'CLIENT' && !clientOnlyModules.includes(item.module)) return false;
+    return true;
   });
 
   const isActive = (href: string, exact?: boolean) => {

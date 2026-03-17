@@ -1,0 +1,65 @@
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+
+export async function generateSignedPDF(
+  originalPdfBuffer: Buffer,
+  signatureImageBuffer: Buffer,
+  signatureData: {
+    signerName: string;
+    signerEmail: string;
+    signedAt: Date;
+    ipAddress: string;
+    documentHash: string;
+  }
+): Promise<Buffer> {
+  const pdfDoc = await PDFDocument.load(originalPdfBuffer);
+  const signatureImage = await pdfDoc.embedPng(signatureImageBuffer);
+
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaOblique = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
+
+  const primaryColor = rgb(0.39, 0.55, 1);
+  const darkColor = rgb(0.06, 0.09, 0.16);
+  const grayColor = rgb(0.39, 0.46, 0.55);
+
+  const pages = pdfDoc.getPages();
+  const lastPage = pages[pages.length - 1];
+  const { width } = lastPage.getSize();
+
+  const sigWidth = 200;
+  const sigHeight = (signatureImage.height / signatureImage.width) * sigWidth;
+  const boxX = width - 260;
+  const baseY = 88;
+  const bonPourAccordY = baseY + 36 + sigHeight;
+  const boxTop = bonPourAccordY + 16;
+  const boxBottom = baseY - 10;
+
+  // Signature box
+  lastPage.drawRectangle({
+    x: boxX - 12, y: boxBottom, width: sigWidth + 24, height: boxTop - boxBottom,
+    color: rgb(1, 1, 1), borderColor: primaryColor, borderWidth: 1,
+  });
+  lastPage.drawText('"Bon pour accord"', { x: boxX, y: bonPourAccordY, size: 11, font: helveticaOblique, color: darkColor });
+  lastPage.drawImage(signatureImage, { x: boxX, y: baseY + 30, width: sigWidth, height: sigHeight });
+  lastPage.drawText(signatureData.signerName, { x: boxX, y: baseY + 14, size: 10, font: helveticaBold, color: darkColor });
+
+  const dateStr = signatureData.signedAt.toLocaleDateString('fr-FR', {
+    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+  lastPage.drawText(`Signe le ${dateStr}`, { x: boxX, y: baseY, size: 8, font: helvetica, color: grayColor });
+
+  // Footer band
+  lastPage.drawRectangle({ x: 0, y: 48, width, height: 3, color: rgb(1, 1, 1) });
+  lastPage.drawRectangle({ x: 0, y: 0, width, height: 40, color: rgb(0.97, 0.98, 0.99) });
+
+  const footerText = `Signe electroniquement par ${signatureData.signerName} (${signatureData.signerEmail})`;
+  const footerWidth = helvetica.widthOfTextAtSize(footerText, 8);
+  lastPage.drawText(footerText, { x: (width - footerWidth) / 2, y: 25, size: 8, font: helvetica, color: darkColor });
+
+  const legalText = `Signature conforme eIDAS - Hash SHA-256: ${signatureData.documentHash}`;
+  const legalWidth = helvetica.widthOfTextAtSize(legalText, 7);
+  lastPage.drawText(legalText, { x: (width - legalWidth) / 2, y: 12, size: 7, font: helvetica, color: grayColor });
+
+  const pdfBytes = await pdfDoc.save();
+  return Buffer.from(pdfBytes);
+}

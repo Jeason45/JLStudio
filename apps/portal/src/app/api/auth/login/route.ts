@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
       email: user.email,
       siteId: site.id,
       role: user.role,
+      contactId: user.contactId,
     });
 
     const response = NextResponse.json({ success: true, role: user.role });

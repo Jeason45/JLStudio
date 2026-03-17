@@ -4,7 +4,7 @@ import type { Prisma } from '@/generated/prisma/client';
 export async function logActivity(
   siteId: string,
   userId: string | null,
-  action: 'create' | 'update' | 'delete',
+  action: 'create' | 'update' | 'delete' | 'send',
   entity: string,
   entityId?: string,
   details?: Record<string, unknown>

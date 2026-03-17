@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { email, password, firstName, lastName, role: userRole } = parsed.data;
+  const { email, password, firstName, lastName, role: userRole, contactId } = parsed.data;
 
   // Check if user already exists for this site
   const existing = await prisma.portalUser.findUnique({
@@ -67,6 +67,7 @@ export async function POST(req: NextRequest) {
       firstName,
       lastName,
       role: userRole,
+      contactId: contactId || null,
     },
     select: {
       id: true,

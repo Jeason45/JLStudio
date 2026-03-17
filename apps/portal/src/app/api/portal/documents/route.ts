@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { extractSiteId, extractUserId } from '@/lib/auth';
+import { extractSiteId, extractUserId, extractUserRole, extractContactId } from '@/lib/auth';
 import { documentCreateSchema } from '@/lib/validations';
 import { logActivity } from '@/lib/activity';
 
 export async function GET(req: NextRequest) {
   const siteId = extractSiteId(req.headers);
+  const role = extractUserRole(req.headers);
+  const userContactId = extractContactId(req.headers);
   if (!siteId) return NextResponse.json({ error: 'Non autorise' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
@@ -17,6 +19,14 @@ export async function GET(req: NextRequest) {
   if (type) where.type = type;
   if (status) where.status = status;
   if (contactId) where.contactId = contactId;
+
+  // CLIENT can only see their own documents
+  if (role === 'CLIENT') {
+    if (!userContactId) {
+      return NextResponse.json([]);
+    }
+    where.contactId = userContactId;
+  }
 
   const documents = await prisma.portalDocument.findMany({
     where,
@@ -32,7 +42,13 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const siteId = extractSiteId(req.headers);
   const userId = extractUserId(req.headers);
+  const role = extractUserRole(req.headers);
   if (!siteId) return NextResponse.json({ error: 'Non autorise' }, { status: 401 });
+
+  // CLIENT cannot create documents
+  if (role === 'CLIENT') {
+    return NextResponse.json({ error: 'Acces refuse' }, { status: 403 });
+  }
 
   const body = await req.json();
   const parsed = documentCreateSchema.safeParse(body);

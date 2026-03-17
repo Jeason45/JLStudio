@@ -14,6 +14,7 @@ export const portalUserCreateSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   role: z.enum(['ADMIN', 'CLIENT', 'EDITOR']).default('CLIENT'),
+  contactId: z.string().optional(),
 });
 
 export const portalUserUpdateSchema = z.object({
@@ -21,6 +22,7 @@ export const portalUserUpdateSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   role: z.enum(['ADMIN', 'CLIENT', 'EDITOR']).optional(),
+  contactId: z.string().nullable().optional(),
   active: z.boolean().optional(),
   password: z.string().min(8, 'Minimum 8 caracteres').optional(),
 });
@@ -130,4 +132,69 @@ export const appointmentUpdateSchema = z.object({
   endTime: z.string().optional(),
   contactId: z.string().nullable().optional(),
   location: z.string().optional(),
+});
+
+// ─── Projects ──────────────────────────────
+export const projectCreateSchema = z.object({
+  name: z.string().min(1, 'Nom requis'),
+  description: z.string().optional(),
+  contactId: z.string().optional(),
+  dueDate: z.string().optional(),
+});
+
+export const projectUpdateSchema = z.object({
+  name: z.string().min(1).optional(),
+  description: z.string().nullable().optional(),
+  status: z.enum(['IN_PROGRESS', 'COMPLETED', 'ON_HOLD', 'CANCELLED']).optional(),
+  contactId: z.string().nullable().optional(),
+  dueDate: z.string().nullable().optional(),
+});
+
+export const projectTaskCreateSchema = z.object({
+  title: z.string().min(1, 'Titre requis'),
+  status: z.enum(['TODO', 'IN_PROGRESS', 'DONE']).optional(),
+  order: z.number().int().optional(),
+});
+
+export const projectTaskUpdateSchema = z.object({
+  title: z.string().min(1).optional(),
+  status: z.enum(['TODO', 'IN_PROGRESS', 'DONE']).optional(),
+  order: z.number().int().optional(),
+});
+
+// ─── CMS Collections ──────────────────────────
+const cmsFieldSchema = z.object({
+  name: z.string().min(1, 'Nom du champ requis'),
+  label: z.string().min(1, 'Label requis'),
+  type: z.enum(['text', 'textarea', 'number', 'boolean', 'date', 'image']),
+});
+
+export const cmsCollectionCreateSchema = z.object({
+  name: z.string().min(1, 'Nom requis'),
+  slug: z.string().min(1, 'Slug requis').regex(/^[a-z0-9-]+$/, 'Slug invalide (a-z, 0-9, -)'),
+  fields: z.array(cmsFieldSchema).default([]),
+  settings: z.record(z.string(), z.unknown()).default({}),
+});
+
+export const cmsCollectionUpdateSchema = z.object({
+  name: z.string().min(1).optional(),
+  slug: z.string().regex(/^[a-z0-9-]+$/, 'Slug invalide').optional(),
+  fields: z.array(cmsFieldSchema).optional(),
+  settings: z.record(z.string(), z.unknown()).optional(),
+});
+
+// ─── CMS Items ─────────────────────────────────
+export const cmsItemCreateSchema = z.object({
+  collectionId: z.string().min(1, 'Collection requise'),
+  slug: z.string().min(1, 'Slug requis').regex(/^[a-z0-9-]+$/, 'Slug invalide (a-z, 0-9, -)'),
+  data: z.record(z.string(), z.unknown()).default({}),
+  status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED', 'SCHEDULED']).default('DRAFT'),
+  scheduledAt: z.string().optional(),
+});
+
+export const cmsItemUpdateSchema = z.object({
+  slug: z.string().regex(/^[a-z0-9-]+$/, 'Slug invalide').optional(),
+  data: z.record(z.string(), z.unknown()).optional(),
+  status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED', 'SCHEDULED']).optional(),
+  scheduledAt: z.string().nullable().optional(),
 });
