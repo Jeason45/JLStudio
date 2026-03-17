@@ -9,4 +9,4 @@ cmds = ["npm install -g npm@latest", "npm install"]
 cmds = ["npx prisma generate", "npm run build"]
 
 [start]
-cmd = "npx prisma db push --skip-generate --accept-data-loss && npm run start"
+cmd = "npx prisma db push --skip-generate --accept-data-loss && node .next/standalone/server.js"
