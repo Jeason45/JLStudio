@@ -79,7 +79,7 @@ export default function PortalHeader({ siteName }: { siteName?: string }) {
     { href: '/factures', label: 'Factures', module: 'moduleFactures' as const },
     { href: '/contrats', label: 'Contrats', module: 'moduleContrats' as const },
     { href: '/projets', label: 'Projets', module: 'moduleProjets' as const },
-    { href: '/cms', label: 'CMS', module: 'moduleCMS' as const },
+    { href: '/mon-site', label: 'Mon Site', module: 'moduleCMS' as const },
     { href: '/calendrier', label: 'Calendrier', module: 'moduleCalendrier' as const },
   ];
 

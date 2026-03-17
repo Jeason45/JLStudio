@@ -708,17 +708,18 @@ model PortalUser {
 }
 
 model PortalConfig {
-  id               String  @id @default(cuid())
-  siteId           String  @unique
+  id               String   @id @default(cuid())
+  siteId           String   @unique
   logoUrl          String?
-  primaryColor     String  @default("#638BFF")
-  moduleCRM        Boolean @default(true)
-  moduleDevis      Boolean @default(true)
-  moduleFactures   Boolean @default(true)
-  moduleContrats   Boolean @default(false)
-  moduleProjets    Boolean @default(false)
-  moduleCMS        Boolean @default(false)
-  moduleCalendrier Boolean @default(false)
+  primaryColor     String   @default("#638BFF")
+  onboardingDone   Boolean  @default(false)
+  moduleCRM        Boolean  @default(false)
+  moduleDevis      Boolean  @default(false)
+  moduleFactures   Boolean  @default(false)
+  moduleContrats   Boolean  @default(false)
+  moduleProjets    Boolean  @default(false)
+  moduleCMS        Boolean  @default(false)
+  moduleCalendrier Boolean  @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 

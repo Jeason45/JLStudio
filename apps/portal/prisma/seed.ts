@@ -20,6 +20,8 @@ async function main() {
   console.log(`✓ Super Admin: ${adminEmail}`);
 
   // ── Portal configs per site ──
+  // For existing sites: mark onboarding as done + all modules active
+  // New sites created later will have onboardingDone: false by default
   const sites = await prisma.site.findMany({ orderBy: { createdAt: 'asc' } });
 
   if (sites.length === 0) {
@@ -29,6 +31,7 @@ async function main() {
 
   for (const site of sites) {
     const allModules = {
+      onboardingDone: true,
       moduleCRM: true,
       moduleDevis: true,
       moduleFactures: true,
@@ -48,7 +51,7 @@ async function main() {
       },
     });
 
-    console.log(`✓ ${site.name} (${site.slug}) — config portail cree`);
+    console.log(`✓ ${site.name} (${site.slug}) — config portail cree (onboarding done)`);
   }
 
   console.log(`\nDone: super admin + ${sites.length} site(s) configures.`);

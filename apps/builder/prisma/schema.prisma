@@ -450,17 +450,18 @@ enum CouponType {
 // ─────────────────────────────────────────────
 
 model PortalConfig {
-  id               String  @id @default(cuid())
-  siteId           String  @unique
+  id               String   @id @default(cuid())
+  siteId           String   @unique
   logoUrl          String?
-  primaryColor     String  @default("#4668e5")
-  moduleCRM        Boolean @default(false)
-  moduleDevis      Boolean @default(false)
-  moduleFactures   Boolean @default(false)
-  moduleContrats   Boolean @default(false)
-  moduleProjets    Boolean @default(false)
-  moduleCMS        Boolean @default(false)
-  moduleCalendrier Boolean @default(false)
+  primaryColor     String   @default("#4668e5")
+  onboardingDone   Boolean  @default(false)
+  moduleCRM        Boolean  @default(false)
+  moduleDevis      Boolean  @default(false)
+  moduleFactures   Boolean  @default(false)
+  moduleContrats   Boolean  @default(false)
+  moduleProjets    Boolean  @default(false)
+  moduleCMS        Boolean  @default(false)
+  moduleCalendrier Boolean  @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 

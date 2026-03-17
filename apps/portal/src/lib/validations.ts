@@ -37,6 +37,7 @@ export const portalUserUpdateSchema = z.object({
 export const portalConfigUpdateSchema = z.object({
   logoUrl: z.string().nullable().optional(),
   primaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Couleur HEX invalide').optional(),
+  onboardingDone: z.boolean().optional(),
   moduleCRM: z.boolean().optional(),
   moduleDevis: z.boolean().optional(),
   moduleFactures: z.boolean().optional(),
@@ -44,6 +45,17 @@ export const portalConfigUpdateSchema = z.object({
   moduleProjets: z.boolean().optional(),
   moduleCMS: z.boolean().optional(),
   moduleCalendrier: z.boolean().optional(),
+});
+
+export const onboardingSchema = z.object({
+  moduleCRM: z.boolean(),
+  moduleDevis: z.boolean(),
+  moduleFactures: z.boolean(),
+  moduleContrats: z.boolean(),
+  moduleProjets: z.boolean(),
+  moduleCMS: z.boolean(),
+  moduleCalendrier: z.boolean(),
+  primaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Couleur HEX invalide').optional(),
 });
 
 // ─── Company Settings ───────────────────────
@@ -86,6 +98,22 @@ export const contactUpdateSchema = z.object({
   tags: z.array(z.string()).optional(),
   notes: z.string().optional(),
   status: z.enum(['NEW', 'ACTIVE', 'INACTIVE']).optional(),
+});
+
+// ─── Leads ─────────────────────────────────
+export const leadCreateSchema = z.object({
+  contactId: z.string().optional(),
+  source: z.string().optional(),
+  notes: z.string().optional(),
+  data: z.record(z.string(), z.unknown()).default({}),
+});
+
+export const leadUpdateSchema = z.object({
+  status: z.enum(['NEW', 'CONTACTED', 'QUALIFIED', 'CONVERTED', 'LOST']).optional(),
+  contactId: z.string().nullable().optional(),
+  source: z.string().optional(),
+  notes: z.string().optional(),
+  data: z.record(z.string(), z.unknown()).optional(),
 });
 
 // ─── Interactions ───────────────────────────

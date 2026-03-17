@@ -1,12 +1,43 @@
 'use client';
 
+import { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { SidebarProvider, useSidebar } from '@/components/portal/SidebarContext';
 import PortalSidebar from '@/components/portal/PortalSidebar';
 import PortalHeader from '@/components/portal/PortalHeader';
 import type { PortalConfigData } from '@/types/portal';
 
 function PortalContent({ children, siteName }: { children: React.ReactNode; siteName: string }) {
-  const { sidebarWidth, isMobile } = useSidebar();
+  const { sidebarWidth, isMobile, config } = useSidebar();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const isOnboardingPage = pathname === '/onboarding';
+  const needsOnboarding = config !== null && !config.onboardingDone && !isOnboardingPage;
+
+  useEffect(() => {
+    if (needsOnboarding) {
+      router.replace('/onboarding');
+    }
+  }, [needsOnboarding, router]);
+
+  // Waiting for redirect
+  if (needsOnboarding) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: 'var(--bg-page)' }}>
+        <div style={{ fontSize: '14px', color: 'var(--text-tertiary)' }}>Chargement...</div>
+      </div>
+    );
+  }
+
+  // Onboarding page: render without sidebar/header
+  if (isOnboardingPage) {
+    return (
+      <div style={{ minHeight: '100vh', background: 'var(--bg-page)' }}>
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-page)' }}>

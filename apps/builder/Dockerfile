@@ -22,16 +22,19 @@ COPY apps/builder/ ./apps/builder/
 COPY package.json turbo.json ./
 
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
 RUN cd apps/builder && npx prisma generate && pnpm build
 
 # ── Stage 3: Production ──
 FROM node:20-slim AS runner
 WORKDIR /app
 
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 

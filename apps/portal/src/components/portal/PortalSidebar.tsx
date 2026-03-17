@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useSidebar } from './SidebarContext';
-import { Settings, LogOut, Menu, X, ChevronLeft, Share2, Upload, Star, Plus, Copy, FileText, Calendar, Send, Bell, Phone, LayoutDashboard, Users, Receipt, FileSignature, FolderKanban, Newspaper } from 'lucide-react';
+import { Settings, LogOut, Menu, X, ChevronLeft, Share2, Upload, Star, Plus, Copy, FileText, Calendar, Send, Bell, Phone, LayoutDashboard, Users, Receipt, FileSignature, FolderKanban, Globe } from 'lucide-react';
 import { useEffect } from 'react';
 import Link from 'next/link';
 
@@ -40,7 +40,7 @@ export default function PortalSidebar() {
     { href: '/factures', icon: <Receipt size={18} />, label: 'Factures', module: 'moduleFactures' as const },
     { href: '/contrats', icon: <FileSignature size={18} />, label: 'Contrats', module: 'moduleContrats' as const },
     { href: '/projets', icon: <FolderKanban size={18} />, label: 'Projets', module: 'moduleProjets' as const, adminOnly: true },
-    { href: '/cms', icon: <Newspaper size={18} />, label: 'CMS', module: 'moduleCMS' as const, adminOnly: true },
+    { href: '/mon-site', icon: <Globe size={18} />, label: 'Mon Site', module: 'moduleCMS' as const },
     { href: '/calendrier', icon: <Calendar size={18} />, label: 'Calendrier', module: 'moduleCalendrier' as const, adminOnly: true },
   ];
 

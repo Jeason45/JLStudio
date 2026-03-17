@@ -3,5 +3,4 @@ node_modules
 .git
 *.md
 .env*
-apps/web
-apps/portal
+.turbo

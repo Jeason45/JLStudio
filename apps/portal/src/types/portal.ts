@@ -15,6 +15,7 @@ export interface PortalConfigData extends PortalModules {
   siteId: string;
   logoUrl: string | null;
   primaryColor: string;
+  onboardingDone: boolean;
 }
 
 export interface PortalUserData {
@@ -124,6 +125,20 @@ export interface ProjectData {
   tasks?: ProjectTaskData[];
   _count?: { tasks: number };
   _tasksDone?: number;
+}
+
+export type LeadStatus = 'NEW' | 'CONTACTED' | 'QUALIFIED' | 'CONVERTED' | 'LOST';
+
+export interface LeadData {
+  id: string;
+  status: LeadStatus;
+  source: string | null;
+  notes: string | null;
+  data: Record<string, unknown>;
+  contactId: string | null;
+  contact?: { id: string; firstName: string | null; lastName: string | null; email: string; company: string | null } | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CompanySettingsData {

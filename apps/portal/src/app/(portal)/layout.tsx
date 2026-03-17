@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { jwtVerify } from 'jose';
 import { prisma } from '@/lib/prisma';
 import { PortalLayoutClient } from './portal-layout-client';
@@ -14,10 +15,17 @@ async function getPortalData() {
     const siteId = payload.siteId as string;
     const role = payload.role as string;
 
-    const [config, site] = await Promise.all([
-      prisma.portalConfig.findUnique({ where: { siteId } }),
+    const [site, existingConfig] = await Promise.all([
       prisma.site.findUnique({ where: { id: siteId }, select: { name: true } }),
+      prisma.portalConfig.findUnique({ where: { siteId } }),
     ]);
+
+    // Create PortalConfig if it doesn't exist yet (new site)
+    const config = existingConfig ?? await prisma.portalConfig.upsert({
+      where: { siteId },
+      update: {},
+      create: { siteId },
+    });
 
     const superAdmin = payload.superAdmin === true;
     return { config, siteName: site?.name || 'Mon site', role, superAdmin };
@@ -34,6 +42,7 @@ export default async function PortalLayout({ children }: { children: React.React
     siteId: data.config.siteId,
     logoUrl: data.config.logoUrl,
     primaryColor: data.config.primaryColor,
+    onboardingDone: data.config.onboardingDone,
     moduleCRM: data.config.moduleCRM,
     moduleDevis: data.config.moduleDevis,
     moduleFactures: data.config.moduleFactures,
