@@ -28,19 +28,23 @@ async function main() {
   }
 
   for (const site of sites) {
+    const allModules = {
+      moduleCRM: true,
+      moduleDevis: true,
+      moduleFactures: true,
+      moduleContrats: true,
+      moduleProjets: true,
+      moduleCMS: true,
+      moduleCalendrier: true,
+    };
+
     await prisma.portalConfig.upsert({
       where: { siteId: site.id },
-      update: {},
+      update: allModules,
       create: {
         siteId: site.id,
         primaryColor: '#638BFF',
-        moduleCRM: true,
-        moduleDevis: true,
-        moduleFactures: true,
-        moduleContrats: false,
-        moduleProjets: false,
-        moduleCMS: false,
-        moduleCalendrier: false,
+        ...allModules,
       },
     });
 
