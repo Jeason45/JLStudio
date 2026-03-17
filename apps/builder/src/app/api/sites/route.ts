@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
         moduleProjets: false,
         moduleCMS: false,
         moduleCalendrier: false,
-        onboardingDone: false,
+        onboardingDone: true,
       },
     })
 

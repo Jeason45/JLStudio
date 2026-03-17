@@ -13,7 +13,12 @@ function PortalContent({ children, siteName }: { children: React.ReactNode; site
   const router = useRouter();
 
   const isOnboardingPage = pathname === '/onboarding';
-  const needsOnboarding = config !== null && !config.onboardingDone && !isOnboardingPage;
+  // Skip onboarding if modules are already configured (existing sites created by builder)
+  const hasModulesConfigured = config !== null && (
+    config.moduleCRM || config.moduleDevis || config.moduleFactures ||
+    config.moduleContrats || config.moduleProjets || config.moduleCMS || config.moduleCalendrier
+  );
+  const needsOnboarding = config !== null && !config.onboardingDone && !hasModulesConfigured && !isOnboardingPage;
 
   useEffect(() => {
     if (needsOnboarding) {

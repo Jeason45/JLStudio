@@ -24,6 +24,8 @@ interface PageData {
 
 // ── Section type labels ──
 const SECTION_LABELS: Record<string, string> = {
+  'site-header': 'En-tete du site',
+  'site-footer': 'Pied de page',
   hero: 'Hero',
   features: 'Fonctionnalites',
   cta: 'Appel a l\'action',
@@ -34,11 +36,13 @@ const SECTION_LABELS: Record<string, string> = {
   footer: 'Pied de page',
   navbar: 'Navigation',
   gallery: 'Galerie',
+  'gallery-grid': 'Galerie grille',
   blog: 'Blog',
   faq: 'FAQ',
   team: 'Equipe',
   timeline: 'Timeline',
   slider: 'Slider',
+  logos: 'Logos partenaires',
   product: 'Produit',
   'product-detail': 'Detail produit',
   cart: 'Panier',
@@ -228,12 +232,19 @@ export default function MonSitePage() {
         </h1>
       </div>
 
-      {pages.length === 0 ? (
+      {pages.length === 0 || pages.every((p) => p.sections.length === 0) ? (
         <div style={{
           background: 'var(--bg-card)', borderRadius: '12px', padding: '40px',
           border: '1px solid var(--border)', textAlign: 'center',
         }}>
-          <p style={{ color: 'var(--text-tertiary)' }}>Aucune page configuree pour ce site.</p>
+          <Globe size={32} style={{ color: 'var(--text-tertiary)', margin: '0 auto 12px', opacity: 0.5 }} />
+          <p style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '15px', marginBottom: '8px' }}>
+            Aucune section a editer
+          </p>
+          <p style={{ color: 'var(--text-tertiary)', fontSize: '13px', lineHeight: '1.5', maxWidth: '400px', margin: '0 auto' }}>
+            Le contenu de votre site apparaitra ici une fois que des sections auront ete ajoutees dans le configurateur.
+            Contactez votre developpeur pour ajouter ou modifier la structure du site.
+          </p>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
