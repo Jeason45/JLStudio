@@ -1,12 +1,19 @@
 [variables]
 NODE_OPTIONS = "--max-old-space-size=2048"
 NEXT_TELEMETRY_DISABLED = "1"
+PORT = "3002"
+HOSTNAME = "0.0.0.0"
 
 [phases.install]
 cmds = ["npm install -g npm@latest", "npm install"]
 
 [phases.build]
-cmds = ["npx prisma generate", "npm run build"]
+cmds = [
+  "npx prisma generate",
+  "npm run build",
+  "cp -r .next/static .next/standalone/.next/static",
+  "cp -r public .next/standalone/public 2>/dev/null || true"
+]
 
 [start]
 cmd = "npx prisma db push --skip-generate --accept-data-loss && node .next/standalone/server.js"
