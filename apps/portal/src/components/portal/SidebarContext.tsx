@@ -13,16 +13,18 @@ interface SidebarContextType {
   config: PortalConfigData | null;
   setConfig: (config: PortalConfigData) => void;
   userRole: string | null;
+  superAdmin: boolean;
   theme: 'light' | 'dark';
   toggleTheme: () => void;
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
-export function SidebarProvider({ children, initialConfig, userRole }: {
+export function SidebarProvider({ children, initialConfig, userRole, superAdmin = false }: {
   children: ReactNode;
   initialConfig: PortalConfigData | null;
   userRole: string | null;
+  superAdmin?: boolean;
 }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
@@ -69,7 +71,7 @@ export function SidebarProvider({ children, initialConfig, userRole }: {
     <SidebarContext.Provider value={{
       isCollapsed, setIsCollapsed, sidebarWidth,
       isMobile, isMobileMenuOpen, setIsMobileMenuOpen,
-      config, setConfig, userRole,
+      config, setConfig, userRole, superAdmin,
       theme, toggleTheme,
     }}>
       {children}

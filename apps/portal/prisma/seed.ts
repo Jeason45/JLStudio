@@ -4,6 +4,22 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
+  // ── Super Admin (BuilderUser) ──
+  const adminEmail = 'contact@jlstudio.dev';
+  const adminPassword = await bcrypt.hash('Daytona45!', 12);
+
+  await prisma.builderUser.upsert({
+    where: { email: adminEmail },
+    update: { password: adminPassword },
+    create: {
+      email: adminEmail,
+      password: adminPassword,
+      name: 'JL Studio',
+    },
+  });
+  console.log(`✓ Super Admin: ${adminEmail}`);
+
+  // ── Portal configs per site ──
   const sites = await prisma.site.findMany({ orderBy: { createdAt: 'asc' } });
 
   if (sites.length === 0) {
@@ -11,10 +27,7 @@ async function main() {
     return;
   }
 
-  const hashedPassword = await bcrypt.hash('admin123', 12);
-
   for (const site of sites) {
-    // PortalConfig par defaut
     await prisma.portalConfig.upsert({
       where: { siteId: site.id },
       update: {},
@@ -31,24 +44,10 @@ async function main() {
       },
     });
 
-    // Admin par defaut
-    await prisma.portalUser.upsert({
-      where: { siteId_email: { siteId: site.id, email: 'admin@portal.dev' } },
-      update: {},
-      create: {
-        siteId: site.id,
-        email: 'admin@portal.dev',
-        password: hashedPassword,
-        firstName: 'Admin',
-        lastName: 'Portal',
-        role: 'ADMIN',
-      },
-    });
-
-    console.log(`✓ ${site.name} (${site.slug}) — admin@portal.dev / admin123`);
+    console.log(`✓ ${site.name} (${site.slug}) — config portail cree`);
   }
 
-  console.log(`\nDone: ${sites.length} site(s) configures.`);
+  console.log(`\nDone: super admin + ${sites.length} site(s) configures.`);
 }
 
 main()

@@ -34,14 +34,16 @@ export function PortalLayoutClient({
   config,
   siteName,
   userRole,
+  superAdmin = false,
 }: {
   children: React.ReactNode;
   config: PortalConfigData | null;
   siteName: string;
   userRole: string | null;
+  superAdmin?: boolean;
 }) {
   return (
-    <SidebarProvider initialConfig={config} userRole={userRole}>
+    <SidebarProvider initialConfig={config} userRole={userRole} superAdmin={superAdmin}>
       <PortalContent siteName={siteName}>{children}</PortalContent>
     </SidebarProvider>
   );

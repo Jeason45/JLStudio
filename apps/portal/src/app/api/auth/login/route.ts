@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const mode = body.mode || 'client';
 
-    // ── Admin login mode ──
+    // ── Admin login mode (uses BuilderUser table) ──
     if (mode === 'admin') {
       const parsed = adminLoginSchema.safeParse(body);
       if (!parsed.success) {
@@ -28,58 +28,44 @@ export async function POST(req: NextRequest) {
 
       const { email, password, siteId } = parsed.data;
 
-      // Find all ADMIN portal users with this email
-      const adminUsers = await prisma.portalUser.findMany({
-        where: { email: email.toLowerCase(), role: 'ADMIN', active: true },
-        include: { site: { select: { id: true, name: true, slug: true } } },
+      // Check BuilderUser table (the admin's builder account)
+      const builderUser = await prisma.builderUser.findUnique({
+        where: { email: email.toLowerCase() },
       });
 
-      if (adminUsers.length === 0) {
+      if (!builderUser || !(await bcrypt.compare(password, builderUser.password))) {
         return NextResponse.json({ error: 'Identifiants invalides' }, { status: 401 });
       }
 
-      // Verify password against any admin account
-      let passwordValid = false;
-      for (const u of adminUsers) {
-        if (await bcrypt.compare(password, u.password)) {
-          passwordValid = true;
-          break;
-        }
-      }
-
-      if (!passwordValid) {
-        return NextResponse.json({ error: 'Identifiants invalides' }, { status: 401 });
-      }
+      // Get all sites
+      const allSites = await prisma.site.findMany({
+        select: { id: true, name: true, slug: true, status: true },
+        orderBy: { createdAt: 'desc' },
+      });
 
       // If no siteId specified, return the list of available sites
       if (!siteId) {
-        const sites = adminUsers.map(u => ({
-          id: u.site.id,
-          name: u.site.name,
-          slug: u.site.slug,
-        }));
-        return NextResponse.json({ needsSiteSelection: true, sites });
+        return NextResponse.json({
+          needsSiteSelection: true,
+          sites: allSites.map(s => ({ id: s.id, name: s.name, slug: s.slug })),
+        });
       }
 
-      // siteId specified — find the matching user and create token
-      const user = adminUsers.find(u => u.siteId === siteId);
-      if (!user) {
-        return NextResponse.json({ error: 'Acces refuse a ce site' }, { status: 403 });
-      }
-
-      if (!(await bcrypt.compare(password, user.password))) {
-        return NextResponse.json({ error: 'Identifiants invalides' }, { status: 401 });
+      // Verify the selected site exists
+      const site = allSites.find(s => s.id === siteId);
+      if (!site) {
+        return NextResponse.json({ error: 'Site introuvable' }, { status: 404 });
       }
 
       const token = await signToken({
-        sub: user.id,
-        email: user.email,
-        siteId: user.siteId,
-        role: user.role,
-        contactId: user.contactId,
+        sub: builderUser.id,
+        email: builderUser.email,
+        siteId: site.id,
+        role: 'ADMIN',
+        superAdmin: true,
       });
 
-      const response = NextResponse.json({ success: true, role: user.role, siteName: user.site.name });
+      const response = NextResponse.json({ success: true, role: 'ADMIN', siteName: site.name });
       response.cookies.set('portal-token', token, {
         httpOnly: true,
         secure: process.env.NEXT_PUBLIC_APP_URL?.startsWith('https://') ?? false,

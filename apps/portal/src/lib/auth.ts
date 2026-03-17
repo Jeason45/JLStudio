@@ -12,6 +12,7 @@ export interface TokenPayload {
   siteId: string;
   role: 'ADMIN' | 'CLIENT' | 'EDITOR';
   contactId?: string | null;
+  superAdmin?: boolean;
 }
 
 export async function signToken(payload: TokenPayload): Promise<string> {

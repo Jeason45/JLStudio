@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const PUBLIC_PATHS = ['/login', '/api/auth', '/sign'];
+const PUBLIC_PATHS = ['/login', '/api/auth/login', '/api/auth/logout', '/sign'];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -38,6 +38,20 @@ export async function middleware(req: NextRequest) {
     const role = payload.role as string;
     const userId = payload.sub as string;
     const contactId = (payload.contactId as string) || '';
+    const superAdmin = payload.superAdmin === true;
+
+    // SuperAdmin bypasses all role restrictions
+    if (superAdmin) {
+      const response = NextResponse.next();
+      response.headers.set('x-portal-site-id', siteId);
+      response.headers.set('x-portal-user-role', 'ADMIN');
+      response.headers.set('x-portal-user-id', userId);
+      response.headers.set('x-portal-super-admin', 'true');
+      response.headers.set('X-Content-Type-Options', 'nosniff');
+      response.headers.set('X-Frame-Options', 'DENY');
+      response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+      return response;
+    }
 
     // Admin-only routes
     if (pathname.startsWith('/settings') && role !== 'ADMIN') {

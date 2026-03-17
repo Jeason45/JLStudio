@@ -19,7 +19,8 @@ async function getPortalData() {
       prisma.site.findUnique({ where: { id: siteId }, select: { name: true } }),
     ]);
 
-    return { config, siteName: site?.name || 'Mon site', role };
+    const superAdmin = payload.superAdmin === true;
+    return { config, siteName: site?.name || 'Mon site', role, superAdmin };
   } catch {
     return null;
   }
@@ -47,6 +48,7 @@ export default async function PortalLayout({ children }: { children: React.React
       config={configData}
       siteName={data?.siteName || 'Mon site'}
       userRole={data?.role || null}
+      superAdmin={data?.superAdmin || false}
     >
       {children}
     </PortalLayoutClient>
