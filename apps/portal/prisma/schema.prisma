@@ -686,17 +686,19 @@ enum PortalUserRole {
 }
 
 model PortalUser {
-  id        String         @id @default(cuid())
-  siteId    String
-  email     String
-  password  String
-  firstName String?
-  lastName  String?
-  role      PortalUserRole @default(CLIENT)
-  contactId String?
-  active    Boolean        @default(true)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id              String         @id @default(cuid())
+  siteId          String
+  email           String
+  password        String
+  firstName       String?
+  lastName        String?
+  role            PortalUserRole @default(CLIENT)
+  contactId       String?
+  active          Boolean        @default(true)
+  inviteToken     String?        @unique
+  inviteExpiresAt DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
   site       Site       @relation(fields: [siteId], references: [id], onDelete: Cascade)
   contact    Contact?   @relation(fields: [contactId], references: [id], onDelete: SetNull)

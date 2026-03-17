@@ -11,13 +11,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Loader2, Sparkles, LayoutTemplate, Plus, ArrowLeft } from 'lucide-react'
+import { Loader2, Sparkles, LayoutTemplate, Plus, ArrowLeft, Mail } from 'lucide-react'
 import { TemplatesModal } from '@/components/editor/TemplatesModal'
 import type { PageTemplate } from '@/data/templates'
 
 const schema = z.object({
   name: z.string().min(1, 'Le nom est requis').max(100),
   description: z.string().max(500).optional(),
+  clientEmail: z.string().email('Email invalide').optional().or(z.literal('')),
+  clientFirstName: z.string().optional(),
+  clientLastName: z.string().optional(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -39,10 +42,19 @@ export function CreateSiteDialog({ children, defaultStep = 'choose' }: CreateSit
   })
 
   const onSubmit = async (data: FormData) => {
+    const payload: Record<string, string | undefined> = {
+      name: data.name,
+      description: data.description,
+    }
+    if (data.clientEmail) {
+      payload.clientEmail = data.clientEmail
+      payload.clientFirstName = data.clientFirstName
+      payload.clientLastName = data.clientLastName
+    }
     const res = await fetch('/api/sites', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     })
     if (res.ok) {
       const site = await res.json()
@@ -172,7 +184,7 @@ export function CreateSiteDialog({ children, defaultStep = 'choose' }: CreateSit
                   >
                     <ArrowLeft className="w-4 h-4" />
                   </button>
-                  <DialogTitle>Blank site</DialogTitle>
+                  <DialogTitle>Nouveau site</DialogTitle>
                 </div>
               </DialogHeader>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-2">
@@ -196,12 +208,46 @@ export function CreateSiteDialog({ children, defaultStep = 'choose' }: CreateSit
                     {...register('description')}
                   />
                 </div>
+
+                {/* Client invitation section */}
+                <div className="border-t border-zinc-800 pt-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Mail className="w-4 h-4 text-indigo-400" />
+                    <span className="text-sm font-medium text-zinc-300">Invitation client</span>
+                    <span className="text-xs text-zinc-500">(optionnel)</span>
+                  </div>
+                  <div className="space-y-2">
+                    <Input
+                      placeholder="Email du client"
+                      type="email"
+                      className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+                      {...register('clientEmail')}
+                    />
+                    {errors.clientEmail && <p className="text-red-400 text-xs">{errors.clientEmail.message}</p>}
+                    <div className="grid grid-cols-2 gap-2">
+                      <Input
+                        placeholder="Prenom"
+                        className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+                        {...register('clientFirstName')}
+                      />
+                      <Input
+                        placeholder="Nom"
+                        className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+                        {...register('clientLastName')}
+                      />
+                    </div>
+                    <p className="text-xs text-zinc-500">
+                      Un email d&apos;invitation sera envoye au client pour activer son portail.
+                    </p>
+                  </div>
+                </div>
+
                 <div className="flex justify-end gap-2 pt-2">
                   <Button type="button" variant="ghost" onClick={() => setStep('choose')} className="text-zinc-400">
                     Retour
                   </Button>
                   <Button type="submit" disabled={isSubmitting} className="bg-indigo-500 hover:bg-indigo-600">
-                    {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Créer le site'}
+                    {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Creer le site'}
                   </Button>
                 </div>
               </form>
