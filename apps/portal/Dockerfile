@@ -9,8 +9,9 @@ WORKDIR /app
 # Copy root workspace files for pnpm resolution
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY apps/portal/package.json ./apps/portal/package.json
+COPY packages/database/package.json ./packages/database/package.json
 
-RUN cd apps/portal && pnpm install --frozen-lockfile || pnpm install
+RUN pnpm install --frozen-lockfile || pnpm install
 
 # ── Stage 2: Build ──
 FROM base AS builder
@@ -18,13 +19,17 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/portal/node_modules ./apps/portal/node_modules
+COPY --from=deps /app/packages/database/node_modules ./packages/database/node_modules
+COPY packages/database/ ./packages/database/
 COPY apps/portal/ ./apps/portal/
 COPY package.json turbo.json ./
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_OPTIONS="--max-old-space-size=2048"
 
-RUN cd apps/portal && npx prisma generate && pnpm build
+# Generate Prisma client from centralized package
+RUN cd packages/database && npx prisma generate
+RUN cd apps/portal && pnpm build
 
 # ── Stage 3: Production ──
 FROM node:20-slim AS runner
@@ -42,9 +47,9 @@ COPY --from=builder /app/apps/portal/.next/standalone ./
 COPY --from=builder /app/apps/portal/public ./apps/portal/public
 COPY --from=builder /app/apps/portal/.next/static ./apps/portal/.next/static
 
-# Prisma schema + generated client
-COPY --from=builder /app/apps/portal/prisma ./apps/portal/prisma
-COPY --from=builder /app/apps/portal/src/generated ./apps/portal/src/generated
+# Prisma generated client from centralized package
+COPY --from=builder /app/packages/database/generated ./packages/database/generated
+COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
 
 USER nextjs
 

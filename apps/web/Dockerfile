@@ -1,25 +1,41 @@
 FROM node:20-slim AS base
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 
 # ── Stage 1: Install dependencies ──
 FROM base AS deps
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm ci
+# Copy root workspace files for pnpm resolution
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY apps/web/package.json ./apps/web/package.json
+COPY packages/database/package.json ./packages/database/package.json
+
+RUN pnpm install --frozen-lockfile || pnpm install
 
 # ── Stage 2: Build ──
 FROM base AS builder
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
+COPY --from=deps /app/packages/database/node_modules ./packages/database/node_modules
+COPY packages/database/ ./packages/database/
+COPY apps/web/ ./apps/web/
+COPY package.json turbo.json ./
 
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+
+# Generate Prisma client from centralized package
+RUN cd packages/database && npx prisma generate
+RUN cd apps/web && pnpm build
 
 # ── Stage 3: Production ──
-FROM base AS runner
+FROM node:20-slim AS runner
 WORKDIR /app
+
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -27,24 +43,19 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/apps/web/.next/standalone ./
+COPY --from=builder /app/apps/web/public ./apps/web/public
+COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
 
-# Prisma: copy schema + engine for db push at startup
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-
-# Create writable storage directory
-RUN mkdir -p /app/storage/documents && chown -R nextjs:nodejs /app/storage
+# Prisma generated client from centralized package
+COPY --from=builder /app/packages/database/generated ./packages/database/generated
+COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
 
 USER nextjs
 
-EXPOSE 3000
+EXPOSE 3004
 
-ENV PORT=3000
+ENV PORT=3004
 ENV HOSTNAME="0.0.0.0"
 
-# Run prisma db push (sync schema) then start the server
-CMD npx prisma db push --skip-generate && node server.js
+CMD ["node", "apps/web/server.js"]
