@@ -52,7 +52,7 @@ export async function POST(
             data: {
               collectionId,
               slug: slugBase,
-              data: data as import('@/generated/prisma').Prisma.InputJsonValue,
+              data: data as import('@jlstudio/database').Prisma.InputJsonValue,
               status: 'DRAFT',
             },
           })

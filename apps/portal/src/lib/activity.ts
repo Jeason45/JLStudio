@@ -1,5 +1,5 @@
 import { prisma } from './prisma';
-import type { Prisma } from '@/generated/prisma/client';
+import type { Prisma } from '@jlstudio/database';
 
 export async function logActivity(
   siteId: string,

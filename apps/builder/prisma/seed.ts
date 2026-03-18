@@ -1,4 +1,4 @@
-import { PrismaClient } from '../src/generated/prisma'
+import { PrismaClient } from '@jlstudio/database'
 import { DEFAULT_SITE_CONFIG } from '../src/types/site'
 import { nanoid } from 'nanoid'
 import bcrypt from 'bcryptjs'

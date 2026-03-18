@@ -1,5 +1,5 @@
 import prisma from '@/lib/db'
-import { ContactStatus } from '@/generated/prisma'
+import { ContactStatus } from '@jlstudio/database'
 
 export async function getContactsBySite(siteId: string) {
   return prisma.contact.findMany({

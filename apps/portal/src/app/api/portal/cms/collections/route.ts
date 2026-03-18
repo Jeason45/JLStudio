@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { extractSiteId, extractUserId, extractUserRole } from '@/lib/auth';
 import { cmsCollectionCreateSchema } from '@/lib/validations';
 import { logActivity } from '@/lib/activity';
-import type { Prisma } from '@/generated/prisma/client';
+import type { Prisma } from '@jlstudio/database';
 
 export async function GET(req: NextRequest) {
   const siteId = extractSiteId(req.headers);

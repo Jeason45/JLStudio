@@ -75,7 +75,7 @@ export async function POST(
       data: {
         collectionId,
         slug,
-        data: data as import('@/generated/prisma').Prisma.InputJsonValue,
+        data: data as import('@jlstudio/database').Prisma.InputJsonValue,
         status: (status as 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | 'SCHEDULED') ?? 'DRAFT',
         publishedAt: publishedAt ? new Date(publishedAt) : status === 'PUBLISHED' ? new Date() : null,
         scheduledAt: scheduledAt ? new Date(scheduledAt) : null,

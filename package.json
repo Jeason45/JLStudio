@@ -8,8 +8,8 @@
     "dev:builder": "turbo run dev --filter=@jlstudio/builder",
     "dev:portal": "turbo run dev --filter=@jlstudio/portal",
     "lint": "turbo run lint",
-    "db:generate": "turbo run db:generate",
-    "db:push": "turbo run db:push"
+    "db:generate": "turbo run db:generate --filter=@jlstudio/database",
+    "db:push": "turbo run db:push --filter=@jlstudio/database"
   },
   "devDependencies": {
     "turbo": "^2"

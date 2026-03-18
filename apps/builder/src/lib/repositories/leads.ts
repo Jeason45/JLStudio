@@ -1,5 +1,5 @@
 import prisma from '@/lib/db'
-import { LeadStatus } from '@/generated/prisma'
+import { LeadStatus } from '@jlstudio/database'
 
 export async function getLeadsBySite(siteId: string) {
   return prisma.lead.findMany({

@@ -1,5 +1,5 @@
 import prisma from '@/lib/db'
-import { SiteStatus } from '@/generated/prisma'
+import { SiteStatus } from '@jlstudio/database'
 import { SiteConfig, SectionConfig, Brand, DEFAULT_SITE_CONFIG } from '@/types/site'
 import { nanoid } from 'nanoid'
 

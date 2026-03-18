@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
         siteId,
         name,
         slug,
-        fields: (fields ?? []) as unknown as import('@/generated/prisma').Prisma.InputJsonValue,
-        settings: (settings ?? {}) as unknown as import('@/generated/prisma').Prisma.InputJsonValue,
+        fields: (fields ?? []) as unknown as import('@jlstudio/database').Prisma.InputJsonValue,
+        settings: (settings ?? {}) as unknown as import('@jlstudio/database').Prisma.InputJsonValue,
       },
       include: { _count: { select: { items: true } } },
     })

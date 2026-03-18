@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/db'
-import type { OrderStatus } from '@/generated/prisma'
+import type { OrderStatus } from '@jlstudio/database'
 
 export async function GET(request: NextRequest) {
   try {
