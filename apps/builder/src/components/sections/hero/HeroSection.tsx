@@ -7201,7 +7201,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
       <section
         ref={jlSectionRef}
         className="relative bg-black"
-        style={{ fontFamily: 'var(--font-body, inherit)', height: isEditing ? '100vh' : '300vh' }}
+        style={{ fontFamily: 'var(--font-body, inherit)', height: isEditing ? '100vh' : '300vh', overflow: 'clip' }}
       >
         {/* ── Preloader overlay (counter 0→100% + circle reveal) ── */}
         {preloaderPhase !== 'done' && (
@@ -7249,7 +7249,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
           </div>
         )}
 
-        <div className="sticky top-0 overflow-hidden" style={{ height: isEditing ? '100%' : '100vh' }}>
+        <div className="sticky top-0" style={{ height: isEditing ? '100%' : '100vh', overflow: 'clip' }}>
           {/* Background artistic image */}
           <div
             className="absolute will-change-transform"
