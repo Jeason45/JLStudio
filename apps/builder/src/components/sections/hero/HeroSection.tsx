@@ -7098,122 +7098,141 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
   }
 
   // ─── VARIANT: jlstudio ───
-  // JL Studio signature hero: full viewport, dark (#0a0a0f), massive centered title, accent blue glow, dual CTA
+  // JL Studio hero: fullscreen artistic background image, massive "JL STUDIO" text with black multiply mask,
+  // then content overlay with title, subtitle, CTAs — cinematic look matching jlstudio.dev
   if (variant === 'jlstudio') {
     const accent = accentColor ?? '#638BFF'
-    const eyebrow = content.eyebrow ?? 'DEVELOPPEUR WEB FREELANCE'
+    const heroImage = bgImage ?? content.backgroundImage ?? 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80'
     const description = subtitle
     return (
       <section
-        className="relative overflow-hidden flex items-center justify-center"
-        style={{ fontFamily: 'var(--font-body, inherit)', minHeight: '100vh', background: '#0a0a0f' }}
+        className="relative overflow-hidden"
+        style={{ fontFamily: 'var(--font-body, inherit)', minHeight: '200vh', background: '#000' }}
       >
-        {/* Radial accent glow behind title */}
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] rounded-full pointer-events-none"
-          style={{ background: `radial-gradient(ellipse 50% 45% at 50% 50%, ${accent}12, transparent 70%)` }}
-        />
-        {/* Subtle bottom gradient overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: 'linear-gradient(to top, rgba(10,10,15,0.8) 0%, transparent 40%)' }}
-        />
-        {/* Video/image background (optional) */}
-        {content.videoUrl && (
-          <div className="absolute inset-0 opacity-20">
-            {renderVideoBg()}
-          </div>
-        )}
-        {bgImage && !content.videoUrl && (
-          <div className="absolute inset-0 opacity-15">
-            {renderBgImage()}
-          </div>
-        )}
-        {/* Film grain texture */}
-        <div
-          className="absolute inset-0 z-[1] pointer-events-none opacity-[0.03] mix-blend-overlay"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-            backgroundSize: '128px 128px',
-          }}
-        />
-        {/* Content */}
-        <div className="relative z-10 max-w-5xl mx-auto px-6 py-24 lg:py-32 flex flex-col items-center text-center gap-6">
-          {/* Eyebrow */}
-          {eyebrow ? (
-            <span
-              {...elementProps(config.id, 'eyebrow', 'badge')}
-              className="text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase"
-              style={{ color: accent }}
-            >
-              {eyebrow}
-            </span>
-          ) : isEditing ? (
-            <EditablePlaceholder sectionId={config.id} contentPath="eyebrow" type="badge" className="mb-2" />
-          ) : null}
-          {/* Title — massive JL STUDIO style */}
-          <h1
-            {...elementProps(config.id, 'title', 'heading')}
-            className={cn(
-              'font-black text-white leading-[0.9] tracking-tight',
-              titleSize ? getTitleSizeClass(titleSize) : 'text-6xl sm:text-7xl md:text-8xl lg:text-9xl'
-            )}
-            style={{
-              ...(customTextColor ? { color: customTextColor } : {}),
-              fontFamily: 'var(--font-heading, var(--font-outfit, system-ui))',
-            }}
-          >
-            {title}
-          </h1>
-          {/* Subtitle */}
-          <p
-            {...elementProps(config.id, 'subtitle', 'text')}
-            className="text-lg sm:text-xl md:text-2xl text-white/50 max-w-2xl leading-relaxed"
-          >
-            {description}
-          </p>
-          {/* CTA Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-            {content.primaryButton ? (
-              <a
-                {...elementProps(config.id, 'primaryButton', 'button')}
-                href={content.primaryButton.href}
-                className="group relative font-semibold px-8 py-3.5 sm:px-10 sm:py-4 rounded-full text-sm sm:text-base text-white overflow-hidden transition-all duration-300"
-                style={{
-                  backgroundColor: accent,
-                  boxShadow: `0 0 30px ${accent}30, 0 4px 20px ${accent}20`,
-                }}
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  {content.primaryButton.label}
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-                </span>
-              </a>
-            ) : isEditing ? (
-              <EditablePlaceholder sectionId={config.id} contentPath="primaryButton.label" type="button" />
-            ) : null}
-            {content.secondaryButton ? (
-              <a
-                {...elementProps(config.id, 'secondaryButton', 'button')}
-                href={content.secondaryButton.href}
-                className="font-medium px-8 py-3.5 sm:px-10 sm:py-4 rounded-full text-sm sm:text-base text-white/80 border border-white/15 hover:border-white/30 hover:text-white backdrop-blur-sm transition-all duration-300"
-              >
-                {content.secondaryButton.label}
-              </a>
-            ) : isEditing ? (
-              <EditablePlaceholder sectionId={config.id} contentPath="secondaryButton.label" type="button" />
-            ) : null}
-          </div>
-          {/* Accent line separator */}
+        {/* Sticky viewport container */}
+        <div className="sticky top-0 h-screen overflow-hidden">
+          {/* Background artistic image — fixed attachment for parallax feel */}
           <div
-            className="mt-4 h-px w-32 opacity-30"
-            style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }}
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${heroImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundAttachment: 'fixed',
+              filter: 'brightness(1.2)',
+            }}
           />
-        </div>
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
-          <span className="text-[0.65rem] tracking-[0.3em] uppercase text-white/30">Scroll</span>
-          <div className="w-[1px] h-8 bg-gradient-to-b from-white/20 to-transparent animate-pulse" />
+          {/* Vignette — cinematic framing */}
+          <div
+            className="absolute inset-0 z-[1]"
+            style={{
+              background: 'radial-gradient(ellipse 80% 70% at center, transparent 40%, rgba(0,0,0,0.6) 100%)',
+            }}
+          />
+          {/* Color grading overlay */}
+          <div
+            className="absolute inset-0 z-[1]"
+            style={{
+              background: 'linear-gradient(180deg, rgba(20,30,60,0.15) 0%, transparent 40%, rgba(10,8,4,0.2) 100%)',
+            }}
+          />
+          {/* Film grain texture */}
+          <div
+            className="absolute inset-0 z-[2] pointer-events-none opacity-[0.04] mix-blend-overlay"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+              backgroundSize: '128px 128px',
+            }}
+          />
+          {/* Black mask with "JL STUDIO" text — multiply blend reveals image through letters */}
+          <div
+            className="absolute inset-0 z-[5] bg-black flex items-center justify-center"
+            style={{ mixBlendMode: 'multiply' }}
+          >
+            <div
+              className="text-white font-black text-center select-none"
+              style={{
+                fontFamily: 'var(--font-heading, var(--font-outfit, system-ui))',
+                fontSize: 'clamp(5rem, 20vw, 16rem)',
+                lineHeight: 0.85,
+                letterSpacing: '-0.03em',
+              }}
+            >
+              {(title ?? 'JL STUDIO').split(' ').length >= 2 ? (
+                <>
+                  {(title ?? 'JL STUDIO').split(' ').slice(0, -1).join(' ')}
+                  <br />
+                  {(title ?? 'JL STUDIO').split(' ').slice(-1)}
+                </>
+              ) : (
+                title ?? 'JL STUDIO'
+              )}
+            </div>
+          </div>
+          {/* Dark overlay for readability of content below the fold */}
+          <div
+            className="absolute inset-0 z-[8] pointer-events-none"
+            style={{ background: 'linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.7) 100%)' }}
+          />
+          {/* Content — appears over the hero image */}
+          <div className="absolute inset-0 z-[10] flex items-end justify-center pb-16 sm:pb-24">
+            <div className="text-center px-6 max-w-4xl mx-auto flex flex-col items-center gap-5">
+              {/* Eyebrow */}
+              <span
+                {...elementProps(config.id, 'eyebrow', 'badge')}
+                className="text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase"
+                style={{ color: accent }}
+              >
+                {content.eyebrow ?? 'DEVELOPPEUR WEB FREELANCE'}
+              </span>
+              {/* Subtitle text */}
+              {description && (
+                <p
+                  {...elementProps(config.id, 'subtitle', 'text')}
+                  className="text-base sm:text-lg md:text-xl text-white/60 max-w-2xl leading-relaxed"
+                >
+                  {description}
+                </p>
+              )}
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+                {content.primaryButton ? (
+                  <a
+                    {...elementProps(config.id, 'primaryButton', 'button')}
+                    href={content.primaryButton.href}
+                    className="group relative font-semibold px-8 py-3.5 sm:px-10 sm:py-4 rounded-full text-sm sm:text-base text-white overflow-hidden transition-all duration-300"
+                    style={{
+                      backgroundColor: accent,
+                      boxShadow: `0 0 30px ${accent}30, 0 4px 20px ${accent}20`,
+                    }}
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      {content.primaryButton.label}
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                    </span>
+                  </a>
+                ) : isEditing ? (
+                  <EditablePlaceholder sectionId={config.id} contentPath="primaryButton.label" type="button" />
+                ) : null}
+                {content.secondaryButton ? (
+                  <a
+                    {...elementProps(config.id, 'secondaryButton', 'button')}
+                    href={content.secondaryButton.href}
+                    className="font-medium px-8 py-3.5 sm:px-10 sm:py-4 rounded-full text-sm sm:text-base text-white/80 border border-white/15 hover:border-white/30 hover:text-white backdrop-blur-sm transition-all duration-300"
+                  >
+                    {content.secondaryButton.label}
+                  </a>
+                ) : isEditing ? (
+                  <EditablePlaceholder sectionId={config.id} contentPath="secondaryButton.label" type="button" />
+                ) : null}
+              </div>
+              {/* Scroll indicator */}
+              <div className="flex flex-col items-center gap-2 mt-4">
+                <span className="text-[0.65rem] tracking-[0.3em] uppercase text-white/30">Scroll</span>
+                <div className="w-[1px] h-8 bg-gradient-to-b from-white/20 to-transparent animate-pulse" />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     )

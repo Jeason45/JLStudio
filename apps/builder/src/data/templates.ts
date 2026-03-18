@@ -1698,8 +1698,10 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         type: 'hero',
         variant: 'jlstudio',
         content: {
-          title: 'Sites Web Premium Sur-Mesure',
+          title: 'JL STUDIO',
           subtitle: 'Développeur web freelance spécialisé dans la création de sites vitrines, e-commerce et applications web haut de gamme. Design unique, performance optimale, résultats concrets.',
+          eyebrow: 'DEVELOPPEUR WEB FREELANCE',
+          backgroundImage: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80',
           primaryButton: { label: 'Voir mes réalisations', href: '#portfolio', variant: 'primary' },
           secondaryButton: { label: 'Me contacter', href: '#contact', variant: 'outline' },
         },

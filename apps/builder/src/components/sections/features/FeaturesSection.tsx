@@ -5707,17 +5707,15 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
               overflow: 'hidden',
             }}
           >
-            {/* Background image */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={slide.image}
-              alt={slide.subtitle}
+            {/* Background image — fixed attachment for parallax effect */}
+            <div
               style={{
                 position: 'absolute',
                 inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
+                backgroundImage: `url(${slide.image})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundAttachment: 'fixed',
               }}
             />
 
