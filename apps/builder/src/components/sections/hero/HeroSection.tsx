@@ -7110,6 +7110,8 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     const jlSectionRef = useRef<HTMLElement>(null)
     const scrollerRef = useRef<HTMLElement | Window | null>(null)
     const [scrollProgress, setScrollProgress] = useState(0)
+    const [pinnedY, setPinnedY] = useState(0)
+    const [viewportH, setViewportH] = useState(0)
     const [preloaderCount, setPreloaderCount] = useState(0)
     const [preloaderPhase, setPreloaderPhase] = useState<'counting' | 'exit' | 'done'>(isEditing ? 'done' : 'counting')
 
@@ -7173,7 +7175,8 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
       const handleScroll = () => {
         const section = jlSectionRef.current
         if (!section) return
-        const totalScroll = section.offsetHeight - (scroller ? scroller.clientHeight : window.innerHeight)
+        const vh = scroller ? scroller.clientHeight : window.innerHeight
+        const totalScroll = section.offsetHeight - vh
         if (totalScroll <= 0) return
         // Get section offset relative to scroll container
         let scrolled: number
@@ -7183,7 +7186,10 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
         } else {
           scrolled = -section.getBoundingClientRect().top
         }
-        setScrollProgress(Math.max(0, Math.min(1, scrolled / totalScroll)))
+        const clamped = Math.max(0, Math.min(scrolled, totalScroll))
+        setScrollProgress(clamped / totalScroll)
+        setPinnedY(clamped)
+        setViewportH(vh)
       }
       scrollTarget.addEventListener('scroll', handleScroll, { passive: true })
       handleScroll()
@@ -7262,7 +7268,13 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
           </div>
         )}
 
-        <div className="sticky top-0 h-screen overflow-hidden">
+        <div
+          className="absolute top-0 left-0 right-0 overflow-hidden will-change-transform"
+          style={{
+            height: isEditing ? '100%' : (viewportH > 0 ? `${viewportH}px` : '100vh'),
+            transform: isEditing ? undefined : `translateY(${pinnedY}px)`,
+          }}
+        >
           {/* Background artistic image */}
           <div
             className="absolute will-change-transform"
