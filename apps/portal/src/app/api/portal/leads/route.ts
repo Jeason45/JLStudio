@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { extractSiteId, extractUserRole, extractUserId } from '@/lib/auth';
 import { leadCreateSchema } from '@/lib/validations';
+import { parsePagination, paginatedResponse } from '@/lib/pagination';
 
 export async function GET(req: NextRequest) {
   const siteId = extractSiteId(req.headers);
@@ -12,6 +13,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const status = searchParams.get('status');
   const search = searchParams.get('search');
+  const { page, limit, skip } = parsePagination(searchParams);
 
   const where: Record<string, unknown> = { siteId };
   if (status) where.status = status;
@@ -25,17 +27,22 @@ export async function GET(req: NextRequest) {
     ];
   }
 
-  const leads = await prisma.lead.findMany({
-    where,
-    include: {
-      contact: {
-        select: { id: true, firstName: true, lastName: true, email: true, company: true },
+  const [leads, total] = await Promise.all([
+    prisma.lead.findMany({
+      where,
+      include: {
+        contact: {
+          select: { id: true, firstName: true, lastName: true, email: true, company: true },
+        },
       },
-    },
-    orderBy: { createdAt: 'desc' },
-  });
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.lead.count({ where }),
+  ]);
 
-  return NextResponse.json(leads);
+  return NextResponse.json(paginatedResponse(leads, total, page, limit));
 }
 
 export async function POST(req: NextRequest) {

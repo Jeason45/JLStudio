@@ -23,19 +23,6 @@ model BuilderUser {
 }
 
 // ─────────────────────────────────────────────
-// AUTH — WEB (JL Studio admin)
-// ─────────────────────────────────────────────
-
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String?
-  role      String   @default("admin")
-  createdAt DateTime @default(now())
-}
-
-// ─────────────────────────────────────────────
 // SITES
 // ─────────────────────────────────────────────
 
@@ -182,12 +169,11 @@ model Contact {
   portalProjects     PortalProject[]
   portalUsers        PortalUser[]
 
-  // Relations Web standalone
+  // Relations Web standalone (sign flow, reminders, email logging)
   interactions Interaction[]
   appointments Appointment[]
   documents    Document[]
   mailLogs     MailLog[]
-  projects     Project[]
 
   @@unique([siteId, email])
   @@index([siteId, status])
@@ -959,7 +945,6 @@ model Document {
   contactId        String?
   contact          Contact?  @relation(fields: [contactId], references: [id], onDelete: SetNull)
   projectId        String?
-  project          Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
   type             String
   templateSlug     String?
   fileName         String?
@@ -986,15 +971,6 @@ model Document {
   @@index([status, createdAt])
   @@index([contactId])
   @@index([projectId])
-}
-
-model DocumentCounter {
-  id      String @id @default(cuid())
-  type    String
-  year    Int
-  counter Int    @default(0)
-
-  @@unique([type, year])
 }
 
 model Signature {
@@ -1052,136 +1028,3 @@ model MailLog {
   @@index([createdAt])
 }
 
-model Project {
-  id              String    @id @default(cuid())
-  contactId       String?
-  contact         Contact?  @relation(fields: [contactId], references: [id], onDelete: SetNull)
-  name            String
-  description     String?
-  status          String    @default("planification")
-  priority        String    @default("medium")
-  projectType     String?
-  technologies    String?
-  startDate       DateTime?
-  endDate         DateTime?
-  estimatedBudget Float?
-  actualBudget    Float?
-  progress        Int       @default(0)
-  notes           String?
-  deletedAt       DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  tasks        Task[]
-  taskSections TaskSection[]
-  milestones   Milestone[]
-  documents    Document[]
-}
-
-model TaskSection {
-  id          String   @id @default(cuid())
-  projectId   String
-  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  name        String
-  color       String?
-  order       Int      @default(0)
-  isCollapsed Boolean  @default(false)
-  createdAt   DateTime @default(now())
-
-  tasks Task[]
-}
-
-model Task {
-  id             String       @id @default(cuid())
-  projectId      String
-  project        Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  sectionId      String?
-  section        TaskSection? @relation(fields: [sectionId], references: [id], onDelete: SetNull)
-  parentTaskId   String?
-  title          String
-  description    String?
-  status         String       @default("todo")
-  priority       String       @default("medium")
-  startDate      DateTime?
-  dueDate        DateTime?
-  duration       Int?
-  estimatedHours Float?
-  actualHours    Float?
-  kanbanColumn   String?
-  tags           String?
-  blockedReason  String?
-  isCriticalPath Boolean      @default(false)
-  order          Int          @default(0)
-  deletedAt      DateTime?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-
-  dependsOn   TaskDependency[] @relation("dependent")
-  dependedBy  TaskDependency[] @relation("predecessor")
-  timeEntries TimeEntry[]
-
-  @@index([projectId, status])
-  @@index([dueDate])
-  @@index([sectionId])
-}
-
-model TaskDependency {
-  id                String @id @default(cuid())
-  dependentTaskId   String
-  dependentTask     Task   @relation("dependent", fields: [dependentTaskId], references: [id], onDelete: Cascade)
-  predecessorTaskId String
-  predecessorTask   Task   @relation("predecessor", fields: [predecessorTaskId], references: [id], onDelete: Cascade)
-  type              String @default("finish_to_start")
-  lag               Int    @default(0)
-
-  @@unique([dependentTaskId, predecessorTaskId])
-}
-
-model Milestone {
-  id        String   @id @default(cuid())
-  projectId String
-  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  name      String
-  date      DateTime
-  status    String   @default("pending")
-  color     String?
-  createdAt DateTime @default(now())
-}
-
-model TimeEntry {
-  id        String    @id @default(cuid())
-  taskId    String
-  task      Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  startedAt DateTime
-  stoppedAt DateTime?
-  duration  Int?      // minutes
-  notes     String?
-  createdAt DateTime  @default(now())
-
-  @@index([taskId])
-}
-
-// ─────────────────────────────────────────────
-// WEB STANDALONE — SETTINGS
-// ─────────────────────────────────────────────
-
-model CompanySettings {
-  id                  String   @id @default("default")
-  name                String   @default("")
-  address             String   @default("")
-  phone               String   @default("")
-  email               String   @default("")
-  siret               String   @default("")
-  iban                String   @default("")
-  bic                 String   @default("")
-  tvaNumber           String   @default("")
-  defaultPaymentTerms String   @default("30 jours")
-  penaltyRate         Float    @default(3.0)
-  legalForm           String   @default("")
-  capital             String   @default("")
-  rcsCity             String   @default("")
-  representantName    String   @default("")
-  representantRole    String   @default("")
-  logoPath            String   @default("")
-  updatedAt           DateTime @updatedAt
-}

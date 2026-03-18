@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { extractSiteId, extractUserId, extractUserRole } from '@/lib/auth';
 import { cmsItemCreateSchema } from '@/lib/validations';
 import { logActivity } from '@/lib/activity';
+import { parsePagination, paginatedResponse } from '@/lib/pagination';
 import type { Prisma } from '@jlstudio/database';
 
 export async function GET(req: NextRequest) {
@@ -12,6 +13,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const collectionId = searchParams.get('collectionId');
   const status = searchParams.get('status');
+  const { page, limit, skip } = parsePagination(searchParams);
 
   const where: Record<string, unknown> = {
     collection: { siteId },
@@ -19,15 +21,20 @@ export async function GET(req: NextRequest) {
   if (collectionId) where.collectionId = collectionId;
   if (status) where.status = status;
 
-  const items = await prisma.cmsItem.findMany({
-    where,
-    include: {
-      collection: { select: { id: true, name: true, slug: true, fields: true } },
-    },
-    orderBy: { createdAt: 'desc' },
-  });
+  const [items, total] = await Promise.all([
+    prisma.cmsItem.findMany({
+      where,
+      include: {
+        collection: { select: { id: true, name: true, slug: true, fields: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.cmsItem.count({ where }),
+  ]);
 
-  return NextResponse.json(items);
+  return NextResponse.json(paginatedResponse(items, total, page, limit));
 }
 
 export async function POST(req: NextRequest) {

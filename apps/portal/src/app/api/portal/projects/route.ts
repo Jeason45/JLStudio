@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { extractSiteId, extractUserId, extractUserRole } from '@/lib/auth';
 import { projectCreateSchema } from '@/lib/validations';
 import { logActivity } from '@/lib/activity';
+import { parsePagination, paginatedResponse } from '@/lib/pagination';
 
 export async function GET(req: NextRequest) {
   const siteId = extractSiteId(req.headers);
@@ -10,21 +11,27 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url);
   const status = searchParams.get('status');
+  const { page, limit, skip } = parsePagination(searchParams);
 
   const where: Record<string, unknown> = { siteId };
   if (status) {
     where.status = status;
   }
 
-  const projects = await prisma.portalProject.findMany({
-    where,
-    include: {
-      contact: { select: { id: true, firstName: true, lastName: true, email: true } },
-      _count: { select: { tasks: true } },
-      tasks: { select: { status: true } },
-    },
-    orderBy: { createdAt: 'desc' },
-  });
+  const [projects, total] = await Promise.all([
+    prisma.portalProject.findMany({
+      where,
+      include: {
+        contact: { select: { id: true, firstName: true, lastName: true, email: true } },
+        _count: { select: { tasks: true } },
+        tasks: { select: { status: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.portalProject.count({ where }),
+  ]);
 
   const result = projects.map((p) => {
     const tasksDone = p.tasks.filter((t) => t.status === 'DONE').length;
@@ -35,7 +42,7 @@ export async function GET(req: NextRequest) {
     };
   });
 
-  return NextResponse.json(result);
+  return NextResponse.json(paginatedResponse(result, total, page, limit));
 }
 
 export async function POST(req: NextRequest) {

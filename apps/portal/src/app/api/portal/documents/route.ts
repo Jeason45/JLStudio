@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { extractSiteId, extractUserId, extractUserRole, extractContactId } from '@/lib/auth';
 import { documentCreateSchema } from '@/lib/validations';
 import { logActivity } from '@/lib/activity';
+import { parsePagination, paginatedResponse } from '@/lib/pagination';
 
 export async function GET(req: NextRequest) {
   const siteId = extractSiteId(req.headers);
@@ -14,6 +15,7 @@ export async function GET(req: NextRequest) {
   const type = searchParams.get('type');
   const status = searchParams.get('status');
   const contactId = searchParams.get('contactId');
+  const { page, limit, skip } = parsePagination(searchParams);
 
   const where: Record<string, unknown> = { siteId };
   if (type) where.type = type;
@@ -23,20 +25,25 @@ export async function GET(req: NextRequest) {
   // CLIENT can only see their own documents
   if (role === 'CLIENT') {
     if (!userContactId) {
-      return NextResponse.json([]);
+      return NextResponse.json(paginatedResponse([], 0, page, limit));
     }
     where.contactId = userContactId;
   }
 
-  const documents = await prisma.portalDocument.findMany({
-    where,
-    include: {
-      contact: { select: { id: true, firstName: true, lastName: true, email: true, company: true } },
-    },
-    orderBy: { createdAt: 'desc' },
-  });
+  const [documents, total] = await Promise.all([
+    prisma.portalDocument.findMany({
+      where,
+      include: {
+        contact: { select: { id: true, firstName: true, lastName: true, email: true, company: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.portalDocument.count({ where }),
+  ]);
 
-  return NextResponse.json(documents);
+  return NextResponse.json(paginatedResponse(documents, total, page, limit));
 }
 
 export async function POST(req: NextRequest) {

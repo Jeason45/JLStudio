@@ -10,7 +10,7 @@ export interface TokenPayload {
   sub: string;
   email: string;
   siteId: string;
-  role: 'ADMIN' | 'CLIENT' | 'EDITOR';
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'CLIENT' | 'EDITOR';
   contactId?: string | null;
   superAdmin?: boolean;
 }

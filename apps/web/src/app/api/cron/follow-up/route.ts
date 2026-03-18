@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     const staleLeads = await prisma.contact.findMany({
       where: {
-        status: 'new',
+        status: 'NEW',
         deletedAt: null,
         createdAt: { lt: twoDaysAgo },
       },
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${lead.name}</td>
         <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${lead.email || '-'}</td>
         <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${lead.projectType || '-'}</td>
-        <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center; font-weight: bold; color: ${lead.score >= 70 ? '#10b981' : lead.score >= 50 ? '#fbbf24' : '#ef4444'};">${lead.score}</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center; font-weight: bold; color: ${(lead.score ?? 0) >= 70 ? '#10b981' : (lead.score ?? 0) >= 50 ? '#fbbf24' : '#ef4444'};">${lead.score ?? 0}</td>
         <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${createdAt}</td>
       </tr>`;
     }).join('');

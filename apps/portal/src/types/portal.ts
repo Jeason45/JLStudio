@@ -1,4 +1,4 @@
-export type PortalUserRole = 'ADMIN' | 'CLIENT' | 'EDITOR';
+export type PortalUserRole = 'SUPER_ADMIN' | 'ADMIN' | 'CLIENT' | 'EDITOR';
 
 export interface PortalModules {
   moduleCRM: boolean;
@@ -117,7 +117,7 @@ export interface ProjectData {
   id: string;
   name: string;
   description: string | null;
-  status: 'IN_PROGRESS' | 'COMPLETED' | 'ON_HOLD' | 'CANCELLED';
+  status: 'PLANNING' | 'IN_PROGRESS' | 'COMPLETED' | 'ON_HOLD' | 'CANCELLED';
   contactId: string | null;
   dueDate: string | null;
   createdAt: string;

@@ -1,5 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { z } from 'zod';
+
+const updatePortalConfigSchema = z.object({
+  logoUrl: z.string().nullable().optional(),
+  primaryColor: z.string().optional(),
+  onboardingDone: z.boolean().optional(),
+  moduleCRM: z.boolean().optional(),
+  moduleDevis: z.boolean().optional(),
+  moduleFactures: z.boolean().optional(),
+  moduleContrats: z.boolean().optional(),
+  moduleProjets: z.boolean().optional(),
+  moduleCMS: z.boolean().optional(),
+  moduleCalendrier: z.boolean().optional(),
+});
 
 // GET portal config + users for a site
 export async function GET(
@@ -33,11 +47,16 @@ export async function PUT(
   const { siteId } = await params;
   const body = await req.json();
 
+  const parsed = updatePortalConfigSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Données invalides', details: parsed.error.issues }, { status: 400 });
+  }
+
   try {
     const config = await prisma.portalConfig.upsert({
       where: { siteId },
-      create: { siteId, ...body },
-      update: body,
+      create: { siteId, ...parsed.data },
+      update: parsed.data,
     });
 
     return NextResponse.json(config);

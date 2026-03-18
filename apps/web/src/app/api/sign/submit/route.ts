@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
         if (signatureRequest.document.contactId) {
           await tx.contact.update({
             where: { id: signatureRequest.document.contactId },
-            data: { status: 'client' },
+            data: { status: 'ACTIVE' },
           });
         }
       });

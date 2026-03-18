@@ -41,7 +41,8 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
     const params = new URLSearchParams({ type });
     if (statusFilter) params.set('status', statusFilter);
     const res = await fetch(`/api/portal/documents?${params}`);
-    setDocuments(await res.json());
+    const json = await res.json();
+    setDocuments(json.data ?? json);
   };
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
     if (statusFilter) params.set('status', statusFilter);
     fetch(`/api/portal/documents?${params}`)
       .then((r) => r.json())
-      .then((data) => { setDocuments(data); setLoading(false); })
+      .then((res) => { setDocuments(res.data ?? res); setLoading(false); })
       .catch(() => setLoading(false));
   }, [type, statusFilter]);
 

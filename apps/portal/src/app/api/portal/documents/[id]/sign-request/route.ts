@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { extractSiteId, extractUserId } from '@/lib/auth';
+import { extractSiteId, extractUserId, extractUserRole } from '@/lib/auth';
 import { logActivity } from '@/lib/activity';
 import { generateToken } from '@/lib/signatureUtils';
 import { sendDocumentEmail } from '@/lib/email';
@@ -20,8 +20,10 @@ export async function POST(
 ) {
   const siteId = extractSiteId(req.headers);
   const userId = extractUserId(req.headers);
+  const role = extractUserRole(req.headers);
   const { id } = await params;
   if (!siteId) return NextResponse.json({ error: 'Non autorise' }, { status: 401 });
+  if (role === 'CLIENT') return NextResponse.json({ error: 'Acces refuse' }, { status: 403 });
 
   const body = await req.json();
   const parsed = schema.safeParse(body);

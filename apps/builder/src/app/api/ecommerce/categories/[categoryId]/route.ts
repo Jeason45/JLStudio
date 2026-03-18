@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/db'
+import { z } from 'zod'
+
+const updateCategorySchema = z.object({
+  name: z.string().min(1).optional(),
+  slug: z.string().min(1).optional(),
+  parentId: z.string().nullable().optional(),
+  image: z.string().nullable().optional(),
+})
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ categoryId: string }> }) {
   try {
@@ -20,9 +28,13 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   try {
     const { categoryId } = await params
     const body = await request.json()
+    const parsed = updateCategorySchema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Données invalides', details: parsed.error.issues }, { status: 400 })
+    }
     const category = await prisma.productCategory.update({
       where: { id: categoryId },
-      data: body,
+      data: parsed.data,
     })
     return NextResponse.json(category)
   } catch (error) {

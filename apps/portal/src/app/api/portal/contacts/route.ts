@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { extractSiteId, extractUserId } from '@/lib/auth';
 import { contactCreateSchema } from '@/lib/validations';
 import { logActivity } from '@/lib/activity';
+import { parsePagination, paginatedResponse } from '@/lib/pagination';
 
 export async function GET(req: NextRequest) {
   const siteId = extractSiteId(req.headers);
@@ -11,6 +12,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const search = searchParams.get('search') || '';
   const status = searchParams.get('status') || '';
+  const { page, limit, skip } = parsePagination(searchParams);
 
   const where: Record<string, unknown> = { siteId };
   if (status) where.status = status;
@@ -23,15 +25,20 @@ export async function GET(req: NextRequest) {
     ];
   }
 
-  const contacts = await prisma.contact.findMany({
-    where,
-    include: {
-      _count: { select: { leads: true, portalDocuments: true, portalInteractions: true, portalAppointments: true } },
-    },
-    orderBy: { createdAt: 'desc' },
-  });
+  const [contacts, total] = await Promise.all([
+    prisma.contact.findMany({
+      where,
+      include: {
+        _count: { select: { leads: true, portalDocuments: true, portalInteractions: true, portalAppointments: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.contact.count({ where }),
+  ]);
 
-  return NextResponse.json(contacts);
+  return NextResponse.json(paginatedResponse(contacts, total, page, limit));
 }
 
 export async function POST(req: NextRequest) {

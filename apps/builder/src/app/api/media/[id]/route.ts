@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/db'
 import { deleteFromStorage, urlToKey } from '@/lib/storage'
+import { z } from 'zod'
+
+const updateMediaSchema = z.object({
+  alt: z.string().optional(),
+  folder: z.string().optional(),
+})
 
 export async function DELETE(
   _request: NextRequest,
@@ -41,11 +47,14 @@ export async function PATCH(
   try {
     const { id } = await params
     const body = await request.json()
-    const { alt } = body
+    const parsed = updateMediaSchema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Données invalides', details: parsed.error.issues }, { status: 400 })
+    }
 
     const media = await prisma.media.update({
       where: { id },
-      data: { alt },
+      data: parsed.data,
     })
 
     return NextResponse.json(media)

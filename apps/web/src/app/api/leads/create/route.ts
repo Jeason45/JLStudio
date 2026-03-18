@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma, getSiteId } from '@/lib/prisma';
 import { leadCreateSchema } from '@/lib/validations';
 import { calculateLeadScore, calculateEstimatedPrice } from '@/lib/scoring/lead-scorer';
 import { rateLimit } from '@/lib/rateLimit';
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
 
     const contact = await prisma.contact.create({
       data: {
+        siteId: getSiteId(),
         name: data.name,
         email: data.email,
         phone: data.phone || null,
@@ -44,7 +45,7 @@ export async function POST(req: NextRequest) {
         notes: data.message || null,
         projectType: data.projectType || null,
         budget: data.budget || null,
-        status: 'new',
+        status: 'NEW',
         source: data.source || 'site_qualifier',
         type: data.company ? 'entreprise' : 'particulier',
         score,

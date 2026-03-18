@@ -1,13 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/db'
+import { z } from 'zod'
+
+const updateTaxRateSchema = z.object({
+  name: z.string().min(1).optional(),
+  rate: z.number().min(0).optional(),
+  country: z.string().nullable().optional(),
+  region: z.string().nullable().optional(),
+  includeInPrice: z.boolean().optional(),
+  active: z.boolean().optional(),
+})
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ rateId: string }> }) {
   try {
     const { rateId } = await params
     const body = await request.json()
+    const parsed = updateTaxRateSchema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Données invalides', details: parsed.error.issues }, { status: 400 })
+    }
     const rate = await prisma.taxRate.update({
       where: { id: rateId },
-      data: body,
+      data: parsed.data,
     })
     return NextResponse.json(rate)
   } catch (error) {

@@ -19,7 +19,7 @@ export const portalUserCreateSchema = z.object({
   password: z.string().min(8, 'Minimum 8 caracteres'),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  role: z.enum(['ADMIN', 'CLIENT', 'EDITOR']).default('CLIENT'),
+  role: z.enum(['SUPER_ADMIN', 'ADMIN', 'CLIENT', 'EDITOR']).default('CLIENT'),
   contactId: z.string().optional(),
 });
 
@@ -27,7 +27,7 @@ export const portalUserUpdateSchema = z.object({
   email: z.string().email('Email invalide').optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  role: z.enum(['ADMIN', 'CLIENT', 'EDITOR']).optional(),
+  role: z.enum(['SUPER_ADMIN', 'ADMIN', 'CLIENT', 'EDITOR']).optional(),
   contactId: z.string().nullable().optional(),
   active: z.boolean().optional(),
   password: z.string().min(8, 'Minimum 8 caracteres').optional(),
@@ -130,7 +130,7 @@ export const documentCreateSchema = z.object({
   type: z.enum(['DEVIS', 'FACTURE', 'CONTRAT']),
   title: z.string().min(1, 'Titre requis'),
   contactId: z.string().optional(),
-  content: z.any().default({}),
+  content: z.record(z.string(), z.unknown()).default({}),
   amount: z.number().optional(),
   taxRate: z.number().default(20),
   validUntil: z.string().optional(),

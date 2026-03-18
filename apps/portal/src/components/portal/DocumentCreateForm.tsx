@@ -34,7 +34,7 @@ export default function DocumentCreateForm({ type, backHref }: { type: 'DEVIS' |
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch('/api/portal/contacts').then((r) => r.json()).then(setContacts);
+    fetch('/api/portal/contacts').then((r) => r.json()).then((res) => setContacts(res.data ?? res));
     fetch(`/api/portal/documents/next-number?type=${type}`).then((r) => r.json()).then((d) => setNextNumber(d.number));
   }, [type]);
 

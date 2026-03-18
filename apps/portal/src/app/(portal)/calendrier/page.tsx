@@ -34,7 +34,7 @@ export default function CalendrierPage() {
   }, [currentMonth]);
 
   useEffect(() => { fetchAppointments(); }, [fetchAppointments]);
-  useEffect(() => { fetch('/api/portal/contacts').then((r) => r.json()).then(setContacts); }, []);
+  useEffect(() => { fetch('/api/portal/contacts').then((r) => r.json()).then((res) => setContacts(res.data ?? res)); }, []);
 
   const handleCreate = async () => {
     if (!form.title || !form.startTime || !form.endTime) return;

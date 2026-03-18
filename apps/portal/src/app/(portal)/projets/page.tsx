@@ -51,7 +51,7 @@ export default function ProjetsPage() {
     const url = statusFilter ? `/api/portal/projects?status=${statusFilter}` : '/api/portal/projects';
     fetch(url)
       .then((r) => r.json())
-      .then((data) => { setProjects(data); setLoading(false); })
+      .then((res) => { setProjects(res.data ?? res); setLoading(false); })
       .catch(() => setLoading(false));
   }, [statusFilter]);
 
@@ -63,7 +63,7 @@ export default function ProjetsPage() {
   }, []);
 
   useEffect(() => { fetchProjects(); }, [fetchProjects]);
-  useEffect(() => { fetch('/api/portal/contacts').then((r) => r.json()).then(setContacts).catch(() => {}); }, []);
+  useEffect(() => { fetch('/api/portal/contacts').then((r) => r.json()).then((res) => setContacts(res.data ?? res)).catch(() => {}); }, []);
 
   const handleCreate = async () => {
     if (!form.name) return;

@@ -53,7 +53,7 @@ export default function CRMPage() {
     if (statusFilter) params.set('status', statusFilter);
     fetch(`/api/portal/contacts?${params}`)
       .then((r) => r.json())
-      .then((data) => { setContacts(data); setLoadingContacts(false); })
+      .then((res) => { setContacts(res.data ?? res); setLoadingContacts(false); })
       .catch(() => setLoadingContacts(false));
   }, [search, statusFilter]);
 
@@ -61,7 +61,7 @@ export default function CRMPage() {
   const fetchLeads = useCallback(() => {
     fetch('/api/portal/leads')
       .then((r) => r.json())
-      .then((data) => { setLeads(data); setLoadingLeads(false); })
+      .then((res) => { setLeads(res.data ?? res); setLoadingLeads(false); })
       .catch(() => setLoadingLeads(false));
   }, []);
 
