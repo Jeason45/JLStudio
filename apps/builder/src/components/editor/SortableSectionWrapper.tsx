@@ -141,6 +141,8 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
   // so the CTA image scrolls away revealing the footer behind it
   const isBrixsaCta = previewMode && section.type === 'cta' && section.variant?.includes('brixsa')
   const isBrixsaFooter = previewMode && section.type === 'site-footer' && section.variant?.includes('brixsa')
+  // JL Studio hero uses position:sticky for scroll-pinned zoom animation — overflow-hidden breaks it
+  const isJlstudioHero = section.type === 'hero' && section.variant === 'jlstudio'
 
   // Transparent headers (luxe-transparent, brixsa) need zero-height wrapper so they overlay the next section
   const isTransparentHeader = section.type === 'site-header' && (
@@ -166,7 +168,7 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
       onClick={handleClick}
       className={cn(
         'relative group transition-all',
-        !isTransparentHeader && !isBrixsaCta && 'overflow-hidden',
+        !isTransparentHeader && !isBrixsaCta && !isJlstudioHero && 'overflow-hidden',
         overrides.className,
         !section.visible && 'opacity-40',
         !previewMode && !isSelected && 'hover:outline hover:outline-1 hover:outline-wf-blue/30 hover:outline-offset-[-1px]',
