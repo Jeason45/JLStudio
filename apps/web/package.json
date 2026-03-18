@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@jlstudio/database": "workspace:*",
+    "@jlstudio/shared": "workspace:*",
     "bcryptjs": "^3.0.3",
     "date-fns": "^4.1.0",
     "gsap": "^3.14.2",
