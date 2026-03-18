@@ -1672,7 +1672,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       colors: { primary: '#0a0a0f', secondary: '#1a1a2e', accent: '#638BFF', background: '#0a0a0f', foreground: '#ffffff', muted: '#888888' },
       typography: { heading: "'Inter', sans-serif", body: "'Inter', sans-serif", size: 'large' as const },
       borderRadius: 'lg' as const,
-      spacing: 'comfortable' as const,
+      spacing: 'relaxed' as const,
     },
     sections: [
       // ── Header ──
