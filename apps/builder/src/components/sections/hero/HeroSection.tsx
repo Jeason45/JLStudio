@@ -7100,6 +7100,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
   // ─── VARIANT: jlstudio ───
   // JL Studio hero: 300vh scroll-driven zoom — "JL STUDIO" text scales 1→50 revealing artistic bg image,
   // then content fades in with title, subtitle, CTAs. Exact replica of jlstudio.dev HeroParallax.
+  // Includes integrated preloader (counter 0→100% + circle reveal) on first load.
   if (variant === 'jlstudio') {
     const accent = accentColor ?? '#638BFF'
     const heroImage = bgImage ?? content.backgroundImage ?? '/images/jlstudio/hero-bg.jpg'
@@ -7107,22 +7108,68 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
 
     /* eslint-disable react-hooks/rules-of-hooks */
     const jlSectionRef = useRef<HTMLElement>(null)
+    const scrollerRef = useRef<HTMLElement | Window | null>(null)
     const [scrollProgress, setScrollProgress] = useState(0)
+    const [preloaderCount, setPreloaderCount] = useState(0)
+    const [preloaderPhase, setPreloaderPhase] = useState<'counting' | 'exit' | 'done'>(isEditing ? 'done' : 'counting')
 
+    // ── Preloader counter animation (0→100 in ~2s, then circle reveal exit) ──
+    useEffect(() => {
+      if (isEditing || preloaderPhase !== 'counting') return
+      const duration = 2000
+      const start = performance.now()
+      let raf: number
+      const tick = (now: number) => {
+        const elapsed = now - start
+        const progress = Math.min(elapsed / duration, 1)
+        const eased = 1 - Math.pow(1 - progress, 3) // ease-out cubic
+        setPreloaderCount(Math.round(eased * 100))
+        if (progress < 1) {
+          raf = requestAnimationFrame(tick)
+        } else {
+          // Counter done → start exit
+          setTimeout(() => setPreloaderPhase('exit'), 300)
+          // Remove preloader after exit animation
+          setTimeout(() => setPreloaderPhase('done'), 1300)
+        }
+      }
+      raf = requestAnimationFrame(tick)
+      return () => cancelAnimationFrame(raf)
+    }, [isEditing, preloaderPhase])
+
+    // ── Find scrollable parent (builder canvas uses overflow-auto div, not window) ──
     useEffect(() => {
       if (isEditing) return
+      const el = jlSectionRef.current
+      if (!el) return
+      // Walk up to find nearest scrollable parent
+      let scroller: HTMLElement | null = el.parentElement
+      while (scroller) {
+        const ov = getComputedStyle(scroller).overflowY
+        if (ov === 'auto' || ov === 'scroll') break
+        scroller = scroller.parentElement
+      }
+      const scrollTarget: HTMLElement | Window = scroller || window
+      scrollerRef.current = scrollTarget
+
       const handleScroll = () => {
-        const el = jlSectionRef.current
-        if (!el) return
-        const rect = el.getBoundingClientRect()
-        const totalScroll = el.offsetHeight - window.innerHeight
+        const section = jlSectionRef.current
+        if (!section) return
+        const totalScroll = section.offsetHeight - (scroller ? scroller.clientHeight : window.innerHeight)
         if (totalScroll <= 0) return
-        const scrolled = -rect.top
+        // Get section offset relative to scroll container
+        let scrolled: number
+        if (scroller) {
+          const sectionTop = section.offsetTop - scroller.offsetTop
+          scrolled = scroller.scrollTop - sectionTop
+        } else {
+          scrolled = -section.getBoundingClientRect().top
+        }
         setScrollProgress(Math.max(0, Math.min(1, scrolled / totalScroll)))
       }
-      window.addEventListener('scroll', handleScroll, { passive: true })
+      scrollTarget.addEventListener('scroll', handleScroll, { passive: true })
       handleScroll()
-      return () => window.removeEventListener('scroll', handleScroll)
+      return () => scrollTarget.removeEventListener('scroll', handleScroll)
     }, [isEditing])
     /* eslint-enable react-hooks/rules-of-hooks */
 
@@ -7151,6 +7198,52 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
         className="relative bg-black"
         style={{ fontFamily: 'var(--font-body, inherit)', height: isEditing ? '100vh' : '300vh' }}
       >
+        {/* ── Preloader overlay (counter 0→100% + circle reveal) ── */}
+        {preloaderPhase !== 'done' && (
+          <div
+            className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center pointer-events-none"
+            style={{
+              clipPath: preloaderPhase === 'exit'
+                ? 'circle(150% at 50% 50%)'
+                : 'circle(100% at 50% 50%)',
+              opacity: preloaderPhase === 'exit' ? 0 : 1,
+              transition: preloaderPhase === 'exit'
+                ? 'opacity 0.8s cubic-bezier(0.76, 0, 0.24, 1)'
+                : 'none',
+            }}
+          >
+            <span
+              className="font-black text-white tabular-nums"
+              style={{
+                fontFamily: 'var(--font-heading, var(--font-outfit, system-ui))',
+                fontSize: 'clamp(4rem, 15vw, 9rem)',
+                lineHeight: 1,
+                transform: preloaderPhase === 'exit' ? 'scale(0.8)' : 'scale(1)',
+                opacity: preloaderPhase === 'exit' ? 0 : 1,
+                transition: 'transform 0.5s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.4s ease',
+              }}
+            >
+              {preloaderCount}
+            </span>
+            {/* Gradient divider */}
+            <div
+              className="mt-4 h-[2px] rounded-full"
+              style={{
+                width: `${preloaderCount}%`,
+                maxWidth: '200px',
+                background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
+                transition: 'width 0.1s linear',
+              }}
+            />
+            <span
+              className="mt-6 text-xs tracking-[0.3em] uppercase text-white/40 font-medium"
+              style={{ fontFamily: 'var(--font-heading, var(--font-outfit, system-ui))' }}
+            >
+              JL Studio
+            </span>
+          </div>
+        )}
+
         <div className="sticky top-0 h-screen overflow-hidden">
           {/* Background artistic image */}
           <div
