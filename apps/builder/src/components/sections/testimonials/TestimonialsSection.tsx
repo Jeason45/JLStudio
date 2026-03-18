@@ -4337,81 +4337,146 @@ const GlassSlider = makeSliderVariant('glass',
 // JLSTUDIO — 3-col glassmorphism cards, quote mark, initials circle
 // ─────────────────────────────────────────────
 
+// Trustpilot star SVG (green filled star)
+function TrustpilotStar({ filled = true }: { filled?: boolean }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <rect width="24" height="24" rx="2" fill={filled ? '#00b67a' : '#dcdce6'} />
+      <path d="M12 4l2.35 4.76 5.25.77-3.8 3.7.9 5.24L12 15.77l-4.7 2.7.9-5.24-3.8-3.7 5.25-.77L12 4z" fill="white" />
+    </svg>
+  )
+}
+
+// Trustpilot logo SVG
+function TrustpilotLogo() {
+  return (
+    <svg width="120" height="30" viewBox="0 0 280 65" fill="none">
+      <path d="M35.2 0l8.4 25.9H70l-21.4 15.5 8.2 25.2L35.2 51l-21.6 15.6 8.2-25.2L.4 25.9h26.4L35.2 0z" fill="#00b67a" />
+      <path d="M49.4 46.4l-3-9.2-11.2 8.1 14.2 1.1z" fill="#005128" />
+      <text x="78" y="44" fontFamily="system-ui, sans-serif" fontSize="36" fontWeight="700" fill="white">Trustpilot</text>
+    </svg>
+  )
+}
+
 function JlstudioParallax({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
-  const eyebrow = content.eyebrow
   const title = content.title
+  const trustpilotUrl = (content as Record<string, unknown>).trustpilotUrl as string | undefined
+  const trustpilotScore = (content as Record<string, unknown>).trustpilotScore as string | undefined
+  const trustpilotCount = (content as Record<string, unknown>).trustpilotCount as string | undefined
 
   return (
     <section className="relative bg-[#050507] py-24 overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
       {/* Ambient glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full pointer-events-none opacity-10 blur-3xl" style={{ background: `radial-gradient(ellipse, ${accent}40, transparent 70%)` }} />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full pointer-events-none opacity-10 blur-3xl" style={{ background: `radial-gradient(ellipse, #00b67a40, transparent 70%)` }} />
 
       <div className="relative max-w-6xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-16 space-y-4">
-          {eyebrow && (
-            <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: accent }}>
-              {eyebrow}
-            </span>
-          )}
+        {/* Header with Trustpilot branding */}
+        <div className="text-center mb-16 space-y-6">
           {title && (
             <h2 {...elementProps(sectionId, 'title', 'heading')} className="text-3xl md:text-5xl font-bold text-white leading-tight" style={styleOverrides?.textColor ? { color: styleOverrides.textColor } : undefined}>
               {title}
             </h2>
           )}
+          {/* Trustpilot badge */}
+          <div className="flex flex-col items-center gap-3">
+            <a
+              href={trustpilotUrl ?? 'https://fr.trustpilot.com/review/jlstudio'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center gap-3 group"
+            >
+              <TrustpilotLogo />
+              {/* Stars row */}
+              <div className="flex items-center gap-1">
+                {[1,2,3,4,5].map(n => <TrustpilotStar key={n} filled />)}
+              </div>
+              <p className="text-sm text-white/50 group-hover:text-white/70 transition-colors">
+                TrustScore <span className="font-semibold text-white/80">{trustpilotScore ?? '5'}/5</span> — {trustpilotCount ?? '5'} avis v\u00E9rifi\u00E9s
+              </p>
+            </a>
+          </div>
         </div>
 
-        {/* Cards grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((item, i) => {
-            const initials = (item.author ?? '')
-              .split(' ')
-              .map(w => w[0])
-              .join('')
-              .toUpperCase()
-              .slice(0, 2)
+        {/* Cards — 3+2 layout (3 top, 2 bottom centered) */}
+        <div className="flex flex-col gap-6">
+          {/* First row: up to 3 cards */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {items.slice(0, 3).map((item, i) => (
+              <JlstudioTestimonialCard key={item.id} item={item} index={i} sectionId={sectionId} />
+            ))}
+          </div>
+          {/* Second row: remaining cards centered */}
+          {items.length > 3 && (
+            <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto w-full">
+              {items.slice(3).map((item, i) => (
+                <JlstudioTestimonialCard key={item.id} item={item} index={i + 3} sectionId={sectionId} />
+              ))}
+            </div>
+          )}
+        </div>
 
-            return (
-              <div
-                key={item.id}
-                className="relative rounded-2xl p-8 border transition-colors hover:border-white/[0.15]"
-                style={{
-                  backgroundColor: 'rgba(0,0,0,0.4)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  borderColor: 'rgba(255,255,255,0.08)',
-                }}
-              >
-                {/* Decorative quote mark */}
-                <span className="block text-4xl font-serif leading-none mb-4" style={{ color: `${accent}60` }}>&ldquo;</span>
-
-                {/* Quote text */}
-                <p
-                  {...elementProps(sectionId, `items.${i}.quote`, 'text')}
-                  className="text-base text-white/70 leading-relaxed mb-8 font-light"
-                >
-                  {item.quote}
-                </p>
-
-                {/* Author */}
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white"
-                    style={{ backgroundColor: accent }}
-                  >
-                    {initials}
-                  </div>
-                  <div>
-                    <p {...elementProps(sectionId, `items.${i}.author`, 'text')} className="text-sm font-semibold text-white">{item.author}</p>
-                    <p {...elementProps(sectionId, `items.${i}.role`, 'text')} className="text-xs text-white/40">{item.role}{item.company ? ` — ${item.company}` : ''}</p>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
+        {/* Bottom CTA */}
+        <div className="text-center mt-12">
+          <a
+            href={trustpilotUrl ?? 'https://fr.trustpilot.com/review/jlstudio'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium text-white/40 hover:text-white/70 transition-colors"
+          >
+            Voir tous les avis sur Trustpilot
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
         </div>
       </div>
     </section>
+  )
+}
+
+function JlstudioTestimonialCard({ item, index, sectionId }: { item: TestimonialItem; index: number; sectionId: string }) {
+  const initials = (item.author ?? '')
+    .split(' ')
+    .map(w => w[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+
+  return (
+    <div
+      className="relative rounded-2xl p-8 border transition-colors hover:border-white/[0.15]"
+      style={{
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderColor: 'rgba(255,255,255,0.08)',
+      }}
+    >
+      {/* Trustpilot stars */}
+      <div className="flex items-center gap-0.5 mb-4">
+        {[1,2,3,4,5].map(n => <TrustpilotStar key={n} filled={n <= (item.rating ?? 5)} />)}
+      </div>
+
+      {/* Quote text */}
+      <p
+        {...elementProps(sectionId, `items.${index}.quote`, 'text')}
+        className="text-base text-white/70 leading-relaxed mb-8 font-light"
+      >
+        {item.quote}
+      </p>
+
+      {/* Author */}
+      <div className="flex items-center gap-3">
+        <div
+          className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white"
+          style={{ backgroundColor: '#00b67a' }}
+        >
+          {initials}
+        </div>
+        <div>
+          <p {...elementProps(sectionId, `items.${index}.author`, 'text')} className="text-sm font-semibold text-white">{item.author}</p>
+          <p {...elementProps(sectionId, `items.${index}.role`, 'text')} className="text-xs text-white/40">{item.role}</p>
+        </div>
+      </div>
+    </div>
   )
 }
 
