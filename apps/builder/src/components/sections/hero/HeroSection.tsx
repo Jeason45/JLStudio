@@ -7113,6 +7113,24 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     const [preloaderCount, setPreloaderCount] = useState(0)
     const [preloaderPhase, setPreloaderPhase] = useState<'counting' | 'exit' | 'done'>(isEditing ? 'done' : 'counting')
 
+    // ── Block scroll during preloader ──
+    useEffect(() => {
+      if (isEditing || preloaderPhase === 'done') return
+      // Find scrollable parent to lock it
+      const el = jlSectionRef.current
+      if (!el) return
+      let scroller: HTMLElement | null = el.parentElement
+      while (scroller) {
+        const ov = getComputedStyle(scroller).overflowY
+        if (ov === 'auto' || ov === 'scroll') break
+        scroller = scroller.parentElement
+      }
+      const target = scroller || document.documentElement
+      const prevOverflow = target.style.overflow
+      target.style.overflow = 'hidden'
+      return () => { target.style.overflow = prevOverflow }
+    }, [isEditing, preloaderPhase])
+
     // ── Preloader counter animation (0→100 in ~2s, then circle reveal exit) ──
     useEffect(() => {
       if (isEditing || preloaderPhase !== 'counting') return
