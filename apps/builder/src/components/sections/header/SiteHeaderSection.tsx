@@ -421,6 +421,12 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
     return <PetaleHeader config={config} logo={logo} ctaLabel={ctaLabel} links={links} />
   }
 
+  // ─── VARIANT: jlstudio ───
+  // JL Studio : glassmorphism sticky header, dark semi-transparent bg, accent bleu #638BFF, hamburger mobile
+  if (variant === 'jlstudio') {
+    return <JLStudioHeader config={config} logo={logo} ctaLabel={ctaLabel} links={links} />
+  }
+
   // fallback → startup
   return <SiteHeaderSection config={{ ...config, variant: 'startup' }} />
 }
@@ -7182,11 +7188,345 @@ function PetaleHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
   )
 }
 
+// ─── JL Studio Header ───
+
+function JLStudioHeader({ config, logo, ctaLabel, links }: { config: SectionConfig; logo: string; ctaLabel?: string; links: NavLink[] }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const headerRef = useRef<HTMLElement>(null)
+
+  // Track scroll for border-bottom effect
+  useEffect(() => {
+    const canvas = document.getElementById('site-canvas')
+    if (!canvas) return
+    let scrollParent: HTMLElement | null = canvas.parentElement
+    while (scrollParent) {
+      const st = getComputedStyle(scrollParent)
+      if (st.overflowY === 'auto' || st.overflowY === 'scroll' || st.overflow === 'auto') break
+      scrollParent = scrollParent.parentElement
+    }
+    if (!scrollParent) return
+    const handler = () => setScrolled(scrollParent!.scrollTop > 20)
+    scrollParent.addEventListener('scroll', handler, { passive: true })
+    return () => scrollParent!.removeEventListener('scroll', handler)
+  }, [])
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = '' }
+    }
+  }, [menuOpen])
+
+  // Close on Escape
+  useEffect(() => {
+    if (!menuOpen) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [menuOpen])
+
+  const toggleMenu = useCallback(() => setMenuOpen(prev => !prev), [])
+
+  const accent = '#638BFF'
+  const fontStack = "'GeneralSans Variable', 'General Sans', var(--font-body, sans-serif)"
+
+  const menuLinks: { label: string; href: string }[] = links.length > 0
+    ? links.map(l => ({ label: l.label, href: l.href }))
+    : [
+        { label: 'Services', href: '#services' },
+        { label: 'Methode', href: '#methode' },
+        { label: 'Projets', href: '#projets' },
+        { label: 'Temoignages', href: '#temoignages' },
+        { label: 'Contact', href: '#contact' },
+      ]
+
+  return (
+    <>
+      {/* JL Studio header responsive styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .jlstudio-nav-desktop { display: none !important; }
+          .jlstudio-cta-desktop { display: none !important; }
+          .jlstudio-hamburger { display: flex !important; }
+        }
+        @media (min-width: 769px) {
+          .jlstudio-hamburger { display: none !important; }
+        }
+      ` }} />
+
+      {/* ─── STICKY HEADER ─── */}
+      <header
+        ref={headerRef}
+        {...elementProps(config.id, 'wrapper', 'container', 'Header')}
+        className="sticky top-0 left-0 w-full flex items-center"
+        style={{
+          zIndex: 888,
+          backgroundColor: 'rgba(10, 10, 15, 0.85)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          minHeight: '72px',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+          fontFamily: fontStack,
+          borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
+          transition: 'border-color 0.3s ease',
+        }}
+      >
+        <div
+          {...elementProps(config.id, 'navGrid', 'container', 'Nav Grid')}
+          className="flex items-center justify-between w-full"
+          style={{ maxWidth: '1280px', margin: '0 auto' }}
+        >
+          {/* LEFT — Logo */}
+          <div
+            {...elementProps(config.id, 'logo', 'image')}
+            className="tracking-wide"
+            style={{
+              fontSize: '20px',
+              fontWeight: 700,
+              color: '#FFFFFF',
+              fontFamily: fontStack,
+              letterSpacing: '0.02em',
+            }}
+          >
+            {renderLogo(logo, 'font-bold text-xl')}
+          </div>
+
+          {/* CENTER — Desktop Navigation */}
+          <nav
+            {...elementProps(config.id, 'navLinks', 'container', 'Navigation')}
+            className="jlstudio-nav-desktop flex items-center"
+            style={{ gap: '32px' }}
+          >
+            {menuLinks.map((link, i) => (
+              <a
+                {...elementProps(config.id, `links.${i}.label`, 'link')}
+                key={links[i]?.id ?? `nav-${i}`}
+                href={link.href}
+                style={{
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                  transition: 'color 0.3s ease',
+                  letterSpacing: '0.01em',
+                  fontFamily: fontStack,
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#FFFFFF' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(255, 255, 255, 0.7)' }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* RIGHT — CTA Button (desktop) */}
+          <div className="flex items-center" style={{ gap: '16px' }}>
+            {ctaLabel && (
+              <a
+                {...elementProps(config.id, 'ctaLabel', 'button')}
+                href={config.content?.ctaHref ?? '#contact'}
+                className="jlstudio-cta-desktop"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: accent,
+                  color: '#FFFFFF',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  padding: '10px 24px',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  transition: 'background-color 0.3s ease, transform 0.2s ease',
+                  fontFamily: fontStack,
+                  letterSpacing: '0.01em',
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#4F75E6'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = accent; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)' }}
+              >
+                {ctaLabel}
+              </a>
+            )}
+
+            {/* Mobile hamburger */}
+            <div
+              {...elementProps(config.id, 'menuButton', 'button', 'Menu Button')}
+              role="button"
+              onClick={toggleMenu}
+              className="jlstudio-hamburger items-center cursor-pointer"
+              style={{
+                borderRadius: '8px',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                backgroundColor: 'rgba(99, 139, 255, 0.15)',
+                color: '#FFFFFF',
+                padding: '10px 14px',
+                border: '1px solid rgba(99, 139, 255, 0.2)',
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(99, 139, 255, 0.3)' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(99, 139, 255, 0.15)' }}
+            >
+              <Menu size={20} />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ─── MOBILE OFF-CANVAS MENU ─── */}
+      <div
+        {...elementProps(config.id, 'offCanvas', 'container', 'Off-Canvas Menu')}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          visibility: menuOpen ? 'visible' : 'hidden',
+          opacity: menuOpen ? 1 : 0,
+          transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s',
+          pointerEvents: menuOpen ? 'auto' : 'none',
+        }}
+      >
+        {/* Backdrop */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundColor: 'rgba(10, 10, 15, 0.95)',
+            backdropFilter: 'blur(30px)',
+            WebkitBackdropFilter: 'blur(30px)',
+          }}
+        />
+
+        {/* Menu content */}
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            fontFamily: fontStack,
+          }}
+        >
+          {/* Top bar — Logo + Close */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: 'clamp(20px, 5vw, 60px)',
+              minHeight: '72px',
+            }}
+          >
+            <div
+              {...elementProps(config.id, 'offCanvasLogo', 'text', 'Menu Logo')}
+              style={{
+                fontSize: '20px',
+                fontWeight: 700,
+                color: '#FFFFFF',
+                fontFamily: fontStack,
+              }}
+            >
+              {renderLogo(logo)}
+            </div>
+            <div
+              {...elementProps(config.id, 'closeButton', 'button', 'Close Button')}
+              role="button"
+              onClick={toggleMenu}
+              style={{
+                cursor: 'pointer',
+                color: 'rgba(255, 255, 255, 0.6)',
+                transition: 'color 0.3s',
+                padding: '8px',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#FFFFFF' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(255, 255, 255, 0.6)' }}
+            >
+              <X size={24} />
+            </div>
+          </div>
+
+          {/* Navigation links */}
+          <div
+            {...elementProps(config.id, 'offCanvasNav', 'container', 'Menu Navigation')}
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              padding: '0 clamp(20px, 5vw, 60px)',
+              gap: '8px',
+            }}
+          >
+            {menuLinks.map((link, i) => (
+              <a
+                {...elementProps(config.id, `offCanvasLinks.${i}`, 'link')}
+                key={links[i]?.id ?? `mobile-${i}`}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontSize: 'clamp(28px, 5vw, 42px)',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  padding: '12px 0',
+                  transition: 'color 0.3s ease, transform 0.3s ease',
+                  fontFamily: fontStack,
+                  display: 'block',
+                  opacity: menuOpen ? 1 : 0,
+                  transform: menuOpen ? 'translateY(0)' : 'translateY(20px)',
+                  transitionDelay: `${0.1 + i * 0.05}s`,
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = accent }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(255, 255, 255, 0.7)' }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          {/* Bottom CTA */}
+          {ctaLabel && (
+            <div style={{ padding: '0 clamp(20px, 5vw, 60px) clamp(30px, 6vw, 60px)' }}>
+              <a
+                {...elementProps(config.id, 'offCanvasCta', 'button', 'Menu CTA')}
+                href={config.content?.ctaHref ?? '#contact'}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'center',
+                  backgroundColor: accent,
+                  color: '#FFFFFF',
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  padding: '16px 24px',
+                  borderRadius: '10px',
+                  textDecoration: 'none',
+                  fontFamily: fontStack,
+                  transition: 'background-color 0.3s ease',
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#4F75E6' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = accent }}
+              >
+                {ctaLabel}
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  )
+}
+
 export const siteHeaderMeta = {
   type: 'site-header',
   label: 'Header',
   icon: '🧭',
-  variants: ['startup', 'corporate', 'luxe-transparent', 'luxe', 'creative', 'ecommerce', 'glass', 'nacre', 'brixsa', 'obscura', 'zmr-agency', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith', 'miel', 'prisme', 'petale'],
+  variants: ['startup', 'corporate', 'luxe-transparent', 'luxe', 'creative', 'ecommerce', 'glass', 'nacre', 'brixsa', 'obscura', 'zmr-agency', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith', 'miel', 'prisme', 'petale', 'jlstudio'],
   defaultVariant: 'startup',
   defaultContent: {},
 }

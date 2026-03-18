@@ -176,6 +176,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'miel-featured', label: 'Miel Featured', description: '50/50 initiales dor\u00E9es + citation, chocolat profond/or miel, p\u00E2tisserie & boulangerie', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'prisme-featured', label: 'Prisme Featured', description: '50/50 initiales bleu glac\u00E9 + citation, navy profond/bleu glac\u00E9, opticien & lunetier', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'petale-featured', label: 'P\u00E9tale Featured', description: '50/50 initiales rose gold + citation, noir riche/rose gold, fleuriste & artisan floral', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'jlstudio-parallax', label: 'JL Studio \u2014 Parallax', description: '3 colonnes glassmorphism, quote mark, initiales accent', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   pricing: [
     // Startup
@@ -236,6 +237,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     // Glass
     { id: 'glass-simple', label: 'Glass — Simple', description: 'Glassmorphism, dark', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass-with-info', label: 'Glass — Avec infos', description: 'Glass, formulaire + infos glow', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'jlstudio-split', label: 'JL Studio — Split', description: 'Image + formulaire split, types de projet, dark', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   logos: [
     // Startup
@@ -314,6 +316,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'ecommerce-vertical', label: 'E-commerce — Vertical', description: 'Vert, empilé vérifié', previewStyle: { background: 'white', paddingY: 'md' } },
     { id: 'glass-horizontal', label: 'Glass — Horizontal', description: 'Dark, glass étapes', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'glass-vertical', label: 'Glass — Vertical', description: 'Glass, empilé glow', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'jlstudio-timeline', label: 'JL Studio — Timeline', description: 'Timeline verticale alternée, nodes accent, fond grille', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'gallery-grid': [
     { id: 'startup-grid', label: 'Startup — Grille', description: 'Grille moderne, indigo', previewStyle: { background: 'white', paddingY: 'md' } },
@@ -343,6 +346,7 @@ export const SECTION_VARIANTS: Record<string, VariantDef[]> = {
     { id: 'miel-creations', label: 'Miel Cr\u00E9ations', description: 'Grid 3 colonnes, galerie p\u00E2tisseries & viennoiseries, chocolat profond/or miel', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'prisme-collection', label: 'Prisme Collection', description: 'Grid 3 colonnes, collection montures design, navy/bleu glac\u00E9', previewStyle: { background: 'dark', paddingY: 'md' } },
     { id: 'petale-creations', label: 'P\u00E9tale Cr\u00E9ations', description: 'Grid 3 colonnes, compositions florales, noir/rose gold', previewStyle: { background: 'dark', paddingY: 'md' } },
+    { id: 'jlstudio-portfolio', label: 'JL Studio \u2014 Portfolio', description: '2 colonnes alternées, projets avec tags tech, dark', previewStyle: { background: 'dark', paddingY: 'md' } },
   ],
   'image-text': [
     { id: 'startup-image-right', label: 'Startup — Image droite', description: 'Indigo, texte + image', previewStyle: { background: 'white', paddingY: 'md' } },

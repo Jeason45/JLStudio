@@ -12,7 +12,7 @@ export interface PageTemplate {
   id: string
   name: string
   description: string
-  category: 'saas' | 'agency' | 'ecommerce' | 'portfolio' | 'real-estate' | 'photographe' | 'coiffeur' | 'beaute' | 'agency-models' | 'restaurant' | 'coach' | 'architecte' | 'tatoueur' | 'spa' | 'dj' | 'traiteur' | 'coach-business' | 'yoga' | 'patisserie' | 'opticien' | 'fleuriste'
+  category: 'saas' | 'agency' | 'agency-web' | 'ecommerce' | 'portfolio' | 'real-estate' | 'photographe' | 'coiffeur' | 'beaute' | 'agency-models' | 'restaurant' | 'coach' | 'architecte' | 'tatoueur' | 'spa' | 'dj' | 'traiteur' | 'coach-business' | 'yoga' | 'patisserie' | 'opticien' | 'fleuriste'
   universe: TemplateUniverse
   emoji: string
   preview: string
@@ -1653,6 +1653,263 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           { type: 'cta', variant: 'prisme-centered', content: { title: 'Découvrez Tom Ford en boutique', subtitle: 'Essayage illimité et conseil personnalisé par nos opticiens spécialistes de la marque', primaryButton: { label: 'Prendre rendez-vous', href: '/rendez-vous', variant: 'secondary' }, backgroundImage: 'https://images.unsplash.com/photo-1577803645773-f96470509666?w=1920&q=80' }, style: { background: 'dark' as any, paddingY: 'xl' }, visible: true },
           { type: 'site-footer', variant: 'prisme', content: { logo: 'Prisme', tagline: 'Opticien — Lunetier', copyright: `© ${year} Prisme Optique. Tous droits réservés.`, columns: [{ id: '1', title: 'Navigation', links: [{ id: '1', label: 'Collections', href: '/collections' }, { id: '2', label: 'Examens', href: '/examens' }, { id: '3', label: 'Services', href: '/services' }, { id: '4', label: 'Notre maison', href: '/a-propos' }, { id: '5', label: 'Contact', href: '/contact' }] }, { id: '2', title: 'Contact', links: [{ id: '1', label: 'contact@prisme-optique.fr', href: 'mailto:contact@prisme-optique.fr' }, { id: '2', label: '01 23 45 67 89', href: 'tel:0123456789' }, { id: '3', label: '15 Avenue de la Vision, 75008 Paris', href: '#' }] }, { id: '3', title: 'Légal', links: [{ id: '1', label: 'Mentions légales', href: '/mentions-legales' }, { id: '2', label: 'Politique de confidentialité', href: '/confidentialite' }] }], socials: { instagram: '#', facebook: '#' } }, style: { background: 'dark' as any, paddingY: 'none' }, visible: true },
         ],
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // JL STUDIO — Agence de développement web premium
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'jlstudio-agency',
+    name: 'JL Studio — Agence Web',
+    description: 'Site vitrine premium pour agence de développement web : hero fullscreen dark, services scroll-pin, timeline process, portfolio projets, témoignages glassmorphism, contact split',
+    category: 'agency-web',
+    universe: 'luxe' as TemplateUniverse,
+    emoji: '💎',
+    preview: 'from-blue-600 to-zinc-950',
+    brand: {
+      colors: { primary: '#0a0a0f', secondary: '#1a1a2e', accent: '#638BFF', background: '#0a0a0f', foreground: '#ffffff', muted: '#888888' },
+      typography: { heading: "'Inter', sans-serif", body: "'Inter', sans-serif", size: 'large' as const },
+      borderRadius: 'lg' as const,
+      spacing: 'comfortable' as const,
+    },
+    sections: [
+      // ── Header ──
+      {
+        type: 'site-header',
+        variant: 'jlstudio',
+        content: {
+          logo: 'JL Studio',
+          links: [
+            { id: '1', label: 'Services', href: '#services' },
+            { id: '2', label: 'Process', href: '#process' },
+            { id: '3', label: 'Portfolio', href: '#portfolio' },
+            { id: '4', label: 'Avis', href: '#testimonials' },
+          ],
+          ctaLabel: 'Contact',
+          ctaHref: '#contact',
+        },
+        style: { background: 'dark' as any, paddingY: 'none' },
+        visible: true,
+      },
+      // ── Hero ──
+      {
+        type: 'hero',
+        variant: 'jlstudio',
+        content: {
+          title: 'Sites Web Premium Sur-Mesure',
+          subtitle: 'Développeur web freelance spécialisé dans la création de sites vitrines, e-commerce et applications web haut de gamme. Design unique, performance optimale, résultats concrets.',
+          primaryButton: { label: 'Voir mes réalisations', href: '#portfolio', variant: 'primary' },
+          secondaryButton: { label: 'Me contacter', href: '#contact', variant: 'outline' },
+        },
+        style: { background: 'dark' as any, paddingY: 'none' },
+        visible: true,
+      },
+      // ── Services (scroll-pin) ──
+      {
+        type: 'features',
+        variant: 'jlstudio-scroll-pin',
+        content: {
+          title: 'Services',
+          subtitle: 'Des solutions digitales complètes, adaptées à vos ambitions',
+          items: [
+            {
+              id: '1',
+              icon: '🌐',
+              title: 'Sites Vitrines',
+              description: 'Une présence en ligne qui reflète votre excellence. Design sur-mesure, animations fluides et performance optimale pour marquer les esprits dès le premier regard.',
+              image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&q=80',
+              features: JSON.stringify(['Design unique et sur-mesure', 'Animations premium GSAP', 'SEO optimisé', 'Performance 90+ Lighthouse', 'Responsive tous écrans', 'CMS intégré']),
+            },
+            {
+              id: '2',
+              icon: '🛒',
+              title: 'E-Commerce',
+              description: 'Des boutiques en ligne qui convertissent. Interface intuitive, tunnel de vente optimisé et gestion complète de votre catalogue pour maximiser vos revenus.',
+              image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1920&q=80',
+              features: JSON.stringify(['Paiement Stripe & PayPal', 'Gestion stocks & variantes', 'Tunnel de vente optimisé', 'Dashboard analytics', 'Emails transactionnels', 'Multi-devises']),
+            },
+            {
+              id: '3',
+              icon: '⚡',
+              title: 'Applications Web',
+              description: 'Des outils métier puissants et intuitifs. Dashboards, CRM, plateformes SaaS — des applications sur-mesure qui transforment vos processus et boostent votre productivité.',
+              image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80',
+              features: JSON.stringify(['Architecture moderne Next.js', 'API REST & temps réel', 'Auth & rôles utilisateurs', 'Base de données PostgreSQL', 'Intégrations tierces', 'Déploiement cloud']),
+            },
+            {
+              id: '4',
+              icon: '🎨',
+              title: 'Branding Digital',
+              description: 'Une identité visuelle cohérente sur tous vos supports digitaux. Du logo aux guidelines, créez une marque mémorable qui inspire confiance et professionnalisme.',
+              image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=1920&q=80',
+              features: JSON.stringify(['Identité visuelle complète', 'Charte graphique digitale', 'Design system réutilisable', 'Iconographie sur-mesure', 'Motion design', 'Guidelines complètes']),
+            },
+          ],
+        },
+        style: { background: 'dark' as any, paddingY: 'xl' },
+        visible: true,
+      },
+      // ── Process (timeline) ──
+      {
+        type: 'steps',
+        variant: 'jlstudio-timeline',
+        content: {
+          title: 'Comment ça marche',
+          subtitle: 'Un processus clair et transparent, de l\'idée au lancement',
+          items: [
+            { id: '1', title: 'Discovery', description: 'On échange sur votre vision, vos objectifs et votre audience cible. J\'analyse votre marché et vos concurrents pour définir la stratégie idéale.', details: 'Audit complet · Analyse concurrence · Définition des objectifs · Brief créatif' },
+            { id: '2', title: 'Design', description: 'Je crée les maquettes de votre site avec un design unique et sur-mesure. Chaque pixel est pensé pour refléter votre identité et convertir vos visiteurs.', details: 'Wireframes · Maquettes HD · Prototypage · Design system' },
+            { id: '3', title: 'Développement', description: 'Je code votre site avec les dernières technologies (Next.js, React, TypeScript). Performance, sécurité et scalabilité sont mes priorités.', details: 'Next.js / React · TypeScript strict · API REST · Base PostgreSQL' },
+            { id: '4', title: 'Tests & QA', description: 'Tests approfondis sur tous les navigateurs et appareils. Chaque fonctionnalité est vérifiée, chaque interaction est peaufinée.', details: 'Tests cross-browser · Responsive check · Performance audit · Accessibilité' },
+            { id: '5', title: 'Lancement', description: 'Déploiement sur infrastructure haute performance avec monitoring. Formation à l\'utilisation du CMS et support continu post-lancement.', details: 'Déploiement · Configuration DNS · Formation CMS · Support 30j inclus' },
+          ],
+        },
+        style: { background: 'dark' as any, paddingY: 'xl' },
+        visible: true,
+      },
+      // ── Portfolio ──
+      {
+        type: 'gallery',
+        variant: 'jlstudio-portfolio',
+        content: {
+          title: 'Réalisations',
+          subtitle: 'Des projets concrets, des résultats mesurables',
+          items: [
+            {
+              id: '1',
+              title: 'Flamme by Caubet',
+              description: 'Site vitrine premium pour un artisan bougie de luxe. Ambiance chaleureuse, animations subtiles et présentation produit immersive.',
+              image: 'https://images.unsplash.com/photo-1602607556950-c82aede5c6e0?w=1200&q=80',
+              category: 'Site vitrine · Artisanat',
+              tags: JSON.stringify(['Next.js', 'GSAP', 'E-commerce', 'Stripe']),
+              features: JSON.stringify(['+200% de trafic', 'Score Lighthouse 98', 'Conversion +45%']),
+            },
+            {
+              id: '2',
+              title: 'Florent Food',
+              description: 'Plateforme de commande en ligne pour un traiteur premium. Catalogue dynamique, panier intelligent et paiement sécurisé.',
+              image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80',
+              category: 'E-commerce · Restauration',
+              tags: JSON.stringify(['Next.js', 'Stripe', 'PostgreSQL', 'CMS']),
+              features: JSON.stringify(['Commandes x3', 'Panier moyen +60%', 'Temps de chargement <1s']),
+            },
+            {
+              id: '3',
+              title: 'PropDesk',
+              description: 'Application web de gestion immobilière complète. Dashboard analytics, gestion locataires, suivi des paiements et documents.',
+              image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80',
+              category: 'Application web · Immobilier',
+              tags: JSON.stringify(['React', 'Node.js', 'PostgreSQL', 'Dashboard']),
+              features: JSON.stringify(['500+ biens gérés', 'Temps gagné -70%', '99.9% uptime']),
+            },
+            {
+              id: '4',
+              title: 'Run As One',
+              description: 'Plateforme communautaire pour coureurs. Événements, tracking GPS, classements temps réel et profils athlètes.',
+              image: 'https://images.unsplash.com/photo-1461896836934-bd45ba688b5d?w=1200&q=80',
+              category: 'Application web · Sport',
+              tags: JSON.stringify(['Next.js', 'API temps réel', 'GPS', 'Social']),
+              features: JSON.stringify(['2000+ utilisateurs', 'Retention 85%', '50+ événements']),
+            },
+            {
+              id: '5',
+              title: 'Al-Ilm',
+              description: 'Plateforme éducative interactive pour l\'apprentissage en ligne. Cours vidéo, quiz, progression et certificats.',
+              image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80',
+              category: 'Plateforme · Éducation',
+              tags: JSON.stringify(['Next.js', 'Streaming', 'PostgreSQL', 'Auth']),
+              features: JSON.stringify(['5000+ étudiants', 'Taux complétion 78%', 'Note 4.9/5']),
+            },
+          ],
+        },
+        style: { background: 'dark' as any, paddingY: 'xl' },
+        visible: true,
+      },
+      // ── Testimonials ──
+      {
+        type: 'testimonials',
+        variant: 'jlstudio-parallax',
+        content: {
+          title: 'Ce qu\'ils en disent',
+          subtitle: 'La satisfaction client est ma priorité absolue',
+          items: [
+            {
+              id: '1',
+              quote: 'JL Studio a transformé notre vision en réalité. Le site est magnifique, ultra-rapide et les retours de nos utilisateurs sont incroyables. Un vrai game-changer pour notre communauté.',
+              author: 'Thomas R.',
+              role: 'Fondateur, Run As One',
+              rating: 5,
+            },
+            {
+              id: '2',
+              quote: 'Professionnalisme, réactivité et qualité exceptionnelle. Notre plateforme immobilière est devenue un outil indispensable au quotidien. Je recommande les yeux fermés.',
+              author: 'Sarah M.',
+              role: 'Directrice, PropDesk',
+              rating: 5,
+            },
+            {
+              id: '3',
+              quote: 'Le site e-learning qu\'il a développé pour nous dépasse toutes nos attentes. L\'interface est intuitive, les étudiants adorent, et les résultats académiques ont nettement progressé.',
+              author: 'Ahmed K.',
+              role: 'Directeur pédagogique, Al-Ilm',
+              rating: 5,
+            },
+          ],
+        },
+        style: { background: 'dark' as any, paddingY: 'xl' },
+        visible: true,
+      },
+      // ── Contact ──
+      {
+        type: 'contact',
+        variant: 'jlstudio-split',
+        content: {
+          title: 'Démarrons votre projet',
+          subtitle: 'Décrivez-moi votre projet et je vous recontacterai sous 24h avec une proposition personnalisée.',
+          email: 'contact@jlstudio.dev',
+          formTitle: 'Envoyer un message',
+          formButtonLabel: 'Envoyer le message',
+          image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&q=80',
+          projectTypes: JSON.stringify(['Site vitrine', 'E-commerce', 'Application web', 'Refonte', 'Branding', 'Autre']),
+        },
+        style: { background: 'dark' as any, paddingY: 'xl' },
+        visible: true,
+      },
+      // ── Footer ──
+      {
+        type: 'site-footer',
+        variant: 'jlstudio',
+        content: {
+          logo: 'JL Studio',
+          tagline: 'Développeur Web Freelance',
+          copyright: `© ${year} JL Studio. Tous droits réservés.`,
+          columns: [
+            {
+              id: '1',
+              title: 'Contact',
+              links: [
+                { id: '1', label: 'contact@jlstudio.dev', href: 'mailto:contact@jlstudio.dev' },
+                { id: '2', label: '+33 7 56 96 43 92', href: 'tel:+33756964392' },
+                { id: '3', label: 'Montpellier, France', href: '#' },
+              ],
+            },
+            {
+              id: '2',
+              title: 'Légal',
+              links: [
+                { id: '1', label: 'Mentions légales', href: '/mentions-legales' },
+                { id: '2', label: 'Politique de confidentialité', href: '/confidentialite' },
+                { id: '3', label: 'CGV', href: '/cgv' },
+              ],
+            },
+          ],
+          socials: { instagram: 'https://instagram.com/jlstudio.dev', linkedin: 'https://linkedin.com/in/jlstudio' },
+          siret: '123 456 789 00012',
+        },
+        style: { background: 'dark' as any, paddingY: 'none' },
+        visible: true,
       },
     ],
   },

@@ -503,6 +503,94 @@ export function StepsSection({ config }: { config: SectionConfig }) {
     )
   }
 
+  // ═══════════════════════════════════════════
+  // JLSTUDIO — Vertical center-line timeline
+  // ═══════════════════════════════════════════
+
+  if (universe === 'jlstudio') {
+    const accent = accentColor ?? '#638BFF'
+
+    return (
+      <section className="relative bg-[#050507] py-24 overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+        {/* Grid background pattern */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: '60px 60px',
+        }} />
+        {/* Ambient glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none opacity-15 blur-3xl" style={{ background: `radial-gradient(ellipse, ${accent}30, transparent 70%)` }} />
+
+        <div className="relative max-w-5xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-20 space-y-4">
+            {eyebrow && (
+              <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: accent }}>
+                {eyebrow}
+              </span>
+            )}
+            {title && (
+              <h2 {...elementProps(config.id, 'title', 'heading')} className="text-3xl md:text-5xl font-bold text-white leading-tight" style={customTextColor ? { color: customTextColor } : undefined}>
+                {title}
+              </h2>
+            )}
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg text-white/40 max-w-2xl mx-auto">{subtitle}</p>}
+          </div>
+
+          {/* Timeline */}
+          <div className="relative">
+            {/* Center line (desktop) / Left line (mobile) */}
+            <div className="absolute top-0 bottom-0 left-4 md:left-1/2 md:-translate-x-px w-px" style={{ background: `linear-gradient(to bottom, transparent, ${accent}40 10%, ${accent}40 90%, transparent)` }} />
+
+            <div className="space-y-16 md:space-y-20">
+              {items.map((item, i) => {
+                const isLeft = i % 2 === 0
+
+                return (
+                  <div key={item.id} className="relative">
+                    {/* Glowing node on the line */}
+                    <div className="absolute left-4 md:left-1/2 -translate-x-1/2 top-0 z-10">
+                      <div className="w-4 h-4 rounded-full border-2" style={{ borderColor: accent, backgroundColor: `${accent}30`, boxShadow: `0 0 12px ${accent}50` }} />
+                    </div>
+
+                    {/* Content block */}
+                    <div className={cn(
+                      'pl-12 md:pl-0 md:w-[calc(50%-40px)]',
+                      isLeft ? 'md:mr-auto md:pr-0 md:text-right' : 'md:ml-auto md:pl-0 md:text-left'
+                    )}>
+                      {/* Big faded number */}
+                      <span
+                        {...elementProps(config.id, `items.${i}.number`, 'badge')}
+                        className="block text-6xl md:text-7xl font-black leading-none mb-3"
+                        style={{ color: `${accent}12` }}
+                      >
+                        {item.number || String(i + 1).padStart(2, '0')}
+                      </span>
+                      <h3
+                        {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                        className="text-xl md:text-2xl font-bold text-white mb-2"
+                      >
+                        {item.title}
+                      </h3>
+                      <p
+                        {...elementProps(config.id, `items.${i}.description`, 'text')}
+                        className="text-sm md:text-base text-white/50 leading-relaxed"
+                      >
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // fallback
   return <StepsSection config={{ ...config, variant: 'startup-horizontal' }} />
 }
@@ -518,6 +606,7 @@ export const stepsMeta = {
     'creative-horizontal', 'creative-vertical',
     'ecommerce-horizontal', 'ecommerce-vertical',
     'glass-horizontal', 'glass-vertical',
+    'jlstudio-timeline',
   ],
   defaultVariant: 'startup-horizontal',
   defaultContent: {},

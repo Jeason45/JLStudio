@@ -1052,6 +1052,13 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
   }
 
   // ═══════════════════════════════════════════════════════
+  // JLSTUDIO — 2-column split: image left + form right
+  // ═══════════════════════════════════════════════════════
+  if (universe === 'jlstudio') {
+    return <JlstudioSplitContact config={config} title={title} subtitle={subtitle} eyebrow={eyebrow} email={email} phone={phone} address={address} buttonLabel={buttonLabel} customTextColor={customTextColor} isEditing={isEditing} />
+  }
+
+  // ═══════════════════════════════════════════════════════
   // ZMR-AGENCY — Fond noir, cards info minimalistes (email/phone/address),
   // formulaire dark avec inputs transparents, style luxe ultra-minimaliste
   // ═══════════════════════════════════════════════════════
@@ -1289,6 +1296,162 @@ function ZmrContact({ config, title, subtitle, email, phone, address, buttonLabe
   )
 }
 
+// ═══════════════════════════════════════════════════════
+// JLSTUDIO SPLIT — Image left + Form right, dark theme
+// ═══════════════════════════════════════════════════════
+function JlstudioSplitContact({ config, title, subtitle, eyebrow, email, phone, address, buttonLabel, customTextColor, isEditing }: {
+  config: SectionConfig; title: string; subtitle?: string; eyebrow?: string; email?: string; phone?: string; address?: string; buttonLabel: string; customTextColor?: string; isEditing?: boolean
+}) {
+  const accent = config.style.accentColor ?? '#638BFF'
+  const [selectedType, setSelectedType] = useState<string | null>(null)
+  const [wantCallback, setWantCallback] = useState(false)
+  const content = (config.content ?? {}) as Partial<ContactContent>
+
+  const projectTypes = ['Site Vitrine', 'E-Commerce', 'Application Web', 'Landing Page', 'Refonte', 'Autre']
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%', padding: '14px 16px', fontSize: '14px', fontWeight: 400, color: 'white',
+    background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: '6px', outline: 'none', transition: 'border-color 0.3s ease',
+    fontFamily: 'inherit',
+  }
+
+  const labelStyle: React.CSSProperties = {
+    display: 'block', fontSize: '12px', letterSpacing: '0.08em', textTransform: 'uppercase' as const,
+    marginBottom: '8px', color: 'rgba(255,255,255,0.5)', fontWeight: 500,
+  }
+
+  return (
+    <section style={{ fontFamily: 'var(--font-body, inherit)' }} className="bg-[#050507] relative overflow-hidden">
+      <div className="grid md:grid-cols-2 min-h-[700px]">
+        {/* Left — Image with overlay title */}
+        <div className="relative hidden md:block">
+          <div
+            {...elementProps(config.id, 'heroImage', 'image')}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${content.address ? '' : 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80'})` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#050507]/30 to-[#050507]/80" />
+          <div className="absolute inset-0 flex flex-col justify-end p-12">
+            {eyebrow && (
+              <span className="text-xs font-semibold tracking-[0.2em] uppercase mb-4" style={{ color: accent }}>
+                {eyebrow}
+              </span>
+            )}
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              className="text-4xl md:text-5xl font-bold text-white leading-tight mb-3"
+              style={customTextColor ? { color: customTextColor } : undefined}
+            >
+              {title}
+            </h2>
+            {subtitle && (
+              <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base text-white/50 max-w-md">
+                {subtitle}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Right — Form */}
+        <div className="relative p-8 md:p-12 lg:p-16 flex flex-col justify-center">
+          {/* Mobile-only title */}
+          <div className="md:hidden mb-8">
+            {eyebrow && (
+              <span className="text-xs font-semibold tracking-[0.2em] uppercase mb-3 block" style={{ color: accent }}>
+                {eyebrow}
+              </span>
+            )}
+            <h2 className="text-3xl font-bold text-white mb-2">{title}</h2>
+            {subtitle && <p className="text-sm text-white/50">{subtitle}</p>}
+          </div>
+
+          {/* Project type pills */}
+          <div className="mb-6">
+            <label style={labelStyle}>Type de projet</label>
+            <div className="flex flex-wrap gap-2">
+              {projectTypes.map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setSelectedType(selectedType === type ? null : type)}
+                  disabled={isEditing}
+                  className="transition-all duration-200"
+                  style={{
+                    padding: '8px 16px', fontSize: '13px', fontWeight: 500, borderRadius: '20px', cursor: 'pointer',
+                    border: selectedType === type ? `1px solid ${accent}` : '1px solid rgba(255,255,255,0.1)',
+                    background: selectedType === type ? `${accent}20` : 'rgba(255,255,255,0.03)',
+                    color: selectedType === type ? accent : 'rgba(255,255,255,0.6)',
+                  }}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Name + Email row */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label style={labelStyle}>Nom</label>
+              <input style={inputStyle} placeholder="Jean Dupont" disabled={isEditing} />
+            </div>
+            <div>
+              <label style={labelStyle}>Email</label>
+              <input style={inputStyle} placeholder="jean@exemple.fr" type="email" disabled={isEditing} />
+            </div>
+          </div>
+
+          {/* Phone */}
+          <div className="mb-4">
+            <label style={labelStyle}>Telephone</label>
+            <input style={inputStyle} placeholder="+33 6 00 00 00 00" type="tel" disabled={isEditing} />
+          </div>
+
+          {/* Message */}
+          <div className="mb-4">
+            <label style={labelStyle}>Votre message</label>
+            <textarea
+              style={{ ...inputStyle, height: '120px', resize: 'vertical' as const }}
+              placeholder="Decrivez votre projet..."
+              disabled={isEditing}
+            />
+          </div>
+
+          {/* Callback checkbox */}
+          <label className="flex items-center gap-3 mb-6 cursor-pointer select-none">
+            <div
+              onClick={() => !isEditing && setWantCallback(!wantCallback)}
+              className="w-5 h-5 rounded border flex items-center justify-center transition-colors"
+              style={{
+                borderColor: wantCallback ? accent : 'rgba(255,255,255,0.2)',
+                backgroundColor: wantCallback ? accent : 'transparent',
+              }}
+            >
+              {wantCallback && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+            </div>
+            <span className="text-sm text-white/50">Je souhaite etre rappele</span>
+          </label>
+
+          {/* Submit */}
+          <button
+            {...elementProps(config.id, 'formButtonLabel', 'button')}
+            disabled={isEditing}
+            className="w-full py-4 rounded-lg font-semibold text-white text-sm tracking-wide transition-all duration-300 hover:brightness-110"
+            style={{ background: accent }}
+          >
+            {buttonLabel}
+          </button>
+
+          {/* Bottom link */}
+          <p className="text-center mt-4 text-xs text-white/30">
+            Decrivez votre projet en 2 minutes
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export const contactMeta = {
   type: 'contact',
   label: 'Contact',
@@ -1302,6 +1465,7 @@ export const contactMeta = {
     'glass-simple', 'glass-with-info',
     'brixsa-simple', 'brixsa-with-info',
     'zmr-simple', 'zmr-with-info',
+    'jlstudio-split',
   ],
   defaultVariant: 'startup-with-info',
   defaultContent: {},

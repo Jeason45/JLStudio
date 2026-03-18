@@ -19,7 +19,7 @@ export interface ImageConfig {
 // HERO
 // ─────────────────────────────────────────────
 
-export type HeroVariant = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass' | 'obscura' | 'canopy' | 'nacre' | 'brixsa' | 'brixsa-page' | 'braise' | 'forge' | 'ciseaux' | 'zmr-agency' | 'zmr-talent-profile' | 'atelier' | 'encre' | 'serenite' | 'pulse' | 'saveur' | 'ascent' | 'zenith' | 'miel' | 'prisme' | 'petale'
+export type HeroVariant = 'startup' | 'corporate' | 'luxe' | 'creative' | 'ecommerce' | 'glass' | 'obscura' | 'canopy' | 'nacre' | 'brixsa' | 'brixsa-page' | 'braise' | 'forge' | 'ciseaux' | 'zmr-agency' | 'zmr-talent-profile' | 'atelier' | 'encre' | 'serenite' | 'pulse' | 'saveur' | 'ascent' | 'zenith' | 'miel' | 'prisme' | 'petale' | 'jlstudio'
 
 export interface HeroContent {
   eyebrow?: string
@@ -78,6 +78,7 @@ export type FeaturesVariant =
   | 'miel-accordion'
   | 'prisme-accordion'
   | 'petale-accordion'
+  | 'jlstudio-scroll-pin'
 
 export interface FeatureItem {
   id: string

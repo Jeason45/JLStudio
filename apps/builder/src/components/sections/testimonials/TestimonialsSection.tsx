@@ -4334,6 +4334,88 @@ const GlassSlider = makeSliderVariant('glass',
 )
 
 // ─────────────────────────────────────────────
+// JLSTUDIO — 3-col glassmorphism cards, quote mark, initials circle
+// ─────────────────────────────────────────────
+
+function JlstudioParallax({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }) {
+  const eyebrow = content.eyebrow
+  const title = content.title
+
+  return (
+    <section className="relative bg-[#050507] py-24 overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+      {/* Ambient glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full pointer-events-none opacity-10 blur-3xl" style={{ background: `radial-gradient(ellipse, ${accent}40, transparent 70%)` }} />
+
+      <div className="relative max-w-6xl mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-16 space-y-4">
+          {eyebrow && (
+            <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: accent }}>
+              {eyebrow}
+            </span>
+          )}
+          {title && (
+            <h2 {...elementProps(sectionId, 'title', 'heading')} className="text-3xl md:text-5xl font-bold text-white leading-tight" style={styleOverrides?.textColor ? { color: styleOverrides.textColor } : undefined}>
+              {title}
+            </h2>
+          )}
+        </div>
+
+        {/* Cards grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((item, i) => {
+            const initials = (item.author ?? '')
+              .split(' ')
+              .map(w => w[0])
+              .join('')
+              .toUpperCase()
+              .slice(0, 2)
+
+            return (
+              <div
+                key={item.id}
+                className="relative rounded-2xl p-8 border transition-colors hover:border-white/[0.15]"
+                style={{
+                  backgroundColor: 'rgba(0,0,0,0.4)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  borderColor: 'rgba(255,255,255,0.08)',
+                }}
+              >
+                {/* Decorative quote mark */}
+                <span className="block text-4xl font-serif leading-none mb-4" style={{ color: `${accent}60` }}>&ldquo;</span>
+
+                {/* Quote text */}
+                <p
+                  {...elementProps(sectionId, `items.${i}.quote`, 'text')}
+                  className="text-base text-white/70 leading-relaxed mb-8 font-light"
+                >
+                  {item.quote}
+                </p>
+
+                {/* Author */}
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white"
+                    style={{ backgroundColor: accent }}
+                  >
+                    {initials}
+                  </div>
+                  <div>
+                    <p {...elementProps(sectionId, `items.${i}.author`, 'text')} className="text-sm font-semibold text-white">{item.author}</p>
+                    <p {...elementProps(sectionId, `items.${i}.role`, 'text')} className="text-xs text-white/40">{item.role}{item.company ? ` — ${item.company}` : ''}</p>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────
 // MAIN COMPONENT — routes to 24 variants
 // ─────────────────────────────────────────────
 
@@ -4381,6 +4463,7 @@ const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsConten
   'miel-featured': MielFeatured,
   'prisme-featured': PrismeFeatured,
   'petale-featured': PetaleFeatured,
+  'jlstudio-parallax': JlstudioParallax,
 }
 
 export function TestimonialsSection({ config, isEditing }: TestimonialsSectionProps) {
@@ -4417,6 +4500,7 @@ export function TestimonialsSection({ config, isEditing }: TestimonialsSectionPr
     miel: '#E8C17A',
     prisme: '#B8D4E3',
     petale: '#D4A574',
+    jlstudio: '#638BFF',
   }
   const accent = accentColor ?? defaultAccents[universe] ?? '#6366f1'
 
@@ -4455,6 +4539,7 @@ export const testimonialsMeta = {
     'miel-featured',
     'prisme-featured',
     'petale-featured',
+    'jlstudio-parallax',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

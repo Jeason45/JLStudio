@@ -5416,6 +5416,129 @@ export function GallerySection({ config }: { config: SectionConfig }) {
     )
   }
 
+  // ═══════════════════════════════════════════
+  // JLSTUDIO — Alternating 2-column portfolio
+  // ═══════════════════════════════════════════
+
+  if (variant === 'jlstudio-portfolio') {
+    const accent = accentColor ?? '#638BFF'
+    const eyebrow = content.title ? undefined : 'Portfolio'
+    const sectionTitle = content.title ?? 'Nos réalisations'
+
+    // Use images array as projects — each image represents a project
+    // caption = description, badge = category, alt = title, category = tech tags (comma-separated)
+    const projects = images.map((img, i) => ({
+      image: img.src,
+      title: img.alt || `Projet ${i + 1}`,
+      category: img.badge ?? 'Web',
+      description: img.caption ?? '',
+      tags: (img.category ?? '').split(',').map(t => t.trim()).filter(Boolean),
+    }))
+
+    return (
+      <section className="relative bg-[#050507] py-24 overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+        {/* Ambient glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full pointer-events-none opacity-10 blur-3xl" style={{ background: `radial-gradient(ellipse, ${accent}30, transparent 70%)` }} />
+
+        <div className="relative max-w-6xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-20 space-y-4">
+            <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: accent }}>
+              {eyebrow ?? 'Portfolio'}
+            </span>
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              className="text-3xl md:text-5xl font-bold text-white leading-tight"
+              style={customTextColor ? { color: customTextColor } : undefined}
+            >
+              {sectionTitle}
+            </h2>
+          </div>
+
+          {/* Projects */}
+          <div className="space-y-24">
+            {projects.map((project, i) => {
+              const isImageLeft = i % 2 === 0
+
+              return (
+                <div key={images[i]?.id ?? i}>
+                  {/* Separator line */}
+                  {i > 0 && <div className="w-full h-px mb-24" style={{ background: `linear-gradient(90deg, transparent, ${accent}30, transparent)` }} />}
+
+                  <div className={cn('grid md:grid-cols-2 gap-10 md:gap-16 items-center', !isImageLeft && 'md:[direction:rtl]')}>
+                    {/* Image */}
+                    <div className="md:[direction:ltr]">
+                      <div className="aspect-[4/3] rounded-xl overflow-hidden bg-white/5 border border-white/[0.06]">
+                        {project.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            {...elementProps(config.id, `images.${i}.src`, 'image')}
+                            src={project.image}
+                            alt={project.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Image className="w-12 h-12 text-white/20" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="md:[direction:ltr] space-y-4">
+                      {/* Category */}
+                      <span
+                        {...elementProps(config.id, `images.${i}.badge`, 'badge')}
+                        className="inline-block text-xs font-semibold tracking-[0.15em] uppercase"
+                        style={{ color: accent }}
+                      >
+                        {project.category}
+                      </span>
+
+                      {/* Title */}
+                      <h3
+                        {...elementProps(config.id, `images.${i}.alt`, 'heading')}
+                        className="text-2xl md:text-3xl font-bold text-white"
+                      >
+                        {project.title}
+                      </h3>
+
+                      {/* Description */}
+                      {project.description && (
+                        <p
+                          {...elementProps(config.id, `images.${i}.caption`, 'text')}
+                          className="text-base text-white/50 leading-relaxed"
+                        >
+                          {project.description}
+                        </p>
+                      )}
+
+                      {/* Tech tags */}
+                      {project.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 pt-2">
+                          {project.tags.map((tag, ti) => (
+                            <span
+                              key={ti}
+                              className="text-xs px-3 py-1 rounded-full border font-medium"
+                              style={{ borderColor: `${accent}30`, color: `${accent}CC`, backgroundColor: `${accent}10` }}
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Fallback to startup-grid
   return (
     <>
@@ -6189,6 +6312,7 @@ export const galleryMeta = {
     'miel-creations',
     'prisme-collection',
     'petale-creations',
+    'jlstudio-portfolio',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

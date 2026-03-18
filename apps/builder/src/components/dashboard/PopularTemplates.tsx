@@ -6,6 +6,7 @@ import { PAGE_TEMPLATES, UNIVERSE_COLORS, type PageTemplate } from '@/data/templ
 import { MiniSectionPreview } from '@/components/editor/MiniSectionPreview'
 
 const POPULAR_IDS = [
+  'jlstudio-agency',
   'real-estate-brixsa',
   'ecommerce-canopy',
   'nail-salon-nacre',

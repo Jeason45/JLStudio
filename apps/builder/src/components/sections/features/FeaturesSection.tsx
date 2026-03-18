@@ -5624,6 +5624,251 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
     )
   }
 
+  // ═══════════════════════════════════════════
+  // JLSTUDIO — Scroll Pin Services
+  // ═══════════════════════════════════════════
+
+  if (variant === 'jlstudio-scroll-pin') {
+    const accent = accentColor ?? '#638BFF'
+
+    const defaultSlides = [
+      {
+        number: '01',
+        subtitle: 'Site Vitrine',
+        title: 'Votre identité en ligne',
+        description: 'Un site web conçu sur mesure pour refléter votre image de marque avec élégance et performance.',
+        tags: ['Design responsive', 'Animations premium', 'SEO optimisé', 'CMS intégré'],
+        image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&q=80',
+      },
+      {
+        number: '02',
+        subtitle: 'E-Commerce',
+        title: 'Vendez sans limites',
+        description: 'Une boutique en ligne performante et sécurisée, pensée pour maximiser vos conversions.',
+        tags: ['Paiement sécurisé', 'Gestion de stock', 'Panier optimisé', 'Analytics avancés'],
+        image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=80',
+      },
+      {
+        number: '03',
+        subtitle: 'Application Web',
+        title: 'Outils sur mesure',
+        description: 'Des applications web robustes et intuitives pour digitaliser vos processus métier.',
+        tags: ['Dashboard temps réel', 'API robuste', 'Architecture scalable', 'UX intuitive'],
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80',
+      },
+      {
+        number: '04',
+        subtitle: 'Autres Services',
+        title: 'Solutions complémentaires',
+        description: 'Un accompagnement complet pour tous vos besoins numériques, du conseil à la maintenance.',
+        tags: ['Landing pages', 'Refonte & migration', 'Maintenance', 'Conseil technique'],
+        image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1400&q=80',
+      },
+    ]
+
+    const resolvedSlides = items.length > 0
+      ? items.map((item, i) => {
+          const def = defaultSlides[i % defaultSlides.length]
+          const raw = item as unknown as Record<string, unknown>
+          const tagsRaw = raw.tags
+          const parsedTags: string[] = Array.isArray(tagsRaw)
+            ? (tagsRaw as string[])
+            : typeof tagsRaw === 'string'
+              ? (tagsRaw as string).split(',').map((t: string) => t.trim())
+              : def.tags
+          return {
+            number: def.number,
+            subtitle: item.title || def.subtitle,
+            title: (raw.description as string) || def.title,
+            description: (raw.details as string) || def.description,
+            tags: parsedTags,
+            image: (raw.image as string) || def.image,
+            id: item.id,
+          }
+        })
+      : defaultSlides.map((s, i) => ({ ...s, id: `default-${i}` }))
+
+    return (
+      <section
+        {...elementProps(config.id, 'wrapper', 'container', 'Scroll Pin Services')}
+        style={{ fontFamily: 'var(--font-body, inherit)', backgroundColor: '#0a0a0a' }}
+      >
+        {resolvedSlides.map((slide, i) => (
+          <div
+            key={slide.id}
+            {...elementProps(config.id, `slide-${i}`, 'container', `Service Slide ${slide.number}`)}
+            style={{
+              position: 'relative',
+              width: '100%',
+              minHeight: '100vh',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Background image */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={slide.image}
+              alt={slide.subtitle}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
+
+            {/* Dark overlay */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.72)',
+              }}
+            />
+
+            {/* Content */}
+            <div
+              style={{
+                position: 'relative',
+                zIndex: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                maxWidth: 720,
+                padding: '48px 24px',
+                gap: 20,
+              }}
+            >
+              {/* Big faded number */}
+              <span
+                style={{
+                  fontSize: 'clamp(80px, 12vw, 160px)',
+                  fontWeight: 800,
+                  lineHeight: 1,
+                  color: accent,
+                  opacity: 0.12,
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                }}
+              >
+                {slide.number}
+              </span>
+
+              {/* Subtitle */}
+              <span
+                {...elementProps(config.id, `items.${i}.title`, 'badge')}
+                style={{
+                  fontSize: 13,
+                  fontWeight: 700,
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  color: accent,
+                }}
+              >
+                {slide.subtitle}
+              </span>
+
+              {/* Title */}
+              <h2
+                {...elementProps(config.id, `items.${i}.description`, 'heading')}
+                style={{
+                  fontSize: 'clamp(32px, 5vw, 56px)',
+                  fontWeight: 700,
+                  lineHeight: 1.1,
+                  color: '#ffffff',
+                  margin: 0,
+                }}
+              >
+                {slide.title}
+              </h2>
+
+              {/* Description */}
+              <p
+                {...elementProps(config.id, `items.${i}.details`, 'text')}
+                style={{
+                  fontSize: 'clamp(15px, 1.8vw, 18px)',
+                  lineHeight: 1.7,
+                  color: 'rgba(255, 255, 255, 0.65)',
+                  margin: 0,
+                  maxWidth: 560,
+                }}
+              >
+                {slide.description}
+              </p>
+
+              {/* Tags */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                  gap: 10,
+                  marginTop: 8,
+                }}
+              >
+                {slide.tags.map((tag, ti) => (
+                  <span
+                    key={ti}
+                    style={{
+                      padding: '8px 18px',
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: 'rgba(255, 255, 255, 0.85)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      borderRadius: 999,
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
+                      background: 'rgba(255, 255, 255, 0.06)',
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Progress dots — right side */}
+            <div
+              style={{
+                position: 'absolute',
+                right: 32,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 12,
+                zIndex: 3,
+              }}
+            >
+              {resolvedSlides.map((_, di) => (
+                <div
+                  key={di}
+                  style={{
+                    width: di === i ? 10 : 8,
+                    height: di === i ? 10 : 8,
+                    borderRadius: '50%',
+                    backgroundColor: di === i ? accent : 'rgba(255, 255, 255, 0.3)',
+                    transition: 'all 0.3s ease',
+                    boxShadow: di === i ? `0 0 12px ${accent}60` : 'none',
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+    )
+  }
+
   // fallback → startup-grid
   return <FeaturesSection config={{ ...config, variant: 'startup-grid' }} />
 }
@@ -5661,6 +5906,7 @@ export const featuresMeta = {
     'miel-accordion',
     'prisme-accordion',
     'petale-accordion',
+    'jlstudio-scroll-pin',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},
