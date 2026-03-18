@@ -7098,113 +7098,147 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
   }
 
   // ─── VARIANT: jlstudio ───
-  // JL Studio hero: fullscreen artistic background image, massive "JL STUDIO" text with black multiply mask,
-  // then content overlay with title, subtitle, CTAs — cinematic look matching jlstudio.dev
+  // JL Studio hero: 300vh scroll-driven zoom — "JL STUDIO" text scales 1→50 revealing artistic bg image,
+  // then content fades in with title, subtitle, CTAs. Exact replica of jlstudio.dev HeroParallax.
   if (variant === 'jlstudio') {
     const accent = accentColor ?? '#638BFF'
-    const heroImage = bgImage ?? content.backgroundImage ?? 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80'
+    const heroImage = bgImage ?? content.backgroundImage ?? '/images/jlstudio/hero-bg.jpg'
     const description = subtitle
+
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const jlSectionRef = useRef<HTMLElement>(null)
+    const [scrollProgress, setScrollProgress] = useState(0)
+
+    useEffect(() => {
+      if (isEditing) return
+      const handleScroll = () => {
+        const el = jlSectionRef.current
+        if (!el) return
+        const rect = el.getBoundingClientRect()
+        const totalScroll = el.offsetHeight - window.innerHeight
+        if (totalScroll <= 0) return
+        const scrolled = -rect.top
+        setScrollProgress(Math.max(0, Math.min(1, scrolled / totalScroll)))
+      }
+      window.addEventListener('scroll', handleScroll, { passive: true })
+      handleScroll()
+      return () => window.removeEventListener('scroll', handleScroll)
+    }, [isEditing])
+    /* eslint-enable react-hooks/rules-of-hooks */
+
+    // Derived animation values from scroll progress (0→1)
+    const p = scrollProgress
+    // Text zoom: scale 1→50, eased with power curve (slow start, fast end)
+    const textScale = 1 + Math.pow(Math.min(p / 0.37, 1), 4) * 49
+    // Mask opacity: stays 1 then drops fast near 40%
+    const maskOpacity = Math.max(0, 1 - Math.pow(Math.min(p / 0.4, 1), 4))
+    // Overlay: fades in between 30%→52%
+    const overlayOpacity = p < 0.3 ? 0 : p > 0.52 ? 1 : (p - 0.3) / 0.22
+    // Content: fades in at 40%→42%, fades out at 70%→92%
+    const contentOpacity = p < 0.4 ? 0 : p < 0.42 ? (p - 0.4) / 0.02 : p > 0.92 ? 0 : p > 0.7 ? 1 - (p - 0.7) / 0.22 : 1
+    // Content Y parallax on exit
+    const contentY = p > 0.7 ? -((p - 0.7) / 0.22) * 80 : 0
+    // Scroll hint: fades out quickly
+    const scrollHintOpacity = Math.max(0, 1 - p * 20)
+    // Background scale: subtle zoom 1→1.12
+    const bgScale = 1 + Math.min(p / 0.4, 1) * 0.12
+    // Background brightness: 1.4→1
+    const bgBrightness = 1.4 - Math.min(p / 0.4, 1) * 0.4
+
     return (
       <section
-        className="relative overflow-hidden"
-        style={{ fontFamily: 'var(--font-body, inherit)', minHeight: '200vh', background: '#000' }}
+        ref={jlSectionRef}
+        className="relative bg-black"
+        style={{ fontFamily: 'var(--font-body, inherit)', height: isEditing ? '100vh' : '300vh' }}
       >
-        {/* Sticky viewport container */}
         <div className="sticky top-0 h-screen overflow-hidden">
-          {/* Background artistic image — fixed attachment for parallax feel */}
+          {/* Background artistic image */}
           <div
-            className="absolute inset-0"
+            className="absolute will-change-transform"
             style={{
-              backgroundImage: `url(${heroImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundAttachment: 'fixed',
-              filter: 'brightness(1.2)',
+              inset: '-10%',
+              transform: `scale(${bgScale})`,
+              filter: `brightness(${bgBrightness})`,
             }}
-          />
-          {/* Vignette — cinematic framing */}
-          <div
-            className="absolute inset-0 z-[1]"
-            style={{
-              background: 'radial-gradient(ellipse 80% 70% at center, transparent 40%, rgba(0,0,0,0.6) 100%)',
-            }}
-          />
-          {/* Color grading overlay */}
-          <div
-            className="absolute inset-0 z-[1]"
-            style={{
-              background: 'linear-gradient(180deg, rgba(20,30,60,0.15) 0%, transparent 40%, rgba(10,8,4,0.2) 100%)',
-            }}
-          />
-          {/* Film grain texture */}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={heroImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            {/* Color grading */}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,30,60,0.15) 0%, transparent 40%, rgba(10,8,4,0.2) 100%)' }} />
+          </div>
+
+          {/* Vignette */}
+          <div className="absolute inset-0 z-[1]" style={{ background: 'radial-gradient(ellipse 80% 70% at center, transparent 40%, rgba(0,0,0,0.6) 100%)' }} />
+
+          {/* Film grain */}
           <div
             className="absolute inset-0 z-[2] pointer-events-none opacity-[0.04] mix-blend-overlay"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-              backgroundSize: '128px 128px',
-            }}
+            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundSize: '128px 128px' }}
           />
-          {/* Black mask with "JL STUDIO" text — multiply blend reveals image through letters */}
+
+          {/* Black mask + "JL STUDIO" text — multiply blend, ZOOMS on scroll */}
           <div
             className="absolute inset-0 z-[5] bg-black flex items-center justify-center"
-            style={{ mixBlendMode: 'multiply' }}
+            style={{ mixBlendMode: 'multiply', opacity: maskOpacity }}
           >
             <div
-              className="text-white font-black text-center select-none"
+              className="text-white font-black text-center select-none will-change-transform"
               style={{
                 fontFamily: 'var(--font-heading, var(--font-outfit, system-ui))',
                 fontSize: 'clamp(5rem, 20vw, 16rem)',
                 lineHeight: 0.85,
                 letterSpacing: '-0.03em',
+                transform: `scale(${textScale})`,
+                transformOrigin: '50% 75%',
               }}
             >
-              {(title ?? 'JL STUDIO').split(' ').length >= 2 ? (
-                <>
-                  {(title ?? 'JL STUDIO').split(' ').slice(0, -1).join(' ')}
-                  <br />
-                  {(title ?? 'JL STUDIO').split(' ').slice(-1)}
-                </>
-              ) : (
-                title ?? 'JL STUDIO'
-              )}
+              JL<br />STUDIO
             </div>
           </div>
-          {/* Dark overlay for readability of content below the fold */}
+
+          {/* Dark overlay — fades in after zoom for content readability */}
           <div
-            className="absolute inset-0 z-[8] pointer-events-none"
-            style={{ background: 'linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.7) 100%)' }}
+            className="absolute inset-0 z-[8] bg-black/60"
+            style={{ opacity: overlayOpacity }}
           />
-          {/* Content — appears over the hero image */}
-          <div className="absolute inset-0 z-[10] flex items-end justify-center pb-16 sm:pb-24">
-            <div className="text-center px-6 max-w-4xl mx-auto flex flex-col items-center gap-5">
-              {/* Eyebrow */}
-              <span
-                {...elementProps(config.id, 'eyebrow', 'badge')}
-                className="text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase"
-                style={{ color: accent }}
+
+          {/* Content — appears after zoom, parallax exits */}
+          <div
+            className="absolute inset-0 z-[10] flex items-center justify-center will-change-transform"
+            style={{ opacity: contentOpacity, transform: `translateY(${contentY}%)` }}
+          >
+            <div className="text-center px-6 max-w-5xl mx-auto" style={{ perspective: 600 }}>
+              {/* Main heading */}
+              <h1
+                {...elementProps(config.id, 'title', 'heading')}
+                className="font-black text-white leading-[0.95] tracking-tight mb-4 text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
+                style={{ fontFamily: 'var(--font-heading, var(--font-outfit, system-ui))' }}
               >
-                {content.eyebrow ?? 'DEVELOPPEUR WEB FREELANCE'}
-              </span>
-              {/* Subtitle text */}
+                Votre Vision
+              </h1>
+              <h2
+                className="font-black leading-[0.95] tracking-tight mb-6 sm:mb-8 text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
+                style={{ fontFamily: 'var(--font-heading, var(--font-outfit, system-ui))', color: accent }}
+              >
+                Notre Expertise
+              </h2>
+              {/* Subtitle */}
               {description && (
                 <p
                   {...elementProps(config.id, 'subtitle', 'text')}
-                  className="text-base sm:text-lg md:text-xl text-white/60 max-w-2xl leading-relaxed"
+                  className="text-base sm:text-lg md:text-xl text-white/60 max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed"
                 >
                   {description}
                 </p>
               )}
               {/* CTA Buttons */}
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+              <div className="flex flex-wrap items-center justify-center gap-4">
                 {content.primaryButton ? (
                   <a
                     {...elementProps(config.id, 'primaryButton', 'button')}
                     href={content.primaryButton.href}
                     className="group relative font-semibold px-8 py-3.5 sm:px-10 sm:py-4 rounded-full text-sm sm:text-base text-white overflow-hidden transition-all duration-300"
-                    style={{
-                      backgroundColor: accent,
-                      boxShadow: `0 0 30px ${accent}30, 0 4px 20px ${accent}20`,
-                    }}
+                    style={{ backgroundColor: accent, boxShadow: `0 0 30px ${accent}30, 0 4px 20px ${accent}20` }}
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       {content.primaryButton.label}
@@ -7226,12 +7260,16 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
                   <EditablePlaceholder sectionId={config.id} contentPath="secondaryButton.label" type="button" />
                 ) : null}
               </div>
-              {/* Scroll indicator */}
-              <div className="flex flex-col items-center gap-2 mt-4">
-                <span className="text-[0.65rem] tracking-[0.3em] uppercase text-white/30">Scroll</span>
-                <div className="w-[1px] h-8 bg-gradient-to-b from-white/20 to-transparent animate-pulse" />
-              </div>
             </div>
+          </div>
+
+          {/* Scroll indicator */}
+          <div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[11] flex flex-col items-center gap-2"
+            style={{ opacity: scrollHintOpacity }}
+          >
+            <span className="text-[0.65rem] tracking-[0.3em] uppercase text-white/30">Scroll</span>
+            <div className="w-[1px] h-8 bg-gradient-to-b from-white/20 to-transparent animate-pulse" />
           </div>
         </div>
       </section>
