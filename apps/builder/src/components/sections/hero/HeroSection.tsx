@@ -7108,14 +7108,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
 
     /* eslint-disable react-hooks/rules-of-hooks */
     const jlSectionRef = useRef<HTMLElement>(null)
-    // Direct-DOM refs for silky-smooth scroll — NO setState on scroll events
-    const viewportRef = useRef<HTMLDivElement>(null)
-    const bgRef = useRef<HTMLDivElement>(null)
-    const maskRef = useRef<HTMLDivElement>(null)
-    const textRef = useRef<HTMLDivElement>(null)
-    const overlayRef = useRef<HTMLDivElement>(null)
-    const contentRef = useRef<HTMLDivElement>(null)
-    const scrollHintRef = useRef<HTMLDivElement>(null)
+    const [scrollProgress, setScrollProgress] = useState(0)
     const [preloaderCount, setPreloaderCount] = useState(0)
     const [preloaderPhase, setPreloaderPhase] = useState<'counting' | 'exit' | 'done'>(isEditing ? 'done' : 'counting')
 
@@ -7158,11 +7151,12 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
       return () => cancelAnimationFrame(raf)
     }, [isEditing, preloaderPhase])
 
-    // ── Scroll-driven animation — all DOM updates via refs, zero re-renders ──
+    // ── Scroll-driven animation via native sticky (GPU-accelerated, no jitter) ──
     useEffect(() => {
       if (isEditing) return
       const el = jlSectionRef.current
       if (!el) return
+      // Find scrollable parent (builder canvas overflow-auto, or window)
       let scroller: HTMLElement | null = el.parentElement
       while (scroller) {
         const ov = getComputedStyle(scroller).overflowY
@@ -7171,13 +7165,12 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
       }
       const scrollTarget: HTMLElement | Window = scroller || window
 
-      const onScroll = () => {
+      const handleScroll = () => {
         const section = jlSectionRef.current
         if (!section) return
         const vh = scroller ? scroller.clientHeight : window.innerHeight
         const totalScroll = section.offsetHeight - vh
         if (totalScroll <= 0) return
-
         let scrolled: number
         if (scroller) {
           const sectionTop = section.offsetTop - scroller.offsetTop
@@ -7185,53 +7178,24 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
         } else {
           scrolled = -section.getBoundingClientRect().top
         }
-        const clamped = Math.max(0, Math.min(scrolled, totalScroll))
-        const p = clamped / totalScroll
-
-        // ── Apply all animations directly to DOM ──
-        // Pin viewport
-        if (viewportRef.current) {
-          viewportRef.current.style.transform = `translateY(${clamped}px)`
-          viewportRef.current.style.height = `${vh}px`
-        }
-        // Background scale + brightness
-        if (bgRef.current) {
-          const bgScale = 1 + Math.min(p / 0.4, 1) * 0.12
-          const bgBrightness = 1.4 - Math.min(p / 0.4, 1) * 0.4
-          bgRef.current.style.transform = `scale(${bgScale})`
-          bgRef.current.style.filter = `brightness(${bgBrightness})`
-        }
-        // Mask (multiply blend) opacity
-        if (maskRef.current) {
-          maskRef.current.style.opacity = String(Math.max(0, 1 - Math.pow(Math.min(p / 0.4, 1), 4)))
-        }
-        // Text zoom
-        if (textRef.current) {
-          const textScale = 1 + Math.pow(Math.min(p / 0.37, 1), 4) * 49
-          textRef.current.style.transform = `scale(${textScale})`
-        }
-        // Dark overlay
-        if (overlayRef.current) {
-          overlayRef.current.style.opacity = String(p < 0.3 ? 0 : p > 0.52 ? 1 : (p - 0.3) / 0.22)
-        }
-        // Content
-        if (contentRef.current) {
-          const cOpacity = p < 0.4 ? 0 : p < 0.42 ? (p - 0.4) / 0.02 : p > 0.92 ? 0 : p > 0.7 ? 1 - (p - 0.7) / 0.22 : 1
-          const cY = p > 0.7 ? -((p - 0.7) / 0.22) * 80 : 0
-          contentRef.current.style.opacity = String(cOpacity)
-          contentRef.current.style.transform = `translateY(${cY}%)`
-        }
-        // Scroll hint
-        if (scrollHintRef.current) {
-          scrollHintRef.current.style.opacity = String(Math.max(0, 1 - p * 20))
-        }
+        setScrollProgress(Math.max(0, Math.min(1, scrolled / totalScroll)))
       }
-
-      scrollTarget.addEventListener('scroll', onScroll, { passive: true })
-      onScroll()
-      return () => scrollTarget.removeEventListener('scroll', onScroll)
+      scrollTarget.addEventListener('scroll', handleScroll, { passive: true })
+      handleScroll()
+      return () => scrollTarget.removeEventListener('scroll', handleScroll)
     }, [isEditing])
     /* eslint-enable react-hooks/rules-of-hooks */
+
+    // Derived animation values from scroll progress (0→1)
+    const p = scrollProgress
+    const textScale = 1 + Math.pow(Math.min(p / 0.37, 1), 4) * 49
+    const maskOpacity = Math.max(0, 1 - Math.pow(Math.min(p / 0.4, 1), 4))
+    const overlayOpacity = p < 0.3 ? 0 : p > 0.52 ? 1 : (p - 0.3) / 0.22
+    const contentOpacity = p < 0.4 ? 0 : p < 0.42 ? (p - 0.4) / 0.02 : p > 0.92 ? 0 : p > 0.7 ? 1 - (p - 0.7) / 0.22 : 1
+    const contentY = p > 0.7 ? -((p - 0.7) / 0.22) * 80 : 0
+    const scrollHintOpacity = Math.max(0, 1 - p * 20)
+    const bgScale = 1 + Math.min(p / 0.4, 1) * 0.12
+    const bgBrightness = 1.4 - Math.min(p / 0.4, 1) * 0.4
 
     return (
       <section
@@ -7285,16 +7249,15 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
           </div>
         )}
 
-        <div
-          ref={viewportRef}
-          className="absolute top-0 left-0 right-0 overflow-hidden will-change-transform"
-          style={{ height: isEditing ? '100%' : '100vh' }}
-        >
+        <div className="sticky top-0 overflow-hidden" style={{ height: isEditing ? '100%' : '100vh' }}>
           {/* Background artistic image */}
           <div
-            ref={bgRef}
             className="absolute will-change-transform"
-            style={{ inset: '-10%', transform: 'scale(1)', filter: 'brightness(1.4)' }}
+            style={{
+              inset: '-10%',
+              transform: `scale(${bgScale})`,
+              filter: `brightness(${bgBrightness})`,
+            }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={heroImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -7313,19 +7276,17 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
 
           {/* Black mask + "JL STUDIO" text — multiply blend, ZOOMS on scroll */}
           <div
-            ref={maskRef}
             className="absolute inset-0 z-[5] bg-black flex items-center justify-center"
-            style={{ mixBlendMode: 'multiply', opacity: 1 }}
+            style={{ mixBlendMode: 'multiply', opacity: maskOpacity }}
           >
             <div
-              ref={textRef}
               className="text-white font-black text-center select-none will-change-transform"
               style={{
                 fontFamily: 'var(--font-heading, var(--font-outfit, system-ui))',
                 fontSize: 'clamp(5rem, 20vw, 16rem)',
                 lineHeight: 0.85,
                 letterSpacing: '-0.03em',
-                transform: 'scale(1)',
+                transform: `scale(${textScale})`,
                 transformOrigin: '50% 75%',
               }}
             >
@@ -7335,16 +7296,14 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
 
           {/* Dark overlay — fades in after zoom for content readability */}
           <div
-            ref={overlayRef}
             className="absolute inset-0 z-[8] bg-black/60"
-            style={{ opacity: 0 }}
+            style={{ opacity: overlayOpacity }}
           />
 
           {/* Content — appears after zoom, parallax exits */}
           <div
-            ref={contentRef}
             className="absolute inset-0 z-[10] flex items-center justify-center will-change-transform"
-            style={{ opacity: 0 }}
+            style={{ opacity: contentOpacity, transform: `translateY(${contentY}%)` }}
           >
             <div className="text-center px-6 max-w-5xl mx-auto" style={{ perspective: 600 }}>
               {/* Main heading */}
@@ -7404,9 +7363,8 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
 
           {/* Scroll indicator */}
           <div
-            ref={scrollHintRef}
             className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[11] flex flex-col items-center gap-2"
-            style={{ opacity: 1 }}
+            style={{ opacity: scrollHintOpacity }}
           >
             <span className="text-[0.65rem] tracking-[0.3em] uppercase text-white/30">Scroll</span>
             <div className="w-[1px] h-8 bg-gradient-to-b from-white/20 to-transparent animate-pulse" />
