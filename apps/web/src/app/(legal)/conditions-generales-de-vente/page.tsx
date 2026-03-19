@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://jlstudio.dev/conditions-generales-de-vente' },
   title: 'Conditions générales de vente | JL Studio',
   description: 'Conditions générales de vente des prestations de développement web - JL Studio.',
 };

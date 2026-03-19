@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://jlstudio.dev/politique-confidentialite' },
   title: 'Politique de confidentialité | JL Studio',
   description: 'Politique de confidentialité et protection des données personnelles - JL Studio.',
 };

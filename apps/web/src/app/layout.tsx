@@ -19,6 +19,9 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://jlstudio.dev"),
+  alternates: {
+    canonical: "https://jlstudio.dev",
+  },
   title: "JL Studio | Création de Sites Web Premium — Bordeaux",
   description:
     "Studio de création web sur mesure. Sites vitrine, e-commerce et applications haut de gamme. Design soigné, performances optimales, accompagnement personnalisé.",

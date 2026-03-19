@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://jlstudio.dev/mentions-legales' },
   title: 'Mentions légales | JL Studio',
   description: 'Mentions légales du site JL Studio.',
 };

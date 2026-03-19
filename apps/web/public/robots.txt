@@ -3,5 +3,8 @@ Allow: /
 Disallow: /admin
 Disallow: /api
 Disallow: /login
+Disallow: /cdn-cgi/
+Disallow: /opengraph-image
+Disallow: /_next/static/
 
 Sitemap: https://jlstudio.dev/sitemap.xml

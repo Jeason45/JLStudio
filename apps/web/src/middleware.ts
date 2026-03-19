@@ -23,6 +23,16 @@ const CSP_DIRECTIVES = [
 ].join('; ');
 
 export async function middleware(req: NextRequest) {
+  const host = req.headers.get('host') || '';
+
+  // Redirect www → non-www (301 permanent)
+  if (host.startsWith('www.')) {
+    const url = req.nextUrl.clone();
+    url.host = host.replace(/^www\./, '');
+    url.protocol = 'https';
+    return NextResponse.redirect(url, 301);
+  }
+
   const { pathname } = req.nextUrl;
   const isApiPath = pathname.startsWith('/api');
 
