@@ -39,14 +39,22 @@ export function JlstudioProcessTimeline({
   const lineProgressRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
 
+  // Set line height to match timeline content (works in both builder and final site)
+  useEffect(() => {
+    if (!sectionRef.current || !lineRef.current) return
+    const stepEls = sectionRef.current.querySelectorAll<HTMLElement>('[data-step]')
+    if (stepEls.length === 0) return
+    const lastStep = stepEls[stepEls.length - 1]
+    const lineHeight = lastStep.offsetTop + lastStep.offsetHeight / 2
+    lineRef.current.style.height = `${lineHeight}px`
+  })
+
   useEffect(() => {
     // ScrollTrigger doesn't work in the builder's nested scroll container.
     // Animations only run on the final deployed site (apps/web).
-    // In the builder, content is shown statically without animations.
     if (!sectionRef.current || !isPreview) return
 
-    // Detect builder environment: if we're inside a nested scrollable container
-    // (not the window), skip GSAP animations entirely
+    // Detect builder environment: skip GSAP animations
     const el = sectionRef.current
     let parent = el.parentElement
     let isInBuilder = false
@@ -72,13 +80,6 @@ export function JlstudioProcessTimeline({
     const nodeInners = section.querySelectorAll<HTMLElement>('[data-node-inner]')
 
     if (stepEls.length === 0) return
-
-    // Set line height to stop at the last step's node center
-    const lastStep = stepEls[stepEls.length - 1]
-    if (lastStep && line) {
-      const lineHeight = lastStep.offsetTop + lastStep.offsetHeight / 2
-      line.style.height = `${lineHeight}px`
-    }
 
     // Skip animations if user prefers reduced motion
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -220,7 +221,7 @@ export function JlstudioProcessTimeline({
       className="relative bg-black overflow-hidden"
       style={{ fontFamily: 'var(--font-body, inherit)' }}
     >
-      {/* Animated grid background */}
+      {/* Animated grid background — fixed attachment for parallax depth */}
       <div className="absolute inset-0">
         <div className="absolute inset-0" style={{
           backgroundImage: `
@@ -228,6 +229,7 @@ export function JlstudioProcessTimeline({
             linear-gradient(90deg, ${accent}10 1px, transparent 1px)
           `,
           backgroundSize: '60px 60px',
+          backgroundAttachment: 'fixed',
         }} />
         <div className="absolute inset-0 overflow-hidden">
           {gridNodes.map((node, i) => (
