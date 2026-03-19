@@ -221,16 +221,17 @@ export function JlstudioProcessTimeline({
       className="relative bg-black overflow-hidden"
       style={{ fontFamily: 'var(--font-body, inherit)' }}
     >
-      {/* Animated grid background — fixed attachment for parallax depth */}
-      <div className="absolute inset-0">
+      {/* Fixed grid background — stays immobile while content scrolls over it */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+        {/* Grid pattern */}
         <div className="absolute inset-0" style={{
           backgroundImage: `
             linear-gradient(${accent}10 1px, transparent 1px),
             linear-gradient(90deg, ${accent}10 1px, transparent 1px)
           `,
           backgroundSize: '60px 60px',
-          backgroundAttachment: 'fixed',
         }} />
+        {/* Glowing nodes */}
         <div className="absolute inset-0 overflow-hidden">
           {gridNodes.map((node, i) => (
             <div key={i} className="absolute rounded-full" style={{
@@ -242,12 +243,14 @@ export function JlstudioProcessTimeline({
             }} />
           ))}
         </div>
+        {/* Scan line */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute left-0 right-0 h-[1px]" style={{
             background: `linear-gradient(90deg, transparent, ${accent}26, transparent)`,
             animation: 'scan-line 8s ease-in-out infinite',
           }} />
         </div>
+        {/* Top/bottom fade */}
         <div className="absolute inset-0" style={{
           background: 'linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.9) 100%)',
         }} />
