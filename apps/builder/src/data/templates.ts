@@ -1777,7 +1777,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       },
       // ── Portfolio Option A: Scroll Reveal Grid ──
       {
-        type: 'gallery',
+        type: 'gallery-grid',
         variant: 'jlstudio-portfolio-reveal',
         content: {
           title: 'Réalisations',
@@ -1835,7 +1835,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       },
       // ── Portfolio Option B: Parallax Vertical Immersive ──
       {
-        type: 'gallery',
+        type: 'gallery-grid',
         variant: 'jlstudio-portfolio-parallax',
         content: {
           title: 'Réalisations',
