@@ -40,7 +40,25 @@ export function JlstudioProcessTimeline({
   const isMobile = useIsMobile()
 
   useEffect(() => {
+    // ScrollTrigger doesn't work in the builder's nested scroll container.
+    // Animations only run on the final deployed site (apps/web).
+    // In the builder, content is shown statically without animations.
     if (!sectionRef.current || !isPreview) return
+
+    // Detect builder environment: if we're inside a nested scrollable container
+    // (not the window), skip GSAP animations entirely
+    const el = sectionRef.current
+    let parent = el.parentElement
+    let isInBuilder = false
+    while (parent) {
+      const style = window.getComputedStyle(parent)
+      if ((style.overflow === 'auto' || style.overflow === 'scroll' || style.overflowY === 'auto' || style.overflowY === 'scroll') && parent !== document.documentElement) {
+        isInBuilder = true
+        break
+      }
+      parent = parent.parentElement
+    }
+    if (isInBuilder) return
 
     const section = sectionRef.current
     const line = lineRef.current
