@@ -106,7 +106,7 @@ export function JlstudioProcessTimeline({
         const split = splitTitles[i]
         const isLeft = i % 2 === 0
 
-        // Initial states
+        // Initial states — GSAP sets opacity:0, will animate to 1 on scroll
         gsap.set(split.chars, { opacity: 0, y: isMobile ? 30 : 50, rotateX: isMobile ? -30 : -60 })
         gsap.set(desc, { opacity: 0, y: 30 })
         if (detail) gsap.set(detail, { opacity: 0, y: 20 })
@@ -204,7 +204,6 @@ export function JlstudioProcessTimeline({
     >
       {/* Animated grid background */}
       <div className="absolute inset-0">
-        {/* Grid pattern */}
         <div className="absolute inset-0" style={{
           backgroundImage: `
             linear-gradient(${accent}10 1px, transparent 1px),
@@ -212,7 +211,6 @@ export function JlstudioProcessTimeline({
           `,
           backgroundSize: '60px 60px',
         }} />
-        {/* Glowing nodes at intersections */}
         <div className="absolute inset-0 overflow-hidden">
           {gridNodes.map((node, i) => (
             <div key={i} className="absolute rounded-full" style={{
@@ -224,20 +222,17 @@ export function JlstudioProcessTimeline({
             }} />
           ))}
         </div>
-        {/* Horizontal scan line */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute left-0 right-0 h-[1px]" style={{
             background: `linear-gradient(90deg, transparent, ${accent}26, transparent)`,
             animation: 'scan-line 8s ease-in-out infinite',
           }} />
         </div>
-        {/* Top/bottom fade */}
         <div className="absolute inset-0" style={{
           background: 'linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.9) 100%)',
         }} />
       </div>
 
-      {/* CSS keyframes for grid animations */}
       <style>{`
         @keyframes pulse-node {
           0%, 100% { opacity: 0.3; transform: scale(1); }
@@ -277,7 +272,7 @@ export function JlstudioProcessTimeline({
 
       {/* Timeline container */}
       <div className="relative z-10 pb-20 md:pb-32">
-        {/* Vertical line — left on mobile, center on desktop */}
+        {/* Vertical line */}
         <div
           ref={lineRef}
           className="absolute top-0 w-[1px]"
@@ -309,8 +304,7 @@ export function JlstudioProcessTimeline({
                 className="absolute top-1/2 z-20"
                 style={{
                   left: isMobile ? '24px' : '50%',
-                  opacity: isPreview ? 0 : 1,
-                  transform: isPreview ? 'translate(-50%, -50%) scale(0)' : 'translate(-50%, -50%) scale(1)',
+                  transform: 'translate(-50%, -50%) scale(1)',
                 }}
               >
                 <div
@@ -319,7 +313,7 @@ export function JlstudioProcessTimeline({
                   style={{
                     backgroundColor: accent,
                     borderColor: accent,
-                    boxShadow: isPreview ? `0 0 0 ${accent}00` : `0 0 20px ${accent}99`,
+                    boxShadow: `0 0 20px ${accent}99`,
                   }}
                 />
               </div>
@@ -330,7 +324,7 @@ export function JlstudioProcessTimeline({
                   <span
                     data-number
                     className="text-5xl font-black block mb-2 leading-none will-change-transform"
-                    style={{ opacity: isPreview ? 0 : 1, color: `${accent}33`, fontFamily: 'var(--font-heading, inherit)' }}
+                    style={{ color: `${accent}33`, fontFamily: 'var(--font-heading, inherit)' }}
                   >
                     {stepNumber}
                   </span>
@@ -346,7 +340,6 @@ export function JlstudioProcessTimeline({
                     data-desc
                     {...elementProps(config.id, `items.${i}.description`, 'text')}
                     className="text-white/60 text-sm sm:text-base leading-relaxed mb-3 relative will-change-transform"
-                    style={{ opacity: isPreview ? 0 : 1 }}
                   >
                     {item.description}
                   </p>
@@ -354,7 +347,7 @@ export function JlstudioProcessTimeline({
                     <p
                       data-detail
                       className="text-xs sm:text-sm tracking-wide relative"
-                      style={{ color: `${accent}8c`, opacity: isPreview ? 0 : 1 }}
+                      style={{ color: `${accent}8c` }}
                     >
                       {item.details}
                     </p>
@@ -369,7 +362,7 @@ export function JlstudioProcessTimeline({
                     <span
                       data-number
                       className="text-5xl lg:text-6xl font-black block mb-3 leading-none will-change-transform"
-                      style={{ opacity: isPreview ? 0 : 1, color: `${accent}33`, fontFamily: 'var(--font-heading, inherit)' }}
+                      style={{ color: `${accent}33`, fontFamily: 'var(--font-heading, inherit)' }}
                     >
                       {stepNumber}
                     </span>
@@ -385,7 +378,6 @@ export function JlstudioProcessTimeline({
                       data-desc
                       {...elementProps(config.id, `items.${i}.description`, 'text')}
                       className="text-white/60 text-base lg:text-lg leading-relaxed mb-4 relative will-change-transform"
-                      style={{ opacity: isPreview ? 0 : 1 }}
                     >
                       {item.description}
                     </p>
@@ -393,7 +385,7 @@ export function JlstudioProcessTimeline({
                       <p
                         data-detail
                         className="text-sm tracking-wide relative"
-                        style={{ color: `${accent}8c`, opacity: isPreview ? 0 : 1 }}
+                        style={{ color: `${accent}8c` }}
                       >
                         {item.details}
                       </p>
