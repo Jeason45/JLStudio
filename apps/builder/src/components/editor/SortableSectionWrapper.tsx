@@ -147,6 +147,8 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
   const isParallaxSlider = section.type === 'slider' && (section.variant?.includes('parallax') || section.variant?.includes('process'))
   // JL Studio process uses position:sticky for the Brixsa-style scrolling bg effect
   const isJlstudioProcess = previewMode && section.type === 'steps' && section.variant === 'jlstudio-process'
+  // JL Studio portfolio parallax uses position:sticky + background-attachment:fixed
+  const isJlstudioPortfolioParallax = previewMode && section.type === 'gallery' && section.variant === 'jlstudio-portfolio-parallax'
 
   // Transparent headers (luxe-transparent, brixsa) need zero-height wrapper so they overlay the next section
   const isTransparentHeader = section.type === 'site-header' && (
@@ -172,7 +174,7 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
       onClick={handleClick}
       className={cn(
         'relative group transition-all',
-        !isTransparentHeader && !isBrixsaCta && !isJlstudioHero && !isParallaxSlider && !isJlstudioProcess && 'overflow-hidden',
+        !isTransparentHeader && !isBrixsaCta && !isJlstudioHero && !isParallaxSlider && !isJlstudioProcess && !isJlstudioPortfolioParallax && 'overflow-hidden',
         overrides.className,
         !section.visible && 'opacity-40',
         !previewMode && !isSelected && 'hover:outline hover:outline-1 hover:outline-wf-blue/30 hover:outline-offset-[-1px]',

@@ -5417,6 +5417,265 @@ export function GallerySection({ config }: { config: SectionConfig }) {
   }
 
   // ═══════════════════════════════════════════
+  // JLSTUDIO — Option A: Scroll Reveal + Image Zoom Grid
+  // ═══════════════════════════════════════════
+
+  if (variant === 'jlstudio-portfolio-reveal') {
+    const accent = accentColor ?? '#638BFF'
+    const raw = content as Record<string, unknown>
+    const itemsRaw = (raw.items ?? []) as Array<Record<string, unknown>>
+
+    const projects = itemsRaw.length > 0
+      ? itemsRaw.map((item, i) => {
+          let tags: string[] = []
+          const t = item.tags
+          if (typeof t === 'string') { try { const p = JSON.parse(t); if (Array.isArray(p)) tags = p } catch { tags = t.split(',').map((s: string) => s.trim()) } }
+          else if (Array.isArray(t)) tags = t as string[]
+          let feats: string[] = []
+          const f = item.features
+          if (typeof f === 'string') { try { const p = JSON.parse(f); if (Array.isArray(p)) feats = p } catch { feats = [] } }
+          else if (Array.isArray(f)) feats = f as string[]
+          return { id: (item.id as string) || `p-${i}`, title: (item.title as string) || `Projet ${i + 1}`, description: (item.description as string) || '', image: (item.image as string) || '', category: (item.category as string) || 'Web', tags, features: feats }
+        })
+      : images.map((img, i) => ({ id: img.id || `p-${i}`, title: img.alt || `Projet ${i + 1}`, description: img.caption || '', image: img.src, category: img.badge || 'Web', tags: (img.category ?? '').split(',').map(s => s.trim()).filter(Boolean), features: [] as string[] }))
+
+    // Asymmetric grid sizes
+    const gridSizes = ['large', 'small', 'small', 'large', 'large'] as const
+
+    return (
+      <section className="relative bg-[#050507] py-24 overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+        {/* Ambient glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full pointer-events-none opacity-10 blur-3xl" style={{ background: `radial-gradient(ellipse, ${accent}30, transparent 70%)` }} />
+
+        <div className="relative max-w-7xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-20 space-y-4">
+            <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: accent }}>Portfolio</span>
+            <h2 {...elementProps(config.id, 'title', 'heading')} className="text-3xl md:text-5xl font-bold text-white leading-tight">
+              {content.title ?? 'Réalisations'}
+            </h2>
+            {content.subtitle && <p className="text-base text-white/40 max-w-lg mx-auto">{content.subtitle}</p>}
+          </div>
+
+          {/* Asymmetric grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {projects.map((project, i) => {
+              const size = gridSizes[i % gridSizes.length]
+              const isLarge = size === 'large'
+
+              return (
+                <div
+                  key={project.id}
+                  className={cn('group', isLarge && i < 1 && 'md:col-span-2')}
+                  style={{ opacity: 1 }}
+                >
+                  {/* Image container with hover zoom */}
+                  <div
+                    className="relative overflow-hidden rounded-xl border border-white/[0.06]"
+                    style={{ aspectRatio: isLarge && i < 1 ? '21/9' : '4/3' }}
+                  >
+                    {project.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-white/5">
+                        <Image className="w-12 h-12 text-white/20" />
+                      </div>
+                    )}
+
+                    {/* Glassmorphic overlay on hover */}
+                    <div
+                      className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 opacity-0 group-hover:opacity-100 transition-all duration-500"
+                      style={{ backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                    >
+                      <span className="text-xs font-semibold tracking-[0.15em] uppercase mb-3" style={{ color: accent }}>{project.category}</span>
+                      <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{project.title}</h3>
+                      {project.description && <p className="text-sm text-white/60 max-w-md">{project.description}</p>}
+
+                      {/* Features stats */}
+                      {project.features.length > 0 && (
+                        <div className="flex flex-wrap gap-4 mt-5 justify-center">
+                          {project.features.map((feat, fi) => (
+                            <span key={fi} className="text-xs font-semibold text-white/90 px-3 py-1.5 rounded-full" style={{ backgroundColor: `${accent}20`, border: `1px solid ${accent}40` }}>
+                              {feat}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Title + tags below image */}
+                  <div className="mt-4 space-y-2">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-semibold tracking-[0.1em] uppercase" style={{ color: accent }}>{project.category}</span>
+                    </div>
+                    <h3 className="text-lg font-bold text-white">{project.title}</h3>
+                    {project.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {project.tags.map((tag, ti) => (
+                          <span key={ti} className="text-[11px] px-2 py-0.5 rounded-full font-medium" style={{ borderColor: `${accent}25`, color: `${accent}BB`, backgroundColor: `${accent}08`, border: `1px solid ${accent}25` }}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // JLSTUDIO — Option B: Parallax Vertical Immersive
+  // ═══════════════════════════════════════════
+
+  if (variant === 'jlstudio-portfolio-parallax') {
+    const accent = accentColor ?? '#638BFF'
+    const raw = content as Record<string, unknown>
+    const itemsRaw = (raw.items ?? []) as Array<Record<string, unknown>>
+    const isPreview = !(config as unknown as Record<string, unknown>).isEditing
+
+    const projects = itemsRaw.length > 0
+      ? itemsRaw.map((item, i) => {
+          let tags: string[] = []
+          const t = item.tags
+          if (typeof t === 'string') { try { const p = JSON.parse(t); if (Array.isArray(p)) tags = p } catch { tags = t.split(',').map((s: string) => s.trim()) } }
+          else if (Array.isArray(t)) tags = t as string[]
+          let feats: string[] = []
+          const f = item.features
+          if (typeof f === 'string') { try { const p = JSON.parse(f); if (Array.isArray(p)) feats = p } catch { feats = [] } }
+          else if (Array.isArray(f)) feats = f as string[]
+          return { id: (item.id as string) || `p-${i}`, title: (item.title as string) || `Projet ${i + 1}`, description: (item.description as string) || '', image: (item.image as string) || '', category: (item.category as string) || 'Web', tags, features: feats }
+        })
+      : images.map((img, i) => ({ id: img.id || `p-${i}`, title: img.alt || `Projet ${i + 1}`, description: img.caption || '', image: img.src, category: img.badge || 'Web', tags: (img.category ?? '').split(',').map(s => s.trim()).filter(Boolean), features: [] as string[] }))
+
+    return (
+      <section style={{ fontFamily: 'var(--font-body, inherit)', backgroundColor: '#050507' }}>
+        {/* Header */}
+        <div style={{ textAlign: 'center', padding: '96px 24px 0' }}>
+          <span style={{ display: 'inline-block', fontSize: 13, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: accent, marginBottom: 16 }}>Portfolio</span>
+          <h2 {...elementProps(config.id, 'title', 'heading')} style={{ fontSize: 'clamp(30px, 5vw, 52px)', fontWeight: 700, color: '#ffffff', lineHeight: 1.1, margin: 0 }}>
+            {content.title ?? 'Réalisations'}
+          </h2>
+          {content.subtitle && <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)', maxWidth: 500, margin: '16px auto 0' }}>{content.subtitle}</p>}
+        </div>
+
+        {/* Projects — each takes 80vh, bg image with sticky text */}
+        {projects.map((project, i) => (
+          <div
+            key={project.id}
+            style={{
+              position: 'relative',
+              minHeight: isPreview ? '80vh' : '60vh',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Background image — fixed attachment for parallax */}
+            {project.image && (
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: `url(${project.image})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundAttachment: isPreview ? 'fixed' : 'scroll',
+              }} />
+            )}
+
+            {/* Dark gradient overlay */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(180deg, rgba(5,5,7,0.95) 0%, rgba(5,5,7,0.5) 30%, rgba(5,5,7,0.5) 70%, rgba(5,5,7,0.95) 100%)',
+            }} />
+
+            {/* Sticky content */}
+            <div style={{
+              position: isPreview ? 'sticky' : 'relative',
+              top: isPreview ? '25vh' : 0,
+              zIndex: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: i % 2 === 0 ? 'flex-start' : 'flex-end',
+              padding: '80px clamp(24px, 6vw, 96px)',
+            }}>
+              {/* Number */}
+              <span style={{ fontSize: 'clamp(60px, 10vw, 120px)', fontWeight: 800, lineHeight: 1, color: accent, opacity: 0.1, position: 'absolute', top: isPreview ? -20 : 40, left: i % 2 === 0 ? 'clamp(24px, 6vw, 96px)' : 'auto', right: i % 2 !== 0 ? 'clamp(24px, 6vw, 96px)' : 'auto' }}>
+                {String(i + 1).padStart(2, '0')}
+              </span>
+
+              {/* Category badge */}
+              <span style={{
+                display: 'inline-block',
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: accent,
+                padding: '6px 16px',
+                borderRadius: 100,
+                border: `1px solid ${accent}40`,
+                backgroundColor: `${accent}10`,
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                marginBottom: 16,
+              }}>
+                {project.category}
+              </span>
+
+              {/* Title */}
+              <h3 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 700, color: '#ffffff', lineHeight: 1.15, margin: '0 0 12px', textAlign: i % 2 === 0 ? 'left' : 'right' }}>
+                {project.title}
+              </h3>
+
+              {/* Description */}
+              {project.description && (
+                <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, margin: 0, maxWidth: 500, textAlign: i % 2 === 0 ? 'left' : 'right' }}>
+                  {project.description}
+                </p>
+              )}
+
+              {/* Features stats */}
+              {project.features.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 20, justifyContent: i % 2 === 0 ? 'flex-start' : 'flex-end' }}>
+                  {project.features.map((feat, fi) => (
+                    <span key={fi} style={{ fontSize: 12, fontWeight: 600, color: '#ffffff', padding: '6px 14px', borderRadius: 100, backgroundColor: `${accent}20`, border: `1px solid ${accent}35` }}>
+                      {feat}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Tech tags */}
+              {project.tags.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 14, justifyContent: i % 2 === 0 ? 'flex-start' : 'flex-end' }}>
+                  {project.tags.map((tag, ti) => (
+                    <span key={ti} style={{ fontSize: 11, padding: '4px 10px', borderRadius: 100, color: `${accent}CC`, backgroundColor: `${accent}08`, border: `1px solid ${accent}20` }}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+
+        {/* Bottom spacer */}
+        <div style={{ height: 96 }} />
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
   // JLSTUDIO — Alternating 2-column portfolio
   // ═══════════════════════════════════════════
 
@@ -6313,6 +6572,8 @@ export const galleryMeta = {
     'prisme-collection',
     'petale-creations',
     'jlstudio-portfolio',
+    'jlstudio-portfolio-reveal',
+    'jlstudio-portfolio-parallax',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},
