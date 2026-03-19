@@ -10,7 +10,7 @@ import { LightboxOverlay } from '@/components/ui/LightboxOverlay'
 import { BrixsaViewCursor } from '../_BrixsaViewCursor'
 import { DecorativeOrnament, FloatingIllustration } from '../_DecorativeOrnament'
 
-export function GallerySection({ config }: { config: SectionConfig }) {
+export function GallerySection({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
   const content = (config.content ?? {}) as Partial<GalleryContent & { enableLightbox?: boolean }>
   const variant = config.variant ?? 'startup-grid'
   const { accentColor, textColor: customTextColor } = config.style
@@ -5421,15 +5421,16 @@ export function GallerySection({ config }: { config: SectionConfig }) {
   // ═══════════════════════════════════════════
 
   // ═══════════════════════════════════════════
-  // JLSTUDIO — Portfolio Split Sticky (Brixsa-inspired)
-  // Left: sticky title + subtitle + CTA | Right: scrolling project cards
-  // Mobile: stacked (title top, grid below)
+  // JLSTUDIO — Portfolio Parallax (Brixsa CTA-style)
+  // Each project = full-bleed parallax slide: background image scrolls, text stays sticky
+  // Projects displayed one after another, immersive full-screen experience
   // ═══════════════════════════════════════════
 
   if (variant === 'jlstudio-portfolio-reveal' || variant === 'jlstudio-portfolio-parallax' || variant === 'jlstudio-portfolio') {
     const accent = accentColor ?? '#638BFF'
     const raw = content as Record<string, unknown>
     const itemsRaw = (raw.items ?? []) as Array<Record<string, unknown>>
+    const isPreview = !isEditing
 
     const projects = itemsRaw.length > 0
       ? itemsRaw.map((item, i) => {
@@ -5444,7 +5445,7 @@ export function GallerySection({ config }: { config: SectionConfig }) {
     const scrollRevealRef = (el: HTMLDivElement | null) => {
       if (!el) return
       el.style.opacity = '0'
-      el.style.transform = 'translateY(40px)'
+      el.style.transform = 'translateY(30px)'
       el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
       const obs = new IntersectionObserver(([entry]) => {
         if (entry.isIntersecting) {
@@ -5456,240 +5457,246 @@ export function GallerySection({ config }: { config: SectionConfig }) {
       obs.observe(el)
     }
 
-    // Split projects into 2 columns for the right side
-    const col1 = projects.filter((_, i) => i % 2 === 0)
-    const col2 = projects.filter((_, i) => i % 2 === 1)
-
-    const renderCard = (project: typeof projects[0], i: number) => (
-      <div
-        key={project.id}
-        ref={scrollRevealRef}
-        className="jls-card group"
-      >
-        {/* Image with dezoom + hover zoom */}
-        <div
-          ref={(el: HTMLDivElement | null) => {
-            if (!el) return
-            const obs = new IntersectionObserver(([entry]) => {
-              if (entry.isIntersecting) {
-                const img = el.querySelector('.jls-img-dezoom')
-                if (img) img.classList.add('revealed')
-                obs.disconnect()
-              }
-            }, { threshold: 0.15 })
-            obs.observe(el)
-          }}
-        >
-          <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
-            {project.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                {...elementProps(config.id, `items.${i}.image`, 'image')}
-                src={project.image}
-                alt={project.title}
-                className="jls-img-zoom jls-img-dezoom w-full h-full object-cover"
-                style={{ transition: 'transform 0.6s ease' }}
-              />
-            ) : (
-              <div
-                className="jls-img-zoom jls-img-dezoom w-full h-full flex items-center justify-center"
-                style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(255,255,255,0.02))', transition: 'transform 0.6s ease' }}
-              >
-                <Image className="w-8 h-8 text-white/20" />
-              </div>
-            )}
-
-            {/* Glassmorphic category badge */}
-            <span
-              {...elementProps(config.id, `items.${i}.badge`, 'badge')}
-              className="flex items-center"
-              style={{
-                position: 'absolute',
-                bottom: '16px',
-                right: '16px',
-                background: `${accent}30`,
-                backdropFilter: 'blur(15px)',
-                WebkitBackdropFilter: 'blur(15px)',
-                borderRadius: '6px',
-                padding: '6px 14px',
-                fontSize: '12px',
-                fontWeight: 600,
-                color: '#FFFFFF',
-                zIndex: 2,
-                border: `1px solid ${accent}40`,
-                letterSpacing: '0.05em',
-              }}
-            >
-              {project.category}
-            </span>
-          </div>
-        </div>
-
-        {/* Body — title + description + tags */}
-        <div style={{ marginTop: '16px' }}>
-          <h3
-            {...elementProps(config.id, `items.${i}.title`, 'heading')}
-            style={{ fontSize: '18px', fontWeight: 600, lineHeight: '140%', color: '#FFFFFF', marginBottom: '6px' }}
-          >
-            {project.title}
-          </h3>
-          {project.description && (
-            <p
-              {...elementProps(config.id, `items.${i}.description`, 'text')}
-              style={{ fontSize: '14px', lineHeight: '150%', color: 'rgba(255,255,255,0.45)', marginBottom: project.tags.length > 0 ? '10px' : 0 }}
-            >
-              {project.description}
-            </p>
-          )}
-          {project.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {project.tags.map((tag, ti) => (
-                <span key={ti} className="text-[11px] px-2 py-0.5 rounded-full font-medium" style={{ color: `${accent}CC`, backgroundColor: `${accent}08`, border: `1px solid ${accent}25` }}>
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    )
-
     return (
       <section
-        className="relative bg-[#050507] overflow-hidden"
-        style={{
-          fontFamily: 'var(--font-body, inherit)',
-          paddingTop: 'clamp(60px, 12vw, 140px)',
-          paddingBottom: 'clamp(60px, 12vw, 140px)',
-          paddingLeft: 'clamp(20px, 5vw, 60px)',
-          paddingRight: 'clamp(20px, 5vw, 60px)',
-        }}
+        className="relative bg-[#050507]"
+        style={{ fontFamily: 'var(--font-body, inherit)' }}
       >
         <style>{`
-          .jls-card:hover .jls-img-zoom { transform: scale(1.05) !important; }
-          .jls-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
-          .jls-img-dezoom.revealed { transform: scale(1); }
-          @media (max-width: 1024px) {
-            .jls-split-layout { flex-direction: column !important; }
-            .jls-sticky-left { position: relative !important; top: 0 !important; width: 100% !important; text-align: center !important; margin-bottom: 48px !important; }
-            .jls-scroll-right { width: 100% !important; }
-            .jls-scroll-right-inner { grid-template-columns: 1fr !important; }
-          }
-          @media (min-width: 1025px) and (max-width: 1280px) {
-            .jls-sticky-left { width: 35% !important; }
-            .jls-scroll-right { width: 65% !important; }
+          @media (max-width: 768px) {
+            .jls-prlx-slide { min-height: auto !important; }
+            .jls-prlx-content { position: relative !important; top: auto !important; padding: 40px 20px !important; }
+            .jls-prlx-img-wrap { height: 60vh !important; }
+            .jls-prlx-counter { font-size: 4rem !important; }
           }
         `}</style>
 
-        {/* Ambient glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full pointer-events-none opacity-10 blur-3xl" style={{ background: `radial-gradient(ellipse, ${accent}30, transparent 70%)` }} />
-
+        {/* Section intro — title + subtitle */}
         <div
-          className="relative jls-split-layout"
           style={{
-            maxWidth: '1320px',
-            margin: '0 auto',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 'clamp(40px, 5vw, 80px)',
+            padding: 'clamp(80px, 15vw, 160px) clamp(20px, 5vw, 60px) clamp(40px, 8vw, 80px)',
+            textAlign: 'center',
           }}
         >
-          {/* LEFT — Sticky title block */}
-          <div
-            className="jls-sticky-left"
-            style={{
-              position: 'sticky',
-              top: 'clamp(80px, 15vh, 160px)',
-              width: '38%',
-              flexShrink: 0,
-            }}
-          >
-            <div ref={scrollRevealRef}>
-              <span
-                className="inline-block text-xs font-semibold tracking-[0.3em] uppercase"
-                style={{ color: `${accent}b3`, marginBottom: '16px' }}
-              >
-                Portfolio
-              </span>
-              <h2
-                {...elementProps(config.id, 'title', 'heading')}
-                style={{
-                  fontSize: 'clamp(2rem, 1.5rem + 2.5vw, 3.5rem)',
-                  fontWeight: 700,
-                  lineHeight: '115%',
-                  color: '#FFFFFF',
-                  marginBottom: '20px',
-                }}
-              >
-                {content.title ?? 'Nos Réalisations'}
-              </h2>
-            </div>
-
-            {(raw.subtitle as string) && (
-              <div ref={scrollRevealRef}>
-                <p
-                  {...elementProps(config.id, 'subtitle', 'text')}
-                  style={{
-                    fontSize: '16px',
-                    lineHeight: '170%',
-                    color: 'rgba(255,255,255,0.45)',
-                    marginBottom: '32px',
-                    maxWidth: '340px',
-                  }}
-                >
-                  {raw.subtitle as string}
-                </p>
-              </div>
-            )}
-
-            {/* Decorative accent line */}
-            <div
+          <div ref={scrollRevealRef}>
+            <span
               style={{
-                width: '48px',
-                height: '2px',
-                background: `linear-gradient(to right, ${accent}, ${accent}30)`,
-                borderRadius: '2px',
-                marginBottom: '32px',
-              }}
-            />
-
-            {/* Project count */}
-            <div ref={scrollRevealRef}>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '8px' }}>
-                <span style={{ fontSize: 'clamp(2rem, 1.5rem + 2vw, 3rem)', fontWeight: 700, color: accent, lineHeight: 1 }}>
-                  {projects.length}
-                </span>
-                <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>
-                  projets livrés
-                </span>
-              </div>
-              <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.25)', lineHeight: '160%' }}>
-                Sites vitrine, e-commerce, applications web sur mesure
-              </p>
-            </div>
-          </div>
-
-          {/* RIGHT — Scrolling 2-column masonry grid */}
-          <div className="jls-scroll-right" style={{ width: '62%' }}>
-            <div
-              className="jls-scroll-right-inner"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: 'clamp(20px, 2.5vw, 32px)',
+                display: 'inline-block',
+                fontSize: '12px',
+                fontWeight: 600,
+                letterSpacing: '0.3em',
+                textTransform: 'uppercase',
+                color: `${accent}b3`,
+                marginBottom: '16px',
               }}
             >
-              {/* Column 1 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 2.5vw, 32px)' }}>
-                {col1.map((project) => renderCard(project, projects.indexOf(project)))}
-              </div>
-              {/* Column 2 — offset down for masonry effect */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 2.5vw, 32px)', paddingTop: 'clamp(60px, 8vw, 120px)' }}>
-                {col2.map((project) => renderCard(project, projects.indexOf(project)))}
+              Portfolio
+            </span>
+            <h2
+              {...elementProps(config.id, 'title', 'heading')}
+              style={{
+                fontSize: 'clamp(2.25rem, 1.5rem + 3.5vw, 4.5rem)',
+                fontWeight: 700,
+                lineHeight: '110%',
+                color: '#FFFFFF',
+                marginBottom: '16px',
+              }}
+            >
+              {content.title ?? 'Nos Réalisations'}
+            </h2>
+          </div>
+          {(raw.subtitle as string) && (
+            <div ref={scrollRevealRef}>
+              <p
+                {...elementProps(config.id, 'subtitle', 'text')}
+                style={{
+                  fontSize: '17px',
+                  lineHeight: '170%',
+                  color: 'rgba(255,255,255,0.4)',
+                  maxWidth: '520px',
+                  margin: '0 auto',
+                }}
+              >
+                {raw.subtitle as string}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Projects — each is a full-bleed parallax slide */}
+        {projects.map((project, i) => (
+          <div
+            key={project.id}
+            className="jls-prlx-slide"
+            style={{
+              position: 'relative',
+              // Tall section for parallax travel — in builder edit mode, shorter
+              minHeight: isPreview ? '140vh' : '100vh',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Background image — fills the entire slide, scrolls with page */}
+            <div
+              className="jls-prlx-img-wrap"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 0,
+              }}
+            >
+              {project.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  {...elementProps(config.id, `items.${i}.image`, 'image')}
+                  src={project.image}
+                  alt={project.title}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center',
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: `linear-gradient(135deg, ${accent}15, #0a0a0a, ${accent}08)`,
+                  }}
+                />
+              )}
+              {/* Dark overlay gradient — stronger at bottom for text readability */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.75) 100%)',
+                }}
+              />
+            </div>
+
+            {/* Sticky content — stays fixed while background scrolls */}
+            <div
+              className="jls-prlx-content"
+              style={{
+                position: isPreview ? 'sticky' : 'relative',
+                top: isPreview ? '25vh' : 0,
+                zIndex: 2,
+                padding: 'clamp(40px, 8vw, 80px) clamp(20px, 5vw, 60px)',
+                ...(!isPreview ? { display: 'flex', alignItems: 'center', minHeight: '100vh' } : {}),
+              }}
+            >
+              <div style={{ maxWidth: '1320px', margin: '0 auto', width: '100%' }}>
+                <div style={{ maxWidth: '680px' }}>
+                  {/* Counter number */}
+                  <div ref={scrollRevealRef}>
+                    <span
+                      className="jls-prlx-counter"
+                      style={{
+                        display: 'block',
+                        fontSize: 'clamp(4rem, 3rem + 5vw, 7rem)',
+                        fontWeight: 800,
+                        lineHeight: 1,
+                        color: 'rgba(255,255,255,0.08)',
+                        marginBottom: '-10px',
+                        fontVariantNumeric: 'tabular-nums',
+                      }}
+                    >
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+
+                  {/* Category badge */}
+                  <div ref={scrollRevealRef}>
+                    <span
+                      {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                      style={{
+                        display: 'inline-block',
+                        background: `${accent}25`,
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        borderRadius: '6px',
+                        padding: '6px 16px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        color: '#FFFFFF',
+                        border: `1px solid ${accent}35`,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        marginBottom: '20px',
+                      }}
+                    >
+                      {project.category}
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <div ref={scrollRevealRef}>
+                    <h3
+                      {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                      style={{
+                        fontSize: 'clamp(1.75rem, 1.2rem + 2.5vw, 3rem)',
+                        fontWeight: 700,
+                        lineHeight: '120%',
+                        color: '#FFFFFF',
+                        marginBottom: '16px',
+                      }}
+                    >
+                      {project.title}
+                    </h3>
+                  </div>
+
+                  {/* Description */}
+                  {project.description && (
+                    <div ref={scrollRevealRef}>
+                      <p
+                        {...elementProps(config.id, `items.${i}.description`, 'text')}
+                        style={{
+                          fontSize: '16px',
+                          lineHeight: '170%',
+                          color: 'rgba(255,255,255,0.6)',
+                          marginBottom: '24px',
+                        }}
+                      >
+                        {project.description}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Tags */}
+                  {project.tags.length > 0 && (
+                    <div ref={scrollRevealRef}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                        {project.tags.map((tag, ti) => (
+                          <span
+                            key={ti}
+                            style={{
+                              fontSize: '12px',
+                              padding: '5px 14px',
+                              borderRadius: '100px',
+                              fontWeight: 500,
+                              color: 'rgba(255,255,255,0.7)',
+                              backgroundColor: 'rgba(255,255,255,0.08)',
+                              border: '1px solid rgba(255,255,255,0.12)',
+                              backdropFilter: 'blur(8px)',
+                              WebkitBackdropFilter: 'blur(8px)',
+                            }}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        ))}
       </section>
     )
   }
