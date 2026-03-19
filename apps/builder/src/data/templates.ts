@@ -1758,8 +1758,8 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         type: 'steps',
         variant: 'jlstudio-process',
         content: {
-          title: 'Comment ça marche',
-          subtitle: 'Un processus clair et transparent, de l\'idée au lancement',
+          title: 'De l\'Idée au Lancement',
+          subtitle: 'Un processus structuré pour transformer votre vision en réalité digitale',
           items: [
             { id: '1', title: 'Discovery', description: 'On échange sur votre vision, vos objectifs et votre audience cible. J\'analyse votre marché et vos concurrents pour définir la stratégie idéale.', badge: 'Stratégie', details: 'Audit complet \u00b7 Analyse concurrence \u00b7 D\u00e9finition des objectifs \u00b7 Brief cr\u00e9atif', image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80' },
             { id: '2', title: 'Design', description: 'Je crée les maquettes de votre site avec un design unique et sur-mesure. Chaque pixel est pensé pour refléter votre identité et convertir vos visiteurs.', badge: 'Créativité', details: 'Wireframes \u00b7 Maquettes HD \u00b7 Prototypage \u00b7 Design system', image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1920&q=80' },

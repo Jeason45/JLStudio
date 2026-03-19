@@ -7286,8 +7286,8 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     return (
       <section
         ref={jlSectionRef}
-        className="relative bg-black overflow-hidden"
-        style={{ fontFamily: 'var(--font-body, inherit)', height: isEditing ? '100vh' : '300vh', isolation: 'isolate' }}
+        className="relative bg-black"
+        style={{ fontFamily: 'var(--font-body, inherit)', height: isEditing ? '100vh' : '300vh', isolation: 'isolate', overflow: isEditing ? 'hidden' : 'clip' }}
       >
         {/* ── Preloader overlay (counter 0→100% + circle reveal) ── */}
         {preloaderPhase !== 'done' && (
