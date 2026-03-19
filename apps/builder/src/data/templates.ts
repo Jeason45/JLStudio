@@ -1722,7 +1722,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               title: 'Site Vitrine',
               description: 'Un site élégant et performant qui reflète votre marque. Design sur mesure, animations fluides, SEO optimisé.',
               image: '/images/jlstudio/services-vitrine.jpg',
-              features: JSON.stringify(['Design responsive', 'Animations premium', 'SEO optimisé', 'CMS intégré']),
+              features: JSON.stringify(['Design responsive', 'Animations premium', 'SEO optimisé', 'Contenu modifiable']),
             },
             {
               id: '2',
@@ -1730,15 +1730,15 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               title: 'E-Commerce',
               description: 'Boutiques en ligne performantes avec paiement sécurisé, gestion de stock et expérience d\'achat optimisée.',
               image: '/images/jlstudio/services-ecommerce.jpg',
-              features: JSON.stringify(['Paiement sécurisé', 'Gestion de stock', 'Panier optimisé', 'Analytics avancés']),
+              features: JSON.stringify(['Paiement sécurisé', 'Gestion de stock', 'Panier optimisé', 'Suivi des ventes']),
             },
             {
               id: '3',
               icon: '⚡',
               title: 'Application Web',
-              description: 'Applications métier robustes : dashboards, CRM, plateformes SaaS. Architecture scalable et interfaces intuitives.',
+              description: 'Outils métier sur mesure : dashboards, CRM, portails clients. Interfaces intuitives et données en temps réel.',
               image: '/images/jlstudio/services-webapp.jpg',
-              features: JSON.stringify(['Dashboard temps réel', 'API robuste', 'Architecture scalable', 'UX intuitive']),
+              features: JSON.stringify(['Dashboard sur mesure', 'Données temps réel', 'Gestion des accès', 'Intégrations tierces']),
             },
             {
               id: '4',
