@@ -5421,8 +5421,9 @@ export function GallerySection({ config }: { config: SectionConfig }) {
   // ═══════════════════════════════════════════
 
   // ═══════════════════════════════════════════
-  // JLSTUDIO — Portfolio Grid (Miel-style: scroll reveal + dezoom + hover zoom + glassmorphic badges)
-  // 3-column grid: row 1 = 3 items, row 2 = 2 items centered
+  // JLSTUDIO — Portfolio Split Sticky (Brixsa-inspired)
+  // Left: sticky title + subtitle + CTA | Right: scrolling project cards
+  // Mobile: stacked (title top, grid below)
   // ═══════════════════════════════════════════
 
   if (variant === 'jlstudio-portfolio-reveal' || variant === 'jlstudio-portfolio-parallax' || variant === 'jlstudio-portfolio') {
@@ -5455,6 +5456,104 @@ export function GallerySection({ config }: { config: SectionConfig }) {
       obs.observe(el)
     }
 
+    // Split projects into 2 columns for the right side
+    const col1 = projects.filter((_, i) => i % 2 === 0)
+    const col2 = projects.filter((_, i) => i % 2 === 1)
+
+    const renderCard = (project: typeof projects[0], i: number) => (
+      <div
+        key={project.id}
+        ref={scrollRevealRef}
+        className="jls-card group"
+      >
+        {/* Image with dezoom + hover zoom */}
+        <div
+          ref={(el: HTMLDivElement | null) => {
+            if (!el) return
+            const obs = new IntersectionObserver(([entry]) => {
+              if (entry.isIntersecting) {
+                const img = el.querySelector('.jls-img-dezoom')
+                if (img) img.classList.add('revealed')
+                obs.disconnect()
+              }
+            }, { threshold: 0.15 })
+            obs.observe(el)
+          }}
+        >
+          <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+            {project.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                {...elementProps(config.id, `items.${i}.image`, 'image')}
+                src={project.image}
+                alt={project.title}
+                className="jls-img-zoom jls-img-dezoom w-full h-full object-cover"
+                style={{ transition: 'transform 0.6s ease' }}
+              />
+            ) : (
+              <div
+                className="jls-img-zoom jls-img-dezoom w-full h-full flex items-center justify-center"
+                style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(255,255,255,0.02))', transition: 'transform 0.6s ease' }}
+              >
+                <Image className="w-8 h-8 text-white/20" />
+              </div>
+            )}
+
+            {/* Glassmorphic category badge */}
+            <span
+              {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+              className="flex items-center"
+              style={{
+                position: 'absolute',
+                bottom: '16px',
+                right: '16px',
+                background: `${accent}30`,
+                backdropFilter: 'blur(15px)',
+                WebkitBackdropFilter: 'blur(15px)',
+                borderRadius: '6px',
+                padding: '6px 14px',
+                fontSize: '12px',
+                fontWeight: 600,
+                color: '#FFFFFF',
+                zIndex: 2,
+                border: `1px solid ${accent}40`,
+                letterSpacing: '0.05em',
+              }}
+            >
+              {project.category}
+            </span>
+          </div>
+        </div>
+
+        {/* Body — title + description + tags */}
+        <div style={{ marginTop: '16px' }}>
+          <h3
+            {...elementProps(config.id, `items.${i}.title`, 'heading')}
+            style={{ fontSize: '18px', fontWeight: 600, lineHeight: '140%', color: '#FFFFFF', marginBottom: '6px' }}
+          >
+            {project.title}
+          </h3>
+          {project.description && (
+            <p
+              {...elementProps(config.id, `items.${i}.description`, 'text')}
+              style={{ fontSize: '14px', lineHeight: '150%', color: 'rgba(255,255,255,0.45)', marginBottom: project.tags.length > 0 ? '10px' : 0 }}
+            >
+              {project.description}
+            </p>
+          )}
+          {project.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {project.tags.map((tag, ti) => (
+                <span key={ti} className="text-[11px] px-2 py-0.5 rounded-full font-medium" style={{ color: `${accent}CC`, backgroundColor: `${accent}08`, border: `1px solid ${accent}25` }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+
     return (
       <section
         className="relative bg-[#050507] overflow-hidden"
@@ -5470,130 +5569,125 @@ export function GallerySection({ config }: { config: SectionConfig }) {
           .jls-card:hover .jls-img-zoom { transform: scale(1.05) !important; }
           .jls-img-dezoom { transform: scale(1.05); transition: transform 1.2s ease-out; }
           .jls-img-dezoom.revealed { transform: scale(1); }
-          @media (max-width: 768px) {
-            .jls-resp-grid { grid-template-columns: 1fr !important; }
+          @media (max-width: 1024px) {
+            .jls-split-layout { flex-direction: column !important; }
+            .jls-sticky-left { position: relative !important; top: 0 !important; width: 100% !important; text-align: center !important; margin-bottom: 48px !important; }
+            .jls-scroll-right { width: 100% !important; }
+            .jls-scroll-right-inner { grid-template-columns: 1fr !important; }
           }
-          @media (min-width: 769px) and (max-width: 1024px) {
-            .jls-resp-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          @media (min-width: 1025px) and (max-width: 1280px) {
+            .jls-sticky-left { width: 35% !important; }
+            .jls-scroll-right { width: 65% !important; }
           }
         `}</style>
 
         {/* Ambient glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full pointer-events-none opacity-10 blur-3xl" style={{ background: `radial-gradient(ellipse, ${accent}30, transparent 70%)` }} />
 
-        <div className="relative" style={{ maxWidth: '1320px', margin: '0 auto' }}>
-          {/* Header */}
-          <div className="text-center mb-16 space-y-4">
-            <span className="inline-block text-xs font-semibold tracking-[0.3em] uppercase" style={{ color: `${accent}b3` }}>Portfolio</span>
-            <h2 {...elementProps(config.id, 'title', 'heading')} className="text-3xl md:text-5xl font-bold text-white leading-tight">
-              {content.title ?? 'Nos Réalisations'}
-            </h2>
-            {(raw.subtitle as string) && (
-              <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base text-white/40 max-w-lg mx-auto">
-                {raw.subtitle as string}
-              </p>
-            )}
-          </div>
-
-          {/* Grid — 3 columns, rows of 3 then 2 centered */}
-          <div className="grid grid-cols-3 jls-resp-grid" style={{ columnGap: 'clamp(16px, 2vw, 24px)', rowGap: 'clamp(30px, 5vw, 60px)' }}>
-            {projects.map((project, i) => (
-              <div
-                key={project.id}
-                ref={scrollRevealRef}
-                className="jls-card group"
+        <div
+          className="relative jls-split-layout"
+          style={{
+            maxWidth: '1320px',
+            margin: '0 auto',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: 'clamp(40px, 5vw, 80px)',
+          }}
+        >
+          {/* LEFT — Sticky title block */}
+          <div
+            className="jls-sticky-left"
+            style={{
+              position: 'sticky',
+              top: 'clamp(80px, 15vh, 160px)',
+              width: '38%',
+              flexShrink: 0,
+            }}
+          >
+            <div ref={scrollRevealRef}>
+              <span
+                className="inline-block text-xs font-semibold tracking-[0.3em] uppercase"
+                style={{ color: `${accent}b3`, marginBottom: '16px' }}
+              >
+                Portfolio
+              </span>
+              <h2
+                {...elementProps(config.id, 'title', 'heading')}
                 style={{
-                  // For 5 items: first row=3, second row=2 centered via grid-column
-                  ...(projects.length === 5 && i === 3 ? { gridColumn: '1 / 2', marginLeft: 'auto', marginRight: 0 } : {}),
+                  fontSize: 'clamp(2rem, 1.5rem + 2.5vw, 3.5rem)',
+                  fontWeight: 700,
+                  lineHeight: '115%',
+                  color: '#FFFFFF',
+                  marginBottom: '20px',
                 }}
               >
-                {/* Image with dezoom + hover zoom */}
-                <div
-                  ref={(el: HTMLDivElement | null) => {
-                    if (!el) return
-                    const obs = new IntersectionObserver(([entry]) => {
-                      if (entry.isIntersecting) {
-                        const img = el.querySelector('.jls-img-dezoom')
-                        if (img) img.classList.add('revealed')
-                        obs.disconnect()
-                      }
-                    }, { threshold: 0.15 })
-                    obs.observe(el)
+                {content.title ?? 'Nos Réalisations'}
+              </h2>
+            </div>
+
+            {(raw.subtitle as string) && (
+              <div ref={scrollRevealRef}>
+                <p
+                  {...elementProps(config.id, 'subtitle', 'text')}
+                  style={{
+                    fontSize: '16px',
+                    lineHeight: '170%',
+                    color: 'rgba(255,255,255,0.45)',
+                    marginBottom: '32px',
+                    maxWidth: '340px',
                   }}
                 >
-                  <div className="overflow-hidden relative" style={{ aspectRatio: '3/4', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    {project.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        {...elementProps(config.id, `items.${i}.image`, 'image')}
-                        src={project.image}
-                        alt={project.title}
-                        className="jls-img-zoom jls-img-dezoom w-full h-full object-cover"
-                        style={{ transition: 'transform 0.6s ease' }}
-                      />
-                    ) : (
-                      <div
-                        className="jls-img-zoom jls-img-dezoom w-full h-full flex items-center justify-center"
-                        style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(255,255,255,0.02))', transition: 'transform 0.6s ease' }}
-                      >
-                        <Image className="w-8 h-8 text-white/20" />
-                      </div>
-                    )}
-
-                    {/* Glassmorphic category badge */}
-                    <span
-                      {...elementProps(config.id, `items.${i}.badge`, 'badge')}
-                      className="flex items-center"
-                      style={{
-                        position: 'absolute',
-                        bottom: '16px',
-                        right: '16px',
-                        background: `${accent}30`,
-                        backdropFilter: 'blur(15px)',
-                        WebkitBackdropFilter: 'blur(15px)',
-                        borderRadius: '6px',
-                        padding: '6px 14px',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        color: '#FFFFFF',
-                        zIndex: 2,
-                        border: `1px solid ${accent}40`,
-                        letterSpacing: '0.05em',
-                      }}
-                    >
-                      {project.category}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Body — title + description */}
-                <div style={{ marginTop: '16px' }}>
-                  <h3
-                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
-                    style={{ fontSize: '18px', fontWeight: 600, lineHeight: '140%', color: '#FFFFFF', marginBottom: '6px' }}
-                  >
-                    {project.title}
-                  </h3>
-                  {project.description && (
-                    <p
-                      {...elementProps(config.id, `items.${i}.description`, 'text')}
-                      style={{ fontSize: '14px', lineHeight: '150%', color: 'rgba(255,255,255,0.45)', marginBottom: project.tags.length > 0 ? '10px' : 0 }}
-                    >
-                      {project.description}
-                    </p>
-                  )}
-                  {project.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
-                      {project.tags.map((tag, ti) => (
-                        <span key={ti} className="text-[11px] px-2 py-0.5 rounded-full font-medium" style={{ color: `${accent}CC`, backgroundColor: `${accent}08`, border: `1px solid ${accent}25` }}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                  {raw.subtitle as string}
+                </p>
               </div>
-            ))}
+            )}
+
+            {/* Decorative accent line */}
+            <div
+              style={{
+                width: '48px',
+                height: '2px',
+                background: `linear-gradient(to right, ${accent}, ${accent}30)`,
+                borderRadius: '2px',
+                marginBottom: '32px',
+              }}
+            />
+
+            {/* Project count */}
+            <div ref={scrollRevealRef}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '8px' }}>
+                <span style={{ fontSize: 'clamp(2rem, 1.5rem + 2vw, 3rem)', fontWeight: 700, color: accent, lineHeight: 1 }}>
+                  {projects.length}
+                </span>
+                <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>
+                  projets livrés
+                </span>
+              </div>
+              <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.25)', lineHeight: '160%' }}>
+                Sites vitrine, e-commerce, applications web sur mesure
+              </p>
+            </div>
+          </div>
+
+          {/* RIGHT — Scrolling 2-column masonry grid */}
+          <div className="jls-scroll-right" style={{ width: '62%' }}>
+            <div
+              className="jls-scroll-right-inner"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: 'clamp(20px, 2.5vw, 32px)',
+              }}
+            >
+              {/* Column 1 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 2.5vw, 32px)' }}>
+                {col1.map((project) => renderCard(project, projects.indexOf(project)))}
+              </div>
+              {/* Column 2 — offset down for masonry effect */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 2.5vw, 32px)', paddingTop: 'clamp(60px, 8vw, 120px)' }}>
+                {col2.map((project) => renderCard(project, projects.indexOf(project)))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
