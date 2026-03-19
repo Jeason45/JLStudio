@@ -143,6 +143,10 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
   const isBrixsaFooter = previewMode && section.type === 'site-footer' && section.variant?.includes('brixsa')
   // JL Studio hero uses position:sticky for scroll-pinned zoom animation — overflow-hidden breaks it
   const isJlstudioHero = section.type === 'hero' && section.variant === 'jlstudio'
+  // Parallax slider variants use background-attachment:fixed which breaks under overflow-hidden
+  const isParallaxSlider = section.type === 'slider' && (section.variant?.includes('parallax') || section.variant?.includes('process'))
+  // JL Studio process uses position:sticky for the Brixsa-style scrolling bg effect
+  const isJlstudioProcess = previewMode && section.type === 'steps' && section.variant === 'jlstudio-process'
 
   // Transparent headers (luxe-transparent, brixsa) need zero-height wrapper so they overlay the next section
   const isTransparentHeader = section.type === 'site-header' && (
@@ -168,7 +172,7 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
       onClick={handleClick}
       className={cn(
         'relative group transition-all',
-        !isTransparentHeader && !isBrixsaCta && !isJlstudioHero && 'overflow-hidden',
+        !isTransparentHeader && !isBrixsaCta && !isJlstudioHero && !isParallaxSlider && !isJlstudioProcess && 'overflow-hidden',
         overrides.className,
         !section.visible && 'opacity-40',
         !previewMode && !isSelected && 'hover:outline hover:outline-1 hover:outline-wf-blue/30 hover:outline-offset-[-1px]',

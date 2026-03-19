@@ -2395,6 +2395,171 @@ function MielFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: SlideIt
   )
 }
 
+/* JL Studio process slide — Dark agency theme with blue accent.
+   Same parallax technique as Miel but with #0a0a0f bg and #638BFF accent. */
+function JlstudioFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: SlideItem; idx: number; sectionId: string; isEditing?: boolean }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  // JS fallback for editor mode only
+  useEffect(() => {
+    if (!isEditing) return
+    const wrap = wrapRef.current
+    const img = imgRef.current
+    if (!wrap || !img) return
+
+    let scroller: HTMLElement | null = wrap.parentElement
+    while (scroller) {
+      const ov = getComputedStyle(scroller).overflowY
+      if (ov === 'auto' || ov === 'scroll') break
+      scroller = scroller.parentElement
+    }
+    if (!scroller) return
+
+    let accOffset = 0
+    let el: HTMLElement | null = wrap
+    while (el && el !== scroller) {
+      accOffset += el.offsetTop
+      el = el.offsetParent as HTMLElement | null
+    }
+
+    const setSize = () => { img.style.height = `${scroller!.clientHeight}px` }
+    setSize()
+
+    const onScroll = () => {
+      img.style.transform = `translate3d(0,${-(accOffset - scroller!.scrollTop)}px,0)`
+    }
+
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+
+    const ro = new ResizeObserver(setSize)
+    ro.observe(scroller)
+
+    return () => {
+      scroller!.removeEventListener('scroll', onScroll)
+      ro.disconnect()
+    }
+  }, [isEditing])
+
+  const BG = '#0a0a0f'
+  const ACCENT = '#638BFF'
+
+  // Preview mode: pure CSS background-attachment: fixed
+  if (!isEditing) {
+    return (
+      <div
+        {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+        style={{
+          display: 'block',
+          minHeight: '100svh',
+          position: 'relative',
+          overflow: 'hidden',
+          color: '#FFFFFF',
+          ...(slide.image ? {
+            backgroundImage: `url(${slide.image})`,
+            backgroundAttachment: 'fixed',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundColor: BG,
+          } : { backgroundColor: BG }),
+        }}
+      >
+        <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: `linear-gradient(360deg, ${BG}ee 14%, ${BG}88 55%, ${BG}22 100%)` }} />
+        {/* Step number top-right */}
+        <div style={{ position: 'absolute', right: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', zIndex: 2, fontFamily: "'Inter Variable', 'Inter', sans-serif", fontSize: '13px', fontWeight: 600, color: ACCENT, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+          Étape {String(idx + 1).padStart(2, '0')}
+        </div>
+        {slide.badge && (
+          <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 100, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(99, 139, 255, 0.12)', color: ACCENT, fontSize: 13, fontWeight: 500, zIndex: 2, letterSpacing: '0.08em', textTransform: 'uppercase', border: '1px solid rgba(99, 139, 255, 0.3)' }}>
+            {slide.badge}
+          </div>
+        )}
+        <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+          <div style={{ maxWidth: '700px' }}>
+            <h2
+              {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+              style={{ fontFamily: "'Inter Variable', 'Inter', sans-serif", fontSize: 'clamp(2.5rem, 1.5rem + 4vw, 4.5rem)', fontWeight: 600, lineHeight: '110%', color: '#FFFFFF', marginBottom: 20 }}
+            >
+              {slide.title}
+            </h2>
+            <p
+              {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+              style={{ fontSize: 17, lineHeight: '160%', color: 'rgba(255,255,255,0.65)', maxWidth: 560 }}
+            >
+              {slide.subtitle}
+            </p>
+            {slide.ctaLabel && (
+              <a
+                {...elementProps(sectionId, `slides.${idx}.cta`, 'button')}
+                href={slide.ctaHref ?? '#'}
+                style={{ display: 'inline-block', marginTop: '28px', padding: '12px 28px', background: ACCENT, color: '#FFFFFF', borderRadius: '100px', fontSize: '15px', fontWeight: 500, textDecoration: 'none', letterSpacing: '0.03em', transition: 'background 0.3s ease' }}
+              >
+                {slide.ctaLabel}
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Editor mode: JS-based scroll compensation with <img> tag
+  return (
+    <div
+      ref={wrapRef}
+      {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+      style={{ minHeight: '100svh', position: 'relative', overflow: 'hidden', backgroundColor: BG, color: '#FFFFFF' }}
+    >
+      {slide.image && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          ref={imgRef}
+          {...elementProps(sectionId, `slides.${idx}.image`, 'image', 'Slide Image')}
+          src={slide.image}
+          alt=""
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', objectFit: 'cover', objectPosition: 'center', pointerEvents: 'none', willChange: 'transform', backfaceVisibility: 'hidden' }}
+        />
+      )}
+      <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: `linear-gradient(360deg, ${BG}ee 14%, ${BG}88 55%, ${BG}22 100%)` }} />
+      {/* Step number top-right */}
+      <div style={{ position: 'absolute', right: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', zIndex: 2, fontFamily: "'Inter Variable', 'Inter', sans-serif", fontSize: '13px', fontWeight: 600, color: ACCENT, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+        Étape {String(idx + 1).padStart(2, '0')}
+      </div>
+      {slide.badge && (
+        <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 100, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(99, 139, 255, 0.12)', color: ACCENT, fontSize: 13, fontWeight: 500, zIndex: 2, letterSpacing: '0.08em', textTransform: 'uppercase', border: '1px solid rgba(99, 139, 255, 0.3)' }}>
+          {slide.badge}
+        </div>
+      )}
+      <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
+        <div style={{ maxWidth: '700px' }}>
+          <h2
+            {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
+            style={{ fontFamily: "'Inter Variable', 'Inter', sans-serif", fontSize: 'clamp(2.5rem, 1.5rem + 4vw, 4.5rem)', fontWeight: 600, lineHeight: '110%', color: '#FFFFFF', marginBottom: 20 }}
+          >
+            {slide.title}
+          </h2>
+          <p
+            {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
+            style={{ fontSize: 17, lineHeight: '160%', color: 'rgba(255,255,255,0.65)', maxWidth: 560 }}
+          >
+            {slide.subtitle}
+          </p>
+          {slide.ctaLabel && (
+            <a
+              {...elementProps(sectionId, `slides.${idx}.cta`, 'button')}
+              href={slide.ctaHref ?? '#'}
+              style={{ display: 'inline-block', marginTop: '28px', padding: '12px 28px', background: ACCENT, color: '#FFFFFF', borderRadius: '100px', fontSize: '15px', fontWeight: 500, textDecoration: 'none', letterSpacing: '0.03em', transition: 'background 0.3s ease' }}
+            >
+              {slide.ctaLabel}
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function PrismeFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: SlideItem; idx: number; sectionId: string; isEditing?: boolean }) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
@@ -3420,6 +3585,26 @@ export function SliderSection({ config, isEditing }: { config: SectionConfig; is
     )
   }
 
+  // ── jlstudio-process: Fullscreen parallax process/timeline for JL Studio agency ──
+  if (config.variant === 'jlstudio-process') {
+    const defaultSlides = [
+      { id: '1', title: 'Discovery', badge: 'Étape 01', subtitle: 'On échange sur votre vision, vos objectifs et votre audience cible. J\'analyse votre marché et vos concurrents pour définir la stratégie idéale.', image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=85' } as SlideItem,
+      { id: '2', title: 'Design', badge: 'Étape 02', subtitle: 'Je crée les maquettes de votre site avec un design unique et sur-mesure. Chaque pixel est pensé pour refléter votre identité et convertir vos visiteurs.', image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1920&q=85' } as SlideItem,
+      { id: '3', title: 'Développement', badge: 'Étape 03', subtitle: 'Je code votre site avec les dernières technologies. Performance, sécurité et scalabilité sont mes priorités absolues.', image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1920&q=85' } as SlideItem,
+      { id: '4', title: 'Tests & QA', badge: 'Étape 04', subtitle: 'Tests approfondis sur tous les navigateurs et appareils. Chaque fonctionnalité est vérifiée, chaque interaction est peaufinée.', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=85' } as SlideItem,
+      { id: '5', title: 'Lancement', badge: 'Étape 05', subtitle: 'Déploiement sur infrastructure haute performance avec monitoring. Formation et support continu post-lancement.', image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&q=85' } as SlideItem,
+    ] as SlideItem[]
+    const items = slides.length > 0 ? slides : defaultSlides
+
+    return (
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Process Parallax Section')} style={{ width: '100%' }}>
+        {items.map((slide, i) => (
+          <JlstudioFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={config.id} isEditing={isEditing} />
+        ))}
+      </section>
+    )
+  }
+
   // ── petale-parallax: Fullscreen parallax florist / seasonal flowers gallery ──
   if (config.variant === 'petale-parallax') {
     const defaultSlides = [
@@ -3567,6 +3752,7 @@ export const sliderMeta: SectionMeta = {
     'ascent-parallax',
     'zenith-parallax',
     'miel-parallax',
+    'jlstudio-process',
     'prisme-parallax',
     'petale-parallax',
   ],

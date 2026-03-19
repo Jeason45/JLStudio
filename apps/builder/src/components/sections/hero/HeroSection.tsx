@@ -10,6 +10,10 @@ import { Play, ShieldCheck, Star, Truck, ArrowRight, ChevronLeft, ChevronRight, 
 import { getTitleSizeClass, getTextAlignClass } from '../_utils'
 import { EditablePlaceholder } from '../_EditablePlaceholder'
 import { useBrixsaScrollReveal } from '@/hooks/useBrixsaScrollReveal'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface HeroSectionProps {
   config: SectionConfig
@@ -7108,7 +7112,12 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
 
     /* eslint-disable react-hooks/rules-of-hooks */
     const jlSectionRef = useRef<HTMLElement>(null)
-    const [scrollProgress, setScrollProgress] = useState(0)
+    const jlBgRef = useRef<HTMLDivElement>(null)
+    const jlMaskRef = useRef<HTMLDivElement>(null)
+    const jlTextRef = useRef<HTMLDivElement>(null)
+    const jlOverlayRef = useRef<HTMLDivElement>(null)
+    const jlContentRef = useRef<HTMLDivElement>(null)
+    const jlScrollHintRef = useRef<HTMLDivElement>(null)
     const [preloaderCount, setPreloaderCount] = useState(0)
     const [preloaderPhase, setPreloaderPhase] = useState<'counting' | 'exit' | 'done'>(isEditing ? 'done' : 'counting')
 
@@ -7151,57 +7160,134 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
       return () => cancelAnimationFrame(raf)
     }, [isEditing, preloaderPhase])
 
-    // ── Scroll-driven animation via native sticky (GPU-accelerated, no jitter) ──
+    // ── Scroll animation: paused GSAP timeline + manual ticker (no ScrollTrigger) ──
+    // ScrollTrigger's scroller option doesn't reliably work with the builder's
+    // deeply-nested overflow-auto container. Instead we calculate progress manually
+    // via getBoundingClientRect and drive a paused timeline with tl.progress(p).
     useEffect(() => {
       if (isEditing) return
-      const el = jlSectionRef.current
-      if (!el) return
-      // Find scrollable parent (builder canvas overflow-auto, or window)
-      let scroller: HTMLElement | null = el.parentElement
+      const section = jlSectionRef.current
+      if (!section) return
+
+      // Find the builder's scroll container (overflow-auto div)
+      let scroller: HTMLElement | null = section.parentElement
       while (scroller) {
         const ov = getComputedStyle(scroller).overflowY
         if (ov === 'auto' || ov === 'scroll') break
         scroller = scroller.parentElement
       }
-      const scrollTarget: HTMLElement | Window = scroller || window
+      if (!scroller) return
 
-      const handleScroll = () => {
-        const section = jlSectionRef.current
-        if (!section) return
-        const vh = scroller ? scroller.clientHeight : window.innerHeight
-        const totalScroll = section.offsetHeight - vh
+      // Force initial states
+      gsap.set(jlTextRef.current, { scale: 1, transformOrigin: '50% 75%' })
+      gsap.set(jlMaskRef.current, { opacity: 1 })
+      gsap.set(jlOverlayRef.current, { opacity: 0 })
+      gsap.set(jlContentRef.current, { opacity: 0 })
+      gsap.set(jlScrollHintRef.current, { opacity: 1 })
+      gsap.set(jlBgRef.current, { scale: 1, filter: 'brightness(1.4)' })
+
+      // Build the timeline (paused — we drive it manually)
+      const tl = gsap.timeline({ paused: true })
+
+      // Scroll hint
+      tl.fromTo(jlScrollHintRef.current,
+        { opacity: 1 },
+        { opacity: 0, duration: 5 },
+        1
+      )
+      // Background
+      tl.fromTo(jlBgRef.current,
+        { scale: 1, filter: 'brightness(1.4)' },
+        { scale: 1.12, filter: 'brightness(1)', ease: 'none', duration: 40 },
+        0
+      )
+      tl.to(jlBgRef.current,
+        { scale: 1.12, ease: 'none', duration: 60 },
+        40
+      )
+      // Text zoom (power4.in — stays near 1 then accelerates to 50)
+      tl.fromTo(jlTextRef.current,
+        { scale: 1, transformOrigin: '50% 75%' },
+        { scale: 50, ease: 'power4.in', duration: 37 },
+        0
+      )
+      // Mask opacity (power4.in — stays near 1 then drops to 0)
+      tl.fromTo(jlMaskRef.current,
+        { opacity: 1 },
+        { opacity: 0, ease: 'power4.in', duration: 40 },
+        0
+      )
+      // Overlay
+      tl.fromTo(jlOverlayRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 22, ease: 'power2.inOut', immediateRender: false },
+        30
+      )
+      // Content
+      tl.fromTo(jlContentRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 2, immediateRender: false },
+        40
+      )
+      // Parallax exit
+      tl.to(jlContentRef.current,
+        { yPercent: -80, opacity: 0, ease: 'none', duration: 22 },
+        70
+      )
+      tl.to(jlOverlayRef.current,
+        { opacity: 0, duration: 22 },
+        70
+      )
+
+      // ── Ticker: calculate progress from scroll position + drive timeline ──
+      // Uses lerp smoothing (like V3's scrub:1) so the timeline transitions
+      // smoothly through intermediate states when scrolling fast.
+      let currentP = 0
+      const LERP_SPEED = 0.12 // ~0.5s to catch up (V3 uses scrub:1 = 1s)
+
+      const tick = () => {
+        const scrollerRect = scroller!.getBoundingClientRect()
+        const sectionRect = section.getBoundingClientRect()
+        // Use sectionRect.height (screen coords) for consistent calculation
+        // even if canvas is zoomed (transform on ancestor)
+        const totalScroll = sectionRect.height - scrollerRect.height
         if (totalScroll <= 0) return
-        let scrolled: number
-        if (scroller) {
-          const sectionTop = section.offsetTop - scroller.offsetTop
-          scrolled = scroller.scrollTop - sectionTop
-        } else {
-          scrolled = -section.getBoundingClientRect().top
+
+        const sectionTopInScroller = sectionRect.top - scrollerRect.top
+        const targetP = Math.max(0, Math.min(1, -sectionTopInScroller / totalScroll))
+
+        // Lerp toward target (smooth like V3's scrub:1)
+        currentP += (targetP - currentP) * LERP_SPEED
+        // Snap when very close to avoid floating point limbo
+        if (Math.abs(currentP - targetP) < 0.0005) currentP = targetP
+
+        // Drive timeline with smoothed progress
+        tl.progress(currentP)
+
+        // Force clean initial state when at the very top (V3 forceTopState equivalent)
+        if (currentP < 0.001) {
+          if (jlTextRef.current) { jlTextRef.current.style.transform = 'scale(1)'; jlTextRef.current.style.transformOrigin = '50% 75%' }
+          if (jlMaskRef.current) jlMaskRef.current.style.opacity = '1'
+          if (jlOverlayRef.current) jlOverlayRef.current.style.opacity = '0'
+          if (jlContentRef.current) jlContentRef.current.style.opacity = '0'
         }
-        setScrollProgress(Math.max(0, Math.min(1, scrolled / totalScroll)))
       }
-      scrollTarget.addEventListener('scroll', handleScroll, { passive: true })
-      handleScroll()
-      return () => scrollTarget.removeEventListener('scroll', handleScroll)
+
+      gsap.ticker.add(tick)
+      tick() // initial call
+
+      return () => {
+        gsap.ticker.remove(tick)
+        tl.kill()
+      }
     }, [isEditing])
     /* eslint-enable react-hooks/rules-of-hooks */
-
-    // Derived animation values from scroll progress (0→1)
-    const p = scrollProgress
-    const textScale = 1 + Math.pow(Math.min(p / 0.37, 1), 4) * 49
-    const maskOpacity = Math.max(0, 1 - Math.pow(Math.min(p / 0.4, 1), 4))
-    const overlayOpacity = p < 0.3 ? 0 : p > 0.52 ? 1 : (p - 0.3) / 0.22
-    const contentOpacity = p < 0.4 ? 0 : p < 0.42 ? (p - 0.4) / 0.02 : p > 0.92 ? 0 : p > 0.7 ? 1 - (p - 0.7) / 0.22 : 1
-    const contentY = p > 0.7 ? -((p - 0.7) / 0.22) * 80 : 0
-    const scrollHintOpacity = Math.max(0, 1 - p * 20)
-    const bgScale = 1 + Math.min(p / 0.4, 1) * 0.12
-    const bgBrightness = 1.4 - Math.min(p / 0.4, 1) * 0.4
 
     return (
       <section
         ref={jlSectionRef}
-        className="relative bg-black"
-        style={{ fontFamily: 'var(--font-body, inherit)', height: isEditing ? '100vh' : '300vh', overflow: 'clip' }}
+        className="relative bg-black overflow-hidden"
+        style={{ fontFamily: 'var(--font-body, inherit)', height: isEditing ? '100vh' : '300vh', isolation: 'isolate' }}
       >
         {/* ── Preloader overlay (counter 0→100% + circle reveal) ── */}
         {preloaderPhase !== 'done' && (
@@ -7230,7 +7316,6 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
             >
               {preloaderCount}
             </span>
-            {/* Gradient divider */}
             <div
               className="mt-4 h-[2px] rounded-full"
               style={{
@@ -7249,19 +7334,15 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
           </div>
         )}
 
-        <div className="sticky top-0" style={{ height: isEditing ? '100%' : '100vh', overflow: 'clip' }}>
+        <div className="sticky top-0 overflow-hidden" style={{ height: isEditing ? '100%' : '100vh' }}>
           {/* Background artistic image */}
           <div
+            ref={jlBgRef}
             className="absolute will-change-transform"
-            style={{
-              inset: '-10%',
-              transform: `scale(${bgScale})`,
-              filter: `brightness(${bgBrightness})`,
-            }}
+            style={{ inset: '-10%' }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={heroImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            {/* Color grading */}
             <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,30,60,0.15) 0%, transparent 40%, rgba(10,8,4,0.2) 100%)' }} />
           </div>
 
@@ -7276,37 +7357,38 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
 
           {/* Black mask + "JL STUDIO" text — multiply blend, ZOOMS on scroll */}
           <div
+            ref={jlMaskRef}
             className="absolute inset-0 z-[5] bg-black flex items-center justify-center"
-            style={{ mixBlendMode: 'multiply', opacity: maskOpacity }}
+            style={{ mixBlendMode: 'multiply' }}
           >
             <div
-              className="text-white font-black text-center select-none will-change-transform"
+              ref={jlTextRef}
+              className="text-white font-black text-center select-none"
               style={{
                 fontFamily: 'var(--font-heading, var(--font-outfit, system-ui))',
                 fontSize: 'clamp(5rem, 20vw, 16rem)',
                 lineHeight: 0.85,
                 letterSpacing: '-0.03em',
-                transform: `scale(${textScale})`,
-                transformOrigin: '50% 75%',
               }}
             >
               JL<br />STUDIO
             </div>
           </div>
 
-          {/* Dark overlay — fades in after zoom for content readability */}
+          {/* Dark overlay */}
           <div
+            ref={jlOverlayRef}
             className="absolute inset-0 z-[8] bg-black/60"
-            style={{ opacity: overlayOpacity }}
+            style={{ opacity: 0 }}
           />
 
-          {/* Content — appears after zoom, parallax exits */}
+          {/* Content — appears after zoom */}
           <div
+            ref={jlContentRef}
             className="absolute inset-0 z-[10] flex items-center justify-center will-change-transform"
-            style={{ opacity: contentOpacity, transform: `translateY(${contentY}%)` }}
+            style={{ opacity: 0 }}
           >
             <div className="text-center px-6 max-w-5xl mx-auto" style={{ perspective: 600 }}>
-              {/* Main heading */}
               <h1
                 {...elementProps(config.id, 'title', 'heading')}
                 className="font-black text-white leading-[0.95] tracking-tight mb-4 text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
@@ -7320,7 +7402,6 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
               >
                 Notre Expertise
               </h2>
-              {/* Subtitle */}
               {description && (
                 <p
                   {...elementProps(config.id, 'subtitle', 'text')}
@@ -7329,7 +7410,6 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
                   {description}
                 </p>
               )}
-              {/* CTA Buttons */}
               <div className="flex flex-wrap items-center justify-center gap-4">
                 {content.primaryButton ? (
                   <a
@@ -7363,8 +7443,8 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
 
           {/* Scroll indicator */}
           <div
+            ref={jlScrollHintRef}
             className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[11] flex flex-col items-center gap-2"
-            style={{ opacity: scrollHintOpacity }}
           >
             <span className="text-[0.65rem] tracking-[0.3em] uppercase text-white/30">Scroll</span>
             <div className="w-[1px] h-8 bg-gradient-to-b from-white/20 to-transparent animate-pulse" />

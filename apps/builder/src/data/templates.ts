@@ -1753,22 +1753,22 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         style: { background: 'dark' as any, paddingY: 'xl' },
         visible: true,
       },
-      // ── Process (timeline) ──
+      // ── Process (Brixsa-style: scrolling bg + sticky text per step) ──
       {
         type: 'steps',
-        variant: 'jlstudio-timeline',
+        variant: 'jlstudio-process',
         content: {
           title: 'Comment ça marche',
           subtitle: 'Un processus clair et transparent, de l\'idée au lancement',
           items: [
-            { id: '1', title: 'Discovery', description: 'On échange sur votre vision, vos objectifs et votre audience cible. J\'analyse votre marché et vos concurrents pour définir la stratégie idéale.', details: 'Audit complet · Analyse concurrence · Définition des objectifs · Brief créatif' },
-            { id: '2', title: 'Design', description: 'Je crée les maquettes de votre site avec un design unique et sur-mesure. Chaque pixel est pensé pour refléter votre identité et convertir vos visiteurs.', details: 'Wireframes · Maquettes HD · Prototypage · Design system' },
-            { id: '3', title: 'Développement', description: 'Je code votre site avec les dernières technologies (Next.js, React, TypeScript). Performance, sécurité et scalabilité sont mes priorités.', details: 'Next.js / React · TypeScript strict · API REST · Base PostgreSQL' },
-            { id: '4', title: 'Tests & QA', description: 'Tests approfondis sur tous les navigateurs et appareils. Chaque fonctionnalité est vérifiée, chaque interaction est peaufinée.', details: 'Tests cross-browser · Responsive check · Performance audit · Accessibilité' },
-            { id: '5', title: 'Lancement', description: 'Déploiement sur infrastructure haute performance avec monitoring. Formation à l\'utilisation du CMS et support continu post-lancement.', details: 'Déploiement · Configuration DNS · Formation CMS · Support 30j inclus' },
+            { id: '1', title: 'Discovery', description: 'On échange sur votre vision, vos objectifs et votre audience cible. J\'analyse votre marché et vos concurrents pour définir la stratégie idéale.', badge: 'Stratégie', details: 'Audit complet \u00b7 Analyse concurrence \u00b7 D\u00e9finition des objectifs \u00b7 Brief cr\u00e9atif', image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80' },
+            { id: '2', title: 'Design', description: 'Je crée les maquettes de votre site avec un design unique et sur-mesure. Chaque pixel est pensé pour refléter votre identité et convertir vos visiteurs.', badge: 'Créativité', details: 'Wireframes \u00b7 Maquettes HD \u00b7 Prototypage \u00b7 Design system', image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1920&q=80' },
+            { id: '3', title: 'Développement', description: 'Je code votre site avec les dernières technologies (Next.js, React, TypeScript). Performance, sécurité et scalabilité sont mes priorités.', badge: 'Technologie', details: 'Next.js / React \u00b7 TypeScript strict \u00b7 API REST \u00b7 Base PostgreSQL', image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1920&q=80' },
+            { id: '4', title: 'Tests & QA', description: 'Tests approfondis sur tous les navigateurs et appareils. Chaque fonctionnalité est vérifiée, chaque interaction est peaufinée.', badge: 'Qualité', details: 'Tests cross-browser \u00b7 Responsive check \u00b7 Performance audit \u00b7 Accessibilit\u00e9', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80' },
+            { id: '5', title: 'Lancement', description: 'Déploiement sur infrastructure haute performance avec monitoring. Formation à l\'utilisation du CMS et support continu post-lancement.', badge: 'Déploiement', details: 'D\u00e9ploiement \u00b7 Configuration DNS \u00b7 Formation CMS \u00b7 Support 30j inclus', image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&q=80' },
           ],
         },
-        style: { background: 'dark' as any, paddingY: 'xl' },
+        style: { background: 'dark' as any, paddingY: 'none' as any },
         visible: true,
       },
       // ── Portfolio ──
