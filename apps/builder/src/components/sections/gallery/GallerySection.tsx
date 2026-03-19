@@ -5454,7 +5454,7 @@ export function GallerySection({ config }: { config: SectionConfig }) {
             <h2 {...elementProps(config.id, 'title', 'heading')} className="text-3xl md:text-5xl font-bold text-white leading-tight">
               {content.title ?? 'Réalisations'}
             </h2>
-            {content.subtitle && <p className="text-base text-white/40 max-w-lg mx-auto">{content.subtitle}</p>}
+            {(raw.subtitle as string) && <p className="text-base text-white/40 max-w-lg mx-auto">{raw.subtitle as string}</p>}
           </div>
 
           {/* Asymmetric grid */}
@@ -5566,7 +5566,7 @@ export function GallerySection({ config }: { config: SectionConfig }) {
           <h2 {...elementProps(config.id, 'title', 'heading')} style={{ fontSize: 'clamp(30px, 5vw, 52px)', fontWeight: 700, color: '#ffffff', lineHeight: 1.1, margin: 0 }}>
             {content.title ?? 'Réalisations'}
           </h2>
-          {content.subtitle && <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)', maxWidth: 500, margin: '16px auto 0' }}>{content.subtitle}</p>}
+          {(raw.subtitle as string) && <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)', maxWidth: 500, margin: '16px auto 0' }}>{raw.subtitle as string}</p>}
         </div>
 
         {/* Projects — each takes 80vh, bg image with sticky text */}
