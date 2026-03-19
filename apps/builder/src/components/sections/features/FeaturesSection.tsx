@@ -5670,17 +5670,19 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
       ? items.map((item, i) => {
           const def = defaultSlides[i % defaultSlides.length]
           const raw = item as unknown as Record<string, unknown>
-          const tagsRaw = raw.tags
-          const parsedTags: string[] = Array.isArray(tagsRaw)
-            ? (tagsRaw as string[])
-            : typeof tagsRaw === 'string'
-              ? (tagsRaw as string).split(',').map((t: string) => t.trim())
-              : def.tags
+          const tagsRaw = raw.features ?? raw.tags
+          let parsedTags: string[] = def.tags
+          if (Array.isArray(tagsRaw)) {
+            parsedTags = tagsRaw as string[]
+          } else if (typeof tagsRaw === 'string') {
+            try { const parsed = JSON.parse(tagsRaw); if (Array.isArray(parsed)) parsedTags = parsed }
+            catch { parsedTags = (tagsRaw as string).split(',').map((t: string) => t.trim()) }
+          }
           return {
             number: def.number,
-            subtitle: item.title || def.subtitle,
-            title: (raw.description as string) || def.title,
-            description: (raw.details as string) || def.description,
+            subtitle: (raw.icon as string) || def.number,
+            title: item.title || def.subtitle,
+            description: (raw.description as string) || def.description,
             tags: parsedTags,
             image: (raw.image as string) || def.image,
             id: item.id,
