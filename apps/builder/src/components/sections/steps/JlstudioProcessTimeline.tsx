@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useCallback } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
@@ -39,7 +39,7 @@ export function JlstudioProcessTimeline({
   const lineProgressRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
 
-  // Set line height to match timeline content (works in both builder and final site)
+  // Set line height to match timeline content
   useEffect(() => {
     if (!sectionRef.current || !lineRef.current) return
     const stepEls = sectionRef.current.querySelectorAll<HTMLElement>('[data-step]')
@@ -49,9 +49,60 @@ export function JlstudioProcessTimeline({
     lineRef.current.style.height = `${lineHeight}px`
   })
 
+  // Scroll-driven line progress — works everywhere (no ScrollTrigger needed)
+  // Uses getBoundingClientRect to calculate progress manually
+  const updateLineProgress = useCallback(() => {
+    if (!lineRef.current || !lineProgressRef.current) return
+    const rect = lineRef.current.getBoundingClientRect()
+    const vh = window.innerHeight
+    // Progress: 0 when line top enters viewport at 60%, 1 when line bottom reaches 40%
+    const start = vh * 0.6
+    const end = vh * 0.4
+    const totalTravel = rect.height + (start - end)
+    const traveled = start - rect.top
+    const progress = Math.max(0, Math.min(1, traveled / totalTravel))
+    lineProgressRef.current.style.transform = `scaleY(${progress})`
+    lineProgressRef.current.style.transformOrigin = 'top'
+  }, [])
+
   useEffect(() => {
-    // ScrollTrigger doesn't work in the builder's nested scroll container.
-    // Animations only run on the final deployed site (apps/web).
+    if (!isPreview) {
+      // In edit mode, show full line
+      if (lineProgressRef.current) {
+        lineProgressRef.current.style.transform = 'scaleY(1)'
+      }
+      return
+    }
+
+    // Find the scroll container (could be window or a parent div in builder)
+    let scrollContainer: HTMLElement | Window = window
+    if (sectionRef.current) {
+      let parent = sectionRef.current.parentElement
+      while (parent) {
+        const style = window.getComputedStyle(parent)
+        if ((style.overflow === 'auto' || style.overflow === 'scroll' || style.overflowY === 'auto' || style.overflowY === 'scroll') && parent !== document.documentElement) {
+          scrollContainer = parent
+          break
+        }
+        parent = parent.parentElement
+      }
+    }
+
+    // Start with line hidden
+    if (lineProgressRef.current) {
+      lineProgressRef.current.style.transform = 'scaleY(0)'
+      lineProgressRef.current.style.transformOrigin = 'top'
+    }
+
+    const onScroll = () => requestAnimationFrame(updateLineProgress)
+    scrollContainer.addEventListener('scroll', onScroll, { passive: true })
+    onScroll() // initial calc
+
+    return () => scrollContainer.removeEventListener('scroll', onScroll)
+  }, [isPreview, updateLineProgress])
+
+  // GSAP animations for final deployed site only
+  useEffect(() => {
     if (!sectionRef.current || !isPreview) return
 
     // Detect builder environment: skip GSAP animations
@@ -69,8 +120,6 @@ export function JlstudioProcessTimeline({
     if (isInBuilder) return
 
     const section = sectionRef.current
-    const line = lineRef.current
-    const lineProgress = lineProgressRef.current
     const stepEls = section.querySelectorAll<HTMLElement>('[data-step]')
     const numberEls = section.querySelectorAll<HTMLElement>('[data-number]')
     const titleEls = section.querySelectorAll<HTMLElement>('[data-title]')
@@ -91,7 +140,6 @@ export function JlstudioProcessTimeline({
       descEls.forEach((d) => gsap.set(d, { opacity: 1, y: 0 }))
       detailEls.forEach((d) => gsap.set(d, { opacity: 1, y: 0 }))
       nodeEls.forEach((n) => gsap.set(n, { scale: 1, opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }))
-      if (lineProgress) gsap.set(lineProgress, { scaleY: 1 })
       return
     }
 
@@ -99,21 +147,6 @@ export function JlstudioProcessTimeline({
       const splitTitles = Array.from(titleEls).map((el) =>
         SplitText.create(el, { type: 'chars' })
       )
-
-      // Progress line grows as you scroll
-      if (lineProgress) {
-        gsap.set(lineProgress, { scaleY: 0, transformOrigin: 'top' })
-        gsap.to(lineProgress, {
-          scaleY: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: line,
-            start: 'top 60%',
-            end: 'bottom 40%',
-            scrub: true,
-          },
-        })
-      }
 
       // Per-step animations
       stepEls.forEach((stepEl, i) => {
@@ -125,31 +158,28 @@ export function JlstudioProcessTimeline({
         const split = splitTitles[i]
         const isLeft = i % 2 === 0
 
-        // Initial states — GSAP sets opacity:0, will animate to 1 on scroll
+        // Initial states
         gsap.set(split.chars, { opacity: 0, y: isMobile ? 30 : 50, rotateX: isMobile ? -30 : -60 })
         gsap.set(desc, { opacity: 0, y: 30 })
         if (detail) gsap.set(detail, { opacity: 0, y: 20 })
         gsap.set(number, { opacity: 0, y: 20 })
         gsap.set(node, { scale: 0, opacity: 0 })
 
-        // Parallax: number moves slower (depth effect)
+        // Parallax: number moves slower
         gsap.to(number, {
-          yPercent: isMobile ? -10 : -25,
-          ease: 'none',
+          yPercent: isMobile ? -10 : -25, ease: 'none',
           scrollTrigger: { trigger: stepEl, start: 'top bottom', end: 'bottom top', scrub: true },
         })
 
-        // Parallax: title moves at medium speed
+        // Parallax: title at medium speed
         gsap.to(titleEls[i], {
-          yPercent: isMobile ? -8 : -15,
-          ease: 'none',
+          yPercent: isMobile ? -8 : -15, ease: 'none',
           scrollTrigger: { trigger: stepEl, start: 'top bottom', end: 'bottom top', scrub: true },
         })
 
-        // Parallax: description at slight speed
+        // Parallax: description slight
         gsap.to(desc, {
-          yPercent: isMobile ? -3 : -5,
-          ease: 'none',
+          yPercent: isMobile ? -3 : -5, ease: 'none',
           scrollTrigger: { trigger: stepEl, start: 'top bottom', end: 'bottom top', scrub: true },
         })
 
@@ -159,7 +189,6 @@ export function JlstudioProcessTimeline({
           scrollTrigger: { trigger: stepEl, start: 'top 70%', toggleActions: 'play none none reverse' },
         })
 
-        // Node glow pulse
         if (nodeInner) {
           gsap.to(nodeInner, {
             boxShadow: `0 0 20px ${accent}99, 0 0 40px ${accent}33`,
@@ -188,7 +217,6 @@ export function JlstudioProcessTimeline({
           scrollTrigger: { trigger: stepEl, start: 'top 62%', toggleActions: 'play none none reverse' },
         })
 
-        // Detail slides in
         if (detail) {
           gsap.to(detail, {
             opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
@@ -219,7 +247,11 @@ export function JlstudioProcessTimeline({
     <section
       ref={sectionRef}
       className="relative bg-black overflow-hidden"
-      style={{ fontFamily: 'var(--font-body, inherit)' }}
+      style={{
+        fontFamily: 'var(--font-body, inherit)',
+        // clip-path clips the fixed background to this section only
+        clipPath: 'inset(0)',
+      }}
     >
       {/* Fixed grid background — stays immobile while content scrolls over it */}
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
@@ -304,12 +336,17 @@ export function JlstudioProcessTimeline({
             transform: isMobile ? 'none' : 'translateX(-50%)',
           }}
         >
+          {/* Background line (faint) */}
           <div className="w-full h-full bg-white/[0.06]" />
+          {/* Animated progress line */}
           <div
             ref={lineProgressRef}
             className="absolute top-0 left-0 w-full h-full"
             style={{
               background: `linear-gradient(to bottom, ${accent}99, ${accent}66, ${accent}99)`,
+              transformOrigin: 'top',
+              transform: 'scaleY(0)',
+              transition: 'none',
             }}
           />
         </div>
