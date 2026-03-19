@@ -5680,7 +5680,7 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
           }
           return {
             number: def.number,
-            subtitle: (raw.icon as string) || def.number,
+            subtitle: (raw.subtitle as string) || def.subtitle,
             title: item.title || def.subtitle,
             description: (raw.description as string) || def.description,
             tags: parsedTags,
