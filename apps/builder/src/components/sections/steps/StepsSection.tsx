@@ -4,6 +4,7 @@ import type { SectionConfig } from '@/types/site'
 import type { StepsContent } from '@/types/sections'
 import { DynamicIcon } from '@/components/ui/DynamicIcon'
 import { elementProps } from '@/lib/elementHelpers'
+import { JlstudioProcessTimeline } from './JlstudioProcessTimeline'
 
 export function StepsSection({ config, isEditing }: { config: SectionConfig; isEditing?: boolean }) {
   const content = (config.content ?? {}) as Partial<StepsContent>
@@ -504,172 +505,12 @@ export function StepsSection({ config, isEditing }: { config: SectionConfig; isE
   }
 
   // ═══════════════════════════════════════════
-  // JLSTUDIO-PROCESS — Brixsa-style sticky text + scrolling bg per step
-  // Each step: tall container (180vh), bg image scrolls away, text stays sticky
+  // JLSTUDIO-PROCESS — V3 ProcessJourney timeline
+  // Vertical timeline, alternating L/R, GSAP SplitText chars, parallax, grid bg
   // ═══════════════════════════════════════════
 
   if (variant === 'jlstudio-process') {
-    const accent = accentColor ?? '#638BFF'
-    const BG = '#0a0a0f'
-    const isPreview = !isEditing
-
-    const defaultImages = [
-      'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80',
-      'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1920&q=80',
-      'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1920&q=80',
-      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80',
-      'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&q=80',
-    ]
-
-    return (
-      <section style={{ fontFamily: 'var(--font-body, inherit)' }}>
-        {/* Section header */}
-        <div style={{ backgroundColor: BG, padding: 'clamp(60px, 10vw, 120px) clamp(20px, 5vw, 60px)', textAlign: 'center' }}>
-          {eyebrow && (
-            <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: accent, marginBottom: 16 }}>
-              {eyebrow}
-            </span>
-          )}
-          {title && (
-            <h2 {...elementProps(config.id, 'title', 'heading')} style={{ fontSize: 'clamp(2rem, 1.2rem + 3.5vw, 3.5rem)', fontWeight: 700, color: '#FFFFFF', lineHeight: '110%', marginBottom: subtitle ? 16 : 0 }}>
-              {title}
-            </h2>
-          )}
-          {subtitle && (
-            <p {...elementProps(config.id, 'subtitle', 'text')} style={{ fontSize: 17, color: 'rgba(255,255,255,0.4)', maxWidth: 600, margin: '0 auto' }}>
-              {subtitle}
-            </p>
-          )}
-        </div>
-
-        {/* Steps — each is a tall block with bg image + sticky text overlay */}
-        {items.map((item, i) => {
-          const image = (item as any).image || defaultImages[i % defaultImages.length]
-          const stepNumber = String(i + 1).padStart(2, '0')
-
-          return (
-            <div
-              key={item.id}
-              style={{
-                position: 'relative',
-                minHeight: isPreview ? '180vh' : '100vh',
-                backgroundColor: BG,
-                color: '#FFFFFF',
-                zIndex: 2,
-              }}
-            >
-              {/* Background image — absolute, scrolls with its parent */}
-              <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={image}
-                  alt=""
-                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
-                />
-                {/* Dark overlay */}
-                <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.55)' }} />
-              </div>
-
-              {/* Sticky text content — stays fixed while bg scrolls */}
-              <div
-                style={{
-                  position: isPreview ? 'sticky' : 'absolute',
-                  top: isPreview ? '15vh' : 0,
-                  left: 0,
-                  right: 0,
-                  zIndex: 2,
-                  padding: 'clamp(40px, 8vw, 100px) clamp(20px, 5vw, 60px)',
-                  ...(isPreview ? {} : { bottom: 0, display: 'flex', alignItems: 'center', height: '100%' }),
-                }}
-              >
-                <div style={{ maxWidth: 800, width: '100%' }}>
-                  {/* Step number large + badge */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-                    <span
-                      {...elementProps(config.id, `items.${i}.number`, 'badge')}
-                      style={{
-                        fontSize: 'clamp(4rem, 3rem + 4vw, 7rem)',
-                        fontWeight: 800,
-                        lineHeight: 1,
-                        color: `${accent}25`,
-                        fontFamily: "'Inter Variable', 'Inter', sans-serif",
-                      }}
-                    >
-                      {stepNumber}
-                    </span>
-                    {(item as any).badge && (
-                      <span style={{
-                        padding: '6px 16px',
-                        borderRadius: 100,
-                        backdropFilter: 'blur(20px)',
-                        WebkitBackdropFilter: 'blur(20px)',
-                        background: `${accent}15`,
-                        color: accent,
-                        fontSize: 12,
-                        fontWeight: 600,
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase' as const,
-                        border: `1px solid ${accent}30`,
-                      }}>
-                        {(item as any).badge}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Title */}
-                  <h3
-                    {...elementProps(config.id, `items.${i}.title`, 'heading')}
-                    style={{
-                      fontSize: 'clamp(2rem, 1.2rem + 3vw, 3.5rem)',
-                      fontWeight: 600,
-                      color: '#FFFFFF',
-                      lineHeight: '115%',
-                      marginBottom: 16,
-                    }}
-                  >
-                    {item.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p
-                    {...elementProps(config.id, `items.${i}.description`, 'text')}
-                    style={{ fontSize: 17, lineHeight: '170%', color: 'rgba(255,255,255,0.65)', maxWidth: 560 }}
-                  >
-                    {item.description}
-                  </p>
-
-                  {/* Details */}
-                  {(item as any).details && (
-                    <p style={{ marginTop: 16, fontSize: 14, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.02em' }}>
-                      {(item as any).details}
-                    </p>
-                  )}
-
-                  {/* Step indicator */}
-                  <div style={{ marginTop: 40, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    {Array.from({ length: items.length }, (_, j) => (
-                      <div
-                        key={j}
-                        style={{
-                          width: j === i ? 32 : 8,
-                          height: 3,
-                          borderRadius: 2,
-                          backgroundColor: j === i ? accent : 'rgba(255,255,255,0.15)',
-                          transition: 'all 0.3s ease',
-                        }}
-                      />
-                    ))}
-                    <span style={{ marginLeft: 12, fontSize: 13, color: 'rgba(255,255,255,0.3)', fontWeight: 500 }}>
-                      {stepNumber} / {String(items.length).padStart(2, '0')}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        })}
-      </section>
-    )
+    return <JlstudioProcessTimeline config={config} isEditing={isEditing} />
   }
 
   // ═══════════════════════════════════════════
