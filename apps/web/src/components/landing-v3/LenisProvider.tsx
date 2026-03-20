@@ -20,6 +20,10 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
     });
     lenisRef.current = lenis;
 
+    // Force scroll to top on page load
+    window.scrollTo(0, 0);
+    lenis.scrollTo(0, { immediate: true });
+
     // Sync Lenis scroll with GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
 
