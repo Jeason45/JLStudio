@@ -5,149 +5,257 @@ import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SplitTextReveal from './shared/SplitTextReveal';
-import { Star } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
+
+/* ═══════════════════════════════════════════
+   TRUSTPILOT DATA
+   ═══════════════════════════════════════════ */
+const TRUSTPILOT_URL = 'https://fr.trustpilot.com/review/jlstudio.dev';
+const TRUST_SCORE = 4.1;
+const TOTAL_REVIEWS = 5;
 
 interface Testimonial {
   name: string;
   role: string;
   quote: string;
-  initials: string;
   rating: number;
+  date: string;
+  verified: boolean;
 }
 
-/* ── Row 1 : scrolls LEFT ── */
-const row1: Testimonial[] = [
+/* ── Real Trustpilot reviews ── */
+const realReviews: Testimonial[] = [
+  {
+    name: 'Houda Zeggouti',
+    role: 'Cliente',
+    quote:
+      "Rapide et efficace dans l'élaboration du projet, JL Studio transforme les idées en résultats concrets et de qualité. Je recommande vivement.",
+    rating: 5,
+    date: '6 mars 2026',
+    verified: true,
+  },
+  {
+    name: 'Carla Goncalves',
+    role: 'Plateforme éducative',
+    quote:
+      "Une grande écoute et une valeur ajoutée significative grâce à des propositions professionnelles. Le résultat dépasse nos attentes.",
+    rating: 5,
+    date: '3 mars 2026',
+    verified: true,
+  },
+  {
+    name: 'Hinde',
+    role: 'Application sur mesure',
+    quote:
+      "Un développeur compétent et à l'écoute qui a su concevoir une application sur mesure. Design soigné, attention au détail et réactivité exemplaire.",
+    rating: 5,
+    date: '3 mars 2026',
+    verified: true,
+  },
+  {
+    name: 'Florent Carivenc',
+    role: 'Créateur culinaire',
+    quote:
+      "Très professionnel, je recommande vraiment. Le site correspond parfaitement à ce que j'attendais, livré dans les temps avec un suivi impeccable.",
+    rating: 5,
+    date: '2 mars 2026',
+    verified: true,
+  },
+  {
+    name: 'Tib',
+    role: 'Site vitrine & CRM',
+    quote:
+      "Top qualité ! Je recommande sans hésitations. Le site et le CRM livrés sont exactement ce dont nous avions besoin, fiables et bien pensés.",
+    rating: 5,
+    date: '2 mars 2026',
+    verified: true,
+  },
+];
+
+/* ── Additional testimonials for marquee density ── */
+const extraReviews: Testimonial[] = [
   {
     name: 'Run As One',
     role: 'Communauté running',
     quote:
-      "Un site qui capture parfaitement l'énergie de notre communauté. Le design épuré et l'expérience mobile irréprochable nous ont permis de fédérer nos coureurs.",
-    initials: 'RO',
+      "Un site qui capture parfaitement l'énergie de notre communauté. Design épuré, performances rapides et expérience mobile irréprochable.",
     rating: 5,
+    date: 'Projet livré',
+    verified: false,
   },
   {
     name: 'Propdesk',
     role: 'Prop trading',
     quote:
-      "JL Studio a su traduire notre exigence de précision en un site professionnel et performant. L'interface inspire confiance dès le premier clic.",
-    initials: 'PD',
+      "JL Studio a traduit notre exigence de précision en un site professionnel et performant. L'interface inspire confiance dès le premier clic.",
     rating: 5,
+    date: 'Projet livré',
+    verified: false,
   },
   {
     name: 'Al-Ilm',
     role: 'Plateforme éducative',
     quote:
-      "Navigation fluide entre les sourates, accès aux hadiths authentiques et contenu éducatif riche. Un outil qui rend l'apprentissage accessible.",
-    initials: 'AI',
+      "Navigation fluide, accès aux hadiths authentiques et contenu riche. Un outil qui rend l'apprentissage accessible et agréable.",
     rating: 5,
-  },
-  {
-    name: 'Flamme by Caubet',
-    role: 'Location événementielle',
-    quote:
-      "Le CRM intégré a transformé notre gestion. Devis automatiques, signature électronique, calendrier de réservations — tout est fluide et pro.",
-    initials: 'FC',
-    rating: 5,
-  },
-  {
-    name: 'Florent Food',
-    role: 'Créateur culinaire',
-    quote:
-      "Ma plateforme de recettes est exactement ce que j'imaginais. Newsletter, abonnements premium, analytics — tout fonctionne parfaitement.",
-    initials: 'FF',
-    rating: 5,
+    date: 'Projet livré',
+    verified: false,
   },
 ];
 
-/* ── Row 2 : scrolls RIGHT ── */
-const row2: Testimonial[] = [
-  {
-    name: 'Sophie M.',
-    role: 'Photographe',
-    quote:
-      "Mon portfolio est enfin à la hauteur de mon travail. Les animations sont sublimes, le chargement ultra-rapide et mes clients adorent.",
-    initials: 'SM',
-    rating: 5,
-  },
-  {
-    name: 'Thomas R.',
-    role: 'Coach business',
-    quote:
-      "Le site a boosté ma crédibilité en ligne. En 2 mois, mes demandes de consultation ont triplé. Le ROI est indiscutable.",
-    initials: 'TR',
-    rating: 5,
-  },
-  {
-    name: 'Maison Delvaux',
-    role: 'Restaurant gastronomique',
-    quote:
-      "Un site élégant qui reflète notre identité. La réservation en ligne a simplifié notre quotidien et nos clients apprécient l'expérience.",
-    initials: 'MD',
-    rating: 5,
-  },
-  {
-    name: 'Lucas B.',
-    role: 'Agence immobilière',
-    quote:
-      "Nos biens sont mis en valeur comme jamais. Le design premium et les performances du site ont clairement fait la différence face à la concurrence.",
-    initials: 'LB',
-    rating: 5,
-  },
-  {
-    name: 'Claire D.',
-    role: 'E-commerce mode',
-    quote:
-      "La boutique en ligne est magnifique et les conversions ont explosé. Paiement fluide, tunnel optimisé — exactement ce qu'il nous fallait.",
-    initials: 'CD',
-    rating: 5,
-  },
-];
+const row1 = [...realReviews.slice(0, 3), ...extraReviews.slice(0, 2)];
+const row2 = [...realReviews.slice(3), ...extraReviews.slice(2), ...realReviews.slice(0, 2)];
 
-/* ── Stars component ── */
-function Stars({ count }: { count: number }) {
+/* ═══════════════════════════════════════════
+   TRUSTPILOT STAR (green Trustpilot style)
+   ═══════════════════════════════════════════ */
+function TrustpilotStar({ filled }: { filled: boolean }) {
   return (
-    <div className="flex gap-0.5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          className={`w-3.5 h-3.5 ${i < count ? 'text-amber-400 fill-amber-400' : 'text-white/15'}`}
+    <div
+      className="w-[22px] h-[22px] flex items-center justify-center"
+      style={{ background: filled ? '#00b67a' : '#dcdce6', clipPath: 'none' }}
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+          fill={filled ? '#fff' : '#fff'}
         />
+      </svg>
+    </div>
+  );
+}
+
+function TrustpilotStars({ count }: { count: number }) {
+  return (
+    <div className="flex gap-[3px]">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <TrustpilotStar key={i} filled={i < count} />
       ))}
     </div>
   );
 }
 
-/* ── Single testimonial card ── */
+/* ── Trustpilot mini badge for cards ── */
+function CardStars({ count }: { count: number }) {
+  return (
+    <div className="flex gap-[2px]">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div
+          key={i}
+          className="w-[18px] h-[18px] flex items-center justify-center"
+          style={{ background: i < count ? '#00b67a' : '#dcdce6' }}
+        >
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+              fill="#fff"
+            />
+          </svg>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   TRUSTBOX WIDGET (custom)
+   ═══════════════════════════════════════════ */
+function TrustBox() {
+  return (
+    <a
+      href={TRUSTPILOT_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-4 sm:gap-6 bg-white/[0.05] backdrop-blur-md border border-white/[0.1] rounded-2xl px-6 sm:px-8 py-4 sm:py-5 hover:bg-white/[0.08] hover:border-white/[0.15] transition-all duration-500 group"
+    >
+      {/* Score */}
+      <div className="text-center">
+        <p className="text-white font-bold text-2xl sm:text-3xl leading-none">{TRUST_SCORE}</p>
+        <p className="text-white/40 text-[10px] mt-1">sur 5</p>
+      </div>
+
+      {/* Divider */}
+      <div className="w-px h-10 bg-white/[0.1]" />
+
+      {/* Stars + info */}
+      <div>
+        <TrustpilotStars count={Math.round(TRUST_SCORE)} />
+        <p className="text-white/50 text-xs mt-1.5">
+          Basé sur <span className="text-white/70 font-medium">{TOTAL_REVIEWS} avis</span>
+        </p>
+      </div>
+
+      {/* Divider */}
+      <div className="w-px h-10 bg-white/[0.1] hidden sm:block" />
+
+      {/* Trustpilot logo */}
+      <div className="hidden sm:flex items-center gap-1.5">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+            fill="#00b67a"
+          />
+        </svg>
+        <span className="text-white font-semibold text-sm tracking-tight">Trustpilot</span>
+      </div>
+
+      {/* Arrow */}
+      <svg className="w-4 h-4 text-white/30 group-hover:text-white/60 group-hover:translate-x-0.5 transition-all duration-300 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </a>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   TESTIMONIAL CARD
+   ═══════════════════════════════════════════ */
 function TestimonialCard({ t }: { t: Testimonial }) {
   return (
     <div className="flex-shrink-0 w-[340px] sm:w-[400px] bg-white/[0.04] backdrop-blur-md border border-white/[0.08] rounded-2xl p-6 sm:p-7 hover:border-white/[0.15] hover:bg-white/[0.06] transition-all duration-500 group">
-      {/* Stars */}
-      <Stars count={t.rating} />
+      {/* Header: stars + verified badge */}
+      <div className="flex items-center justify-between mb-4">
+        <CardStars count={t.rating} />
+        {t.verified && (
+          <span className="text-[10px] text-[#00b67a]/80 font-medium flex items-center gap-1">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            Vérifié
+          </span>
+        )}
+      </div>
 
       {/* Quote */}
-      <blockquote className="mt-4 mb-6 text-white/60 text-sm leading-relaxed group-hover:text-white/75 transition-colors duration-500">
+      <blockquote className="mb-5 text-white/60 text-sm leading-relaxed group-hover:text-white/75 transition-colors duration-500">
         <p>&ldquo;{t.quote}&rdquo;</p>
       </blockquote>
 
-      {/* Author */}
-      <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-full bg-[#638BFF]/[0.1] border border-[#638BFF]/20 flex items-center justify-center flex-shrink-0">
-          <span className="text-[10px] font-bold text-[#638BFF]">{t.initials}</span>
+      {/* Author + date */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-[#00b67a]/[0.12] border border-[#00b67a]/20 flex items-center justify-center flex-shrink-0">
+            <span className="text-[10px] font-bold text-[#00b67a]">
+              {t.name.split(' ').map(w => w[0]).join('').slice(0, 2)}
+            </span>
+          </div>
+          <div>
+            <cite className="text-sm font-semibold text-white not-italic block leading-tight">
+              {t.name}
+            </cite>
+            <p className="text-[11px] text-white/35">{t.role}</p>
+          </div>
         </div>
-        <div>
-          <cite className="text-sm font-semibold text-white not-italic block leading-tight">
-            {t.name}
-          </cite>
-          <p className="text-[11px] text-white/40">{t.role}</p>
-        </div>
+        <p className="text-[10px] text-white/25">{t.date}</p>
       </div>
     </div>
   );
 }
 
-/* ── Marquee row: duplicated for seamless loop ── */
+/* ═══════════════════════════════════════════
+   MARQUEE ROW
+   ═══════════════════════════════════════════ */
 function MarqueeRow({
   items,
   direction,
@@ -164,7 +272,6 @@ function MarqueeRow({
     const track = trackRef.current;
     if (!track) return;
 
-    // Each item set occupies 50% of the track (since we duplicate once)
     const xPercent = direction === 'left' ? -50 : 0;
     const xPercentEnd = direction === 'left' ? 0 : -50;
 
@@ -194,7 +301,6 @@ function MarqueeRow({
     }
   };
 
-  // Duplicate items for seamless loop
   const doubled = [...items, ...items];
 
   return (
@@ -205,14 +311,16 @@ function MarqueeRow({
     >
       <div ref={trackRef} className="flex gap-5 w-max will-change-transform">
         {doubled.map((t, i) => (
-          <TestimonialCard key={`${t.initials}-${i}`} t={t} />
+          <TestimonialCard key={`${t.name}-${i}`} t={t} />
         ))}
       </div>
     </div>
   );
 }
 
-/* ── Main section ── */
+/* ═══════════════════════════════════════════
+   MAIN SECTION
+   ═══════════════════════════════════════════ */
 export default function TestimonialsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
@@ -222,7 +330,6 @@ export default function TestimonialsSection() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const ctx = gsap.context(() => {
-      // Background parallax
       if (bgRef.current) {
         gsap.to(bgRef.current, {
           yPercent: -15,
@@ -236,7 +343,6 @@ export default function TestimonialsSection() {
         });
       }
 
-      // Fade in the marquee rows on scroll
       const rows = sectionRef.current!.querySelectorAll<HTMLElement>('[data-marquee-row]');
       rows.forEach((row, i) => {
         gsap.from(row, {
@@ -277,14 +383,14 @@ export default function TestimonialsSection() {
         </div>
       </div>
 
-      {/* Overlay for readability */}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/50" />
 
       <div className="relative z-10">
         {/* Header */}
-        <div className="text-center mb-14 sm:mb-20 px-6">
-          <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">
-            Témoignages
+        <div className="text-center mb-8 sm:mb-12 px-6">
+          <p className="text-[#00b67a]/70 text-xs tracking-[0.4em] uppercase mb-4">
+            Avis clients
           </p>
           <SplitTextReveal
             tag="h2"
@@ -293,12 +399,14 @@ export default function TestimonialsSection() {
           >
             Ils nous font confiance
           </SplitTextReveal>
-          <p className="mt-4 text-white/40 text-sm max-w-md mx-auto">
-            Des projets livrés, des clients satisfaits.
-          </p>
         </div>
 
-        {/* Marquee rows — full width, no max-w container */}
+        {/* TrustBox widget */}
+        <div className="flex justify-center mb-14 sm:mb-20 px-6">
+          <TrustBox />
+        </div>
+
+        {/* Marquee rows */}
         <div className="space-y-5">
           <div data-marquee-row>
             <MarqueeRow items={row1} direction="left" speed={45} />
