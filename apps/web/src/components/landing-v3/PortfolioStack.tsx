@@ -207,62 +207,7 @@ export default function PortfolioStack() {
     };
   }, [isMobile]);
 
-  // ── Hover: track hovered card via ref to avoid flicker ──
-  const hoveredRef = useRef<number | null>(null);
-  const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const animateToState = useCallback((index: number | null) => {
-    if (!fanReady || activeCard !== null || !sectionRef.current) return;
-
-    const cards = sectionRef.current.querySelectorAll<HTMLElement>('[data-card]');
-    const inners = sectionRef.current.querySelectorAll<HTMLElement>('[data-card-inner]');
-
-    if (index === null) {
-      // Reset all cards to fan position
-      cards.forEach((card, i) => {
-        const pos = getFanPosition(i);
-        gsap.to(card, { x: pos.x, y: pos.y, zIndex: i + 1, duration: 0.5, ease: 'elastic.out(0.6, 0.5)' });
-        gsap.to(inners[i], { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: 'elastic.out(0.6, 0.5)' });
-      });
-    } else {
-      cards.forEach((card, i) => {
-        if (i === index) {
-          gsap.to(inners[i], { y: -40, scale: 1.08, duration: 0.4, ease: 'power3.out' });
-          gsap.to(card, { zIndex: 20, duration: 0 });
-        } else {
-          const dir = i < index ? -1 : 1;
-          gsap.to(card, { x: getFanPosition(i).x + dir * 15, duration: 0.4, ease: 'power2.out' });
-          gsap.to(inners[i], { scale: 0.95, opacity: 0.45, duration: 0.4, ease: 'power2.out' });
-        }
-      });
-    }
-  }, [fanReady, activeCard]);
-
-  // Detect which card the mouse is over via the fan container's mousemove
-  const handleFanMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!fanReady || activeCard !== null || !sectionRef.current) return;
-
-    // Find the topmost card element under the cursor
-    const els = document.elementsFromPoint(e.clientX, e.clientY);
-    let foundIndex: number | null = null;
-    for (const el of els) {
-      const card = (el as HTMLElement).closest('[data-card]') as HTMLElement | null;
-      if (card) {
-        const cards = Array.from(sectionRef.current.querySelectorAll<HTMLElement>('[data-card]'));
-        foundIndex = cards.indexOf(card);
-        break;
-      }
-    }
-
-    if (foundIndex === hoveredRef.current) return;
-    hoveredRef.current = foundIndex;
-    animateToState(foundIndex);
-  }, [fanReady, activeCard, animateToState]);
-
-  const handleFanMouseLeave = useCallback(() => {
-    hoveredRef.current = null;
-    animateToState(null);
-  }, [animateToState]);
+  // Hover is handled entirely via CSS (same approach as builder)
 
   const handleCardClick = useCallback((index: number) => {
     if (!fanReady) return;
@@ -347,13 +292,34 @@ export default function PortfolioStack() {
         </h2>
       </div>
 
+      {/* CSS hover rules — same approach as builder (pure CSS, no JS) */}
+      <style jsx>{`
+        .fan-card {
+          transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), z-index 0s;
+        }
+        .fan-card-inner {
+          transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+        }
+        .fan-container:hover .fan-card:not(:hover) .fan-card-inner {
+          transform: scale(0.95);
+          opacity: 0.45;
+        }
+        .fan-card:hover {
+          z-index: 20 !important;
+        }
+        .fan-card:hover .fan-card-inner {
+          transform: translateY(-40px) scale(1.08);
+        }
+        .fan-card:hover .fan-img img {
+          transform: scale(1.1);
+        }
+      `}</style>
+
       {/* Fan cards container */}
       <div
         data-fan-container
-        className="relative flex items-center justify-center"
+        className="fan-container relative flex items-center justify-center"
         style={{ height: '480px' }}
-        onMouseMove={handleFanMouseMove}
-        onMouseLeave={handleFanMouseLeave}
       >
         {projects.map((project, i) => {
           const pos = getFanPosition(i);
@@ -361,7 +327,7 @@ export default function PortfolioStack() {
             <div
               key={i}
               data-card
-              className="absolute cursor-pointer"
+              className="fan-card absolute cursor-pointer"
               style={{
                 width: '310px',
                 height: '430px',
@@ -372,13 +338,14 @@ export default function PortfolioStack() {
               }}
               onClick={() => handleCardClick(i)}
             >
-              <div data-card-inner className="w-full h-full rounded-2xl overflow-hidden border border-white/[0.1] bg-[#111114] shadow-2xl relative group">
-                <div className="relative h-[60%] overflow-hidden">
+              <div data-card-inner className="fan-card-inner w-full h-full rounded-2xl overflow-hidden border border-white/[0.1] bg-[#111114] shadow-2xl relative">
+                <div className="fan-img relative h-[60%] overflow-hidden">
                   <Image
                     src={project.image}
                     alt={project.title}
                     fill
-                    className="object-cover object-top transition-transform duration-700 group-hover:scale-110"
+                    className="object-cover object-top"
+                    style={{ transition: 'transform 0.7s ease' }}
                     sizes="280px"
                     priority={i === 0}
                   />
