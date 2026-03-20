@@ -5458,51 +5458,55 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
       obs.observe(el)
     }
 
+    const fanRotations = [-16, -8, 0, 8, 16]
+    const fanYOffsets = [30, 10, 0, 10, 30]
+    const fanXSpread = 220
+    const mid = Math.floor(projects.length / 2)
+
+    const [expandedCard, setExpandedCard] = useState<number | null>(null)
+
     return (
       <section
         className="relative bg-[#050507]"
         style={{ fontFamily: 'var(--font-body, inherit)' }}
       >
         <style>{`
+          .jls-fan-card {
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), z-index 0s;
+          }
+          .jls-fan-card-inner {
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+          }
+          .jls-fan-container:hover .jls-fan-card:not(:hover) .jls-fan-card-inner {
+            transform: scale(0.95);
+            opacity: 0.45;
+          }
+          .jls-fan-card:hover {
+            z-index: 20 !important;
+          }
+          .jls-fan-card:hover .jls-fan-card-inner {
+            transform: translateY(-40px) scale(1.08);
+          }
+          .jls-fan-card:hover .jls-fan-card-img img {
+            transform: scale(1.1);
+          }
           @media (max-width: 768px) {
-            .jls-stack-card { position: relative !important; top: auto !important; height: auto !important; min-height: 0 !important; border-radius: 12px !important; margin-bottom: 24px !important; }
-            .jls-stack-card-inner { flex-direction: column !important; }
-            .jls-stack-card-img { width: 100% !important; height: 50vh !important; }
-            .jls-stack-card-content { width: 100% !important; padding: 32px 24px !important; }
-            .jls-stack-spacer { height: 0 !important; }
+            .jls-fan-container { flex-direction: column !important; height: auto !important; align-items: stretch !important; gap: 20px !important; }
+            .jls-fan-card { position: relative !important; transform: none !important; width: 100% !important; height: auto !important; }
+            .jls-fan-card-inner { transform: none !important; opacity: 1 !important; }
+            .jls-fan-container:hover .jls-fan-card:not(:hover) .jls-fan-card-inner { transform: none; opacity: 1; }
           }
         `}</style>
 
-        {/* Section intro — title + subtitle */}
-        <div
-          style={{
-            padding: 'clamp(80px, 15vw, 160px) clamp(20px, 5vw, 60px) clamp(40px, 8vw, 80px)',
-            textAlign: 'center',
-          }}
-        >
+        {/* Section intro */}
+        <div style={{ padding: 'clamp(80px, 15vw, 160px) clamp(20px, 5vw, 60px) clamp(20px, 4vw, 40px)', textAlign: 'center' }}>
           <div ref={staggerRevealRef(0)}>
-            <span
-              style={{
-                display: 'inline-block',
-                fontSize: '12px',
-                fontWeight: 600,
-                letterSpacing: '0.3em',
-                textTransform: 'uppercase',
-                color: `${accent}b3`,
-                marginBottom: '16px',
-              }}
-            >
+            <span style={{ display: 'inline-block', fontSize: '12px', fontWeight: 600, letterSpacing: '0.3em', textTransform: 'uppercase', color: `${accent}b3`, marginBottom: '16px' }}>
               Portfolio
             </span>
             <h2
               {...elementProps(config.id, 'title', 'heading')}
-              style={{
-                fontSize: 'clamp(2.25rem, 1.5rem + 3.5vw, 4.5rem)',
-                fontWeight: 700,
-                lineHeight: '110%',
-                color: '#FFFFFF',
-                marginBottom: '16px',
-              }}
+              style={{ fontSize: 'clamp(2.25rem, 1.5rem + 3.5vw, 4.5rem)', fontWeight: 700, lineHeight: '110%', color: '#FFFFFF', marginBottom: '16px' }}
             >
               {content.title ?? 'Nos Réalisations'}
             </h2>
@@ -5511,13 +5515,7 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
             <div ref={staggerRevealRef(0.15)}>
               <p
                 {...elementProps(config.id, 'subtitle', 'text')}
-                style={{
-                  fontSize: '17px',
-                  lineHeight: '170%',
-                  color: 'rgba(255,255,255,0.4)',
-                  maxWidth: '520px',
-                  margin: '0 auto',
-                }}
+                style={{ fontSize: '17px', lineHeight: '170%', color: 'rgba(255,255,255,0.4)', maxWidth: '520px', margin: '0 auto' }}
               >
                 {raw.subtitle as string}
               </p>
@@ -5525,203 +5523,153 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
           )}
         </div>
 
-        {/* Stacking cards container — each card is sticky and gets covered by the next */}
-        <div style={{ position: 'relative', padding: '0 clamp(16px, 3vw, 40px)' }}>
-          {projects.map((project, i) => (
-            <div
-              key={project.id}
-              className="jls-stack-spacer"
-              style={{
-                // Each card needs vertical space so scrolling reveals the next
-                height: isPreview ? '100vh' : 'auto',
-              }}
-            >
+        {/* Fan cards */}
+        <div
+          className="jls-fan-container"
+          style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '500px',
+            margin: '0 auto',
+            padding: '0 20px',
+          }}
+        >
+          {projects.map((project, i) => {
+            const xOffset = (i - mid) * fanXSpread
+            const yOffset = fanYOffsets[i] ?? 0
+            const rotation = fanRotations[i] ?? 0
+
+            return (
               <div
-                className="jls-stack-card"
+                key={project.id}
+                className="jls-fan-card"
                 style={{
-                  position: isPreview ? 'sticky' : 'relative',
-                  // Each card sticks slightly lower than the previous → visible stacking
-                  top: isPreview ? `${40 + i * 20}px` : 0,
-                  height: isPreview ? 'calc(100vh - 100px)' : 'auto',
-                  minHeight: isPreview ? 0 : '500px',
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-                  // Higher z-index = later cards stack on top
+                  position: 'absolute',
+                  width: '280px',
+                  height: '380px',
+                  padding: '15px',
                   zIndex: i + 1,
+                  transformOrigin: 'center 150%',
+                  transform: `translateX(${xOffset}px) translateY(${yOffset}px) rotate(${rotation}deg)`,
+                  cursor: 'pointer',
                 }}
+                onClick={() => setExpandedCard(i)}
               >
-                {/* Card inner — image left, content right */}
-                <div
-                  className="jls-stack-card-inner"
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    width: '100%',
-                    height: '100%',
-                    background: '#0c0c0f',
-                  }}
-                >
-                  {/* Image — 55% width */}
-                  <div
-                    className="jls-stack-card-img"
-                    style={{
-                      width: '55%',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      flexShrink: 0,
-                    }}
-                  >
+                <div className="jls-fan-card-inner" style={{ width: '100%', height: '100%', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', background: '#111114', boxShadow: '0 20px 60px rgba(0,0,0,0.5)', position: 'relative' }}>
+                  {/* Image */}
+                  <div className="jls-fan-card-img" style={{ position: 'relative', height: '60%', overflow: 'hidden' }}>
                     {project.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        {...elementProps(config.id, `items.${i}.image`, 'image')}
                         src={project.image}
                         alt={project.title}
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          objectPosition: 'center',
-                          transition: 'transform 0.6s ease',
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.03)' }}
-                        onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
+                        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', transition: 'transform 0.7s ease' }}
                       />
                     ) : (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          inset: 0,
-                          background: `linear-gradient(135deg, ${accent}12, #0a0a0a, ${accent}06)`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
+                      <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, ${accent}12, #0a0a0a, ${accent}06)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <Image className="w-12 h-12 text-white/15" />
                       </div>
                     )}
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #111114, transparent)' }} />
                   </div>
-
-                  {/* Content — 45% width */}
-                  <div
-                    className="jls-stack-card-content"
-                    style={{
-                      width: '45%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      padding: 'clamp(32px, 4vw, 64px)',
-                    }}
-                  >
-                    {/* Counter */}
-                    <div ref={staggerRevealRef(0)}>
-                      <span
-                        style={{
-                          display: 'block',
-                          fontSize: 'clamp(3rem, 2.5rem + 3vw, 5rem)',
-                          fontWeight: 800,
-                          lineHeight: 1,
-                          color: `${accent}12`,
-                          marginBottom: '-4px',
-                          fontVariantNumeric: 'tabular-nums',
-                        }}
-                      >
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
+                  {/* Brief info */}
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px' }}>
+                    <span style={{ display: 'block', fontSize: '10px', fontWeight: 600, letterSpacing: '0.3em', textTransform: 'uppercase', color: `${accent}b3`, marginBottom: '6px' }}>
+                      {project.category}
+                    </span>
+                    <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#FFFFFF', lineHeight: '120%' }}>
+                      {project.title}
+                    </h3>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '8px' }}>
+                      {project.tags.slice(0, 2).map((tag, ti) => (
+                        <span key={ti} style={{ fontSize: '9px', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.08)', padding: '2px 8px', borderRadius: '100px' }}>
+                          {tag}
+                        </span>
+                      ))}
                     </div>
-
-                    {/* Category badge */}
-                    <div ref={staggerRevealRef(0.1)}>
-                      <span
-                        {...elementProps(config.id, `items.${i}.badge`, 'badge')}
-                        style={{
-                          display: 'inline-block',
-                          background: `${accent}18`,
-                          borderRadius: '6px',
-                          padding: '5px 14px',
-                          fontSize: '11px',
-                          fontWeight: 600,
-                          color: accent,
-                          border: `1px solid ${accent}30`,
-                          letterSpacing: '0.1em',
-                          textTransform: 'uppercase',
-                          marginBottom: '24px',
-                        }}
-                      >
-                        {project.category}
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <div ref={staggerRevealRef(0.15)}>
-                      <h3
-                        {...elementProps(config.id, `items.${i}.title`, 'heading')}
-                        style={{
-                          fontSize: 'clamp(1.5rem, 1rem + 2vw, 2.25rem)',
-                          fontWeight: 700,
-                          lineHeight: '125%',
-                          color: '#FFFFFF',
-                          marginBottom: '12px',
-                        }}
-                      >
-                        {project.title}
-                      </h3>
-                    </div>
-
-                    {/* Description */}
-                    {project.description && (
-                      <div ref={staggerRevealRef(0.2)}>
-                        <p
-                          {...elementProps(config.id, `items.${i}.description`, 'text')}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '170%',
-                            color: 'rgba(255,255,255,0.5)',
-                            marginBottom: '24px',
-                          }}
-                        >
-                          {project.description}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Tags */}
-                    {project.tags.length > 0 && (
-                      <div ref={staggerRevealRef(0.25)}>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                          {project.tags.map((tag, ti) => (
-                            <span
-                              key={ti}
-                              style={{
-                                fontSize: '11px',
-                                padding: '4px 12px',
-                                borderRadius: '100px',
-                                fontWeight: 500,
-                                color: 'rgba(255,255,255,0.6)',
-                                backgroundColor: 'rgba(255,255,255,0.06)',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                              }}
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
-        {/* Bottom spacer so last card can be scrolled past */}
-        <div style={{ height: 'clamp(40px, 8vw, 80px)' }} />
+        {/* Hint */}
+        <div style={{ textAlign: 'center', padding: '24px 0 clamp(60px, 10vw, 120px)' }}>
+          <p style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)' }}>
+            Cliquer sur une carte pour en savoir plus
+          </p>
+        </div>
+
+        {/* Expanded card overlay */}
+        {expandedCard !== null && (
+          <div
+            style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            onClick={() => setExpandedCard(null)}
+          >
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }} />
+            <div
+              style={{
+                position: 'relative', zIndex: 1, width: 'min(1200px, calc(100% - 2rem))', maxHeight: '80vh',
+                borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)',
+                background: '#111114', display: 'grid', gridTemplateColumns: '55% 45%',
+                boxShadow: '0 40px 100px rgba(0,0,0,0.7)',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close */}
+              <button
+                onClick={() => setExpandedCard(null)}
+                style={{
+                  position: 'absolute', top: '16px', right: '16px', zIndex: 10,
+                  width: '40px', height: '40px', borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)',
+                  color: 'rgba(255,255,255,0.6)', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '20px', lineHeight: 1,
+                }}
+              >
+                ✕
+              </button>
+              {/* Image */}
+              <div style={{ position: 'relative', minHeight: '500px' }}>
+                {projects[expandedCard].image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={projects[expandedCard].image}
+                    alt={projects[expandedCard].title}
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
+                  />
+                ) : (
+                  <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, ${accent}12, #0a0a0a)` }} />
+                )}
+              </div>
+              {/* Content */}
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 'clamp(32px, 4vw, 56px)' }}>
+                <span style={{ display: 'inline-block', fontSize: '11px', fontWeight: 600, letterSpacing: '0.3em', textTransform: 'uppercase', color: `${accent}b3`, marginBottom: '12px' }}>
+                  {projects[expandedCard].category}
+                </span>
+                <h3 style={{ fontSize: 'clamp(1.75rem, 1rem + 2vw, 2.5rem)', fontWeight: 700, lineHeight: '115%', color: '#FFFFFF', marginBottom: '16px' }}>
+                  {projects[expandedCard].title}
+                </h3>
+                <p style={{ fontSize: '15px', lineHeight: '170%', color: 'rgba(255,255,255,0.55)', marginBottom: '24px' }}>
+                  {projects[expandedCard].description}
+                </p>
+                {projects[expandedCard].tags.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {projects[expandedCard].tags.map((tag, ti) => (
+                      <span key={ti} style={{ fontSize: '11px', padding: '4px 12px', borderRadius: '100px', fontWeight: 500, color: 'rgba(255,255,255,0.6)', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </section>
     )
   }
