@@ -5421,9 +5421,9 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
   // ═══════════════════════════════════════════
 
   // ═══════════════════════════════════════════
-  // JLSTUDIO — Portfolio Parallax (Brixsa CTA-style)
-  // Each project = full-bleed parallax slide: background image scrolls, text stays sticky
-  // Projects displayed one after another, immersive full-screen experience
+  // JLSTUDIO — Portfolio Stacking Cards
+  // Each project is a sticky full-screen card that stacks on scroll.
+  // As you scroll, the next card slides up and covers the previous one.
   // ═══════════════════════════════════════════
 
   if (variant === 'jlstudio-portfolio-reveal' || variant === 'jlstudio-portfolio-parallax' || variant === 'jlstudio-portfolio') {
@@ -5442,11 +5442,11 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
         })
       : images.map((img, i) => ({ id: img.id || `p-${i}`, title: img.alt || `Projet ${i + 1}`, description: img.caption || '', image: img.src, category: img.badge || 'Web', tags: (img.category ?? '').split(',').map(s => s.trim()).filter(Boolean) }))
 
-    // Staggered scroll reveal — each element appears with a progressive delay
+    // Staggered scroll reveal
     const staggerRevealRef = (delay: number) => (el: HTMLDivElement | null) => {
       if (!el) return
       el.style.opacity = '0'
-      el.style.transform = 'translateY(35px)'
+      el.style.transform = 'translateY(30px)'
       el.style.transition = `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`
       const obs = new IntersectionObserver(([entry]) => {
         if (entry.isIntersecting) {
@@ -5465,10 +5465,11 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
       >
         <style>{`
           @media (max-width: 768px) {
-            .jls-prlx-slide { min-height: auto !important; }
-            .jls-prlx-content { position: relative !important; top: auto !important; padding: 40px 20px !important; }
-            .jls-prlx-img-wrap { height: 60vh !important; }
-            .jls-prlx-counter { font-size: 4rem !important; }
+            .jls-stack-card { position: relative !important; top: auto !important; height: auto !important; min-height: 0 !important; border-radius: 12px !important; margin-bottom: 24px !important; }
+            .jls-stack-card-inner { flex-direction: column !important; }
+            .jls-stack-card-img { width: 100% !important; height: 50vh !important; }
+            .jls-stack-card-content { width: 100% !important; padding: 32px 24px !important; }
+            .jls-stack-spacer { height: 0 !important; }
           }
         `}</style>
 
@@ -5524,179 +5525,203 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
           )}
         </div>
 
-        {/* Projects — each is a full-bleed parallax slide */}
-        {projects.map((project, i) => (
-          <div
-            key={project.id}
-            className="jls-prlx-slide"
-            style={{
-              position: 'relative',
-              // Tall section for parallax travel — in builder edit mode, shorter
-              minHeight: isPreview ? '150vh' : '100vh',
-            }}
-          >
-            {/* Background image — fills the entire slide, scrolls with page */}
+        {/* Stacking cards container — each card is sticky and gets covered by the next */}
+        <div style={{ position: 'relative', padding: '0 clamp(16px, 3vw, 40px)' }}>
+          {projects.map((project, i) => (
             <div
-              className="jls-prlx-img-wrap"
+              key={project.id}
+              className="jls-stack-spacer"
               style={{
-                position: 'absolute',
-                inset: 0,
-                zIndex: 0,
+                // Each card needs vertical space so scrolling reveals the next
+                height: isPreview ? '100vh' : 'auto',
               }}
             >
-              {project.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  {...elementProps(config.id, `items.${i}.image`, 'image')}
-                  src={project.image}
-                  alt={project.title}
+              <div
+                className="jls-stack-card"
+                style={{
+                  position: isPreview ? 'sticky' : 'relative',
+                  // Each card sticks slightly lower than the previous → visible stacking
+                  top: isPreview ? `${40 + i * 20}px` : 0,
+                  height: isPreview ? 'calc(100vh - 100px)' : 'auto',
+                  minHeight: isPreview ? 0 : '500px',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+                  // Higher z-index = later cards stack on top
+                  zIndex: i + 1,
+                }}
+              >
+                {/* Card inner — image left, content right */}
+                <div
+                  className="jls-stack-card-inner"
                   style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
+                    display: 'flex',
+                    flexDirection: 'row',
                     width: '100%',
                     height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center',
+                    background: '#0c0c0f',
                   }}
-                />
-              ) : (
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: `linear-gradient(135deg, ${accent}15, #0a0a0a, ${accent}08)`,
-                  }}
-                />
-              )}
-              {/* Dark overlay gradient — stronger at bottom for text readability */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%)',
-                }}
-              />
-            </div>
-
-            {/* Sticky content — stays fixed while background scrolls past */}
-            <div
-              className="jls-prlx-content"
-              style={{
-                position: isPreview ? 'sticky' : 'relative',
-                top: isPreview ? '10vh' : 0,
-                zIndex: 2,
-                padding: 'clamp(40px, 8vw, 80px) clamp(20px, 5vw, 60px)',
-                ...(!isPreview ? { display: 'flex', alignItems: 'center', minHeight: '100vh' } : {}),
-              }}
-            >
-              <div style={{ maxWidth: '1320px', margin: '0 auto', width: '100%' }}>
-                <div style={{ maxWidth: '680px' }}>
-                  {/* Counter number — delay 0s */}
-                  <div ref={staggerRevealRef(0)}>
-                    <span
-                      className="jls-prlx-counter"
-                      style={{
-                        display: 'block',
-                        fontSize: 'clamp(4rem, 3rem + 5vw, 7rem)',
-                        fontWeight: 800,
-                        lineHeight: 1,
-                        color: 'rgba(255,255,255,0.08)',
-                        marginBottom: '-10px',
-                        fontVariantNumeric: 'tabular-nums',
-                      }}
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                  </div>
-
-                  {/* Category badge — delay 0.1s */}
-                  <div ref={staggerRevealRef(0.1)}>
-                    <span
-                      {...elementProps(config.id, `items.${i}.badge`, 'badge')}
-                      style={{
-                        display: 'inline-block',
-                        background: `${accent}25`,
-                        backdropFilter: 'blur(12px)',
-                        WebkitBackdropFilter: 'blur(12px)',
-                        borderRadius: '6px',
-                        padding: '6px 16px',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        color: '#FFFFFF',
-                        border: `1px solid ${accent}35`,
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        marginBottom: '20px',
-                      }}
-                    >
-                      {project.category}
-                    </span>
-                  </div>
-
-                  {/* Title — delay 0.2s */}
-                  <div ref={staggerRevealRef(0.2)}>
-                    <h3
-                      {...elementProps(config.id, `items.${i}.title`, 'heading')}
-                      style={{
-                        fontSize: 'clamp(1.75rem, 1.2rem + 2.5vw, 3rem)',
-                        fontWeight: 700,
-                        lineHeight: '120%',
-                        color: '#FFFFFF',
-                        marginBottom: '16px',
-                      }}
-                    >
-                      {project.title}
-                    </h3>
-                  </div>
-
-                  {/* Description — delay 0.3s */}
-                  {project.description && (
-                    <div ref={staggerRevealRef(0.3)}>
-                      <p
-                        {...elementProps(config.id, `items.${i}.description`, 'text')}
+                >
+                  {/* Image — 55% width */}
+                  <div
+                    className="jls-stack-card-img"
+                    style={{
+                      width: '55%',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {project.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        {...elementProps(config.id, `items.${i}.image`, 'image')}
+                        src={project.image}
+                        alt={project.title}
                         style={{
-                          fontSize: '16px',
-                          lineHeight: '170%',
-                          color: 'rgba(255,255,255,0.6)',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center',
+                          transition: 'transform 0.6s ease',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.03)' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          background: `linear-gradient(135deg, ${accent}12, #0a0a0a, ${accent}06)`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Image className="w-12 h-12 text-white/15" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Content — 45% width */}
+                  <div
+                    className="jls-stack-card-content"
+                    style={{
+                      width: '45%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      padding: 'clamp(32px, 4vw, 64px)',
+                    }}
+                  >
+                    {/* Counter */}
+                    <div ref={staggerRevealRef(0)}>
+                      <span
+                        style={{
+                          display: 'block',
+                          fontSize: 'clamp(3rem, 2.5rem + 3vw, 5rem)',
+                          fontWeight: 800,
+                          lineHeight: 1,
+                          color: `${accent}12`,
+                          marginBottom: '-4px',
+                          fontVariantNumeric: 'tabular-nums',
+                        }}
+                      >
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                    </div>
+
+                    {/* Category badge */}
+                    <div ref={staggerRevealRef(0.1)}>
+                      <span
+                        {...elementProps(config.id, `items.${i}.badge`, 'badge')}
+                        style={{
+                          display: 'inline-block',
+                          background: `${accent}18`,
+                          borderRadius: '6px',
+                          padding: '5px 14px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          color: accent,
+                          border: `1px solid ${accent}30`,
+                          letterSpacing: '0.1em',
+                          textTransform: 'uppercase',
                           marginBottom: '24px',
                         }}
                       >
-                        {project.description}
-                      </p>
+                        {project.category}
+                      </span>
                     </div>
-                  )}
 
-                  {/* Tags — delay 0.4s */}
-                  {project.tags.length > 0 && (
-                    <div ref={staggerRevealRef(0.4)}>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                        {project.tags.map((tag, ti) => (
-                          <span
-                            key={ti}
-                            style={{
-                              fontSize: '12px',
-                              padding: '5px 14px',
-                              borderRadius: '100px',
-                              fontWeight: 500,
-                              color: 'rgba(255,255,255,0.7)',
-                              backgroundColor: 'rgba(255,255,255,0.08)',
-                              border: '1px solid rgba(255,255,255,0.12)',
-                              backdropFilter: 'blur(8px)',
-                              WebkitBackdropFilter: 'blur(8px)',
-                            }}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
+                    {/* Title */}
+                    <div ref={staggerRevealRef(0.15)}>
+                      <h3
+                        {...elementProps(config.id, `items.${i}.title`, 'heading')}
+                        style={{
+                          fontSize: 'clamp(1.5rem, 1rem + 2vw, 2.25rem)',
+                          fontWeight: 700,
+                          lineHeight: '125%',
+                          color: '#FFFFFF',
+                          marginBottom: '12px',
+                        }}
+                      >
+                        {project.title}
+                      </h3>
                     </div>
-                  )}
+
+                    {/* Description */}
+                    {project.description && (
+                      <div ref={staggerRevealRef(0.2)}>
+                        <p
+                          {...elementProps(config.id, `items.${i}.description`, 'text')}
+                          style={{
+                            fontSize: '15px',
+                            lineHeight: '170%',
+                            color: 'rgba(255,255,255,0.5)',
+                            marginBottom: '24px',
+                          }}
+                        >
+                          {project.description}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Tags */}
+                    {project.tags.length > 0 && (
+                      <div ref={staggerRevealRef(0.25)}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                          {project.tags.map((tag, ti) => (
+                            <span
+                              key={ti}
+                              style={{
+                                fontSize: '11px',
+                                padding: '4px 12px',
+                                borderRadius: '100px',
+                                fontWeight: 500,
+                                color: 'rgba(255,255,255,0.6)',
+                                backgroundColor: 'rgba(255,255,255,0.06)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                              }}
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* Bottom spacer so last card can be scrolled past */}
+        <div style={{ height: 'clamp(40px, 8vw, 80px)' }} />
       </section>
     )
   }
