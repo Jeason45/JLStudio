@@ -104,8 +104,7 @@ const extraReviews: Testimonial[] = [
   },
 ];
 
-const row1 = [...realReviews.slice(0, 3), ...extraReviews.slice(0, 2)];
-const row2 = [...realReviews.slice(3), ...extraReviews.slice(2), ...realReviews.slice(0, 2)];
+const allReviews = [...realReviews, ...extraReviews];
 
 /* ═══════════════════════════════════════════
    TRUSTPILOT STAR (green Trustpilot style)
@@ -406,14 +405,9 @@ export default function TestimonialsSection() {
           <TrustBox />
         </div>
 
-        {/* Marquee rows */}
-        <div className="space-y-5">
-          <div data-marquee-row>
-            <MarqueeRow items={row1} direction="left" speed={45} />
-          </div>
-          <div data-marquee-row>
-            <MarqueeRow items={row2} direction="right" speed={50} />
-          </div>
+        {/* Marquee — single row */}
+        <div data-marquee-row>
+          <MarqueeRow items={allReviews} direction="left" speed={50} />
         </div>
       </div>
 
