@@ -124,10 +124,11 @@ const projects: Project[] = [
 
 export default function PortfolioStack() {
   const sectionRef = useRef<HTMLElement>(null);
+  const cardsContainerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    if (!sectionRef.current) return;
+    if (!sectionRef.current || !cardsContainerRef.current) return;
 
     const section = sectionRef.current;
     const projectEls = section.querySelectorAll<HTMLElement>('[data-project]');
@@ -144,6 +145,41 @@ export default function PortfolioStack() {
     }
 
     const ctx = gsap.context(() => {
+      // ── Stacking cards via GSAP pin (desktop only) ──
+      if (!isMobile) {
+        const cards = cardsContainerRef.current!.querySelectorAll<HTMLElement>('[data-card]');
+        const totalCards = cards.length;
+
+        cards.forEach((card, i) => {
+          // Pin each card; last card doesn't need pinning
+          if (i < totalCards - 1) {
+            ScrollTrigger.create({
+              trigger: card,
+              start: `top ${60 + i * 20}px`,
+              endTrigger: cardsContainerRef.current!,
+              end: 'bottom bottom',
+              pin: true,
+              pinSpacing: false,
+            });
+          }
+
+          // Slight scale down + dim as next cards stack on top
+          if (i < totalCards - 1) {
+            gsap.to(card, {
+              scale: 0.95 - i * 0.02,
+              opacity: 0.6,
+              scrollTrigger: {
+                trigger: cards[i + 1],
+                start: 'top bottom',
+                end: `top ${80 + i * 20}px`,
+                scrub: true,
+              },
+            });
+          }
+        });
+      }
+
+      // ── Content animations ──
       projectEls.forEach((projectEl) => {
         const mockup = projectEl.querySelector<HTMLElement>('[data-mockup]');
         const titleEl = projectEl.querySelector<HTMLElement>('[data-title]');
@@ -153,7 +189,6 @@ export default function PortfolioStack() {
         const featureItems = projectEl.querySelectorAll<HTMLElement>('[data-feature-item]');
         const tagEls = projectEl.querySelectorAll<HTMLElement>('[data-tag]');
 
-        // ── Mockup: fade in ──
         if (mockup) {
           gsap.set(mockup, { opacity: 0, y: 40 });
           gsap.to(mockup, {
@@ -162,13 +197,12 @@ export default function PortfolioStack() {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: projectEl,
-              start: 'top 75%',
+              start: 'top 80%',
               toggleActions: 'play none none reverse',
             },
           });
         }
 
-        // ── Title: SplitText char reveal ──
         if (titleEl) {
           const split = SplitText.create(titleEl, { type: 'chars' });
           gsap.set(split.chars, { opacity: 0, y: isMobile ? 30 : 50, rotateX: isMobile ? -30 : -60 });
@@ -179,7 +213,7 @@ export default function PortfolioStack() {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: projectEl,
-              start: 'top 75%',
+              start: 'top 80%',
               toggleActions: 'play none none reverse',
             },
           });
@@ -191,7 +225,7 @@ export default function PortfolioStack() {
             opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
             scrollTrigger: {
               trigger: projectEl,
-              start: 'top 78%',
+              start: 'top 82%',
               toggleActions: 'play none none reverse',
             },
           });
@@ -203,7 +237,7 @@ export default function PortfolioStack() {
             opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
             scrollTrigger: {
               trigger: projectEl,
-              start: 'top 72%',
+              start: 'top 78%',
               toggleActions: 'play none none reverse',
             },
           });
@@ -215,7 +249,7 @@ export default function PortfolioStack() {
             opacity: 1, y: 0, duration: 0.5, ease: 'power2.out',
             scrollTrigger: {
               trigger: projectEl,
-              start: 'top 68%',
+              start: 'top 74%',
               toggleActions: 'play none none reverse',
             },
           });
@@ -230,7 +264,7 @@ export default function PortfolioStack() {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: projectEl,
-              start: 'top 65%',
+              start: 'top 70%',
               toggleActions: 'play none none reverse',
             },
           });
@@ -245,7 +279,7 @@ export default function PortfolioStack() {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: projectEl,
-              start: 'top 60%',
+              start: 'top 66%',
               toggleActions: 'play none none reverse',
             },
           });
@@ -257,9 +291,6 @@ export default function PortfolioStack() {
       ctx.revert();
     };
   }, [isMobile]);
-
-  const CARD_TOP_BASE = 80;
-  const CARD_TOP_STEP = 25;
 
   return (
     <section
@@ -275,140 +306,123 @@ export default function PortfolioStack() {
         </h2>
       </div>
 
-      {/* Stacking cards */}
-      <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+      {/* Cards */}
+      <div ref={cardsContainerRef} className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
         {projects.map((project, i) => (
           <div
             key={i}
-            className={isMobile ? 'mb-6' : ''}
-            style={isMobile ? undefined : { height: '100vh' }}
+            data-card
+            data-project
+            className={`
+              rounded-2xl border border-white/[0.08] bg-[#111114]
+              ${isMobile ? 'mb-6' : 'mb-8 grid grid-cols-[55%_45%]'}
+            `}
+            style={{
+              zIndex: i + 1,
+              boxShadow: isMobile ? undefined : '0 -4px 40px rgba(0,0,0,0.5)',
+              height: isMobile ? undefined : '85vh',
+            }}
           >
-            <article
-              data-project
+            {/* ── Image ── */}
+            <div
+              data-mockup
               className={`
-                rounded-2xl border border-white/[0.08]
-                ${isMobile
-                  ? 'bg-[#111114]'
-                  : 'bg-[#111114] grid grid-cols-[55%_45%]'
-                }
+                relative w-full overflow-hidden
+                ${isMobile ? 'aspect-[4/3] rounded-t-2xl' : 'h-full rounded-l-2xl'}
               `}
-              style={
-                isMobile
-                  ? undefined
-                  : {
-                      position: 'sticky',
-                      top: `${CARD_TOP_BASE + i * CARD_TOP_STEP}px`,
-                      height: `calc(100vh - ${CARD_TOP_BASE + i * CARD_TOP_STEP + 40}px)`,
-                      boxShadow: '0 -4px 40px rgba(0,0,0,0.5)',
-                    }
-              }
+              style={{ opacity: 0 }}
             >
-              {/* ── Image ── */}
-              <div
-                data-mockup
-                className={`
-                  relative w-full
-                  ${isMobile
-                    ? 'aspect-[4/3] rounded-t-2xl'
-                    : 'h-full rounded-l-2xl'
-                  }
-                  overflow-hidden
-                `}
+              <Image
+                src={project.image}
+                alt={project.title}
+                fill
+                className="object-cover object-top transition-transform duration-700 ease-out hover:scale-105"
+                sizes="(max-width: 1024px) 100vw, 55vw"
+                priority={i === 0}
+              />
+            </div>
+
+            {/* ── Content ── */}
+            <div className={`
+              flex flex-col justify-center
+              ${isMobile ? 'p-5 pb-6' : 'p-8 lg:p-12 xl:p-14'}
+            `}>
+              {/* Category */}
+              <p
+                data-category
+                className="text-[#638BFF]/70 text-xs font-medium tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-3"
                 style={{ opacity: 0 }}
               >
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  className="object-cover object-top transition-transform duration-700 ease-out hover:scale-105"
-                  sizes="(max-width: 1024px) 100vw, 55vw"
-                  priority={i === 0}
-                />
-              </div>
+                {project.category}
+              </p>
 
-              {/* ── Content ── */}
-              <div className={`
-                flex flex-col justify-center
-                ${isMobile ? 'p-5 pb-6' : 'p-8 lg:p-12 xl:p-14'}
-              `}>
-                {/* Category */}
-                <p
-                  data-category
-                  className="text-[#638BFF]/70 text-xs font-medium tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-3"
-                  style={{ opacity: 0 }}
-                >
-                  {project.category}
-                </p>
+              {/* Title */}
+              <h3
+                data-title
+                className="font-[family-name:var(--font-outfit)] font-black text-white leading-[0.95] tracking-tight mb-4"
+                style={{
+                  fontSize: isMobile ? 'clamp(1.75rem, 8vw, 2.5rem)' : 'clamp(1.75rem, 2.5vw, 2.75rem)',
+                  perspective: 600,
+                }}
+              >
+                {project.title}
+              </h3>
 
-                {/* Title */}
-                <h3
-                  data-title
-                  className="font-[family-name:var(--font-outfit)] font-black text-white leading-[0.95] tracking-tight mb-4"
-                  style={{
-                    fontSize: isMobile ? 'clamp(1.75rem, 8vw, 2.5rem)' : 'clamp(1.75rem, 2.5vw, 2.75rem)',
-                    perspective: 600,
-                  }}
-                >
-                  {project.title}
-                </h3>
+              {/* Description */}
+              <p
+                data-desc
+                className="text-white/55 text-sm sm:text-base leading-relaxed mb-5 max-w-md"
+                style={{ opacity: 0 }}
+              >
+                {project.description}
+              </p>
 
-                {/* Description */}
-                <p
-                  data-desc
-                  className="text-white/55 text-sm sm:text-base leading-relaxed mb-5 max-w-md"
-                  style={{ opacity: 0 }}
-                >
-                  {project.description}
-                </p>
-
-                {/* Features */}
-                {project.features && (
-                  <div className="mb-5">
-                    <p
-                      data-feature-title
-                      className="text-white/50 text-xs uppercase tracking-[0.2em] mb-3"
-                      style={{ opacity: 0 }}
-                    >
-                      {project.features.title}
-                    </p>
-                    <div className="space-y-2">
-                      {(isMobile ? project.features.items.slice(0, 3) : project.features.items).map((feature, j) => (
-                        <div
-                          key={j}
-                          data-feature-item
-                          className="flex items-center gap-3"
-                          style={{ opacity: 0 }}
-                        >
-                          <div className="w-5 h-5 rounded-md bg-[#638BFF]/[0.08] border border-[#638BFF]/15 flex items-center justify-center flex-shrink-0">
-                            <Check className="w-2.5 h-2.5 text-[#638BFF]" />
-                          </div>
-                          <span className="text-[13px] text-white/65">{feature.label}</span>
+              {/* Features */}
+              {project.features && (
+                <div className="mb-5">
+                  <p
+                    data-feature-title
+                    className="text-white/50 text-xs uppercase tracking-[0.2em] mb-3"
+                    style={{ opacity: 0 }}
+                  >
+                    {project.features.title}
+                  </p>
+                  <div className="space-y-2">
+                    {(isMobile ? project.features.items.slice(0, 3) : project.features.items).map((feature, j) => (
+                      <div
+                        key={j}
+                        data-feature-item
+                        className="flex items-center gap-3"
+                        style={{ opacity: 0 }}
+                      >
+                        <div className="w-5 h-5 rounded-md bg-[#638BFF]/[0.08] border border-[#638BFF]/15 flex items-center justify-center flex-shrink-0">
+                          <Check className="w-2.5 h-2.5 text-[#638BFF]" />
                         </div>
-                      ))}
-                    </div>
+                        <span className="text-[13px] text-white/65">{feature.label}</span>
+                      </div>
+                    ))}
                   </div>
-                )}
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag, j) => (
-                    <span
-                      key={j}
-                      data-tag
-                      className="text-[11px] text-white/50 border border-white/[0.1] bg-white/[0.03] px-3 py-1 rounded-full"
-                      style={{ opacity: 0 }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
                 </div>
+              )}
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2">
+                {project.tags.map((tag, j) => (
+                  <span
+                    key={j}
+                    data-tag
+                    className="text-[11px] text-white/50 border border-white/[0.1] bg-white/[0.03] px-3 py-1 rounded-full"
+                    style={{ opacity: 0 }}
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
-            </article>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Bottom spacing */}
       <div className="h-12 sm:h-20" />
     </section>
   );
