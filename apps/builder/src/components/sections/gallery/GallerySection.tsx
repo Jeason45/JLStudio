@@ -5533,7 +5533,6 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
               position: 'relative',
               // Tall section for parallax travel — in builder edit mode, shorter
               minHeight: isPreview ? '150vh' : '100vh',
-              overflow: 'hidden',
             }}
           >
             {/* Background image — fills the entire slide, scrolls with page */}
