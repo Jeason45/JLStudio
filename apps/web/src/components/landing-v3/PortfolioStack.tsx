@@ -207,26 +207,31 @@ export default function PortfolioStack() {
     };
   }, [isMobile]);
 
-  // ── Hover: lift card, push siblings ──
+  // ── Hover: animate inner card visuals, keep hit area stable ──
   const handleCardHover = useCallback((index: number) => {
     if (!fanReady || activeCard !== null || !sectionRef.current) return;
 
     const cards = sectionRef.current.querySelectorAll<HTMLElement>('[data-card]');
+    const inners = sectionRef.current.querySelectorAll<HTMLElement>('[data-card-inner]');
     cards.forEach((card, i) => {
       if (i === index) {
-        gsap.to(card, {
-          y: getFanPosition(i).y - 60,
-          scale: 1.1,
-          rotation: FAN_ROTATIONS[i] * 0.2,
-          zIndex: 20,
+        // Lift the inner visual, keep the outer hit area in place
+        gsap.to(inners[i], {
+          y: -40,
+          scale: 1.08,
           duration: 0.4,
           ease: 'power3.out',
         });
+        gsap.to(card, { zIndex: 20, duration: 0 });
       } else {
         const dir = i < index ? -1 : 1;
         gsap.to(card, {
-          x: getFanPosition(i).x + dir * 20,
-          scale: 0.92,
+          x: getFanPosition(i).x + dir * 15,
+          duration: 0.4,
+          ease: 'power2.out',
+        });
+        gsap.to(inners[i], {
+          scale: 0.95,
           opacity: 0.45,
           duration: 0.4,
           ease: 'power2.out',
@@ -239,15 +244,20 @@ export default function PortfolioStack() {
     if (!fanReady || activeCard !== null || !sectionRef.current) return;
 
     const cards = sectionRef.current.querySelectorAll<HTMLElement>('[data-card]');
+    const inners = sectionRef.current.querySelectorAll<HTMLElement>('[data-card-inner]');
     cards.forEach((card, i) => {
       const pos = getFanPosition(i);
       gsap.to(card, {
         x: pos.x,
         y: pos.y,
-        rotation: pos.rotation,
+        zIndex: i + 1,
+        duration: 0.5,
+        ease: 'elastic.out(0.6, 0.5)',
+      });
+      gsap.to(inners[i], {
+        y: 0,
         scale: 1,
         opacity: 1,
-        zIndex: i + 1,
         duration: 0.5,
         ease: 'elastic.out(0.6, 0.5)',
       });
@@ -347,18 +357,18 @@ export default function PortfolioStack() {
               data-card
               className="absolute cursor-pointer"
               style={{
-                width: '280px',
-                height: '380px',
+                width: '310px',
+                height: '430px',
+                padding: '15px',
                 zIndex: i + 1,
                 transformOrigin: 'center 150%',
-                /* CSS fallback position — visible even without JS */
                 transform: `translateX(${pos.x}px) translateY(${pos.y}px) rotate(${pos.rotation}deg)`,
               }}
               onMouseEnter={() => handleCardHover(i)}
               onMouseLeave={handleCardLeave}
               onClick={() => handleCardClick(i)}
             >
-              <div className="w-full h-full rounded-2xl overflow-hidden border border-white/[0.1] bg-[#111114] shadow-2xl relative group">
+              <div data-card-inner className="w-full h-full rounded-2xl overflow-hidden border border-white/[0.1] bg-[#111114] shadow-2xl relative group">
                 <div className="relative h-[60%] overflow-hidden">
                   <Image
                     src={project.image}
