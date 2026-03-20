@@ -5442,18 +5442,19 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
         })
       : images.map((img, i) => ({ id: img.id || `p-${i}`, title: img.alt || `Projet ${i + 1}`, description: img.caption || '', image: img.src, category: img.badge || 'Web', tags: (img.category ?? '').split(',').map(s => s.trim()).filter(Boolean) }))
 
-    const scrollRevealRef = (el: HTMLDivElement | null) => {
+    // Staggered scroll reveal — each element appears with a progressive delay
+    const staggerRevealRef = (delay: number) => (el: HTMLDivElement | null) => {
       if (!el) return
       el.style.opacity = '0'
-      el.style.transform = 'translateY(30px)'
-      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease'
+      el.style.transform = 'translateY(35px)'
+      el.style.transition = `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`
       const obs = new IntersectionObserver(([entry]) => {
         if (entry.isIntersecting) {
           el.style.opacity = '1'
           el.style.transform = 'translateY(0)'
           obs.disconnect()
         }
-      }, { threshold: 0.15 })
+      }, { threshold: 0.1 })
       obs.observe(el)
     }
 
@@ -5478,7 +5479,7 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
             textAlign: 'center',
           }}
         >
-          <div ref={scrollRevealRef}>
+          <div ref={staggerRevealRef(0)}>
             <span
               style={{
                 display: 'inline-block',
@@ -5506,7 +5507,7 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
             </h2>
           </div>
           {(raw.subtitle as string) && (
-            <div ref={scrollRevealRef}>
+            <div ref={staggerRevealRef(0.15)}>
               <p
                 {...elementProps(config.id, 'subtitle', 'text')}
                 style={{
@@ -5531,7 +5532,7 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
             style={{
               position: 'relative',
               // Tall section for parallax travel — in builder edit mode, shorter
-              minHeight: isPreview ? '140vh' : '100vh',
+              minHeight: isPreview ? '150vh' : '100vh',
               overflow: 'hidden',
             }}
           >
@@ -5579,12 +5580,12 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
               />
             </div>
 
-            {/* Sticky content — stays fixed while background scrolls */}
+            {/* Sticky content — stays fixed while background scrolls past */}
             <div
               className="jls-prlx-content"
               style={{
                 position: isPreview ? 'sticky' : 'relative',
-                top: isPreview ? '25vh' : 0,
+                top: isPreview ? '10vh' : 0,
                 zIndex: 2,
                 padding: 'clamp(40px, 8vw, 80px) clamp(20px, 5vw, 60px)',
                 ...(!isPreview ? { display: 'flex', alignItems: 'center', minHeight: '100vh' } : {}),
@@ -5592,8 +5593,8 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
             >
               <div style={{ maxWidth: '1320px', margin: '0 auto', width: '100%' }}>
                 <div style={{ maxWidth: '680px' }}>
-                  {/* Counter number */}
-                  <div ref={scrollRevealRef}>
+                  {/* Counter number — delay 0s */}
+                  <div ref={staggerRevealRef(0)}>
                     <span
                       className="jls-prlx-counter"
                       style={{
@@ -5610,8 +5611,8 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
                     </span>
                   </div>
 
-                  {/* Category badge */}
-                  <div ref={scrollRevealRef}>
+                  {/* Category badge — delay 0.1s */}
+                  <div ref={staggerRevealRef(0.1)}>
                     <span
                       {...elementProps(config.id, `items.${i}.badge`, 'badge')}
                       style={{
@@ -5634,8 +5635,8 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
                     </span>
                   </div>
 
-                  {/* Title */}
-                  <div ref={scrollRevealRef}>
+                  {/* Title — delay 0.2s */}
+                  <div ref={staggerRevealRef(0.2)}>
                     <h3
                       {...elementProps(config.id, `items.${i}.title`, 'heading')}
                       style={{
@@ -5650,9 +5651,9 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
                     </h3>
                   </div>
 
-                  {/* Description */}
+                  {/* Description — delay 0.3s */}
                   {project.description && (
-                    <div ref={scrollRevealRef}>
+                    <div ref={staggerRevealRef(0.3)}>
                       <p
                         {...elementProps(config.id, `items.${i}.description`, 'text')}
                         style={{
@@ -5667,9 +5668,9 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
                     </div>
                   )}
 
-                  {/* Tags */}
+                  {/* Tags — delay 0.4s */}
                   {project.tags.length > 0 && (
-                    <div ref={scrollRevealRef}>
+                    <div ref={staggerRevealRef(0.4)}>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                         {project.tags.map((tag, ti) => (
                           <span
