@@ -122,168 +122,151 @@ const projects: Project[] = [
   },
 ];
 
+/* ─────────────────────────────────────────────────────────── */
+
 export default function PortfolioStack() {
   const sectionRef = useRef<HTMLElement>(null);
-  const cardsContainerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    if (!sectionRef.current || !cardsContainerRef.current) return;
+    if (!sectionRef.current) return;
 
     const section = sectionRef.current;
-    const projectEls = section.querySelectorAll<HTMLElement>('[data-project]');
+    const slides = section.querySelectorAll<HTMLElement>('[data-slide]');
+    const contents = section.querySelectorAll<HTMLElement>('[data-content]');
+    const titles = section.querySelectorAll<HTMLElement>('[data-title]');
+    const categories = section.querySelectorAll<HTMLElement>('[data-category]');
+    const descs = section.querySelectorAll<HTMLElement>('[data-desc]');
+    const featureWraps = section.querySelectorAll<HTMLElement>('[data-features]');
+    const tagWraps = section.querySelectorAll<HTMLElement>('[data-tags]');
+    const images = section.querySelectorAll<HTMLElement>('[data-image]');
+    const dots = section.querySelectorAll<HTMLElement>('[data-dot]');
 
-    if (projectEls.length === 0) return;
+    if (slides.length === 0) return;
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      projectEls.forEach((projectEl) => {
-        projectEl.querySelectorAll<HTMLElement>('[style]').forEach((el) => {
-          if (el.style.opacity === '0') el.style.opacity = '1';
-        });
+      slides.forEach((s) => gsap.set(s, { autoAlpha: 1 }));
+      contents.forEach((c) => gsap.set(c, { autoAlpha: 1 }));
+      categories.forEach((c) => gsap.set(c, { opacity: 1, y: 0 }));
+      titles.forEach((t) => {
+        const sp = SplitText.create(t, { type: 'chars' });
+        gsap.set(sp.chars, { opacity: 1, y: 0, rotateX: 0 });
       });
+      descs.forEach((d) => gsap.set(d, { opacity: 1, y: 0 }));
+      featureWraps.forEach((fw) => {
+        gsap.set(fw.querySelector('[data-feature-title]')!, { opacity: 1, y: 0 });
+        gsap.set(fw.querySelectorAll('[data-feature-item]'), { opacity: 1, x: 0 });
+      });
+      tagWraps.forEach((tw) => gsap.set(tw.querySelectorAll('[data-tag]'), { opacity: 1, y: 0 }));
       return;
     }
 
     const ctx = gsap.context(() => {
-      // ── Stacking cards via GSAP pin (desktop only) ──
-      if (!isMobile) {
-        const cards = cardsContainerRef.current!.querySelectorAll<HTMLElement>('[data-card]');
-        const totalCards = cards.length;
+      const splitTitles = Array.from(titles).map((el) =>
+        SplitText.create(el, { type: 'chars' })
+      );
 
-        cards.forEach((card, i) => {
-          // Pin each card; last card doesn't need pinning
-          if (i < totalCards - 1) {
-            ScrollTrigger.create({
-              trigger: card,
-              start: `top ${60 + i * 20}px`,
-              endTrigger: cardsContainerRef.current!,
-              end: 'bottom bottom',
-              pin: true,
-              pinSpacing: false,
-            });
-          }
+      // ── Initial states ──
+      // First slide visible
+      gsap.set(slides[0], { autoAlpha: 1 });
+      gsap.set(contents[0], { autoAlpha: 1 });
+      gsap.set(images[0], { scale: 1 });
+      gsap.set(categories[0], { opacity: 1, y: 0 });
+      gsap.set(splitTitles[0].chars, { opacity: 1, y: 0, rotateX: 0 });
+      gsap.set(descs[0], { opacity: 1, y: 0 });
+      const ft0 = featureWraps[0]?.querySelector<HTMLElement>('[data-feature-title]');
+      const fi0 = featureWraps[0]?.querySelectorAll<HTMLElement>('[data-feature-item]');
+      if (ft0) gsap.set(ft0, { opacity: 1, y: 0 });
+      if (fi0) gsap.set(fi0, { opacity: 1, x: 0 });
+      const tags0 = tagWraps[0]?.querySelectorAll<HTMLElement>('[data-tag]');
+      if (tags0) gsap.set(tags0, { opacity: 1, y: 0 });
 
-          // Slight scale down + dim as next cards stack on top
-          if (i < totalCards - 1) {
-            gsap.to(card, {
-              scale: 0.95 - i * 0.02,
-              opacity: 0.6,
-              scrollTrigger: {
-                trigger: cards[i + 1],
-                start: 'top bottom',
-                end: `top ${80 + i * 20}px`,
-                scrub: true,
-              },
-            });
-          }
-        });
+      // Subsequent slides hidden, positioned below
+      for (let i = 1; i < projects.length; i++) {
+        gsap.set(slides[i], { autoAlpha: 1, yPercent: 100 });
+        gsap.set(images[i], { scale: 1.1, yPercent: 10 });
+        gsap.set(contents[i], { autoAlpha: 0 });
+        gsap.set(categories[i], { opacity: 0, y: 20 });
+        gsap.set(splitTitles[i].chars, { opacity: 0, y: isMobile ? 30 : 50, rotateX: isMobile ? -30 : -60 });
+        gsap.set(descs[i], { opacity: 0, y: 20 });
+        const ftI = featureWraps[i]?.querySelector<HTMLElement>('[data-feature-title]');
+        const fiI = featureWraps[i]?.querySelectorAll<HTMLElement>('[data-feature-item]');
+        if (ftI) gsap.set(ftI, { opacity: 0, y: 15 });
+        if (fiI) gsap.set(fiI, { opacity: 0, x: -15 });
+        const tagsI = tagWraps[i]?.querySelectorAll<HTMLElement>('[data-tag]');
+        if (tagsI) gsap.set(tagsI, { opacity: 0, y: 10 });
       }
 
-      // ── Content animations ──
-      projectEls.forEach((projectEl) => {
-        const mockup = projectEl.querySelector<HTMLElement>('[data-mockup]');
-        const titleEl = projectEl.querySelector<HTMLElement>('[data-title]');
-        const categoryEl = projectEl.querySelector<HTMLElement>('[data-category]');
-        const descEl = projectEl.querySelector<HTMLElement>('[data-desc]');
-        const featureTitle = projectEl.querySelector<HTMLElement>('[data-feature-title]');
-        const featureItems = projectEl.querySelectorAll<HTMLElement>('[data-feature-item]');
-        const tagEls = projectEl.querySelectorAll<HTMLElement>('[data-tag]');
+      // ── Master timeline ──
+      const tl = gsap.timeline();
 
-        if (mockup) {
-          gsap.set(mockup, { opacity: 0, y: 40 });
-          gsap.to(mockup, {
-            opacity: 1, y: 0,
-            duration: 0.9,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: projectEl,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            },
-          });
-        }
+      // Slow parallax on first image
+      tl.to(images[0], { scale: 1.08, yPercent: -3, ease: 'none', duration: 3 }, 0);
 
-        if (titleEl) {
-          const split = SplitText.create(titleEl, { type: 'chars' });
-          gsap.set(split.chars, { opacity: 0, y: isMobile ? 30 : 50, rotateX: isMobile ? -30 : -60 });
-          gsap.to(split.chars, {
-            opacity: 1, y: 0, rotateX: 0,
-            stagger: 0.03,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: projectEl,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            },
-          });
-        }
+      for (let i = 1; i < projects.length; i++) {
+        const prevFt = featureWraps[i - 1]?.querySelector<HTMLElement>('[data-feature-title]');
+        const prevFi = featureWraps[i - 1]?.querySelectorAll<HTMLElement>('[data-feature-item]');
+        const prevTags = tagWraps[i - 1]?.querySelectorAll<HTMLElement>('[data-tag]');
 
-        if (categoryEl) {
-          gsap.set(categoryEl, { opacity: 0, y: 15 });
-          gsap.to(categoryEl, {
-            opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
-            scrollTrigger: {
-              trigger: projectEl,
-              start: 'top 82%',
-              toggleActions: 'play none none reverse',
-            },
-          });
-        }
+        const nextFt = featureWraps[i]?.querySelector<HTMLElement>('[data-feature-title]');
+        const nextFi = featureWraps[i]?.querySelectorAll<HTMLElement>('[data-feature-item]');
+        const nextTags = tagWraps[i]?.querySelectorAll<HTMLElement>('[data-tag]');
 
-        if (descEl) {
-          gsap.set(descEl, { opacity: 0, y: 20 });
-          gsap.to(descEl, {
-            opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
-            scrollTrigger: {
-              trigger: projectEl,
-              start: 'top 78%',
-              toggleActions: 'play none none reverse',
-            },
-          });
-        }
+        // ── PHASE 1: Exit current text ──
+        const exitStart = (i - 1) * 4 + 2.5;
 
-        if (featureTitle) {
-          gsap.set(featureTitle, { opacity: 0, y: 15 });
-          gsap.to(featureTitle, {
-            opacity: 1, y: 0, duration: 0.5, ease: 'power2.out',
-            scrollTrigger: {
-              trigger: projectEl,
-              start: 'top 74%',
-              toggleActions: 'play none none reverse',
-            },
-          });
-        }
+        tl.to(categories[i - 1], { opacity: 0, y: -20, duration: 0.5, ease: 'power2.in' }, exitStart);
+        tl.to(splitTitles[i - 1].chars, {
+          opacity: 0, y: -40, rotateX: 20,
+          stagger: 0.015, duration: 0.6, ease: 'power3.in',
+        }, exitStart);
+        tl.to(descs[i - 1], { opacity: 0, y: -20, duration: 0.5, ease: 'power2.in' }, exitStart + 0.1);
+        if (prevFt) tl.to(prevFt, { opacity: 0, y: -15, duration: 0.4, ease: 'power2.in' }, exitStart + 0.1);
+        if (prevFi) tl.to(prevFi, { opacity: 0, x: -10, stagger: 0.02, duration: 0.3, ease: 'power2.in' }, exitStart + 0.15);
+        if (prevTags) tl.to(prevTags, { opacity: 0, y: -10, stagger: 0.02, duration: 0.3, ease: 'power2.in' }, exitStart + 0.15);
 
-        if (featureItems.length > 0) {
-          gsap.set(featureItems, { opacity: 0, x: -15 });
-          gsap.to(featureItems, {
-            opacity: 1, x: 0,
-            stagger: 0.08,
-            duration: 0.5,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: projectEl,
-              start: 'top 70%',
-              toggleActions: 'play none none reverse',
-            },
-          });
-        }
+        // ── PHASE 2: New card slides up over previous ──
+        const crossStart = exitStart + 0.6;
 
-        if (tagEls.length > 0) {
-          gsap.set(tagEls, { opacity: 0, y: 10 });
-          gsap.to(tagEls, {
-            opacity: 1, y: 0,
-            stagger: 0.06,
-            duration: 0.4,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: projectEl,
-              start: 'top 66%',
-              toggleActions: 'play none none reverse',
-            },
-          });
+        tl.to(slides[i], { yPercent: 0, duration: 1.4, ease: 'power3.inOut' }, crossStart);
+        tl.to(images[i], { scale: 1, yPercent: 0, duration: 1.4, ease: 'power3.out' }, crossStart);
+
+        // Dots
+        tl.set(dots[i - 1], { background: 'rgba(255,255,255,0.15)', scale: 1, boxShadow: 'none' }, crossStart + 0.3);
+        tl.set(dots[i], { background: '#638BFF', scale: 1.5, boxShadow: '0 0 12px rgba(99,139,255,0.4)' }, crossStart + 0.7);
+
+        // ── PHASE 3: Enter new text ──
+        const enterStart = crossStart + 0.8;
+
+        tl.to(contents[i], { autoAlpha: 1, duration: 0.1 }, enterStart);
+        tl.to(categories[i], { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, enterStart);
+        tl.to(splitTitles[i].chars, {
+          opacity: 1, y: 0, rotateX: 0,
+          stagger: 0.03, duration: 0.7, ease: 'power3.out',
+        }, enterStart + 0.15);
+        tl.to(descs[i], { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, enterStart + 0.4);
+        if (nextFt) tl.to(nextFt, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, enterStart + 0.5);
+        if (nextFi) tl.to(nextFi, { opacity: 1, x: 0, stagger: 0.06, duration: 0.4, ease: 'power2.out' }, enterStart + 0.6);
+        if (nextTags) tl.to(nextTags, { opacity: 1, y: 0, stagger: 0.04, duration: 0.4, ease: 'power2.out' }, enterStart + 0.7);
+
+        // Slow parallax on new image
+        tl.to(images[i], { scale: 1.08, yPercent: -3, ease: 'none', duration: 3 }, enterStart);
+
+        // Breathing room
+        if (i < projects.length - 1) {
+          tl.to({}, { duration: 0.5 });
         }
+      }
+
+      // Pin the entire section
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: `+=${projects.length * (isMobile ? 900 : 1200)}`,
+        pin: true,
+        pinSpacing: true,
+        scrub: isMobile ? 0.8 : 1.5,
+        animation: tl,
       });
     }, sectionRef);
 
@@ -296,62 +279,86 @@ export default function PortfolioStack() {
     <section
       ref={sectionRef}
       id="projets"
-      className="relative bg-black"
+      aria-label="Portfolio"
+      className="relative h-screen overflow-hidden bg-black"
     >
-      {/* Section header */}
-      <div className="relative z-10 pt-20 pb-8 md:pt-32 md:pb-16 text-center">
-        <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">Portfolio</p>
-        <h2 className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-5xl font-black text-white">
+      {/* Section title overlay */}
+      <div className="absolute top-0 left-0 right-0 z-20 pt-6 sm:pt-10 text-center pointer-events-none">
+        <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-2">Portfolio</p>
+        <h2 className="font-[family-name:var(--font-outfit)] text-2xl sm:text-3xl md:text-4xl font-black text-white">
           Nos réalisations
         </h2>
       </div>
 
-      {/* Cards */}
-      <div ref={cardsContainerRef} className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
-        {projects.map((project, i) => (
+      {/* Progress dots */}
+      <div className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-3 sm:gap-4">
+        {projects.map((_, i) => (
           <div
             key={i}
-            data-card
-            data-project
-            className={`
-              rounded-2xl border border-white/[0.08] bg-[#111114]
-              ${isMobile ? 'mb-6' : 'mb-8 grid grid-cols-[55%_45%]'}
-            `}
+            data-dot
+            className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full"
             style={{
-              zIndex: i + 1,
-              boxShadow: isMobile ? undefined : '0 -4px 40px rgba(0,0,0,0.5)',
-              height: isMobile ? undefined : '85vh',
+              background: i === 0 ? '#638BFF' : 'rgba(255,255,255,0.15)',
+              transform: i === 0 ? 'scale(1.5)' : 'scale(1)',
+              boxShadow: i === 0 ? '0 0 12px rgba(99,139,255,0.4)' : 'none',
+              transition: 'background 0.3s, transform 0.3s, box-shadow 0.3s',
             }}
-          >
-            {/* ── Image ── */}
-            <div
-              data-mockup
-              className={`
-                relative w-full overflow-hidden
-                ${isMobile ? 'aspect-[4/3] rounded-t-2xl' : 'h-full rounded-l-2xl'}
-              `}
-              style={{ opacity: 0 }}
-            >
+          />
+        ))}
+      </div>
+
+      {/* Slides — stacked, full-screen */}
+      {projects.map((project, i) => (
+        <div
+          key={i}
+          data-slide
+          className="absolute inset-0"
+          style={{ zIndex: i + 1 }}
+        >
+          {/* Image side */}
+          <div className={`absolute ${isMobile ? 'inset-0' : 'top-0 left-0 bottom-0 w-[55%]'} overflow-hidden`}>
+            <div data-image className="absolute inset-[-10%] will-change-transform">
               <Image
                 src={project.image}
                 alt={project.title}
                 fill
-                className="object-cover object-top transition-transform duration-700 ease-out hover:scale-105"
-                sizes="(max-width: 1024px) 100vw, 55vw"
+                className="object-cover object-top"
+                sizes={isMobile ? '100vw' : '55vw'}
                 priority={i === 0}
               />
             </div>
+            {/* Gradient overlay for text readability on mobile */}
+            {isMobile && (
+              <div className="absolute inset-0" style={{
+                background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.9) 100%)',
+              }} />
+            )}
+          </div>
 
-            {/* ── Content ── */}
-            <div className={`
-              flex flex-col justify-center
-              ${isMobile ? 'p-5 pb-6' : 'p-8 lg:p-12 xl:p-14'}
-            `}>
+          {/* Desktop: subtle edge gradient between image and content */}
+          {!isMobile && (
+            <div className="absolute top-0 bottom-0 left-[50%] w-[10%] z-[2]" style={{
+              background: 'linear-gradient(to right, transparent, #0a0a0a)',
+            }} />
+          )}
+
+          {/* Content side */}
+          <div
+            data-content
+            className={`
+              absolute z-10
+              ${isMobile
+                ? 'inset-0 flex items-end p-6 pb-8'
+                : 'top-0 right-0 bottom-0 w-[45%] flex items-center'
+              }
+            `}
+            style={{ opacity: i === 0 ? 1 : 0 }}
+          >
+            <div className={isMobile ? 'w-full' : 'px-8 lg:px-14 xl:px-16 w-full'}>
               {/* Category */}
               <p
                 data-category
                 className="text-[#638BFF]/70 text-xs font-medium tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-3"
-                style={{ opacity: 0 }}
               >
                 {project.category}
               </p>
@@ -361,8 +368,7 @@ export default function PortfolioStack() {
                 data-title
                 className="font-[family-name:var(--font-outfit)] font-black text-white leading-[0.95] tracking-tight mb-4"
                 style={{
-                  fontSize: isMobile ? 'clamp(1.75rem, 8vw, 2.5rem)' : 'clamp(1.75rem, 2.5vw, 2.75rem)',
-                  perspective: 600,
+                  fontSize: isMobile ? 'clamp(1.75rem, 8vw, 2.5rem)' : 'clamp(2rem, 2.8vw, 3rem)',
                 }}
               >
                 {project.title}
@@ -372,18 +378,16 @@ export default function PortfolioStack() {
               <p
                 data-desc
                 className="text-white/55 text-sm sm:text-base leading-relaxed mb-5 max-w-md"
-                style={{ opacity: 0 }}
               >
                 {project.description}
               </p>
 
               {/* Features */}
               {project.features && (
-                <div className="mb-5">
+                <div data-features className="mb-5">
                   <p
                     data-feature-title
                     className="text-white/50 text-xs uppercase tracking-[0.2em] mb-3"
-                    style={{ opacity: 0 }}
                   >
                     {project.features.title}
                   </p>
@@ -393,7 +397,6 @@ export default function PortfolioStack() {
                         key={j}
                         data-feature-item
                         className="flex items-center gap-3"
-                        style={{ opacity: 0 }}
                       >
                         <div className="w-5 h-5 rounded-md bg-[#638BFF]/[0.08] border border-[#638BFF]/15 flex items-center justify-center flex-shrink-0">
                           <Check className="w-2.5 h-2.5 text-[#638BFF]" />
@@ -406,13 +409,12 @@ export default function PortfolioStack() {
               )}
 
               {/* Tags */}
-              <div className="flex flex-wrap gap-2">
+              <div data-tags className="flex flex-wrap gap-2">
                 {project.tags.map((tag, j) => (
                   <span
                     key={j}
                     data-tag
-                    className="text-[11px] text-white/50 border border-white/[0.1] bg-white/[0.03] px-3 py-1 rounded-full"
-                    style={{ opacity: 0 }}
+                    className="text-[11px] text-white/50 border border-white/[0.1] bg-white/[0.03] px-3 py-1 rounded-full backdrop-blur-sm"
                   >
                     {tag}
                   </span>
@@ -420,10 +422,8 @@ export default function PortfolioStack() {
               </div>
             </div>
           </div>
-        ))}
-      </div>
-
-      <div className="h-12 sm:h-20" />
+        </div>
+      ))}
     </section>
   );
 }
