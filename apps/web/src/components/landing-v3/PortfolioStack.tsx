@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, Fragment } from 'react';
+import { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -122,7 +122,7 @@ const projects: Project[] = [
   },
 ];
 
-export default function PortfolioParallax() {
+export default function PortfolioStack() {
   const sectionRef = useRef<HTMLElement>(null);
   const isMobile = useIsMobile();
 
@@ -134,7 +134,6 @@ export default function PortfolioParallax() {
 
     if (projectEls.length === 0) return;
 
-    // Skip all animations if user prefers reduced motion
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       projectEls.forEach((projectEl) => {
         projectEl.querySelectorAll<HTMLElement>('[style]').forEach((el) => {
@@ -154,28 +153,17 @@ export default function PortfolioParallax() {
         const featureItems = projectEl.querySelectorAll<HTMLElement>('[data-feature-item]');
         const tagEls = projectEl.querySelectorAll<HTMLElement>('[data-tag]');
 
-        // ── Mockup: slide in + subtle parallax ──
+        // ── Mockup: fade in ──
         if (mockup) {
-          gsap.set(mockup, { opacity: 0, y: 60 });
+          gsap.set(mockup, { opacity: 0, y: 40 });
           gsap.to(mockup, {
             opacity: 1, y: 0,
-            duration: 1,
+            duration: 0.9,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: projectEl,
-              start: 'top 80%',
+              start: 'top 75%',
               toggleActions: 'play none none reverse',
-            },
-          });
-
-          gsap.to(mockup, {
-            yPercent: isMobile ? -5 : -10,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: projectEl,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: true,
             },
           });
         }
@@ -270,6 +258,9 @@ export default function PortfolioParallax() {
     };
   }, [isMobile]);
 
+  const CARD_TOP_BASE = 80;
+  const CARD_TOP_STEP = 25;
+
   return (
     <section
       ref={sectionRef}
@@ -277,46 +268,69 @@ export default function PortfolioParallax() {
       className="relative bg-black"
     >
       {/* Section header */}
-      <div className="relative z-10 pt-20 pb-12 md:pt-32 md:pb-20 text-center">
+      <div className="relative z-10 pt-20 pb-8 md:pt-32 md:pb-16 text-center">
         <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">Portfolio</p>
         <h2 className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-5xl font-black text-white">
           Nos réalisations
         </h2>
       </div>
 
-      {/* Projects */}
-      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-        {projects.map((project, i) => {
-          const isEven = i % 2 === 0;
-
-          return (
-            <Fragment key={i}>
+      {/* Stacking cards */}
+      <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+        {projects.map((project, i) => (
+          <div
+            key={i}
+            className={isMobile ? 'mb-6' : ''}
+            style={isMobile ? undefined : { height: '100vh' }}
+          >
             <article
               data-project
-              className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center py-10 sm:py-20 lg:py-28"
+              className={`
+                rounded-2xl border border-white/[0.08]
+                ${isMobile
+                  ? 'bg-[#111114]'
+                  : 'bg-[#111114] grid grid-cols-[55%_45%]'
+                }
+              `}
+              style={
+                isMobile
+                  ? undefined
+                  : {
+                      position: 'sticky',
+                      top: `${CARD_TOP_BASE + i * CARD_TOP_STEP}px`,
+                      height: `calc(100vh - ${CARD_TOP_BASE + i * CARD_TOP_STEP + 40}px)`,
+                      boxShadow: '0 -4px 40px rgba(0,0,0,0.5)',
+                    }
+              }
             >
-              {/* ── Screenshot ── */}
+              {/* ── Image ── */}
               <div
                 data-mockup
-                className={`relative will-change-transform ${
-                  !isMobile && !isEven ? 'lg:order-2' : ''
-                }`}
+                className={`
+                  relative w-full
+                  ${isMobile
+                    ? 'aspect-[4/3] rounded-t-2xl'
+                    : 'h-full rounded-l-2xl'
+                  }
+                  overflow-hidden
+                `}
                 style={{ opacity: 0 }}
               >
-                <div className="relative aspect-[4/3] lg:aspect-[16/10] rounded-xl overflow-hidden">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover object-top"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    priority={i === 0}
-                  />
-                </div>
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  className="object-cover object-top transition-transform duration-700 ease-out hover:scale-105"
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                  priority={i === 0}
+                />
               </div>
 
               {/* ── Content ── */}
-              <div className={!isMobile && !isEven ? 'lg:order-1' : ''}>
+              <div className={`
+                flex flex-col justify-center
+                ${isMobile ? 'p-5 pb-6' : 'p-8 lg:p-12 xl:p-14'}
+              `}>
                 {/* Category */}
                 <p
                   data-category
@@ -329,9 +343,9 @@ export default function PortfolioParallax() {
                 {/* Title */}
                 <h3
                   data-title
-                  className="font-[family-name:var(--font-outfit)] font-black text-white leading-[0.95] tracking-tight mb-4 sm:mb-5"
+                  className="font-[family-name:var(--font-outfit)] font-black text-white leading-[0.95] tracking-tight mb-4"
                   style={{
-                    fontSize: isMobile ? 'clamp(1.75rem, 8vw, 2.5rem)' : 'clamp(2rem, 3vw, 3rem)',
+                    fontSize: isMobile ? 'clamp(1.75rem, 8vw, 2.5rem)' : 'clamp(1.75rem, 2.5vw, 2.75rem)',
                     perspective: 600,
                   }}
                 >
@@ -341,7 +355,7 @@ export default function PortfolioParallax() {
                 {/* Description */}
                 <p
                   data-desc
-                  className="text-white/55 text-sm sm:text-base leading-relaxed mb-6 sm:mb-8 max-w-lg"
+                  className="text-white/55 text-sm sm:text-base leading-relaxed mb-5 max-w-md"
                   style={{ opacity: 0 }}
                 >
                   {project.description}
@@ -349,15 +363,15 @@ export default function PortfolioParallax() {
 
                 {/* Features */}
                 {project.features && (
-                  <div className="mb-6 sm:mb-8">
+                  <div className="mb-5">
                     <p
                       data-feature-title
-                      className="text-white/50 text-xs uppercase tracking-[0.2em] mb-4"
+                      className="text-white/50 text-xs uppercase tracking-[0.2em] mb-3"
                       style={{ opacity: 0 }}
                     >
                       {project.features.title}
                     </p>
-                    <div className="space-y-2.5">
+                    <div className="space-y-2">
                       {(isMobile ? project.features.items.slice(0, 3) : project.features.items).map((feature, j) => (
                         <div
                           key={j}
@@ -365,10 +379,10 @@ export default function PortfolioParallax() {
                           className="flex items-center gap-3"
                           style={{ opacity: 0 }}
                         >
-                          <div className="w-6 h-6 rounded-md bg-[#638BFF]/[0.08] border border-[#638BFF]/15 flex items-center justify-center flex-shrink-0">
-                            <Check className="w-3 h-3 text-[#638BFF]" />
+                          <div className="w-5 h-5 rounded-md bg-[#638BFF]/[0.08] border border-[#638BFF]/15 flex items-center justify-center flex-shrink-0">
+                            <Check className="w-2.5 h-2.5 text-[#638BFF]" />
                           </div>
-                          <span className="text-sm text-white/65">{feature.label}</span>
+                          <span className="text-[13px] text-white/65">{feature.label}</span>
                         </div>
                       ))}
                     </div>
@@ -381,7 +395,7 @@ export default function PortfolioParallax() {
                     <span
                       key={j}
                       data-tag
-                      className="text-[11px] lg:text-xs text-white/50 border border-white/[0.1] bg-white/[0.03] px-3 py-1 lg:px-4 lg:py-1.5 rounded-full"
+                      className="text-[11px] text-white/50 border border-white/[0.1] bg-white/[0.03] px-3 py-1 rounded-full"
                       style={{ opacity: 0 }}
                     >
                       {tag}
@@ -390,24 +404,12 @@ export default function PortfolioParallax() {
                 </div>
               </div>
             </article>
-
-            {/* Separator between projects */}
-            {i < projects.length - 1 && (
-              <div className="flex items-center gap-4">
-                {/* Mobile: numbered pill separator */}
-                <div className="flex-1 h-px bg-[#638BFF]/20 lg:bg-white/[0.06]" />
-                <span className="text-[#638BFF]/40 text-[11px] font-medium tracking-wider lg:hidden">
-                  {String(i + 2).padStart(2, '0')}
-                </span>
-                <div className="flex-1 h-px bg-[#638BFF]/20 lg:bg-white/[0.06] lg:hidden" />
-              </div>
-            )}
-          </Fragment>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
-      <div className="h-8 sm:h-16" />
+      {/* Bottom spacing */}
+      <div className="h-12 sm:h-20" />
     </section>
   );
 }
