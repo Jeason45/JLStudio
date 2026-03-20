@@ -207,62 +207,50 @@ export default function PortfolioStack() {
     };
   }, [isMobile]);
 
-  // ── Hover: animate inner card visuals, keep hit area stable ──
+  // ── Hover: track hovered card via ref to avoid flicker ──
+  const hoveredRef = useRef<number | null>(null);
+
+  const animateHover = useCallback((index: number | null) => {
+    if (!fanReady || activeCard !== null || !sectionRef.current) return;
+
+    const cards = sectionRef.current.querySelectorAll<HTMLElement>('[data-card]');
+    const inners = sectionRef.current.querySelectorAll<HTMLElement>('[data-card-inner]');
+
+    if (index === null) {
+      // Reset all cards to fan position
+      cards.forEach((card, i) => {
+        const pos = getFanPosition(i);
+        gsap.to(card, { x: pos.x, y: pos.y, zIndex: i + 1, duration: 0.5, ease: 'elastic.out(0.6, 0.5)' });
+        gsap.to(inners[i], { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: 'elastic.out(0.6, 0.5)' });
+      });
+    } else {
+      cards.forEach((card, i) => {
+        if (i === index) {
+          gsap.to(inners[i], { y: -40, scale: 1.08, duration: 0.4, ease: 'power3.out' });
+          gsap.to(card, { zIndex: 20, duration: 0 });
+        } else {
+          const dir = i < index ? -1 : 1;
+          gsap.to(card, { x: getFanPosition(i).x + dir * 15, duration: 0.4, ease: 'power2.out' });
+          gsap.to(inners[i], { scale: 0.95, opacity: 0.45, duration: 0.4, ease: 'power2.out' });
+        }
+      });
+    }
+  }, [fanReady, activeCard]);
+
   const handleCardHover = useCallback((index: number) => {
-    if (!fanReady || activeCard !== null || !sectionRef.current) return;
+    if (hoveredRef.current === index) return;
+    hoveredRef.current = index;
+    animateHover(index);
+  }, [animateHover]);
 
-    const cards = sectionRef.current.querySelectorAll<HTMLElement>('[data-card]');
-    const inners = sectionRef.current.querySelectorAll<HTMLElement>('[data-card-inner]');
-    cards.forEach((card, i) => {
-      if (i === index) {
-        // Lift the inner visual, keep the outer hit area in place
-        gsap.to(inners[i], {
-          y: -40,
-          scale: 1.08,
-          duration: 0.4,
-          ease: 'power3.out',
-        });
-        gsap.to(card, { zIndex: 20, duration: 0 });
-      } else {
-        const dir = i < index ? -1 : 1;
-        gsap.to(card, {
-          x: getFanPosition(i).x + dir * 15,
-          duration: 0.4,
-          ease: 'power2.out',
-        });
-        gsap.to(inners[i], {
-          scale: 0.95,
-          opacity: 0.45,
-          duration: 0.4,
-          ease: 'power2.out',
-        });
-      }
-    });
-  }, [fanReady, activeCard]);
-
-  const handleCardLeave = useCallback(() => {
-    if (!fanReady || activeCard !== null || !sectionRef.current) return;
-
-    const cards = sectionRef.current.querySelectorAll<HTMLElement>('[data-card]');
-    const inners = sectionRef.current.querySelectorAll<HTMLElement>('[data-card-inner]');
-    cards.forEach((card, i) => {
-      const pos = getFanPosition(i);
-      gsap.to(card, {
-        x: pos.x,
-        y: pos.y,
-        zIndex: i + 1,
-        duration: 0.5,
-        ease: 'elastic.out(0.6, 0.5)',
-      });
-      gsap.to(inners[i], {
-        y: 0,
-        scale: 1,
-        opacity: 1,
-        duration: 0.5,
-        ease: 'elastic.out(0.6, 0.5)',
-      });
-    });
-  }, [fanReady, activeCard]);
+  const handleCardLeave = useCallback((e: React.MouseEvent) => {
+    // Only reset if mouse actually left the fan container (not moving between cards)
+    const container = (e.currentTarget as HTMLElement).closest('[data-fan-container]');
+    const related = e.relatedTarget as HTMLElement | null;
+    if (container && related && container.contains(related)) return;
+    hoveredRef.current = null;
+    animateHover(null);
+  }, [animateHover]);
 
   const handleCardClick = useCallback((index: number) => {
     if (!fanReady) return;
@@ -348,7 +336,7 @@ export default function PortfolioStack() {
       </div>
 
       {/* Fan cards container */}
-      <div className="relative flex items-center justify-center" style={{ height: '480px' }}>
+      <div data-fan-container className="relative flex items-center justify-center" style={{ height: '480px' }}>
         {projects.map((project, i) => {
           const pos = getFanPosition(i);
           return (
@@ -365,7 +353,7 @@ export default function PortfolioStack() {
                 transform: `translateX(${pos.x}px) translateY(${pos.y}px) rotate(${pos.rotation}deg)`,
               }}
               onMouseEnter={() => handleCardHover(i)}
-              onMouseLeave={handleCardLeave}
+              onMouseLeave={(e) => handleCardLeave(e)}
               onClick={() => handleCardClick(i)}
             >
               <div data-card-inner className="w-full h-full rounded-2xl overflow-hidden border border-white/[0.1] bg-[#111114] shadow-2xl relative group">
