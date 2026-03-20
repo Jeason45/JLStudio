@@ -5574,7 +5574,7 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.75) 100%)',
+                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%)',
                 }}
               />
             </div>

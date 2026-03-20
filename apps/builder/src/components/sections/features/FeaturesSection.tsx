@@ -5726,7 +5726,7 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
               style={{
                 position: 'absolute',
                 inset: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.72)',
+                backgroundColor: 'rgba(0, 0, 0, 0.58)',
               }}
             />
 
