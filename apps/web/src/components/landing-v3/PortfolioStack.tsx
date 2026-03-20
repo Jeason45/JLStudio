@@ -209,8 +209,9 @@ export default function PortfolioStack() {
 
   // ── Hover: track hovered card via ref to avoid flicker ──
   const hoveredRef = useRef<number | null>(null);
+  const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const animateHover = useCallback((index: number | null) => {
+  const animateToState = useCallback((index: number | null) => {
     if (!fanReady || activeCard !== null || !sectionRef.current) return;
 
     const cards = sectionRef.current.querySelectorAll<HTMLElement>('[data-card]');
@@ -238,19 +239,23 @@ export default function PortfolioStack() {
   }, [fanReady, activeCard]);
 
   const handleCardHover = useCallback((index: number) => {
+    // Cancel any pending leave reset
+    if (leaveTimerRef.current) {
+      clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = null;
+    }
     if (hoveredRef.current === index) return;
     hoveredRef.current = index;
-    animateHover(index);
-  }, [animateHover]);
+    animateToState(index);
+  }, [animateToState]);
 
-  const handleCardLeave = useCallback((e: React.MouseEvent) => {
-    // Only reset if mouse actually left the fan container (not moving between cards)
-    const container = (e.currentTarget as HTMLElement).closest('[data-fan-container]');
-    const related = e.relatedTarget as HTMLElement | null;
-    if (container && related && container.contains(related)) return;
-    hoveredRef.current = null;
-    animateHover(null);
-  }, [animateHover]);
+  const handleCardLeave = useCallback(() => {
+    // Delay the reset to allow mouseEnter on the next card to cancel it
+    leaveTimerRef.current = setTimeout(() => {
+      hoveredRef.current = null;
+      animateToState(null);
+    }, 60);
+  }, [animateToState]);
 
   const handleCardClick = useCallback((index: number) => {
     if (!fanReady) return;
@@ -353,7 +358,7 @@ export default function PortfolioStack() {
                 transform: `translateX(${pos.x}px) translateY(${pos.y}px) rotate(${pos.rotation}deg)`,
               }}
               onMouseEnter={() => handleCardHover(i)}
-              onMouseLeave={(e) => handleCardLeave(e)}
+              onMouseLeave={handleCardLeave}
               onClick={() => handleCardClick(i)}
             >
               <div data-card-inner className="w-full h-full rounded-2xl overflow-hidden border border-white/[0.1] bg-[#111114] shadow-2xl relative group">
