@@ -1836,8 +1836,8 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         content: {
           title: 'Avis clients',
           subtitle: 'Avis v\u00E9rifi\u00E9s sur Trustpilot',
-          trustpilotUrl: 'https://fr.trustpilot.com/review/jlstudio',
-          trustpilotScore: '5',
+          trustpilotUrl: 'https://fr.trustpilot.com/review/jlstudio.dev',
+          trustpilotScore: '4.1',
           trustpilotCount: '5',
           items: [
             {

@@ -4364,68 +4364,100 @@ function JlstudioParallax({ content, items, accent, styleOverrides, sectionId }:
   const trustpilotScore = (content as Record<string, unknown>).trustpilotScore as string | undefined
   const trustpilotCount = (content as Record<string, unknown>).trustpilotCount as string | undefined
 
+  // Duplicate items for seamless marquee loop
+  const doubled = [...items, ...items]
+
   return (
     <section className="relative bg-[#050507] py-24 overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)' }}>
-      {/* Ambient glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full pointer-events-none opacity-10 blur-3xl" style={{ background: `radial-gradient(ellipse, #00b67a40, transparent 70%)` }} />
+      <style>{`
+        @keyframes jls-marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .jls-marquee-track {
+          animation: jls-marquee 40s linear infinite;
+        }
+        .jls-marquee-track:hover {
+          animation-play-state: paused;
+        }
+        .jls-marquee-fade-l {
+          background: linear-gradient(to right, #050507, transparent);
+        }
+        .jls-marquee-fade-r {
+          background: linear-gradient(to left, #050507, transparent);
+        }
+      `}</style>
 
-      <div className="relative max-w-6xl mx-auto px-6">
-        {/* Header with Trustpilot branding */}
-        <div className="text-center mb-16 space-y-6">
+      {/* Ambient glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full pointer-events-none opacity-10 blur-3xl" style={{ background: 'radial-gradient(ellipse, #00b67a40, transparent 70%)' }} />
+
+      <div className="relative">
+        {/* Header */}
+        <div className="text-center mb-8 px-6">
+          <p style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(0,182,122,0.7)', marginBottom: '16px' }}>
+            Avis clients
+          </p>
           {title && (
             <h2 {...elementProps(sectionId, 'title', 'heading')} className="text-3xl md:text-5xl font-bold text-white leading-tight" style={styleOverrides?.textColor ? { color: styleOverrides.textColor } : undefined}>
               {title}
             </h2>
           )}
-          {/* Trustpilot badge */}
-          <div className="flex flex-col items-center gap-3">
-            <a
-              href={trustpilotUrl ?? 'https://fr.trustpilot.com/review/jlstudio'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-col items-center gap-3 group"
-            >
-              <TrustpilotLogo />
-              {/* Stars row */}
-              <div className="flex items-center gap-1">
-                {[1,2,3,4,5].map(n => <TrustpilotStar key={n} filled />)}
-              </div>
-              <p className="text-sm text-white/50 group-hover:text-white/70 transition-colors">
-                TrustScore <span className="font-semibold text-white/80">{trustpilotScore ?? '5'}/5</span> — {trustpilotCount ?? '5'} avis v\u00E9rifi\u00E9s
-              </p>
-            </a>
-          </div>
         </div>
 
-        {/* Cards — 3+2 layout (3 top, 2 bottom centered) */}
-        <div className="flex flex-col gap-6">
-          {/* First row: up to 3 cards */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {items.slice(0, 3).map((item, i) => (
-              <JlstudioTestimonialCard key={item.id} item={item} index={i} sectionId={sectionId} />
-            ))}
-          </div>
-          {/* Second row: remaining cards centered */}
-          {items.length > 3 && (
-            <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto w-full">
-              {items.slice(3).map((item, i) => (
-                <JlstudioTestimonialCard key={item.id} item={item} index={i + 3} sectionId={sectionId} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Bottom CTA */}
-        <div className="text-center mt-12">
+        {/* TrustBox widget */}
+        <div className="flex justify-center mb-14 px-6">
           <a
-            href={trustpilotUrl ?? 'https://fr.trustpilot.com/review/jlstudio'}
+            href={trustpilotUrl ?? 'https://fr.trustpilot.com/review/jlstudio.dev'}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-medium text-white/40 hover:text-white/70 transition-colors"
+            className="inline-flex items-center gap-4 sm:gap-6 rounded-2xl px-6 sm:px-8 py-4 sm:py-5 transition-all duration-500 group"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.05)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.1)',
+            }}
           >
-            Voir tous les avis sur Trustpilot
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            {/* Score */}
+            <div className="text-center">
+              <p className="text-white font-bold text-2xl sm:text-3xl leading-none">{trustpilotScore ?? '4.1'}</p>
+              <p className="text-white/40 text-[10px] mt-1">sur 5</p>
+            </div>
+            <div className="w-px h-10" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }} />
+            {/* Stars + count */}
+            <div>
+              <div className="flex items-center gap-1">
+                {[1,2,3,4,5].map(n => <TrustpilotStar key={n} filled={n <= Math.round(Number(trustpilotScore ?? 4))} />)}
+              </div>
+              <p className="text-white/50 text-xs mt-1.5">
+                Basé sur <span className="text-white/70 font-medium">{trustpilotCount ?? '5'} avis</span>
+              </p>
+            </div>
+            <div className="w-px h-10 hidden sm:block" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }} />
+            {/* Logo */}
+            <div className="hidden sm:flex items-center gap-1.5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#00b67a" />
+              </svg>
+              <span className="text-white font-semibold text-sm tracking-tight">Trustpilot</span>
+            </div>
+            {/* Arrow */}
+            <svg className="w-4 h-4 text-white/30 group-hover:text-white/60 transition-all duration-300 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
           </a>
+        </div>
+
+        {/* Marquee — single row */}
+        <div className="relative overflow-hidden">
+          <div className="jls-marquee-track flex gap-5 w-max">
+            {doubled.map((item, i) => (
+              <JlstudioTestimonialCard key={`${item.id}-${i}`} item={item} index={i % items.length} sectionId={sectionId} />
+            ))}
+          </div>
+          {/* Fade edges */}
+          <div className="jls-marquee-fade-l absolute top-0 bottom-0 left-0 w-20 sm:w-40 z-10 pointer-events-none" />
+          <div className="jls-marquee-fade-r absolute top-0 bottom-0 right-0 w-20 sm:w-40 z-10 pointer-events-none" />
         </div>
       </div>
     </section>
@@ -4442,38 +4474,45 @@ function JlstudioTestimonialCard({ item, index, sectionId }: { item: Testimonial
 
   return (
     <div
-      className="relative rounded-2xl p-8 border transition-colors hover:border-white/[0.15]"
+      className="relative rounded-2xl p-7 border transition-all duration-500 hover:border-white/[0.15] hover:bg-white/[0.06] flex-shrink-0"
       style={{
-        backgroundColor: 'rgba(0,0,0,0.4)',
+        width: '400px',
+        backgroundColor: 'rgba(255,255,255,0.04)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderColor: 'rgba(255,255,255,0.08)',
       }}
     >
-      {/* Trustpilot stars */}
-      <div className="flex items-center gap-0.5 mb-4">
-        {[1,2,3,4,5].map(n => <TrustpilotStar key={n} filled={n <= (item.rating ?? 5)} />)}
+      {/* Stars + verified */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-0.5">
+          {[1,2,3,4,5].map(n => <TrustpilotStar key={n} filled={n <= (item.rating ?? 5)} />)}
+        </div>
+        <span style={{ fontSize: '10px', color: 'rgba(0,182,122,0.8)', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+          Vérifié
+        </span>
       </div>
 
-      {/* Quote text */}
+      {/* Quote */}
       <p
         {...elementProps(sectionId, `items.${index}.quote`, 'text')}
-        className="text-base text-white/70 leading-relaxed mb-8 font-light"
+        className="text-sm text-white/60 leading-relaxed mb-5"
       >
-        {item.quote}
+        &ldquo;{item.quote}&rdquo;
       </p>
 
       {/* Author */}
       <div className="flex items-center gap-3">
         <div
-          className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white"
-          style={{ backgroundColor: '#00b67a' }}
+          className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0"
+          style={{ backgroundColor: 'rgba(0,182,122,0.12)', border: '1px solid rgba(0,182,122,0.2)', color: '#00b67a' }}
         >
           {initials}
         </div>
         <div>
-          <p {...elementProps(sectionId, `items.${index}.author`, 'text')} className="text-sm font-semibold text-white">{item.author}</p>
-          <p {...elementProps(sectionId, `items.${index}.role`, 'text')} className="text-xs text-white/40">{item.role}</p>
+          <p {...elementProps(sectionId, `items.${index}.author`, 'text')} className="text-sm font-semibold text-white leading-tight">{item.author}</p>
+          <p {...elementProps(sectionId, `items.${index}.role`, 'text')} className="text-[11px] text-white/35">{item.role}</p>
         </div>
       </div>
     </div>
