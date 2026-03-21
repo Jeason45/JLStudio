@@ -77,6 +77,7 @@ export const LIBRARY_SUBCATEGORIES: Record<LibraryCategory, LibrarySubcategory[]
     { id: 'containers', label: 'Conteneurs' },
     { id: 'lists', label: 'Listes' },
     { id: 'links', label: 'Liens' },
+    { id: 'navigation', label: 'Navigation' },
   ],
   illustrations: [
     { id: 'abstract', label: 'Abstraites' },
