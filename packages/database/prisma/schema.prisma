@@ -63,6 +63,7 @@ model Site {
   portalProjects          PortalProject[]
   portalCompanySettings   PortalCompanySettings?
   activities              Activity[]
+  deploys                 Deploy[]
 
   @@index([status])
   @@index([createdAt])
@@ -72,6 +73,32 @@ enum SiteStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+// ─────────────────────────────────────────────
+// DEPLOYS
+// ─────────────────────────────────────────────
+
+model Deploy {
+  id            String       @id @default(cuid())
+  siteId        String
+  status        DeployStatus @default(PENDING)
+  pagesExported Int          @default(0)
+  duration      Int          @default(0)
+  outputDir     String?
+  deployUrl     String?
+  error         String?      @db.Text
+  createdAt     DateTime     @default(now())
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, createdAt])
+}
+
+enum DeployStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }
 
 // ─────────────────────────────────────────────

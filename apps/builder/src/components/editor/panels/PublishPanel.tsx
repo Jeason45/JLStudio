@@ -1,8 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { useEditorStore } from '@/store/editorStore'
-import { Rocket, Copy, Check, ExternalLink, Clock, ToggleLeft, ToggleRight } from 'lucide-react'
+import { Rocket, Copy, Check, ExternalLink, Clock, ToggleLeft, ToggleRight, AlertCircle, CheckCircle2, XCircle, History } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface PublishPanelProps {
@@ -10,14 +10,25 @@ interface PublishPanelProps {
   onClose: () => void
 }
 
-// Mock deploy history
-const MOCK_HISTORY = [
-  { id: '1', timestamp: '2026-03-08T14:30:00Z', status: 'success' as const, duration: '12s' },
-  { id: '2', timestamp: '2026-03-07T10:15:00Z', status: 'success' as const, duration: '9s' },
-  { id: '3', timestamp: '2026-03-06T16:45:00Z', status: 'success' as const, duration: '11s' },
-  { id: '4', timestamp: '2026-03-05T09:00:00Z', status: 'failed' as const, duration: '3s' },
-  { id: '5', timestamp: '2026-03-04T11:20:00Z', status: 'success' as const, duration: '10s' },
-]
+interface ExportResponse {
+  success?: boolean
+  error?: string
+  details?: string
+  pagesExported?: number
+  duration?: number
+  deployUrl?: string
+  deployId?: string
+}
+
+interface DeployRecord {
+  id: string
+  status: 'PENDING' | 'SUCCESS' | 'FAILED'
+  pagesExported: number
+  duration: number
+  deployUrl: string | null
+  error: string | null
+  createdAt: string
+}
 
 function formatDate(iso: string): string {
   try {
@@ -28,29 +39,84 @@ function formatDate(iso: string): string {
   }
 }
 
+function formatDuration(ms: number): string {
+  if (ms < 1000) return `${ms}ms`
+  return `${(ms / 1000).toFixed(1)}s`
+}
+
 export function PublishPanel({ open, onClose }: PublishPanelProps) {
   const { siteConfig, updateDeploy } = useEditorStore()
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishResult, setPublishResult] = useState<'success' | 'error' | null>(null)
+  const [publishError, setPublishError] = useState<string | null>(null)
+  const [publishStats, setPublishStats] = useState<{ pages: number; duration: number } | null>(null)
   const [copiedField, setCopiedField] = useState<string | null>(null)
   const [activeEnv, setActiveEnv] = useState<'staging' | 'production'>('production')
+  const [deploys, setDeploys] = useState<DeployRecord[]>([])
+  const [loadingHistory, setLoadingHistory] = useState(false)
 
   const deploy = siteConfig?.deploy ?? {}
+  const siteId = siteConfig?.id
   const siteName = siteConfig?.meta.title ?? 'site'
   const slugified = siteName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
-  const stagingUrl = deploy.stagingUrl || `https://${slugified}.staging.example.com`
-  const productionUrl = deploy.productionUrl || `https://${slugified}.example.com`
+  const stagingUrl = deploy.stagingUrl || `https://${slugified}.staging.jlstudio.dev`
+  const productionUrl = deploy.productionUrl || deploy.deployUrl || `https://${slugified}.jlstudio.dev`
+
+  const fetchDeploys = useCallback(async () => {
+    if (!siteId) return
+    setLoadingHistory(true)
+    try {
+      const res = await fetch(`/api/sites/${siteId}/deploys?limit=10`)
+      if (res.ok) {
+        const data = await res.json()
+        setDeploys(data.deploys || [])
+      }
+    } catch {
+      // Silently fail — history is non-critical
+    } finally {
+      setLoadingHistory(false)
+    }
+  }, [siteId])
+
+  useEffect(() => {
+    if (open && siteId) {
+      fetchDeploys()
+    }
+  }, [open, siteId, fetchDeploys])
 
   const handlePublish = async () => {
+    if (!siteId) return
     setIsPublishing(true)
     setPublishResult(null)
-    // Simulate publish
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    updateDeploy({ lastPublishedAt: new Date().toISOString() })
-    setIsPublishing(false)
-    setPublishResult('success')
-    setTimeout(() => setPublishResult(null), 3000)
+    setPublishError(null)
+    setPublishStats(null)
+
+    try {
+      const res = await fetch(`/api/sites/${siteId}/export`, { method: 'POST' })
+      const data: ExportResponse = await res.json()
+
+      if (!res.ok || data.error) {
+        setPublishResult('error')
+        setPublishError(data.error || 'Export failed')
+        fetchDeploys()
+        return
+      }
+
+      updateDeploy({
+        lastPublishedAt: new Date().toISOString(),
+        deployUrl: data.deployUrl,
+      })
+      setPublishStats({ pages: data.pagesExported ?? 0, duration: data.duration ?? 0 })
+      setPublishResult('success')
+      fetchDeploys()
+      setTimeout(() => setPublishResult(null), 5000)
+    } catch (err) {
+      setPublishResult('error')
+      setPublishError(String(err))
+    } finally {
+      setIsPublishing(false)
+    }
   }
 
   const handleCopy = (text: string, field: string) => {
@@ -107,6 +173,19 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
               )}
             </button>
 
+            {publishResult === 'error' && publishError && (
+              <div className="mt-2 p-2 bg-red-500/10 border border-red-500/20 rounded text-[10px] text-red-400 flex items-start gap-1.5">
+                <AlertCircle className="w-3 h-3 mt-0.5 shrink-0" />
+                <span>{publishError}</span>
+              </div>
+            )}
+
+            {publishResult === 'success' && publishStats && (
+              <p className="text-[10px] text-green-400 mt-2">
+                {publishStats.pages} page{publishStats.pages > 1 ? 's' : ''} exported in {formatDuration(publishStats.duration)}
+              </p>
+            )}
+
             {deploy.lastPublishedAt && (
               <p className="text-[10px] text-zinc-500 mt-2 flex items-center gap-1">
                 <Clock className="w-3 h-3" />
@@ -146,7 +225,6 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
 
           {/* URLs */}
           <div className="space-y-3">
-            {/* Staging URL */}
             <div>
               <p className="text-[10px] text-zinc-500 mb-1">Staging URL</p>
               <div className="flex items-center gap-1">
@@ -172,7 +250,6 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
               </div>
             </div>
 
-            {/* Production URL */}
             <div>
               <p className="text-[10px] text-zinc-500 mb-1">Production URL</p>
               <div className="flex items-center gap-1">
@@ -219,27 +296,55 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
 
           {/* Deploy history */}
           <div>
-            <p className="text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-2">Recent deploys</p>
-            <div className="space-y-1">
-              {MOCK_HISTORY.map(entry => (
-                <div key={entry.id} className="flex items-center gap-2 px-2.5 py-2 bg-zinc-800/30 border border-zinc-800 rounded">
-                  <span className={cn(
-                    'w-2 h-2 rounded-full shrink-0',
-                    entry.status === 'success' ? 'bg-green-500' : 'bg-red-500'
-                  )} />
-                  <span className="flex-1 text-[10px] text-zinc-400">
-                    {formatDate(entry.timestamp)}
-                  </span>
-                  <span className={cn(
-                    'text-[9px] px-1.5 py-0.5 rounded font-medium',
-                    entry.status === 'success' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
-                  )}>
-                    {entry.status}
-                  </span>
-                  <span className="text-[9px] text-zinc-600">{entry.duration}</span>
-                </div>
-              ))}
-            </div>
+            <p className="text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <History className="w-3 h-3" />
+              Deploy history
+            </p>
+
+            {loadingHistory ? (
+              <div className="flex items-center justify-center py-4">
+                <span className="w-4 h-4 border-2 border-zinc-700 border-t-zinc-400 rounded-full animate-spin" />
+              </div>
+            ) : deploys.length === 0 ? (
+              <p className="text-[10px] text-zinc-600 py-2">No deploys yet</p>
+            ) : (
+              <div className="space-y-1.5">
+                {deploys.map((d) => (
+                  <div
+                    key={d.id}
+                    className="flex items-center gap-2 p-2 bg-zinc-800/50 border border-zinc-700/50 rounded text-[10px]"
+                  >
+                    {d.status === 'SUCCESS' ? (
+                      <CheckCircle2 className="w-3 h-3 text-green-500 shrink-0" />
+                    ) : d.status === 'FAILED' ? (
+                      <XCircle className="w-3 h-3 text-red-500 shrink-0" />
+                    ) : (
+                      <Clock className="w-3 h-3 text-yellow-500 shrink-0" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className={cn(
+                          'font-medium',
+                          d.status === 'SUCCESS' ? 'text-zinc-300' : d.status === 'FAILED' ? 'text-red-400' : 'text-yellow-400'
+                        )}>
+                          {d.status === 'SUCCESS' ? `${d.pagesExported} pages` : d.status === 'FAILED' ? 'Failed' : 'Pending'}
+                        </span>
+                        <span className="text-zinc-600">{formatDuration(d.duration)}</span>
+                      </div>
+                      <p className="text-zinc-600 truncate">{formatDate(d.createdAt)}</p>
+                      {d.status === 'FAILED' && d.error && (
+                        <p className="text-red-500/70 truncate mt-0.5">{d.error}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Info */}
+          <div className="p-3 bg-zinc-800/50 border border-zinc-700 rounded text-[10px] text-zinc-500">
+            Export generates static HTML files served by Nginx. No server runtime needed.
           </div>
         </div>
       </SheetContent>

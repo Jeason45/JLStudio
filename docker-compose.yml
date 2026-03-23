@@ -53,8 +53,12 @@ services:
       S3_SECRET_KEY: ${S3_SECRET_KEY:-minioadmin123}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       RESEND_API_KEY: ${RESEND_API_KEY:-}
+      DEPLOY_NOTIFY_EMAIL: ${DEPLOY_NOTIFY_EMAIL:-}
       AUTH_SECRET: ${AUTH_SECRET_BUILDER:-change-me-builder-secret-32chars}
       NEXT_PUBLIC_APP_URL: ${BUILDER_URL:-http://localhost:3001}
+      EXPORT_DIR: /var/www/sites
+    volumes:
+      - sites_data:/var/www/sites
     ports:
       - "3001:3001"
 
@@ -75,6 +79,19 @@ services:
     ports:
       - "3002:3002"
 
+  # ── Nginx — Static sites server ──
+  nginx-sites:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - sites_data:/var/www/sites:ro
+      - ./nginx/sites.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - builder
+
 volumes:
   postgres_data:
   minio_data:
+  sites_data:

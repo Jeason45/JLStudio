@@ -162,6 +162,7 @@ export interface DeployConfig {
   lastPublishedAt?: string
   stagingUrl?: string
   productionUrl?: string
+  deployUrl?: string
   autoDeploy?: boolean
 }
 
