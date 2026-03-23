@@ -3990,6 +3990,505 @@ const FAQ_COMPONENTS: LibraryElementItem[] = [
   },
 ]
 
+// ─── ERROR PAGES (4 premium presets) ───
+
+const ERROR_PAGES: LibraryElementItem[] = [
+  {
+    id: 'comp-404-minimal',
+    label: '404 Minimal',
+    category: 'components',
+    subcategory: 'pages',
+    tags: ['404', 'error', 'minimal', 'page', 'not-found'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: '404 Minimal',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<style>.e404m-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:600px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:60px 24px}.e404m-code{font-size:120px;font-weight:800;color:#f0f0f0;margin:0;line-height:1;letter-spacing:-4px}.e404m-title{font-size:22px;font-weight:500;color:rgba(255,255,255,0.5);margin:16px 0 0;letter-spacing:0.01em}.e404m-desc{font-size:14px;color:rgba(255,255,255,0.3);margin:12px 0 0;max-width:360px;line-height:1.7}.e404m-btn{display:inline-block;margin-top:36px;padding:14px 36px;background:#f0f0f0;color:#0a0a0a;font-size:14px;font-weight:600;border-radius:8px;text-decoration:none;transition:all 0.3s ease;letter-spacing:0.02em}.e404m-btn:hover{background:#fff;transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,255,255,0.1)}</style><div class="e404m-wrap"><p class="e404m-code">404</p><h1 class="e404m-title">Page not found</h1><p class="e404m-desc">The page you are looking for does not exist or has been moved.</p><a href="#" class="e404m-btn">Go Home</a></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-404-creative',
+    label: '404 Creative',
+    category: 'components',
+    subcategory: 'pages',
+    tags: ['404', 'error', 'creative', 'glitch', 'animated'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: '404 Creative',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<style>.e404c-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:600px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:60px 24px;overflow:hidden;position:relative}.e404c-code{font-size:140px;font-weight:900;color:#f0f0f0;margin:0;line-height:1;position:relative;letter-spacing:-6px}.e404c-code::before,.e404c-code::after{content:'404';position:absolute;top:0;left:0;width:100%;height:100%}.e404c-code::before{color:#ff3366;animation:e404c-glitch1 2s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}.e404c-code::after{color:#638BFF;animation:e404c-glitch2 2s infinite;clip-path:polygon(0 67%,100% 67%,100% 100%,0 100%)}@keyframes e404c-glitch1{0%,100%{transform:translate(0)}20%{transform:translate(-3px,3px)}40%{transform:translate(3px,-3px)}60%{transform:translate(-2px,1px)}80%{transform:translate(2px,-1px)}}@keyframes e404c-glitch2{0%,100%{transform:translate(0)}20%{transform:translate(3px,-2px)}40%{transform:translate(-3px,2px)}60%{transform:translate(2px,-1px)}80%{transform:translate(-2px,3px)}}.e404c-desc{font-size:16px;color:rgba(255,255,255,0.4);margin:24px 0 0;max-width:400px;line-height:1.7}.e404c-actions{display:flex;gap:12px;margin-top:36px;align-items:center;flex-wrap:wrap;justify-content:center}.e404c-input{padding:12px 20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#f0f0f0;font-size:14px;outline:none;width:220px;font-family:inherit;transition:border-color 0.3s}.e404c-input::placeholder{color:rgba(255,255,255,0.25)}.e404c-input:focus{border-color:rgba(99,139,255,0.4)}.e404c-btn{padding:12px 28px;background:#f0f0f0;color:#0a0a0a;font-size:14px;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:all 0.3s;font-family:inherit}.e404c-btn:hover{background:#fff;transform:translateY(-1px)}</style><div class="e404c-wrap"><p class="e404c-code">404</p><p class="e404c-desc">Looks like this page got lost in the digital void. Try searching or head back home.</p><div class="e404c-actions"><input type="text" class="e404c-input" placeholder="Search the site..."><a href="#" class="e404c-btn">Go Home</a></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-coming-soon',
+    label: 'Coming Soon',
+    category: 'components',
+    subcategory: 'pages',
+    tags: ['coming-soon', 'launch', 'countdown', 'notify', 'page'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Coming Soon',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<style>.ecs-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:600px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:60px 24px}.ecs-badge{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#638BFF;margin:0 0 24px;padding:6px 16px;border:1px solid rgba(99,139,255,0.25);border-radius:20px}.ecs-title{font-size:48px;font-weight:800;color:#f0f0f0;margin:0;line-height:1.1;letter-spacing:-1.5px}.ecs-desc{font-size:15px;color:rgba(255,255,255,0.4);margin:16px 0 0;max-width:420px;line-height:1.7}.ecs-countdown{display:flex;gap:20px;margin:40px 0}.ecs-unit{display:flex;flex-direction:column;align-items:center;gap:6px}.ecs-num{font-size:42px;font-weight:700;color:#f0f0f0;min-width:60px;line-height:1;font-variant-numeric:tabular-nums}.ecs-lbl{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3)}.ecs-form{display:flex;gap:10px;margin-top:36px;flex-wrap:wrap;justify-content:center}.ecs-input{padding:12px 20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#f0f0f0;font-size:14px;outline:none;width:260px;font-family:inherit;transition:border-color 0.3s}.ecs-input::placeholder{color:rgba(255,255,255,0.25)}.ecs-input:focus{border-color:rgba(99,139,255,0.4)}.ecs-btn{padding:12px 24px;background:#638BFF;color:#fff;font-size:14px;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:all 0.3s;font-family:inherit}.ecs-btn:hover{background:#7ba0ff;transform:translateY(-1px)}</style><div class="ecs-wrap"><span class="ecs-badge">Coming Soon</span><h1 class="ecs-title">Something Amazing<br>Is on Its Way</h1><p class="ecs-desc">We are working hard to bring you an exceptional experience. Be the first to know when we launch.</p><div class="ecs-countdown"><div class="ecs-unit"><span class="ecs-num" id="ecs-d">00</span><span class="ecs-lbl">Days</span></div><div class="ecs-unit"><span class="ecs-num" id="ecs-h">00</span><span class="ecs-lbl">Hours</span></div><div class="ecs-unit"><span class="ecs-num" id="ecs-m">00</span><span class="ecs-lbl">Minutes</span></div><div class="ecs-unit"><span class="ecs-num" id="ecs-s">00</span><span class="ecs-lbl">Seconds</span></div></div><div class="ecs-form"><input type="email" class="ecs-input" placeholder="Enter your email"><button class="ecs-btn">Notify Me</button></div></div><script>(function(){var t=new Date(Date.now()+7*24*60*60*1000).getTime();function u(){var n=t-Date.now();if(n<0)n=0;document.getElementById('ecs-d').textContent=String(Math.floor(n/86400000)).padStart(2,'0');document.getElementById('ecs-h').textContent=String(Math.floor(n%86400000/3600000)).padStart(2,'0');document.getElementById('ecs-m').textContent=String(Math.floor(n%3600000/60000)).padStart(2,'0');document.getElementById('ecs-s').textContent=String(Math.floor(n%60000/1000)).padStart(2,'0')}u();setInterval(u,1000)})()</script>`
+      },
+    },
+  },
+  {
+    id: 'comp-maintenance',
+    label: 'Maintenance',
+    category: 'components',
+    subcategory: 'pages',
+    tags: ['maintenance', 'offline', 'page', 'downtime'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Maintenance',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<style>.emnt-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:600px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:60px 24px}.emnt-icon{width:64px;height:64px;color:rgba(255,255,255,0.15);margin-bottom:28px}.emnt-title{font-size:36px;font-weight:700;color:#f0f0f0;margin:0;line-height:1.2;letter-spacing:-0.5px}.emnt-desc{font-size:15px;color:rgba(255,255,255,0.4);margin:16px 0 0;max-width:440px;line-height:1.7}.emnt-time{display:inline-flex;align-items:center;gap:8px;margin-top:28px;padding:10px 20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;font-size:13px;color:rgba(255,255,255,0.5)}.emnt-dot{width:6px;height:6px;border-radius:50%;background:#f59e0b;animation:emnt-pulse 2s infinite}@keyframes emnt-pulse{0%,100%{opacity:1}50%{opacity:0.3}}.emnt-social{display:flex;gap:16px;margin-top:40px}.emnt-social a{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);text-decoration:none;transition:all 0.3s}.emnt-social a:hover{border-color:rgba(99,139,255,0.3);color:#638BFF;transform:translateY(-2px)}.emnt-social svg{width:18px;height:18px}</style><div class="emnt-wrap"><svg class="emnt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><h1 class="emnt-title">Under Maintenance</h1><p class="emnt-desc">We are performing scheduled maintenance to improve your experience. We will be back shortly.</p><div class="emnt-time"><span class="emnt-dot"></span>Estimated downtime: ~2 hours</div><div class="emnt-social"><a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a><a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></div></div>`
+      },
+    },
+  },
+]
+
+// ─── COUNTDOWN SECTIONS (4 premium presets) ───
+
+const COUNTDOWN_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-countdown-launch',
+    label: 'Launch Timer',
+    category: 'components',
+    subcategory: 'countdown',
+    tags: ['countdown', 'launch', 'timer', 'flip', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Launch Timer',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: {
+        html: `<style>.cdl-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:60px 24px}.cdl-title{font-size:14px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin:0 0 40px}.cdl-boxes{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}.cdl-box{display:flex;flex-direction:column;align-items:center;width:110px;padding:28px 0;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;position:relative}.cdl-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#638BFF,transparent);border-radius:14px 14px 0 0;opacity:0.6}.cdl-val{font-size:48px;font-weight:800;color:#f0f0f0;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-1px}.cdl-lbl{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:10px}</style><div class="cdl-wrap"><p class="cdl-title">Launching In</p><div class="cdl-boxes"><div class="cdl-box"><span class="cdl-val" id="cdl-d">00</span><span class="cdl-lbl">Days</span></div><div class="cdl-box"><span class="cdl-val" id="cdl-h">00</span><span class="cdl-lbl">Hours</span></div><div class="cdl-box"><span class="cdl-val" id="cdl-m">00</span><span class="cdl-lbl">Minutes</span></div><div class="cdl-box"><span class="cdl-val" id="cdl-s">00</span><span class="cdl-lbl">Seconds</span></div></div></div><script>(function(){var t=new Date(Date.now()+7*24*60*60*1000).getTime();function u(){var n=t-Date.now();if(n<0)n=0;document.getElementById('cdl-d').textContent=String(Math.floor(n/86400000)).padStart(2,'0');document.getElementById('cdl-h').textContent=String(Math.floor(n%86400000/3600000)).padStart(2,'0');document.getElementById('cdl-m').textContent=String(Math.floor(n%3600000/60000)).padStart(2,'0');document.getElementById('cdl-s').textContent=String(Math.floor(n%60000/1000)).padStart(2,'0')}u();setInterval(u,1000)})()</script>`
+      },
+    },
+  },
+  {
+    id: 'comp-countdown-sale',
+    label: 'Sale Timer',
+    category: 'components',
+    subcategory: 'countdown',
+    tags: ['countdown', 'sale', 'flash', 'urgent', 'cta'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Sale Timer',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: {
+        html: `<style>.cds-wrap{display:flex;align-items:center;justify-content:center;min-height:200px;background:linear-gradient(135deg,#1a0a0a 0%,#2a0f0f 50%,#1a0a0a 100%);font-family:system-ui,-apple-system,sans-serif;padding:40px 24px;gap:40px;flex-wrap:wrap}.cds-left{display:flex;flex-direction:column;gap:8px}.cds-badge{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#ff4444;padding:4px 12px;background:rgba(255,68,68,0.1);border:1px solid rgba(255,68,68,0.2);border-radius:4px;width:fit-content}.cds-title{font-size:28px;font-weight:800;color:#f0f0f0;margin:0;line-height:1.2}.cds-center{display:flex;gap:12px;align-items:center}.cds-unit{text-align:center}.cds-num{display:block;font-size:36px;font-weight:800;color:#f0f0f0;line-height:1;font-variant-numeric:tabular-nums}.cds-lbl{font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:4px;display:block}.cds-sep{font-size:28px;color:rgba(255,68,68,0.5);font-weight:300;margin-bottom:12px}.cds-btn{padding:14px 32px;background:#ff4444;color:#fff;font-size:14px;font-weight:700;border:none;border-radius:8px;cursor:pointer;transition:all 0.3s;font-family:inherit;letter-spacing:0.02em;white-space:nowrap}.cds-btn:hover{background:#ff5555;transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,68,68,0.3)}</style><div class="cds-wrap"><div class="cds-left"><span class="cds-badge">Limited Time</span><h2 class="cds-title">Flash Sale Ends In</h2></div><div class="cds-center"><div class="cds-unit"><span class="cds-num" id="cds-d">00</span><span class="cds-lbl">Days</span></div><span class="cds-sep">:</span><div class="cds-unit"><span class="cds-num" id="cds-h">00</span><span class="cds-lbl">Hours</span></div><span class="cds-sep">:</span><div class="cds-unit"><span class="cds-num" id="cds-m">00</span><span class="cds-lbl">Min</span></div><span class="cds-sep">:</span><div class="cds-unit"><span class="cds-num" id="cds-s">00</span><span class="cds-lbl">Sec</span></div></div><button class="cds-btn">Shop Now</button></div><script>(function(){var t=new Date(Date.now()+7*24*60*60*1000).getTime();function u(){var n=t-Date.now();if(n<0)n=0;document.getElementById('cds-d').textContent=String(Math.floor(n/86400000)).padStart(2,'0');document.getElementById('cds-h').textContent=String(Math.floor(n%86400000/3600000)).padStart(2,'0');document.getElementById('cds-m').textContent=String(Math.floor(n%3600000/60000)).padStart(2,'0');document.getElementById('cds-s').textContent=String(Math.floor(n%60000/1000)).padStart(2,'0')}u();setInterval(u,1000)})()</script>`
+      },
+    },
+  },
+  {
+    id: 'comp-countdown-event',
+    label: 'Event Timer',
+    category: 'components',
+    subcategory: 'countdown',
+    tags: ['countdown', 'event', 'register', 'elegant', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Event Timer',
+      defaultStyle: { width: '100%', minHeight: '500px' },
+      defaultContent: {
+        html: `<style>.cde-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:500px;background:linear-gradient(180deg,#0a0a0a 0%,#0f0f18 100%);font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:60px 24px}.cde-label{font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#638BFF;margin:0 0 16px}.cde-name{font-size:44px;font-weight:800;color:#f0f0f0;margin:0;line-height:1.15;letter-spacing:-1px;max-width:500px}.cde-date{font-size:15px;color:rgba(255,255,255,0.35);margin:16px 0 0}.cde-timer{display:flex;gap:32px;margin:44px 0;flex-wrap:wrap;justify-content:center}.cde-unit{display:flex;flex-direction:column;align-items:center;gap:8px}.cde-num{font-size:56px;font-weight:800;color:#f0f0f0;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-2px}.cde-lbl{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.25)}.cde-divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(99,139,255,0.3),transparent);margin:0 0 8px}.cde-btn{display:inline-block;margin-top:8px;padding:16px 40px;background:linear-gradient(135deg,#638BFF,#4a6fd4);color:#fff;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;transition:all 0.3s;font-family:inherit;letter-spacing:0.02em;text-decoration:none}.cde-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(99,139,255,0.3)}</style><div class="cde-wrap"><span class="cde-label">Upcoming Event</span><h1 class="cde-name">Design & Innovation Summit 2026</h1><p class="cde-date">March 30, 2026 — Virtual Event</p><div class="cde-timer"><div class="cde-unit"><span class="cde-num" id="cde-d">00</span><span class="cde-lbl">Days</span></div><div class="cde-unit"><span class="cde-num" id="cde-h">00</span><span class="cde-lbl">Hours</span></div><div class="cde-unit"><span class="cde-num" id="cde-m">00</span><span class="cde-lbl">Minutes</span></div><div class="cde-unit"><span class="cde-num" id="cde-s">00</span><span class="cde-lbl">Seconds</span></div></div><div class="cde-divider"></div><a href="#" class="cde-btn">Register Now</a></div><script>(function(){var t=new Date(Date.now()+7*24*60*60*1000).getTime();function u(){var n=t-Date.now();if(n<0)n=0;document.getElementById('cde-d').textContent=String(Math.floor(n/86400000)).padStart(2,'0');document.getElementById('cde-h').textContent=String(Math.floor(n%86400000/3600000)).padStart(2,'0');document.getElementById('cde-m').textContent=String(Math.floor(n%3600000/60000)).padStart(2,'0');document.getElementById('cde-s').textContent=String(Math.floor(n%60000/1000)).padStart(2,'0')}u();setInterval(u,1000)})()</script>`
+      },
+    },
+  },
+  {
+    id: 'comp-countdown-circle',
+    label: 'Circle Timer',
+    category: 'components',
+    subcategory: 'countdown',
+    tags: ['countdown', 'circle', 'svg', 'progress', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Circle Timer',
+      defaultStyle: { width: '100%', minHeight: '450px' },
+      defaultContent: {
+        html: `<style>.cdc-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:450px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:60px 24px}.cdc-title{font-size:28px;font-weight:700;color:#f0f0f0;margin:0 0 8px;letter-spacing:-0.5px}.cdc-sub{font-size:14px;color:rgba(255,255,255,0.35);margin:0 0 44px}.cdc-rings{display:flex;gap:28px;flex-wrap:wrap;justify-content:center}.cdc-ring{position:relative;width:120px;height:120px}.cdc-ring svg{width:120px;height:120px;transform:rotate(-90deg)}.cdc-ring circle{fill:none;stroke-width:3;stroke-linecap:round}.cdc-ring .cdc-bg{stroke:rgba(255,255,255,0.06)}.cdc-ring .cdc-fg{stroke:#638BFF;stroke-dasharray:339.292;stroke-dashoffset:0;transition:stroke-dashoffset 1s ease}.cdc-ring:nth-child(2) .cdc-fg{stroke:#a78bfa}.cdc-ring:nth-child(3) .cdc-fg{stroke:#34d399}.cdc-ring:nth-child(4) .cdc-fg{stroke:#f59e0b}.cdc-info{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center}.cdc-val{font-size:32px;font-weight:800;color:#f0f0f0;line-height:1;font-variant-numeric:tabular-nums}.cdc-lbl{font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:4px}</style><div class="cdc-wrap"><h2 class="cdc-title">Time Remaining</h2><p class="cdc-sub">Until the big reveal</p><div class="cdc-rings"><div class="cdc-ring"><svg viewBox="0 0 120 120"><circle class="cdc-bg" cx="60" cy="60" r="54"/><circle class="cdc-fg" id="cdc-rd" cx="60" cy="60" r="54"/></svg><div class="cdc-info"><span class="cdc-val" id="cdc-d">00</span><span class="cdc-lbl">Days</span></div></div><div class="cdc-ring"><svg viewBox="0 0 120 120"><circle class="cdc-bg" cx="60" cy="60" r="54"/><circle class="cdc-fg" id="cdc-rh" cx="60" cy="60" r="54"/></svg><div class="cdc-info"><span class="cdc-val" id="cdc-h">00</span><span class="cdc-lbl">Hours</span></div></div><div class="cdc-ring"><svg viewBox="0 0 120 120"><circle class="cdc-bg" cx="60" cy="60" r="54"/><circle class="cdc-fg" id="cdc-rm" cx="60" cy="60" r="54"/></svg><div class="cdc-info"><span class="cdc-val" id="cdc-m">00</span><span class="cdc-lbl">Min</span></div></div><div class="cdc-ring"><svg viewBox="0 0 120 120"><circle class="cdc-bg" cx="60" cy="60" r="54"/><circle class="cdc-fg" id="cdc-rs" cx="60" cy="60" r="54"/></svg><div class="cdc-info"><span class="cdc-val" id="cdc-s">00</span><span class="cdc-lbl">Sec</span></div></div></div></div><script>(function(){var c=2*Math.PI*54,t=new Date(Date.now()+7*24*60*60*1000).getTime();function u(){var n=t-Date.now();if(n<0)n=0;var d=Math.floor(n/86400000),h=Math.floor(n%86400000/3600000),m=Math.floor(n%3600000/60000),s=Math.floor(n%60000/1000);document.getElementById('cdc-d').textContent=String(d).padStart(2,'0');document.getElementById('cdc-h').textContent=String(h).padStart(2,'0');document.getElementById('cdc-m').textContent=String(m).padStart(2,'0');document.getElementById('cdc-s').textContent=String(s).padStart(2,'0');document.getElementById('cdc-rd').style.strokeDashoffset=String(c*(1-d/7));document.getElementById('cdc-rh').style.strokeDashoffset=String(c*(1-h/24));document.getElementById('cdc-rm').style.strokeDashoffset=String(c*(1-m/60));document.getElementById('cdc-rs').style.strokeDashoffset=String(c*(1-s/60))}u();setInterval(u,1000)})()</script>`
+      },
+    },
+  },
+]
+
+// ─── TABS SECTIONS (4 premium presets) ───
+
+const TABS_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-tabs-horizontal',
+    label: 'Horizontal Tabs',
+    category: 'components',
+    subcategory: 'tabs-sections',
+    tags: ['tabs', 'horizontal', 'interactive', 'content', 'switch'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Horizontal Tabs',
+      defaultStyle: { width: '100%', minHeight: '500px' },
+      defaultContent: {
+        html: `<style>.th-wrap{max-width:800px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;padding:60px 24px}.th-bar{display:flex;gap:4px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:40px}.th-tab{padding:12px 24px;background:none;border:none;font-size:14px;font-weight:500;color:rgba(255,255,255,0.35);cursor:pointer;font-family:inherit;position:relative;transition:color 0.3s}.th-tab:hover{color:rgba(255,255,255,0.6)}.th-tab.active{color:#f0f0f0}.th-tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:#638BFF;border-radius:2px 2px 0 0}.th-panel{display:none;gap:40px;align-items:center}.th-panel.active{display:flex}.th-icon{width:48px;height:48px;border-radius:12px;background:rgba(99,139,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}.th-icon svg{width:22px;height:22px;color:#638BFF}.th-content{flex:1}.th-content h3{font-size:22px;font-weight:700;color:#f0f0f0;margin:0 0 10px;letter-spacing:-0.3px}.th-content p{font-size:14px;color:rgba(255,255,255,0.4);margin:0;line-height:1.7}.th-img{width:240px;height:160px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-size:12px}</style><div class="th-wrap"><div class="th-bar"><button class="th-tab active" onclick="document.querySelectorAll('.th-panel').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.th-tab').forEach(function(t){t.classList.remove('active')});this.classList.add('active');document.getElementById('th-p0').classList.add('active')">Design</button><button class="th-tab" onclick="document.querySelectorAll('.th-panel').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.th-tab').forEach(function(t){t.classList.remove('active')});this.classList.add('active');document.getElementById('th-p1').classList.add('active')">Development</button><button class="th-tab" onclick="document.querySelectorAll('.th-panel').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.th-tab').forEach(function(t){t.classList.remove('active')});this.classList.add('active');document.getElementById('th-p2').classList.add('active')">Analytics</button><button class="th-tab" onclick="document.querySelectorAll('.th-panel').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.th-tab').forEach(function(t){t.classList.remove('active')});this.classList.add('active');document.getElementById('th-p3').classList.add('active')">Support</button></div><div class="th-panel active" id="th-p0"><div class="th-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div class="th-content"><h3>Pixel-Perfect Design</h3><p>Every interface is crafted with meticulous attention to detail, ensuring visual consistency and a premium feel across every screen and device.</p></div><div class="th-img">Preview</div></div><div class="th-panel" id="th-p1"><div class="th-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><div class="th-content"><h3>Modern Development</h3><p>Built with cutting-edge technologies and best practices, our code is clean, performant, and scalable for projects of any size.</p></div><div class="th-img">Preview</div></div><div class="th-panel" id="th-p2"><div class="th-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="th-content"><h3>Deep Analytics</h3><p>Gain actionable insights with real-time dashboards, conversion tracking, and detailed reports that help you make data-driven decisions.</p></div><div class="th-img">Preview</div></div><div class="th-panel" id="th-p3"><div class="th-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="th-content"><h3>Priority Support</h3><p>Get dedicated support with fast response times, detailed documentation, and a team that truly cares about your success.</p></div><div class="th-img">Preview</div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-tabs-vertical-section',
+    label: 'Vertical Tabs Section',
+    category: 'components',
+    subcategory: 'tabs-sections',
+    tags: ['tabs', 'vertical', 'desktop', 'split', 'content'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Vertical Tabs Section',
+      defaultStyle: { width: '100%', minHeight: '500px' },
+      defaultContent: {
+        html: `<style>.tv-wrap{display:flex;gap:0;max-width:900px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;padding:60px 24px;min-height:420px}.tv-tabs{display:flex;flex-direction:column;gap:2px;width:240px;flex-shrink:0;border-right:1px solid rgba(255,255,255,0.06);padding-right:24px}.tv-tab{padding:14px 20px;background:none;border:none;text-align:left;font-size:14px;font-weight:500;color:rgba(255,255,255,0.35);cursor:pointer;font-family:inherit;border-radius:8px;transition:all 0.3s;position:relative}.tv-tab:hover{color:rgba(255,255,255,0.6);background:rgba(255,255,255,0.02)}.tv-tab.active{color:#f0f0f0;background:rgba(99,139,255,0.08)}.tv-tab.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:#638BFF;border-radius:0 3px 3px 0}.tv-panels{flex:1;padding-left:40px}.tv-panel{display:none;flex-direction:column;gap:16px}.tv-panel.active{display:flex}.tv-panel h3{font-size:26px;font-weight:700;color:#f0f0f0;margin:0;letter-spacing:-0.5px}.tv-panel p{font-size:14px;color:rgba(255,255,255,0.4);margin:0;line-height:1.8;max-width:480px}.tv-panel ul{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:10px}.tv-panel li{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.5)}.tv-panel li::before{content:'';width:5px;height:5px;border-radius:50%;background:#638BFF;flex-shrink:0}</style><div class="tv-wrap"><div class="tv-tabs"><button class="tv-tab active" onclick="document.querySelectorAll('.tv-panel').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.tv-tab').forEach(function(t){t.classList.remove('active')});this.classList.add('active');document.getElementById('tv-p0').classList.add('active')">Strategy</button><button class="tv-tab" onclick="document.querySelectorAll('.tv-panel').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.tv-tab').forEach(function(t){t.classList.remove('active')});this.classList.add('active');document.getElementById('tv-p1').classList.add('active')">Branding</button><button class="tv-tab" onclick="document.querySelectorAll('.tv-panel').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.tv-tab').forEach(function(t){t.classList.remove('active')});this.classList.add('active');document.getElementById('tv-p2').classList.add('active')">Web Design</button><button class="tv-tab" onclick="document.querySelectorAll('.tv-panel').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.tv-tab').forEach(function(t){t.classList.remove('active')});this.classList.add('active');document.getElementById('tv-p3').classList.add('active')">Marketing</button></div><div class="tv-panels"><div class="tv-panel active" id="tv-p0"><h3>Digital Strategy</h3><p>We develop comprehensive digital strategies that align with your business goals, target audience, and market position.</p><ul><li>Market research & analysis</li><li>Competitor benchmarking</li><li>Growth roadmap planning</li><li>KPI definition & tracking</li></ul></div><div class="tv-panel" id="tv-p1"><h3>Brand Identity</h3><p>Create a memorable brand that resonates with your audience and stands out in a crowded marketplace.</p><ul><li>Logo & visual identity</li><li>Brand guidelines</li><li>Tone of voice</li><li>Brand collateral</li></ul></div><div class="tv-panel" id="tv-p2"><h3>Premium Web Design</h3><p>Beautiful, functional websites that convert visitors into customers with intuitive UX and stunning visuals.</p><ul><li>Responsive design</li><li>Interactive prototypes</li><li>Performance optimization</li><li>Accessibility compliance</li></ul></div><div class="tv-panel" id="tv-p3"><h3>Growth Marketing</h3><p>Data-driven marketing strategies that maximize ROI and drive sustainable business growth.</p><ul><li>SEO & content strategy</li><li>Paid advertising</li><li>Email marketing automation</li><li>Analytics & reporting</li></ul></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-tabs-accordion-section',
+    label: 'Accordion Section',
+    category: 'components',
+    subcategory: 'tabs-sections',
+    tags: ['accordion', 'expandable', 'faq', 'section', 'interactive'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Accordion Section',
+      defaultStyle: { width: '100%', minHeight: '500px' },
+      defaultContent: {
+        html: `<style>.ta-wrap{max-width:680px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;padding:80px 24px}.ta-header{text-align:center;margin-bottom:48px}.ta-header h2{font-size:36px;font-weight:800;color:#f0f0f0;margin:0 0 12px;letter-spacing:-1px}.ta-header p{font-size:15px;color:rgba(255,255,255,0.35);margin:0}.ta-items{display:flex;flex-direction:column;gap:2px}.ta-item{border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.02);transition:background 0.3s}.ta-item.open{background:rgba(255,255,255,0.04)}.ta-trigger{width:100%;display:flex;justify-content:space-between;align-items:center;padding:20px 24px;background:none;border:none;cursor:pointer;font-family:inherit;text-align:left}.ta-trigger span{font-size:15px;font-weight:600;color:#f0f0f0;flex:1;padding-right:16px}.ta-arrow{width:20px;height:20px;color:rgba(255,255,255,0.25);transition:transform 0.3s,color 0.3s;flex-shrink:0}.ta-item.open .ta-arrow{transform:rotate(180deg);color:#638BFF}.ta-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease}.ta-item.open .ta-body{max-height:200px}.ta-body-inner{padding:0 24px 20px;font-size:14px;line-height:1.8;color:rgba(255,255,255,0.4)}</style><div class="ta-wrap"><div class="ta-header"><h2>Everything You Need to Know</h2><p>Find answers to common questions about our services</p></div><div class="ta-items"><div class="ta-item open"><button class="ta-trigger" onclick="this.parentElement.classList.toggle('open')"><span>What services do you offer?</span><svg class="ta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="ta-body"><div class="ta-body-inner">We offer a full suite of digital services including web design, branding, development, and digital marketing. Each project is tailored to your specific goals and audience.</div></div></div><div class="ta-item"><button class="ta-trigger" onclick="this.parentElement.classList.toggle('open')"><span>How long does a typical project take?</span><svg class="ta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="ta-body"><div class="ta-body-inner">Project timelines vary based on scope. A typical branding project takes 3-4 weeks, while a full website build ranges from 6-10 weeks. We provide detailed timelines during the proposal phase.</div></div></div><div class="ta-item"><button class="ta-trigger" onclick="this.parentElement.classList.toggle('open')"><span>Do you work with startups?</span><svg class="ta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="ta-body"><div class="ta-body-inner">Absolutely. We love working with startups and have special packages designed for early-stage companies that need premium quality on a strategic budget.</div></div></div><div class="ta-item"><button class="ta-trigger" onclick="this.parentElement.classList.toggle('open')"><span>What is your pricing model?</span><svg class="ta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="ta-body"><div class="ta-body-inner">We offer project-based pricing with clear milestones. Every engagement starts with a discovery phase to ensure accurate scoping and transparent pricing with no hidden fees.</div></div></div><div class="ta-item"><button class="ta-trigger" onclick="this.parentElement.classList.toggle('open')"><span>Can I see examples of your work?</span><svg class="ta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="ta-body"><div class="ta-body-inner">Of course! Browse our portfolio section to see case studies from various industries. We are happy to share more detailed examples relevant to your specific sector during a call.</div></div></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-tabs-pills-section',
+    label: 'Pills Section',
+    category: 'components',
+    subcategory: 'tabs-sections',
+    tags: ['tabs', 'pills', 'modern', 'saas', 'cards'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Pills Section',
+      defaultStyle: { width: '100%', minHeight: '550px' },
+      defaultContent: {
+        html: `<style>.tp-wrap{max-width:900px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;padding:80px 24px;text-align:center}.tp-header h2{font-size:36px;font-weight:800;color:#f0f0f0;margin:0 0 12px;letter-spacing:-1px}.tp-header p{font-size:15px;color:rgba(255,255,255,0.35);margin:0 0 40px}.tp-pills{display:inline-flex;gap:4px;padding:4px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:12px;margin-bottom:40px}.tp-pill{padding:10px 22px;background:none;border:none;font-size:13px;font-weight:500;color:rgba(255,255,255,0.4);cursor:pointer;font-family:inherit;border-radius:9px;transition:all 0.3s}.tp-pill:hover{color:rgba(255,255,255,0.6)}.tp-pill.active{background:#638BFF;color:#fff;box-shadow:0 4px 15px rgba(99,139,255,0.3)}.tp-panel{display:none;text-align:left}.tp-panel.active{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.tp-card{padding:28px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;transition:border-color 0.3s,transform 0.3s}.tp-card:hover{border-color:rgba(99,139,255,0.2);transform:translateY(-3px)}.tp-card-icon{width:40px;height:40px;border-radius:10px;background:rgba(99,139,255,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:16px}.tp-card-icon svg{width:20px;height:20px;color:#638BFF}.tp-card h4{font-size:16px;font-weight:600;color:#f0f0f0;margin:0 0 8px}.tp-card p{font-size:13px;color:rgba(255,255,255,0.4);margin:0;line-height:1.7}</style><div class="tp-wrap"><div class="tp-header"><h2>Powerful Features</h2><p>Everything you need to build, launch, and grow</p></div><div class="tp-pills"><button class="tp-pill active" onclick="document.querySelectorAll('.tp-panel').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.tp-pill').forEach(function(t){t.classList.remove('active')});this.classList.add('active');document.getElementById('tp-p0').classList.add('active')">Platform</button><button class="tp-pill" onclick="document.querySelectorAll('.tp-panel').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.tp-pill').forEach(function(t){t.classList.remove('active')});this.classList.add('active');document.getElementById('tp-p1').classList.add('active')">Integrations</button><button class="tp-pill" onclick="document.querySelectorAll('.tp-panel').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.tp-pill').forEach(function(t){t.classList.remove('active')});this.classList.add('active');document.getElementById('tp-p2').classList.add('active')">Security</button></div><div class="tp-panel active" id="tp-p0"><div class="tp-card"><div class="tp-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><h4>Visual Builder</h4><p>Drag and drop interface for creating beautiful pages without writing code.</p></div><div class="tp-card"><div class="tp-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h4>Fast Performance</h4><p>Optimized for speed with lazy loading, CDN delivery, and minimal bundle sizes.</p></div><div class="tp-card"><div class="tp-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><h4>Custom Themes</h4><p>Full theming support with dark mode, color schemes, and typography controls.</p></div></div><div class="tp-panel" id="tp-p1"><div class="tp-card"><div class="tp-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div><h4>API Access</h4><p>RESTful API with comprehensive documentation for custom integrations.</p></div><div class="tp-card"><div class="tp-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><h4>Webhooks</h4><p>Real-time event notifications for seamless workflow automation.</p></div><div class="tp-card"><div class="tp-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><h4>Plugins</h4><p>Extend functionality with our growing ecosystem of plugins and add-ons.</p></div></div><div class="tp-panel" id="tp-p2"><div class="tp-card"><div class="tp-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h4>Encryption</h4><p>End-to-end encryption for all data at rest and in transit with AES-256.</p></div><div class="tp-card"><div class="tp-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>Compliance</h4><p>GDPR, SOC 2, and HIPAA compliant infrastructure and processes.</p></div><div class="tp-card"><div class="tp-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div><h4>Access Control</h4><p>Role-based permissions with SSO, 2FA, and granular team management.</p></div></div></div>`
+      },
+    },
+  },
+]
+
+// ─── NEWSLETTER SECTIONS (5 premium presets) ───
+
+const NEWSLETTER_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-newsletter-inline',
+    label: 'Newsletter Inline',
+    category: 'components',
+    subcategory: 'newsletter',
+    tags: ['newsletter', 'inline', 'email', 'subscribe', 'glassmorphic'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Newsletter Inline',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: {
+        html: `<style>.nl-inline{display:flex;align-items:center;justify-content:center;gap:20px;max-width:700px;margin:0 auto;padding:32px 40px;background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;font-family:system-ui,-apple-system,sans-serif;flex-wrap:wrap}.nl-inline-heading{font-size:18px;font-weight:600;color:#f0f0f0;margin:0;white-space:nowrap}.nl-inline-form{display:flex;gap:10px;flex:1;min-width:280px}.nl-inline-input{flex:1;padding:12px 18px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#f0f0f0;font-size:14px;outline:none;transition:border-color 0.3s}.nl-inline-input::placeholder{color:rgba(255,255,255,0.3)}.nl-inline-input:focus{border-color:rgba(99,139,255,0.4)}.nl-inline-btn{padding:12px 28px;background:#638BFF;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.3s;white-space:nowrap}.nl-inline-btn:hover{background:#4f7af5}</style><div class="nl-inline"><h3 class="nl-inline-heading">Stay updated</h3><div class="nl-inline-form"><input class="nl-inline-input" type="email" placeholder="Enter your email"><button class="nl-inline-btn">Subscribe</button></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-newsletter-popup',
+    label: 'Newsletter Popup',
+    category: 'components',
+    subcategory: 'newsletter',
+    tags: ['newsletter', 'popup', 'modal', 'overlay', 'email'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Newsletter Popup',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: {
+        html: `<style>.nl-popup-wrap{position:relative;width:100%;min-height:400px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);border-radius:16px;font-family:system-ui,-apple-system,sans-serif}.nl-popup-card{position:relative;max-width:420px;width:100%;padding:48px 40px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.08);border-radius:20px;text-align:center}.nl-popup-close{position:absolute;top:16px;right:16px;width:32px;height:32px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.4);font-size:16px;line-height:1;transition:background 0.3s}.nl-popup-close:hover{background:rgba(255,255,255,0.1)}.nl-popup-heading{font-size:28px;font-weight:700;color:#f0f0f0;margin:0 0 12px;line-height:1.2}.nl-popup-desc{font-size:14px;color:rgba(255,255,255,0.45);margin:0 0 28px;line-height:1.6}.nl-popup-input{width:100%;padding:14px 18px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#f0f0f0;font-size:14px;outline:none;margin-bottom:14px;box-sizing:border-box;transition:border-color 0.3s}.nl-popup-input::placeholder{color:rgba(255,255,255,0.3)}.nl-popup-input:focus{border-color:rgba(99,139,255,0.4)}.nl-popup-btn{width:100%;padding:14px;background:#638BFF;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:background 0.3s}.nl-popup-btn:hover{background:#4f7af5}</style><div class="nl-popup-wrap"><div class="nl-popup-card"><div class="nl-popup-close">&times;</div><h2 class="nl-popup-heading">Join our newsletter</h2><p class="nl-popup-desc">Get the latest updates, insights, and exclusive content delivered straight to your inbox. No spam, ever.</p><input class="nl-popup-input" type="email" placeholder="Your email address"><button class="nl-popup-btn">Subscribe Now</button></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-newsletter-fullwidth',
+    label: 'Newsletter Fullwidth',
+    category: 'components',
+    subcategory: 'newsletter',
+    tags: ['newsletter', 'fullwidth', 'gradient', 'split', 'email'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Newsletter Fullwidth',
+      defaultStyle: { width: '100%', minHeight: '280px' },
+      defaultContent: {
+        html: `<style>.nl-fw{display:flex;align-items:center;justify-content:space-between;gap:60px;padding:64px 60px;background:linear-gradient(135deg,#0a0a0a 0%,#111827 50%,#1e1b4b 100%);border-radius:20px;font-family:system-ui,-apple-system,sans-serif;flex-wrap:wrap}.nl-fw-text{flex:1;min-width:280px}.nl-fw-heading{font-size:32px;font-weight:700;color:#f0f0f0;margin:0 0 12px;line-height:1.2}.nl-fw-desc{font-size:15px;color:rgba(255,255,255,0.45);margin:0;line-height:1.6;max-width:420px}.nl-fw-form{flex:0 0 380px;display:flex;flex-direction:column;gap:14px}.nl-fw-input{width:100%;padding:14px 18px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:#f0f0f0;font-size:14px;outline:none;box-sizing:border-box;transition:border-color 0.3s}.nl-fw-input::placeholder{color:rgba(255,255,255,0.3)}.nl-fw-input:focus{border-color:rgba(99,139,255,0.4)}.nl-fw-btn{padding:14px 32px;background:#638BFF;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:background 0.3s}.nl-fw-btn:hover{background:#4f7af5}.nl-fw-note{font-size:12px;color:rgba(255,255,255,0.3);margin:0}</style><div class="nl-fw"><div class="nl-fw-text"><h2 class="nl-fw-heading">Stay in the loop</h2><p class="nl-fw-desc">Subscribe to our newsletter and be the first to know about new features, updates, and exclusive offers.</p></div><div class="nl-fw-form"><input class="nl-fw-input" type="email" placeholder="Enter your email address"><button class="nl-fw-btn">Subscribe</button><p class="nl-fw-note">No spam. Unsubscribe at any time.</p></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-newsletter-minimal',
+    label: 'Newsletter Minimal',
+    category: 'components',
+    subcategory: 'newsletter',
+    tags: ['newsletter', 'minimal', 'clean', 'dark', 'arrow'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Newsletter Minimal',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: {
+        html: `<style>.nl-min{display:flex;align-items:center;justify-content:center;padding:24px 0;font-family:system-ui,-apple-system,sans-serif}.nl-min-form{display:flex;align-items:center;gap:0;max-width:440px;width:100%;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:14px;overflow:hidden;transition:border-color 0.3s}.nl-min-form:focus-within{border-color:rgba(99,139,255,0.3)}.nl-min-input{flex:1;padding:16px 20px;background:transparent;border:none;color:#f0f0f0;font-size:14px;outline:none}.nl-min-input::placeholder{color:rgba(255,255,255,0.3)}.nl-min-btn{width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#638BFF;border:none;border-radius:12px;margin:4px;cursor:pointer;transition:background 0.3s;flex-shrink:0}.nl-min-btn:hover{background:#4f7af5}.nl-min-btn svg{width:18px;height:18px;color:#fff}</style><div class="nl-min"><div class="nl-min-form"><input class="nl-min-input" type="email" placeholder="Enter your email"><button class="nl-min-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-newsletter-with-perks',
+    label: 'Newsletter With Perks',
+    category: 'components',
+    subcategory: 'newsletter',
+    tags: ['newsletter', 'perks', 'benefits', 'card', 'email'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Newsletter With Perks',
+      defaultStyle: { width: '100%', minHeight: '340px' },
+      defaultContent: {
+        html: `<style>.nl-perks{max-width:480px;margin:0 auto;padding:44px 40px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;font-family:system-ui,-apple-system,sans-serif}.nl-perks-heading{font-size:26px;font-weight:700;color:#f0f0f0;margin:0 0 24px;line-height:1.3}.nl-perks-list{list-style:none;padding:0;margin:0 0 28px}.nl-perks-item{display:flex;align-items:center;gap:12px;padding:8px 0;font-size:14px;color:rgba(255,255,255,0.55);line-height:1.5}.nl-perks-check{width:20px;height:20px;background:rgba(99,139,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}.nl-perks-check svg{width:12px;height:12px;color:#638BFF}.nl-perks-form{display:flex;gap:10px}.nl-perks-input{flex:1;padding:14px 18px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#f0f0f0;font-size:14px;outline:none;transition:border-color 0.3s}.nl-perks-input::placeholder{color:rgba(255,255,255,0.3)}.nl-perks-input:focus{border-color:rgba(99,139,255,0.4)}.nl-perks-btn{padding:14px 28px;background:#638BFF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.3s;white-space:nowrap}.nl-perks-btn:hover{background:#4f7af5}</style><div class="nl-perks"><h2 class="nl-perks-heading">Get exclusive updates</h2><ul class="nl-perks-list"><li class="nl-perks-item"><span class="nl-perks-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Early access to new features</li><li class="nl-perks-item"><span class="nl-perks-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Weekly design inspiration & tips</li><li class="nl-perks-item"><span class="nl-perks-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Exclusive discounts & resources</li></ul><div class="nl-perks-form"><input class="nl-perks-input" type="email" placeholder="Your email"><button class="nl-perks-btn">Subscribe</button></div></div>`
+      },
+    },
+  },
+]
+
+// ─── COMPARISON SECTIONS (4 premium presets) ───
+
+const COMPARISON_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-comparison-feature-table',
+    label: 'Comparison Feature Table',
+    category: 'components',
+    subcategory: 'comparison',
+    tags: ['comparison', 'table', 'features', 'pricing', 'glassmorphic'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Comparison Table',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<style>.cmp-table{max-width:740px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.cmp-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:0}.cmp-cell{padding:18px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center}.cmp-header{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.1)}.cmp-header:first-child{border-radius:14px 0 0 0}.cmp-header:last-child{border-radius:0 14px 0 0}.cmp-plan{font-size:16px;font-weight:700;color:#f0f0f0;text-align:center;justify-content:center}.cmp-plan-pop{color:#638BFF}.cmp-feature{font-size:14px;color:rgba(255,255,255,0.55)}.cmp-val{justify-content:center;font-size:14px;color:rgba(255,255,255,0.5)}.cmp-check{color:#34d399;font-size:18px}.cmp-cross{color:rgba(255,255,255,0.15);font-size:18px}.cmp-pop-col{background:rgba(99,139,255,0.04)}</style><div class="cmp-table"><div class="cmp-grid"><div class="cmp-cell cmp-header"></div><div class="cmp-cell cmp-header cmp-plan">Free</div><div class="cmp-cell cmp-header cmp-plan cmp-plan-pop cmp-pop-col">Pro</div><div class="cmp-cell cmp-header cmp-plan">Enterprise</div><div class="cmp-cell cmp-feature">Projects</div><div class="cmp-cell cmp-val">3</div><div class="cmp-cell cmp-val cmp-pop-col">Unlimited</div><div class="cmp-cell cmp-val">Unlimited</div><div class="cmp-cell cmp-feature">Team members</div><div class="cmp-cell cmp-val">1</div><div class="cmp-cell cmp-val cmp-pop-col">10</div><div class="cmp-cell cmp-val">Unlimited</div><div class="cmp-cell cmp-feature">Storage</div><div class="cmp-cell cmp-val">1 GB</div><div class="cmp-cell cmp-val cmp-pop-col">50 GB</div><div class="cmp-cell cmp-val">500 GB</div><div class="cmp-cell cmp-feature">Analytics</div><div class="cmp-cell cmp-val"><span class="cmp-cross">&times;</span></div><div class="cmp-cell cmp-val cmp-pop-col"><span class="cmp-check">&check;</span></div><div class="cmp-cell cmp-val"><span class="cmp-check">&check;</span></div><div class="cmp-cell cmp-feature">Priority support</div><div class="cmp-cell cmp-val"><span class="cmp-cross">&times;</span></div><div class="cmp-cell cmp-val cmp-pop-col"><span class="cmp-check">&check;</span></div><div class="cmp-cell cmp-val"><span class="cmp-check">&check;</span></div><div class="cmp-cell cmp-feature">Custom branding</div><div class="cmp-cell cmp-val"><span class="cmp-cross">&times;</span></div><div class="cmp-cell cmp-val cmp-pop-col"><span class="cmp-cross">&times;</span></div><div class="cmp-cell cmp-val"><span class="cmp-check">&check;</span></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-comparison-toggle',
+    label: 'Comparison Toggle',
+    category: 'components',
+    subcategory: 'comparison',
+    tags: ['comparison', 'toggle', 'before-after', 'plans', 'interactive'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Comparison Toggle',
+      defaultStyle: { width: '100%', minHeight: '420px' },
+      defaultContent: {
+        html: `<style>.cmp-toggle{max-width:700px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;text-align:center}.cmp-toggle-heading{font-size:28px;font-weight:700;color:#f0f0f0;margin:0 0 32px}.cmp-toggle-sw{display:inline-flex;align-items:center;gap:16px;margin-bottom:40px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:40px;padding:6px 8px}.cmp-toggle-opt{padding:10px 28px;border-radius:32px;border:none;background:transparent;color:rgba(255,255,255,0.4);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.3s;font-family:inherit}.cmp-toggle-opt.active{background:#638BFF;color:#fff}.cmp-toggle-panels{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}.cmp-toggle-panel{flex:1;min-width:280px;max-width:320px;padding:36px 32px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:18px;text-align:left;transition:border-color 0.3s,transform 0.3s}.cmp-toggle-panel.highlighted{border-color:rgba(99,139,255,0.3);transform:translateY(-4px);background:rgba(99,139,255,0.04)}.cmp-toggle-name{font-size:20px;font-weight:700;color:#f0f0f0;margin:0 0 6px}.cmp-toggle-price{font-size:32px;font-weight:800;color:#f0f0f0;margin:0 0 4px}.cmp-toggle-price span{font-size:14px;font-weight:400;color:rgba(255,255,255,0.35)}.cmp-toggle-desc{font-size:13px;color:rgba(255,255,255,0.4);margin:0 0 24px}.cmp-toggle-features{list-style:none;padding:0;margin:0 0 28px}.cmp-toggle-features li{padding:8px 0;font-size:14px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:10px}.cmp-toggle-features li::before{content:'\\2713';color:#34d399;font-weight:700;font-size:13px}.cmp-toggle-cta{width:100%;padding:13px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#f0f0f0;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:inherit}.cmp-toggle-panel.highlighted .cmp-toggle-cta{background:#638BFF;border-color:#638BFF;color:#fff}</style><div class="cmp-toggle"><h2 class="cmp-toggle-heading">Compare plans</h2><div class="cmp-toggle-sw"><button class="cmp-toggle-opt active">Monthly</button><button class="cmp-toggle-opt">Yearly</button></div><div class="cmp-toggle-panels"><div class="cmp-toggle-panel"><h3 class="cmp-toggle-name">Starter</h3><p class="cmp-toggle-price">$19<span>/mo</span></p><p class="cmp-toggle-desc">Perfect for individuals</p><ul class="cmp-toggle-features"><li>5 projects</li><li>10 GB storage</li><li>Email support</li><li>Basic analytics</li></ul><button class="cmp-toggle-cta">Get started</button></div><div class="cmp-toggle-panel highlighted"><h3 class="cmp-toggle-name">Professional</h3><p class="cmp-toggle-price">$49<span>/mo</span></p><p class="cmp-toggle-desc">Best for growing teams</p><ul class="cmp-toggle-features"><li>Unlimited projects</li><li>100 GB storage</li><li>Priority support</li><li>Advanced analytics</li></ul><button class="cmp-toggle-cta">Get started</button></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-comparison-checklist',
+    label: 'Comparison Checklist',
+    category: 'components',
+    subcategory: 'comparison',
+    tags: ['comparison', 'checklist', 'included', 'features', 'list'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Comparison Checklist',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: {
+        html: `<style>.cmp-cl{max-width:520px;margin:0 auto;padding:44px 40px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;font-family:system-ui,-apple-system,sans-serif}.cmp-cl-heading{font-size:26px;font-weight:700;color:#f0f0f0;margin:0 0 8px}.cmp-cl-sub{font-size:14px;color:rgba(255,255,255,0.4);margin:0 0 28px}.cmp-cl-list{list-style:none;padding:0;margin:0}.cmp-cl-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.05)}.cmp-cl-item:last-child{border-bottom:none}.cmp-cl-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}.cmp-cl-icon.yes{background:rgba(52,211,153,0.12)}.cmp-cl-icon.no{background:rgba(239,68,68,0.1)}.cmp-cl-icon svg{width:13px;height:13px}.cmp-cl-icon.yes svg{color:#34d399}.cmp-cl-icon.no svg{color:#ef4444}.cmp-cl-text{font-size:14px;color:rgba(255,255,255,0.6)}.cmp-cl-text.excluded{color:rgba(255,255,255,0.25);text-decoration:line-through}</style><div class="cmp-cl"><h2 class="cmp-cl-heading">What's included</h2><p class="cmp-cl-sub">Everything in the Pro plan</p><ul class="cmp-cl-list"><li class="cmp-cl-item"><span class="cmp-cl-icon yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="cmp-cl-text">Unlimited projects & workspaces</span></li><li class="cmp-cl-item"><span class="cmp-cl-icon yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="cmp-cl-text">Advanced analytics dashboard</span></li><li class="cmp-cl-item"><span class="cmp-cl-icon yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="cmp-cl-text">Priority 24/7 support</span></li><li class="cmp-cl-item"><span class="cmp-cl-icon yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="cmp-cl-text">Custom domain & branding</span></li><li class="cmp-cl-item"><span class="cmp-cl-icon yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="cmp-cl-text">Team collaboration tools</span></li><li class="cmp-cl-item"><span class="cmp-cl-icon yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="cmp-cl-text">API access & integrations</span></li><li class="cmp-cl-item"><span class="cmp-cl-icon no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span class="cmp-cl-text excluded">Dedicated account manager</span></li><li class="cmp-cl-item"><span class="cmp-cl-icon no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span class="cmp-cl-text excluded">Custom SLA agreement</span></li></ul></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-comparison-cards',
+    label: 'Comparison Cards',
+    category: 'components',
+    subcategory: 'comparison',
+    tags: ['comparison', 'cards', 'pricing', 'plans', 'badge'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Comparison Cards',
+      defaultStyle: { width: '100%', minHeight: '460px' },
+      defaultContent: {
+        html: `<style>.cmp-cards{display:flex;gap:20px;max-width:680px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;flex-wrap:wrap;justify-content:center}.cmp-card{flex:1;min-width:280px;max-width:320px;padding:40px 32px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;position:relative;transition:border-color 0.3s,transform 0.3s}.cmp-card.popular{border-color:rgba(99,139,255,0.3);transform:translateY(-6px)}.cmp-card-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:6px 18px;background:#638BFF;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;border-radius:20px}.cmp-card-name{font-size:18px;font-weight:600;color:rgba(255,255,255,0.5);margin:0 0 8px}.cmp-card-price{font-size:40px;font-weight:800;color:#f0f0f0;margin:0 0 4px;line-height:1}.cmp-card-price span{font-size:15px;font-weight:400;color:rgba(255,255,255,0.3)}.cmp-card-desc{font-size:13px;color:rgba(255,255,255,0.35);margin:0 0 28px}.cmp-card-features{list-style:none;padding:0;margin:0 0 32px}.cmp-card-features li{padding:9px 0;font-size:14px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:10px}.cmp-card-features li::before{content:'\\2713';color:#34d399;font-weight:700;font-size:13px}.cmp-card-cta{width:100%;padding:14px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:inherit;border:none}.cmp-card .cmp-card-cta{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#f0f0f0}.cmp-card.popular .cmp-card-cta{background:#638BFF;color:#fff}</style><div class="cmp-cards"><div class="cmp-card"><h3 class="cmp-card-name">Basic</h3><p class="cmp-card-price">$29<span>/mo</span></p><p class="cmp-card-desc">Great for getting started</p><ul class="cmp-card-features"><li>5 projects</li><li>10 GB storage</li><li>Email support</li><li>Basic analytics</li><li>1 team member</li></ul><button class="cmp-card-cta">Choose Basic</button></div><div class="cmp-card popular"><span class="cmp-card-badge">Most Popular</span><h3 class="cmp-card-name">Premium</h3><p class="cmp-card-price">$79<span>/mo</span></p><p class="cmp-card-desc">Perfect for professionals</p><ul class="cmp-card-features"><li>Unlimited projects</li><li>100 GB storage</li><li>Priority support</li><li>Advanced analytics</li><li>10 team members</li></ul><button class="cmp-card-cta">Choose Premium</button></div></div>`
+      },
+    },
+  },
+]
+
+// ─── VIDEO SECTIONS (5 premium presets) ───
+
+const VIDEO_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-video-hero',
+    label: 'Video Hero',
+    category: 'components',
+    subcategory: 'video',
+    tags: ['video', 'hero', 'play', 'large', 'media'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Video Hero',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<style>.vid-hero{max-width:800px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.vid-hero-player{position:relative;width:100%;aspect-ratio:16/9;background:#0a0a0a;border:1px solid rgba(255,255,255,0.08);border-radius:18px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer}.vid-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:40px 40px}.vid-hero-play{width:72px;height:72px;background:rgba(99,139,255,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:transform 0.3s,background 0.3s;box-shadow:0 8px 32px rgba(99,139,255,0.3)}.vid-hero-player:hover .vid-hero-play{transform:scale(1.08);background:#638BFF}.vid-hero-play svg{width:28px;height:28px;color:#fff;margin-left:4px}.vid-hero-info{text-align:center;margin-top:24px}.vid-hero-title{font-size:24px;font-weight:700;color:#f0f0f0;margin:0 0 8px}.vid-hero-desc{font-size:14px;color:rgba(255,255,255,0.4);margin:0}</style><div class="vid-hero"><div class="vid-hero-player"><div class="vid-hero-grid"></div><div class="vid-hero-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div><div class="vid-hero-info"><h2 class="vid-hero-title">Watch our story</h2><p class="vid-hero-desc">See how we bring ideas to life through design and technology</p></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-video-side',
+    label: 'Video Side by Side',
+    category: 'components',
+    subcategory: 'video',
+    tags: ['video', 'side', 'split', 'text', 'cta'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Video Side by Side',
+      defaultStyle: { width: '100%', minHeight: '380px' },
+      defaultContent: {
+        html: `<style>.vid-side{display:flex;gap:48px;max-width:860px;margin:0 auto;align-items:center;font-family:system-ui,-apple-system,sans-serif;flex-wrap:wrap}.vid-side-player{flex:1;min-width:320px;position:relative;aspect-ratio:16/10;background:#0a0a0a;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer}.vid-side-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:32px 32px}.vid-side-play{width:56px;height:56px;background:rgba(99,139,255,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:transform 0.3s;box-shadow:0 6px 24px rgba(99,139,255,0.25)}.vid-side-player:hover .vid-side-play{transform:scale(1.08)}.vid-side-play svg{width:22px;height:22px;color:#fff;margin-left:3px}.vid-side-content{flex:1;min-width:280px}.vid-side-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:#638BFF;margin:0 0 12px}.vid-side-title{font-size:28px;font-weight:700;color:#f0f0f0;margin:0 0 16px;line-height:1.3}.vid-side-desc{font-size:15px;color:rgba(255,255,255,0.45);margin:0 0 28px;line-height:1.7}.vid-side-btn{padding:13px 32px;background:#638BFF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.3s}.vid-side-btn:hover{background:#4f7af5}</style><div class="vid-side"><div class="vid-side-player"><div class="vid-side-grid"></div><div class="vid-side-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div><div class="vid-side-content"><p class="vid-side-label">Behind the scenes</p><h2 class="vid-side-title">How we build premium experiences</h2><p class="vid-side-desc">From concept to launch, discover our meticulous process that ensures every detail is crafted to perfection.</p><button class="vid-side-btn">Learn more</button></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-video-grid',
+    label: 'Video Grid',
+    category: 'components',
+    subcategory: 'video',
+    tags: ['video', 'grid', 'thumbnails', 'gallery', 'media'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Video Grid',
+      defaultStyle: { width: '100%', minHeight: '340px' },
+      defaultContent: {
+        html: `<style>.vid-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:800px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.vid-grid-item{cursor:pointer}.vid-grid-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#0a0a0a;border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:border-color 0.3s}.vid-grid-item:hover .vid-grid-thumb{border-color:rgba(99,139,255,0.3)}.vid-grid-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:24px 24px}.vid-grid-play{width:44px;height:44px;background:rgba(99,139,255,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:transform 0.3s;box-shadow:0 4px 16px rgba(99,139,255,0.25)}.vid-grid-item:hover .vid-grid-play{transform:scale(1.1)}.vid-grid-play svg{width:18px;height:18px;color:#fff;margin-left:2px}.vid-grid-info{padding:14px 4px 0}.vid-grid-title{font-size:14px;font-weight:600;color:#f0f0f0;margin:0 0 4px}.vid-grid-meta{display:flex;align-items:center;gap:8px}.vid-grid-dur{font-size:12px;color:rgba(255,255,255,0.35)}</style><div class="vid-grid"><div class="vid-grid-item"><div class="vid-grid-thumb"><div class="vid-grid-pattern"></div><div class="vid-grid-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div><div class="vid-grid-info"><h4 class="vid-grid-title">Product Overview</h4><div class="vid-grid-meta"><span class="vid-grid-dur">2:34</span></div></div></div><div class="vid-grid-item"><div class="vid-grid-thumb"><div class="vid-grid-pattern"></div><div class="vid-grid-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div><div class="vid-grid-info"><h4 class="vid-grid-title">Customer Story</h4><div class="vid-grid-meta"><span class="vid-grid-dur">4:12</span></div></div></div><div class="vid-grid-item"><div class="vid-grid-thumb"><div class="vid-grid-pattern"></div><div class="vid-grid-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div><div class="vid-grid-info"><h4 class="vid-grid-title">Behind the Scenes</h4><div class="vid-grid-meta"><span class="vid-grid-dur">3:48</span></div></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-video-fullwidth',
+    label: 'Video Fullwidth',
+    category: 'components',
+    subcategory: 'video',
+    tags: ['video', 'fullwidth', 'overlay', 'heading', 'cinematic'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Video Fullwidth',
+      defaultStyle: { width: '100%', minHeight: '440px' },
+      defaultContent: {
+        html: `<style>.vid-fw{position:relative;width:100%;min-height:440px;background:#0a0a0a;border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer}.vid-fw-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px}.vid-fw-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.6) 100%)}.vid-fw-content{position:relative;z-index:1;text-align:center;font-family:system-ui,-apple-system,sans-serif}.vid-fw-play{width:80px;height:80px;background:rgba(255,255,255,0.12);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;transition:transform 0.3s,background 0.3s}.vid-fw:hover .vid-fw-play{transform:scale(1.08);background:rgba(99,139,255,0.8)}.vid-fw-play svg{width:32px;height:32px;color:#fff;margin-left:4px}.vid-fw-title{font-size:32px;font-weight:700;color:#fff;margin:0 0 8px;text-shadow:0 2px 16px rgba(0,0,0,0.4)}.vid-fw-sub{font-size:15px;color:rgba(255,255,255,0.6);margin:0;text-shadow:0 1px 8px rgba(0,0,0,0.3)}</style><div class="vid-fw"><div class="vid-fw-grid"></div><div class="vid-fw-overlay"></div><div class="vid-fw-content"><div class="vid-fw-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div><h2 class="vid-fw-title">Experience the difference</h2><p class="vid-fw-sub">A cinematic look at what we do best</p></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-video-testimonial',
+    label: 'Video Testimonial',
+    category: 'components',
+    subcategory: 'video',
+    tags: ['video', 'testimonial', 'quote', 'social-proof', 'media'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Video Testimonial',
+      defaultStyle: { width: '100%', minHeight: '320px' },
+      defaultContent: {
+        html: `<style>.vid-test{display:flex;gap:44px;max-width:780px;margin:0 auto;align-items:center;font-family:system-ui,-apple-system,sans-serif;flex-wrap:wrap}.vid-test-player{flex:0 0 320px;position:relative;aspect-ratio:4/3;background:#0a0a0a;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer}.vid-test-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:28px 28px}.vid-test-play{width:52px;height:52px;background:rgba(99,139,255,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:transform 0.3s;box-shadow:0 6px 20px rgba(99,139,255,0.25)}.vid-test-player:hover .vid-test-play{transform:scale(1.08)}.vid-test-play svg{width:20px;height:20px;color:#fff;margin-left:3px}.vid-test-content{flex:1;min-width:260px}.vid-test-quote-icon{font-size:48px;line-height:1;color:rgba(99,139,255,0.3);margin-bottom:8px;font-family:Georgia,serif}.vid-test-quote{font-size:18px;font-weight:500;color:#f0f0f0;margin:0 0 24px;line-height:1.6;font-style:italic}.vid-test-author{display:flex;align-items:center;gap:14px}.vid-test-avatar{width:44px;height:44px;background:rgba(99,139,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#638BFF}.vid-test-info h4{font-size:15px;font-weight:600;color:#f0f0f0;margin:0 0 2px}.vid-test-info p{font-size:13px;color:rgba(255,255,255,0.4);margin:0}</style><div class="vid-test"><div class="vid-test-player"><div class="vid-test-grid"></div><div class="vid-test-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div><div class="vid-test-content"><div class="vid-test-quote-icon">&ldquo;</div><p class="vid-test-quote">Working with this team transformed our entire digital presence. The attention to detail and creative vision exceeded every expectation.</p><div class="vid-test-author"><div class="vid-test-avatar">SM</div><div class="vid-test-info"><h4>Sarah Mitchell</h4><p>CEO, Luminary Design</p></div></div></div></div>`
+      },
+    },
+  },
+]
+
+// ─── MAP SECTIONS (3 premium presets) ───
+
+const MAP_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-map-contact',
+    label: 'Map + Contact',
+    category: 'components',
+    subcategory: 'map',
+    tags: ['map', 'contact', 'address', 'info', 'split'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Map + Contact',
+      defaultStyle: { width: '100%', minHeight: '380px' },
+      defaultContent: {
+        html: `<style>.map-contact{display:flex;gap:0;max-width:820px;margin:0 auto;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);font-family:system-ui,-apple-system,sans-serif;flex-wrap:wrap}.map-contact-map{flex:1;min-width:320px;min-height:340px;background:#0a0a0a;position:relative;display:flex;align-items:center;justify-content:center}.map-contact-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:32px 32px}.map-contact-roads{position:absolute;inset:0;overflow:hidden}.map-contact-roads::before{content:'';position:absolute;top:40%;left:0;right:0;height:2px;background:rgba(255,255,255,0.06)}.map-contact-roads::after{content:'';position:absolute;left:55%;top:0;bottom:0;width:2px;background:rgba(255,255,255,0.06)}.map-contact-pin{position:relative;z-index:1;width:40px;height:40px;display:flex;align-items:center;justify-content:center}.map-contact-pin svg{width:32px;height:32px;color:#638BFF;filter:drop-shadow(0 4px 12px rgba(99,139,255,0.3))}.map-contact-info{flex:0 0 320px;padding:44px 36px;background:rgba(255,255,255,0.02)}.map-contact-heading{font-size:22px;font-weight:700;color:#f0f0f0;margin:0 0 28px}.map-contact-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:22px}.map-contact-icon{width:36px;height:36px;background:rgba(99,139,255,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.map-contact-icon svg{width:16px;height:16px;color:#638BFF}.map-contact-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);margin:0 0 4px}.map-contact-val{font-size:14px;color:rgba(255,255,255,0.6);margin:0;line-height:1.5}</style><div class="map-contact"><div class="map-contact-map"><div class="map-contact-grid"></div><div class="map-contact-roads"></div><div class="map-contact-pin"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg></div></div><div class="map-contact-info"><h3 class="map-contact-heading">Get in touch</h3><div class="map-contact-item"><div class="map-contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div><div><p class="map-contact-label">Address</p><p class="map-contact-val">42 Avenue des Champs-Elysees<br>75008 Paris, France</p></div></div><div class="map-contact-item"><div class="map-contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><p class="map-contact-label">Phone</p><p class="map-contact-val">+33 1 42 68 53 00</p></div></div><div class="map-contact-item"><div class="map-contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div><p class="map-contact-label">Email</p><p class="map-contact-val">hello@studio.com</p></div></div><div class="map-contact-item"><div class="map-contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><p class="map-contact-label">Hours</p><p class="map-contact-val">Mon - Fri: 9:00 - 18:00</p></div></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-map-fullwidth',
+    label: 'Map Fullwidth',
+    category: 'components',
+    subcategory: 'map',
+    tags: ['map', 'fullwidth', 'location', 'pin', 'address'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Map Fullwidth',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: {
+        html: `<style>.map-fw{font-family:system-ui,-apple-system,sans-serif}.map-fw-map{position:relative;width:100%;min-height:320px;background:#0a0a0a;border-radius:20px 20px 0 0;border:1px solid rgba(255,255,255,0.08);border-bottom:none;display:flex;align-items:center;justify-content:center;overflow:hidden}.map-fw-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:40px 40px}.map-fw-roads{position:absolute;inset:0;overflow:hidden}.map-fw-roads::before{content:'';position:absolute;top:35%;left:10%;right:20%;height:2px;background:rgba(255,255,255,0.05);transform:rotate(-5deg)}.map-fw-roads::after{content:'';position:absolute;top:15%;bottom:20%;left:60%;width:2px;background:rgba(255,255,255,0.05);transform:rotate(8deg)}.map-fw-road3{position:absolute;top:60%;left:20%;right:30%;height:2px;background:rgba(255,255,255,0.04);transform:rotate(3deg)}.map-fw-pin{position:relative;z-index:1;text-align:center}.map-fw-pin svg{width:44px;height:44px;color:#638BFF;filter:drop-shadow(0 6px 16px rgba(99,139,255,0.35))}.map-fw-pin-pulse{width:20px;height:20px;background:rgba(99,139,255,0.2);border-radius:50%;margin:-6px auto 0}.map-fw-bar{display:flex;align-items:center;justify-content:center;gap:8px;padding:18px 28px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:0 0 20px 20px}.map-fw-bar svg{width:16px;height:16px;color:#638BFF;flex-shrink:0}.map-fw-bar p{font-size:14px;color:rgba(255,255,255,0.5);margin:0}</style><div class="map-fw"><div class="map-fw-map"><div class="map-fw-grid"></div><div class="map-fw-roads"><div class="map-fw-road3"></div></div><div class="map-fw-pin"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg><div class="map-fw-pin-pulse"></div></div></div><div class="map-fw-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><p>42 Avenue des Champs-Elysees, 75008 Paris, France</p></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-map-multi-location',
+    label: 'Map Multi Location',
+    category: 'components',
+    subcategory: 'map',
+    tags: ['map', 'multi-location', 'stores', 'locator', 'cards'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Map Multi Location',
+      defaultStyle: { width: '100%', minHeight: '520px' },
+      defaultContent: {
+        html: `<style>.map-ml{max-width:820px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.map-ml-map{position:relative;width:100%;min-height:280px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:24px}.map-ml-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:36px 36px}.map-ml-roads{position:absolute;inset:0;overflow:hidden}.map-ml-roads::before{content:'';position:absolute;top:45%;left:5%;right:10%;height:2px;background:rgba(255,255,255,0.05)}.map-ml-roads::after{content:'';position:absolute;top:10%;bottom:15%;left:50%;width:2px;background:rgba(255,255,255,0.05)}.map-ml-pins{position:relative;z-index:1;display:flex;gap:120px}.map-ml-pin{text-align:center}.map-ml-pin svg{width:28px;height:28px;color:#638BFF;filter:drop-shadow(0 3px 8px rgba(99,139,255,0.3))}.map-ml-pin span{display:block;font-size:10px;font-weight:600;color:rgba(255,255,255,0.4);margin-top:4px;text-transform:uppercase;letter-spacing:0.05em}.map-ml-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.map-ml-card{padding:28px 24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;transition:border-color 0.3s}.map-ml-card:hover{border-color:rgba(99,139,255,0.2)}.map-ml-city{font-size:17px;font-weight:700;color:#f0f0f0;margin:0 0 12px}.map-ml-detail{display:flex;align-items:center;gap:8px;margin-bottom:8px}.map-ml-detail svg{width:14px;height:14px;color:rgba(99,139,255,0.6);flex-shrink:0}.map-ml-detail p{font-size:13px;color:rgba(255,255,255,0.45);margin:0;line-height:1.4}</style><div class="map-ml"><div class="map-ml-map"><div class="map-ml-grid"></div><div class="map-ml-roads"></div><div class="map-ml-pins"><div class="map-ml-pin"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg><span>Paris</span></div><div class="map-ml-pin"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg><span>London</span></div><div class="map-ml-pin"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg><span>Berlin</span></div></div></div><div class="map-ml-cards"><div class="map-ml-card"><h3 class="map-ml-city">Paris</h3><div class="map-ml-detail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><p>42 Av. Champs-Elysees<br>75008 Paris</p></div><div class="map-ml-detail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><p>+33 1 42 68 53 00</p></div></div><div class="map-ml-card"><h3 class="map-ml-city">London</h3><div class="map-ml-detail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><p>10 Kings Road<br>London SW3 4ND</p></div><div class="map-ml-detail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><p>+44 20 7946 0958</p></div></div><div class="map-ml-card"><h3 class="map-ml-city">Berlin</h3><div class="map-ml-detail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><p>Friedrichstrasse 43<br>10117 Berlin</p></div><div class="map-ml-detail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><p>+49 30 901820</p></div></div></div></div>`
+      },
+    },
+  },
+]
+
 export const LIBRARY_COMPONENTS: LibraryElementItem[] = [
   ...BUTTONS,
   ...BADGES,
@@ -4019,4 +4518,11 @@ export const LIBRARY_COMPONENTS: LibraryElementItem[] = [
   ...TESTIMONIALS,
   ...PRICING,
   ...FAQ_COMPONENTS,
+  ...ERROR_PAGES,
+  ...COUNTDOWN_SECTIONS,
+  ...TABS_SECTIONS,
+  ...NEWSLETTER_SECTIONS,
+  ...COMPARISON_SECTIONS,
+  ...VIDEO_SECTIONS,
+  ...MAP_SECTIONS,
 ]

@@ -1671,6 +1671,266 @@ const CODE_ELEMENTS: LibraryElementItem[] = [
   },
 ]
 
+// ─── TABLES ───
+
+const TABLES: LibraryElementItem[] = [
+  {
+    id: 'el-table-simple',
+    label: 'Simple Table',
+    category: 'elements', subcategory: 'tables',
+    tags: ['table', 'data', 'rows', 'columns', 'grid', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Simple Table',
+      defaultStyle: { width: '100%', minHeight: '280px' },
+      defaultContent: {
+        html: `<div class="jl-tbl-simple" style="font-family:system-ui,-apple-system,sans-serif;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)"><style>.jl-tbs table{width:100%;border-collapse:collapse;font-size:0.8125rem;color:rgba(246,239,229,0.7)}.jl-tbs th{padding:12px 16px;text-align:left;font-weight:600;color:#f6efe5;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em}.jl-tbs td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04)}.jl-tbs tr:nth-child(even) td{background:rgba(255,255,255,0.02)}.jl-tbs tr:last-child td{border-bottom:none}</style><div class="jl-tbs" style="background:#0a0a0a"><table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Revenue</th></tr></thead><tbody><tr><td>Sophia Laurent</td><td>Creative Director</td><td style="color:#34d399">Active</td><td>$48,200</td></tr><tr><td>Marcus Chen</td><td>Lead Developer</td><td style="color:#34d399">Active</td><td>$36,800</td></tr><tr><td>Amira Patel</td><td>Brand Strategist</td><td style="color:#f59e0b">Pending</td><td>$29,500</td></tr><tr><td>Julian Moreau</td><td>UX Designer</td><td style="color:#34d399">Active</td><td>$31,400</td></tr><tr><td>Elena Rossi</td><td>Project Manager</td><td style="color:rgba(246,239,229,0.3)">Inactive</td><td>$22,100</td></tr></tbody></table></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-table-striped',
+    label: 'Striped Table',
+    category: 'elements', subcategory: 'tables',
+    tags: ['table', 'striped', 'zebra', 'hover', 'accent', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Striped Table',
+      defaultStyle: { width: '100%', minHeight: '260px' },
+      defaultContent: {
+        html: `<div class="jl-tbl-striped" style="font-family:system-ui,-apple-system,sans-serif;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)"><style>.jl-tbst table{width:100%;border-collapse:collapse;font-size:0.8125rem;color:rgba(246,239,229,0.7)}.jl-tbst th{padding:12px 16px;text-align:left;font-weight:600;color:#fff;background:rgba(99,139,255,0.15);border-bottom:2px solid rgba(99,139,255,0.3);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em}.jl-tbst td{padding:12px 16px;transition:background 0.2s ease}.jl-tbst tbody tr:nth-child(odd) td{background:rgba(255,255,255,0.03)}.jl-tbst tbody tr:nth-child(even) td{background:rgba(255,255,255,0.06)}.jl-tbst tbody tr:hover td{background:rgba(99,139,255,0.08)}</style><div class="jl-tbst" style="background:#0a0a0a"><table><thead><tr><th>Product</th><th>Category</th><th>Stock</th><th>Price</th></tr></thead><tbody><tr><td>Noir Collection</td><td>Apparel</td><td>124</td><td>$289</td></tr><tr><td>Aura Fragrance</td><td>Beauty</td><td>87</td><td>$165</td></tr><tr><td>Silk Clutch</td><td>Accessories</td><td>56</td><td>$420</td></tr><tr><td>Cashmere Wrap</td><td>Apparel</td><td>31</td><td>$540</td></tr></tbody></table></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-table-cards',
+    label: 'Card Table',
+    category: 'elements', subcategory: 'tables',
+    tags: ['table', 'cards', 'mobile', 'responsive', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Card Table',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: {
+        html: `<div class="jl-tbl-cards" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-tbc-grid{display:flex;flex-direction:column;gap:10px}.jl-tbc-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;transition:border-color 0.2s ease}.jl-tbc-card:hover{border-color:rgba(255,255,255,0.12)}.jl-tbc-name{font-size:0.875rem;font-weight:600;color:#f6efe5;min-width:140px}.jl-tbc-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:0.6875rem;font-weight:600;letter-spacing:0.02em}.jl-tbc-badge-green{background:rgba(52,211,153,0.1);color:#34d399}.jl-tbc-badge-amber{background:rgba(245,158,11,0.1);color:#f59e0b}.jl-tbc-badge-red{background:rgba(239,68,68,0.1);color:#ef4444}.jl-tbc-amount{font-size:0.875rem;font-weight:500;color:rgba(246,239,229,0.8);font-variant-numeric:tabular-nums}.jl-tbc-date{font-size:0.75rem;color:rgba(246,239,229,0.3)}</style><div class="jl-tbc-grid" style="background:#0a0a0a;padding:4px;border-radius:16px"><div class="jl-tbc-card"><span class="jl-tbc-name">Alexandre Dubois</span><span class="jl-tbc-badge jl-tbc-badge-green">Completed</span><span class="jl-tbc-amount">$12,400</span><span class="jl-tbc-date">Mar 15, 2026</span></div><div class="jl-tbc-card"><span class="jl-tbc-name">Camille Fontaine</span><span class="jl-tbc-badge jl-tbc-badge-amber">In Progress</span><span class="jl-tbc-amount">$8,750</span><span class="jl-tbc-date">Mar 12, 2026</span></div><div class="jl-tbc-card"><span class="jl-tbc-name">Hugo Bernard</span><span class="jl-tbc-badge jl-tbc-badge-red">Overdue</span><span class="jl-tbc-amount">$5,200</span><span class="jl-tbc-date">Feb 28, 2026</span></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-table-pricing',
+    label: 'Pricing Table',
+    category: 'elements', subcategory: 'tables',
+    tags: ['table', 'pricing', 'comparison', 'features', 'plans', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Pricing Table',
+      defaultStyle: { width: '100%', minHeight: '380px' },
+      defaultContent: {
+        html: `<div class="jl-tbl-pricing" style="font-family:system-ui,-apple-system,sans-serif;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)"><style>.jl-tbp table{width:100%;border-collapse:collapse;font-size:0.8125rem;color:rgba(246,239,229,0.6)}.jl-tbp th{padding:20px 16px;text-align:center;vertical-align:bottom;border-bottom:1px solid rgba(255,255,255,0.08)}.jl-tbp th:first-child{text-align:left;width:35%}.jl-tbp .jl-tbp-plan{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:rgba(246,239,229,0.4);font-weight:500;margin-bottom:4px}.jl-tbp .jl-tbp-price{font-size:1.5rem;font-weight:700;color:#f6efe5}.jl-tbp .jl-tbp-price span{font-size:0.75rem;font-weight:400;color:rgba(246,239,229,0.3)}.jl-tbp td{padding:12px 16px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04)}.jl-tbp td:first-child{text-align:left;color:rgba(246,239,229,0.7);font-weight:500}.jl-tbp tr:last-child td{border-bottom:none}.jl-tbp .jl-tbp-check{color:#34d399;font-size:1rem}.jl-tbp .jl-tbp-dash{color:rgba(246,239,229,0.15)}.jl-tbp .jl-tbp-pop{background:rgba(99,139,255,0.04);border-left:1px solid rgba(99,139,255,0.1);border-right:1px solid rgba(99,139,255,0.1)}.jl-tbp th.jl-tbp-pop{background:rgba(99,139,255,0.08);border-top:2px solid #638bff}</style><div class="jl-tbp" style="background:#0a0a0a"><table><thead><tr><th></th><th><div class="jl-tbp-plan">Basic</div><div class="jl-tbp-price">$29<span>/mo</span></div></th><th class="jl-tbp-pop"><div class="jl-tbp-plan" style="color:#638bff">Pro</div><div class="jl-tbp-price">$79<span>/mo</span></div></th><th><div class="jl-tbp-plan">Enterprise</div><div class="jl-tbp-price">$199<span>/mo</span></div></th></tr></thead><tbody><tr><td>Custom domain</td><td class="jl-tbp-check">&#10003;</td><td class="jl-tbp-pop jl-tbp-check">&#10003;</td><td class="jl-tbp-check">&#10003;</td></tr><tr><td>Analytics dashboard</td><td class="jl-tbp-dash">&#8212;</td><td class="jl-tbp-pop jl-tbp-check">&#10003;</td><td class="jl-tbp-check">&#10003;</td></tr><tr><td>Priority support</td><td class="jl-tbp-dash">&#8212;</td><td class="jl-tbp-pop jl-tbp-check">&#10003;</td><td class="jl-tbp-check">&#10003;</td></tr><tr><td>API access</td><td class="jl-tbp-dash">&#8212;</td><td class="jl-tbp-pop jl-tbp-dash">&#8212;</td><td class="jl-tbp-check">&#10003;</td></tr><tr><td>White-label</td><td class="jl-tbp-dash">&#8212;</td><td class="jl-tbp-pop jl-tbp-dash">&#8212;</td><td class="jl-tbp-check">&#10003;</td></tr><tr><td>Dedicated manager</td><td class="jl-tbp-dash">&#8212;</td><td class="jl-tbp-pop jl-tbp-dash">&#8212;</td><td class="jl-tbp-check">&#10003;</td></tr></tbody></table></div></div>`
+      }
+    }
+  },
+]
+
+// ─── LISTS ───
+
+const LISTS: LibraryElementItem[] = [
+  {
+    id: 'el-list-checkmarks',
+    label: 'Checkmark List',
+    category: 'elements', subcategory: 'lists',
+    tags: ['list', 'checkmark', 'benefits', 'features', 'check', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Checkmark List',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: {
+        html: `<div class="jl-lst-check" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-lc-list{display:flex;flex-direction:column;gap:12px;padding:4px 0}.jl-lc-item{display:flex;align-items:flex-start;gap:12px}.jl-lc-icon{width:20px;height:20px;border-radius:50%;background:rgba(52,211,153,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}.jl-lc-icon svg{width:12px;height:12px;stroke:#34d399;stroke-width:2.5;fill:none}.jl-lc-text{font-size:0.875rem;color:rgba(246,239,229,0.75);line-height:1.5}</style><div class="jl-lc-list"><div class="jl-lc-item"><div class="jl-lc-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="jl-lc-text">Unlimited premium templates and components</span></div><div class="jl-lc-item"><div class="jl-lc-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="jl-lc-text">Custom domain with SSL certificate included</span></div><div class="jl-lc-item"><div class="jl-lc-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="jl-lc-text">Priority support with 2-hour response time</span></div><div class="jl-lc-item"><div class="jl-lc-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="jl-lc-text">Advanced analytics and conversion tracking</span></div><div class="jl-lc-item"><div class="jl-lc-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="jl-lc-text">Automatic backups and version history</span></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-list-numbered',
+    label: 'Numbered List',
+    category: 'elements', subcategory: 'lists',
+    tags: ['list', 'numbered', 'steps', 'process', 'order', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Numbered List',
+      defaultStyle: { width: '100%', minHeight: '220px' },
+      defaultContent: {
+        html: `<div class="jl-lst-num" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-ln-list{display:flex;flex-direction:column;gap:16px;padding:4px 0}.jl-ln-item{display:flex;align-items:flex-start;gap:14px}.jl-ln-num{font-size:0.8125rem;font-weight:700;color:#638bff;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;min-width:24px;line-height:1.5}.jl-ln-text{font-size:0.875rem;color:rgba(246,239,229,0.75);line-height:1.5;border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:14px;flex:1}.jl-ln-item:last-child .jl-ln-text{border-bottom:none;padding-bottom:0}</style><div class="jl-ln-list"><div class="jl-ln-item"><span class="jl-ln-num">01</span><span class="jl-ln-text">Discovery call to understand your vision and brand identity</span></div><div class="jl-ln-item"><span class="jl-ln-num">02</span><span class="jl-ln-text">Strategic wireframing and content architecture planning</span></div><div class="jl-ln-item"><span class="jl-ln-num">03</span><span class="jl-ln-text">High-fidelity design with interactive prototyping</span></div><div class="jl-ln-item"><span class="jl-ln-num">04</span><span class="jl-ln-text">Development with pixel-perfect implementation and testing</span></div><div class="jl-ln-item"><span class="jl-ln-num">05</span><span class="jl-ln-text">Launch, optimization, and ongoing performance monitoring</span></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-list-icons',
+    label: 'Icon List',
+    category: 'elements', subcategory: 'lists',
+    tags: ['list', 'icons', 'features', 'services', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Icon List',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: {
+        html: `<div class="jl-lst-icons" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-li-list{display:flex;flex-direction:column;gap:20px}.jl-li-item{display:flex;align-items:flex-start;gap:14px}.jl-li-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0}.jl-li-icon svg{width:18px;height:18px;stroke:rgba(246,239,229,0.6);stroke-width:1.5;fill:none}.jl-li-body{flex:1}.jl-li-title{font-size:0.875rem;font-weight:600;color:#f6efe5;margin-bottom:3px}.jl-li-desc{font-size:0.8125rem;color:rgba(246,239,229,0.45);line-height:1.5}</style><div class="jl-li-list"><div class="jl-li-item"><div class="jl-li-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div class="jl-li-body"><div class="jl-li-title">Modular Architecture</div><div class="jl-li-desc">Component-based system for scalable and maintainable builds</div></div></div><div class="jl-li-item"><div class="jl-li-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="jl-li-body"><div class="jl-li-title">Responsive Layouts</div><div class="jl-li-desc">Fluid grids that adapt seamlessly across every device</div></div></div><div class="jl-li-item"><div class="jl-li-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="jl-li-body"><div class="jl-li-title">Performance First</div><div class="jl-li-desc">Optimized loading with sub-second time to interactive</div></div></div><div class="jl-li-item"><div class="jl-li-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="jl-li-body"><div class="jl-li-title">Enterprise Security</div><div class="jl-li-desc">SSL, DDoS protection, and GDPR compliance built-in</div></div></div><div class="jl-li-item"><div class="jl-li-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="jl-li-body"><div class="jl-li-title">Dedicated Support</div><div class="jl-li-desc">Direct access to your project lead with guaranteed SLA</div></div></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-list-timeline',
+    label: 'Timeline List',
+    category: 'elements', subcategory: 'lists',
+    tags: ['list', 'timeline', 'vertical', 'history', 'steps', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Timeline List',
+      defaultStyle: { width: '100%', minHeight: '320px' },
+      defaultContent: {
+        html: `<div class="jl-lst-timeline" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-lt-list{position:relative;padding-left:28px}.jl-lt-list::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:rgba(255,255,255,0.08)}.jl-lt-item{position:relative;padding-bottom:28px}.jl-lt-item:last-child{padding-bottom:0}.jl-lt-dot{position:absolute;left:-28px;top:6px;width:11px;height:11px;border-radius:50%;background:#0a0a0a;border:2px solid rgba(99,139,255,0.5);z-index:1}.jl-lt-item:first-child .jl-lt-dot{border-color:#638bff;background:#638bff;box-shadow:0 0 0 4px rgba(99,139,255,0.15)}.jl-lt-date{font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.06em;color:rgba(246,239,229,0.3);font-weight:500;margin-bottom:4px}.jl-lt-title{font-size:0.875rem;font-weight:600;color:#f6efe5;margin-bottom:4px}.jl-lt-desc{font-size:0.8125rem;color:rgba(246,239,229,0.45);line-height:1.5}</style><div class="jl-lt-list"><div class="jl-lt-item"><div class="jl-lt-dot"></div><div class="jl-lt-date">March 2026</div><div class="jl-lt-title">Platform Launch</div><div class="jl-lt-desc">Public release with core builder features and template library</div></div><div class="jl-lt-item"><div class="jl-lt-dot"></div><div class="jl-lt-date">January 2026</div><div class="jl-lt-title">Beta Program</div><div class="jl-lt-desc">Invited 50 creators to test and refine the editing experience</div></div><div class="jl-lt-item"><div class="jl-lt-dot"></div><div class="jl-lt-date">October 2025</div><div class="jl-lt-title">Design System v2</div><div class="jl-lt-desc">Complete overhaul of the component library and animation engine</div></div><div class="jl-lt-item"><div class="jl-lt-dot"></div><div class="jl-lt-date">June 2025</div><div class="jl-lt-title">Initial Prototype</div><div class="jl-lt-desc">First working prototype with drag-and-drop section builder</div></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-list-pros-cons',
+    label: 'Pros & Cons',
+    category: 'elements', subcategory: 'lists',
+    tags: ['list', 'pros', 'cons', 'comparison', 'split', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Pros & Cons',
+      defaultStyle: { width: '100%', minHeight: '240px' },
+      defaultContent: {
+        html: `<div class="jl-lst-procon" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-lpc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.jl-lpc-col{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px}.jl-lpc-header{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}.jl-lpc-header-pro{color:#34d399}.jl-lpc-header-con{color:#ef4444}.jl-lpc-items{display:flex;flex-direction:column;gap:10px}.jl-lpc-item{display:flex;align-items:flex-start;gap:10px;font-size:0.8125rem;color:rgba(246,239,229,0.65);line-height:1.5}.jl-lpc-icon{flex-shrink:0;margin-top:2px;width:14px;height:14px}.jl-lpc-icon-pro{stroke:#34d399;fill:none;stroke-width:2.5}.jl-lpc-icon-con{stroke:#ef4444;fill:none;stroke-width:2.5}</style><div class="jl-lpc-grid"><div class="jl-lpc-col"><div class="jl-lpc-header jl-lpc-header-pro"><svg class="jl-lpc-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" class="jl-lpc-icon-pro"/></svg>Advantages</div><div class="jl-lpc-items"><div class="jl-lpc-item"><svg class="jl-lpc-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" class="jl-lpc-icon-pro"/></svg><span>Lightning-fast page load times under 1s</span></div><div class="jl-lpc-item"><svg class="jl-lpc-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" class="jl-lpc-icon-pro"/></svg><span>No code required for full customization</span></div><div class="jl-lpc-item"><svg class="jl-lpc-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" class="jl-lpc-icon-pro"/></svg><span>Built-in SEO optimization tools</span></div><div class="jl-lpc-item"><svg class="jl-lpc-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" class="jl-lpc-icon-pro"/></svg><span>Integrated CRM and client portal</span></div></div></div><div class="jl-lpc-col"><div class="jl-lpc-header jl-lpc-header-con"><svg class="jl-lpc-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" class="jl-lpc-icon-con"/><line x1="6" y1="6" x2="18" y2="18" class="jl-lpc-icon-con"/></svg>Limitations</div><div class="jl-lpc-items"><div class="jl-lpc-item"><svg class="jl-lpc-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" class="jl-lpc-icon-con"/><line x1="6" y1="6" x2="18" y2="18" class="jl-lpc-icon-con"/></svg><span>Learning curve for advanced animations</span></div><div class="jl-lpc-item"><svg class="jl-lpc-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" class="jl-lpc-icon-con"/><line x1="6" y1="6" x2="18" y2="18" class="jl-lpc-icon-con"/></svg><span>Limited third-party plugin ecosystem</span></div><div class="jl-lpc-item"><svg class="jl-lpc-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" class="jl-lpc-icon-con"/><line x1="6" y1="6" x2="18" y2="18" class="jl-lpc-icon-con"/></svg><span>Custom code requires Pro plan</span></div><div class="jl-lpc-item"><svg class="jl-lpc-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" class="jl-lpc-icon-con"/><line x1="6" y1="6" x2="18" y2="18" class="jl-lpc-icon-con"/></svg><span>No native e-commerce below Business tier</span></div></div></div></div></div>`
+      }
+    }
+  },
+]
+
+// ─── BLOCKQUOTES ───
+
+const BLOCKQUOTES: LibraryElementItem[] = [
+  {
+    id: 'el-quote-simple',
+    label: 'Simple Quote',
+    category: 'elements', subcategory: 'quotes',
+    tags: ['quote', 'blockquote', 'testimonial', 'centered', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Simple Quote',
+      defaultStyle: { width: '100%', minHeight: '160px' },
+      defaultContent: {
+        html: `<div class="jl-qt-simple" style="font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:20px 0"><style>.jl-qs-mark{font-size:3.5rem;line-height:1;color:rgba(99,139,255,0.3);font-family:Georgia,serif;margin-bottom:8px}.jl-qs-text{font-size:1.125rem;font-style:italic;color:rgba(246,239,229,0.75);line-height:1.7;max-width:560px;margin:0 auto 16px}.jl-qs-author{font-size:0.8125rem;font-weight:600;color:rgba(246,239,229,0.4);letter-spacing:0.03em;text-transform:uppercase}</style><div class="jl-qs-mark">\u201C</div><p class="jl-qs-text">Design is not just what it looks like and feels like. Design is how it works. Every detail matters when crafting exceptional experiences.</p><div class="jl-qs-author">Jonathan Ive</div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-quote-bordered',
+    label: 'Bordered Quote',
+    category: 'elements', subcategory: 'quotes',
+    tags: ['quote', 'blockquote', 'bordered', 'editorial', 'accent', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Bordered Quote',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: {
+        html: `<div class="jl-qt-bordered" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-qb-wrap{border-left:4px solid #638bff;padding:16px 0 16px 24px}.jl-qb-text{font-size:1rem;color:rgba(246,239,229,0.75);line-height:1.7;font-style:italic;margin-bottom:12px}.jl-qb-footer{display:flex;align-items:center;gap:8px}.jl-qb-dash{width:16px;height:1px;background:rgba(246,239,229,0.15)}.jl-qb-author{font-size:0.8125rem;font-weight:600;color:rgba(246,239,229,0.5)}.jl-qb-role{font-size:0.75rem;color:rgba(246,239,229,0.25)}</style><div class="jl-qb-wrap"><p class="jl-qb-text">The best interfaces are the ones that disappear. When a user forgets they are using software, you have achieved something truly remarkable.</p><div class="jl-qb-footer"><div class="jl-qb-dash"></div><span class="jl-qb-author">Marie Laurent</span><span class="jl-qb-role">\u2014 Design Director, Studio Noir</span></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-quote-card',
+    label: 'Quote Card',
+    category: 'elements', subcategory: 'quotes',
+    tags: ['quote', 'card', 'glassmorphism', 'avatar', 'premium', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Quote Card',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: {
+        html: `<div class="jl-qt-card" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-qc-card{background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:28px 28px 24px;position:relative;overflow:hidden}.jl-qc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)}.jl-qc-marks{font-size:4rem;line-height:1;color:rgba(99,139,255,0.12);font-family:Georgia,serif;position:absolute;top:12px;left:24px}\u201C.jl-qc-text{font-size:0.9375rem;color:rgba(246,239,229,0.7);line-height:1.7;margin:20px 0 20px;font-style:italic}.jl-qc-footer{display:flex;align-items:center;gap:12px}.jl-qc-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#638bff,#c084fc);display:flex;align-items:center;justify-content:center;font-size:0.8125rem;font-weight:700;color:#fff;flex-shrink:0}.jl-qc-info{display:flex;flex-direction:column}.jl-qc-name{font-size:0.8125rem;font-weight:600;color:#f6efe5}.jl-qc-role{font-size:0.75rem;color:rgba(246,239,229,0.35)}</style><div class="jl-qc-card"><div class="jl-qc-marks">\u201C</div><p class="jl-qc-text">Working with this platform transformed how we approach digital experiences. The attention to detail and craft in every component is simply unmatched in the industry.</p><div class="jl-qc-footer"><div class="jl-qc-avatar">SL</div><div class="jl-qc-info"><span class="jl-qc-name">Sophie Laurent</span><span class="jl-qc-role">CEO, Maison Digitale</span></div></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-quote-highlight',
+    label: 'Highlight Quote',
+    category: 'elements', subcategory: 'quotes',
+    tags: ['quote', 'highlight', 'pullquote', 'accent', 'article', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Highlight Quote',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: {
+        html: `<div class="jl-qt-highlight" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-qh-wrap{background:rgba(99,139,255,0.06);border-radius:12px;padding:28px 32px;text-align:center;position:relative;overflow:hidden}.jl-qh-wrap::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:40px;height:2px;background:#638bff;border-radius:1px}.jl-qh-text{font-size:1.25rem;font-weight:500;color:rgba(246,239,229,0.85);line-height:1.6;letter-spacing:-0.01em}</style><div class="jl-qh-wrap"><p class="jl-qh-text">Great design is invisible. It does not call attention to itself \u2014 it simply makes everything feel effortless and inevitable.</p></div></div>`
+      }
+    }
+  },
+]
+
+// ─── VIDEO ELEMENTS ───
+
+const VIDEO_ELEMENTS: LibraryElementItem[] = [
+  {
+    id: 'el-video-player',
+    label: 'Video Player',
+    category: 'elements', subcategory: 'video',
+    tags: ['video', 'player', 'media', 'controls', 'play', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Video Player',
+      defaultStyle: { width: '100%', minHeight: '360px' },
+      defaultContent: {
+        html: `<div class="jl-vid-player" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-vp-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#0a0a0a;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer}.jl-vp-play{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.1);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;z-index:2}.jl-vp-wrap:hover .jl-vp-play{background:rgba(255,255,255,0.15);transform:scale(1.08)}.jl-vp-play svg{width:24px;height:24px;fill:#fff;margin-left:3px}.jl-vp-controls{position:absolute;bottom:0;left:0;right:0;padding:12px 16px;background:linear-gradient(transparent,rgba(0,0,0,0.7));display:flex;align-items:center;gap:12px;z-index:2}.jl-vp-time{font-size:0.6875rem;color:rgba(255,255,255,0.6);font-variant-numeric:tabular-nums;min-width:72px}.jl-vp-bar{flex:1;height:3px;background:rgba(255,255,255,0.15);border-radius:2px;position:relative;cursor:pointer}.jl-vp-bar::before{content:'';position:absolute;left:0;top:0;height:100%;width:35%;background:#638bff;border-radius:2px}.jl-vp-bar::after{content:'';position:absolute;left:35%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;background:#fff;border-radius:50%;opacity:0;transition:opacity 0.2s}.jl-vp-wrap:hover .jl-vp-bar::after{opacity:1}.jl-vp-vol{width:14px;height:14px;stroke:rgba(255,255,255,0.5);fill:none;stroke-width:1.5}.jl-vp-fs{width:14px;height:14px;stroke:rgba(255,255,255,0.5);fill:none;stroke-width:1.5}</style><div class="jl-vp-wrap"><div class="jl-vp-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="jl-vp-controls"><span class="jl-vp-time">1:24 / 3:42</span><div class="jl-vp-bar"></div><svg class="jl-vp-vol" viewBox="0 0 24 24"><polygon points="11,5 6,9 2,9 2,15 6,15 11,19" fill="rgba(255,255,255,0.5)"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg><svg class="jl-vp-fs" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/></svg></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-video-thumbnail',
+    label: 'Video Thumbnail',
+    category: 'elements', subcategory: 'video',
+    tags: ['video', 'thumbnail', 'preview', 'play', 'overlay', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Video Thumbnail',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: {
+        html: `<div class="jl-vid-thumb" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-vt-wrap{position:relative;width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0f0f0f 0%,#1a1a2e 50%,#16213e 100%);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);cursor:pointer}.jl-vt-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;transition:background 0.3s ease}.jl-vt-wrap:hover .jl-vt-overlay{background:rgba(0,0,0,0.15)}.jl-vt-play{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.12);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;transition:all 0.3s ease}.jl-vt-wrap:hover .jl-vt-play{transform:scale(1.1);background:rgba(255,255,255,0.18)}.jl-vt-play svg{width:22px;height:22px;fill:#fff;margin-left:2px}.jl-vt-badge{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);padding:3px 8px;border-radius:4px;font-size:0.6875rem;font-weight:600;color:rgba(255,255,255,0.8);font-variant-numeric:tabular-nums;letter-spacing:0.02em}</style><div class="jl-vt-wrap"><div class="jl-vt-overlay"><div class="jl-vt-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div><div class="jl-vt-badge">3:42</div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-video-embed',
+    label: 'Video Embed',
+    category: 'elements', subcategory: 'video',
+    tags: ['video', 'embed', 'placeholder', 'youtube', 'vimeo', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Video Embed',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: {
+        html: `<div class="jl-vid-embed" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-ve-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#0a0a0a;border-radius:12px;overflow:hidden;border:2px dashed rgba(255,255,255,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;transition:border-color 0.3s ease}.jl-ve-wrap:hover{border-color:rgba(99,139,255,0.3)}.jl-ve-icon{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center}.jl-ve-icon svg{width:20px;height:20px;stroke:rgba(246,239,229,0.3);fill:none;stroke-width:1.5}.jl-ve-text{font-size:0.875rem;color:rgba(246,239,229,0.35);font-weight:500}.jl-ve-sub{font-size:0.75rem;color:rgba(246,239,229,0.2)}</style><div class="jl-ve-wrap"><div class="jl-ve-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><polygon points="10,8 16,12 10,16" fill="rgba(246,239,229,0.3)" stroke="none"/></svg></div><span class="jl-ve-text">Paste your video URL</span><span class="jl-ve-sub">YouTube, Vimeo, or direct MP4 link</span></div></div>`
+      }
+    }
+  },
+]
+
 export const LIBRARY_ELEMENTS: LibraryElementItem[] = [
   ...HEADINGS,
   ...TEXTS,
@@ -1690,4 +1950,8 @@ export const LIBRARY_ELEMENTS: LibraryElementItem[] = [
   ...TAGS_CHIPS,
   ...PAGINATION_ELEMENTS,
   ...CODE_ELEMENTS,
+  ...TABLES,
+  ...LISTS,
+  ...BLOCKQUOTES,
+  ...VIDEO_ELEMENTS,
 ]

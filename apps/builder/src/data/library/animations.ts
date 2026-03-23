@@ -3045,6 +3045,225 @@ const TEXTURE_EFFECTS: LibraryElementItem[] = [
   },
 ]
 
+// ─── PARALLAX EFFECTS ───
+
+const PARALLAX_EFFECTS: LibraryElementItem[] = [
+  {
+    id: 'anim-parallax-layers',
+    label: 'Multi-Layer Parallax',
+    category: 'animations', subcategory: 'parallax',
+    tags: ['animation', 'parallax', 'layers', 'scroll', 'depth', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Multi-Layer Parallax',
+      defaultStyle: { width: '100%', minHeight: '500px' },
+      defaultContent: { html: `<div style="width:100%;min-height:500px;position:relative;overflow:hidden;background:#0a0a0a;border-radius:.75rem"><style>.pxl-wrap{position:relative;width:100%;height:500px;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth}.pxl-track{height:1200px;position:relative}.pxl-layer{position:sticky;top:0;width:100%;height:500px;display:flex;align-items:center;justify-content:center}.pxl-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:.75rem}.pxl-l1{background:linear-gradient(135deg,#1a0a2e,#0d1b2a);z-index:1}.pxl-l2{background:transparent;z-index:2}.pxl-l3{background:transparent;z-index:3}.pxl-l2 .pxl-box{width:200px;height:120px;background:linear-gradient(135deg,rgba(200,169,126,.15),rgba(200,169,126,.05));border:1px solid rgba(200,169,126,.2);border-radius:.75rem;display:flex;align-items:center;justify-content:center;color:#c8a97e;font-family:system-ui,sans-serif;font-size:.875rem;font-weight:600;backdrop-filter:blur(10px)}.pxl-l3 .pxl-box{width:160px;height:90px;background:rgba(246,239,229,.08);border:1px solid rgba(246,239,229,.15);border-radius:.5rem;display:flex;align-items:center;justify-content:center;color:#f6efe5;font-family:system-ui,sans-serif;font-size:.75rem;font-weight:700}.pxl-l1 span{color:rgba(246,239,229,.15);font-family:system-ui,sans-serif;font-size:4rem;font-weight:900;letter-spacing:.2em}</style><div class="pxl-wrap" id="pxlWrap"><div class="pxl-track"><div class="pxl-layer"><div class="pxl-bg pxl-l1"><span>DEPTH</span></div><div class="pxl-bg pxl-l2"><div class="pxl-box" id="pxlMid">Mid Layer</div></div><div class="pxl-bg pxl-l3"><div class="pxl-box" id="pxlFront">Front Layer</div></div></div></div></div><script>(function(){var w=document.getElementById('pxlWrap'),m=document.getElementById('pxlMid'),f=document.getElementById('pxlFront');if(!w||!m||!f)return;w.addEventListener('scroll',function(){var s=w.scrollTop;m.style.transform='translateY('+s*0.3+'px)';f.style.transform='translateY('+s*0.6+'px)';});})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-parallax-image-split',
+    label: 'Image Split',
+    category: 'animations', subcategory: 'parallax',
+    tags: ['animation', 'parallax', 'split', 'image', 'reveal', 'scroll', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Image Split',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: { html: `<div style="width:100%;min-height:400px;background:#0a0a0a;border-radius:.75rem;overflow:hidden;position:relative"><style>.pxs-container{position:relative;width:100%;height:400px;overflow:hidden;display:flex;align-items:center;justify-content:center}.pxs-reveal{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;color:#f6efe5;font-family:system-ui,sans-serif}.pxs-reveal h2{font-size:2rem;font-weight:800;opacity:.6}.pxs-left,.pxs-right{position:absolute;top:0;width:50%;height:100%;z-index:2;transition:transform 1.2s cubic-bezier(.16,1,.3,1);overflow:hidden}.pxs-left{left:0}.pxs-right{right:0}.pxs-inner{width:200%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e,#16213e,#0d1b2a)}.pxs-left .pxs-inner{margin-left:0}.pxs-right .pxs-inner{margin-left:-100%}.pxs-inner span{font-family:system-ui,sans-serif;font-size:3rem;font-weight:900;background:linear-gradient(135deg,#c8a97e,#f6efe5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.pxs-container.pxs-split .pxs-left{transform:translateX(-100%)}.pxs-container.pxs-split .pxs-right{transform:translateX(100%)}</style><div class="pxs-container" id="pxsContainer"><div class="pxs-reveal"><h2>Content Revealed</h2></div><div class="pxs-left"><div class="pxs-inner"><span>SPLIT</span></div></div><div class="pxs-right"><div class="pxs-inner"><span>SPLIT</span></div></div></div><script>(function(){var c=document.getElementById('pxsContainer');if(!c)return;var o=new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting){c.classList.add('pxs-split')}else{c.classList.remove('pxs-split')}})},{threshold:0.5});o.observe(c);})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-parallax-text-scroll',
+    label: 'Text Scroll',
+    category: 'animations', subcategory: 'parallax',
+    tags: ['animation', 'parallax', 'text', 'horizontal', 'scroll', 'marquee', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Text Scroll',
+      defaultStyle: { width: '100%', minHeight: '500px' },
+      defaultContent: { html: `<div style="width:100%;min-height:500px;background:#0a0a0a;border-radius:.75rem;overflow:hidden;position:relative"><style>.pxt-wrap{width:100%;height:500px;overflow-y:auto;overflow-x:hidden}.pxt-track{height:1500px;position:relative}.pxt-sticky{position:sticky;top:0;height:500px;display:flex;align-items:center;overflow:hidden}.pxt-text{white-space:nowrap;font-family:system-ui,sans-serif;font-size:6rem;font-weight:900;color:transparent;-webkit-text-stroke:1px rgba(200,169,126,.3);will-change:transform;transition:none}.pxt-text span{-webkit-text-stroke:0;color:#c8a97e;opacity:.8}</style><div class="pxt-wrap" id="pxtWrap"><div class="pxt-track"><div class="pxt-sticky"><div class="pxt-text" id="pxtText">PREMIUM DESIGN &mdash; <span>LUXURY</span> &mdash; VISUAL EXCELLENCE &mdash; <span>STUDIO</span> &mdash; CRAFTED WITH CARE &mdash;</div></div></div></div><script>(function(){var w=document.getElementById('pxtWrap'),t=document.getElementById('pxtText');if(!w||!t)return;w.addEventListener('scroll',function(){var s=w.scrollTop;var max=w.scrollHeight-w.clientHeight;var pct=s/max;t.style.transform='translateX('+ (-pct*60) +'%)';});})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-parallax-depth',
+    label: 'Depth Effect',
+    category: 'animations', subcategory: 'parallax',
+    tags: ['animation', 'parallax', 'depth', 'mouse', 'perspective', '3d', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Depth Effect',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: { html: `<div style="width:100%;min-height:400px;background:#0a0a0a;border-radius:.75rem;overflow:hidden;display:flex;align-items:center;justify-content:center"><style>.pxd-scene{perspective:800px;width:350px;height:350px;position:relative}.pxd-el{position:absolute;border-radius:.75rem;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-weight:700;transition:transform .15s ease-out;will-change:transform}.pxd-e1{width:280px;height:280px;top:35px;left:35px;background:rgba(200,169,126,.06);border:1px solid rgba(200,169,126,.1);color:rgba(200,169,126,.15);font-size:3rem}.pxd-e2{width:200px;height:200px;top:75px;left:75px;background:rgba(200,169,126,.1);border:1px solid rgba(200,169,126,.15);color:rgba(200,169,126,.25);font-size:.75rem}.pxd-e3{width:140px;height:140px;top:105px;left:105px;background:rgba(200,169,126,.12);border:1px solid rgba(200,169,126,.2);color:rgba(200,169,126,.4);font-size:.7rem}.pxd-e4{width:90px;height:90px;top:130px;left:130px;background:linear-gradient(135deg,rgba(200,169,126,.15),rgba(200,169,126,.08));border:1px solid rgba(200,169,126,.25);color:#c8a97e;font-size:.65rem;font-weight:800}.pxd-e5{width:50px;height:50px;top:150px;left:150px;background:linear-gradient(135deg,#c8a97e,#8b6914);color:#0a0a0a;font-size:.55rem;font-weight:900}</style><div class="pxd-scene" id="pxdScene"><div class="pxd-el pxd-e1" data-depth="1">&#x2B22;</div><div class="pxd-el pxd-e2" data-depth="2">Layer 2</div><div class="pxd-el pxd-e3" data-depth="3">Layer 3</div><div class="pxd-el pxd-e4" data-depth="4">Layer 4</div><div class="pxd-el pxd-e5" data-depth="5">&#x2726;</div></div><script>(function(){var s=document.getElementById('pxdScene');if(!s)return;var els=s.querySelectorAll('.pxd-el');s.addEventListener('mousemove',function(e){var r=s.getBoundingClientRect();var x=(e.clientX-r.left-r.width/2)/r.width;var y=(e.clientY-r.top-r.height/2)/r.height;els.forEach(function(el){var d=parseInt(el.getAttribute('data-depth'))||1;el.style.transform='translate3d('+x*d*15+'px,'+y*d*15+'px,'+d*20+'px)';});});s.addEventListener('mouseleave',function(){els.forEach(function(el){el.style.transform='translate3d(0,0,0)';});});})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-parallax-reveal',
+    label: 'Section Reveal',
+    category: 'animations', subcategory: 'parallax',
+    tags: ['animation', 'parallax', 'reveal', 'scroll', 'sticky', 'overlay', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Section Reveal',
+      defaultStyle: { width: '100%', minHeight: '500px' },
+      defaultContent: { html: `<div style="width:100%;min-height:500px;background:#0a0a0a;border-radius:.75rem;overflow:hidden"><style>.pxr-wrap{width:100%;height:500px;overflow-y:auto;overflow-x:hidden}.pxr-track{height:1200px;position:relative}.pxr-content{position:sticky;top:0;height:500px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d1b2a,#1a1a2e);overflow:hidden}.pxr-text{text-align:center;color:#f6efe5;font-family:system-ui,sans-serif;z-index:1}.pxr-text h2{font-size:2.5rem;font-weight:900;margin:0 0 .5rem;background:linear-gradient(135deg,#c8a97e,#f6efe5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.pxr-text p{font-size:.875rem;opacity:.5;margin:0}.pxr-overlay{position:absolute;bottom:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:2;transition:none;will-change:transform}</style><div class="pxr-wrap" id="pxrWrap"><div class="pxr-track"><div class="pxr-content"><div class="pxr-text"><h2>Revealed Content</h2><p>Scroll to reveal this section</p></div><div class="pxr-overlay" id="pxrOverlay"></div></div></div></div><script>(function(){var w=document.getElementById('pxrWrap'),o=document.getElementById('pxrOverlay');if(!w||!o)return;w.addEventListener('scroll',function(){var s=w.scrollTop;var max=w.scrollHeight-w.clientHeight;var pct=Math.min(s/max,1);o.style.transform='translateY('+(-pct*100)+'%)';});})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-parallax-zoom',
+    label: 'Zoom on Scroll',
+    category: 'animations', subcategory: 'parallax',
+    tags: ['animation', 'parallax', 'zoom', 'scroll', 'scale', 'fullscreen', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Zoom on Scroll',
+      defaultStyle: { width: '100%', minHeight: '500px' },
+      defaultContent: { html: `<div style="width:100%;min-height:500px;background:#0a0a0a;border-radius:.75rem;overflow:hidden"><style>.pxz-wrap{width:100%;height:500px;overflow-y:auto;overflow-x:hidden}.pxz-track{height:1500px;position:relative}.pxz-sticky{position:sticky;top:0;height:500px;display:flex;align-items:center;justify-content:center;overflow:hidden}.pxz-el{width:120px;height:120px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(200,169,126,.2);border-radius:1rem;display:flex;align-items:center;justify-content:center;flex-direction:column;will-change:transform;transition:none}.pxz-el span{font-size:2rem;margin-bottom:.25rem}.pxz-el p{color:#c8a97e;font-family:system-ui,sans-serif;font-size:.7rem;font-weight:700;margin:0;letter-spacing:.1em}</style><div class="pxz-wrap" id="pxzWrap"><div class="pxz-track"><div class="pxz-sticky"><div class="pxz-el" id="pxzEl"><span>&#x2B22;</span><p>ZOOM</p></div></div></div></div><script>(function(){var w=document.getElementById('pxzWrap'),el=document.getElementById('pxzEl');if(!w||!el)return;w.addEventListener('scroll',function(){var s=w.scrollTop;var max=w.scrollHeight-w.clientHeight;var pct=Math.min(s/max,1);var scale=1+pct*6;el.style.transform='scale('+scale+')';el.style.borderRadius=(1-pct*0.8)+'rem';});})()</script></div>` },
+    },
+  },
+]
+
+// ─── 3D EFFECTS ───
+
+const THREE_D_EFFECTS: LibraryElementItem[] = [
+  {
+    id: 'anim-3d-card-flip',
+    label: 'Card Flip',
+    category: 'animations', subcategory: '3d',
+    tags: ['animation', '3d', 'card', 'flip', 'hover', 'perspective', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Card Flip',
+      defaultStyle: { width: '100%', minHeight: '350px' },
+      defaultContent: { html: `<div style="width:100%;min-height:350px;background:#0a0a0a;border-radius:.75rem;display:flex;align-items:center;justify-content:center;padding:2rem"><style>.tdcf-container{perspective:1000px;width:280px;height:200px}.tdcf-card{position:relative;width:100%;height:100%;transition:transform .8s cubic-bezier(.25,.46,.45,.94);transform-style:preserve-3d;cursor:pointer}.tdcf-container:hover .tdcf-card{transform:rotateY(180deg)}.tdcf-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:.75rem;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui,sans-serif;padding:1.5rem;text-align:center}.tdcf-front{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(200,169,126,.2);color:#f6efe5}.tdcf-front h3{margin:0 0 .5rem;font-size:1.25rem;font-weight:800}.tdcf-front p{margin:0;font-size:.75rem;opacity:.4}.tdcf-back{background:linear-gradient(135deg,#c8a97e,#8b6914);transform:rotateY(180deg);color:#0a0a0a}.tdcf-back h3{margin:0 0 .5rem;font-size:1.1rem;font-weight:800}.tdcf-back p{margin:0;font-size:.75rem;opacity:.7}</style><div class="tdcf-container"><div class="tdcf-card"><div class="tdcf-face tdcf-front"><h3>Front Face</h3><p>Hover to flip</p></div><div class="tdcf-face tdcf-back"><h3>Back Face</h3><p>Hidden content revealed</p></div></div></div></div>` },
+    },
+  },
+  {
+    id: 'anim-3d-cube',
+    label: 'Rotating Cube',
+    category: 'animations', subcategory: '3d',
+    tags: ['animation', '3d', 'cube', 'rotate', 'continuous', 'perspective', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Rotating Cube',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: { html: `<div style="width:100%;min-height:400px;background:#0a0a0a;border-radius:.75rem;display:flex;align-items:center;justify-content:center"><style>.tdcu-scene{perspective:600px;width:160px;height:160px}.tdcu-cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:tdcuSpin 12s linear infinite}.tdcu-face{position:absolute;width:160px;height:160px;border:1px solid rgba(200,169,126,.15);display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:.875rem;font-weight:700;color:#c8a97e;backdrop-filter:blur(4px)}.tdcu-f1{background:rgba(200,169,126,.08);transform:translateZ(80px)}.tdcu-f2{background:rgba(200,169,126,.06);transform:rotateY(90deg) translateZ(80px)}.tdcu-f3{background:rgba(200,169,126,.04);transform:rotateY(180deg) translateZ(80px)}.tdcu-f4{background:rgba(200,169,126,.06);transform:rotateY(-90deg) translateZ(80px)}.tdcu-f5{background:rgba(200,169,126,.05);transform:rotateX(90deg) translateZ(80px)}.tdcu-f6{background:rgba(200,169,126,.05);transform:rotateX(-90deg) translateZ(80px)}@keyframes tdcuSpin{0%{transform:rotateX(-15deg) rotateY(0deg)}100%{transform:rotateX(-15deg) rotateY(360deg)}}</style><div class="tdcu-scene"><div class="tdcu-cube"><div class="tdcu-face tdcu-f1">Front</div><div class="tdcu-face tdcu-f2">Right</div><div class="tdcu-face tdcu-f3">Back</div><div class="tdcu-face tdcu-f4">Left</div><div class="tdcu-face tdcu-f5">Top</div><div class="tdcu-face tdcu-f6">Bottom</div></div></div></div>` },
+    },
+  },
+  {
+    id: 'anim-3d-tilt-card',
+    label: 'Tilt Card',
+    category: 'animations', subcategory: '3d',
+    tags: ['animation', '3d', 'tilt', 'card', 'mouse', 'perspective', 'shine', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Tilt Card',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: { html: `<div style="width:100%;min-height:400px;background:#0a0a0a;border-radius:.75rem;display:flex;align-items:center;justify-content:center" id="tdtcWrap"><style>.tdtc-card{width:300px;height:200px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(200,169,126,.15);border-radius:1rem;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui,sans-serif;cursor:pointer;transition:transform .15s ease-out,box-shadow .15s ease-out;transform-style:preserve-3d;will-change:transform}.tdtc-card h3{color:#f6efe5;font-size:1.25rem;font-weight:800;margin:0 0 .25rem;transform:translateZ(30px)}.tdtc-card p{color:rgba(200,169,126,.6);font-size:.75rem;margin:0;transform:translateZ(20px)}.tdtc-shine{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.1),transparent 60%);opacity:0;transition:opacity .3s ease;pointer-events:none}</style><div class="tdtc-card" id="tdtcCard" style="perspective:800px"><div class="tdtc-shine" id="tdtcShine"></div><h3>Tilt Card</h3><p>Move your mouse</p></div><script>(function(){var card=document.getElementById('tdtcCard'),shine=document.getElementById('tdtcShine'),wrap=document.getElementById('tdtcWrap');if(!card||!shine||!wrap)return;card.addEventListener('mousemove',function(e){var r=card.getBoundingClientRect();var x=(e.clientX-r.left)/r.width;var y=(e.clientY-r.top)/r.height;var rotY=(x-.5)*25;var rotX=(y-.5)*-25;card.style.transform='perspective(800px) rotateX('+rotX+'deg) rotateY('+rotY+'deg) scale3d(1.05,1.05,1.05)';card.style.boxShadow='0 20px 60px rgba(200,169,126,.15)';shine.style.opacity='1';shine.style.background='radial-gradient(circle at '+x*100+'% '+y*100+'%,rgba(255,255,255,.12),transparent 60%)';});card.addEventListener('mouseleave',function(){card.style.transform='perspective(800px) rotateX(0) rotateY(0) scale3d(1,1,1)';card.style.boxShadow='none';shine.style.opacity='0';});})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-3d-carousel',
+    label: '3D Carousel',
+    category: 'animations', subcategory: '3d',
+    tags: ['animation', '3d', 'carousel', 'rotate', 'cards', 'auto', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: '3D Carousel',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: { html: `<div style="width:100%;min-height:400px;background:#0a0a0a;border-radius:.75rem;display:flex;align-items:center;justify-content:center"><style>.tdcr-scene{perspective:1000px;width:300px;height:200px;position:relative}.tdcr-ring{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:tdcrSpin 20s linear infinite}.tdcr-item{position:absolute;width:140px;height:160px;left:50%;top:50%;margin-left:-70px;margin-top:-80px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(200,169,126,.15);border-radius:.75rem;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui,sans-serif;backface-visibility:hidden}.tdcr-item h4{color:#f6efe5;font-size:.875rem;font-weight:700;margin:0 0 .25rem}.tdcr-item p{color:rgba(200,169,126,.5);font-size:.65rem;margin:0}.tdcr-i1{transform:rotateY(0deg) translateZ(200px)}.tdcr-i2{transform:rotateY(72deg) translateZ(200px)}.tdcr-i3{transform:rotateY(144deg) translateZ(200px)}.tdcr-i4{transform:rotateY(216deg) translateZ(200px)}.tdcr-i5{transform:rotateY(288deg) translateZ(200px)}@keyframes tdcrSpin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}</style><div class="tdcr-scene"><div class="tdcr-ring"><div class="tdcr-item tdcr-i1"><h4>Card 1</h4><p>Design</p></div><div class="tdcr-item tdcr-i2"><h4>Card 2</h4><p>Strategy</p></div><div class="tdcr-item tdcr-i3"><h4>Card 3</h4><p>Develop</p></div><div class="tdcr-item tdcr-i4"><h4>Card 4</h4><p>Launch</p></div><div class="tdcr-item tdcr-i5"><h4>Card 5</h4><p>Grow</p></div></div></div></div>` },
+    },
+  },
+  {
+    id: 'anim-3d-fold-reveal',
+    label: 'Fold Reveal',
+    category: 'animations', subcategory: '3d',
+    tags: ['animation', '3d', 'fold', 'reveal', 'book', 'open', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Fold Reveal',
+      defaultStyle: { width: '100%', minHeight: '350px' },
+      defaultContent: { html: `<div style="width:100%;min-height:350px;background:#0a0a0a;border-radius:.75rem;display:flex;align-items:center;justify-content:center;padding:2rem"><style>.tdfr-book{display:flex;perspective:1200px;cursor:pointer}.tdfr-panel{width:140px;height:180px;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:.75rem;font-weight:700;color:#f6efe5;backface-visibility:hidden;transition:transform 1s cubic-bezier(.25,.46,.45,.94);transform-style:preserve-3d}.tdfr-p1{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(200,169,126,.15);border-radius:.75rem 0 0 .75rem;transform-origin:right center;z-index:3}.tdfr-p2{background:linear-gradient(135deg,rgba(200,169,126,.08),rgba(200,169,126,.04));border-top:1px solid rgba(200,169,126,.1);border-bottom:1px solid rgba(200,169,126,.1);color:#c8a97e;transform-origin:left center;z-index:2}.tdfr-p3{background:linear-gradient(135deg,#16213e,#1a1a2e);border:1px solid rgba(200,169,126,.15);border-radius:0 .75rem .75rem 0;transform-origin:left center;z-index:1}.tdfr-book:hover .tdfr-p1{transform:rotateY(-160deg)}.tdfr-book:hover .tdfr-p3{transform:rotateY(160deg)}</style><div class="tdfr-book"><div class="tdfr-panel tdfr-p1">Left Page</div><div class="tdfr-panel tdfr-p2">&#x2726; Center</div><div class="tdfr-panel tdfr-p3">Right Page</div></div></div>` },
+    },
+  },
+  {
+    id: 'anim-3d-perspective-grid',
+    label: 'Perspective Grid',
+    category: 'animations', subcategory: '3d',
+    tags: ['animation', '3d', 'perspective', 'grid', 'hover', 'cards', 'vanishing', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Perspective Grid',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: { html: `<div style="width:100%;min-height:400px;background:#0a0a0a;border-radius:.75rem;display:flex;align-items:center;justify-content:center;padding:2rem"><style>.tdpg-scene{perspective:800px;perspective-origin:50% 20%}.tdpg-grid{display:grid;grid-template-columns:repeat(3,100px);gap:12px;transform:rotateX(45deg) rotateZ(-5deg);transform-style:preserve-3d}.tdpg-cell{width:100px;height:80px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(200,169,126,.1);border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:.7rem;font-weight:700;color:rgba(200,169,126,.4);transition:transform .4s cubic-bezier(.25,.46,.45,.94),background .4s ease,box-shadow .4s ease;cursor:pointer}.tdpg-cell:hover{transform:translateZ(40px);background:linear-gradient(135deg,rgba(200,169,126,.12),rgba(200,169,126,.06));border-color:rgba(200,169,126,.25);color:#c8a97e;box-shadow:0 20px 40px rgba(0,0,0,.4)}</style><div class="tdpg-scene"><div class="tdpg-grid"><div class="tdpg-cell">01</div><div class="tdpg-cell">02</div><div class="tdpg-cell">03</div><div class="tdpg-cell">04</div><div class="tdpg-cell">05</div><div class="tdpg-cell">06</div><div class="tdpg-cell">07</div><div class="tdpg-cell">08</div><div class="tdpg-cell">09</div></div></div></div>` },
+    },
+  },
+]
+
+// ─── COUNTER EFFECTS ───
+
+const COUNTER_EFFECTS: LibraryElementItem[] = [
+  {
+    id: 'anim-counter-roll',
+    label: 'Rolling Counter',
+    category: 'animations', subcategory: 'counters',
+    tags: ['animation', 'counter', 'roll', 'odometer', 'number', 'digit', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Rolling Counter',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;background:#0a0a0a;border-radius:.75rem;display:flex;align-items:center;justify-content:center;gap:4px"><style>.ctrl-digit{width:50px;height:70px;overflow:hidden;position:relative;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(200,169,126,.15);border-radius:.5rem}.ctrl-strip{display:flex;flex-direction:column;transition:transform 1.5s cubic-bezier(.25,.46,.45,.94)}.ctrl-num{width:50px;height:70px;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:2rem;font-weight:900;color:#c8a97e}.ctrl-sep{width:20px;height:70px;display:flex;align-items:center;justify-content:center;color:rgba(200,169,126,.3);font-family:system-ui,sans-serif;font-size:1.5rem;font-weight:700}</style><div class="ctrl-digit"><div class="ctrl-strip" id="ctrlD1"><div class="ctrl-num">0</div><div class="ctrl-num">1</div></div></div><div class="ctrl-sep">,</div><div class="ctrl-digit"><div class="ctrl-strip" id="ctrlD2"><div class="ctrl-num">0</div><div class="ctrl-num">1</div><div class="ctrl-num">2</div></div></div><div class="ctrl-digit"><div class="ctrl-strip" id="ctrlD3"><div class="ctrl-num">0</div><div class="ctrl-num">1</div><div class="ctrl-num">2</div><div class="ctrl-num">3</div></div></div><div class="ctrl-digit"><div class="ctrl-strip" id="ctrlD4"><div class="ctrl-num">0</div><div class="ctrl-num">1</div><div class="ctrl-num">2</div><div class="ctrl-num">3</div><div class="ctrl-num">4</div></div></div><script>(function(){var digits=[{el:'ctrlD1',to:1},{el:'ctrlD2',to:2},{el:'ctrlD3',to:3},{el:'ctrlD4',to:4}];function roll(){digits.forEach(function(d,i){var el=document.getElementById(d.el);if(el){setTimeout(function(){el.style.transform='translateY(-'+d.to*70+'px)';},i*200);}});}var wrap=digits[0]&&document.getElementById(digits[0].el);if(!wrap)return;var p=wrap.closest('[style]');if(!p)return;var o=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){roll();o.disconnect();}});},{threshold:0.5});o.observe(p);})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-counter-increment',
+    label: 'Increment Counter',
+    category: 'animations', subcategory: 'counters',
+    tags: ['animation', 'counter', 'increment', 'stats', 'numbers', 'count-up', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Increment Counter',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;background:#0a0a0a;border-radius:.75rem;display:flex;align-items:center;justify-content:center;gap:2rem;padding:2rem;flex-wrap:wrap" id="ctinWrap"><style>.ctin-stat{text-align:center;font-family:system-ui,sans-serif}.ctin-val{font-size:2.5rem;font-weight:900;color:#c8a97e;display:block}.ctin-suffix{font-size:1.5rem;font-weight:700;color:rgba(200,169,126,.5)}.ctin-label{font-size:.7rem;color:rgba(246,239,229,.35);margin-top:.25rem;text-transform:uppercase;letter-spacing:.1em}</style><div class="ctin-stat"><span class="ctin-val" data-target="150" id="ctin1">0</span><span class="ctin-suffix">+</span><div class="ctin-label">Projects</div></div><div class="ctin-stat"><span class="ctin-val" data-target="98" id="ctin2">0</span><span class="ctin-suffix">%</span><div class="ctin-label">Satisfaction</div></div><div class="ctin-stat"><span class="ctin-val" data-target="24" id="ctin3">0</span><span class="ctin-suffix">/7</span><div class="ctin-label">Support</div></div><div class="ctin-stat"><span class="ctin-val" data-target="50" id="ctin4">0</span><span class="ctin-suffix">k</span><div class="ctin-label">Users</div></div><script>(function(){var els=['ctin1','ctin2','ctin3','ctin4'];var w=document.getElementById('ctinWrap');if(!w)return;function animate(){els.forEach(function(id){var el=document.getElementById(id);if(!el)return;var target=parseInt(el.getAttribute('data-target'))||0;var dur=2000;var start=performance.now();function step(now){var pct=Math.min((now-start)/dur,1);var ease=1-Math.pow(1-pct,3);el.textContent=Math.floor(ease*target);if(pct<1)requestAnimationFrame(step);}requestAnimationFrame(step);});}var o=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){animate();o.disconnect();}});},{threshold:0.5});o.observe(w);})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-counter-flip',
+    label: 'Flip Counter',
+    category: 'animations', subcategory: 'counters',
+    tags: ['animation', 'counter', 'flip', 'clock', 'departure', 'board', 'digit', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Flip Counter',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;background:#0a0a0a;border-radius:.75rem;display:flex;align-items:center;justify-content:center;gap:8px;padding:2rem"><style>.ctfl-digit{width:55px;height:80px;position:relative;perspective:400px}.ctfl-top,.ctfl-bottom{position:absolute;width:100%;height:50%;overflow:hidden;background:#1a1a2e;border:1px solid rgba(200,169,126,.1);display:flex;align-items:center;justify-content:center}.ctfl-top{top:0;border-radius:.5rem .5rem 0 0;border-bottom:1px solid rgba(0,0,0,.4);align-items:flex-end;padding-bottom:0}.ctfl-bottom{bottom:0;border-radius:0 0 .5rem .5rem;align-items:flex-start;padding-top:0}.ctfl-num{font-family:system-ui,sans-serif;font-size:2.5rem;font-weight:900;color:#c8a97e;line-height:80px}.ctfl-top .ctfl-num{margin-bottom:-40px}.ctfl-bottom .ctfl-num{margin-top:-40px}.ctfl-flap{position:absolute;top:0;left:0;width:100%;height:50%;overflow:hidden;background:#1a1a2e;border:1px solid rgba(200,169,126,.1);border-radius:.5rem .5rem 0 0;transform-origin:bottom center;z-index:2;display:flex;align-items:flex-end;justify-content:center;padding-bottom:0}.ctfl-flap .ctfl-num{margin-bottom:-40px}.ctfl-flap.ctfl-flip{animation:ctflFlip .6s ease-in-out forwards}@keyframes ctflFlip{0%{transform:rotateX(0deg)}50%{transform:rotateX(-90deg)}100%{transform:rotateX(-180deg);opacity:0}}.ctfl-sep{font-family:system-ui,sans-serif;font-size:2rem;color:rgba(200,169,126,.3);font-weight:900;align-self:center}</style><div class="ctfl-digit" id="ctflD0"><div class="ctfl-top"><span class="ctfl-num">0</span></div><div class="ctfl-bottom"><span class="ctfl-num">0</span></div></div><div class="ctfl-digit" id="ctflD1"><div class="ctfl-top"><span class="ctfl-num">0</span></div><div class="ctfl-bottom"><span class="ctfl-num">0</span></div></div><div class="ctfl-sep">:</div><div class="ctfl-digit" id="ctflD2"><div class="ctfl-top"><span class="ctfl-num">0</span></div><div class="ctfl-bottom"><span class="ctfl-num">0</span></div></div><div class="ctfl-digit" id="ctflD3"><div class="ctfl-top"><span class="ctfl-num">0</span></div><div class="ctfl-bottom"><span class="ctfl-num">0</span></div></div><script>(function(){var targets=[1,2,3,4];var ids=['ctflD0','ctflD1','ctflD2','ctflD3'];function flipTo(id,val){var el=document.getElementById(id);if(!el)return;var topEl=el.querySelector('.ctfl-top .ctfl-num');var botEl=el.querySelector('.ctfl-bottom .ctfl-num');var flap=document.createElement('div');flap.className='ctfl-flap';flap.innerHTML='<span class="ctfl-num">'+topEl.textContent+'</span>';el.appendChild(flap);topEl.textContent=val;requestAnimationFrame(function(){flap.classList.add('ctfl-flip');});setTimeout(function(){botEl.textContent=val;if(flap.parentNode)flap.parentNode.removeChild(flap);},600);}var wrap=document.getElementById(ids[0]);if(!wrap)return;var p=wrap.closest('[style*="min-height"]');if(!p)return;var o=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){targets.forEach(function(v,i){setTimeout(function(){flipTo(ids[i],v);},i*400);});o.disconnect();}});},{threshold:0.5});o.observe(p);})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-counter-circle-progress',
+    label: 'Circle Progress',
+    category: 'animations', subcategory: 'counters',
+    tags: ['animation', 'counter', 'circle', 'progress', 'svg', 'percentage', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Circle Progress',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;background:#0a0a0a;border-radius:.75rem;display:flex;align-items:center;justify-content:center;gap:2.5rem;padding:2rem;flex-wrap:wrap" id="ctcpWrap"><style>.ctcp-item{text-align:center}.ctcp-ring{width:100px;height:100px;position:relative}.ctcp-ring svg{transform:rotate(-90deg)}.ctcp-ring circle{fill:none;stroke-width:6;stroke-linecap:round}.ctcp-bg{stroke:rgba(200,169,126,.1)}.ctcp-fg{stroke:#c8a97e;transition:stroke-dashoffset 2s cubic-bezier(.25,.46,.45,.94)}.ctcp-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:1.25rem;font-weight:900;color:#f6efe5}.ctcp-label{font-family:system-ui,sans-serif;font-size:.65rem;color:rgba(246,239,229,.35);margin-top:.5rem;text-transform:uppercase;letter-spacing:.1em}</style><div class="ctcp-item"><div class="ctcp-ring"><svg width="100" height="100"><circle class="ctcp-bg" cx="50" cy="50" r="42"/><circle class="ctcp-fg" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9" id="ctcpC1"/></svg><div class="ctcp-val" id="ctcpV1">0%</div></div><div class="ctcp-label">Design</div></div><div class="ctcp-item"><div class="ctcp-ring"><svg width="100" height="100"><circle class="ctcp-bg" cx="50" cy="50" r="42"/><circle class="ctcp-fg" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9" id="ctcpC2"/></svg><div class="ctcp-val" id="ctcpV2">0%</div></div><div class="ctcp-label">Code</div></div><div class="ctcp-item"><div class="ctcp-ring"><svg width="100" height="100"><circle class="ctcp-bg" cx="50" cy="50" r="42"/><circle class="ctcp-fg" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9" id="ctcpC3"/></svg><div class="ctcp-val" id="ctcpV3">0%</div></div><div class="ctcp-label">Strategy</div></div><script>(function(){var data=[{c:'ctcpC1',v:'ctcpV1',pct:75},{c:'ctcpC2',v:'ctcpV2',pct:90},{c:'ctcpC3',v:'ctcpV3',pct:60}];var circ=263.9;var w=document.getElementById('ctcpWrap');if(!w)return;function animate(){data.forEach(function(d,i){var c=document.getElementById(d.c),v=document.getElementById(d.v);if(!c||!v)return;var offset=circ-(d.pct/100)*circ;setTimeout(function(){c.style.strokeDashoffset=offset;var dur=2000,start=performance.now();function step(now){var pct=Math.min((now-start)/dur,1);var ease=1-Math.pow(1-pct,3);v.textContent=Math.floor(ease*d.pct)+'%';if(pct<1)requestAnimationFrame(step);}requestAnimationFrame(step);},i*300);});}var o=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){animate();o.disconnect();}});},{threshold:0.5});o.observe(w);})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-counter-bar-race',
+    label: 'Bar Race',
+    category: 'animations', subcategory: 'counters',
+    tags: ['animation', 'counter', 'bar', 'race', 'chart', 'horizontal', 'stagger', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Bar Race',
+      defaultStyle: { width: '100%', minHeight: '280px' },
+      defaultContent: { html: `<div style="width:100%;min-height:280px;background:#0a0a0a;border-radius:.75rem;display:flex;flex-direction:column;justify-content:center;gap:1rem;padding:2rem 2.5rem" id="ctbrWrap"><style>.ctbr-row{display:flex;align-items:center;gap:.75rem}.ctbr-label{font-family:system-ui,sans-serif;font-size:.7rem;font-weight:700;color:rgba(246,239,229,.5);width:60px;text-align:right;flex-shrink:0}.ctbr-track{flex:1;height:32px;background:rgba(200,169,126,.05);border-radius:.5rem;overflow:hidden;position:relative}.ctbr-bar{height:100%;border-radius:.5rem;display:flex;align-items:center;justify-content:flex-end;padding-right:.75rem;font-family:system-ui,sans-serif;font-size:.7rem;font-weight:800;color:#0a0a0a;width:0;transition:width 1.8s cubic-bezier(.25,.46,.45,.94)}.ctbr-b1{background:linear-gradient(90deg,#c8a97e,#f6efe5)}.ctbr-b2{background:linear-gradient(90deg,rgba(200,169,126,.7),#c8a97e)}.ctbr-b3{background:linear-gradient(90deg,rgba(200,169,126,.5),rgba(200,169,126,.8))}.ctbr-b4{background:linear-gradient(90deg,rgba(200,169,126,.3),rgba(200,169,126,.6))}</style><div class="ctbr-row"><span class="ctbr-label">Design</span><div class="ctbr-track"><div class="ctbr-bar ctbr-b1" id="ctbrB1">92%</div></div></div><div class="ctbr-row"><span class="ctbr-label">Strategy</span><div class="ctbr-track"><div class="ctbr-bar ctbr-b2" id="ctbrB2">78%</div></div></div><div class="ctbr-row"><span class="ctbr-label">Code</span><div class="ctbr-track"><div class="ctbr-bar ctbr-b3" id="ctbrB3">85%</div></div></div><div class="ctbr-row"><span class="ctbr-label">Growth</span><div class="ctbr-track"><div class="ctbr-bar ctbr-b4" id="ctbrB4">65%</div></div></div><script>(function(){var bars=[{id:'ctbrB1',w:'92%'},{id:'ctbrB2',w:'78%'},{id:'ctbrB3',w:'85%'},{id:'ctbrB4',w:'65%'}];var w=document.getElementById('ctbrWrap');if(!w)return;function animate(){bars.forEach(function(b,i){var el=document.getElementById(b.id);if(!el)return;setTimeout(function(){el.style.width=b.w;},i*250);});}var o=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){animate();o.disconnect();}});},{threshold:0.5});o.observe(w);})()</script></div>` },
+    },
+  },
+]
+
 // ─── EXPORT ───
 
 export const LIBRARY_ANIMATIONS: LibraryElementItem[] = [
@@ -3082,4 +3301,7 @@ export const LIBRARY_ANIMATIONS: LibraryElementItem[] = [
   ...MORPH_TRANSITIONS,
   ...SVG_ANIMATIONS,
   ...TEXTURE_EFFECTS,
+  ...PARALLAX_EFFECTS,
+  ...THREE_D_EFFECTS,
+  ...COUNTER_EFFECTS,
 ]
