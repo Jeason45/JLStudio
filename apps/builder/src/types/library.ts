@@ -78,6 +78,10 @@ export const LIBRARY_SUBCATEGORIES: Record<LibraryCategory, LibrarySubcategory[]
     { id: 'lists', label: 'Listes' },
     { id: 'links', label: 'Liens' },
     { id: 'navigation', label: 'Navigation' },
+    { id: 'inputs', label: 'Champs de formulaire' },
+    { id: 'social', label: 'Liens sociaux' },
+    { id: 'progress', label: 'Progression' },
+    { id: 'avatars', label: 'Avatars' },
   ],
   illustrations: [
     { id: 'abstract', label: 'Abstraites' },

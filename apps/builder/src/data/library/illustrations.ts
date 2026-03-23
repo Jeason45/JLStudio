@@ -427,6 +427,112 @@ const GLASSMORPHIC: LibraryElementItem[] = [
   },
 ]
 
+// ─── GEOMETRIC PATTERNS ───
+
+const GEOMETRIC_PATTERNS: LibraryElementItem[] = [
+  {
+    id: 'illus-grid-dots',
+    label: 'Dot Grid',
+    category: 'illustrations', subcategory: 'patterns',
+    tags: ['pattern', 'dots', 'grid', 'subtle', 'background'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Dot Grid',
+      defaultStyle: { width: '200px', height: '200px', opacity: 0.15 },
+      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#0f172a"/><defs><pattern id="dot-grid-geo" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="rgba(255,255,255,0.4)"/></pattern></defs><rect width="200" height="200" fill="url(#dot-grid-geo)"/></svg>' },
+    },
+  },
+  {
+    id: 'illus-isometric-cubes',
+    label: 'Isometric Cubes',
+    category: 'illustrations', subcategory: 'patterns',
+    tags: ['pattern', 'isometric', 'cubes', '3d', 'monochrome'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Isometric Cubes',
+      defaultStyle: { width: '200px', height: '200px', opacity: 0.2 },
+      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="iso-cubes-geo" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><path d="M30 0 L60 17.3 L60 52 L30 34.7 Z" fill="rgba(255,255,255,0.08)"/><path d="M30 0 L0 17.3 L0 52 L30 34.7 Z" fill="rgba(255,255,255,0.15)"/><path d="M0 17.3 L30 0 L60 17.3 L30 34.7 Z" fill="rgba(255,255,255,0.22)"/></pattern></defs><rect width="200" height="200" fill="url(#iso-cubes-geo)"/></svg>' },
+    },
+  },
+  {
+    id: 'illus-diagonal-lines',
+    label: 'Diagonal Lines',
+    category: 'illustrations', subcategory: 'patterns',
+    tags: ['pattern', 'diagonal', 'lines', 'subtle', 'overlay'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Diagonal Lines',
+      defaultStyle: { width: '200px', height: '200px', opacity: 0.12 },
+      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="diag-lines-geo" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="14" stroke="rgba(255,255,255,0.3)" stroke-width="0.75"/></pattern></defs><rect width="200" height="200" fill="url(#diag-lines-geo)"/></svg>' },
+    },
+  },
+  {
+    id: 'illus-hexagon-grid',
+    label: 'Hexagon Grid',
+    category: 'illustrations', subcategory: 'patterns',
+    tags: ['pattern', 'hexagon', 'honeycomb', 'grid', 'gradient'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Hexagon Grid',
+      defaultStyle: { width: '200px', height: '200px', opacity: 0.18 },
+      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hex-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="rgba(99,102,241,0.3)"/><stop offset="100%" stop-color="rgba(168,85,247,0.3)"/></linearGradient><pattern id="hex-grid-geo" x="0" y="0" width="40" height="46.19" patternUnits="userSpaceOnUse"><polygon points="20,2 37.32,11.1 37.32,28.1 20,37.19 2.68,28.1 2.68,11.1" fill="none" stroke="url(#hex-grad)" stroke-width="0.75"/><polygon points="40,25.1 57.32,34.19 57.32,51.19 40,60.29 22.68,51.19 22.68,34.19" fill="none" stroke="url(#hex-grad)" stroke-width="0.75" transform="translate(-20,-23.1)"/></pattern></defs><rect width="200" height="200" fill="url(#hex-grid-geo)"/></svg>' },
+    },
+  },
+]
+
+// ─── LINE ART ───
+
+const LINE_ART: LibraryElementItem[] = [
+  {
+    id: 'illus-line-wave',
+    label: 'Wave Line',
+    category: 'illustrations', subcategory: 'decorative',
+    tags: ['line-art', 'wave', 'elegant', 'accent', 'minimal'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Wave Line',
+      defaultStyle: { width: '200px', height: '200px' },
+      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M10 100 C 40 60, 70 140, 100 100 S 160 60, 190 100" fill="none" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/></svg>' },
+    },
+  },
+  {
+    id: 'illus-line-circles',
+    label: 'Concentric Circles',
+    category: 'illustrations', subcategory: 'decorative',
+    tags: ['line-art', 'circles', 'concentric', 'minimal', 'geometric'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Concentric Circles',
+      defaultStyle: { width: '200px', height: '200px' },
+      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" stroke-width="1" opacity="0.15"/><circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/><circle cx="100" cy="100" r="40" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5"/><circle cx="100" cy="100" r="20" fill="none" stroke="currentColor" stroke-width="1" opacity="0.7"/></svg>' },
+    },
+  },
+  {
+    id: 'illus-line-geometric',
+    label: 'Geometric Composition',
+    category: 'illustrations', subcategory: 'decorative',
+    tags: ['line-art', 'geometric', 'abstract', 'triangles', 'composition'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Geometric Composition',
+      defaultStyle: { width: '200px', height: '200px' },
+      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,20 170,140 30,140" fill="none" stroke="currentColor" stroke-width="1" opacity="0.4"/><circle cx="100" cy="100" r="50" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/><line x1="40" y1="40" x2="160" y2="160" stroke="currentColor" stroke-width="0.75" opacity="0.25"/><line x1="160" y1="40" x2="40" y2="160" stroke="currentColor" stroke-width="0.75" opacity="0.25"/><circle cx="100" cy="100" r="5" fill="currentColor" opacity="0.4"/><polygon points="100,55 135,115 65,115" fill="none" stroke="currentColor" stroke-width="0.75" opacity="0.5"/></svg>' },
+    },
+  },
+  {
+    id: 'illus-line-flow',
+    label: 'Flow Lines',
+    category: 'illustrations', subcategory: 'decorative',
+    tags: ['line-art', 'flow', 'curves', 'organic', 'elegant'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Flow Lines',
+      defaultStyle: { width: '200px', height: '200px' },
+      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M20 80 C 60 20, 100 160, 140 80 S 200 40, 200 100" fill="none" stroke="currentColor" stroke-width="1" opacity="0.35" stroke-linecap="round"/><path d="M0 110 C 50 60, 90 180, 140 110 S 190 70, 210 120" fill="none" stroke="currentColor" stroke-width="1" opacity="0.25" stroke-linecap="round"/><path d="M10 140 C 40 90, 100 190, 150 130 S 180 100, 200 140" fill="none" stroke="currentColor" stroke-width="1" opacity="0.15" stroke-linecap="round"/></svg>' },
+    },
+  },
+]
+
 export const LIBRARY_ILLUSTRATIONS: LibraryElementItem[] = [
   ...BLOBS,
   ...GRADIENTS,
@@ -435,4 +541,6 @@ export const LIBRARY_ILLUSTRATIONS: LibraryElementItem[] = [
   ...MESH_GRADIENTS,
   ...ABSTRACT_SHAPES,
   ...GLASSMORPHIC,
+  ...GEOMETRIC_PATTERNS,
+  ...LINE_ART,
 ]

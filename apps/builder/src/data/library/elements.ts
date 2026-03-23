@@ -981,6 +981,696 @@ const NAVIGATION: LibraryElementItem[] = [
   },
 ]
 
+// ─── FORM INPUTS ───
+
+const FORM_INPUTS: LibraryElementItem[] = [
+  {
+    id: 'el-input-text',
+    label: 'Text Input',
+    category: 'elements', subcategory: 'inputs',
+    tags: ['input', 'text', 'form', 'field', 'name'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Text Input',
+      defaultStyle: { width: '100%', minHeight: '48px' },
+      defaultContent: {
+        html: `<div class="jl-inp-text" style="width:100%;font-family:system-ui,-apple-system,sans-serif"><label style="display:block;font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.6);margin-bottom:8px;letter-spacing:0.02em">Full Name</label><input type="text" placeholder="Your name" style="width:100%;height:48px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0 16px;font-size:0.9375rem;color:#f6efe5;outline:none;box-sizing:border-box;transition:all 0.25s ease" onfocus="this.style.borderColor='rgba(99,139,255,0.6)';this.style.boxShadow='0 0 0 3px rgba(99,139,255,0.15)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.boxShadow='none'"/></div>`
+      }
+    }
+  },
+  {
+    id: 'el-input-email',
+    label: 'Email Input',
+    category: 'elements', subcategory: 'inputs',
+    tags: ['input', 'email', 'form', 'field', 'icon'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Email Input',
+      defaultStyle: { width: '100%', minHeight: '48px' },
+      defaultContent: {
+        html: `<div class="jl-inp-email" style="width:100%;font-family:system-ui,-apple-system,sans-serif"><label style="display:block;font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.6);margin-bottom:8px;letter-spacing:0.02em">Email Address</label><div style="position:relative"><svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(246,239,229,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><input type="email" placeholder="email@example.com" style="width:100%;height:48px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0 16px 0 42px;font-size:0.9375rem;color:#f6efe5;outline:none;box-sizing:border-box;transition:all 0.25s ease" onfocus="this.style.borderColor='rgba(99,139,255,0.6)';this.style.boxShadow='0 0 0 3px rgba(99,139,255,0.15)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.boxShadow='none'"/></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-input-password',
+    label: 'Password Input',
+    category: 'elements', subcategory: 'inputs',
+    tags: ['input', 'password', 'form', 'field', 'toggle', 'eye'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Password Input',
+      defaultStyle: { width: '100%', minHeight: '48px' },
+      defaultContent: {
+        html: `<div class="jl-inp-pwd" style="width:100%;font-family:system-ui,-apple-system,sans-serif"><label style="display:block;font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.6);margin-bottom:8px;letter-spacing:0.02em">Password</label><div style="position:relative"><input id="jl-pwd-field" type="password" value="mypassword" style="width:100%;height:48px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0 48px 0 16px;font-size:0.9375rem;color:#f6efe5;outline:none;box-sizing:border-box;transition:all 0.25s ease" onfocus="this.style.borderColor='rgba(99,139,255,0.6)';this.style.boxShadow='0 0 0 3px rgba(99,139,255,0.15)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.boxShadow='none'"/><button onclick="var f=document.getElementById('jl-pwd-field');f.type=f.type==='password'?'text':'password'" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:36px;height:36px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:background 0.2s" onmouseenter="this.style.background='rgba(255,255,255,0.06)'" onmouseleave="this.style.background='none'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(246,239,229,0.4)" stroke-width="1.5" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-input-textarea',
+    label: 'Textarea',
+    category: 'elements', subcategory: 'inputs',
+    tags: ['input', 'textarea', 'form', 'field', 'multiline', 'message'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Textarea',
+      defaultStyle: { width: '100%', minHeight: '140px' },
+      defaultContent: {
+        html: `<div class="jl-inp-ta" style="width:100%;font-family:system-ui,-apple-system,sans-serif"><label style="display:block;font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.6);margin-bottom:8px;letter-spacing:0.02em">Message</label><textarea rows="4" placeholder="Write your message..." style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px 16px;font-size:0.9375rem;color:#f6efe5;outline:none;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;transition:all 0.25s ease;min-height:110px" onfocus="this.style.borderColor='rgba(99,139,255,0.6)';this.style.boxShadow='0 0 0 3px rgba(99,139,255,0.15)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.boxShadow='none'"></textarea></div>`
+      }
+    }
+  },
+  {
+    id: 'el-input-select',
+    label: 'Select / Dropdown',
+    category: 'elements', subcategory: 'inputs',
+    tags: ['input', 'select', 'dropdown', 'form', 'field', 'chevron'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Select Dropdown',
+      defaultStyle: { width: '100%', minHeight: '48px' },
+      defaultContent: {
+        html: `<div class="jl-inp-sel" style="width:100%;font-family:system-ui,-apple-system,sans-serif"><label style="display:block;font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.6);margin-bottom:8px;letter-spacing:0.02em">Category</label><div style="position:relative"><select style="width:100%;height:48px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0 40px 0 16px;font-size:0.9375rem;color:#f6efe5;outline:none;box-sizing:border-box;appearance:none;-webkit-appearance:none;cursor:pointer;transition:all 0.25s ease" onfocus="this.style.borderColor='rgba(99,139,255,0.6)';this.style.boxShadow='0 0 0 3px rgba(99,139,255,0.15)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.boxShadow='none'"><option value="" style="background:#1a1a1a">Select an option</option><option value="design" style="background:#1a1a1a">Design</option><option value="development" style="background:#1a1a1a">Development</option><option value="marketing" style="background:#1a1a1a">Marketing</option></select><svg style="position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(246,239,229,0.4)" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-input-file',
+    label: 'File Upload',
+    category: 'elements', subcategory: 'inputs',
+    tags: ['input', 'file', 'upload', 'form', 'dropzone', 'drag'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'File Upload',
+      defaultStyle: { width: '100%', minHeight: '140px' },
+      defaultContent: {
+        html: `<div class="jl-inp-file" style="width:100%;font-family:system-ui,-apple-system,sans-serif"><div class="jl-dropzone" style="width:100%;min-height:130px;border:2px dashed rgba(255,255,255,0.12);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;transition:all 0.3s ease;padding:24px;box-sizing:border-box" onmouseenter="this.style.borderColor='rgba(99,139,255,0.4)';this.style.background='rgba(99,139,255,0.04)'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.12)';this.style.background='transparent'"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(246,239,229,0.3)" stroke-width="1.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span style="font-size:0.9375rem;color:rgba(246,239,229,0.5);font-weight:500">Drop files or click to upload</span><span style="font-size:0.75rem;color:rgba(246,239,229,0.25)">PNG, JPG, PDF up to 10MB</span></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-input-range',
+    label: 'Range Slider',
+    category: 'elements', subcategory: 'inputs',
+    tags: ['input', 'range', 'slider', 'form', 'field', 'value'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Range Slider',
+      defaultStyle: { width: '100%', minHeight: '56px' },
+      defaultContent: {
+        html: `<div class="jl-inp-range" style="width:100%;font-family:system-ui,-apple-system,sans-serif"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><label style="font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.6);letter-spacing:0.02em">Budget</label><span id="jl-range-val" style="font-size:0.875rem;font-weight:600;color:#638bff">75%</span></div><style>.jl-range-s::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(90deg,#638bff 75%,rgba(255,255,255,0.08) 75%)}.jl-range-s::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#638bff;border:3px solid #1a1a1a;margin-top:-7px;cursor:pointer;box-shadow:0 0 0 3px rgba(99,139,255,0.2);transition:box-shadow 0.2s}.jl-range-s::-webkit-slider-thumb:hover{box-shadow:0 0 0 6px rgba(99,139,255,0.2)}</style><input class="jl-range-s" type="range" min="0" max="100" value="75" style="width:100%;appearance:none;-webkit-appearance:none;background:transparent;outline:none;cursor:pointer" oninput="document.getElementById('jl-range-val').textContent=this.value+'%';this.style.setProperty('--v',this.value)"/></div>`
+      }
+    }
+  },
+  {
+    id: 'el-input-date',
+    label: 'Date Input',
+    category: 'elements', subcategory: 'inputs',
+    tags: ['input', 'date', 'form', 'field', 'calendar', 'picker'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Date Input',
+      defaultStyle: { width: '100%', minHeight: '48px' },
+      defaultContent: {
+        html: `<div class="jl-inp-date" style="width:100%;font-family:system-ui,-apple-system,sans-serif"><label style="display:block;font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.6);margin-bottom:8px;letter-spacing:0.02em">Date</label><div style="position:relative"><svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(246,239,229,0.35)" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><input type="date" style="width:100%;height:48px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0 16px 0 42px;font-size:0.9375rem;color:#f6efe5;outline:none;box-sizing:border-box;transition:all 0.25s ease;color-scheme:dark" onfocus="this.style.borderColor='rgba(99,139,255,0.6)';this.style.boxShadow='0 0 0 3px rgba(99,139,255,0.15)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.boxShadow='none'"/></div></div>`
+      }
+    }
+  },
+]
+
+// ─── SOCIAL LINKS ───
+
+const SOCIAL_LINKS: LibraryElementItem[] = [
+  {
+    id: 'el-social-icons-row',
+    label: 'Social Icons Row',
+    category: 'elements', subcategory: 'social',
+    tags: ['social', 'icons', 'row', 'horizontal', 'hover', 'links'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Social Icons Row',
+      defaultStyle: { width: '100%', minHeight: '44px' },
+      defaultContent: {
+        html: `<div class="jl-soc-row" style="display:flex;align-items:center;gap:16px;font-family:system-ui,-apple-system,sans-serif"><style>.jl-soc-row a{display:flex;align-items:center;justify-content:center;width:40px;height:40px;transition:all 0.3s ease;opacity:0.5}.jl-soc-row a:hover{opacity:1;transform:scale(1.15)}</style><a href="#" aria-label="X/Twitter"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f6efe5"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a><a href="#" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="#f6efe5" stroke="none"/></svg></a><a href="#" aria-label="LinkedIn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5" stroke-linecap="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a><a href="#" aria-label="GitHub"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f6efe5"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></a><a href="#" aria-label="YouTube"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5" stroke-linecap="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.43z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="#f6efe5" stroke="none"/></svg></a></div>`
+      }
+    }
+  },
+  {
+    id: 'el-social-icons-circle',
+    label: 'Social Icons Circle',
+    category: 'elements', subcategory: 'social',
+    tags: ['social', 'icons', 'circle', 'hover', 'brand-color', 'links'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Social Icons Circle',
+      defaultStyle: { width: '100%', minHeight: '48px' },
+      defaultContent: {
+        html: `<div class="jl-soc-circle" style="display:flex;align-items:center;gap:12px;font-family:system-ui,-apple-system,sans-serif"><style>.jl-soc-circle a{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);transition:all 0.3s ease;text-decoration:none}.jl-soc-circle a:hover{transform:translateY(-2px)}.jl-soc-c-tw:hover{background:#1d9bf0!important;border-color:#1d9bf0!important}.jl-soc-c-ig:hover{background:#e4405f!important;border-color:#e4405f!important}.jl-soc-c-li:hover{background:#0a66c2!important;border-color:#0a66c2!important}.jl-soc-c-gh:hover{background:#333!important;border-color:#555!important}.jl-soc-c-yt:hover{background:#ff0000!important;border-color:#ff0000!important}</style><a href="#" class="jl-soc-c-tw" aria-label="X/Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="#f6efe5"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a><a href="#" class="jl-soc-c-ig" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="#f6efe5" stroke="none"/></svg></a><a href="#" class="jl-soc-c-li" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a><a href="#" class="jl-soc-c-gh" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="#f6efe5"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></a><a href="#" class="jl-soc-c-yt" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.43z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="#f6efe5" stroke="none"/></svg></a></div>`
+      }
+    }
+  },
+  {
+    id: 'el-social-icons-pill',
+    label: 'Social Pill Buttons',
+    category: 'elements', subcategory: 'social',
+    tags: ['social', 'pill', 'buttons', 'username', 'monochrome', 'links'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Social Pill Buttons',
+      defaultStyle: { width: '100%', minHeight: '44px' },
+      defaultContent: {
+        html: `<div class="jl-soc-pill" style="display:flex;flex-wrap:wrap;gap:10px;font-family:system-ui,-apple-system,sans-serif"><style>.jl-soc-pill a{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);text-decoration:none;font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.6);transition:all 0.3s ease;white-space:nowrap}.jl-soc-pill a:hover{color:#f6efe5;background:rgba(99,139,255,0.1);border-color:rgba(99,139,255,0.3)}</style><a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>@studio</a><a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg>@studio.design</a><a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>/in/studio</a><a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>@studio</a></div>`
+      }
+    }
+  },
+  {
+    id: 'el-social-share',
+    label: 'Share Bar',
+    category: 'elements', subcategory: 'social',
+    tags: ['social', 'share', 'bar', 'buttons', 'copy', 'links'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Share Bar',
+      defaultStyle: { width: '100%', minHeight: '48px' },
+      defaultContent: {
+        html: `<div class="jl-soc-share" style="display:flex;align-items:center;gap:16px;font-family:system-ui,-apple-system,sans-serif"><span style="font-size:0.8125rem;font-weight:600;color:rgba(246,239,229,0.4);text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap">Share this</span><div style="width:1px;height:20px;background:rgba(255,255,255,0.08)"></div><div style="display:flex;gap:8px"><style>.jl-share-btn{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:all 0.3s ease;text-decoration:none}.jl-share-btn:hover{background:rgba(255,255,255,0.08);transform:translateY(-2px)}</style><a href="#" class="jl-share-btn" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="#f6efe5"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a><a href="#" class="jl-share-btn" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a><a href="#" class="jl-share-btn" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a><a href="#" class="jl-share-btn" aria-label="Copy Link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></a></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-social-follow',
+    label: 'Follow Card',
+    category: 'elements', subcategory: 'social',
+    tags: ['social', 'follow', 'card', 'counts', 'followers', 'cta'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Follow Card',
+      defaultStyle: { width: '100%', minHeight: '160px' },
+      defaultContent: {
+        html: `<div class="jl-soc-follow" style="width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:28px 32px;font-family:system-ui,-apple-system,sans-serif"><h4 style="font-size:1.125rem;font-weight:600;color:#f6efe5;margin:0 0 6px;letter-spacing:-0.01em">Follow us</h4><p style="font-size:0.875rem;color:rgba(246,239,229,0.4);margin:0 0 20px;line-height:1.5">Stay connected and get the latest updates</p><div style="display:flex;flex-wrap:wrap;gap:10px"><style>.jl-follow-btn{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);text-decoration:none;transition:all 0.3s ease;cursor:pointer}.jl-follow-btn:hover{background:rgba(255,255,255,0.08);transform:translateY(-1px)}.jl-follow-cnt{font-size:0.75rem;color:rgba(246,239,229,0.3);font-weight:500}</style><a href="#" class="jl-follow-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="#f6efe5"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><span class="jl-follow-cnt">12.4K</span></a><a href="#" class="jl-follow-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="#f6efe5" stroke="none"/></svg><span class="jl-follow-cnt">8.2K</span></a><a href="#" class="jl-follow-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg><span class="jl-follow-cnt">5.1K</span></a><a href="#" class="jl-follow-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f6efe5" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.43z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="#f6efe5" stroke="none"/></svg><span class="jl-follow-cnt">3.7K</span></a></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-social-icons-minimal',
+    label: 'Social Icons Minimal',
+    category: 'elements', subcategory: 'social',
+    tags: ['social', 'icons', 'minimal', 'footer', 'subtle', 'inline'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Social Icons Minimal',
+      defaultStyle: { width: '100%', minHeight: '24px' },
+      defaultContent: {
+        html: `<div class="jl-soc-min" style="display:flex;align-items:center;gap:20px;font-family:system-ui,-apple-system,sans-serif"><style>.jl-soc-min a{display:inline-flex;color:rgba(246,239,229,0.3);transition:color 0.3s ease;text-decoration:none}.jl-soc-min a:hover{color:#f6efe5}</style><a href="#" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a><a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a><a href="#" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a><a href="#" aria-label="GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></a></div>`
+      }
+    }
+  },
+]
+
+// ─── PROGRESS ───
+
+const PROGRESS: LibraryElementItem[] = [
+  {
+    id: 'el-progress-bar',
+    label: 'Progress Bar',
+    category: 'elements', subcategory: 'progress',
+    tags: ['progress', 'bar', 'percentage', 'fill', 'animated'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Progress Bar',
+      defaultStyle: { width: '100%', minHeight: '48px' },
+      defaultContent: {
+        html: `<div class="jl-prog-bar" style="width:100%;font-family:system-ui,-apple-system,sans-serif"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.6)">Progress</span><span style="font-size:0.8125rem;font-weight:600;color:#638bff">72%</span></div><div style="width:100%;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden"><div style="width:72%;height:100%;background:linear-gradient(90deg,#638bff,#8b5cf6);border-radius:4px;animation:jl-prog-fill 1.5s ease-out forwards"></div></div><style>@keyframes jl-prog-fill{from{width:0}to{width:72%}}</style></div>`
+      }
+    }
+  },
+  {
+    id: 'el-progress-circle',
+    label: 'Circular Progress',
+    category: 'elements', subcategory: 'progress',
+    tags: ['progress', 'circle', 'donut', 'svg', 'animated', 'percentage'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Circular Progress',
+      defaultStyle: { width: '140px', minHeight: '140px' },
+      defaultContent: {
+        html: `<div class="jl-prog-circ" style="width:140px;height:140px;position:relative;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif"><svg width="140" height="140" viewBox="0 0 140 140" style="transform:rotate(-90deg)"><circle cx="70" cy="70" r="58" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/><circle cx="70" cy="70" r="58" fill="none" stroke="url(#jl-prog-grad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="364.42" stroke-dashoffset="91.1" style="animation:jl-circ-fill 1.5s ease-out forwards"><animate attributeName="stroke-dashoffset" from="364.42" to="91.1" dur="1.5s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/></circle><defs><linearGradient id="jl-prog-grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#638bff"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs></svg><div style="position:absolute;text-align:center"><span style="font-size:2rem;font-weight:700;color:#f6efe5;letter-spacing:-0.02em">75</span><span style="font-size:0.875rem;font-weight:500;color:rgba(246,239,229,0.4)">%</span></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-progress-steps',
+    label: 'Step Indicator',
+    category: 'elements', subcategory: 'progress',
+    tags: ['progress', 'steps', 'indicator', 'numbered', 'wizard', 'stepper'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Step Indicator',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-prog-steps" style="width:100%;display:flex;align-items:center;justify-content:center;gap:0;font-family:system-ui,-apple-system,sans-serif"><style>.jl-step-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8125rem;font-weight:600;flex-shrink:0;transition:all 0.3s ease}.jl-step-line{flex:1;height:2px;max-width:80px;min-width:40px}.jl-step-done{background:#22c55e;color:#fff}.jl-step-active{background:#638bff;color:#fff;box-shadow:0 0 0 4px rgba(99,139,255,0.2)}.jl-step-pending{background:rgba(255,255,255,0.06);color:rgba(246,239,229,0.3);border:1px solid rgba(255,255,255,0.08)}.jl-line-done{background:#22c55e}.jl-line-pending{background:rgba(255,255,255,0.08)}</style><div class="jl-step-dot jl-step-done"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="jl-step-line jl-line-done"></div><div class="jl-step-dot jl-step-active">2</div><div class="jl-step-line jl-line-pending"></div><div class="jl-step-dot jl-step-pending">3</div><div class="jl-step-line jl-line-pending"></div><div class="jl-step-dot jl-step-pending">4</div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-progress-skills',
+    label: 'Skills Bars',
+    category: 'elements', subcategory: 'progress',
+    tags: ['progress', 'skills', 'bars', 'labeled', 'animated', 'multiple'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Skills Bars',
+      defaultStyle: { width: '100%', minHeight: '180px' },
+      defaultContent: {
+        html: `<div class="jl-prog-skills" style="width:100%;display:flex;flex-direction:column;gap:18px;font-family:system-ui,-apple-system,sans-serif"><style>@keyframes jl-skill-fill{from{width:0}}.jl-skill-bar{height:6px;border-radius:3px;animation:jl-skill-fill 1.2s ease-out forwards}</style><div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.7)">Design</span><span style="font-size:0.8125rem;font-weight:600;color:rgba(246,239,229,0.4)">90%</span></div><div style="width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden"><div class="jl-skill-bar" style="width:90%;background:linear-gradient(90deg,#638bff,#818cf8)"></div></div></div><div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.7)">Development</span><span style="font-size:0.8125rem;font-weight:600;color:rgba(246,239,229,0.4)">85%</span></div><div style="width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden"><div class="jl-skill-bar" style="width:85%;background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div></div></div><div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.7)">SEO</span><span style="font-size:0.8125rem;font-weight:600;color:rgba(246,239,229,0.4)">70%</span></div><div style="width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden"><div class="jl-skill-bar" style="width:70%;background:linear-gradient(90deg,#22c55e,#4ade80)"></div></div></div><div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.7)">UX Research</span><span style="font-size:0.8125rem;font-weight:600;color:rgba(246,239,229,0.4)">95%</span></div><div style="width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden"><div class="jl-skill-bar" style="width:95%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-progress-stats',
+    label: 'Stats Counter',
+    category: 'elements', subcategory: 'progress',
+    tags: ['progress', 'stats', 'counter', 'numbers', 'metrics', 'animated'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Stats Counter',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: {
+        html: `<div class="jl-prog-stats" style="width:100%;display:flex;justify-content:center;gap:48px;flex-wrap:wrap;font-family:system-ui,-apple-system,sans-serif"><style>@keyframes jl-stat-up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.jl-stat-item{text-align:center;animation:jl-stat-up 0.6s ease-out forwards;opacity:0}.jl-stat-item:nth-child(1){animation-delay:0s}.jl-stat-item:nth-child(2){animation-delay:0.15s}.jl-stat-item:nth-child(3){animation-delay:0.3s}</style><div class="jl-stat-item"><div style="font-size:2.5rem;font-weight:700;color:#f6efe5;letter-spacing:-0.03em;line-height:1">150<span style="color:#638bff">+</span></div><div style="font-size:0.8125rem;color:rgba(246,239,229,0.4);margin-top:6px;font-weight:500">Projects Delivered</div></div><div class="jl-stat-item"><div style="font-size:2.5rem;font-weight:700;color:#f6efe5;letter-spacing:-0.03em;line-height:1">98<span style="color:#22c55e">%</span></div><div style="font-size:0.8125rem;color:rgba(246,239,229,0.4);margin-top:6px;font-weight:500">Client Satisfaction</div></div><div class="jl-stat-item"><div style="font-size:2.5rem;font-weight:700;color:#f6efe5;letter-spacing:-0.03em;line-height:1">24<span style="color:#f59e0b">/7</span></div><div style="font-size:0.8125rem;color:rgba(246,239,229,0.4);margin-top:6px;font-weight:500">Support Available</div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-progress-timeline-mini',
+    label: 'Mini Timeline',
+    category: 'elements', subcategory: 'progress',
+    tags: ['progress', 'timeline', 'mini', 'vertical', 'dates', 'steps'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Mini Timeline',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: {
+        html: `<div class="jl-prog-tl" style="width:100%;display:flex;flex-direction:column;gap:0;padding-left:20px;font-family:system-ui,-apple-system,sans-serif"><style>.jl-tl-entry{position:relative;padding:0 0 28px 28px;border-left:2px solid rgba(255,255,255,0.08)}.jl-tl-entry:last-child{border-left-color:transparent;padding-bottom:0}.jl-tl-dot{position:absolute;left:-7px;top:2px;width:12px;height:12px;border-radius:50%;border:2px solid #638bff;background:#0a0a0a}.jl-tl-entry:first-child .jl-tl-dot{background:#638bff}</style><div class="jl-tl-entry"><div class="jl-tl-dot"></div><span style="font-size:0.75rem;font-weight:600;color:#638bff;letter-spacing:0.04em;text-transform:uppercase">Jan 2026</span><p style="font-size:0.875rem;color:rgba(246,239,229,0.6);margin:4px 0 0;line-height:1.5">Project kickoff and initial research phase completed</p></div><div class="jl-tl-entry"><div class="jl-tl-dot"></div><span style="font-size:0.75rem;font-weight:600;color:rgba(246,239,229,0.35);letter-spacing:0.04em;text-transform:uppercase">Feb 2026</span><p style="font-size:0.875rem;color:rgba(246,239,229,0.6);margin:4px 0 0;line-height:1.5">Design system and prototyping in Figma</p></div><div class="jl-tl-entry"><div class="jl-tl-dot"></div><span style="font-size:0.75rem;font-weight:600;color:rgba(246,239,229,0.35);letter-spacing:0.04em;text-transform:uppercase">Mar 2026</span><p style="font-size:0.875rem;color:rgba(246,239,229,0.6);margin:4px 0 0;line-height:1.5">Development sprint and beta launch</p></div></div>`
+      }
+    }
+  },
+]
+
+// ─── AVATARS ───
+
+const AVATARS: LibraryElementItem[] = [
+  {
+    id: 'el-avatar-single',
+    label: 'Single Avatar',
+    category: 'elements', subcategory: 'avatars',
+    tags: ['avatar', 'single', 'image', 'initials', 'status', 'online'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Single Avatar',
+      defaultStyle: { width: '52px', minHeight: '52px' },
+      defaultContent: {
+        html: `<div class="jl-avatar-s" style="position:relative;width:52px;height:52px;font-family:system-ui,-apple-system,sans-serif"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#638bff,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:1.125rem;font-weight:600;color:#fff;letter-spacing:-0.01em">JL</div><div style="position:absolute;bottom:1px;right:1px;width:14px;height:14px;border-radius:50%;background:#22c55e;border:3px solid #0a0a0a"></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-avatar-group',
+    label: 'Avatar Group',
+    category: 'elements', subcategory: 'avatars',
+    tags: ['avatar', 'group', 'stacked', 'overlapping', 'counter', 'team'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Avatar Group',
+      defaultStyle: { width: '100%', minHeight: '44px' },
+      defaultContent: {
+        html: `<div class="jl-avatar-g" style="display:flex;align-items:center;font-family:system-ui,-apple-system,sans-serif"><style>.jl-avg-item{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8125rem;font-weight:600;color:#fff;border:3px solid #0a0a0a;margin-left:-10px;position:relative;transition:transform 0.2s ease}.jl-avg-item:first-child{margin-left:0}.jl-avg-item:hover{transform:translateY(-3px);z-index:10}</style><div class="jl-avg-item" style="background:linear-gradient(135deg,#638bff,#818cf8);z-index:4">AL</div><div class="jl-avg-item" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);z-index:3">MK</div><div class="jl-avg-item" style="background:linear-gradient(135deg,#ec4899,#f472b6);z-index:2">SR</div><div class="jl-avg-item" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);z-index:1">JP</div><div class="jl-avg-item" style="background:rgba(255,255,255,0.08);color:rgba(246,239,229,0.5);font-size:0.75rem;z-index:0">+3</div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-avatar-card',
+    label: 'Avatar Card',
+    category: 'elements', subcategory: 'avatars',
+    tags: ['avatar', 'card', 'name', 'role', 'bio', 'profile', 'horizontal'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Avatar Card',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: {
+        html: `<div class="jl-avatar-card" style="display:flex;align-items:center;gap:16px;padding:16px 20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;font-family:system-ui,-apple-system,sans-serif;transition:all 0.3s ease" onmouseenter="this.style.borderColor='rgba(255,255,255,0.12)';this.style.background='rgba(255,255,255,0.05)'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='rgba(255,255,255,0.03)'"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#638bff,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:1.125rem;font-weight:600;color:#fff;flex-shrink:0">JL</div><div style="flex:1;min-width:0"><div style="font-size:0.9375rem;font-weight:600;color:#f6efe5;letter-spacing:-0.01em">Jean Lemonier</div><div style="font-size:0.8125rem;color:#638bff;font-weight:500;margin-top:2px">Lead Designer</div><div style="font-size:0.8125rem;color:rgba(246,239,229,0.4);margin-top:4px;line-height:1.4">Crafting premium digital experiences for ambitious brands.</div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-avatar-with-badge',
+    label: 'Avatar + Badge',
+    category: 'elements', subcategory: 'avatars',
+    tags: ['avatar', 'badge', 'notification', 'count', 'alert', 'red'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Avatar + Badge',
+      defaultStyle: { width: '52px', minHeight: '52px' },
+      defaultContent: {
+        html: `<div class="jl-avatar-badge" style="position:relative;width:52px;height:52px;font-family:system-ui,-apple-system,sans-serif"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#638bff,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:1.125rem;font-weight:600;color:#fff;letter-spacing:-0.01em">JL</div><div style="position:absolute;top:-2px;right:-2px;min-width:20px;height:20px;border-radius:10px;background:#ef4444;border:3px solid #0a0a0a;display:flex;align-items:center;justify-content:center;padding:0 5px;box-sizing:border-box"><span style="font-size:0.6875rem;font-weight:700;color:#fff;line-height:1">3</span></div></div>`
+      }
+    }
+  },
+]
+
+// ─── TABS ───
+
+const TABS_ELEMENTS: LibraryElementItem[] = [
+  {
+    id: 'el-tabs-underline',
+    label: 'Underline Tabs',
+    category: 'elements', subcategory: 'tabs',
+    tags: ['tabs', 'underline', 'navigation', 'toggle', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Underline Tabs',
+      defaultStyle: { width: '100%', minHeight: '180px' },
+      defaultContent: {
+        html: `<div class="jl-tabs-ul" style="font-family:system-ui,-apple-system,sans-serif;width:100%"><style>.jl-tabs-ul-bar{display:flex;border-bottom:1px solid rgba(255,255,255,0.08);gap:0}.jl-tabs-ul-btn{padding:12px 24px;font-size:0.875rem;font-weight:500;color:rgba(246,239,229,0.4);background:none;border:none;cursor:pointer;position:relative;transition:color 0.25s ease}.jl-tabs-ul-btn:hover{color:rgba(246,239,229,0.7)}.jl-tabs-ul-btn.active{color:#f6efe5;font-weight:600}.jl-tabs-ul-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:#638bff;border-radius:1px}.jl-tabs-ul-panel{padding:20px 4px;font-size:0.875rem;color:rgba(246,239,229,0.6);line-height:1.6;display:none}.jl-tabs-ul-panel.active{display:block}</style><div class="jl-tabs-ul-bar"><button class="jl-tabs-ul-btn active" onclick="(function(b){b.closest('.jl-tabs-ul').querySelectorAll('.jl-tabs-ul-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-ul').querySelectorAll('.jl-tabs-ul-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-ul').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="t1">Overview</button><button class="jl-tabs-ul-btn" onclick="(function(b){b.closest('.jl-tabs-ul').querySelectorAll('.jl-tabs-ul-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-ul').querySelectorAll('.jl-tabs-ul-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-ul').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="t2">Features</button><button class="jl-tabs-ul-btn" onclick="(function(b){b.closest('.jl-tabs-ul').querySelectorAll('.jl-tabs-ul-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-ul').querySelectorAll('.jl-tabs-ul-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-ul').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="t3">Pricing</button></div><div class="jl-tabs-ul-panel active" data-tab="t1">Discover our comprehensive platform designed to elevate your digital presence with premium tools and seamless integrations.</div><div class="jl-tabs-ul-panel" data-tab="t2">Advanced analytics, real-time collaboration, custom workflows, and enterprise-grade security built for modern teams.</div><div class="jl-tabs-ul-panel" data-tab="t3">Flexible plans starting at $29/month. Scale as you grow with transparent pricing and no hidden fees.</div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-tabs-pills',
+    label: 'Pill Tabs',
+    category: 'elements', subcategory: 'tabs',
+    tags: ['tabs', 'pills', 'rounded', 'toggle', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Pill Tabs',
+      defaultStyle: { width: '100%', minHeight: '180px' },
+      defaultContent: {
+        html: `<div class="jl-tabs-pill" style="font-family:system-ui,-apple-system,sans-serif;width:100%"><style>.jl-tabs-pill-bar{display:flex;gap:6px;padding:4px;background:rgba(255,255,255,0.04);border-radius:12px;width:fit-content}.jl-tabs-pill-btn{padding:8px 20px;font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.45);background:none;border:none;border-radius:8px;cursor:pointer;transition:all 0.25s ease}.jl-tabs-pill-btn:hover{color:rgba(246,239,229,0.7)}.jl-tabs-pill-btn.active{background:#638bff;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(99,139,255,0.3)}.jl-tabs-pill-panel{padding:20px 4px;font-size:0.875rem;color:rgba(246,239,229,0.6);line-height:1.6;display:none}.jl-tabs-pill-panel.active{display:block}</style><div class="jl-tabs-pill-bar"><button class="jl-tabs-pill-btn active" onclick="(function(b){b.closest('.jl-tabs-pill').querySelectorAll('.jl-tabs-pill-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-pill').querySelectorAll('.jl-tabs-pill-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-pill').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="p1">Monthly</button><button class="jl-tabs-pill-btn" onclick="(function(b){b.closest('.jl-tabs-pill').querySelectorAll('.jl-tabs-pill-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-pill').querySelectorAll('.jl-tabs-pill-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-pill').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="p2">Quarterly</button><button class="jl-tabs-pill-btn" onclick="(function(b){b.closest('.jl-tabs-pill').querySelectorAll('.jl-tabs-pill-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-pill').querySelectorAll('.jl-tabs-pill-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-pill').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="p3">Annual</button></div><div class="jl-tabs-pill-panel active" data-tab="p1">Pay month-to-month with full flexibility. Cancel or upgrade at any time with no commitment.</div><div class="jl-tabs-pill-panel" data-tab="p2">Save 15% with quarterly billing. Ideal for growing teams looking for stability and savings.</div><div class="jl-tabs-pill-panel" data-tab="p3">Best value — save 30% annually. Priority support and early access to new features included.</div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-tabs-vertical',
+    label: 'Vertical Tabs',
+    category: 'elements', subcategory: 'tabs',
+    tags: ['tabs', 'vertical', 'sidebar', 'navigation', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Vertical Tabs',
+      defaultStyle: { width: '100%', minHeight: '220px' },
+      defaultContent: {
+        html: `<div class="jl-tabs-vert" style="font-family:system-ui,-apple-system,sans-serif;display:flex;gap:0;width:100%;min-height:200px"><style>.jl-tabs-vert-sidebar{display:flex;flex-direction:column;gap:2px;padding:4px;background:rgba(255,255,255,0.02);border-right:1px solid rgba(255,255,255,0.06);min-width:160px;border-radius:12px 0 0 12px}.jl-tabs-vert-btn{padding:10px 16px;font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.4);background:none;border:none;text-align:left;cursor:pointer;border-radius:8px;transition:all 0.2s ease}.jl-tabs-vert-btn:hover{color:rgba(246,239,229,0.7);background:rgba(255,255,255,0.03)}.jl-tabs-vert-btn.active{color:#f6efe5;background:rgba(99,139,255,0.1);font-weight:600;border-left:2px solid #638bff;padding-left:14px}.jl-tabs-vert-content{flex:1;padding:16px 24px;font-size:0.875rem;color:rgba(246,239,229,0.6);line-height:1.6}.jl-tabs-vert-panel{display:none}.jl-tabs-vert-panel.active{display:block}</style><div class="jl-tabs-vert-sidebar"><button class="jl-tabs-vert-btn active" onclick="(function(b){b.closest('.jl-tabs-vert').querySelectorAll('.jl-tabs-vert-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-vert').querySelectorAll('.jl-tabs-vert-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-vert').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="v1">Dashboard</button><button class="jl-tabs-vert-btn" onclick="(function(b){b.closest('.jl-tabs-vert').querySelectorAll('.jl-tabs-vert-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-vert').querySelectorAll('.jl-tabs-vert-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-vert').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="v2">Analytics</button><button class="jl-tabs-vert-btn" onclick="(function(b){b.closest('.jl-tabs-vert').querySelectorAll('.jl-tabs-vert-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-vert').querySelectorAll('.jl-tabs-vert-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-vert').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="v3">Settings</button></div><div class="jl-tabs-vert-content"><div class="jl-tabs-vert-panel active" data-tab="v1">Your dashboard provides a real-time overview of key metrics, recent activity, and quick actions to manage your workspace efficiently.</div><div class="jl-tabs-vert-panel" data-tab="v2">Deep-dive into user behavior, conversion funnels, and performance trends with interactive charts and exportable reports.</div><div class="jl-tabs-vert-panel" data-tab="v3">Customize your experience — notifications, integrations, team permissions, and billing preferences all in one place.</div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-tabs-bordered',
+    label: 'Bordered Tabs',
+    category: 'elements', subcategory: 'tabs',
+    tags: ['tabs', 'bordered', 'classic', 'navigation', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Bordered Tabs',
+      defaultStyle: { width: '100%', minHeight: '180px' },
+      defaultContent: {
+        html: `<div class="jl-tabs-brd" style="font-family:system-ui,-apple-system,sans-serif;width:100%"><style>.jl-tabs-brd-bar{display:flex;border-bottom:2px solid rgba(255,255,255,0.06)}.jl-tabs-brd-btn{padding:12px 24px;font-size:0.875rem;font-weight:500;color:rgba(246,239,229,0.4);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all 0.25s ease}.jl-tabs-brd-btn:hover{color:rgba(246,239,229,0.65)}.jl-tabs-brd-btn.active{color:#f6efe5;font-weight:700;border-bottom-color:#638bff}.jl-tabs-brd-panel{padding:20px 4px;font-size:0.875rem;color:rgba(246,239,229,0.6);line-height:1.6;display:none}.jl-tabs-brd-panel.active{display:block}</style><div class="jl-tabs-brd-bar"><button class="jl-tabs-brd-btn active" onclick="(function(b){b.closest('.jl-tabs-brd').querySelectorAll('.jl-tabs-brd-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-brd').querySelectorAll('.jl-tabs-brd-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-brd').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="b1">Details</button><button class="jl-tabs-brd-btn" onclick="(function(b){b.closest('.jl-tabs-brd').querySelectorAll('.jl-tabs-brd-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-brd').querySelectorAll('.jl-tabs-brd-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-brd').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="b2">Reviews</button><button class="jl-tabs-brd-btn" onclick="(function(b){b.closest('.jl-tabs-brd').querySelectorAll('.jl-tabs-brd-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');b.closest('.jl-tabs-brd').querySelectorAll('.jl-tabs-brd-panel').forEach(function(p){p.classList.remove('active')});b.closest('.jl-tabs-brd').querySelector('[data-tab='+b.dataset.target+']').classList.add('active')})(this)" data-target="b3">Shipping</button></div><div class="jl-tabs-brd-panel active" data-tab="b1">Crafted from premium materials with meticulous attention to detail. Every element is designed to deliver an exceptional experience.</div><div class="jl-tabs-brd-panel" data-tab="b2">Rated 4.9/5 by over 2,000 verified customers. Consistently praised for quality, design, and customer service.</div><div class="jl-tabs-brd-panel" data-tab="b3">Free express shipping on all orders. Delivered within 2-4 business days with full tracking and insurance.</div></div>`
+      }
+    }
+  },
+]
+
+// ─── ALERTS ───
+
+const ALERTS_ELEMENTS: LibraryElementItem[] = [
+  {
+    id: 'el-alert-success',
+    label: 'Success Alert',
+    category: 'elements', subcategory: 'alerts',
+    tags: ['alert', 'success', 'notification', 'green', 'dismissible'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Success Alert',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-alert-s" style="font-family:system-ui,-apple-system,sans-serif;display:flex;align-items:flex-start;gap:12px;padding:16px 20px;background:rgba(34,197,94,0.06);border-left:3px solid #22c55e;border-radius:0 10px 10px 0;position:relative"><style>.jl-alert-s-close{position:absolute;top:12px;right:12px;width:24px;height:24px;border:none;background:none;color:rgba(246,239,229,0.3);cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all 0.2s ease;font-size:1rem;line-height:1}.jl-alert-s-close:hover{background:rgba(255,255,255,0.06);color:rgba(246,239,229,0.6)}</style><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><div style="flex:1;padding-right:20px"><div style="font-size:0.875rem;font-weight:600;color:#f6efe5;margin-bottom:4px">Success</div><div style="font-size:0.8125rem;color:rgba(246,239,229,0.5);line-height:1.5">Your changes have been saved successfully. The updates will be reflected immediately.</div></div><button class="jl-alert-s-close" onclick="this.closest('.jl-alert-s').style.opacity='0';this.closest('.jl-alert-s').style.transform='translateX(10px)';setTimeout(function(){}.bind(this),300)">&times;</button></div>`
+      }
+    }
+  },
+  {
+    id: 'el-alert-error',
+    label: 'Error Alert',
+    category: 'elements', subcategory: 'alerts',
+    tags: ['alert', 'error', 'notification', 'red', 'danger'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Error Alert',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-alert-e" style="font-family:system-ui,-apple-system,sans-serif;display:flex;align-items:flex-start;gap:12px;padding:16px 20px;background:rgba(239,68,68,0.06);border-left:3px solid #ef4444;border-radius:0 10px 10px 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><div style="flex:1"><div style="font-size:0.875rem;font-weight:600;color:#f6efe5;margin-bottom:4px">Error</div><div style="font-size:0.8125rem;color:rgba(246,239,229,0.5);line-height:1.5">Something went wrong while processing your request. Please try again or contact support.</div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-alert-warning',
+    label: 'Warning Alert',
+    category: 'elements', subcategory: 'alerts',
+    tags: ['alert', 'warning', 'notification', 'amber', 'caution'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Warning Alert',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-alert-w" style="font-family:system-ui,-apple-system,sans-serif;display:flex;align-items:flex-start;gap:12px;padding:16px 20px;background:rgba(245,158,11,0.06);border-left:3px solid #f59e0b;border-radius:0 10px 10px 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div style="flex:1"><div style="font-size:0.875rem;font-weight:600;color:#f6efe5;margin-bottom:4px">Warning</div><div style="font-size:0.8125rem;color:rgba(246,239,229,0.5);line-height:1.5">Your account storage is almost full. Consider upgrading your plan to avoid service interruptions.</div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-alert-info',
+    label: 'Info Alert',
+    category: 'elements', subcategory: 'alerts',
+    tags: ['alert', 'info', 'notification', 'blue', 'information'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Info Alert',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-alert-i" style="font-family:system-ui,-apple-system,sans-serif;display:flex;align-items:flex-start;gap:12px;padding:16px 20px;background:rgba(99,139,255,0.06);border-left:3px solid #638bff;border-radius:0 10px 10px 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#638bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div style="flex:1"><div style="font-size:0.875rem;font-weight:600;color:#f6efe5;margin-bottom:4px">Information</div><div style="font-size:0.8125rem;color:rgba(246,239,229,0.5);line-height:1.5">A new version is available. Update now to access the latest features and security improvements.</div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-alert-banner',
+    label: 'Top Banner',
+    category: 'elements', subcategory: 'alerts',
+    tags: ['alert', 'banner', 'announcement', 'strip', 'top'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Top Banner',
+      defaultStyle: { width: '100%', minHeight: '44px' },
+      defaultContent: {
+        html: `<div class="jl-alert-ban" style="font-family:system-ui,-apple-system,sans-serif;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 48px 10px 20px;background:linear-gradient(135deg,rgba(99,139,255,0.12),rgba(139,92,246,0.08));border:1px solid rgba(99,139,255,0.15);border-radius:10px;position:relative"><style>.jl-alert-ban-link{color:#638bff;text-decoration:none;font-weight:600;font-size:0.8125rem;transition:color 0.2s ease}.jl-alert-ban-link:hover{color:#818cf8}.jl-alert-ban-close{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:24px;height:24px;border:none;background:none;color:rgba(246,239,229,0.3);cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all 0.2s ease;font-size:1rem}.jl-alert-ban-close:hover{background:rgba(255,255,255,0.06);color:rgba(246,239,229,0.6)}</style><span style="font-size:0.8125rem;color:rgba(246,239,229,0.7)">Introducing our redesigned platform with powerful new features.</span><a href="#" class="jl-alert-ban-link">Learn more &rarr;</a><button class="jl-alert-ban-close" onclick="this.closest('.jl-alert-ban').style.opacity='0';this.closest('.jl-alert-ban').style.transform='translateY(-4px)'">&times;</button></div>`
+      }
+    }
+  },
+]
+
+// ─── TAGS / CHIPS ───
+
+const TAGS_CHIPS: LibraryElementItem[] = [
+  {
+    id: 'el-tag-basic',
+    label: 'Basic Tags',
+    category: 'elements', subcategory: 'tags',
+    tags: ['tag', 'label', 'category', 'basic', 'group'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Basic Tags',
+      defaultStyle: { width: '100%', minHeight: '36px' },
+      defaultContent: {
+        html: `<div class="jl-tags-basic" style="font-family:system-ui,-apple-system,sans-serif;display:flex;flex-wrap:wrap;gap:8px"><style>.jl-tag-b{padding:6px 14px;font-size:0.75rem;font-weight:500;color:rgba(246,239,229,0.6);background:rgba(255,255,255,0.06);border-radius:20px;letter-spacing:0.01em;transition:all 0.2s ease;cursor:default}.jl-tag-b:hover{background:rgba(255,255,255,0.1);color:rgba(246,239,229,0.8)}</style><span class="jl-tag-b">Technology</span><span class="jl-tag-b">Design</span><span class="jl-tag-b">Marketing</span><span class="jl-tag-b">Business</span><span class="jl-tag-b">Creative</span></div>`
+      }
+    }
+  },
+  {
+    id: 'el-tag-removable',
+    label: 'Removable Tags',
+    category: 'elements', subcategory: 'tags',
+    tags: ['tag', 'removable', 'close', 'dismiss', 'interactive'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Removable Tags',
+      defaultStyle: { width: '100%', minHeight: '36px' },
+      defaultContent: {
+        html: `<div class="jl-tags-rem" style="font-family:system-ui,-apple-system,sans-serif;display:flex;flex-wrap:wrap;gap:8px"><style>.jl-tag-r{display:inline-flex;align-items:center;gap:8px;padding:6px 10px 6px 14px;font-size:0.75rem;font-weight:500;color:rgba(246,239,229,0.65);background:rgba(99,139,255,0.1);border:1px solid rgba(99,139,255,0.15);border-radius:20px;transition:all 0.3s ease}.jl-tag-r-x{width:16px;height:16px;border:none;background:rgba(255,255,255,0.08);color:rgba(246,239,229,0.4);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.625rem;transition:all 0.2s ease;line-height:1}.jl-tag-r-x:hover{background:rgba(239,68,68,0.2);color:#ef4444}</style><span class="jl-tag-r">React<button class="jl-tag-r-x" onclick="var t=this.closest('.jl-tag-r');t.style.opacity='0';t.style.transform='scale(0.8)';setTimeout(function(){t.remove()},200)">&times;</button></span><span class="jl-tag-r">TypeScript<button class="jl-tag-r-x" onclick="var t=this.closest('.jl-tag-r');t.style.opacity='0';t.style.transform='scale(0.8)';setTimeout(function(){t.remove()},200)">&times;</button></span><span class="jl-tag-r">Next.js<button class="jl-tag-r-x" onclick="var t=this.closest('.jl-tag-r');t.style.opacity='0';t.style.transform='scale(0.8)';setTimeout(function(){t.remove()},200)">&times;</button></span></div>`
+      }
+    }
+  },
+  {
+    id: 'el-tag-status',
+    label: 'Status Tags',
+    category: 'elements', subcategory: 'tags',
+    tags: ['tag', 'status', 'state', 'dot', 'badge'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Status Tags',
+      defaultStyle: { width: '100%', minHeight: '36px' },
+      defaultContent: {
+        html: `<div class="jl-tags-status" style="font-family:system-ui,-apple-system,sans-serif;display:flex;flex-wrap:wrap;gap:10px"><style>.jl-tag-st{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;font-size:0.75rem;font-weight:500;border-radius:20px;letter-spacing:0.01em}.jl-tag-st-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}</style><span class="jl-tag-st" style="background:rgba(161,161,170,0.1);color:rgba(161,161,170,0.8)"><span class="jl-tag-st-dot" style="background:#a1a1aa"></span>Draft</span><span class="jl-tag-st" style="background:rgba(34,197,94,0.1);color:rgba(34,197,94,0.9)"><span class="jl-tag-st-dot" style="background:#22c55e"></span>Published</span><span class="jl-tag-st" style="background:rgba(245,158,11,0.1);color:rgba(245,158,11,0.9)"><span class="jl-tag-st-dot" style="background:#f59e0b"></span>Archived</span><span class="jl-tag-st" style="background:rgba(239,68,68,0.1);color:rgba(239,68,68,0.9)"><span class="jl-tag-st-dot" style="background:#ef4444"></span>Deleted</span></div>`
+      }
+    }
+  },
+  {
+    id: 'el-tag-category',
+    label: 'Category Pills',
+    category: 'elements', subcategory: 'tags',
+    tags: ['tag', 'category', 'pill', 'icon', 'large'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Category Pills',
+      defaultStyle: { width: '100%', minHeight: '40px' },
+      defaultContent: {
+        html: `<div class="jl-tags-cat" style="font-family:system-ui,-apple-system,sans-serif;display:flex;flex-wrap:wrap;gap:10px"><style>.jl-tag-c{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.7);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:24px;cursor:default;transition:all 0.25s ease}.jl-tag-c:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.12);color:#f6efe5}.jl-tag-c svg{flex-shrink:0}</style><span class="jl-tag-c"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>Mobile</span><span class="jl-tag-c"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Web</span><span class="jl-tag-c"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><path d="M17 2H7a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V7a5 5 0 0 0-5-5z"/><path d="M2 17l5-5 5 5"/><path d="M22 17l-5-5-3 3"/></svg>Design</span><span class="jl-tag-c"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Analytics</span></div>`
+      }
+    }
+  },
+]
+
+// ─── PAGINATION ───
+
+const PAGINATION_ELEMENTS: LibraryElementItem[] = [
+  {
+    id: 'el-pagination-numbered',
+    label: 'Numbered Pagination',
+    category: 'elements', subcategory: 'pagination',
+    tags: ['pagination', 'numbered', 'pages', 'navigation', 'arrows'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Numbered Pagination',
+      defaultStyle: { width: '100%', minHeight: '44px' },
+      defaultContent: {
+        html: `<div class="jl-pag-num" style="font-family:system-ui,-apple-system,sans-serif;display:flex;align-items:center;justify-content:center;gap:4px"><style>.jl-pag-n-btn{width:36px;height:36px;border:none;background:none;color:rgba(246,239,229,0.4);font-size:0.8125rem;font-weight:500;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}.jl-pag-n-btn:hover{background:rgba(255,255,255,0.06);color:rgba(246,239,229,0.7)}.jl-pag-n-btn.active{background:#638bff;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(99,139,255,0.25)}.jl-pag-n-btn.disabled{opacity:0.25;cursor:not-allowed;pointer-events:none}.jl-pag-n-dots{color:rgba(246,239,229,0.2);font-size:0.75rem;width:36px;text-align:center;letter-spacing:2px}</style><button class="jl-pag-n-btn" onclick="(function(b){var btns=b.closest('.jl-pag-num').querySelectorAll('.jl-pag-n-btn:not(.disabled)');btns.forEach(function(x){x.classList.remove('active')});b.classList.add('active')})(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button><button class="jl-pag-n-btn active" onclick="(function(b){var btns=b.closest('.jl-pag-num').querySelectorAll('.jl-pag-n-btn:not(.disabled)');btns.forEach(function(x){x.classList.remove('active')});b.classList.add('active')})(this)">1</button><button class="jl-pag-n-btn" onclick="(function(b){var btns=b.closest('.jl-pag-num').querySelectorAll('.jl-pag-n-btn:not(.disabled)');btns.forEach(function(x){x.classList.remove('active')});b.classList.add('active')})(this)">2</button><button class="jl-pag-n-btn" onclick="(function(b){var btns=b.closest('.jl-pag-num').querySelectorAll('.jl-pag-n-btn:not(.disabled)');btns.forEach(function(x){x.classList.remove('active')});b.classList.add('active')})(this)">3</button><span class="jl-pag-n-dots">...</span><button class="jl-pag-n-btn" onclick="(function(b){var btns=b.closest('.jl-pag-num').querySelectorAll('.jl-pag-n-btn:not(.disabled)');btns.forEach(function(x){x.classList.remove('active')});b.classList.add('active')})(this)">10</button><button class="jl-pag-n-btn" onclick="(function(b){var btns=b.closest('.jl-pag-num').querySelectorAll('.jl-pag-n-btn:not(.disabled)');btns.forEach(function(x){x.classList.remove('active')});b.classList.add('active')})(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button></div>`
+      }
+    }
+  },
+  {
+    id: 'el-pagination-simple',
+    label: 'Simple Pagination',
+    category: 'elements', subcategory: 'pagination',
+    tags: ['pagination', 'simple', 'minimal', 'previous', 'next'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Simple Pagination',
+      defaultStyle: { width: '100%', minHeight: '40px' },
+      defaultContent: {
+        html: `<div class="jl-pag-simple" style="font-family:system-ui,-apple-system,sans-serif;display:flex;align-items:center;justify-content:space-between"><style>.jl-pag-s-link{display:inline-flex;align-items:center;gap:6px;font-size:0.8125rem;font-weight:500;color:rgba(246,239,229,0.45);text-decoration:none;cursor:pointer;padding:8px 4px;transition:color 0.2s ease}.jl-pag-s-link:hover{color:#638bff}.jl-pag-s-divider{width:1px;height:16px;background:rgba(255,255,255,0.08)}</style><a class="jl-pag-s-link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Previous</a><span class="jl-pag-s-divider"></span><a class="jl-pag-s-link" href="#">Next<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div>`
+      }
+    }
+  },
+  {
+    id: 'el-pagination-load-more',
+    label: 'Load More Button',
+    category: 'elements', subcategory: 'pagination',
+    tags: ['pagination', 'load-more', 'button', 'spinner', 'loading'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Load More Button',
+      defaultStyle: { width: '100%', minHeight: '48px' },
+      defaultContent: {
+        html: `<div class="jl-pag-load" style="font-family:system-ui,-apple-system,sans-serif;display:flex;justify-content:center"><style>.jl-pag-l-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 28px;font-size:0.8125rem;font-weight:600;color:rgba(246,239,229,0.7);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;cursor:pointer;transition:all 0.3s ease;letter-spacing:0.01em}.jl-pag-l-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.14);color:#f6efe5}.jl-pag-l-btn:active{transform:scale(0.97)}.jl-pag-l-spinner{display:none;width:14px;height:14px;border:2px solid rgba(246,239,229,0.15);border-top-color:#638bff;border-radius:50%;animation:jl-pag-spin 0.6s linear infinite}@keyframes jl-pag-spin{to{transform:rotate(360deg)}}.jl-pag-l-btn.loading .jl-pag-l-spinner{display:block}.jl-pag-l-btn.loading .jl-pag-l-text{opacity:0.5}</style><button class="jl-pag-l-btn" onclick="var b=this;b.classList.add('loading');setTimeout(function(){b.classList.remove('loading')},1500)"><span class="jl-pag-l-spinner"></span><span class="jl-pag-l-text">Load more</span></button></div>`
+      }
+    }
+  },
+]
+
+// ─── CODE ───
+
+const CODE_ELEMENTS: LibraryElementItem[] = [
+  {
+    id: 'el-code-inline',
+    label: 'Inline Code',
+    category: 'elements', subcategory: 'code',
+    tags: ['code', 'inline', 'monospace', 'snippet', 'text'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Inline Code',
+      defaultStyle: { width: '100%', minHeight: '32px' },
+      defaultContent: {
+        html: `<div class="jl-code-inline" style="font-family:system-ui,-apple-system,sans-serif;font-size:0.875rem;color:rgba(246,239,229,0.6);line-height:1.7"><style>.jl-ci{padding:2px 8px;font-family:'SF Mono',SFMono-Regular,ui-monospace,'Cascadia Mono',Menlo,Consolas,monospace;font-size:0.8125em;background:rgba(255,255,255,0.06);color:#e2b3ff;border-radius:5px;letter-spacing:-0.01em}</style>Use the <code class="jl-ci">useState</code> hook to manage local component state, or <code class="jl-ci">useReducer</code> for more complex logic. Import from <code class="jl-ci">react</code> directly.</div>`
+      }
+    }
+  },
+  {
+    id: 'el-code-block',
+    label: 'Code Block',
+    category: 'elements', subcategory: 'code',
+    tags: ['code', 'block', 'syntax', 'highlighting', 'lines'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Code Block',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: {
+        html: `<div class="jl-code-block" style="font-family:system-ui,-apple-system,sans-serif;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)"><style>.jl-cb-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06)}.jl-cb-dots{display:flex;gap:6px}.jl-cb-dot{width:10px;height:10px;border-radius:50%}.jl-cb-lang{font-size:0.6875rem;color:rgba(246,239,229,0.3);font-weight:500;text-transform:uppercase;letter-spacing:0.05em}.jl-cb-body{padding:16px;background:#0a0a0a;overflow-x:auto}.jl-cb-line{display:flex;line-height:1.7;font-size:0.8125rem}.jl-cb-ln{width:32px;text-align:right;padding-right:16px;color:rgba(246,239,229,0.15);font-family:'SF Mono',SFMono-Regular,ui-monospace,monospace;user-select:none;flex-shrink:0}.jl-cb-code{font-family:'SF Mono',SFMono-Regular,ui-monospace,monospace;color:#f6efe5;white-space:pre}.jl-cb-kw{color:#c084fc}.jl-cb-fn{color:#60a5fa}.jl-cb-str{color:#34d399}.jl-cb-cm{color:rgba(246,239,229,0.25);font-style:italic}.jl-cb-op{color:#f59e0b}.jl-cb-num{color:#fb923c}</style><div class="jl-cb-header"><div class="jl-cb-dots"><div class="jl-cb-dot" style="background:#ef4444"></div><div class="jl-cb-dot" style="background:#f59e0b"></div><div class="jl-cb-dot" style="background:#22c55e"></div></div><span class="jl-cb-lang">typescript</span></div><div class="jl-cb-body"><div class="jl-cb-line"><span class="jl-cb-ln">1</span><span class="jl-cb-code"><span class="jl-cb-kw">import</span> { <span class="jl-cb-fn">useState</span>, <span class="jl-cb-fn">useEffect</span> } <span class="jl-cb-kw">from</span> <span class="jl-cb-str">'react'</span></span></div><div class="jl-cb-line"><span class="jl-cb-ln">2</span><span class="jl-cb-code"></span></div><div class="jl-cb-line"><span class="jl-cb-ln">3</span><span class="jl-cb-code"><span class="jl-cb-cm">// Custom hook for fetching data</span></span></div><div class="jl-cb-line"><span class="jl-cb-ln">4</span><span class="jl-cb-code"><span class="jl-cb-kw">export function</span> <span class="jl-cb-fn">useFetch</span><span class="jl-cb-op">&lt;</span>T<span class="jl-cb-op">&gt;</span>(url: <span class="jl-cb-fn">string</span>) {</span></div><div class="jl-cb-line"><span class="jl-cb-ln">5</span><span class="jl-cb-code">  <span class="jl-cb-kw">const</span> [data, setData] <span class="jl-cb-op">=</span> <span class="jl-cb-fn">useState</span><span class="jl-cb-op">&lt;</span>T <span class="jl-cb-op">|</span> <span class="jl-cb-kw">null</span><span class="jl-cb-op">&gt;</span>(<span class="jl-cb-kw">null</span>)</span></div><div class="jl-cb-line"><span class="jl-cb-ln">6</span><span class="jl-cb-code">  <span class="jl-cb-kw">const</span> [loading, setLoading] <span class="jl-cb-op">=</span> <span class="jl-cb-fn">useState</span>(<span class="jl-cb-kw">true</span>)</span></div><div class="jl-cb-line"><span class="jl-cb-ln">7</span><span class="jl-cb-code"></span></div><div class="jl-cb-line"><span class="jl-cb-ln">8</span><span class="jl-cb-code">  <span class="jl-cb-fn">useEffect</span>(() <span class="jl-cb-op">=&gt;</span> {</span></div><div class="jl-cb-line"><span class="jl-cb-ln">9</span><span class="jl-cb-code">    <span class="jl-cb-fn">fetch</span>(url)</span></div><div class="jl-cb-line"><span class="jl-cb-ln">10</span><span class="jl-cb-code">      .<span class="jl-cb-fn">then</span>(r <span class="jl-cb-op">=&gt;</span> r.<span class="jl-cb-fn">json</span>())</span></div><div class="jl-cb-line"><span class="jl-cb-ln">11</span><span class="jl-cb-code">      .<span class="jl-cb-fn">then</span>(setData)</span></div><div class="jl-cb-line"><span class="jl-cb-ln">12</span><span class="jl-cb-code">      .<span class="jl-cb-fn">finally</span>(() <span class="jl-cb-op">=&gt;</span> <span class="jl-cb-fn">setLoading</span>(<span class="jl-cb-kw">false</span>))</span></div><div class="jl-cb-line"><span class="jl-cb-ln">13</span><span class="jl-cb-code">  }, [url])</span></div><div class="jl-cb-line"><span class="jl-cb-ln">14</span><span class="jl-cb-code"></span></div><div class="jl-cb-line"><span class="jl-cb-ln">15</span><span class="jl-cb-code">  <span class="jl-cb-kw">return</span> { data, loading }</span></div><div class="jl-cb-line"><span class="jl-cb-ln">16</span><span class="jl-cb-code">}</span></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-code-terminal',
+    label: 'Terminal',
+    category: 'elements', subcategory: 'code',
+    tags: ['code', 'terminal', 'console', 'command', 'cli', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Terminal',
+      defaultStyle: { width: '100%', minHeight: '180px' },
+      defaultContent: {
+        html: `<div class="jl-code-term" style="font-family:system-ui,-apple-system,sans-serif;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)"><style>.jl-ct-header{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06)}.jl-ct-dots{display:flex;gap:6px}.jl-ct-dot{width:10px;height:10px;border-radius:50%}.jl-ct-title{font-size:0.6875rem;color:rgba(246,239,229,0.25);font-weight:500;flex:1;text-align:center}.jl-ct-body{padding:16px 20px;background:#050505;font-family:'SF Mono',SFMono-Regular,ui-monospace,monospace;font-size:0.8125rem;line-height:1.8}.jl-ct-line{display:flex}.jl-ct-prompt{color:#22c55e;margin-right:8px;user-select:none;flex-shrink:0}.jl-ct-cmd{color:#f6efe5}.jl-ct-out{color:rgba(246,239,229,0.4);padding-left:20px}.jl-ct-cursor{display:inline-block;width:7px;height:14px;background:#22c55e;margin-left:2px;animation:jl-ct-blink 1s step-end infinite;vertical-align:text-bottom}@keyframes jl-ct-blink{50%{opacity:0}}</style><div class="jl-ct-header"><div class="jl-ct-dots"><div class="jl-ct-dot" style="background:#ef4444"></div><div class="jl-ct-dot" style="background:#f59e0b"></div><div class="jl-ct-dot" style="background:#22c55e"></div></div><span class="jl-ct-title">Terminal</span><div style="width:54px"></div></div><div class="jl-ct-body"><div class="jl-ct-line"><span class="jl-ct-prompt">$</span><span class="jl-ct-cmd">pnpm install</span></div><div class="jl-ct-out">Packages: +247</div><div class="jl-ct-out">Progress: resolved 312, reused 298, downloaded 14</div><div class="jl-ct-out" style="color:#22c55e">Done in 3.2s</div><div class="jl-ct-line" style="margin-top:4px"><span class="jl-ct-prompt">$</span><span class="jl-ct-cmd">pnpm dev</span></div><div class="jl-ct-out">Ready on http://localhost:3000</div><div class="jl-ct-line" style="margin-top:4px"><span class="jl-ct-prompt">$</span><span class="jl-ct-cursor"></span></div></div></div>`
+      }
+    }
+  },
+]
+
 export const LIBRARY_ELEMENTS: LibraryElementItem[] = [
   ...HEADINGS,
   ...TEXTS,
@@ -991,4 +1681,13 @@ export const LIBRARY_ELEMENTS: LibraryElementItem[] = [
   ...SECTION_DIVIDERS,
   ...COLOR_PALETTES,
   ...NAVIGATION,
+  ...FORM_INPUTS,
+  ...SOCIAL_LINKS,
+  ...PROGRESS,
+  ...AVATARS,
+  ...TABS_ELEMENTS,
+  ...ALERTS_ELEMENTS,
+  ...TAGS_CHIPS,
+  ...PAGINATION_ELEMENTS,
+  ...CODE_ELEMENTS,
 ]

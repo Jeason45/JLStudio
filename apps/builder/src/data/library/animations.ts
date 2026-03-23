@@ -2410,6 +2410,641 @@ const SITE_INSPIRED: LibraryElementItem[] = [
   },
 ]
 
+// ─── LOADING STATES ───
+
+const LOADING_STATES: LibraryElementItem[] = [
+  {
+    id: 'anim-skeleton-pulse',
+    label: 'Skeleton Pulse',
+    category: 'animations', subcategory: 'loading',
+    tags: ['animation', 'loading', 'skeleton', 'pulse', 'placeholder', 'shimmer'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Skeleton Pulse',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: { html: '<div style="width:100%;min-height:120px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.lsk-wrap{width:320px;display:flex;flex-direction:column;gap:.75rem}.lsk-bar{border-radius:.375rem;background:linear-gradient(90deg,#1a1a1a 25%,#2a2a2a 50%,#1a1a1a 75%);background-size:200% 100%;animation:lskShimmer 1.8s ease-in-out infinite}.lsk-title{height:18px;width:55%}.lsk-line1{height:12px;width:100%}.lsk-line2{height:12px;width:80%}@keyframes lskShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}</style><div class="lsk-wrap"><div class="lsk-bar lsk-title"></div><div class="lsk-bar lsk-line1"></div><div class="lsk-bar lsk-line2"></div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-spinner-dots',
+    label: 'Dot Spinner',
+    category: 'animations', subcategory: 'loading',
+    tags: ['animation', 'loading', 'spinner', 'dots', 'bounce', 'stagger'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Dot Spinner',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: { html: '<div style="width:100%;min-height:100px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem"><style>.lds-dots{display:flex;gap:8px}.lds-dot{width:12px;height:12px;border-radius:50%;background:#c8a97e;animation:ldsBounce .6s cubic-bezier(.28,.84,.42,1) infinite alternate}.lds-dot:nth-child(2){animation-delay:.15s}.lds-dot:nth-child(3){animation-delay:.3s}@keyframes ldsBounce{0%{transform:translateY(0);opacity:.4}100%{transform:translateY(-16px);opacity:1}}</style><div class="lds-dots"><div class="lds-dot"></div><div class="lds-dot"></div><div class="lds-dot"></div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-progress-bar',
+    label: 'Progress Bar',
+    category: 'animations', subcategory: 'loading',
+    tags: ['animation', 'loading', 'progress', 'bar', 'linear', 'repeating'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Progress Bar',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: { html: '<div style="width:100%;min-height:80px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.lpb-track{width:280px;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}.lpb-fill{height:100%;width:0;background:linear-gradient(90deg,#3b82f6,#60a5fa);border-radius:2px;animation:lpbGrow 2s cubic-bezier(.4,0,.2,1) infinite}@keyframes lpbGrow{0%{width:0}80%{width:100%}100%{width:100%;opacity:0}}</style><div class="lpb-track"><div class="lpb-fill"></div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-skeleton-card',
+    label: 'Skeleton Card',
+    category: 'animations', subcategory: 'loading',
+    tags: ['animation', 'loading', 'skeleton', 'card', 'placeholder', 'shimmer'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Skeleton Card',
+      defaultStyle: { width: '100%', minHeight: '220px' },
+      defaultContent: { html: '<div style="width:100%;min-height:220px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.lsc-card{width:260px;background:#111;border-radius:.75rem;overflow:hidden;border:1px solid rgba(255,255,255,.05)}.lsc-img{height:120px;background:linear-gradient(90deg,#1a1a1a 25%,#252525 50%,#1a1a1a 75%);background-size:200% 100%;animation:lscShim 1.8s ease-in-out infinite}.lsc-body{padding:1rem;display:flex;flex-direction:column;gap:.5rem}.lsc-b{border-radius:.25rem;background:linear-gradient(90deg,#1a1a1a 25%,#252525 50%,#1a1a1a 75%);background-size:200% 100%;animation:lscShim 1.8s ease-in-out infinite}.lsc-t{height:14px;width:60%}.lsc-l{height:10px;width:100%}.lsc-l2{height:10px;width:75%}@keyframes lscShim{0%{background-position:200% 0}100%{background-position:-200% 0}}</style><div class="lsc-card"><div class="lsc-img"></div><div class="lsc-body"><div class="lsc-b lsc-t"></div><div class="lsc-b lsc-l"></div><div class="lsc-b lsc-l2"></div></div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-spinner-ring',
+    label: 'Ring Spinner',
+    category: 'animations', subcategory: 'loading',
+    tags: ['animation', 'loading', 'spinner', 'ring', 'circular', 'rotating'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Ring Spinner',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: { html: '<div style="width:100%;min-height:100px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem"><style>.lsr-ring{width:40px;height:40px;border:3px solid rgba(255,255,255,.08);border-top-color:#c8a97e;border-radius:50%;animation:lsrSpin .9s linear infinite}@keyframes lsrSpin{to{transform:rotate(360deg)}}</style><div class="lsr-ring"></div></div>' },
+    },
+  },
+  {
+    id: 'anim-loading-text',
+    label: 'Loading Text',
+    category: 'animations', subcategory: 'loading',
+    tags: ['animation', 'loading', 'text', 'wave', 'letters', 'fade'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Loading Text',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: { html: '<div style="width:100%;min-height:80px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem"><style>.llt-wrap{display:flex;gap:1px;font-family:system-ui,sans-serif;font-size:1.1rem;font-weight:500;letter-spacing:.02em}.llt-ch{color:rgba(246,239,229,.9);animation:lltWave 1.4s ease-in-out infinite}@keyframes lltWave{0%,100%{opacity:.2;transform:translateY(0)}50%{opacity:1;transform:translateY(-4px)}}</style><div class="llt-wrap"><span class="llt-ch" style="animation-delay:0s">L</span><span class="llt-ch" style="animation-delay:.07s">o</span><span class="llt-ch" style="animation-delay:.14s">a</span><span class="llt-ch" style="animation-delay:.21s">d</span><span class="llt-ch" style="animation-delay:.28s">i</span><span class="llt-ch" style="animation-delay:.35s">n</span><span class="llt-ch" style="animation-delay:.42s">g</span><span class="llt-ch" style="animation-delay:.49s">.</span><span class="llt-ch" style="animation-delay:.56s">.</span><span class="llt-ch" style="animation-delay:.63s">.</span></div></div>' },
+    },
+  },
+  {
+    id: 'anim-progress-circle',
+    label: 'Progress Circle',
+    category: 'animations', subcategory: 'loading',
+    tags: ['animation', 'loading', 'progress', 'circle', 'svg', 'percentage'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Progress Circle',
+      defaultStyle: { width: '100%', minHeight: '140px' },
+      defaultContent: { html: '<div style="width:100%;min-height:140px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem"><style>.lpc-wrap{position:relative;width:80px;height:80px}.lpc-svg{transform:rotate(-90deg)}.lpc-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:4}.lpc-fg{fill:none;stroke:#3b82f6;stroke-width:4;stroke-linecap:round;stroke-dasharray:226;stroke-dashoffset:226;animation:lpcDraw 2.2s cubic-bezier(.4,0,.2,1) infinite}.lpc-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:.85rem;font-weight:600;color:#f6efe5}@keyframes lpcDraw{0%{stroke-dashoffset:226}70%{stroke-dashoffset:0}85%,100%{stroke-dashoffset:0;opacity:0}}</style><div class="lpc-wrap"><svg class="lpc-svg" width="80" height="80" viewBox="0 0 80 80"><circle class="lpc-bg" cx="40" cy="40" r="36"/><circle class="lpc-fg" cx="40" cy="40" r="36"/></svg><div class="lpc-pct" id="lpcPct">0%</div></div><script>(function(){var el=document.getElementById("lpcPct");if(!el)return;var v=0;var iv=setInterval(function(){v+=1;if(v>100){v=0}el.textContent=v+"%"},22)})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-shimmer-block',
+    label: 'Shimmer Block',
+    category: 'animations', subcategory: 'loading',
+    tags: ['animation', 'loading', 'shimmer', 'block', 'placeholder', 'diagonal'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Shimmer Block',
+      defaultStyle: { width: '100%', minHeight: '140px' },
+      defaultContent: { html: '<div style="width:100%;min-height:140px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.lsb-block{width:320px;height:90px;border-radius:.75rem;background:#151515;position:relative;overflow:hidden}.lsb-block::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.04) 45%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 55%,transparent 70%);background-size:200% 100%;animation:lsbSweep 2s ease-in-out infinite}@keyframes lsbSweep{0%{background-position:200% 0}100%{background-position:-200% 0}}</style><div class="lsb-block"></div></div>' },
+    },
+  },
+]
+
+// ─── MICRO INTERACTIONS ───
+
+const MICRO_INTERACTIONS: LibraryElementItem[] = [
+  {
+    id: 'anim-toggle-switch',
+    label: 'Toggle Switch',
+    category: 'animations', subcategory: 'micro',
+    tags: ['animation', 'micro', 'toggle', 'switch', 'interactive', 'ios'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Toggle Switch',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: { html: '<div style="width:100%;min-height:80px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;gap:12px"><style>.mts-track{width:52px;height:30px;border-radius:15px;background:#333;cursor:pointer;position:relative;transition:background .3s ease}.mts-track[data-on="true"]{background:#22c55e}.mts-knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .3s cubic-bezier(.4,.2,.2,1)}.mts-track[data-on="true"] .mts-knob{transform:translateX(22px)}.mts-lbl{font-family:system-ui,sans-serif;font-size:.8rem;color:rgba(246,239,229,.5);min-width:24px}</style><span class="mts-lbl" id="mtsLbl">Off</span><div class="mts-track" id="mtsTrack" data-on="false"><div class="mts-knob"></div></div><script>(function(){var t=document.getElementById("mtsTrack"),l=document.getElementById("mtsLbl");if(!t||!l)return;t.addEventListener("click",function(){var on=t.getAttribute("data-on")==="true";t.setAttribute("data-on",on?"false":"true");l.textContent=on?"Off":"On"})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-checkbox-tick',
+    label: 'Checkbox Tick',
+    category: 'animations', subcategory: 'micro',
+    tags: ['animation', 'micro', 'checkbox', 'tick', 'svg', 'draw', 'interactive'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Checkbox Tick',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: { html: '<div style="width:100%;min-height:80px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem"><style>.mcb-box{width:28px;height:28px;border:2px solid rgba(255,255,255,.2);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .25s,border-color .25s}.mcb-box[data-checked="true"]{background:#3b82f6;border-color:#3b82f6}.mcb-check{stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none;stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .3s cubic-bezier(.4,0,.2,1)}.mcb-box[data-checked="true"] .mcb-check{stroke-dashoffset:0}</style><div class="mcb-box" id="mcbBox" data-checked="false"><svg width="16" height="16" viewBox="0 0 16 16"><polyline class="mcb-check" points="3,8 7,12 13,4"/></svg></div><script>(function(){var b=document.getElementById("mcbBox");if(!b)return;b.addEventListener("click",function(){var c=b.getAttribute("data-checked")==="true";b.setAttribute("data-checked",c?"false":"true")})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-radio-ripple',
+    label: 'Radio Ripple',
+    category: 'animations', subcategory: 'micro',
+    tags: ['animation', 'micro', 'radio', 'ripple', 'interactive', 'selection'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Radio Ripple',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: { html: '<div style="width:100%;min-height:80px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;gap:16px"><style>.mrr-opt{width:24px;height:24px;border:2px solid rgba(255,255,255,.2);border-radius:50%;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;transition:border-color .25s}.mrr-opt[data-sel="true"]{border-color:#3b82f6}.mrr-dot{width:12px;height:12px;border-radius:50%;background:#3b82f6;transform:scale(0);transition:transform .25s cubic-bezier(.4,.2,.2,1)}.mrr-opt[data-sel="true"] .mrr-dot{transform:scale(1)}.mrr-opt::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid #3b82f6;opacity:0;transform:scale(.8);pointer-events:none}@keyframes mrrRip{0%{opacity:.5;transform:scale(.8)}100%{opacity:0;transform:scale(1.4)}}.mrr-opt.mrr-rip::after{animation:mrrRip .4s ease-out}</style><div class="mrr-opt" id="mrrA" data-sel="true"><div class="mrr-dot"></div></div><div class="mrr-opt" id="mrrB" data-sel="false"><div class="mrr-dot"></div></div><div class="mrr-opt" id="mrrC" data-sel="false"><div class="mrr-dot"></div></div><script>(function(){var opts=document.querySelectorAll(".mrr-opt");opts.forEach(function(o){o.addEventListener("click",function(){opts.forEach(function(x){x.setAttribute("data-sel","false");x.classList.remove("mrr-rip")});o.setAttribute("data-sel","true");o.classList.remove("mrr-rip");void o.offsetWidth;o.classList.add("mrr-rip")})})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-toast-slide',
+    label: 'Toast Notification',
+    category: 'animations', subcategory: 'micro',
+    tags: ['animation', 'micro', 'toast', 'notification', 'slide', 'auto-dismiss'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Toast Notification',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: { html: '<div style="width:100%;min-height:120px;display:flex;align-items:flex-start;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1.5rem;position:relative"><style>.mtn-toast{position:absolute;top:12px;right:12px;background:#111;border:1px solid rgba(34,197,94,.2);border-radius:.5rem;padding:.625rem 1rem;display:flex;align-items:center;gap:.5rem;transform:translateX(120%);opacity:0;transition:transform .4s cubic-bezier(.16,1,.3,1),opacity .4s ease;box-shadow:0 4px 12px rgba(0,0,0,.3)}.mtn-toast.mtn-show{transform:translateX(0);opacity:1}.mtn-toast.mtn-hide{transform:translateX(120%);opacity:0}.mtn-icon{color:#22c55e;font-size:.9rem;flex-shrink:0}.mtn-msg{color:#f6efe5;font-family:system-ui,sans-serif;font-size:.8rem}.mtn-btn{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#f6efe5;font-family:system-ui,sans-serif;font-size:.75rem;padding:.4rem 1rem;border-radius:.375rem;cursor:pointer;transition:background .2s}.mtn-btn:hover{background:rgba(255,255,255,.14)}</style><div class="mtn-toast" id="mtnToast"><span class="mtn-icon">&#10003;</span><span class="mtn-msg">Action completed successfully</span></div><button class="mtn-btn" id="mtnBtn">Show Toast</button><script>(function(){var t=document.getElementById("mtnToast"),b=document.getElementById("mtnBtn");if(!t||!b)return;var tm;function show(){clearTimeout(tm);t.classList.remove("mtn-hide");t.classList.add("mtn-show");tm=setTimeout(function(){t.classList.remove("mtn-show");t.classList.add("mtn-hide")},3000)}b.addEventListener("click",show);setTimeout(show,600)})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-tooltip-hover',
+    label: 'Tooltip Hover',
+    category: 'animations', subcategory: 'micro',
+    tags: ['animation', 'micro', 'tooltip', 'hover', 'fade', 'scale', 'pointer'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Tooltip Hover',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: { html: '<div style="width:100%;min-height:100px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.mth-wrap{position:relative;display:inline-flex}.mth-trigger{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#f6efe5;font-family:system-ui,sans-serif;font-size:.8rem;padding:.5rem 1rem;border-radius:.375rem;cursor:default}.mth-tip{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) scale(.9);background:#222;border:1px solid rgba(255,255,255,.08);color:#f6efe5;font-family:system-ui,sans-serif;font-size:.72rem;padding:.35rem .65rem;border-radius:.375rem;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s cubic-bezier(.16,1,.3,1);box-shadow:0 4px 8px rgba(0,0,0,.3)}.mth-tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#222}.mth-wrap:hover .mth-tip{opacity:1;transform:translateX(-50%) scale(1)}</style><div class="mth-wrap"><div class="mth-tip">Helpful tooltip text</div><div class="mth-trigger">Hover me</div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-like-heart',
+    label: 'Like Heart',
+    category: 'animations', subcategory: 'micro',
+    tags: ['animation', 'micro', 'like', 'heart', 'particles', 'interactive', 'scale'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Like Heart',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: { html: '<div style="width:100%;min-height:100px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem"><style>.mlh-btn{position:relative;background:none;border:none;cursor:pointer;font-size:1.8rem;transition:transform .2s cubic-bezier(.4,.2,.2,1);color:rgba(255,255,255,.25);line-height:1}.mlh-btn[data-liked="true"]{color:#ef4444}.mlh-btn.mlh-pop{animation:mlhPop .45s cubic-bezier(.17,.89,.32,1.49)}@keyframes mlhPop{0%{transform:scale(1)}30%{transform:scale(1.35)}60%{transform:scale(.9)}100%{transform:scale(1)}}.mlh-particle{position:absolute;width:5px;height:5px;border-radius:50%;pointer-events:none;animation:mlhPart .6s ease-out forwards}@keyframes mlhPart{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:var(--mlh-dir) scale(0)}}</style><button class="mlh-btn" id="mlhBtn" data-liked="false">&#9829;</button><script>(function(){var b=document.getElementById("mlhBtn");if(!b)return;var colors=["#ef4444","#f97316","#eab308","#ec4899","#a855f7"];b.addEventListener("click",function(){var liked=b.getAttribute("data-liked")==="true";b.setAttribute("data-liked",liked?"false":"true");if(!liked){b.classList.remove("mlh-pop");void b.offsetWidth;b.classList.add("mlh-pop");for(var i=0;i<6;i++){var p=document.createElement("div");p.className="mlh-particle";var a=Math.PI*2/6*i;var d=20+Math.random()*10;p.style.cssText="--mlh-dir:translate("+Math.cos(a)*d+"px,"+Math.sin(a)*d+"px);left:50%;top:50%;background:"+colors[i%colors.length];b.appendChild(p);setTimeout(function(el){el.remove()},600,p)}}})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-copy-clipboard',
+    label: 'Copy to Clipboard',
+    category: 'animations', subcategory: 'micro',
+    tags: ['animation', 'micro', 'copy', 'clipboard', 'morph', 'interactive', 'feedback'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Copy to Clipboard',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: { html: '<div style="width:100%;min-height:80px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1.5rem"><style>.mcc-wrap{display:flex;align-items:center;gap:0;background:#151515;border:1px solid rgba(255,255,255,.06);border-radius:.5rem;overflow:hidden}.mcc-code{padding:.5rem .75rem;font-family:ui-monospace,monospace;font-size:.78rem;color:rgba(246,239,229,.7);white-space:nowrap;user-select:all}.mcc-btn{padding:.5rem .75rem;background:rgba(255,255,255,.05);border:none;border-left:1px solid rgba(255,255,255,.06);color:#f6efe5;cursor:pointer;font-family:system-ui,sans-serif;font-size:.72rem;display:flex;align-items:center;gap:.3rem;transition:background .2s;min-width:80px;justify-content:center}.mcc-btn:hover{background:rgba(255,255,255,.1)}.mcc-btn[data-copied="true"]{color:#22c55e}</style><div class="mcc-wrap"><div class="mcc-code">npm install jlstudio</div><button class="mcc-btn" id="mccBtn" data-copied="false"><span id="mccTxt">Copy</span></button></div><script>(function(){var b=document.getElementById("mccBtn"),t=document.getElementById("mccTxt");if(!b||!t)return;b.addEventListener("click",function(){b.setAttribute("data-copied","true");t.textContent="Copied!";setTimeout(function(){b.setAttribute("data-copied","false");t.textContent="Copy"},2000)})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-dropdown-reveal',
+    label: 'Dropdown Reveal',
+    category: 'animations', subcategory: 'micro',
+    tags: ['animation', 'micro', 'dropdown', 'reveal', 'stagger', 'interactive', 'menu'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Dropdown Reveal',
+      defaultStyle: { width: '100%', minHeight: '180px' },
+      defaultContent: { html: '<div style="width:100%;min-height:180px;display:flex;align-items:flex-start;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.mdr-wrap{position:relative;width:180px}.mdr-btn{width:100%;padding:.5rem .75rem;background:#151515;border:1px solid rgba(255,255,255,.1);color:#f6efe5;font-family:system-ui,sans-serif;font-size:.8rem;border-radius:.375rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:border-color .2s}.mdr-btn:hover{border-color:rgba(255,255,255,.2)}.mdr-arr{transition:transform .3s;font-size:.6rem;color:rgba(246,239,229,.4)}.mdr-wrap[data-open="true"] .mdr-arr{transform:rotate(180deg)}.mdr-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#151515;border:1px solid rgba(255,255,255,.08);border-radius:.375rem;overflow:hidden;max-height:0;opacity:0;transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s}.mdr-wrap[data-open="true"] .mdr-list{max-height:200px;opacity:1}.mdr-item{padding:.45rem .75rem;font-family:system-ui,sans-serif;font-size:.78rem;color:rgba(246,239,229,.7);cursor:pointer;transition:background .15s,transform .2s,opacity .2s;transform:translateY(-6px);opacity:0}.mdr-wrap[data-open="true"] .mdr-item{transform:translateY(0);opacity:1}.mdr-item:nth-child(1){transition-delay:.05s}.mdr-item:nth-child(2){transition-delay:.1s}.mdr-item:nth-child(3){transition-delay:.15s}.mdr-item:nth-child(4){transition-delay:.2s}.mdr-item:hover{background:rgba(255,255,255,.05)}</style><div class="mdr-wrap" id="mdrWrap" data-open="false"><button class="mdr-btn" id="mdrBtn">Select option <span class="mdr-arr">&#9660;</span></button><div class="mdr-list"><div class="mdr-item">Dashboard</div><div class="mdr-item">Settings</div><div class="mdr-item">Analytics</div><div class="mdr-item">Logout</div></div></div><script>(function(){var w=document.getElementById("mdrWrap"),b=document.getElementById("mdrBtn");if(!w||!b)return;b.addEventListener("click",function(e){e.stopPropagation();var o=w.getAttribute("data-open")==="true";w.setAttribute("data-open",o?"false":"true")});document.addEventListener("click",function(){w.setAttribute("data-open","false")})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-notification-badge',
+    label: 'Badge Pulse',
+    category: 'animations', subcategory: 'micro',
+    tags: ['animation', 'micro', 'notification', 'badge', 'pulse', 'bell', 'bounce'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Badge Pulse',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: { html: '<div style="width:100%;min-height:80px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem"><style>.mnb-wrap{position:relative;cursor:pointer;padding:.5rem}.mnb-bell{font-size:1.5rem;color:rgba(246,239,229,.6);transition:color .2s}.mnb-wrap:hover .mnb-bell{color:#f6efe5;animation:mnbRing .5s ease}.mnb-badge{position:absolute;top:2px;right:2px;width:18px;height:18px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:.6rem;font-weight:700;color:#fff;animation:mnbPulse 2s ease-in-out infinite;box-shadow:0 0 0 0 rgba(239,68,68,.4)}@keyframes mnbPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4);transform:scale(1)}50%{box-shadow:0 0 0 6px rgba(239,68,68,0);transform:scale(1.1)}}@keyframes mnbRing{0%{transform:rotate(0)}20%{transform:rotate(14deg)}40%{transform:rotate(-14deg)}60%{transform:rotate(7deg)}80%{transform:rotate(-7deg)}100%{transform:rotate(0)}}</style><div class="mnb-wrap"><span class="mnb-bell">&#128276;</span><div class="mnb-badge">3</div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-drag-reorder',
+    label: 'Drag Reorder',
+    category: 'animations', subcategory: 'micro',
+    tags: ['animation', 'micro', 'drag', 'reorder', 'list', 'interactive', 'demo'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Drag Reorder',
+      defaultStyle: { width: '100%', minHeight: '180px' },
+      defaultContent: { html: '<div style="width:100%;min-height:180px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1.5rem"><style>.mdg-list{display:flex;flex-direction:column;gap:6px;width:240px}.mdg-item{display:flex;align-items:center;gap:.6rem;padding:.55rem .75rem;background:#151515;border:1px solid rgba(255,255,255,.06);border-radius:.5rem;cursor:grab;transition:transform .25s cubic-bezier(.4,.2,.2,1),box-shadow .25s,background .15s;user-select:none;font-family:system-ui,sans-serif;font-size:.8rem;color:#f6efe5}.mdg-item:active{cursor:grabbing}.mdg-item.mdg-dragging{background:#1a1a2e;box-shadow:0 8px 24px rgba(0,0,0,.4);transform:scale(1.03);z-index:10;border-color:rgba(59,130,246,.3)}.mdg-grip{color:rgba(246,239,229,.2);font-size:.7rem;letter-spacing:1px;line-height:1}.mdg-num{width:20px;height:20px;border-radius:50%;background:rgba(59,130,246,.15);color:#60a5fa;font-size:.65rem;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}</style><div class="mdg-list" id="mdgList"><div class="mdg-item" draggable="true"><span class="mdg-grip">&#9776;</span><span class="mdg-num">1</span>Design System</div><div class="mdg-item" draggable="true"><span class="mdg-grip">&#9776;</span><span class="mdg-num">2</span>Components</div><div class="mdg-item" draggable="true"><span class="mdg-grip">&#9776;</span><span class="mdg-num">3</span>Animations</div></div><script>(function(){var list=document.getElementById("mdgList");if(!list)return;var dragged=null;list.addEventListener("dragstart",function(e){dragged=e.target.closest(".mdg-item");if(dragged)dragged.classList.add("mdg-dragging")});list.addEventListener("dragend",function(){if(dragged)dragged.classList.remove("mdg-dragging");dragged=null;var items=list.querySelectorAll(".mdg-item .mdg-num");items.forEach(function(n,i){n.textContent=i+1})});list.addEventListener("dragover",function(e){e.preventDefault();var after=getDragAfter(list,e.clientY);if(!dragged)return;if(after==null)list.appendChild(dragged);else list.insertBefore(dragged,after)});function getDragAfter(cont,y){var els=Array.from(cont.querySelectorAll(".mdg-item:not(.mdg-dragging)"));var closest=null;var closestOff=Number.NEGATIVE_INFINITY;els.forEach(function(c){var box=c.getBoundingClientRect();var off=y-box.top-box.height/2;if(off<0&&off>closestOff){closestOff=off;closest=c}});return closest}})()</script></div>' },
+    },
+  },
+]
+
+// ─── REVEAL PATTERNS ───
+
+const REVEAL_PATTERNS: LibraryElementItem[] = [
+  {
+    id: 'anim-curtain-reveal',
+    label: 'Curtain Reveal',
+    category: 'animations', subcategory: 'reveals',
+    tags: ['animation', 'reveal', 'curtain', 'split', 'panels', 'dramatic'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Curtain Reveal',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem"><style>.rcr-stage{position:relative;width:320px;height:160px;overflow:hidden;border-radius:.5rem}.rcr-content{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e,#16213e);font-family:system-ui,sans-serif;font-size:1.1rem;font-weight:600;color:#f6efe5;letter-spacing:.05em}.rcr-left,.rcr-right{position:absolute;top:0;bottom:0;width:50%;background:#111;z-index:2;transition:transform 1s cubic-bezier(.77,0,.18,1)}.rcr-left{left:0}.rcr-right{right:0}.rcr-stage.rcr-open .rcr-left{transform:translateX(-100%)}.rcr-stage.rcr-open .rcr-right{transform:translateX(100%)}.rcr-replay{position:absolute;bottom:8px;right:8px;background:rgba(255,255,255,.08);border:none;color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .5rem;border-radius:.25rem;cursor:pointer;z-index:5}.rcr-replay:hover{background:rgba(255,255,255,.14);color:#f6efe5}</style><div class="rcr-stage" id="rcrStage"><div class="rcr-content">Revealed Content</div><div class="rcr-left"></div><div class="rcr-right"></div><button class="rcr-replay" id="rcrReplay">Replay</button></div><script>(function(){var s=document.getElementById("rcrStage"),b=document.getElementById("rcrReplay");if(!s||!b)return;setTimeout(function(){s.classList.add("rcr-open")},500);b.addEventListener("click",function(){s.classList.remove("rcr-open");setTimeout(function(){s.classList.add("rcr-open")},400)})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-blinds-reveal',
+    label: 'Blinds Reveal',
+    category: 'animations', subcategory: 'reveals',
+    tags: ['animation', 'reveal', 'blinds', 'slats', 'rotate', 'image'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Blinds Reveal',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem"><style>.rbl-stage{position:relative;width:320px;height:160px;border-radius:.5rem;overflow:hidden}.rbl-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0f172a,#1e293b);display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:1rem;font-weight:600;color:#f6efe5}.rbl-slats{position:absolute;inset:0;display:flex;flex-direction:column;z-index:2}.rbl-slat{flex:1;background:#111;transform-origin:center top;transition:transform .8s cubic-bezier(.77,0,.18,1);border-bottom:.5px solid rgba(255,255,255,.03)}.rbl-stage.rbl-open .rbl-slat{transform:rotateX(90deg)}.rbl-slat:nth-child(1){transition-delay:0s}.rbl-slat:nth-child(2){transition-delay:.06s}.rbl-slat:nth-child(3){transition-delay:.12s}.rbl-slat:nth-child(4){transition-delay:.18s}.rbl-slat:nth-child(5){transition-delay:.24s}.rbl-slat:nth-child(6){transition-delay:.3s}.rbl-slat:nth-child(7){transition-delay:.36s}.rbl-slat:nth-child(8){transition-delay:.42s}.rbl-replay{position:absolute;bottom:8px;right:8px;background:rgba(255,255,255,.08);border:none;color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .5rem;border-radius:.25rem;cursor:pointer;z-index:5}.rbl-replay:hover{background:rgba(255,255,255,.14);color:#f6efe5}</style><div class="rbl-stage" id="rblStage"><div class="rbl-bg">Revealed Content</div><div class="rbl-slats"><div class="rbl-slat"></div><div class="rbl-slat"></div><div class="rbl-slat"></div><div class="rbl-slat"></div><div class="rbl-slat"></div><div class="rbl-slat"></div><div class="rbl-slat"></div><div class="rbl-slat"></div></div><button class="rbl-replay" id="rblReplay">Replay</button></div><script>(function(){var s=document.getElementById("rblStage"),b=document.getElementById("rblReplay");if(!s||!b)return;setTimeout(function(){s.classList.add("rbl-open")},500);b.addEventListener("click",function(){s.classList.remove("rbl-open");setTimeout(function(){s.classList.add("rbl-open")},400)})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-diagonal-wipe',
+    label: 'Diagonal Wipe',
+    category: 'animations', subcategory: 'reveals',
+    tags: ['animation', 'reveal', 'diagonal', 'wipe', 'clip-path', 'sweep'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Diagonal Wipe',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem"><style>.rdw-stage{position:relative;width:320px;height:160px;border-radius:.5rem;overflow:hidden}.rdw-content{position:absolute;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:1rem;font-weight:600;color:#f6efe5;clip-path:polygon(0 0,0 0,0 100%,0 100%);transition:clip-path 1s cubic-bezier(.77,0,.18,1)}.rdw-stage.rdw-open .rdw-content{clip-path:polygon(0 0,120% 0,100% 100%,0 100%)}.rdw-overlay{position:absolute;inset:0;background:#111;z-index:1;clip-path:polygon(0 0,100% 0,100% 100%,0 100%);transition:clip-path 1s cubic-bezier(.77,0,.18,1)}.rdw-stage.rdw-open .rdw-overlay{clip-path:polygon(120% 0,100% 0,120% 100%,100% 100%)}.rdw-replay{position:absolute;bottom:8px;right:8px;background:rgba(255,255,255,.08);border:none;color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .5rem;border-radius:.25rem;cursor:pointer;z-index:5}.rdw-replay:hover{background:rgba(255,255,255,.14);color:#f6efe5}</style><div class="rdw-stage" id="rdwStage"><div class="rdw-content">Revealed Content</div><div class="rdw-overlay"></div><button class="rdw-replay" id="rdwReplay">Replay</button></div><script>(function(){var s=document.getElementById("rdwStage"),b=document.getElementById("rdwReplay");if(!s||!b)return;setTimeout(function(){s.classList.add("rdw-open")},500);b.addEventListener("click",function(){s.classList.remove("rdw-open");setTimeout(function(){s.classList.add("rdw-open")},400)})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-circle-expand',
+    label: 'Circle Expand',
+    category: 'animations', subcategory: 'reveals',
+    tags: ['animation', 'reveal', 'circle', 'expand', 'clip-path', 'center'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Circle Expand',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem"><style>.rce-stage{position:relative;width:320px;height:160px;border-radius:.5rem;overflow:hidden}.rce-content{position:absolute;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:1rem;font-weight:600;color:#f6efe5;clip-path:circle(0% at 50% 50%);transition:clip-path 1s cubic-bezier(.4,0,.2,1)}.rce-stage.rce-open .rce-content{clip-path:circle(75% at 50% 50%)}.rce-replay{position:absolute;bottom:8px;right:8px;background:rgba(255,255,255,.08);border:none;color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .5rem;border-radius:.25rem;cursor:pointer;z-index:5}.rce-replay:hover{background:rgba(255,255,255,.14);color:#f6efe5}</style><div class="rce-stage" id="rceStage"><div class="rce-content">Revealed Content</div><button class="rce-replay" id="rceReplay">Replay</button></div><script>(function(){var s=document.getElementById("rceStage"),b=document.getElementById("rceReplay");if(!s||!b)return;setTimeout(function(){s.classList.add("rce-open")},500);b.addEventListener("click",function(){s.classList.remove("rce-open");setTimeout(function(){s.classList.add("rce-open")},400)})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-pixel-dissolve',
+    label: 'Pixel Dissolve',
+    category: 'animations', subcategory: 'reveals',
+    tags: ['animation', 'reveal', 'pixel', 'dissolve', 'grid', 'random', 'fade'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Pixel Dissolve',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem"><style>.rpd-stage{position:relative;width:320px;height:160px;border-radius:.5rem;overflow:hidden}.rpd-content{position:absolute;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:1rem;font-weight:600;color:#f6efe5}.rpd-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(16,1fr);grid-template-rows:repeat(8,1fr);z-index:2}.rpd-cell{background:#111;transition:opacity .4s ease}.rpd-replay{position:absolute;bottom:8px;right:8px;background:rgba(255,255,255,.08);border:none;color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .5rem;border-radius:.25rem;cursor:pointer;z-index:5}.rpd-replay:hover{background:rgba(255,255,255,.14);color:#f6efe5}</style><div class="rpd-stage" id="rpdStage"><div class="rpd-content">Revealed Content</div><div class="rpd-grid" id="rpdGrid"></div><button class="rpd-replay" id="rpdReplay">Replay</button></div><script>(function(){var grid=document.getElementById("rpdGrid"),s=document.getElementById("rpdStage"),b=document.getElementById("rpdReplay");if(!grid||!s||!b)return;function init(){grid.innerHTML="";for(var i=0;i<128;i++){var c=document.createElement("div");c.className="rpd-cell";grid.appendChild(c)}}function dissolve(){var cells=Array.from(grid.querySelectorAll(".rpd-cell"));cells.forEach(function(c){c.style.opacity="1"});var shuffled=cells.slice().sort(function(){return Math.random()-.5});shuffled.forEach(function(c,i){setTimeout(function(){c.style.opacity="0"},i*12+200)})}init();dissolve();b.addEventListener("click",function(){init();dissolve()})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-split-slide',
+    label: 'Split Slide',
+    category: 'animations', subcategory: 'reveals',
+    tags: ['animation', 'reveal', 'split', 'slide', 'vertical', 'image', 'text'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Split Slide',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem"><style>.rss-stage{position:relative;width:320px;height:160px;border-radius:.5rem;overflow:hidden}.rss-content{position:absolute;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:1rem;font-weight:600;color:#f6efe5}.rss-top,.rss-bot{position:absolute;left:0;right:0;height:50%;background:#111;z-index:2;transition:transform 1s cubic-bezier(.77,0,.18,1)}.rss-top{top:0}.rss-bot{bottom:0}.rss-stage.rss-open .rss-top{transform:translateY(-100%)}.rss-stage.rss-open .rss-bot{transform:translateY(100%)}.rss-replay{position:absolute;bottom:8px;right:8px;background:rgba(255,255,255,.08);border:none;color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .5rem;border-radius:.25rem;cursor:pointer;z-index:5}.rss-replay:hover{background:rgba(255,255,255,.14);color:#f6efe5}</style><div class="rss-stage" id="rssStage"><div class="rss-content">Revealed Content</div><div class="rss-top"></div><div class="rss-bot"></div><button class="rss-replay" id="rssReplay">Replay</button></div><script>(function(){var s=document.getElementById("rssStage"),b=document.getElementById("rssReplay");if(!s||!b)return;setTimeout(function(){s.classList.add("rss-open")},500);b.addEventListener("click",function(){s.classList.remove("rss-open");setTimeout(function(){s.classList.add("rss-open")},400)})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-rotate-in',
+    label: '3D Rotate In',
+    category: 'animations', subcategory: 'reveals',
+    tags: ['animation', 'reveal', '3d', 'rotate', 'flip', 'perspective', 'card'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: '3D Rotate In',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem;perspective:800px"><style>.rri-card{width:280px;height:140px;border-radius:.5rem;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:1rem;font-weight:600;color:#f6efe5;transform:rotateY(-90deg);opacity:0;animation:rriFlip .9s cubic-bezier(.25,.46,.45,.94) .4s forwards;border:1px solid rgba(255,255,255,.06);box-shadow:0 8px 32px rgba(0,0,0,.3)}@keyframes rriFlip{0%{transform:rotateY(-90deg);opacity:0}100%{transform:rotateY(0);opacity:1}}.rri-replay{position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,.08);border:none;color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .5rem;border-radius:.25rem;cursor:pointer}.rri-replay:hover{background:rgba(255,255,255,.14);color:#f6efe5}</style><div style="position:relative"><div class="rri-card" id="rriCard">3D Rotate Reveal</div><button class="rri-replay" id="rriReplay">Replay</button></div><script>(function(){var c=document.getElementById("rriCard"),b=document.getElementById("rriReplay");if(!c||!b)return;b.addEventListener("click",function(){c.style.animation="none";void c.offsetWidth;c.style.animation="rriFlip .9s cubic-bezier(.25,.46,.45,.94) .1s forwards"})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-unfold',
+    label: 'Unfold',
+    category: 'animations', subcategory: 'reveals',
+    tags: ['animation', 'reveal', 'unfold', 'paper', 'perspective', 'shadow', '3d'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Unfold',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem;perspective:600px"><style>.ruf-card{width:300px;height:150px;border-radius:.5rem;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:1rem;font-weight:600;color:#f6efe5;transform-origin:top center;transform:rotateX(-90deg);opacity:0;animation:rufUnfold 1s cubic-bezier(.4,0,.2,1) .4s forwards;border:1px solid rgba(255,255,255,.06);box-shadow:0 12px 40px rgba(0,0,0,.4)}@keyframes rufUnfold{0%{transform:rotateX(-90deg);opacity:0}60%{transform:rotateX(8deg);opacity:1}100%{transform:rotateX(0);opacity:1}}.ruf-replay{position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,.08);border:none;color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .5rem;border-radius:.25rem;cursor:pointer}.ruf-replay:hover{background:rgba(255,255,255,.14);color:#f6efe5}</style><div style="position:relative"><div class="ruf-card" id="rufCard">Unfolded Content</div><button class="ruf-replay" id="rufReplay">Replay</button></div><script>(function(){var c=document.getElementById("rufCard"),b=document.getElementById("rufReplay");if(!c||!b)return;b.addEventListener("click",function(){c.style.animation="none";void c.offsetWidth;c.style.animation="rufUnfold 1s cubic-bezier(.4,0,.2,1) .1s forwards"})})()</script></div>' },
+    },
+  },
+]
+
+// ─── MAGNETIC EFFECTS ───
+
+const MAGNETIC_EFFECTS: LibraryElementItem[] = [
+  {
+    id: 'anim-magnetic-button',
+    label: 'Magnetic Button',
+    category: 'animations', subcategory: 'magnetic',
+    tags: ['animation', 'magnetic', 'button', 'cursor', 'interactive', 'hover', 'spring'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Magnetic Button',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.mgb-wrap{position:relative;display:inline-block}.mgb-btn{padding:.875rem 2.5rem;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(255,255,255,.1);border-radius:.5rem;color:#f6efe5;font-family:system-ui,sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:transform .3s cubic-bezier(.25,.46,.45,.94),box-shadow .3s ease;box-shadow:0 4px 20px rgba(0,0,0,.3)}.mgb-btn:hover{box-shadow:0 8px 32px rgba(22,33,62,.5)}</style><div class="mgb-wrap" id="mgbWrap"><button class="mgb-btn" id="mgbBtn">Hover Near Me</button></div><script>(function(){var wrap=document.getElementById("mgbWrap"),btn=document.getElementById("mgbBtn");if(!wrap||!btn)return;var rect,cx,cy;function update(){rect=wrap.getBoundingClientRect();cx=rect.left+rect.width/2;cy=rect.top+rect.height/2}update();window.addEventListener("scroll",update);window.addEventListener("resize",update);document.addEventListener("mousemove",function(e){update();var dx=e.clientX-cx,dy=e.clientY-cy,dist=Math.sqrt(dx*dx+dy*dy),radius=100;if(dist<radius){var pull=(1-dist/radius)*.4;btn.style.transform="translate("+dx*pull+"px,"+dy*pull+"px)"}else{btn.style.transform="translate(0,0)"}});wrap.addEventListener("mouseleave",function(){btn.style.transform="translate(0,0)"})})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-magnetic-card',
+    label: 'Magnetic Card',
+    category: 'animations', subcategory: 'magnetic',
+    tags: ['animation', 'magnetic', 'card', '3d', 'tilt', 'perspective', 'cursor'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Magnetic Card',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem;perspective:800px"><style>.mgc-card{width:280px;height:180px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(255,255,255,.08);border-radius:.75rem;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#f6efe5;font-family:system-ui,sans-serif;transition:transform .15s ease-out,box-shadow .3s ease;box-shadow:0 8px 32px rgba(0,0,0,.3);cursor:default}.mgc-card h3{margin:0;font-size:1.1rem;font-weight:700}.mgc-card p{margin:.5rem 0 0;font-size:.75rem;opacity:.5}</style><div class="mgc-card" id="mgcCard"><h3>Premium Card</h3><p>Move your cursor over me</p></div><script>(function(){var card=document.getElementById("mgcCard");if(!card)return;card.addEventListener("mousemove",function(e){var rect=card.getBoundingClientRect(),x=(e.clientX-rect.left)/rect.width,y=(e.clientY-rect.top)/rect.height,rotY=(x-.5)*20,rotX=(y-.5)*-20;card.style.transform="rotateX("+rotX+"deg) rotateY("+rotY+"deg) scale(1.02)";card.style.boxShadow="0 "+(12+rotX)+"px "+(40+Math.abs(rotY))+"px rgba(0,0,0,.4)"});card.addEventListener("mouseleave",function(){card.style.transform="rotateX(0) rotateY(0) scale(1)";card.style.boxShadow="0 8px 32px rgba(0,0,0,.3)"})})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-magnetic-text',
+    label: 'Magnetic Letters',
+    category: 'animations', subcategory: 'magnetic',
+    tags: ['animation', 'magnetic', 'text', 'letters', 'cursor', 'interactive'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Magnetic Letters',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.mgl-wrap{display:flex;gap:4px;font-family:system-ui,sans-serif;font-size:2.5rem;font-weight:800;user-select:none}.mgl-char{color:#f6efe5;transition:transform .2s cubic-bezier(.25,.46,.45,.94);display:inline-block;cursor:default}</style><div class="mgl-wrap" id="mglWrap"></div><script>(function(){var wrap=document.getElementById("mglWrap");if(!wrap)return;var word="MAGNETIC";word.split("").forEach(function(ch){var span=document.createElement("span");span.className="mgl-char";span.textContent=ch;wrap.appendChild(span)});var chars=wrap.querySelectorAll(".mgl-char");document.addEventListener("mousemove",function(e){chars.forEach(function(c){var rect=c.getBoundingClientRect(),cx=rect.left+rect.width/2,cy=rect.top+rect.height/2,dx=e.clientX-cx,dy=e.clientY-cy,dist=Math.sqrt(dx*dx+dy*dy),radius=120;if(dist<radius){var pull=(1-dist/radius)*.35;c.style.transform="translate("+dx*pull+"px,"+dy*pull+"px)"}else{c.style.transform="translate(0,0)"}})})})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-cursor-trail',
+    label: 'Cursor Trail',
+    category: 'animations', subcategory: 'magnetic',
+    tags: ['animation', 'cursor', 'trail', 'follow', 'circles', 'interactive'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Cursor Trail',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: `<div style="width:100%;min-height:300px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem;position:relative;overflow:hidden" id="ctWrap"><style>.ct-dot{position:absolute;border-radius:50%;background:rgba(200,169,126,.6);pointer-events:none;transition:transform .08s linear;mix-blend-mode:screen}.ct-label{color:rgba(246,239,229,.3);font-family:system-ui,sans-serif;font-size:.75rem;pointer-events:none;z-index:2;position:relative}</style><span class="ct-label">Move cursor here</span><script>(function(){var wrap=document.getElementById("ctWrap");if(!wrap)return;var dots=[],count=8;for(var i=0;i<count;i++){var d=document.createElement("div");d.className="ct-dot";var size=20-i*2;d.style.width=size+"px";d.style.height=size+"px";d.style.opacity=String(1-i*.11);wrap.appendChild(d);dots.push({el:d,x:0,y:0})}var mouse={x:0,y:0};wrap.addEventListener("mousemove",function(e){var rect=wrap.getBoundingClientRect();mouse.x=e.clientX-rect.left;mouse.y=e.clientY-rect.top});function animate(){var px=mouse.x,py=mouse.y;dots.forEach(function(dot,i){var speed=.15-i*.012;dot.x+=(px-dot.x)*speed;dot.y+=(py-dot.y)*speed;dot.el.style.transform="translate("+dot.x+"px,"+dot.y+"px) translate(-50%,-50%)";px=dot.x;py=dot.y});requestAnimationFrame(animate)}animate()})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-cursor-blob',
+    label: 'Cursor Blob',
+    category: 'animations', subcategory: 'magnetic',
+    tags: ['animation', 'cursor', 'blob', 'gradient', 'follow', 'glow'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Cursor Blob',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: `<div style="width:100%;min-height:300px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem;position:relative;overflow:hidden" id="cbWrap"><style>.cb-blob{position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,126,.3),rgba(26,26,46,.1));filter:blur(40px);pointer-events:none;transform:translate(-50%,-50%)}.cb-label{color:rgba(246,239,229,.3);font-family:system-ui,sans-serif;font-size:.75rem;pointer-events:none;z-index:2;position:relative}</style><div class="cb-blob" id="cbBlob"></div><span class="cb-label">Move cursor here</span><script>(function(){var wrap=document.getElementById("cbWrap"),blob=document.getElementById("cbBlob");if(!wrap||!blob)return;var bx=0,by=0,mx=0,my=0;wrap.addEventListener("mousemove",function(e){var rect=wrap.getBoundingClientRect();mx=e.clientX-rect.left;my=e.clientY-rect.top});function animate(){bx+=(mx-bx)*.06;by+=(my-by)*.06;blob.style.left=bx+"px";blob.style.top=by+"px";requestAnimationFrame(animate)}animate()})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-repel-dots',
+    label: 'Repel Grid',
+    category: 'animations', subcategory: 'magnetic',
+    tags: ['animation', 'repel', 'grid', 'dots', 'force', 'field', 'cursor', 'interactive'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Repel Grid',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: `<div style="width:100%;min-height:300px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem;position:relative;overflow:hidden" id="rdWrap"><style>.rd-dot{position:absolute;width:4px;height:4px;border-radius:50%;background:rgba(200,169,126,.4);transition:transform .3s cubic-bezier(.25,.46,.45,.94)}.rd-label{color:rgba(246,239,229,.25);font-family:system-ui,sans-serif;font-size:.7rem;pointer-events:none;z-index:2;position:relative}</style><span class="rd-label">Move cursor over the grid</span><script>(function(){var wrap=document.getElementById("rdWrap");if(!wrap)return;var dots=[],cols=20,rows=12,spacingX,spacingY;function init(){wrap.querySelectorAll(".rd-dot").forEach(function(d){d.remove()});dots=[];var rect=wrap.getBoundingClientRect();spacingX=rect.width/(cols+1);spacingY=rect.height/(rows+1);for(var r=1;r<=rows;r++){for(var c=1;c<=cols;c++){var d=document.createElement("div");d.className="rd-dot";d.style.left=c*spacingX+"px";d.style.top=r*spacingY+"px";wrap.appendChild(d);dots.push({el:d,ox:c*spacingX,oy:r*spacingY})}}}init();window.addEventListener("resize",init);wrap.addEventListener("mousemove",function(e){var rect=wrap.getBoundingClientRect(),mx=e.clientX-rect.left,my=e.clientY-rect.top;dots.forEach(function(dot){var dx=dot.ox-mx,dy=dot.oy-my,dist=Math.sqrt(dx*dx+dy*dy),radius=80;if(dist<radius){var force=(1-dist/radius)*30,angle=Math.atan2(dy,dx);dot.el.style.transform="translate("+Math.cos(angle)*force+"px,"+Math.sin(angle)*force+"px)"}else{dot.el.style.transform="translate(0,0)"}})});wrap.addEventListener("mouseleave",function(){dots.forEach(function(dot){dot.el.style.transform="translate(0,0)"})})})()</script></div>` },
+    },
+  },
+]
+
+// ─── MORPH TRANSITIONS ───
+
+const MORPH_TRANSITIONS: LibraryElementItem[] = [
+  {
+    id: 'anim-morph-shape',
+    label: 'Shape Morph',
+    category: 'animations', subcategory: 'morphing',
+    tags: ['animation', 'morph', 'shape', 'svg', 'loop', 'circle', 'square', 'triangle'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Shape Morph',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.msh-svg{width:120px;height:120px}.msh-path{fill:none;stroke:rgba(200,169,126,.7);stroke-width:2;animation:mshMorph 4s cubic-bezier(.45,.05,.55,.95) infinite}@keyframes mshMorph{0%,100%{d:path("M60,10 A50,50 0 1,1 59.99,10 Z")}33%{d:path("M15,15 L105,15 L105,105 L15,105 Z")}66%{d:path("M60,10 L110,100 L10,100 Z")}}</style><svg class="msh-svg" viewBox="0 0 120 120"><path class="msh-path" d="M60,10 A50,50 0 1,1 59.99,10 Z"/></svg></div>` },
+    },
+  },
+  {
+    id: 'anim-morph-icon',
+    label: 'Icon Morph',
+    category: 'animations', subcategory: 'morphing',
+    tags: ['animation', 'morph', 'icon', 'hamburger', 'close', 'menu', 'click', 'interactive'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Icon Morph',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.mhi-btn{width:48px;height:48px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:.5rem;cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;transition:background .2s}.mhi-btn:hover{background:rgba(255,255,255,.08)}.mhi-line{width:24px;height:2px;background:#f6efe5;border-radius:1px;transition:transform .4s cubic-bezier(.77,0,.18,1),opacity .3s ease}.mhi-btn.mhi-open .mhi-l1{transform:translateY(8px) rotate(45deg)}.mhi-btn.mhi-open .mhi-l2{opacity:0;transform:scaleX(0)}.mhi-btn.mhi-open .mhi-l3{transform:translateY(-8px) rotate(-45deg)}.mhi-label{color:rgba(246,239,229,.4);font-family:system-ui,sans-serif;font-size:.7rem;margin-top:1rem}</style><div style="text-align:center"><button class="mhi-btn" id="mhiBtn"><span class="mhi-line mhi-l1"></span><span class="mhi-line mhi-l2"></span><span class="mhi-line mhi-l3"></span></button><div class="mhi-label">Click to toggle</div></div><script>(function(){var btn=document.getElementById("mhiBtn");if(!btn)return;btn.addEventListener("click",function(){btn.classList.toggle("mhi-open")})})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-morph-text',
+    label: 'Text Morph',
+    category: 'animations', subcategory: 'morphing',
+    tags: ['animation', 'morph', 'text', 'blur', 'transition', 'rotate', 'words', 'loop'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Text Morph',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.mmt-word{font-family:system-ui,sans-serif;font-size:2.5rem;font-weight:800;color:#f6efe5;transition:opacity .5s ease,filter .5s ease;display:inline-block}</style><span class="mmt-word" id="mmtWord">Design</span><script>(function(){var el=document.getElementById("mmtWord");if(!el)return;var words=["Design","Build","Launch"],idx=0;setInterval(function(){el.style.opacity="0";el.style.filter="blur(8px)";setTimeout(function(){idx=(idx+1)%words.length;el.textContent=words[idx];el.style.opacity="1";el.style.filter="blur(0)"},500)},2500)})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-liquid-button',
+    label: 'Liquid Button',
+    category: 'animations', subcategory: 'morphing',
+    tags: ['animation', 'morph', 'liquid', 'gooey', 'button', 'svg', 'filter', 'hover'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Liquid Button',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><svg style="position:absolute;width:0;height:0"><defs><filter id="mlqGoo"><feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/><feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"/><feBlend in="SourceGraphic" in2="goo"/></filter></defs></svg><style>.mlq-wrap{filter:url(#mlqGoo)}.mlq-btn{position:relative;padding:1rem 2.5rem;background:#1a1a2e;border:none;color:#f6efe5;font-family:system-ui,sans-serif;font-size:.9rem;font-weight:600;border-radius:2rem;cursor:pointer;overflow:visible;transition:background .3s}.mlq-btn:hover{background:#16213e}.mlq-blob{position:absolute;width:20px;height:20px;background:#1a1a2e;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0;transition:all .4s cubic-bezier(.25,.46,.45,.94)}.mlq-btn:hover .mlq-b1{opacity:1;transform:translate(-140%,-120%) scale(1.2)}.mlq-btn:hover .mlq-b2{opacity:1;transform:translate(100%,-80%) scale(.9)}.mlq-btn:hover .mlq-b3{opacity:1;transform:translate(-60%,100%) scale(1.1)}.mlq-btn:hover .mlq-b4{opacity:1;transform:translate(120%,60%) scale(.8)}</style><div class="mlq-wrap"><button class="mlq-btn">Hover Me<span class="mlq-blob mlq-b1"></span><span class="mlq-blob mlq-b2"></span><span class="mlq-blob mlq-b3"></span><span class="mlq-blob mlq-b4"></span></button></div></div>` },
+    },
+  },
+  {
+    id: 'anim-blob-morph',
+    label: 'Blob Morph',
+    category: 'animations', subcategory: 'morphing',
+    tags: ['animation', 'morph', 'blob', 'organic', 'border-radius', 'loop', 'gradient'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Blob Morph',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.mbm-blob{width:160px;height:160px;background:linear-gradient(135deg,rgba(200,169,126,.4),rgba(26,26,46,.6));animation:mbmMorph 8s cubic-bezier(.45,.05,.55,.95) infinite;transition:border-radius .1s}@keyframes mbmMorph{0%,100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%}25%{border-radius:30% 60% 70% 40%/50% 60% 30% 60%}50%{border-radius:50% 60% 30% 60%/30% 50% 70% 50%}75%{border-radius:40% 30% 60% 50%/60% 40% 30% 70%}}</style><div class="mbm-blob"></div></div>` },
+    },
+  },
+  {
+    id: 'anim-number-morph',
+    label: 'Number Morph',
+    category: 'animations', subcategory: 'morphing',
+    tags: ['animation', 'morph', 'number', 'counter', 'digit', 'rolling', 'slide'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Number Morph',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.mnm-wrap{width:80px;height:100px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.08);border-radius:.5rem;background:rgba(255,255,255,.03)}.mnm-strip{display:flex;flex-direction:column;transition:transform .6s cubic-bezier(.77,0,.18,1)}.mnm-digit{width:80px;height:100px;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:3rem;font-weight:800;color:#f6efe5;flex-shrink:0}</style><div class="mnm-wrap"><div class="mnm-strip" id="mnmStrip"></div></div><script>(function(){var strip=document.getElementById("mnmStrip");if(!strip)return;for(var i=0;i<=9;i++){var d=document.createElement("div");d.className="mnm-digit";d.textContent=String(i);strip.appendChild(d)}var idx=0;setInterval(function(){idx=(idx+1)%10;strip.style.transform="translateY("+-idx*100+"px)"},1200)})()</script></div>` },
+    },
+  },
+]
+
+// ─── SVG ANIMATIONS ───
+
+const SVG_ANIMATIONS: LibraryElementItem[] = [
+  {
+    id: 'anim-svg-draw',
+    label: 'SVG Line Draw',
+    category: 'animations', subcategory: 'svg',
+    tags: ['animation', 'svg', 'draw', 'stroke', 'line', 'logo', 'signature', 'reveal'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'SVG Line Draw',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.svd-icon{width:120px;height:120px}.svd-path{fill:none;stroke:rgba(200,169,126,.8);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:500;stroke-dashoffset:500;animation:svdDraw 2.5s cubic-bezier(.45,.05,.55,.95) forwards}@keyframes svdDraw{to{stroke-dashoffset:0}}.svd-replay{margin-top:1rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .75rem;border-radius:.25rem;cursor:pointer}.svd-replay:hover{background:rgba(255,255,255,.1);color:#f6efe5}</style><div style="text-align:center"><svg class="svd-icon" viewBox="0 0 120 120"><path class="svd-path" id="svdPath" d="M20,90 L40,30 L60,70 L80,20 L100,90 M15,90 L105,90 M60,20 L60,90"/></svg><br><button class="svd-replay" id="svdReplay">Replay</button></div><script>(function(){var p=document.getElementById("svdPath"),b=document.getElementById("svdReplay");if(!p||!b)return;b.addEventListener("click",function(){p.style.animation="none";void p.offsetWidth;p.style.animation="svdDraw 2.5s cubic-bezier(.45,.05,.55,.95) forwards"})})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-svg-fill',
+    label: 'SVG Fill Reveal',
+    category: 'animations', subcategory: 'svg',
+    tags: ['animation', 'svg', 'fill', 'reveal', 'color', 'gradient', 'mask'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'SVG Fill Reveal',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.svf-svg{width:140px;height:140px}@keyframes svfFill{0%{stop-color:rgba(200,169,126,.7);offset:0%}100%{stop-color:rgba(200,169,126,.7);offset:100%}}@keyframes svfRise{0%{y2:100%}100%{y2:0%}}.svf-shape{stroke:rgba(200,169,126,.3);stroke-width:1.5;fill:url(#svfGrad)}.svf-stop1{stop-color:rgba(200,169,126,.6)}.svf-stop2{stop-color:transparent}.svf-grad{animation:svfRise 2s cubic-bezier(.45,.05,.55,.95) forwards}.svf-replay{margin-top:1rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .75rem;border-radius:.25rem;cursor:pointer}.svf-replay:hover{background:rgba(255,255,255,.1);color:#f6efe5}</style><div style="text-align:center"><svg class="svf-svg" viewBox="0 0 140 140"><defs><linearGradient id="svfGrad" x1="0%" y1="100%" x2="0%" y2="100%" class="svf-grad"><stop offset="0%" class="svf-stop1"/><stop offset="100%" class="svf-stop2"/></linearGradient></defs><circle class="svf-shape" cx="70" cy="70" r="60"/></svg><br><button class="svf-replay" id="svfReplay">Replay</button></div><script>(function(){var g=document.querySelector(".svf-grad"),b=document.getElementById("svfReplay");if(!g||!b)return;b.addEventListener("click",function(){g.style.animation="none";void g.getBBox;g.style.animation="svfRise 2s cubic-bezier(.45,.05,.55,.95) forwards"})})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-svg-path-follow',
+    label: 'Path Follow',
+    category: 'animations', subcategory: 'svg',
+    tags: ['animation', 'svg', 'path', 'follow', 'motion', 'circle', 'loop', 'orbit'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Path Follow',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><svg width="300" height="200" viewBox="0 0 300 200"><path d="M30,100 C30,30 130,30 150,100 C170,170 270,170 270,100" fill="none" stroke="rgba(200,169,126,.15)" stroke-width="1.5" stroke-dasharray="4,6" id="svpfPath"/><circle r="6" fill="rgba(200,169,126,.8)"><animateMotion dur="3s" repeatCount="indefinite"><mpath href="#svpfPath"/></animateMotion></circle><circle r="3" fill="rgba(200,169,126,.4)"><animateMotion dur="3s" repeatCount="indefinite" begin="0.3s"><mpath href="#svpfPath"/></animateMotion></circle></svg></div>` },
+    },
+  },
+  {
+    id: 'anim-svg-wave',
+    label: 'SVG Wave',
+    category: 'animations', subcategory: 'svg',
+    tags: ['animation', 'svg', 'wave', 'divider', 'section', 'loop', 'horizontal'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'SVG Wave',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;display:flex;align-items:flex-end;background:#0a0a0a;border-radius:.75rem;overflow:hidden;position:relative"><style>.svw-wave{position:absolute;bottom:0;left:0;width:200%;height:100px;animation:svwMove 6s linear infinite}.svw-w1{opacity:.3;animation-duration:6s}.svw-w2{opacity:.15;animation-duration:8s;animation-direction:reverse;bottom:10px}@keyframes svwMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}</style><svg class="svw-wave svw-w1" viewBox="0 0 1200 100" preserveAspectRatio="none"><path d="M0,40 C200,80 400,0 600,40 C800,80 1000,0 1200,40 L1200,100 L0,100 Z" fill="rgba(200,169,126,.4)"/></svg><svg class="svw-wave svw-w2" viewBox="0 0 1200 100" preserveAspectRatio="none"><path d="M0,50 C150,90 350,10 600,50 C850,90 1050,10 1200,50 L1200,100 L0,100 Z" fill="rgba(200,169,126,.3)"/></svg></div>` },
+    },
+  },
+  {
+    id: 'anim-svg-handwriting',
+    label: 'Handwriting',
+    category: 'animations', subcategory: 'svg',
+    tags: ['animation', 'svg', 'handwriting', 'cursive', 'write', 'stroke', 'text'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Handwriting',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.svh-path{fill:none;stroke:rgba(200,169,126,.8);stroke-width:2;stroke-linecap:round;stroke-dasharray:600;stroke-dashoffset:600;animation:svhWrite 3s cubic-bezier(.45,.05,.55,.95) forwards}.svh-replay{margin-top:1rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .75rem;border-radius:.25rem;cursor:pointer}.svh-replay:hover{background:rgba(255,255,255,.1);color:#f6efe5}@keyframes svhWrite{to{stroke-dashoffset:0}}</style><div style="text-align:center"><svg width="260" height="80" viewBox="0 0 260 80"><path class="svh-path" id="svhPath" d="M10,60 C10,20 30,15 30,40 C30,55 15,60 15,60 L40,60 M50,30 C45,30 40,40 40,50 C40,60 50,65 55,55 M55,25 L55,60 M70,30 C65,30 60,40 60,50 C60,60 70,65 75,55 L75,60 C75,60 72,75 60,75 M90,25 L90,60 M90,25 L90,22 M100,50 C100,35 115,35 115,50 C115,65 100,65 100,50 Z"/></svg><br><button class="svh-replay" id="svhReplay">Replay</button></div><script>(function(){var p=document.getElementById("svhPath"),b=document.getElementById("svhReplay");if(!p||!b)return;b.addEventListener("click",function(){p.style.animation="none";void p.offsetWidth;p.style.animation="svhWrite 3s cubic-bezier(.45,.05,.55,.95) forwards"})})()</script></div>` },
+    },
+  },
+  {
+    id: 'anim-svg-logo-assemble',
+    label: 'Logo Assembly',
+    category: 'animations', subcategory: 'svg',
+    tags: ['animation', 'svg', 'logo', 'assemble', 'fly', 'pieces', 'build', 'reveal'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Logo Assembly',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.sla-wrap{position:relative;width:140px;height:140px}.sla-piece{position:absolute;width:60px;height:60px;opacity:0;transition:all 1s cubic-bezier(.25,.46,.45,.94)}.sla-p1{background:rgba(200,169,126,.5);border-radius:.25rem 0 0 0;top:0;left:0;transform:translate(-80px,-80px) rotate(-90deg)}.sla-p2{background:rgba(200,169,126,.4);border-radius:0 .25rem 0 0;top:0;right:0;transform:translate(80px,-80px) rotate(90deg)}.sla-p3{background:rgba(200,169,126,.3);border-radius:0 0 0 .25rem;bottom:0;left:0;transform:translate(-80px,80px) rotate(90deg)}.sla-p4{background:rgba(200,169,126,.35);border-radius:0 0 .25rem 0;bottom:0;right:0;transform:translate(80px,80px) rotate(-90deg)}.sla-wrap.sla-done .sla-piece{opacity:1;transform:translate(0,0) rotate(0deg)}.sla-replay{margin-top:1.5rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:rgba(246,239,229,.5);font-size:.65rem;font-family:system-ui,sans-serif;padding:.25rem .75rem;border-radius:.25rem;cursor:pointer}.sla-replay:hover{background:rgba(255,255,255,.1);color:#f6efe5}</style><div style="text-align:center"><div class="sla-wrap" id="slaWrap"><div class="sla-piece sla-p1"></div><div class="sla-piece sla-p2"></div><div class="sla-piece sla-p3"></div><div class="sla-piece sla-p4"></div></div><button class="sla-replay" id="slaReplay">Replay</button></div><script>(function(){var w=document.getElementById("slaWrap"),b=document.getElementById("slaReplay");if(!w||!b)return;setTimeout(function(){w.classList.add("sla-done")},500);b.addEventListener("click",function(){w.classList.remove("sla-done");setTimeout(function(){w.classList.add("sla-done")},400)})})()</script></div>` },
+    },
+  },
+]
+
+// ─── TEXTURE EFFECTS ───
+
+const TEXTURE_EFFECTS: LibraryElementItem[] = [
+  {
+    id: 'anim-noise-grain',
+    label: 'Film Grain',
+    category: 'animations', subcategory: 'textures',
+    tags: ['animation', 'texture', 'noise', 'grain', 'film', 'overlay', 'dark', 'vintage'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Film Grain',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem;position:relative;overflow:hidden"><svg style="position:absolute;width:0;height:0"><filter id="txNoise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></svg><style>.txn-overlay{position:absolute;inset:0;opacity:.06;animation:txnShift .1s steps(4) infinite;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");pointer-events:none}@keyframes txnShift{0%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}50%{transform:translate(1px,-1px)}75%{transform:translate(-1px,2px)}}.txn-text{position:relative;z-index:1;color:#f6efe5;font-family:system-ui,sans-serif;font-size:1.5rem;font-weight:700;text-align:center}.txn-sub{font-size:.75rem;font-weight:400;opacity:.4;margin-top:.5rem}</style><div class="txn-overlay"></div><div class="txn-text">Film Grain Overlay<div class="txn-sub">Subtle animated noise texture</div></div></div>` },
+    },
+  },
+  {
+    id: 'anim-glitch-text',
+    label: 'Glitch Text',
+    category: 'animations', subcategory: 'textures',
+    tags: ['animation', 'texture', 'glitch', 'text', 'rgb', 'split', 'clip', 'cyberpunk'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Glitch Text',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.txg-text{position:relative;font-family:system-ui,sans-serif;font-size:2.5rem;font-weight:900;color:#f6efe5;letter-spacing:.05em}.txg-text::before,.txg-text::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%}.txg-text::before{color:#ff006e;animation:txgBefore 3s infinite;clip-path:polygon(0 0,100% 0,100% 45%,0 45%)}.txg-text::after{color:#00d4ff;animation:txgAfter 3s infinite;clip-path:polygon(0 55%,100% 55%,100% 100%,0 100%)}@keyframes txgBefore{0%,87%,100%{transform:translate(0)}88%{transform:translate(-4px,-1px)}89%{transform:translate(4px,1px)}90%{transform:translate(-2px,2px)}91%,100%{transform:translate(0)}}@keyframes txgAfter{0%,87%,100%{transform:translate(0)}88%{transform:translate(3px,1px)}89%{transform:translate(-3px,-1px)}90%{transform:translate(2px,-2px)}91%,100%{transform:translate(0)}}</style><div class="txg-text" data-text="GLITCH">GLITCH</div></div>` },
+    },
+  },
+  {
+    id: 'anim-gradient-text',
+    label: 'Gradient Text',
+    category: 'animations', subcategory: 'textures',
+    tags: ['animation', 'texture', 'gradient', 'text', 'color', 'shift', 'heading', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Gradient Text',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.txgt-heading{font-family:system-ui,sans-serif;font-size:2.5rem;font-weight:900;background:linear-gradient(90deg,#c8a97e,#f6efe5,#c8a97e,#8b6914,#c8a97e);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:txgtShift 4s ease infinite}@keyframes txgtShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}</style><h2 class="txgt-heading">Premium Gradient</h2></div>` },
+    },
+  },
+  {
+    id: 'anim-glass-reflection',
+    label: 'Glass Reflection',
+    category: 'animations', subcategory: 'textures',
+    tags: ['animation', 'texture', 'glass', 'reflection', 'sweep', 'light', 'card', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Glass Reflection',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: `<div style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.txgr-card{position:relative;width:300px;height:180px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(255,255,255,.08);border-radius:.75rem;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#f6efe5;font-family:system-ui,sans-serif}.txgr-card h3{font-size:1.1rem;font-weight:700;margin:0}.txgr-card p{font-size:.75rem;opacity:.4;margin:.25rem 0 0}.txgr-shine{position:absolute;top:-50%;left:-75%;width:50%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);transform:rotate(25deg);animation:txgrSweep 4s ease-in-out infinite}@keyframes txgrSweep{0%,100%{left:-75%}50%{left:150%}}</style><div class="txgr-card"><div class="txgr-shine"></div><div style="text-align:center;position:relative;z-index:1"><h3>Glass Card</h3><p>Light reflection sweep</p></div></div></div>` },
+    },
+  },
+  {
+    id: 'anim-neon-glow',
+    label: 'Neon Glow',
+    category: 'animations', subcategory: 'textures',
+    tags: ['animation', 'texture', 'neon', 'glow', 'flicker', 'cyberpunk', 'text', 'light'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Neon Glow',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: `<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.txn-neon{font-family:system-ui,sans-serif;font-size:2.5rem;font-weight:900;color:#fff;text-shadow:0 0 7px #c8a97e,0 0 10px #c8a97e,0 0 21px #c8a97e,0 0 42px #8b6914,0 0 82px #8b6914;animation:txnFlicker 3s infinite}@keyframes txnFlicker{0%,19%,21%,23%,25%,54%,56%,100%{text-shadow:0 0 7px #c8a97e,0 0 10px #c8a97e,0 0 21px #c8a97e,0 0 42px #8b6914,0 0 82px #8b6914;opacity:1}20%,24%,55%{text-shadow:none;opacity:.8}}</style><span class="txn-neon">NEON</span></div>` },
+    },
+  },
+  {
+    id: 'anim-aurora',
+    label: 'Aurora',
+    category: 'animations', subcategory: 'textures',
+    tags: ['animation', 'texture', 'aurora', 'northern', 'lights', 'gradient', 'flow', 'background'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const, label: 'Aurora',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: `<div style="width:100%;min-height:300px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem;position:relative;overflow:hidden"><style>.txa-layer{position:absolute;inset:0;opacity:.3;filter:blur(60px)}.txa-l1{background:linear-gradient(135deg,transparent 20%,rgba(200,169,126,.3) 40%,transparent 60%);animation:txaFlow1 8s ease-in-out infinite}.txa-l2{background:linear-gradient(225deg,transparent 30%,rgba(26,26,46,.5) 50%,transparent 70%);animation:txaFlow2 10s ease-in-out infinite}.txa-l3{background:linear-gradient(180deg,transparent 25%,rgba(139,105,20,.2) 45%,transparent 65%);animation:txaFlow3 12s ease-in-out infinite}@keyframes txaFlow1{0%,100%{transform:translate(-20%,-10%) rotate(0deg)}50%{transform:translate(20%,10%) rotate(5deg)}}@keyframes txaFlow2{0%,100%{transform:translate(15%,5%) rotate(0deg)}50%{transform:translate(-15%,-15%) rotate(-3deg)}}@keyframes txaFlow3{0%,100%{transform:translate(0,10%) scale(1)}50%{transform:translate(-10%,-5%) scale(1.1)}}.txa-text{position:relative;z-index:1;color:#f6efe5;font-family:system-ui,sans-serif;font-size:1.5rem;font-weight:700;text-align:center}.txa-sub{font-size:.75rem;font-weight:400;opacity:.4;margin-top:.5rem}</style><div class="txa-layer txa-l1"></div><div class="txa-layer txa-l2"></div><div class="txa-layer txa-l3"></div><div class="txa-text">Aurora Effect<div class="txa-sub">Flowing gradient layers</div></div></div>` },
+    },
+  },
+]
+
 // ─── EXPORT ───
 
 export const LIBRARY_ANIMATIONS: LibraryElementItem[] = [
@@ -2440,4 +3075,11 @@ export const LIBRARY_ANIMATIONS: LibraryElementItem[] = [
   ...SECTION_TRANSITIONS,
   ...BACKGROUNDS_PREMIUM,
   ...SITE_INSPIRED,
+  ...LOADING_STATES,
+  ...MICRO_INTERACTIONS,
+  ...REVEAL_PATTERNS,
+  ...MAGNETIC_EFFECTS,
+  ...MORPH_TRANSITIONS,
+  ...SVG_ANIMATIONS,
+  ...TEXTURE_EFFECTS,
 ]

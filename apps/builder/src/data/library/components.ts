@@ -2448,6 +2448,1548 @@ const SITE_INSPIRED: LibraryElementItem[] = [
   },
 ]
 
+// ─── NAVBARS — Full Premium (custom-embed, 10 presets) ───
+
+const NAVBARS_FULL: LibraryElementItem[] = [
+  {
+    id: 'comp-navbar-minimal',
+    label: 'Navbar Minimal',
+    category: 'components',
+    subcategory: 'navbars',
+    tags: ['navbar', 'minimal', 'dark', 'clean', 'navigation'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Navbar Minimal',
+      defaultStyle: { width: '100%', minHeight: '64px' },
+      defaultContent: {
+        html: `<style>.nb-min{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif}.nb-min-logo{font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em}.nb-min-links{display:flex;gap:32px}.nb-min-a{font-size:14px;font-weight:450;color:rgba(255,255,255,0.6);text-decoration:none;cursor:pointer;transition:opacity 0.3s}.nb-min-a:hover{opacity:1;color:#fff}.nb-min-cta{font-size:13px;font-weight:600;color:#0a0a0a;background:#fff;padding:8px 20px;border-radius:6px;border:none;cursor:pointer;transition:background 0.3s;font-family:inherit}.nb-min-cta:hover{background:rgba(255,255,255,0.85)}</style><nav class="nb-min"><span class="nb-min-logo">Brand</span><div class="nb-min-links"><a class="nb-min-a">Work</a><a class="nb-min-a">Services</a><a class="nb-min-a">About</a><a class="nb-min-a">Contact</a></div><button class="nb-min-cta">Get Started</button></nav>`
+      }
+    }
+  },
+  {
+    id: 'comp-navbar-transparent',
+    label: 'Navbar Transparent',
+    category: 'components',
+    subcategory: 'navbars',
+    tags: ['navbar', 'transparent', 'overlay', 'hero', 'navigation'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Navbar Transparent',
+      defaultStyle: { width: '100%', minHeight: '280px' },
+      defaultContent: {
+        html: `<style>.nb-tr-wrap{position:relative;min-height:280px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:12px;overflow:hidden}.nb-tr{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;z-index:2}.nb-tr-logo{font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em;font-family:system-ui,sans-serif}.nb-tr-links{display:flex;gap:28px}.nb-tr-a{font-size:14px;font-weight:450;color:rgba(255,255,255,0.7);text-decoration:none;cursor:pointer;position:relative;font-family:system-ui,sans-serif;transition:color 0.3s}.nb-tr-a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:#fff;transition:width 0.3s}.nb-tr-a:hover{color:#fff}.nb-tr-a:hover::after{width:100%}.nb-tr-cta{font-size:13px;font-weight:600;color:#fff;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);padding:8px 20px;border-radius:6px;cursor:pointer;transition:background 0.3s;font-family:system-ui,sans-serif}.nb-tr-cta:hover{background:rgba(255,255,255,0.2)}.nb-tr-hero{display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.15);font-size:14px;font-family:system-ui,sans-serif}</style><div class="nb-tr-wrap"><nav class="nb-tr"><span class="nb-tr-logo">Studio</span><div class="nb-tr-links"><a class="nb-tr-a">Work</a><a class="nb-tr-a">About</a><a class="nb-tr-a">Services</a><a class="nb-tr-a">Contact</a></div><button class="nb-tr-cta">Let's Talk</button></nav><div class="nb-tr-hero">Hero content area</div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-navbar-bordered',
+    label: 'Navbar Bordered',
+    category: 'components',
+    subcategory: 'navbars',
+    tags: ['navbar', 'bordered', 'clean', 'corporate', 'light', 'navigation'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Navbar Bordered',
+      defaultStyle: { width: '100%', minHeight: '64px' },
+      defaultContent: {
+        html: `<style>.nb-brd{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:#fff;border-bottom:1px solid #e5e5e5;font-family:system-ui,-apple-system,sans-serif}.nb-brd-logo{font-size:18px;font-weight:700;color:#0a0a0a;letter-spacing:-0.03em}.nb-brd-links{display:flex;gap:28px}.nb-brd-a{font-size:14px;font-weight:450;color:#666;text-decoration:none;cursor:pointer;transition:color 0.3s}.nb-brd-a:hover{color:#0a0a0a}.nb-brd-avatar{width:34px;height:34px;border-radius:50%;background:#e5e5e5;display:flex;align-items:center;justify-content:center;cursor:pointer}.nb-brd-avatar svg{width:16px;height:16px;stroke:#666;fill:none;stroke-width:2;stroke-linecap:round}</style><nav class="nb-brd"><span class="nb-brd-logo">Company</span><div class="nb-brd-links"><a class="nb-brd-a">Products</a><a class="nb-brd-a">Solutions</a><a class="nb-brd-a">Pricing</a><a class="nb-brd-a">Resources</a></div><div class="nb-brd-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0112 0v1"/></svg></div></nav>`
+      }
+    }
+  },
+  {
+    id: 'comp-navbar-centered',
+    label: 'Navbar Centered',
+    category: 'components',
+    subcategory: 'navbars',
+    tags: ['navbar', 'centered', 'luxury', 'serif', 'elegant', 'navigation'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Navbar Centered',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: {
+        html: `<style>.nb-cen{display:flex;flex-direction:column;align-items:center;padding:24px 40px 0;background:#0a0a0a;gap:16px}.nb-cen-logo{font-family:Georgia,"Cormorant Garamond",serif;font-size:26px;font-weight:400;color:#f2ede7;letter-spacing:0.08em;text-transform:uppercase}.nb-cen-links{display:flex;gap:36px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.08)}.nb-cen-a{font-size:12px;font-weight:500;color:rgba(255,255,255,0.45);text-decoration:none;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;font-family:system-ui,sans-serif;transition:color 0.3s}.nb-cen-a:hover{color:#C5A572}</style><nav class="nb-cen"><span class="nb-cen-logo">Maison</span><div class="nb-cen-links"><a class="nb-cen-a">Collection</a><a class="nb-cen-a">Atelier</a><a class="nb-cen-a">Story</a><a class="nb-cen-a">Journal</a><a class="nb-cen-a">Contact</a></div></nav>`
+      }
+    }
+  },
+  {
+    id: 'comp-navbar-split',
+    label: 'Navbar Split',
+    category: 'components',
+    subcategory: 'navbars',
+    tags: ['navbar', 'split', 'balanced', 'dark', 'navigation'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Navbar Split',
+      defaultStyle: { width: '100%', minHeight: '64px' },
+      defaultContent: {
+        html: `<style>.nb-spl{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 40px;height:64px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif}.nb-spl-links{display:flex;gap:28px}.nb-spl-a{font-size:14px;font-weight:450;color:rgba(255,255,255,0.55);text-decoration:none;cursor:pointer;transition:color 0.3s}.nb-spl-a:hover{color:#fff}.nb-spl-logo{font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em;text-align:center}.nb-spl-right{display:flex;justify-content:flex-end}.nb-spl-cta{font-size:13px;font-weight:600;color:#0a0a0a;background:#fff;padding:8px 22px;border-radius:6px;border:none;cursor:pointer;transition:background 0.3s;font-family:inherit}.nb-spl-cta:hover{background:rgba(255,255,255,0.85)}</style><nav class="nb-spl"><div class="nb-spl-links"><a class="nb-spl-a">Work</a><a class="nb-spl-a">About</a><a class="nb-spl-a">Blog</a></div><span class="nb-spl-logo">Brand</span><div class="nb-spl-right"><button class="nb-spl-cta">Contact</button></div></nav>`
+      }
+    }
+  },
+  {
+    id: 'comp-navbar-pill',
+    label: 'Navbar Pill',
+    category: 'components',
+    subcategory: 'navbars',
+    tags: ['navbar', 'pill', 'floating', 'blur', 'modern', 'navigation'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Navbar Pill',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: {
+        html: `<style>.nb-pill-wrap{display:flex;justify-content:center;padding:16px 20px;background:#0a0a0a;min-height:120px;align-items:flex-start;border-radius:12px}.nb-pill{display:flex;align-items:center;gap:32px;padding:10px 12px 10px 24px;background:rgba(255,255,255,0.06);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:999px;font-family:system-ui,-apple-system,sans-serif}.nb-pill-logo{font-size:15px;font-weight:700;color:#fff;letter-spacing:-0.02em}.nb-pill-links{display:flex;gap:24px}.nb-pill-a{font-size:13px;font-weight:450;color:rgba(255,255,255,0.55);text-decoration:none;cursor:pointer;transition:color 0.3s}.nb-pill-a:hover{color:#fff}.nb-pill-cta{font-size:12px;font-weight:600;color:#0a0a0a;background:#fff;padding:7px 18px;border-radius:999px;border:none;cursor:pointer;transition:background 0.3s;font-family:inherit}.nb-pill-cta:hover{background:rgba(255,255,255,0.85)}</style><div class="nb-pill-wrap"><nav class="nb-pill"><span class="nb-pill-logo">Brand</span><div class="nb-pill-links"><a class="nb-pill-a">Features</a><a class="nb-pill-a">Pricing</a><a class="nb-pill-a">Docs</a><a class="nb-pill-a">Blog</a></div><button class="nb-pill-cta">Sign Up</button></nav></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-navbar-sidebar-toggle',
+    label: 'Navbar Sidebar Toggle',
+    category: 'components',
+    subcategory: 'navbars',
+    tags: ['navbar', 'hamburger', 'minimal', 'creative', 'agency', 'navigation'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Navbar Sidebar Toggle',
+      defaultStyle: { width: '100%', minHeight: '64px' },
+      defaultContent: {
+        html: `<style>.nb-st{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif}.nb-st-logo{font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em}.nb-st-ham{display:flex;flex-direction:column;gap:5px;cursor:pointer;padding:8px;transition:opacity 0.3s}.nb-st-ham:hover{opacity:0.7}.nb-st-bar{width:24px;height:1.5px;background:#fff;transition:transform 0.3s}.nb-st-ham:hover .nb-st-bar:first-child{transform:translateX(4px)}.nb-st-ham:hover .nb-st-bar:last-child{transform:translateX(-4px)}</style><nav class="nb-st"><span class="nb-st-logo">Atelier</span><div class="nb-st-ham"><span class="nb-st-bar"></span><span class="nb-st-bar"></span><span class="nb-st-bar"></span></div></nav>`
+      }
+    }
+  },
+  {
+    id: 'comp-navbar-mega',
+    label: 'Navbar Mega Menu',
+    category: 'components',
+    subcategory: 'navbars',
+    tags: ['navbar', 'mega', 'dropdown', 'corporate', 'saas', 'navigation'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Navbar Mega Menu',
+      defaultStyle: { width: '100%', minHeight: '64px' },
+      defaultContent: {
+        html: `<style>.nb-mg{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;position:relative}.nb-mg-logo{font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em}.nb-mg-links{display:flex;gap:28px;align-items:center}.nb-mg-item{position:relative}.nb-mg-a{font-size:14px;font-weight:450;color:rgba(255,255,255,0.6);text-decoration:none;cursor:pointer;transition:color 0.3s;display:flex;align-items:center;gap:4px}.nb-mg-a:hover{color:#fff}.nb-mg-arrow{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2}.nb-mg-panel{display:none;position:absolute;top:100%;left:-20px;min-width:420px;background:#111;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:24px;margin-top:12px;z-index:10}.nb-mg-item:hover .nb-mg-panel{display:grid;grid-template-columns:1fr 1fr;gap:16px}.nb-mg-col-title{font-size:11px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;grid-column:span 2}.nb-mg-sub{font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer;padding:6px 0;transition:color 0.2s}.nb-mg-sub:hover{color:#fff}.nb-mg-cta{font-size:13px;font-weight:600;color:#0a0a0a;background:#fff;padding:8px 20px;border-radius:6px;border:none;cursor:pointer;transition:background 0.3s;font-family:inherit}.nb-mg-cta:hover{background:rgba(255,255,255,0.85)}</style><nav class="nb-mg"><span class="nb-mg-logo">Platform</span><div class="nb-mg-links"><div class="nb-mg-item"><a class="nb-mg-a">Products <svg class="nb-mg-arrow" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></a><div class="nb-mg-panel"><span class="nb-mg-col-title">Products</span><span class="nb-mg-sub">Analytics</span><span class="nb-mg-sub">Automation</span><span class="nb-mg-sub">Integrations</span><span class="nb-mg-sub">API Platform</span><span class="nb-mg-sub">Security</span><span class="nb-mg-sub">Enterprise</span></div></div><div class="nb-mg-item"><a class="nb-mg-a">Solutions</a></div><div class="nb-mg-item"><a class="nb-mg-a">Pricing</a></div><div class="nb-mg-item"><a class="nb-mg-a">Docs</a></div></div><button class="nb-mg-cta">Get Started</button></nav>`
+      }
+    }
+  },
+  {
+    id: 'comp-navbar-gradient',
+    label: 'Navbar Gradient',
+    category: 'components',
+    subcategory: 'navbars',
+    tags: ['navbar', 'gradient', 'modern', 'saas', 'startup', 'navigation'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Navbar Gradient',
+      defaultStyle: { width: '100%', minHeight: '64px' },
+      defaultContent: {
+        html: `<style>.nb-grad{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:linear-gradient(135deg,#7c3aed,#3b82f6);font-family:system-ui,-apple-system,sans-serif}.nb-grad-logo{font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em}.nb-grad-links{display:flex;gap:28px}.nb-grad-a{font-size:14px;font-weight:450;color:rgba(255,255,255,0.75);text-decoration:none;cursor:pointer;transition:color 0.3s}.nb-grad-a:hover{color:#fff}.nb-grad-cta{font-size:13px;font-weight:600;color:#7c3aed;background:#fff;padding:8px 22px;border-radius:6px;border:none;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit;box-shadow:0 2px 12px rgba(0,0,0,0.15)}.nb-grad-cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.2)}</style><nav class="nb-grad"><span class="nb-grad-logo">Launchpad</span><div class="nb-grad-links"><a class="nb-grad-a">Features</a><a class="nb-grad-a">Pricing</a><a class="nb-grad-a">Docs</a><a class="nb-grad-a">Blog</a></div><button class="nb-grad-cta">Start Free</button></nav>`
+      }
+    }
+  },
+  {
+    id: 'comp-navbar-stacked',
+    label: 'Navbar Stacked',
+    category: 'components',
+    subcategory: 'navbars',
+    tags: ['navbar', 'stacked', 'topbar', 'professional', 'business', 'navigation'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Navbar Stacked',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: {
+        html: `<style>.nb-stk-top{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:36px;background:#111;font-family:system-ui,-apple-system,sans-serif;border-bottom:1px solid rgba(255,255,255,0.06)}.nb-stk-info{display:flex;gap:20px}.nb-stk-info-item{font-size:11px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:6px}.nb-stk-info-item svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}.nb-stk-social{display:flex;gap:12px}.nb-stk-social a{color:rgba(255,255,255,0.35);transition:color 0.3s;cursor:pointer;font-size:11px}.nb-stk-social a:hover{color:#fff}.nb-stk-main{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif}.nb-stk-logo{font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em}.nb-stk-links{display:flex;gap:28px}.nb-stk-a{font-size:14px;font-weight:450;color:rgba(255,255,255,0.6);text-decoration:none;cursor:pointer;transition:color 0.3s}.nb-stk-a:hover{color:#fff}.nb-stk-cta{font-size:13px;font-weight:600;color:#0a0a0a;background:#fff;padding:8px 22px;border-radius:6px;border:none;cursor:pointer;transition:background 0.3s;font-family:inherit}.nb-stk-cta:hover{background:rgba(255,255,255,0.85)}</style><div class="nb-stk-top"><div class="nb-stk-info"><span class="nb-stk-info-item"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+1 (555) 000-0000</span><span class="nb-stk-info-item"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>hello@company.com</span></div><div class="nb-stk-social"><a>LinkedIn</a><a>Twitter</a><a>Instagram</a></div></div><nav class="nb-stk-main"><span class="nb-stk-logo">Company</span><div class="nb-stk-links"><a class="nb-stk-a">Home</a><a class="nb-stk-a">Services</a><a class="nb-stk-a">Portfolio</a><a class="nb-stk-a">About</a><a class="nb-stk-a">Contact</a></div><button class="nb-stk-cta">Get a Quote</button></nav>`
+      }
+    }
+  },
+]
+
+// ─── FOOTERS — Full Premium (custom-embed, 8 presets) ───
+
+const FOOTERS_FULL: LibraryElementItem[] = [
+  {
+    id: 'comp-footer-4col',
+    label: 'Footer 4 Columns',
+    category: 'components',
+    subcategory: 'footers',
+    tags: ['footer', 'columns', 'dark', 'corporate', 'links'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Footer 4 Columns',
+      defaultStyle: { width: '100%', minHeight: '340px' },
+      defaultContent: {
+        html: `<style>.ft-4c{background:#0a0a0a;padding:64px 40px 0;font-family:system-ui,-apple-system,sans-serif}.ft-4c-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,0.08)}.ft-4c-brand{display:flex;flex-direction:column;gap:16px}.ft-4c-logo{font-size:20px;font-weight:700;color:#fff;letter-spacing:-0.03em}.ft-4c-desc{font-size:14px;line-height:1.7;color:rgba(255,255,255,0.4);max-width:280px}.ft-4c-col{display:flex;flex-direction:column;gap:12px}.ft-4c-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px}.ft-4c-link{font-size:14px;color:rgba(255,255,255,0.55);text-decoration:none;cursor:pointer;transition:color 0.3s}.ft-4c-link:hover{color:#fff}.ft-4c-bottom{display:flex;justify-content:space-between;align-items:center;padding:24px 0}.ft-4c-copy{font-size:12px;color:rgba(255,255,255,0.25)}.ft-4c-legal{display:flex;gap:20px}.ft-4c-legal a{font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;cursor:pointer;transition:color 0.3s}.ft-4c-legal a:hover{color:rgba(255,255,255,0.6)}</style><footer class="ft-4c"><div class="ft-4c-grid"><div class="ft-4c-brand"><span class="ft-4c-logo">Brand</span><p class="ft-4c-desc">Crafting premium digital experiences for visionary brands worldwide.</p></div><div class="ft-4c-col"><span class="ft-4c-title">Services</span><a class="ft-4c-link">Web Design</a><a class="ft-4c-link">Development</a><a class="ft-4c-link">Branding</a><a class="ft-4c-link">Strategy</a></div><div class="ft-4c-col"><span class="ft-4c-title">Company</span><a class="ft-4c-link">About</a><a class="ft-4c-link">Careers</a><a class="ft-4c-link">Blog</a><a class="ft-4c-link">Press</a></div><div class="ft-4c-col"><span class="ft-4c-title">Contact</span><a class="ft-4c-link">hello@brand.com</a><a class="ft-4c-link">+1 (555) 000-0000</a><a class="ft-4c-link">New York, NY</a></div></div><div class="ft-4c-bottom"><span class="ft-4c-copy">&copy; 2026 Brand. All rights reserved.</span><div class="ft-4c-legal"><a>Privacy</a><a>Terms</a><a>Cookies</a></div></div></footer>`
+      }
+    }
+  },
+  {
+    id: 'comp-footer-minimal',
+    label: 'Footer Minimal',
+    category: 'components',
+    subcategory: 'footers',
+    tags: ['footer', 'minimal', 'simple', 'clean', 'subtle'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Footer Minimal',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<style>.ft-mn{display:flex;align-items:center;justify-content:center;gap:24px;padding:20px 40px;background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;border-top:1px solid rgba(255,255,255,0.06)}.ft-mn-copy{font-size:13px;color:rgba(255,255,255,0.3)}.ft-mn-dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.15)}.ft-mn-a{font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;cursor:pointer;transition:color 0.3s}.ft-mn-a:hover{color:rgba(255,255,255,0.7)}</style><footer class="ft-mn"><span class="ft-mn-copy">&copy; 2026 Brand</span><span class="ft-mn-dot"></span><a class="ft-mn-a">Privacy</a><span class="ft-mn-dot"></span><a class="ft-mn-a">Terms</a></footer>`
+      }
+    }
+  },
+  {
+    id: 'comp-footer-cta',
+    label: 'Footer CTA',
+    category: 'components',
+    subcategory: 'footers',
+    tags: ['footer', 'cta', 'conversion', 'bold', 'contact'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Footer CTA',
+      defaultStyle: { width: '100%', minHeight: '360px' },
+      defaultContent: {
+        html: `<style>.ft-cta{background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif}.ft-cta-hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:80px 40px 64px;gap:24px;border-bottom:1px solid rgba(255,255,255,0.08)}.ft-cta-h{font-size:clamp(32px,4vw,48px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0;line-height:1.1}.ft-cta-email{font-size:18px;color:rgba(255,255,255,0.45);margin:0}.ft-cta-btn{font-size:14px;font-weight:600;color:#0a0a0a;background:#fff;padding:12px 32px;border-radius:8px;border:none;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit;margin-top:8px}.ft-cta-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,255,255,0.15)}.ft-cta-bottom{display:flex;justify-content:space-between;align-items:center;padding:24px 40px}.ft-cta-copy{font-size:12px;color:rgba(255,255,255,0.25)}.ft-cta-links{display:flex;gap:24px}.ft-cta-links a{font-size:12px;color:rgba(255,255,255,0.35);text-decoration:none;cursor:pointer;transition:color 0.3s}.ft-cta-links a:hover{color:rgba(255,255,255,0.6)}</style><footer class="ft-cta"><div class="ft-cta-hero"><h2 class="ft-cta-h">Let's work together</h2><p class="ft-cta-email">hello@brand.com</p><button class="ft-cta-btn">Start a Project</button></div><div class="ft-cta-bottom"><span class="ft-cta-copy">&copy; 2026 Brand</span><div class="ft-cta-links"><a>Twitter</a><a>LinkedIn</a><a>Instagram</a><a>Dribbble</a></div></div></footer>`
+      }
+    }
+  },
+  {
+    id: 'comp-footer-newsletter',
+    label: 'Footer Newsletter',
+    category: 'components',
+    subcategory: 'footers',
+    tags: ['footer', 'newsletter', 'email', 'subscribe', 'social'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Footer Newsletter',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: {
+        html: `<style>.ft-nl{background:#0a0a0a;padding:64px 40px 32px;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;align-items:center;gap:40px}.ft-nl-top{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}.ft-nl-h{font-size:24px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin:0}.ft-nl-p{font-size:14px;color:rgba(255,255,255,0.4);margin:0;max-width:400px;line-height:1.6}.ft-nl-form{display:flex;gap:8px}.ft-nl-input{padding:10px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:14px;width:260px;outline:none;font-family:inherit;transition:border-color 0.3s}.ft-nl-input::placeholder{color:rgba(255,255,255,0.25)}.ft-nl-input:focus{border-color:rgba(255,255,255,0.25)}.ft-nl-btn{font-size:13px;font-weight:600;color:#0a0a0a;background:#fff;padding:10px 24px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;transition:background 0.3s}.ft-nl-btn:hover{background:rgba(255,255,255,0.85)}.ft-nl-social{display:flex;gap:16px}.ft-nl-social a{font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;cursor:pointer;transition:color 0.3s}.ft-nl-social a:hover{color:#fff}.ft-nl-bottom{display:flex;gap:24px;align-items:center;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06);width:100%;justify-content:center}.ft-nl-copy{font-size:12px;color:rgba(255,255,255,0.2)}.ft-nl-link{font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;cursor:pointer;transition:color 0.3s}.ft-nl-link:hover{color:rgba(255,255,255,0.5)}</style><footer class="ft-nl"><div class="ft-nl-top"><h3 class="ft-nl-h">Stay in the loop</h3><p class="ft-nl-p">Subscribe to our newsletter for the latest updates, insights, and exclusive content.</p><div class="ft-nl-form"><input class="ft-nl-input" type="email" placeholder="your@email.com"/><button class="ft-nl-btn">Subscribe</button></div></div><div class="ft-nl-social"><a>Twitter</a><a>LinkedIn</a><a>Instagram</a><a>YouTube</a></div><div class="ft-nl-bottom"><span class="ft-nl-copy">&copy; 2026 Brand</span><a class="ft-nl-link">Privacy</a><a class="ft-nl-link">Terms</a></div></footer>`
+      }
+    }
+  },
+  {
+    id: 'comp-footer-split',
+    label: 'Footer Split',
+    category: 'components',
+    subcategory: 'footers',
+    tags: ['footer', 'split', 'two-column', 'clean', 'brand'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Footer Split',
+      defaultStyle: { width: '100%', minHeight: '280px' },
+      defaultContent: {
+        html: `<style>.ft-sp{background:#0a0a0a;padding:64px 40px 32px;font-family:system-ui,-apple-system,sans-serif}.ft-sp-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,0.06)}.ft-sp-left{display:flex;flex-direction:column;gap:20px}.ft-sp-logo{font-size:20px;font-weight:700;color:#fff;letter-spacing:-0.03em}.ft-sp-desc{font-size:14px;line-height:1.7;color:rgba(255,255,255,0.4);max-width:320px}.ft-sp-social{display:flex;gap:14px;margin-top:8px}.ft-sp-social a{font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;cursor:pointer;transition:color 0.3s}.ft-sp-social a:hover{color:#fff}.ft-sp-right{display:grid;grid-template-columns:1fr 1fr;gap:32px}.ft-sp-col{display:flex;flex-direction:column;gap:10px}.ft-sp-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px}.ft-sp-link{font-size:14px;color:rgba(255,255,255,0.5);text-decoration:none;cursor:pointer;transition:color 0.3s}.ft-sp-link:hover{color:#fff}.ft-sp-bottom{padding:24px 0 0;text-align:center}.ft-sp-copy{font-size:12px;color:rgba(255,255,255,0.2)}</style><footer class="ft-sp"><div class="ft-sp-grid"><div class="ft-sp-left"><span class="ft-sp-logo">Brand</span><p class="ft-sp-desc">We design and build premium digital products for forward-thinking companies.</p><div class="ft-sp-social"><a>Twitter</a><a>LinkedIn</a><a>Dribbble</a></div></div><div class="ft-sp-right"><div class="ft-sp-col"><span class="ft-sp-title">Product</span><a class="ft-sp-link">Features</a><a class="ft-sp-link">Pricing</a><a class="ft-sp-link">Changelog</a><a class="ft-sp-link">Docs</a></div><div class="ft-sp-col"><span class="ft-sp-title">Company</span><a class="ft-sp-link">About</a><a class="ft-sp-link">Blog</a><a class="ft-sp-link">Careers</a><a class="ft-sp-link">Contact</a></div></div></div><div class="ft-sp-bottom"><span class="ft-sp-copy">&copy; 2026 Brand. All rights reserved.</span></div></footer>`
+      }
+    }
+  },
+  {
+    id: 'comp-footer-luxury',
+    label: 'Footer Luxury',
+    category: 'components',
+    subcategory: 'footers',
+    tags: ['footer', 'luxury', 'serif', 'gold', 'elegant', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Footer Luxury',
+      defaultStyle: { width: '100%', minHeight: '320px' },
+      defaultContent: {
+        html: `<style>.ft-lx{background:#0a0a0a;padding:64px 40px 32px;font-family:system-ui,-apple-system,sans-serif}.ft-lx-top{text-align:center;margin-bottom:48px}.ft-lx-logo{font-family:Georgia,"Cormorant Garamond",serif;font-size:28px;font-weight:400;color:#f2ede7;letter-spacing:0.08em;text-transform:uppercase}.ft-lx-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid rgba(197,165,114,0.15)}.ft-lx-col{display:flex;flex-direction:column;gap:12px;text-align:center}.ft-lx-title{font-size:11px;font-weight:600;color:#C5A572;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:4px}.ft-lx-link{font-size:14px;color:rgba(242,237,231,0.45);text-decoration:none;cursor:pointer;transition:color 0.4s}.ft-lx-link:hover{color:#C5A572}.ft-lx-bottom{display:flex;justify-content:center;padding:24px 0 0}.ft-lx-copy{font-size:11px;color:rgba(242,237,231,0.2);letter-spacing:0.05em}</style><footer class="ft-lx"><div class="ft-lx-top"><span class="ft-lx-logo">Maison</span></div><div class="ft-lx-grid"><div class="ft-lx-col"><span class="ft-lx-title">Explore</span><a class="ft-lx-link">Collection</a><a class="ft-lx-link">Atelier</a><a class="ft-lx-link">Savoir-faire</a></div><div class="ft-lx-col"><span class="ft-lx-title">Maison</span><a class="ft-lx-link">Our Story</a><a class="ft-lx-link">Heritage</a><a class="ft-lx-link">Journal</a></div><div class="ft-lx-col"><span class="ft-lx-title">Contact</span><a class="ft-lx-link">Appointments</a><a class="ft-lx-link">Boutiques</a><a class="ft-lx-link">Client Care</a></div></div><div class="ft-lx-bottom"><span class="ft-lx-copy">&copy; 2026 Maison. All rights reserved.</span></div></footer>`
+      }
+    }
+  },
+  {
+    id: 'comp-footer-modern',
+    label: 'Footer Modern',
+    category: 'components',
+    subcategory: 'footers',
+    tags: ['footer', 'modern', 'gradient', 'glassmorphic', 'tech'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Footer Modern',
+      defaultStyle: { width: '100%', minHeight: '360px' },
+      defaultContent: {
+        html: `<style>.ft-md{background:#0a0a0a;padding:4px 4px 0;font-family:system-ui,-apple-system,sans-serif;border-radius:12px;overflow:hidden}.ft-md-inner{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:56px 40px 32px;position:relative;overflow:hidden}.ft-md-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.5),rgba(139,92,246,0.5),transparent)}.ft-md-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px}.ft-md-brand{font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.04em}.ft-md-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:32px}.ft-md-col{display:flex;flex-direction:column;gap:10px}.ft-md-title{font-size:11px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px}.ft-md-link{font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;cursor:pointer;transition:color 0.3s}.ft-md-link:hover{color:#fff}.ft-md-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:32px;margin-top:48px;border-top:1px solid rgba(255,255,255,0.06)}.ft-md-copy{font-size:12px;color:rgba(255,255,255,0.2)}.ft-md-legal{display:flex;gap:20px}.ft-md-legal a{font-size:12px;color:rgba(255,255,255,0.25);text-decoration:none;cursor:pointer;transition:color 0.3s}.ft-md-legal a:hover{color:rgba(255,255,255,0.5)}</style><footer class="ft-md"><div class="ft-md-inner"><div class="ft-md-top"><span class="ft-md-brand">BRAND</span><div class="ft-md-grid"><div class="ft-md-col"><span class="ft-md-title">Product</span><a class="ft-md-link">Features</a><a class="ft-md-link">Integrations</a><a class="ft-md-link">Pricing</a><a class="ft-md-link">Changelog</a></div><div class="ft-md-col"><span class="ft-md-title">Resources</span><a class="ft-md-link">Documentation</a><a class="ft-md-link">API Reference</a><a class="ft-md-link">Guides</a><a class="ft-md-link">Community</a></div><div class="ft-md-col"><span class="ft-md-title">Company</span><a class="ft-md-link">About</a><a class="ft-md-link">Blog</a><a class="ft-md-link">Careers</a><a class="ft-md-link">Press</a></div><div class="ft-md-col"><span class="ft-md-title">Legal</span><a class="ft-md-link">Privacy</a><a class="ft-md-link">Terms</a><a class="ft-md-link">Security</a><a class="ft-md-link">GDPR</a></div></div></div><div class="ft-md-bottom"><span class="ft-md-copy">&copy; 2026 Brand Inc. All rights reserved.</span><div class="ft-md-legal"><a>Status</a><a>Sitemap</a></div></div></div></footer>`
+      }
+    }
+  },
+  {
+    id: 'comp-footer-simple',
+    label: 'Footer Simple',
+    category: 'components',
+    subcategory: 'footers',
+    tags: ['footer', 'simple', 'light', 'centered', 'clean'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Footer Simple',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: {
+        html: `<style>.ft-sm{background:#fafafa;padding:48px 40px 32px;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;align-items:center;gap:24px;border-top:1px solid #e5e5e5}.ft-sm-logo{font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.03em}.ft-sm-links{display:flex;gap:28px}.ft-sm-a{font-size:14px;color:#666;text-decoration:none;cursor:pointer;transition:color 0.3s}.ft-sm-a:hover{color:#0a0a0a}.ft-sm-social{display:flex;gap:16px}.ft-sm-social a{width:36px;height:36px;border-radius:50%;background:#e5e5e5;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.3s;text-decoration:none}.ft-sm-social a:hover{background:#d4d4d4}.ft-sm-social svg{width:16px;height:16px;stroke:#666;fill:none;stroke-width:2}.ft-sm-copy{font-size:12px;color:#999}</style><footer class="ft-sm"><span class="ft-sm-logo">Brand</span><div class="ft-sm-links"><a class="ft-sm-a">Home</a><a class="ft-sm-a">About</a><a class="ft-sm-a">Services</a><a class="ft-sm-a">Blog</a><a class="ft-sm-a">Contact</a></div><div class="ft-sm-social"><a><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></a><a><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a><a><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></div><span class="ft-sm-copy">&copy; 2026 Brand. All rights reserved.</span></footer>`
+      }
+    }
+  },
+]
+
+// ─── CTA SECTIONS — Premium (custom-embed, 6 presets) ───
+
+const CTA_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-cta-centered',
+    label: 'CTA Centered',
+    category: 'components',
+    subcategory: 'cta',
+    tags: ['cta', 'centered', 'dark', 'conversion', 'classic'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'CTA Centered',
+      defaultStyle: { width: '100%', minHeight: '320px' },
+      defaultContent: {
+        html: `<style>.cta-cn{background:#0a0a0a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px;gap:24px;font-family:system-ui,-apple-system,sans-serif;border-radius:12px}.cta-cn-h{font-size:clamp(28px,3.5vw,44px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0;line-height:1.15;max-width:600px}.cta-cn-p{font-size:16px;color:rgba(255,255,255,0.45);margin:0;max-width:480px;line-height:1.7}.cta-cn-btn{font-size:15px;font-weight:600;color:#0a0a0a;background:#fff;padding:14px 36px;border-radius:8px;border:none;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit;margin-top:8px}.cta-cn-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,255,255,0.15)}</style><section class="cta-cn"><h2 class="cta-cn-h">Ready to elevate your digital presence?</h2><p class="cta-cn-p">Join hundreds of brands that trust us to deliver exceptional results.</p><button class="cta-cn-btn">Get Started Today</button></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-cta-split',
+    label: 'CTA Split',
+    category: 'components',
+    subcategory: 'cta',
+    tags: ['cta', 'split', 'horizontal', 'accent', 'conversion'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'CTA Split',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: {
+        html: `<style>.cta-sp{display:flex;align-items:center;justify-content:space-between;padding:40px 48px;background:#111;border-radius:12px;font-family:system-ui,-apple-system,sans-serif;border:1px solid rgba(255,255,255,0.06)}.cta-sp-left{display:flex;flex-direction:column;gap:8px}.cta-sp-h{font-size:24px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin:0}.cta-sp-p{font-size:14px;color:rgba(255,255,255,0.4);margin:0}.cta-sp-btn{font-size:14px;font-weight:600;color:#0a0a0a;background:#fff;padding:12px 28px;border-radius:8px;border:none;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit;white-space:nowrap}.cta-sp-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,255,255,0.15)}</style><section class="cta-sp"><div class="cta-sp-left"><h3 class="cta-sp-h">Start building something great</h3><p class="cta-sp-p">No credit card required. Free 14-day trial.</p></div><button class="cta-sp-btn">Start Free Trial</button></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-cta-gradient',
+    label: 'CTA Gradient',
+    category: 'components',
+    subcategory: 'cta',
+    tags: ['cta', 'gradient', 'modern', 'saas', 'two-buttons'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'CTA Gradient',
+      defaultStyle: { width: '100%', minHeight: '320px' },
+      defaultContent: {
+        html: `<style>.cta-gr{background:linear-gradient(135deg,#7c3aed,#3b82f6);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px;gap:24px;font-family:system-ui,-apple-system,sans-serif;border-radius:12px}.cta-gr-h{font-size:clamp(28px,3.5vw,44px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0;line-height:1.15;max-width:600px}.cta-gr-p{font-size:16px;color:rgba(255,255,255,0.7);margin:0;max-width:480px;line-height:1.7}.cta-gr-btns{display:flex;gap:12px;margin-top:8px}.cta-gr-primary{font-size:15px;font-weight:600;color:#7c3aed;background:#fff;padding:14px 32px;border-radius:8px;border:none;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit}.cta-gr-primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.2)}.cta-gr-ghost{font-size:15px;font-weight:600;color:#fff;background:transparent;padding:14px 32px;border-radius:8px;border:1px solid rgba(255,255,255,0.3);cursor:pointer;transition:background 0.3s,border-color 0.3s;font-family:inherit}.cta-gr-ghost:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.5)}</style><section class="cta-gr"><h2 class="cta-gr-h">Ship faster with our platform</h2><p class="cta-gr-p">Everything you need to build, deploy, and scale your product.</p><div class="cta-gr-btns"><button class="cta-gr-primary">Start Free</button><button class="cta-gr-ghost">Watch Demo</button></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-cta-card',
+    label: 'CTA Card',
+    category: 'components',
+    subcategory: 'cta',
+    tags: ['cta', 'card', 'glassmorphic', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'CTA Card',
+      defaultStyle: { width: '100%', minHeight: '360px' },
+      defaultContent: {
+        html: `<style>.cta-cd-wrap{background:#0a0a0a;display:flex;align-items:center;justify-content:center;padding:64px 40px;border-radius:12px;min-height:360px}.cta-cd{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:56px 48px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px;max-width:520px;width:100%;font-family:system-ui,-apple-system,sans-serif;position:relative;overflow:hidden}.cta-cd::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent)}.cta-cd-badge{font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);padding:6px 14px;border-radius:99px;text-transform:uppercase;letter-spacing:0.1em}.cta-cd-h{font-size:28px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin:0;line-height:1.2}.cta-cd-p{font-size:15px;color:rgba(255,255,255,0.4);margin:0;line-height:1.7}.cta-cd-btn{font-size:14px;font-weight:600;color:#0a0a0a;background:#fff;padding:12px 32px;border-radius:8px;border:none;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit;margin-top:8px}.cta-cd-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,255,255,0.15)}</style><div class="cta-cd-wrap"><div class="cta-cd"><span class="cta-cd-badge">Limited Offer</span><h3 class="cta-cd-h">Get early access today</h3><p class="cta-cd-p">Be among the first to experience the future of digital creation.</p><button class="cta-cd-btn">Join the Waitlist</button></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-cta-banner',
+    label: 'CTA Banner',
+    category: 'components',
+    subcategory: 'cta',
+    tags: ['cta', 'banner', 'full-width', 'bold', 'accent'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'CTA Banner',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: {
+        html: `<style>.cta-bn{display:flex;align-items:center;justify-content:space-between;padding:24px 40px;background:#fff;font-family:system-ui,-apple-system,sans-serif;border-radius:12px;border:1px solid #e5e5e5}.cta-bn-left{display:flex;align-items:center;gap:16px}.cta-bn-icon{width:40px;height:40px;border-radius:10px;background:#0a0a0a;display:flex;align-items:center;justify-content:center}.cta-bn-icon svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2}.cta-bn-text{display:flex;flex-direction:column;gap:2px}.cta-bn-h{font-size:16px;font-weight:600;color:#0a0a0a;margin:0}.cta-bn-p{font-size:13px;color:#666;margin:0}.cta-bn-btn{font-size:13px;font-weight:600;color:#fff;background:#0a0a0a;padding:10px 24px;border-radius:8px;border:none;cursor:pointer;transition:background 0.3s;font-family:inherit;white-space:nowrap}.cta-bn-btn:hover{background:#222}</style><section class="cta-bn"><div class="cta-bn-left"><div class="cta-bn-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="cta-bn-text"><h4 class="cta-bn-h">Boost your workflow today</h4><p class="cta-bn-p">Save 20% with our annual plan</p></div></div><button class="cta-bn-btn">Upgrade Now</button></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-cta-animated',
+    label: 'CTA Animated',
+    category: 'components',
+    subcategory: 'cta',
+    tags: ['cta', 'animated', 'gradient', 'blob', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'CTA Animated',
+      defaultStyle: { width: '100%', minHeight: '360px' },
+      defaultContent: {
+        html: `<style>.cta-an{background:#0a0a0a;display:flex;align-items:center;justify-content:center;padding:80px 40px;border-radius:12px;position:relative;overflow:hidden;min-height:360px;font-family:system-ui,-apple-system,sans-serif}.cta-an-blob{position:absolute;width:400px;height:400px;border-radius:50%;filter:blur(80px);opacity:0.3;animation:ctaBlob 8s ease-in-out infinite}.cta-an-b1{background:linear-gradient(135deg,#7c3aed,#3b82f6);top:50%;left:50%;transform:translate(-50%,-50%);animation-name:ctaBlob}.cta-an-b2{background:linear-gradient(135deg,#ec4899,#8b5cf6);top:50%;left:50%;transform:translate(-50%,-50%);animation-name:ctaBlob2;width:300px;height:300px}@keyframes ctaBlob{0%,100%{transform:translate(-50%,-50%) scale(1)}33%{transform:translate(-40%,-60%) scale(1.1)}66%{transform:translate(-60%,-40%) scale(0.9)}}@keyframes ctaBlob2{0%,100%{transform:translate(-50%,-50%) scale(1)}33%{transform:translate(-60%,-40%) scale(0.9)}66%{transform:translate(-40%,-60%) scale(1.1)}}.cta-an-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px}.cta-an-h{font-size:clamp(28px,3.5vw,44px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0;line-height:1.15;max-width:560px}.cta-an-p{font-size:16px;color:rgba(255,255,255,0.5);margin:0;max-width:440px;line-height:1.7}.cta-an-btn{font-size:15px;font-weight:600;color:#0a0a0a;background:#fff;padding:14px 36px;border-radius:8px;border:none;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit;margin-top:8px}.cta-an-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(255,255,255,0.15)}</style><section class="cta-an"><div class="cta-an-blob cta-an-b1"></div><div class="cta-an-blob cta-an-b2"></div><div class="cta-an-content"><h2 class="cta-an-h">Transform your ideas into reality</h2><p class="cta-an-p">Start building with the most powerful creative platform available.</p><button class="cta-an-btn">Get Started Free</button></div></section>`
+      }
+    }
+  },
+]
+
+// ─── HERO SECTIONS (8 premium presets) ───
+
+const HERO_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-hero-centered',
+    label: 'Hero Centered',
+    category: 'components',
+    subcategory: 'heroes',
+    tags: ['hero', 'centered', 'saas', 'dark', 'cta', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Hero Centered',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<style>.hero-ctr{background:#0a0a0a;display:flex;align-items:center;justify-content:center;min-height:600px;padding:80px 40px;font-family:system-ui,-apple-system,sans-serif;text-align:center}.hero-ctr-inner{max-width:720px;display:flex;flex-direction:column;align-items:center;gap:24px}.hero-ctr-badge{font-size:12px;font-weight:600;color:#a78bfa;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);padding:6px 16px;border-radius:100px;letter-spacing:0.05em;text-transform:uppercase}.hero-ctr-h{font-size:48px;font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.1;margin:0}.hero-ctr-p{font-size:18px;color:rgba(255,255,255,0.5);line-height:1.7;margin:0;max-width:540px}.hero-ctr-btns{display:flex;gap:12px;margin-top:8px}.hero-ctr-btn{font-size:15px;font-weight:600;padding:14px 32px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;transition:all 0.3s}.hero-ctr-primary{background:#fff;color:#0a0a0a}.hero-ctr-primary:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(255,255,255,0.15)}.hero-ctr-ghost{background:transparent;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15)}.hero-ctr-ghost:hover{border-color:rgba(255,255,255,0.3);color:#fff}</style><section class="hero-ctr"><div class="hero-ctr-inner"><span class="hero-ctr-badge">Now Available</span><h1 class="hero-ctr-h">Build beautiful products faster than ever</h1><p class="hero-ctr-p">The all-in-one platform for designers and developers to create, iterate, and ship stunning experiences.</p><div class="hero-ctr-btns"><button class="hero-ctr-btn hero-ctr-primary">Get Started</button><button class="hero-ctr-btn hero-ctr-ghost">Learn More</button></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-hero-split',
+    label: 'Hero Split',
+    category: 'components',
+    subcategory: 'heroes',
+    tags: ['hero', 'split', 'image', 'layout', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Hero Split',
+      defaultStyle: { width: '100%', minHeight: '560px' },
+      defaultContent: {
+        html: `<style>.hero-spl{background:#0a0a0a;display:flex;align-items:center;min-height:560px;padding:60px 40px;font-family:system-ui,-apple-system,sans-serif;gap:60px}.hero-spl-text{flex:1;display:flex;flex-direction:column;gap:24px}.hero-spl-tag{font-size:12px;font-weight:600;color:#34d399;letter-spacing:0.08em;text-transform:uppercase;margin:0}.hero-spl-h{font-size:44px;font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.1;margin:0}.hero-spl-p{font-size:16px;color:rgba(255,255,255,0.5);line-height:1.7;margin:0;max-width:440px}.hero-spl-btn{font-size:15px;font-weight:600;color:#0a0a0a;background:#34d399;padding:14px 32px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;width:fit-content;transition:all 0.3s}.hero-spl-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(52,211,153,0.25)}.hero-spl-visual{flex:1;min-height:400px;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);border-radius:16px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.hero-spl-mock{width:280px;height:200px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:12px;padding:20px}.hero-spl-mock-bar{height:8px;border-radius:4px;background:rgba(255,255,255,0.1)}.hero-spl-mock-bar:first-child{width:60%}.hero-spl-mock-bar:nth-child(2){width:80%}.hero-spl-mock-bar:nth-child(3){width:45%}.hero-spl-mock-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.hero-spl-mock-card{height:40px;border-radius:6px;background:rgba(255,255,255,0.06)}</style><section class="hero-spl"><div class="hero-spl-text"><p class="hero-spl-tag">Platform</p><h1 class="hero-spl-h">Design, build, and launch in one place</h1><p class="hero-spl-p">Streamline your entire workflow from concept to production with our integrated suite of tools.</p><button class="hero-spl-btn">Start Building</button></div><div class="hero-spl-visual"><div class="hero-spl-mock"><div class="hero-spl-mock-bar"></div><div class="hero-spl-mock-bar"></div><div class="hero-spl-mock-bar"></div><div class="hero-spl-mock-grid"><div class="hero-spl-mock-card"></div><div class="hero-spl-mock-card"></div><div class="hero-spl-mock-card"></div><div class="hero-spl-mock-card"></div></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-hero-video-bg',
+    label: 'Hero Video Background',
+    category: 'components',
+    subcategory: 'heroes',
+    tags: ['hero', 'video', 'fullscreen', 'dark', 'overlay', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Hero Video Background',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<style>.hero-vid{position:relative;min-height:600px;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;background:#0a0a0a}.hero-vid-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);background-size:400% 400%;animation:heroVidShift 12s ease-in-out infinite}.hero-vid-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.6) 100%)}@keyframes heroVidShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}.hero-vid-play{position:absolute;width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;z-index:1;top:50%;left:50%;transform:translate(-50%,-50%);backdrop-filter:blur(8px)}.hero-vid-play:hover{background:rgba(255,255,255,0.2);transform:translate(-50%,-50%) scale(1.05)}.hero-vid-play svg{width:24px;height:24px;fill:#fff;margin-left:3px}.hero-vid-content{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px;padding:40px}.hero-vid-h{font-size:52px;font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.1;margin:0;max-width:680px}.hero-vid-p{font-size:17px;color:rgba(255,255,255,0.6);margin:0;max-width:480px;line-height:1.7}.hero-vid-btn{font-size:15px;font-weight:600;color:#0a0a0a;background:#fff;padding:14px 36px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;transition:all 0.3s;margin-top:8px}.hero-vid-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(255,255,255,0.15)}</style><section class="hero-vid"><div class="hero-vid-bg"></div><div class="hero-vid-content"><h1 class="hero-vid-h">Cinematic experiences for the web</h1><p class="hero-vid-p">Create immersive, video-first landing pages that captivate your audience from the first frame.</p><button class="hero-vid-btn">Watch Showreel</button></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-hero-minimal',
+    label: 'Hero Minimal',
+    category: 'components',
+    subcategory: 'heroes',
+    tags: ['hero', 'minimal', 'editorial', 'clean', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Hero Minimal',
+      defaultStyle: { width: '100%', minHeight: '500px' },
+      defaultContent: {
+        html: `<style>.hero-min{background:#0a0a0a;display:flex;align-items:center;justify-content:center;min-height:500px;padding:80px 40px;font-family:system-ui,-apple-system,sans-serif;text-align:center}.hero-min-inner{display:flex;flex-direction:column;align-items:center;gap:20px}.hero-min-h{font-size:72px;font-weight:700;color:#fff;letter-spacing:-0.04em;line-height:1.05;margin:0;max-width:800px}.hero-min-p{font-size:17px;color:rgba(255,255,255,0.4);margin:0;letter-spacing:0.01em}.hero-min-link{font-size:15px;color:rgba(255,255,255,0.6);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.2);padding-bottom:2px;transition:all 0.3s;margin-top:12px}.hero-min-link:hover{color:#fff;border-color:rgba(255,255,255,0.5)}</style><section class="hero-min"><div class="hero-min-inner"><h1 class="hero-min-h">Less noise. More craft.</h1><p class="hero-min-p">A design-first approach to digital products.</p><a href="#" class="hero-min-link">Explore the work</a></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-hero-gradient',
+    label: 'Hero Gradient',
+    category: 'components',
+    subcategory: 'heroes',
+    tags: ['hero', 'gradient', 'animated', 'colorful', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Hero Gradient',
+      defaultStyle: { width: '100%', minHeight: '580px' },
+      defaultContent: {
+        html: `<style>.hero-grd{min-height:580px;display:flex;align-items:center;justify-content:center;padding:80px 40px;font-family:system-ui,-apple-system,sans-serif;text-align:center;background:linear-gradient(-45deg,#0f0a1a,#1a0533,#0a1628,#0d1f2d);background-size:400% 400%;animation:heroGrdShift 15s ease infinite;position:relative;overflow:hidden}.hero-grd::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,rgba(124,58,237,0.15) 0%,transparent 50%),radial-gradient(circle at 70% 50%,rgba(59,130,246,0.1) 0%,transparent 50%),radial-gradient(circle at 50% 80%,rgba(20,184,166,0.1) 0%,transparent 50%);animation:heroGrdOrb 20s linear infinite}@keyframes heroGrdShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}@keyframes heroGrdOrb{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}.hero-grd-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:24px;max-width:680px}.hero-grd-h{font-size:48px;font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.1;margin:0;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.hero-grd-p{font-size:17px;color:rgba(255,255,255,0.5);margin:0;max-width:480px;line-height:1.7}.hero-grd-btn{font-size:15px;font-weight:600;color:#fff;background:linear-gradient(135deg,#7c3aed,#3b82f6);padding:14px 36px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;transition:all 0.3s;margin-top:8px}.hero-grd-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(124,58,237,0.3)}</style><section class="hero-grd"><div class="hero-grd-inner"><h1 class="hero-grd-h">The future of creative tooling starts here</h1><p class="hero-grd-p">Powered by AI, built for speed. Design systems that adapt to your vision in real time.</p><button class="hero-grd-btn">Start for Free</button></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-hero-image-overlay',
+    label: 'Hero Image Overlay',
+    category: 'components',
+    subcategory: 'heroes',
+    tags: ['hero', 'image', 'overlay', 'fullscreen', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Hero Image Overlay',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<style>.hero-img{position:relative;min-height:600px;display:flex;align-items:flex-end;padding:80px 60px;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;background:#0a0a0a}.hero-img-bg{position:absolute;inset:0;background:linear-gradient(145deg,#1a1a2e 0%,#16213e 30%,#0f3460 60%,#1a1a2e 100%);opacity:0.8}.hero-img-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,0.8) 0%,rgba(0,0,0,0.2) 50%,rgba(0,0,0,0.1) 100%)}.hero-img-noise{position:absolute;inset:0;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}.hero-img-content{position:relative;z-index:1;display:flex;flex-direction:column;gap:16px;max-width:560px}.hero-img-h{font-size:48px;font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.1;margin:0}.hero-img-p{font-size:16px;color:rgba(255,255,255,0.5);margin:0;line-height:1.7}.hero-img-btn{font-size:15px;font-weight:600;color:#0a0a0a;background:#fff;padding:14px 32px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;width:fit-content;transition:all 0.3s;margin-top:8px}.hero-img-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(255,255,255,0.15)}</style><section class="hero-img"><div class="hero-img-bg"></div><div class="hero-img-overlay"></div><div class="hero-img-noise"></div><div class="hero-img-content"><h1 class="hero-img-h">Where vision meets execution</h1><p class="hero-img-p">Premium digital experiences crafted with precision and purpose for brands that demand excellence.</p><button class="hero-img-btn">View Portfolio</button></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-hero-cards',
+    label: 'Hero Cards',
+    category: 'components',
+    subcategory: 'heroes',
+    tags: ['hero', 'cards', 'showcase', 'product', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Hero Cards',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<style>.hero-cds{background:#0a0a0a;display:flex;flex-direction:column;align-items:center;padding:80px 40px;min-height:600px;font-family:system-ui,-apple-system,sans-serif;gap:48px}.hero-cds-top{text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;max-width:600px}.hero-cds-h{font-size:44px;font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.1;margin:0}.hero-cds-p{font-size:17px;color:rgba(255,255,255,0.45);margin:0;line-height:1.7}.hero-cds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:100%;max-width:900px}.hero-cds-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:32px 24px;display:flex;flex-direction:column;gap:16px;transition:all 0.4s;cursor:pointer}.hero-cds-card:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);transform:translateY(-4px)}.hero-cds-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(59,130,246,0.15));display:flex;align-items:center;justify-content:center}.hero-cds-icon svg{width:22px;height:22px;stroke:#a78bfa;fill:none;stroke-width:1.5}.hero-cds-ch{font-size:17px;font-weight:600;color:#fff;margin:0}.hero-cds-cp{font-size:14px;color:rgba(255,255,255,0.4);margin:0;line-height:1.6}</style><section class="hero-cds"><div class="hero-cds-top"><h1 class="hero-cds-h">Everything you need to scale</h1><p class="hero-cds-p">Three powerful tools designed to work together seamlessly.</p></div><div class="hero-cds-grid"><div class="hero-cds-card"><div class="hero-cds-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><h3 class="hero-cds-ch">Design System</h3><p class="hero-cds-cp">Build consistent interfaces with a shared component library.</p></div><div class="hero-cds-card"><div class="hero-cds-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3 class="hero-cds-ch">Performance</h3><p class="hero-cds-cp">Optimized builds that ship fast and score 100 on Lighthouse.</p></div><div class="hero-cds-card"><div class="hero-cds-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><h3 class="hero-cds-ch">Automation</h3><p class="hero-cds-cp">CI/CD pipelines and workflows that handle the boring stuff.</p></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-hero-animated-text',
+    label: 'Hero Animated Text',
+    category: 'components',
+    subcategory: 'heroes',
+    tags: ['hero', 'animated', 'typing', 'dark', 'interactive', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Hero Animated Text',
+      defaultStyle: { width: '100%', minHeight: '560px' },
+      defaultContent: {
+        html: `<style>.hero-anim{background:#0a0a0a;display:flex;align-items:center;justify-content:center;min-height:560px;padding:80px 40px;font-family:system-ui,-apple-system,sans-serif;text-align:center}.hero-anim-inner{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:700px}.hero-anim-h{font-size:48px;font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.1;margin:0;display:inline}.hero-anim-typed{display:inline;border-right:2px solid #a78bfa;padding-right:4px;animation:heroTypeBlink 1s step-end infinite;color:#a78bfa;font-size:48px;font-weight:700;letter-spacing:-0.03em;line-height:1.1}.hero-anim-wrap{overflow:hidden}@keyframes heroTypeBlink{0%,100%{border-color:#a78bfa}50%{border-color:transparent}}@keyframes heroTypeIn{from{width:0}to{width:100%}}.hero-anim-sub{font-size:17px;color:rgba(255,255,255,0.4);margin:0;max-width:480px;line-height:1.7;opacity:0;animation:heroFadeIn 1s ease 2.5s forwards}@keyframes heroFadeIn{to{opacity:1}}.hero-anim-btn{font-size:15px;font-weight:600;color:#0a0a0a;background:#fff;padding:14px 36px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;transition:all 0.3s;opacity:0;animation:heroFadeIn 1s ease 3s forwards}.hero-anim-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(255,255,255,0.15)}</style><section class="hero-anim"><div class="hero-anim-inner"><div><h1 class="hero-anim-h">We craft </h1><span class="hero-anim-typed" id="heroTyped"></span></div><p class="hero-anim-sub">From concept to launch, we build digital experiences that leave a lasting impression.</p><button class="hero-anim-btn">Start a Project</button></div></section><script>(function(){var w=["experiences.","brands.","products.","futures."],el=document.getElementById("heroTyped");if(!el)return;var wi=0,ci=0,del=false,spd=120;function tick(){var word=w[wi];if(!del){el.textContent=word.substring(0,ci+1);ci++;if(ci===word.length){del=true;setTimeout(tick,1800);return}}else{el.textContent=word.substring(0,ci-1);ci--;if(ci===0){del=false;wi=(wi+1)%w.length}}setTimeout(tick,del?60:spd)}tick()})()</script>`
+      }
+    }
+  },
+]
+
+// ─── FEATURE SECTIONS (8 premium presets) ───
+
+const FEATURE_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-features-3col',
+    label: 'Features 3 Column',
+    category: 'components',
+    subcategory: 'features',
+    tags: ['features', 'grid', '3-column', 'icons', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Features 3 Column',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: {
+        html: `<style>.feat-3c{background:#0a0a0a;padding:80px 40px;font-family:system-ui,-apple-system,sans-serif}.feat-3c-top{text-align:center;margin-bottom:48px}.feat-3c-tag{font-size:12px;font-weight:600;color:#3b82f6;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 12px}.feat-3c-h{font-size:36px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin:0}.feat-3c-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:960px;margin:0 auto}.feat-3c-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:16px;transition:all 0.3s}.feat-3c-card:hover{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1)}.feat-3c-icon{width:44px;height:44px;border-radius:12px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center}.feat-3c-icon svg{width:22px;height:22px;stroke:#3b82f6;fill:none;stroke-width:1.5}.feat-3c-ch{font-size:17px;font-weight:600;color:#fff;margin:0}.feat-3c-cp{font-size:14px;color:rgba(255,255,255,0.45);margin:0;line-height:1.6}</style><section class="feat-3c"><div class="feat-3c-top"><p class="feat-3c-tag">Features</p><h2 class="feat-3c-h">Built for modern teams</h2></div><div class="feat-3c-grid"><div class="feat-3c-card"><div class="feat-3c-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3 class="feat-3c-ch">Lightning Fast</h3><p class="feat-3c-cp">Sub-second load times with edge-first architecture and global CDN distribution.</p></div><div class="feat-3c-card"><div class="feat-3c-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h3 class="feat-3c-ch">Enterprise Security</h3><p class="feat-3c-cp">SOC 2 Type II compliant with end-to-end encryption and role-based access control.</p></div><div class="feat-3c-card"><div class="feat-3c-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3 class="feat-3c-ch">Team Collaboration</h3><p class="feat-3c-cp">Real-time editing, comments, and version history for seamless teamwork.</p></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-features-alternating',
+    label: 'Features Alternating',
+    category: 'components',
+    subcategory: 'features',
+    tags: ['features', 'alternating', 'zigzag', 'image', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Features Alternating',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<style>.feat-alt{background:#0a0a0a;padding:80px 40px;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;gap:60px;max-width:1000px;margin:0 auto}.feat-alt-row{display:flex;align-items:center;gap:60px}.feat-alt-row:nth-child(2){flex-direction:row-reverse}.feat-alt-text{flex:1;display:flex;flex-direction:column;gap:16px}.feat-alt-tag{font-size:12px;font-weight:600;color:#34d399;letter-spacing:0.08em;text-transform:uppercase;margin:0}.feat-alt-h{font-size:28px;font-weight:700;color:#fff;letter-spacing:-0.02em;line-height:1.2;margin:0}.feat-alt-p{font-size:15px;color:rgba(255,255,255,0.45);line-height:1.7;margin:0}.feat-alt-link{font-size:14px;color:#34d399;text-decoration:none;font-weight:500;transition:opacity 0.3s;margin-top:4px}.feat-alt-link:hover{opacity:0.7}.feat-alt-visual{flex:1;min-height:280px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}.feat-alt-mock{width:200px;height:140px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;display:flex;flex-direction:column;padding:16px;gap:8px}.feat-alt-bar{height:6px;border-radius:3px;background:rgba(255,255,255,0.08)}.feat-alt-bar:nth-child(1){width:70%}.feat-alt-bar:nth-child(2){width:50%}.feat-alt-bar:nth-child(3){width:85%}</style><section class="feat-alt"><div class="feat-alt-row"><div class="feat-alt-text"><p class="feat-alt-tag">Analytics</p><h3 class="feat-alt-h">Real-time insights at your fingertips</h3><p class="feat-alt-p">Track performance metrics, user behavior, and conversion funnels with beautiful dashboards that update in real time.</p><a href="#" class="feat-alt-link">Learn more &rarr;</a></div><div class="feat-alt-visual"><div class="feat-alt-mock"><div class="feat-alt-bar"></div><div class="feat-alt-bar"></div><div class="feat-alt-bar"></div></div></div></div><div class="feat-alt-row"><div class="feat-alt-text"><p class="feat-alt-tag">Automation</p><h3 class="feat-alt-h">Set it and forget it workflows</h3><p class="feat-alt-p">Automate repetitive tasks with powerful workflow builders. Connect your tools and let the system handle the rest.</p><a href="#" class="feat-alt-link">Learn more &rarr;</a></div><div class="feat-alt-visual"><div class="feat-alt-mock"><div class="feat-alt-bar"></div><div class="feat-alt-bar"></div><div class="feat-alt-bar"></div></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-features-icon-list',
+    label: 'Features Icon List',
+    category: 'components',
+    subcategory: 'features',
+    tags: ['features', 'list', 'icons', 'compact', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Features Icon List',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: {
+        html: `<style>.feat-il{background:#0a0a0a;padding:80px 40px;font-family:system-ui,-apple-system,sans-serif;max-width:720px;margin:0 auto}.feat-il-top{margin-bottom:40px}.feat-il-tag{font-size:12px;font-weight:600;color:#f59e0b;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 12px}.feat-il-h{font-size:32px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin:0}.feat-il-list{display:flex;flex-direction:column;gap:24px}.feat-il-item{display:flex;gap:20px;align-items:flex-start;padding:20px;border-radius:12px;transition:background 0.3s}.feat-il-item:hover{background:rgba(255,255,255,0.03)}.feat-il-icon{width:44px;height:44px;min-width:44px;border-radius:10px;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center}.feat-il-icon svg{width:20px;height:20px;stroke:#f59e0b;fill:none;stroke-width:1.5}.feat-il-body{display:flex;flex-direction:column;gap:4px}.feat-il-ch{font-size:16px;font-weight:600;color:#fff;margin:0}.feat-il-cp{font-size:14px;color:rgba(255,255,255,0.4);margin:0;line-height:1.6}</style><section class="feat-il"><div class="feat-il-top"><p class="feat-il-tag">Why Choose Us</p><h2 class="feat-il-h">Designed for results</h2></div><div class="feat-il-list"><div class="feat-il-item"><div class="feat-il-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="feat-il-body"><h4 class="feat-il-ch">No-code editor</h4><p class="feat-il-cp">Build and customize without writing a single line of code. Intuitive drag-and-drop interface.</p></div></div><div class="feat-il-item"><div class="feat-il-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="feat-il-body"><h4 class="feat-il-ch">Built-in security</h4><p class="feat-il-cp">SSL certificates, DDoS protection, and automatic backups included at no extra cost.</p></div></div><div class="feat-il-item"><div class="feat-il-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="feat-il-body"><h4 class="feat-il-ch">99.99% uptime</h4><p class="feat-il-cp">Enterprise-grade infrastructure ensures your site is always available when customers need it.</p></div></div><div class="feat-il-item"><div class="feat-il-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="feat-il-body"><h4 class="feat-il-ch">24/7 support</h4><p class="feat-il-cp">Get help anytime with our dedicated support team via live chat, email, or phone.</p></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-features-bento',
+    label: 'Features Bento Grid',
+    category: 'components',
+    subcategory: 'features',
+    tags: ['features', 'bento', 'grid', 'glassmorphism', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Features Bento Grid',
+      defaultStyle: { width: '100%', minHeight: '500px' },
+      defaultContent: {
+        html: `<style>.feat-bn{background:#0a0a0a;padding:80px 40px;font-family:system-ui,-apple-system,sans-serif}.feat-bn-top{text-align:center;margin-bottom:48px}.feat-bn-tag{font-size:12px;font-weight:600;color:#a78bfa;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 12px}.feat-bn-h{font-size:36px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin:0}.feat-bn-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;gap:16px;max-width:960px;margin:0 auto}.feat-bn-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(10px);transition:all 0.4s;overflow:hidden;position:relative}.feat-bn-card:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);transform:translateY(-2px)}.feat-bn-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}.feat-bn-lg{grid-column:span 2;grid-row:span 2}.feat-bn-wide{grid-column:span 2}.feat-bn-icon{width:40px;height:40px;border-radius:10px;background:rgba(167,139,250,0.1);display:flex;align-items:center;justify-content:center}.feat-bn-icon svg{width:20px;height:20px;stroke:#a78bfa;fill:none;stroke-width:1.5}.feat-bn-ch{font-size:17px;font-weight:600;color:#fff;margin:0}.feat-bn-cp{font-size:14px;color:rgba(255,255,255,0.4);margin:0;line-height:1.6}.feat-bn-lg .feat-bn-ch{font-size:22px}.feat-bn-lg .feat-bn-cp{font-size:15px}.feat-bn-visual{flex:1;display:flex;align-items:center;justify-content:center;margin-top:16px;min-height:80px}.feat-bn-dots{display:grid;grid-template-columns:repeat(6,8px);gap:6px}.feat-bn-dot{width:8px;height:8px;border-radius:50%;background:rgba(167,139,250,0.2)}.feat-bn-dot:nth-child(3n){background:rgba(167,139,250,0.5)}</style><section class="feat-bn"><div class="feat-bn-top"><p class="feat-bn-tag">Platform</p><h2 class="feat-bn-h">A better way to build</h2></div><div class="feat-bn-grid"><div class="feat-bn-card feat-bn-lg"><div class="feat-bn-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div><h3 class="feat-bn-ch">Visual Editor</h3><p class="feat-bn-cp">Design pixel-perfect layouts with our intuitive drag-and-drop editor. No coding required.</p><div class="feat-bn-visual"><div class="feat-bn-dots"><div class="feat-bn-dot"></div><div class="feat-bn-dot"></div><div class="feat-bn-dot"></div><div class="feat-bn-dot"></div><div class="feat-bn-dot"></div><div class="feat-bn-dot"></div><div class="feat-bn-dot"></div><div class="feat-bn-dot"></div><div class="feat-bn-dot"></div><div class="feat-bn-dot"></div><div class="feat-bn-dot"></div><div class="feat-bn-dot"></div></div></div></div><div class="feat-bn-card"><div class="feat-bn-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3 class="feat-bn-ch">Fast Deploys</h3><p class="feat-bn-cp">Ship in seconds with one-click deployment.</p></div><div class="feat-bn-card"><div class="feat-bn-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><h3 class="feat-bn-ch">Analytics</h3><p class="feat-bn-cp">Real-time metrics and conversion tracking.</p></div><div class="feat-bn-card feat-bn-wide"><div class="feat-bn-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3 class="feat-bn-ch">Enterprise Security & Compliance</h3><p class="feat-bn-cp">SOC 2, GDPR, and HIPAA ready. Your data is encrypted at rest and in transit with automatic backups.</p></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-features-tabs',
+    label: 'Features Tabs',
+    category: 'components',
+    subcategory: 'features',
+    tags: ['features', 'tabs', 'interactive', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Features Tabs',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<style>.feat-tb{background:#0a0a0a;padding:80px 40px;font-family:system-ui,-apple-system,sans-serif;max-width:800px;margin:0 auto}.feat-tb-top{text-align:center;margin-bottom:40px}.feat-tb-h{font-size:36px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin:0 0 8px}.feat-tb-sub{font-size:16px;color:rgba(255,255,255,0.4);margin:0}.feat-tb-nav{display:flex;gap:4px;background:rgba(255,255,255,0.04);border-radius:12px;padding:4px;margin-bottom:32px}.feat-tb-btn{flex:1;padding:12px 20px;border:none;background:transparent;color:rgba(255,255,255,0.5);font-size:14px;font-weight:500;border-radius:8px;cursor:pointer;transition:all 0.3s;font-family:inherit}.feat-tb-btn.feat-tb-active{background:rgba(255,255,255,0.08);color:#fff}.feat-tb-btn:hover:not(.feat-tb-active){color:rgba(255,255,255,0.7)}.feat-tb-panel{display:none;gap:32px;align-items:center;animation:featTbIn 0.3s ease}.feat-tb-panel.feat-tb-show{display:flex}@keyframes featTbIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.feat-tb-info{flex:1;display:flex;flex-direction:column;gap:16px}.feat-tb-ph{font-size:24px;font-weight:600;color:#fff;margin:0}.feat-tb-pp{font-size:15px;color:rgba(255,255,255,0.45);line-height:1.7;margin:0}.feat-tb-checks{display:flex;flex-direction:column;gap:8px}.feat-tb-check{display:flex;align-items:center;gap:8px;font-size:14px;color:rgba(255,255,255,0.6)}.feat-tb-check svg{width:16px;height:16px;stroke:#34d399;fill:none;stroke-width:2}.feat-tb-visual{flex:1;height:240px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;display:flex;align-items:center;justify-content:center}.feat-tb-chart{display:flex;align-items:flex-end;gap:8px;height:100px}.feat-tb-bar{width:20px;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#3b82f6,rgba(59,130,246,0.3));transition:height 0.4s}.feat-tb-b1{height:40px}.feat-tb-b2{height:70px}.feat-tb-b3{height:55px}.feat-tb-b4{height:90px}.feat-tb-b5{height:65px}</style><section class="feat-tb"><div class="feat-tb-top"><h2 class="feat-tb-h">Powerful features</h2><p class="feat-tb-sub">Everything you need in one platform</p></div><div class="feat-tb-nav"><button class="feat-tb-btn feat-tb-active" onclick="document.querySelectorAll('.feat-tb-panel').forEach(p=>p.classList.remove('feat-tb-show'));document.querySelectorAll('.feat-tb-btn').forEach(b=>b.classList.remove('feat-tb-active'));this.classList.add('feat-tb-active');document.getElementById('feat-tb-0').classList.add('feat-tb-show')">Analytics</button><button class="feat-tb-btn" onclick="document.querySelectorAll('.feat-tb-panel').forEach(p=>p.classList.remove('feat-tb-show'));document.querySelectorAll('.feat-tb-btn').forEach(b=>b.classList.remove('feat-tb-active'));this.classList.add('feat-tb-active');document.getElementById('feat-tb-1').classList.add('feat-tb-show')">Automation</button><button class="feat-tb-btn" onclick="document.querySelectorAll('.feat-tb-panel').forEach(p=>p.classList.remove('feat-tb-show'));document.querySelectorAll('.feat-tb-btn').forEach(b=>b.classList.remove('feat-tb-active'));this.classList.add('feat-tb-active');document.getElementById('feat-tb-2').classList.add('feat-tb-show')">Security</button></div><div id="feat-tb-0" class="feat-tb-panel feat-tb-show"><div class="feat-tb-info"><h3 class="feat-tb-ph">Deep Analytics</h3><p class="feat-tb-pp">Understand your users with real-time dashboards, funnel analysis, and cohort tracking.</p><div class="feat-tb-checks"><div class="feat-tb-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Real-time data</div><div class="feat-tb-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Custom reports</div><div class="feat-tb-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Export to CSV</div></div></div><div class="feat-tb-visual"><div class="feat-tb-chart"><div class="feat-tb-bar feat-tb-b1"></div><div class="feat-tb-bar feat-tb-b2"></div><div class="feat-tb-bar feat-tb-b3"></div><div class="feat-tb-bar feat-tb-b4"></div><div class="feat-tb-bar feat-tb-b5"></div></div></div></div><div id="feat-tb-1" class="feat-tb-panel"><div class="feat-tb-info"><h3 class="feat-tb-ph">Smart Automation</h3><p class="feat-tb-pp">Build workflows that trigger on events, schedule tasks, and connect with 100+ integrations.</p><div class="feat-tb-checks"><div class="feat-tb-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Visual builder</div><div class="feat-tb-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>100+ integrations</div><div class="feat-tb-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Event triggers</div></div></div><div class="feat-tb-visual"><div class="feat-tb-chart"><div class="feat-tb-bar" style="height:80px"></div><div class="feat-tb-bar" style="height:50px"></div><div class="feat-tb-bar" style="height:95px"></div><div class="feat-tb-bar" style="height:60px"></div><div class="feat-tb-bar" style="height:75px"></div></div></div></div><div id="feat-tb-2" class="feat-tb-panel"><div class="feat-tb-info"><h3 class="feat-tb-ph">Enterprise Security</h3><p class="feat-tb-pp">Bank-grade encryption, SSO, audit logs, and compliance certifications you can trust.</p><div class="feat-tb-checks"><div class="feat-tb-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>SOC 2 certified</div><div class="feat-tb-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>SSO & SAML</div><div class="feat-tb-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Audit logs</div></div></div><div class="feat-tb-visual"><div class="feat-tb-chart"><div class="feat-tb-bar" style="height:90px"></div><div class="feat-tb-bar" style="height:85px"></div><div class="feat-tb-bar" style="height:92px"></div><div class="feat-tb-bar" style="height:88px"></div><div class="feat-tb-bar" style="height:95px"></div></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-features-comparison',
+    label: 'Features Comparison',
+    category: 'components',
+    subcategory: 'features',
+    tags: ['features', 'comparison', 'conversion', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Features Comparison',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<style>.feat-cmp{background:#0a0a0a;padding:80px 40px;font-family:system-ui,-apple-system,sans-serif;max-width:800px;margin:0 auto}.feat-cmp-top{text-align:center;margin-bottom:48px}.feat-cmp-h{font-size:36px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin:0 0 8px}.feat-cmp-sub{font-size:16px;color:rgba(255,255,255,0.4);margin:0}.feat-cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.feat-cmp-col{border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:20px}.feat-cmp-without{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.1)}.feat-cmp-with{background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.15)}.feat-cmp-label{font-size:14px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin:0;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.06)}.feat-cmp-without .feat-cmp-label{color:#ef4444}.feat-cmp-with .feat-cmp-label{color:#34d399}.feat-cmp-items{display:flex;flex-direction:column;gap:14px}.feat-cmp-item{display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,0.6)}.feat-cmp-item svg{width:18px;height:18px;min-width:18px;fill:none;stroke-width:2}.feat-cmp-without .feat-cmp-item svg{stroke:#ef4444}.feat-cmp-with .feat-cmp-item svg{stroke:#34d399}.feat-cmp-btn{font-size:14px;font-weight:600;color:#0a0a0a;background:#34d399;padding:12px 28px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;margin-top:8px;transition:all 0.3s}.feat-cmp-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(52,211,153,0.25)}</style><section class="feat-cmp"><div class="feat-cmp-top"><h2 class="feat-cmp-h">See the difference</h2><p class="feat-cmp-sub">What changes when you switch to our platform</p></div><div class="feat-cmp-grid"><div class="feat-cmp-col feat-cmp-without"><p class="feat-cmp-label">Without Us</p><div class="feat-cmp-items"><div class="feat-cmp-item"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Hours spent on manual tasks</div><div class="feat-cmp-item"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Scattered tools and data</div><div class="feat-cmp-item"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Slow deployment cycles</div><div class="feat-cmp-item"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>No real-time collaboration</div><div class="feat-cmp-item"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Security vulnerabilities</div></div></div><div class="feat-cmp-col feat-cmp-with"><p class="feat-cmp-label">With Us</p><div class="feat-cmp-items"><div class="feat-cmp-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Automated workflows save 10h/week</div><div class="feat-cmp-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Single source of truth</div><div class="feat-cmp-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>One-click deploys in seconds</div><div class="feat-cmp-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Real-time multiplayer editing</div><div class="feat-cmp-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Enterprise-grade encryption</div></div><button class="feat-cmp-btn">Switch Today</button></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-features-numbers',
+    label: 'Features Numbers',
+    category: 'components',
+    subcategory: 'features',
+    tags: ['features', 'stats', 'numbers', 'counter', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Features Numbers',
+      defaultStyle: { width: '100%', minHeight: '240px' },
+      defaultContent: {
+        html: `<style>.feat-num{background:#0a0a0a;padding:80px 40px;font-family:system-ui,-apple-system,sans-serif}.feat-num-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;max-width:900px;margin:0 auto;text-align:center}.feat-num-item{display:flex;flex-direction:column;gap:8px;position:relative}.feat-num-item:not(:last-child)::after{content:'';position:absolute;right:-16px;top:10%;height:80%;width:1px;background:rgba(255,255,255,0.06)}.feat-num-val{font-size:48px;font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1;margin:0;background:linear-gradient(135deg,#fff,rgba(255,255,255,0.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.feat-num-label{font-size:14px;color:rgba(255,255,255,0.4);margin:0;font-weight:500}.feat-num-desc{font-size:12px;color:rgba(255,255,255,0.25);margin:0}</style><section class="feat-num"><div class="feat-num-grid"><div class="feat-num-item"><p class="feat-num-val">150+</p><p class="feat-num-label">Projects Delivered</p><p class="feat-num-desc">Across 12 industries</p></div><div class="feat-num-item"><p class="feat-num-val">99.9%</p><p class="feat-num-label">Uptime SLA</p><p class="feat-num-desc">Enterprise reliability</p></div><div class="feat-num-item"><p class="feat-num-val">24/7</p><p class="feat-num-label">Support</p><p class="feat-num-desc">Average 2min response</p></div><div class="feat-num-item"><p class="feat-num-val">50k+</p><p class="feat-num-label">Active Users</p><p class="feat-num-desc">Growing 20% monthly</p></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-features-carousel',
+    label: 'Features Carousel',
+    category: 'components',
+    subcategory: 'features',
+    tags: ['features', 'carousel', 'scrollable', 'cards', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Features Carousel',
+      defaultStyle: { width: '100%', minHeight: '420px' },
+      defaultContent: {
+        html: `<style>.feat-car{background:#0a0a0a;padding:80px 0;font-family:system-ui,-apple-system,sans-serif}.feat-car-top{text-align:center;margin-bottom:40px;padding:0 40px}.feat-car-h{font-size:36px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin:0 0 8px}.feat-car-sub{font-size:16px;color:rgba(255,255,255,0.4);margin:0}.feat-car-track{display:flex;gap:20px;overflow-x:auto;padding:0 40px 20px;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}.feat-car-track::-webkit-scrollbar{display:none}.feat-car-card{min-width:280px;max-width:280px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:16px;scroll-snap-align:start;transition:all 0.3s;flex-shrink:0}.feat-car-card:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);transform:translateY(-4px)}.feat-car-num{font-size:48px;font-weight:700;color:rgba(255,255,255,0.06);line-height:1;margin:0}.feat-car-ch{font-size:18px;font-weight:600;color:#fff;margin:0}.feat-car-cp{font-size:14px;color:rgba(255,255,255,0.4);margin:0;line-height:1.6}.feat-car-link{font-size:13px;color:#3b82f6;text-decoration:none;font-weight:500;margin-top:auto;transition:opacity 0.3s}.feat-car-link:hover{opacity:0.7}.feat-car-nav{display:flex;justify-content:center;gap:8px;margin-top:24px;padding:0 40px}.feat-car-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;cursor:pointer;transition:all 0.3s;padding:0}.feat-car-dot:first-child{background:rgba(255,255,255,0.5);width:24px;border-radius:4px}</style><section class="feat-car"><div class="feat-car-top"><h2 class="feat-car-h">Everything included</h2><p class="feat-car-sub">Scroll to explore all features</p></div><div class="feat-car-track"><div class="feat-car-card"><p class="feat-car-num">01</p><h3 class="feat-car-ch">Visual Editor</h3><p class="feat-car-cp">Drag-and-drop interface for building beautiful layouts without code.</p><a href="#" class="feat-car-link">Learn more &rarr;</a></div><div class="feat-car-card"><p class="feat-car-num">02</p><h3 class="feat-car-ch">Smart Components</h3><p class="feat-car-cp">Pre-built, customizable components that adapt to your brand automatically.</p><a href="#" class="feat-car-link">Learn more &rarr;</a></div><div class="feat-car-card"><p class="feat-car-num">03</p><h3 class="feat-car-ch">AI Content</h3><p class="feat-car-cp">Generate copy, images, and layouts with AI that understands your brand voice.</p><a href="#" class="feat-car-link">Learn more &rarr;</a></div><div class="feat-car-card"><p class="feat-car-num">04</p><h3 class="feat-car-ch">Global CDN</h3><p class="feat-car-cp">Lightning-fast delivery from 200+ edge locations worldwide.</p><a href="#" class="feat-car-link">Learn more &rarr;</a></div><div class="feat-car-card"><p class="feat-car-num">05</p><h3 class="feat-car-ch">Team Spaces</h3><p class="feat-car-cp">Organize projects, manage permissions, and collaborate in real time.</p><a href="#" class="feat-car-link">Learn more &rarr;</a></div></div><div class="feat-car-nav"><div class="feat-car-dot"></div><div class="feat-car-dot"></div><div class="feat-car-dot"></div></div></section>`
+      }
+    }
+  },
+]
+
+// ─── SOCIAL PROOF (6 premium presets) ───
+
+const SOCIAL_PROOF: LibraryElementItem[] = [
+  {
+    id: 'comp-logos-bar',
+    label: 'Logo Bar',
+    category: 'components',
+    subcategory: 'social-proof',
+    tags: ['logos', 'trust', 'social-proof', 'grayscale', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Logo Bar',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: {
+        html: `<style>.sp-logos{background:#0a0a0a;padding:48px 40px;font-family:system-ui,-apple-system,sans-serif;text-align:center}.sp-logos-label{font-size:12px;font-weight:500;color:rgba(255,255,255,0.3);letter-spacing:0.08em;text-transform:uppercase;margin:0 0 32px}.sp-logos-row{display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap}.sp-logos-item{opacity:0.4;transition:opacity 0.4s;cursor:default;display:flex;align-items:center;gap:8px}.sp-logos-item:hover{opacity:0.8}.sp-logos-icon{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center}.sp-logos-icon svg{width:14px;height:14px;fill:rgba(255,255,255,0.6)}.sp-logos-name{font-size:15px;font-weight:600;color:rgba(255,255,255,0.7);letter-spacing:-0.01em}</style><section class="sp-logos"><p class="sp-logos-label">Trusted by industry leaders</p><div class="sp-logos-row"><div class="sp-logos-item"><div class="sp-logos-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/></svg></div><span class="sp-logos-name">Acme Corp</span></div><div class="sp-logos-item"><div class="sp-logos-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg></div><span class="sp-logos-name">Globex</span></div><div class="sp-logos-item"><div class="sp-logos-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/></svg></div><span class="sp-logos-name">Initech</span></div><div class="sp-logos-item"><div class="sp-logos-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 19h20L12 2z"/></svg></div><span class="sp-logos-name">Umbrella</span></div><div class="sp-logos-item"><div class="sp-logos-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div><span class="sp-logos-name">Massive</span></div><div class="sp-logos-item"><div class="sp-logos-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="3"/></svg></div><span class="sp-logos-name">Soylent</span></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-logos-marquee',
+    label: 'Logo Marquee',
+    category: 'components',
+    subcategory: 'social-proof',
+    tags: ['logos', 'marquee', 'scroll', 'infinite', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Logo Marquee',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: {
+        html: `<style>.sp-marq{background:#0a0a0a;padding:40px 0;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;position:relative}.sp-marq::before,.sp-marq::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:1}.sp-marq::before{left:0;background:linear-gradient(90deg,#0a0a0a,transparent)}.sp-marq::after{right:0;background:linear-gradient(-90deg,#0a0a0a,transparent)}.sp-marq-track{display:flex;animation:spMarqScroll 25s linear infinite;width:max-content}.sp-marq-set{display:flex;align-items:center;gap:56px;padding:0 28px}@keyframes spMarqScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.sp-marq-item{display:flex;align-items:center;gap:8px;opacity:0.35;flex-shrink:0}.sp-marq-icon{width:24px;height:24px;border-radius:5px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center}.sp-marq-icon svg{width:12px;height:12px;fill:rgba(255,255,255,0.5)}.sp-marq-name{font-size:14px;font-weight:600;color:rgba(255,255,255,0.6);white-space:nowrap}</style><section class="sp-marq"><div class="sp-marq-track"><div class="sp-marq-set"><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/></svg></div><span class="sp-marq-name">Acme Corp</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg></div><span class="sp-marq-name">Globex</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/></svg></div><span class="sp-marq-name">Initech</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 19h20L12 2z"/></svg></div><span class="sp-marq-name">Umbrella</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div><span class="sp-marq-name">Massive</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="3"/></svg></div><span class="sp-marq-name">Soylent</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div><span class="sp-marq-name">Hooli</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg></div><span class="sp-marq-name">Stark Inc</span></div></div><div class="sp-marq-set"><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/></svg></div><span class="sp-marq-name">Acme Corp</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg></div><span class="sp-marq-name">Globex</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/></svg></div><span class="sp-marq-name">Initech</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 19h20L12 2z"/></svg></div><span class="sp-marq-name">Umbrella</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div><span class="sp-marq-name">Massive</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="3"/></svg></div><span class="sp-marq-name">Soylent</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div><span class="sp-marq-name">Hooli</span></div><div class="sp-marq-item"><div class="sp-marq-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg></div><span class="sp-marq-name">Stark Inc</span></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-stats-bar',
+    label: 'Stats Bar',
+    category: 'components',
+    subcategory: 'social-proof',
+    tags: ['stats', 'bar', 'numbers', 'accent', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Stats Bar',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: {
+        html: `<style>.sp-stats{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:40px;font-family:system-ui,-apple-system,sans-serif;border-radius:16px;border:1px solid rgba(255,255,255,0.06)}.sp-stats-row{display:flex;align-items:center;justify-content:space-around;gap:24px;max-width:800px;margin:0 auto}.sp-stats-item{text-align:center;display:flex;flex-direction:column;gap:4px;position:relative;flex:1}.sp-stats-item:not(:last-child)::after{content:'';position:absolute;right:0;top:15%;height:70%;width:1px;background:rgba(255,255,255,0.08)}.sp-stats-val{font-size:32px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin:0}.sp-stats-label{font-size:13px;color:rgba(255,255,255,0.4);margin:0;font-weight:500}</style><section class="sp-stats"><div class="sp-stats-row"><div class="sp-stats-item"><p class="sp-stats-val">200+</p><p class="sp-stats-label">Projects</p></div><div class="sp-stats-item"><p class="sp-stats-val">50+</p><p class="sp-stats-label">Clients</p></div><div class="sp-stats-item"><p class="sp-stats-val">5+</p><p class="sp-stats-label">Years</p></div><div class="sp-stats-item"><p class="sp-stats-val">4.9</p><p class="sp-stats-label">Rating</p></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-social-proof-avatars',
+    label: 'Social Proof Avatars',
+    category: 'components',
+    subcategory: 'social-proof',
+    tags: ['social-proof', 'avatars', 'cta', 'trust', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Social Proof Avatars',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: {
+        html: `<style>.sp-av{background:#0a0a0a;padding:48px 40px;font-family:system-ui,-apple-system,sans-serif;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}.sp-av-stack{display:flex;align-items:center}.sp-av-circle{width:40px;height:40px;border-radius:50%;border:2px solid #0a0a0a;margin-left:-10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff}.sp-av-circle:first-child{margin-left:0}.sp-av-c1{background:linear-gradient(135deg,#7c3aed,#a78bfa)}.sp-av-c2{background:linear-gradient(135deg,#3b82f6,#60a5fa)}.sp-av-c3{background:linear-gradient(135deg,#ec4899,#f472b6)}.sp-av-c4{background:linear-gradient(135deg,#f59e0b,#fbbf24)}.sp-av-c5{background:linear-gradient(135deg,#10b981,#34d399)}.sp-av-info{display:flex;flex-direction:column;gap:4px}.sp-av-text{font-size:15px;font-weight:600;color:#fff;margin:0}.sp-av-sub{font-size:13px;color:rgba(255,255,255,0.4);margin:0}.sp-av-btn{font-size:14px;font-weight:600;color:#0a0a0a;background:#fff;padding:10px 24px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;transition:all 0.3s;margin-left:16px}.sp-av-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,255,255,0.15)}</style><section class="sp-av"><div class="sp-av-stack"><div class="sp-av-circle sp-av-c1">JL</div><div class="sp-av-circle sp-av-c2">AK</div><div class="sp-av-circle sp-av-c3">MR</div><div class="sp-av-circle sp-av-c4">TS</div><div class="sp-av-circle sp-av-c5">+</div></div><div class="sp-av-info"><p class="sp-av-text">Join 2,000+ customers</p><p class="sp-av-sub">who already trust our platform</p></div><button class="sp-av-btn">Get Started</button></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-review-stars',
+    label: 'Review Stars',
+    category: 'components',
+    subcategory: 'social-proof',
+    tags: ['reviews', 'stars', 'rating', 'trust', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Review Stars',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: {
+        html: `<style>.sp-rev{background:#0a0a0a;padding:48px 40px;font-family:system-ui,-apple-system,sans-serif;display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap}.sp-rev-stars{display:flex;gap:4px}.sp-rev-star{width:24px;height:24px;fill:#f59e0b}.sp-rev-score{display:flex;flex-direction:column;gap:2px}.sp-rev-num{font-size:32px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin:0;line-height:1}.sp-rev-out{font-size:13px;color:rgba(255,255,255,0.4);margin:0}.sp-rev-divider{width:1px;height:48px;background:rgba(255,255,255,0.08)}.sp-rev-badge{display:flex;flex-direction:column;align-items:center;gap:4px}.sp-rev-label{font-size:18px;font-weight:700;color:#34d399;margin:0}.sp-rev-count{font-size:13px;color:rgba(255,255,255,0.4);margin:0}</style><section class="sp-rev"><div class="sp-rev-stars"><svg class="sp-rev-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="sp-rev-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="sp-rev-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="sp-rev-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="sp-rev-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="sp-rev-score"><p class="sp-rev-num">4.9</p><p class="sp-rev-out">out of 5</p></div><div class="sp-rev-divider"></div><div class="sp-rev-badge"><p class="sp-rev-label">Excellent</p><p class="sp-rev-count">Based on 1,247 reviews</p></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-press-mentions',
+    label: 'Press Mentions',
+    category: 'components',
+    subcategory: 'social-proof',
+    tags: ['press', 'media', 'logos', 'trust', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Press Mentions',
+      defaultStyle: { width: '100%', minHeight: '100px' },
+      defaultContent: {
+        html: `<style>.sp-press{background:#0a0a0a;padding:48px 40px;font-family:system-ui,-apple-system,sans-serif;text-align:center}.sp-press-label{font-size:12px;font-weight:500;color:rgba(255,255,255,0.25);letter-spacing:0.08em;text-transform:uppercase;margin:0 0 28px}.sp-press-row{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap}.sp-press-item{opacity:0.3;transition:opacity 0.4s;cursor:default}.sp-press-item:hover{opacity:0.6}.sp-press-name{font-size:18px;font-weight:700;color:#fff;letter-spacing:0.02em;font-style:italic;margin:0}</style><section class="sp-press"><p class="sp-press-label">As seen in</p><div class="sp-press-row"><div class="sp-press-item"><p class="sp-press-name">TechCrunch</p></div><div class="sp-press-item"><p class="sp-press-name">Forbes</p></div><div class="sp-press-item"><p class="sp-press-name">The Verge</p></div><div class="sp-press-item"><p class="sp-press-name">Wired</p></div><div class="sp-press-item"><p class="sp-press-name">Fast Company</p></div></div></section>`
+      }
+    }
+  },
+]
+
+// ─── BLOG SECTIONS (6 premium presets) ───
+
+const BLOG_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-blog-card-grid',
+    label: 'Blog Card Grid',
+    category: 'components',
+    subcategory: 'blog',
+    tags: ['blog', 'cards', 'grid', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Blog Card Grid',
+      defaultStyle: { width: '100%', minHeight: '520px' },
+      defaultContent: {
+        html: `<style>.blg-cg{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.blg-cg-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 48px 0;text-align:center}.blg-cg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}.blg-cg-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;transition:transform 0.3s,border-color 0.3s}.blg-cg-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.15)}.blg-cg-img{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase}.blg-cg-img-1{background:linear-gradient(135deg,#1a1a2e,#16213e);color:rgba(255,255,255,0.3)}.blg-cg-img-2{background:linear-gradient(135deg,#1a2e1a,#162e21);color:rgba(255,255,255,0.3)}.blg-cg-img-3{background:linear-gradient(135deg,#2e1a1a,#2e1621);color:rgba(255,255,255,0.3)}.blg-cg-body{padding:24px}.blg-cg-date{font-size:12px;color:rgba(255,255,255,0.35);margin:0 0 12px 0}.blg-cg-title{font-size:18px;font-weight:600;color:#fff;margin:0 0 10px 0;letter-spacing:-0.01em;line-height:1.3}.blg-cg-excerpt{font-size:14px;color:rgba(255,255,255,0.4);margin:0 0 16px 0;line-height:1.6}.blg-cg-link{font-size:13px;font-weight:600;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:gap 0.3s}.blg-cg-link:hover{gap:10px}.blg-cg-link span{transition:transform 0.3s}@media(max-width:768px){.blg-cg-grid{grid-template-columns:1fr}}</style><section class="blg-cg"><h2 class="blg-cg-h">Latest Articles</h2><div class="blg-cg-grid"><div class="blg-cg-card"><div class="blg-cg-img blg-cg-img-1">Image 1</div><div class="blg-cg-body"><p class="blg-cg-date">Mar 18, 2026</p><h3 class="blg-cg-title">Design Systems That Scale</h3><p class="blg-cg-excerpt">How to build component libraries that grow with your team and product.</p><a class="blg-cg-link" href="#">Read More <span>&rarr;</span></a></div></div><div class="blg-cg-card"><div class="blg-cg-img blg-cg-img-2">Image 2</div><div class="blg-cg-body"><p class="blg-cg-date">Mar 12, 2026</p><h3 class="blg-cg-title">The Future of Web Animation</h3><p class="blg-cg-excerpt">Exploring the latest techniques in motion design for the modern web.</p><a class="blg-cg-link" href="#">Read More <span>&rarr;</span></a></div></div><div class="blg-cg-card"><div class="blg-cg-img blg-cg-img-3">Image 3</div><div class="blg-cg-body"><p class="blg-cg-date">Mar 5, 2026</p><h3 class="blg-cg-title">Typography in Digital Products</h3><p class="blg-cg-excerpt">A deep dive into choosing and pairing typefaces for premium interfaces.</p><a class="blg-cg-link" href="#">Read More <span>&rarr;</span></a></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-blog-featured',
+    label: 'Blog Featured Post',
+    category: 'components',
+    subcategory: 'blog',
+    tags: ['blog', 'featured', 'hero', 'dark', 'editorial'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Blog Featured Post',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<style>.blg-ft{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif;max-width:1100px;margin:0 auto}.blg-ft-main{position:relative;border-radius:16px;overflow:hidden;margin-bottom:24px;min-height:360px;display:flex;align-items:flex-end;background:linear-gradient(135deg,#1a1a2e,#0f0f23)}.blg-ft-main-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 60%);z-index:1}.blg-ft-main-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:0.05em}.blg-ft-main-body{position:relative;z-index:2;padding:40px}.blg-ft-badge{font-size:11px;font-weight:600;color:#fff;background:rgba(124,58,237,0.8);padding:5px 12px;border-radius:99px;text-transform:uppercase;letter-spacing:0.08em;display:inline-block;margin-bottom:16px}.blg-ft-main-title{font-size:clamp(24px,3vw,36px);font-weight:700;color:#fff;margin:0 0 12px 0;letter-spacing:-0.02em;line-height:1.2}.blg-ft-main-excerpt{font-size:15px;color:rgba(255,255,255,0.5);margin:0;max-width:500px;line-height:1.6}.blg-ft-row{display:grid;grid-template-columns:1fr 1fr;gap:24px}.blg-ft-sm{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;display:flex;overflow:hidden;transition:border-color 0.3s}.blg-ft-sm:hover{border-color:rgba(255,255,255,0.15)}.blg-ft-sm-img{width:180px;min-height:160px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:0.05em}.blg-ft-sm-img-1{background:linear-gradient(135deg,#1a2e1a,#162e21)}.blg-ft-sm-img-2{background:linear-gradient(135deg,#2e1a1a,#2e1621)}.blg-ft-sm-body{padding:24px;display:flex;flex-direction:column;justify-content:center;gap:8px}.blg-ft-sm-date{font-size:12px;color:rgba(255,255,255,0.3);margin:0}.blg-ft-sm-title{font-size:16px;font-weight:600;color:#fff;margin:0;letter-spacing:-0.01em;line-height:1.3}.blg-ft-sm-excerpt{font-size:13px;color:rgba(255,255,255,0.4);margin:0;line-height:1.5}@media(max-width:768px){.blg-ft-row{grid-template-columns:1fr}.blg-ft-sm{flex-direction:column}.blg-ft-sm-img{width:100%;min-height:120px}}</style><section class="blg-ft"><div class="blg-ft-main"><div class="blg-ft-main-placeholder">Featured Image</div><div class="blg-ft-main-overlay"></div><div class="blg-ft-main-body"><span class="blg-ft-badge">Featured</span><h2 class="blg-ft-main-title">Building the Next Generation of Creative Tools</h2><p class="blg-ft-main-excerpt">An in-depth look at how AI and design are converging to reshape the creative industry.</p></div></div><div class="blg-ft-row"><div class="blg-ft-sm"><div class="blg-ft-sm-img blg-ft-sm-img-1">Image</div><div class="blg-ft-sm-body"><p class="blg-ft-sm-date">Mar 10, 2026</p><h3 class="blg-ft-sm-title">Minimalism in Modern UI</h3><p class="blg-ft-sm-excerpt">Less is more — why top brands are simplifying.</p></div></div><div class="blg-ft-sm"><div class="blg-ft-sm-img blg-ft-sm-img-2">Image</div><div class="blg-ft-sm-body"><p class="blg-ft-sm-date">Mar 3, 2026</p><h3 class="blg-ft-sm-title">Color Theory for Digital</h3><p class="blg-ft-sm-excerpt">Mastering palette selection for screen-first design.</p></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-blog-list',
+    label: 'Blog Post List',
+    category: 'components',
+    subcategory: 'blog',
+    tags: ['blog', 'list', 'minimal', 'clean', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Blog Post List',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<style>.blg-ls{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.blg-ls-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 48px 0}.blg-ls-list{max-width:800px;display:flex;flex-direction:column}.blg-ls-item{display:flex;align-items:flex-start;justify-content:space-between;gap:32px;padding:32px 0;border-bottom:1px solid rgba(255,255,255,0.08);transition:border-color 0.3s}.blg-ls-item:first-child{border-top:1px solid rgba(255,255,255,0.08)}.blg-ls-item:hover{border-color:rgba(255,255,255,0.2)}.blg-ls-left{flex:1}.blg-ls-meta{display:flex;align-items:center;gap:12px;margin-bottom:10px}.blg-ls-date{font-size:12px;color:rgba(255,255,255,0.3)}.blg-ls-author{font-size:12px;color:rgba(255,255,255,0.4)}.blg-ls-dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.2)}.blg-ls-title{font-size:20px;font-weight:600;color:#fff;margin:0 0 8px 0;letter-spacing:-0.01em;line-height:1.3}.blg-ls-excerpt{font-size:14px;color:rgba(255,255,255,0.4);margin:0;line-height:1.6;max-width:560px}.blg-ls-arrow{font-size:18px;color:rgba(255,255,255,0.3);margin-top:8px;transition:color 0.3s,transform 0.3s;flex-shrink:0}.blg-ls-item:hover .blg-ls-arrow{color:#fff;transform:translateX(4px)}</style><section class="blg-ls"><h2 class="blg-ls-h">Journal</h2><div class="blg-ls-list"><div class="blg-ls-item"><div class="blg-ls-left"><div class="blg-ls-meta"><span class="blg-ls-date">Mar 18, 2026</span><span class="blg-ls-dot"></span><span class="blg-ls-author">Alex Chen</span></div><h3 class="blg-ls-title">The Art of Whitespace in Web Design</h3><p class="blg-ls-excerpt">Why breathing room is the secret weapon of premium digital experiences.</p></div><span class="blg-ls-arrow">&rarr;</span></div><div class="blg-ls-item"><div class="blg-ls-left"><div class="blg-ls-meta"><span class="blg-ls-date">Mar 11, 2026</span><span class="blg-ls-dot"></span><span class="blg-ls-author">Sarah Kim</span></div><h3 class="blg-ls-title">Microinteractions That Delight Users</h3><p class="blg-ls-excerpt">Small details that create memorable and engaging interfaces.</p></div><span class="blg-ls-arrow">&rarr;</span></div><div class="blg-ls-item"><div class="blg-ls-left"><div class="blg-ls-meta"><span class="blg-ls-date">Mar 4, 2026</span><span class="blg-ls-dot"></span><span class="blg-ls-author">James Park</span></div><h3 class="blg-ls-title">Responsive Design Beyond Breakpoints</h3><p class="blg-ls-excerpt">Fluid layouts and modern CSS techniques for truly adaptive interfaces.</p></div><span class="blg-ls-arrow">&rarr;</span></div><div class="blg-ls-item"><div class="blg-ls-left"><div class="blg-ls-meta"><span class="blg-ls-date">Feb 25, 2026</span><span class="blg-ls-dot"></span><span class="blg-ls-author">Mia Torres</span></div><h3 class="blg-ls-title">Choosing Fonts That Speak Your Brand</h3><p class="blg-ls-excerpt">A practical guide to typography selection for digital products.</p></div><span class="blg-ls-arrow">&rarr;</span></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-blog-magazine',
+    label: 'Blog Magazine Layout',
+    category: 'components',
+    subcategory: 'blog',
+    tags: ['blog', 'magazine', 'editorial', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Blog Magazine Layout',
+      defaultStyle: { width: '100%', minHeight: '520px' },
+      defaultContent: {
+        html: `<style>.blg-mg{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.blg-mg-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 48px 0}.blg-mg-grid{display:grid;grid-template-columns:2fr 1fr;gap:24px;max-width:1100px}.blg-mg-main{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;transition:border-color 0.3s}.blg-mg-main:hover{border-color:rgba(255,255,255,0.15)}.blg-mg-main-img{width:100%;height:320px;background:linear-gradient(135deg,#1a1a2e,#0f0f23);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:0.05em}.blg-mg-main-body{padding:32px}.blg-mg-main-cat{font-size:11px;font-weight:600;color:rgba(124,58,237,0.9);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 12px 0}.blg-mg-main-title{font-size:24px;font-weight:700;color:#fff;margin:0 0 12px 0;letter-spacing:-0.02em;line-height:1.25}.blg-mg-main-excerpt{font-size:15px;color:rgba(255,255,255,0.4);margin:0;line-height:1.6}.blg-mg-side{display:flex;flex-direction:column;gap:24px}.blg-mg-sm{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;flex:1;transition:border-color 0.3s}.blg-mg-sm:hover{border-color:rgba(255,255,255,0.15)}.blg-mg-sm-img{width:100%;height:140px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:0.05em}.blg-mg-sm-img-1{background:linear-gradient(135deg,#1a2e1a,#162e21)}.blg-mg-sm-img-2{background:linear-gradient(135deg,#2e1a1a,#2e1621)}.blg-mg-sm-body{padding:20px}.blg-mg-sm-cat{font-size:10px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 8px 0}.blg-mg-sm-title{font-size:16px;font-weight:600;color:#fff;margin:0;letter-spacing:-0.01em;line-height:1.3}@media(max-width:768px){.blg-mg-grid{grid-template-columns:1fr}}</style><section class="blg-mg"><h2 class="blg-mg-h">Stories</h2><div class="blg-mg-grid"><div class="blg-mg-main"><div class="blg-mg-main-img">Featured Image</div><div class="blg-mg-main-body"><p class="blg-mg-main-cat">Design</p><h3 class="blg-mg-main-title">Reimagining the Digital Experience for Luxury Brands</h3><p class="blg-mg-main-excerpt">How premium brands are setting new standards in digital craftsmanship and user experience.</p></div></div><div class="blg-mg-side"><div class="blg-mg-sm"><div class="blg-mg-sm-img blg-mg-sm-img-1">Image</div><div class="blg-mg-sm-body"><p class="blg-mg-sm-cat">Technology</p><h3 class="blg-mg-sm-title">AI-Powered Design Workflows</h3></div></div><div class="blg-mg-sm"><div class="blg-mg-sm-img blg-mg-sm-img-2">Image</div><div class="blg-mg-sm-body"><p class="blg-mg-sm-cat">Strategy</p><h3 class="blg-mg-sm-title">Content-First Design Approach</h3></div></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-blog-minimal',
+    label: 'Blog Minimal',
+    category: 'components',
+    subcategory: 'blog',
+    tags: ['blog', 'minimal', 'serif', 'elegant', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Blog Minimal',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: {
+        html: `<style>.blg-mn{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.blg-mn-h{font-size:14px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.1em;margin:0 0 40px 0}.blg-mn-list{max-width:640px;display:flex;flex-direction:column}.blg-mn-item{display:flex;align-items:center;justify-content:space-between;padding:28px 0;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:border-color 0.3s}.blg-mn-item:first-child{border-top:1px solid rgba(255,255,255,0.06)}.blg-mn-item:hover{border-color:rgba(255,255,255,0.15)}.blg-mn-left{display:flex;flex-direction:column;gap:6px}.blg-mn-title{font-size:20px;font-weight:400;color:#fff;margin:0;letter-spacing:-0.01em;line-height:1.3;font-family:Georgia,'Times New Roman',serif}.blg-mn-date{font-size:12px;color:rgba(255,255,255,0.25);font-family:system-ui,-apple-system,sans-serif}.blg-mn-arrow{font-size:16px;color:rgba(255,255,255,0.2);transition:color 0.3s,transform 0.3s}.blg-mn-item:hover .blg-mn-arrow{color:#fff;transform:translateX(4px)}</style><section class="blg-mn"><p class="blg-mn-h">Recent Writing</p><div class="blg-mn-list"><div class="blg-mn-item"><div class="blg-mn-left"><h3 class="blg-mn-title">On the Importance of Craft in Digital Design</h3><span class="blg-mn-date">March 18, 2026</span></div><span class="blg-mn-arrow">&rarr;</span></div><div class="blg-mn-item"><div class="blg-mn-left"><h3 class="blg-mn-title">Silence as a Design Element</h3><span class="blg-mn-date">March 9, 2026</span></div><span class="blg-mn-arrow">&rarr;</span></div><div class="blg-mn-item"><div class="blg-mn-left"><h3 class="blg-mn-title">The Quiet Revolution of Slow Interfaces</h3><span class="blg-mn-date">February 28, 2026</span></div><span class="blg-mn-arrow">&rarr;</span></div><div class="blg-mn-item"><div class="blg-mn-left"><h3 class="blg-mn-title">Why Every Pixel Still Matters</h3><span class="blg-mn-date">February 14, 2026</span></div><span class="blg-mn-arrow">&rarr;</span></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-blog-sidebar',
+    label: 'Blog With Sidebar',
+    category: 'components',
+    subcategory: 'blog',
+    tags: ['blog', 'sidebar', 'newsletter', 'categories', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Blog With Sidebar',
+      defaultStyle: { width: '100%', minHeight: '560px' },
+      defaultContent: {
+        html: `<style>.blg-sb{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.blg-sb-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 48px 0}.blg-sb-layout{display:grid;grid-template-columns:1fr 320px;gap:48px;max-width:1100px}.blg-sb-main{display:flex;flex-direction:column;gap:24px}.blg-sb-post{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;display:flex;transition:border-color 0.3s}.blg-sb-post:hover{border-color:rgba(255,255,255,0.15)}.blg-sb-post-img{width:200px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:0.05em}.blg-sb-post-img-1{background:linear-gradient(135deg,#1a1a2e,#0f0f23)}.blg-sb-post-img-2{background:linear-gradient(135deg,#1a2e1a,#162e21)}.blg-sb-post-body{padding:28px;display:flex;flex-direction:column;justify-content:center;gap:10px}.blg-sb-post-date{font-size:12px;color:rgba(255,255,255,0.3);margin:0}.blg-sb-post-title{font-size:18px;font-weight:600;color:#fff;margin:0;letter-spacing:-0.01em;line-height:1.3}.blg-sb-post-excerpt{font-size:14px;color:rgba(255,255,255,0.4);margin:0;line-height:1.6}.blg-sb-side{display:flex;flex-direction:column;gap:24px}.blg-sb-widget{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:24px}.blg-sb-widget-h{font-size:14px;font-weight:600;color:#fff;margin:0 0 16px 0;text-transform:uppercase;letter-spacing:0.05em}.blg-sb-cats{display:flex;flex-direction:column;gap:8px}.blg-sb-cat{font-size:14px;color:rgba(255,255,255,0.5);text-decoration:none;transition:color 0.3s;cursor:pointer;display:flex;justify-content:space-between}.blg-sb-cat:hover{color:#fff}.blg-sb-cat-count{font-size:12px;color:rgba(255,255,255,0.25)}.blg-sb-tags{display:flex;flex-wrap:wrap;gap:8px}.blg-sb-tag{font-size:12px;color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.06);padding:6px 12px;border-radius:6px;cursor:pointer;transition:background 0.3s,color 0.3s}.blg-sb-tag:hover{background:rgba(255,255,255,0.1);color:#fff}.blg-sb-nl{display:flex;flex-direction:column;gap:12px}.blg-sb-nl-p{font-size:13px;color:rgba(255,255,255,0.4);margin:0;line-height:1.5}.blg-sb-nl-input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 14px;font-size:13px;color:#fff;outline:none;font-family:inherit}.blg-sb-nl-input::placeholder{color:rgba(255,255,255,0.25)}.blg-sb-nl-btn{font-size:13px;font-weight:600;color:#0a0a0a;background:#fff;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;transition:transform 0.2s;font-family:inherit}.blg-sb-nl-btn:hover{transform:translateY(-1px)}@media(max-width:768px){.blg-sb-layout{grid-template-columns:1fr}.blg-sb-post{flex-direction:column}.blg-sb-post-img{width:100%;min-height:140px}}</style><section class="blg-sb"><h2 class="blg-sb-h">Blog</h2><div class="blg-sb-layout"><div class="blg-sb-main"><div class="blg-sb-post"><div class="blg-sb-post-img blg-sb-post-img-1">Image</div><div class="blg-sb-post-body"><p class="blg-sb-post-date">Mar 18, 2026</p><h3 class="blg-sb-post-title">Crafting Premium Web Experiences</h3><p class="blg-sb-post-excerpt">The principles behind websites that feel truly luxurious and intentional.</p></div></div><div class="blg-sb-post"><div class="blg-sb-post-img blg-sb-post-img-2">Image</div><div class="blg-sb-post-body"><p class="blg-sb-post-date">Mar 10, 2026</p><h3 class="blg-sb-post-title">Motion Design for the Web</h3><p class="blg-sb-post-excerpt">How subtle animations elevate user experience and brand perception.</p></div></div></div><div class="blg-sb-side"><div class="blg-sb-widget"><h4 class="blg-sb-widget-h">Categories</h4><div class="blg-sb-cats"><span class="blg-sb-cat">Design <span class="blg-sb-cat-count">12</span></span><span class="blg-sb-cat">Development <span class="blg-sb-cat-count">8</span></span><span class="blg-sb-cat">Strategy <span class="blg-sb-cat-count">5</span></span><span class="blg-sb-cat">Branding <span class="blg-sb-cat-count">4</span></span></div></div><div class="blg-sb-widget"><h4 class="blg-sb-widget-h">Tags</h4><div class="blg-sb-tags"><span class="blg-sb-tag">UI/UX</span><span class="blg-sb-tag">CSS</span><span class="blg-sb-tag">Animation</span><span class="blg-sb-tag">Typography</span><span class="blg-sb-tag">Branding</span><span class="blg-sb-tag">React</span></div></div><div class="blg-sb-widget"><h4 class="blg-sb-widget-h">Newsletter</h4><div class="blg-sb-nl"><p class="blg-sb-nl-p">Get weekly design insights delivered to your inbox.</p><input class="blg-sb-nl-input" type="email" placeholder="your@email.com"/><button class="blg-sb-nl-btn">Subscribe</button></div></div></div></div></section>`
+      }
+    }
+  },
+]
+
+// ─── TEAM SECTIONS (5 premium presets) ───
+
+const TEAM_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-team-grid',
+    label: 'Team Grid',
+    category: 'components',
+    subcategory: 'team',
+    tags: ['team', 'grid', 'hover', 'social', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Team Grid',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<style>.tm-gr{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif;text-align:center}.tm-gr-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 12px 0}.tm-gr-sub{font-size:15px;color:rgba(255,255,255,0.4);margin:0 0 56px 0}.tm-gr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;max-width:960px;margin:0 auto}.tm-gr-member{display:flex;flex-direction:column;align-items:center;gap:16px;position:relative}.tm-gr-photo{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:rgba(255,255,255,0.3);transition:transform 0.3s}.tm-gr-photo-1{background:linear-gradient(135deg,#1a1a2e,#16213e)}.tm-gr-photo-2{background:linear-gradient(135deg,#2e1a1a,#2e1621)}.tm-gr-photo-3{background:linear-gradient(135deg,#1a2e1a,#162e21)}.tm-gr-photo-4{background:linear-gradient(135deg,#2e2e1a,#21291e)}.tm-gr-member:hover .tm-gr-photo{transform:scale(1.05)}.tm-gr-name{font-size:16px;font-weight:600;color:#fff;margin:0;letter-spacing:-0.01em}.tm-gr-role{font-size:13px;color:rgba(255,255,255,0.35);margin:-8px 0 0 0}.tm-gr-social{display:flex;gap:12px;opacity:0;transform:translateY(8px);transition:opacity 0.3s,transform 0.3s}.tm-gr-member:hover .tm-gr-social{opacity:1;transform:translateY(0)}.tm-gr-social a{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(255,255,255,0.5);text-decoration:none;transition:background 0.3s,color 0.3s}.tm-gr-social a:hover{background:rgba(255,255,255,0.15);color:#fff}@media(max-width:768px){.tm-gr-grid{grid-template-columns:repeat(2,1fr);gap:40px}}</style><section class="tm-gr"><h2 class="tm-gr-h">Our Team</h2><p class="tm-gr-sub">The people behind the product</p><div class="tm-gr-grid"><div class="tm-gr-member"><div class="tm-gr-photo tm-gr-photo-1">JD</div><p class="tm-gr-name">Jane Doe</p><p class="tm-gr-role">CEO & Founder</p><div class="tm-gr-social"><a href="#">Li</a><a href="#">Tw</a></div></div><div class="tm-gr-member"><div class="tm-gr-photo tm-gr-photo-2">AS</div><p class="tm-gr-name">Alex Smith</p><p class="tm-gr-role">Lead Designer</p><div class="tm-gr-social"><a href="#">Li</a><a href="#">Dr</a></div></div><div class="tm-gr-member"><div class="tm-gr-photo tm-gr-photo-3">MK</div><p class="tm-gr-name">Maria Kim</p><p class="tm-gr-role">Engineering Lead</p><div class="tm-gr-social"><a href="#">Li</a><a href="#">Gh</a></div></div><div class="tm-gr-member"><div class="tm-gr-photo tm-gr-photo-4">TC</div><p class="tm-gr-name">Tom Carter</p><p class="tm-gr-role">Product Manager</p><div class="tm-gr-social"><a href="#">Li</a><a href="#">Tw</a></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-team-cards',
+    label: 'Team Cards Glass',
+    category: 'components',
+    subcategory: 'team',
+    tags: ['team', 'cards', 'glassmorphic', 'bio', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Team Cards Glass',
+      defaultStyle: { width: '100%', minHeight: '520px' },
+      defaultContent: {
+        html: `<style>.tm-cd{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.tm-cd-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 48px 0;text-align:center}.tm-cd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}.tm-cd-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;transition:transform 0.3s,border-color 0.3s;backdrop-filter:blur(12px)}.tm-cd-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.15)}.tm-cd-photo{width:100px;height:100px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:rgba(255,255,255,0.3)}.tm-cd-photo-1{background:linear-gradient(135deg,#1a1a2e,#16213e)}.tm-cd-photo-2{background:linear-gradient(135deg,#2e1a1a,#2e1621)}.tm-cd-photo-3{background:linear-gradient(135deg,#1a2e1a,#162e21)}.tm-cd-name{font-size:18px;font-weight:600;color:#fff;margin:0;letter-spacing:-0.01em}.tm-cd-role{font-size:13px;color:rgba(124,58,237,0.8);margin:-8px 0 0 0;font-weight:500}.tm-cd-bio{font-size:14px;color:rgba(255,255,255,0.4);margin:0;line-height:1.6}.tm-cd-links{display:flex;gap:10px;margin-top:4px}.tm-cd-links a{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(255,255,255,0.4);text-decoration:none;transition:background 0.3s,color 0.3s}.tm-cd-links a:hover{background:rgba(255,255,255,0.12);color:#fff}@media(max-width:768px){.tm-cd-grid{grid-template-columns:1fr;max-width:360px}}</style><section class="tm-cd"><h2 class="tm-cd-h">Meet the Team</h2><div class="tm-cd-grid"><div class="tm-cd-card"><div class="tm-cd-photo tm-cd-photo-1">EL</div><p class="tm-cd-name">Emma Laurent</p><p class="tm-cd-role">Creative Director</p><p class="tm-cd-bio">10+ years shaping visual identities for premium brands worldwide.</p><div class="tm-cd-links"><a href="#">Li</a><a href="#">Tw</a><a href="#">Be</a></div></div><div class="tm-cd-card"><div class="tm-cd-photo tm-cd-photo-2">RM</div><p class="tm-cd-name">Ryan Mitchell</p><p class="tm-cd-role">Full-Stack Engineer</p><p class="tm-cd-bio">Building scalable systems with a passion for clean architecture.</p><div class="tm-cd-links"><a href="#">Li</a><a href="#">Gh</a><a href="#">Tw</a></div></div><div class="tm-cd-card"><div class="tm-cd-photo tm-cd-photo-3">SP</div><p class="tm-cd-name">Sofia Park</p><p class="tm-cd-role">UX Researcher</p><p class="tm-cd-bio">Uncovering insights that drive meaningful product decisions.</p><div class="tm-cd-links"><a href="#">Li</a><a href="#">Tw</a><a href="#">Dr</a></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-team-horizontal',
+    label: 'Team Horizontal',
+    category: 'components',
+    subcategory: 'team',
+    tags: ['team', 'horizontal', 'bio', 'dark', 'clean'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Team Horizontal',
+      defaultStyle: { width: '100%', minHeight: '440px' },
+      defaultContent: {
+        html: `<style>.tm-hz{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.tm-hz-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 48px 0}.tm-hz-list{display:flex;flex-direction:column;gap:24px;max-width:800px}.tm-hz-card{display:flex;gap:32px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:32px;transition:border-color 0.3s}.tm-hz-card:hover{border-color:rgba(255,255,255,0.15)}.tm-hz-photo{width:120px;height:120px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:rgba(255,255,255,0.3)}.tm-hz-photo-1{background:linear-gradient(135deg,#1a1a2e,#16213e)}.tm-hz-photo-2{background:linear-gradient(135deg,#2e1a1a,#2e1621)}.tm-hz-info{display:flex;flex-direction:column;justify-content:center;gap:8px}.tm-hz-name{font-size:20px;font-weight:600;color:#fff;margin:0;letter-spacing:-0.01em}.tm-hz-role{font-size:13px;color:rgba(255,255,255,0.35);margin:0;font-weight:500}.tm-hz-bio{font-size:14px;color:rgba(255,255,255,0.4);margin:4px 0 0 0;line-height:1.6;max-width:480px}@media(max-width:640px){.tm-hz-card{flex-direction:column;align-items:center;text-align:center}.tm-hz-bio{max-width:none}}</style><section class="tm-hz"><h2 class="tm-hz-h">Leadership</h2><div class="tm-hz-list"><div class="tm-hz-card"><div class="tm-hz-photo tm-hz-photo-1">NR</div><div class="tm-hz-info"><p class="tm-hz-name">Nadia Rousseau</p><p class="tm-hz-role">Co-Founder & CEO</p><p class="tm-hz-bio">Former design lead at a top agency, Nadia brings 12 years of experience in building digital products that merge aesthetics with performance.</p></div></div><div class="tm-hz-card"><div class="tm-hz-photo tm-hz-photo-2">DW</div><div class="tm-hz-info"><p class="tm-hz-name">David Wu</p><p class="tm-hz-role">Co-Founder & CTO</p><p class="tm-hz-bio">Systems architect with a background in distributed computing. David ensures our platform scales elegantly from day one.</p></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-team-minimal',
+    label: 'Team Minimal',
+    category: 'components',
+    subcategory: 'team',
+    tags: ['team', 'minimal', 'hover', 'clean', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Team Minimal',
+      defaultStyle: { width: '100%', minHeight: '320px' },
+      defaultContent: {
+        html: `<style>.tm-mn{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.tm-mn-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 48px 0}.tm-mn-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:900px}.tm-mn-member{padding:24px;border-radius:12px;cursor:pointer;transition:background 0.3s;position:relative;overflow:hidden}.tm-mn-member:hover{background:rgba(255,255,255,0.04)}.tm-mn-name{font-size:16px;font-weight:600;color:#fff;margin:0 0 4px 0;letter-spacing:-0.01em}.tm-mn-role{font-size:13px;color:rgba(255,255,255,0.35);margin:0}.tm-mn-avatar{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:rgba(255,255,255,0.3);margin-top:12px;opacity:0;transform:translateY(8px);transition:opacity 0.3s,transform 0.3s}.tm-mn-av-1{background:linear-gradient(135deg,#1a1a2e,#16213e)}.tm-mn-av-2{background:linear-gradient(135deg,#2e1a1a,#2e1621)}.tm-mn-av-3{background:linear-gradient(135deg,#1a2e1a,#162e21)}.tm-mn-av-4{background:linear-gradient(135deg,#2e2e1a,#21291e)}.tm-mn-member:hover .tm-mn-avatar{opacity:1;transform:translateY(0)}@media(max-width:768px){.tm-mn-grid{grid-template-columns:repeat(2,1fr)}}</style><section class="tm-mn"><h2 class="tm-mn-h">The Team</h2><div class="tm-mn-grid"><div class="tm-mn-member"><p class="tm-mn-name">Claire Dubois</p><p class="tm-mn-role">Design Lead</p><div class="tm-mn-avatar tm-mn-av-1">CD</div></div><div class="tm-mn-member"><p class="tm-mn-name">Lucas Rivera</p><p class="tm-mn-role">Frontend Engineer</p><div class="tm-mn-avatar tm-mn-av-2">LR</div></div><div class="tm-mn-member"><p class="tm-mn-name">Yuki Tanaka</p><p class="tm-mn-role">Product Strategist</p><div class="tm-mn-avatar tm-mn-av-3">YT</div></div><div class="tm-mn-member"><p class="tm-mn-name">Omar Hassan</p><p class="tm-mn-role">Backend Engineer</p><div class="tm-mn-avatar tm-mn-av-4">OH</div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-team-founder',
+    label: 'Founder Spotlight',
+    category: 'components',
+    subcategory: 'team',
+    tags: ['team', 'founder', 'solo', 'spotlight', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Founder Spotlight',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<style>.tm-fd{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.tm-fd-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;max-width:1000px;align-items:center}.tm-fd-photo{aspect-ratio:4/5;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:700;color:rgba(255,255,255,0.2);background:linear-gradient(135deg,#1a1a2e,#0f0f23);position:relative;overflow:hidden}.tm-fd-photo::after{content:'';position:absolute;inset:0;border:1px solid rgba(255,255,255,0.08);border-radius:16px;pointer-events:none}.tm-fd-info{display:flex;flex-direction:column;gap:20px}.tm-fd-label{font-size:12px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.1em;margin:0}.tm-fd-name{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0;line-height:1.15}.tm-fd-title{font-size:16px;color:rgba(124,58,237,0.8);font-weight:500;margin:0}.tm-fd-bio{font-size:15px;color:rgba(255,255,255,0.45);margin:0;line-height:1.7;max-width:440px}.tm-fd-social{display:flex;gap:12px;margin-top:8px}.tm-fd-social a{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:rgba(255,255,255,0.4);text-decoration:none;transition:background 0.3s,color 0.3s,border-color 0.3s}.tm-fd-social a:hover{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.15)}@media(max-width:768px){.tm-fd-inner{grid-template-columns:1fr;text-align:center}.tm-fd-photo{max-width:300px;margin:0 auto}.tm-fd-info{align-items:center}.tm-fd-bio{max-width:none}}</style><section class="tm-fd"><div class="tm-fd-inner"><div class="tm-fd-photo">JL</div><div class="tm-fd-info"><p class="tm-fd-label">Founder & Creative Director</p><h2 class="tm-fd-name">Julien Laurent</h2><p class="tm-fd-title">Building premium digital experiences since 2014</p><p class="tm-fd-bio">With over a decade of experience in web design and development, Julien founded JL Studio with a singular vision: to craft digital experiences that feel as intentional and refined as the brands they represent. Every pixel, every interaction, every detail matters.</p><div class="tm-fd-social"><a href="#">Li</a><a href="#">Tw</a><a href="#">Dr</a><a href="#">Be</a></div></div></div></section>`
+      }
+    }
+  },
+]
+
+// ─── GALLERY SECTIONS (5 premium presets) ───
+
+const GALLERY_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-gallery-grid',
+    label: 'Gallery Grid',
+    category: 'components',
+    subcategory: 'gallery',
+    tags: ['gallery', 'grid', 'hover', 'overlay', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Gallery Grid',
+      defaultStyle: { width: '100%', minHeight: '520px' },
+      defaultContent: {
+        html: `<style>.gl-gr{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.gl-gr-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 48px 0;text-align:center}.gl-gr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1000px;margin:0 auto}.gl-gr-item{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:4/3;cursor:pointer}.gl-gr-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.05em;transition:transform 0.5s}.gl-gr-img-1{background:linear-gradient(135deg,#1a1a2e,#16213e)}.gl-gr-img-2{background:linear-gradient(135deg,#2e1a1a,#2e1621)}.gl-gr-img-3{background:linear-gradient(135deg,#1a2e1a,#162e21)}.gl-gr-img-4{background:linear-gradient(135deg,#2e2e1a,#21291e)}.gl-gr-img-5{background:linear-gradient(135deg,#1a2e2e,#16212e)}.gl-gr-img-6{background:linear-gradient(135deg,#2e1a2e,#211621)}.gl-gr-item:hover .gl-gr-img{transform:scale(1.05)}.gl-gr-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.8) 0%,transparent 50%);opacity:0;transition:opacity 0.3s;display:flex;align-items:flex-end;padding:20px}.gl-gr-item:hover .gl-gr-overlay{opacity:1}.gl-gr-title{font-size:14px;font-weight:600;color:#fff;margin:0}@media(max-width:768px){.gl-gr-grid{grid-template-columns:repeat(2,1fr)}}</style><section class="gl-gr"><h2 class="gl-gr-h">Gallery</h2><div class="gl-gr-grid"><div class="gl-gr-item"><div class="gl-gr-img gl-gr-img-1">Photo 1</div><div class="gl-gr-overlay"><p class="gl-gr-title">Mountain Retreat</p></div></div><div class="gl-gr-item"><div class="gl-gr-img gl-gr-img-2">Photo 2</div><div class="gl-gr-overlay"><p class="gl-gr-title">Urban Architecture</p></div></div><div class="gl-gr-item"><div class="gl-gr-img gl-gr-img-3">Photo 3</div><div class="gl-gr-overlay"><p class="gl-gr-title">Coastal Sunset</p></div></div><div class="gl-gr-item"><div class="gl-gr-img gl-gr-img-4">Photo 4</div><div class="gl-gr-overlay"><p class="gl-gr-title">Forest Canopy</p></div></div><div class="gl-gr-item"><div class="gl-gr-img gl-gr-img-5">Photo 5</div><div class="gl-gr-overlay"><p class="gl-gr-title">Desert Dunes</p></div></div><div class="gl-gr-item"><div class="gl-gr-img gl-gr-img-6">Photo 6</div><div class="gl-gr-overlay"><p class="gl-gr-title">Night Skyline</p></div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-gallery-masonry',
+    label: 'Gallery Masonry',
+    category: 'components',
+    subcategory: 'gallery',
+    tags: ['gallery', 'masonry', 'columns', 'hover', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Gallery Masonry',
+      defaultStyle: { width: '100%', minHeight: '580px' },
+      defaultContent: {
+        html: `<style>.gl-ms{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.gl-ms-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 48px 0;text-align:center}.gl-ms-grid{columns:3;column-gap:16px;max-width:1000px;margin:0 auto}.gl-ms-item{break-inside:avoid;margin-bottom:16px;border-radius:12px;overflow:hidden;position:relative;cursor:pointer}.gl-ms-img{width:100%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.05em;transition:transform 0.5s}.gl-ms-item:hover .gl-ms-img{transform:scale(1.04)}.gl-ms-img-1{background:linear-gradient(135deg,#1a1a2e,#16213e);height:280px}.gl-ms-img-2{background:linear-gradient(135deg,#2e1a1a,#2e1621);height:200px}.gl-ms-img-3{background:linear-gradient(135deg,#1a2e1a,#162e21);height:320px}.gl-ms-img-4{background:linear-gradient(135deg,#2e2e1a,#21291e);height:240px}.gl-ms-img-5{background:linear-gradient(135deg,#1a2e2e,#16212e);height:300px}.gl-ms-img-6{background:linear-gradient(135deg,#2e1a2e,#211621);height:220px}@media(max-width:768px){.gl-ms-grid{columns:2}}</style><section class="gl-ms"><h2 class="gl-ms-h">Portfolio</h2><div class="gl-ms-grid"><div class="gl-ms-item"><div class="gl-ms-img gl-ms-img-1">Photo 1</div></div><div class="gl-ms-item"><div class="gl-ms-img gl-ms-img-2">Photo 2</div></div><div class="gl-ms-item"><div class="gl-ms-img gl-ms-img-3">Photo 3</div></div><div class="gl-ms-item"><div class="gl-ms-img gl-ms-img-4">Photo 4</div></div><div class="gl-ms-item"><div class="gl-ms-img gl-ms-img-5">Photo 5</div></div><div class="gl-ms-item"><div class="gl-ms-img gl-ms-img-6">Photo 6</div></div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-gallery-carousel',
+    label: 'Gallery Carousel',
+    category: 'components',
+    subcategory: 'gallery',
+    tags: ['gallery', 'carousel', 'slider', 'arrows', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Gallery Carousel',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<style>.gl-cr{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.gl-cr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}.gl-cr-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0}.gl-cr-nav{display:flex;align-items:center;gap:16px}.gl-cr-counter{font-size:14px;color:rgba(255,255,255,0.35);font-variant-numeric:tabular-nums}.gl-cr-btn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.3s,border-color 0.3s;color:rgba(255,255,255,0.5);font-size:18px}.gl-cr-btn:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff}.gl-cr-track{display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:8px}.gl-cr-track::-webkit-scrollbar{display:none}.gl-cr-slide{flex-shrink:0;width:360px;aspect-ratio:3/2;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.05em;transition:transform 0.3s;cursor:pointer}.gl-cr-slide:hover{transform:scale(1.02)}.gl-cr-s1{background:linear-gradient(135deg,#1a1a2e,#16213e)}.gl-cr-s2{background:linear-gradient(135deg,#2e1a1a,#2e1621)}.gl-cr-s3{background:linear-gradient(135deg,#1a2e1a,#162e21)}.gl-cr-s4{background:linear-gradient(135deg,#2e2e1a,#21291e)}.gl-cr-s5{background:linear-gradient(135deg,#1a2e2e,#16212e)}</style><section class="gl-cr"><div class="gl-cr-top"><h2 class="gl-cr-h">Work</h2><div class="gl-cr-nav"><span class="gl-cr-counter">1 / 5</span><button class="gl-cr-btn" onclick="document.querySelector('.gl-cr-track').scrollBy({left:-376,behavior:'smooth'})">&larr;</button><button class="gl-cr-btn" onclick="document.querySelector('.gl-cr-track').scrollBy({left:376,behavior:'smooth'})">&rarr;</button></div></div><div class="gl-cr-track"><div class="gl-cr-slide gl-cr-s1">Project 1</div><div class="gl-cr-slide gl-cr-s2">Project 2</div><div class="gl-cr-slide gl-cr-s3">Project 3</div><div class="gl-cr-slide gl-cr-s4">Project 4</div><div class="gl-cr-slide gl-cr-s5">Project 5</div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-gallery-lightbox',
+    label: 'Gallery Lightbox',
+    category: 'components',
+    subcategory: 'gallery',
+    tags: ['gallery', 'lightbox', 'modal', 'thumbnails', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Gallery Lightbox',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<style>.gl-lb{background:#0a0a0a;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif}.gl-lb-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 48px 0;text-align:center}.gl-lb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:900px;margin:0 auto}.gl-lb-thumb{aspect-ratio:1;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.05em;transition:transform 0.3s,opacity 0.3s;position:relative;overflow:hidden}.gl-lb-thumb:hover{transform:scale(1.03)}.gl-lb-th-1{background:linear-gradient(135deg,#1a1a2e,#16213e)}.gl-lb-th-2{background:linear-gradient(135deg,#2e1a1a,#2e1621)}.gl-lb-th-3{background:linear-gradient(135deg,#1a2e1a,#162e21)}.gl-lb-th-4{background:linear-gradient(135deg,#2e2e1a,#21291e)}.gl-lb-zoom{position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s;font-size:24px;color:#fff}.gl-lb-thumb:hover .gl-lb-zoom{opacity:1}.gl-lb-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:20px}.gl-lb-modal.gl-lb-active{display:flex}.gl-lb-modal-img{width:70vw;max-width:700px;aspect-ratio:16/10;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.05em}.gl-lb-close{position:absolute;top:24px;right:24px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.3s}.gl-lb-close:hover{background:rgba(255,255,255,0.15)}@media(max-width:640px){.gl-lb-grid{grid-template-columns:repeat(2,1fr)}}</style><section class="gl-lb"><h2 class="gl-lb-h">Selected Work</h2><div class="gl-lb-grid"><div class="gl-lb-thumb gl-lb-th-1" onclick="document.getElementById('gl-lb-m').classList.add('gl-lb-active');document.getElementById('gl-lb-mi').className='gl-lb-modal-img gl-lb-th-1';document.getElementById('gl-lb-mi').textContent='Photo 1'">Photo 1<div class="gl-lb-zoom">+</div></div><div class="gl-lb-thumb gl-lb-th-2" onclick="document.getElementById('gl-lb-m').classList.add('gl-lb-active');document.getElementById('gl-lb-mi').className='gl-lb-modal-img gl-lb-th-2';document.getElementById('gl-lb-mi').textContent='Photo 2'">Photo 2<div class="gl-lb-zoom">+</div></div><div class="gl-lb-thumb gl-lb-th-3" onclick="document.getElementById('gl-lb-m').classList.add('gl-lb-active');document.getElementById('gl-lb-mi').className='gl-lb-modal-img gl-lb-th-3';document.getElementById('gl-lb-mi').textContent='Photo 3'">Photo 3<div class="gl-lb-zoom">+</div></div><div class="gl-lb-thumb gl-lb-th-4" onclick="document.getElementById('gl-lb-m').classList.add('gl-lb-active');document.getElementById('gl-lb-mi').className='gl-lb-modal-img gl-lb-th-4';document.getElementById('gl-lb-mi').textContent='Photo 4'">Photo 4<div class="gl-lb-zoom">+</div></div></div><div class="gl-lb-modal" id="gl-lb-m"><button class="gl-lb-close" onclick="document.getElementById('gl-lb-m').classList.remove('gl-lb-active')">&times;</button><div class="gl-lb-modal-img gl-lb-th-1" id="gl-lb-mi">Photo 1</div></div></section>`
+      }
+    }
+  },
+  {
+    id: 'comp-gallery-fullwidth',
+    label: 'Gallery Full Width',
+    category: 'components',
+    subcategory: 'gallery',
+    tags: ['gallery', 'fullwidth', 'portfolio', 'hero', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Gallery Full Width',
+      defaultStyle: { width: '100%', minHeight: '640px' },
+      defaultContent: {
+        html: `<style>.gl-fw{background:#0a0a0a;padding:80px 0;font-family:system-ui,-apple-system,sans-serif}.gl-fw-hdr{padding:0 48px;margin-bottom:48px;text-align:center}.gl-fw-h{font-size:clamp(28px,3vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;margin:0 0 12px 0}.gl-fw-sub{font-size:15px;color:rgba(255,255,255,0.4);margin:0}.gl-fw-hero{width:100%;aspect-ratio:21/9;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:0.05em;background:linear-gradient(135deg,#1a1a2e,#0f0f23);margin-bottom:16px;position:relative;overflow:hidden;cursor:pointer;transition:filter 0.3s}.gl-fw-hero:hover{filter:brightness(1.1)}.gl-fw-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:0 48px}.gl-fw-item{aspect-ratio:4/3;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;transition:transform 0.3s;overflow:hidden}.gl-fw-item:hover{transform:scale(1.03)}.gl-fw-i1{background:linear-gradient(135deg,#2e1a1a,#2e1621)}.gl-fw-i2{background:linear-gradient(135deg,#1a2e1a,#162e21)}.gl-fw-i3{background:linear-gradient(135deg,#2e2e1a,#21291e)}.gl-fw-i4{background:linear-gradient(135deg,#1a2e2e,#16212e)}@media(max-width:768px){.gl-fw-row{grid-template-columns:repeat(2,1fr);padding:0 24px}.gl-fw-hdr{padding:0 24px}}</style><section class="gl-fw"><div class="gl-fw-hdr"><h2 class="gl-fw-h">Portfolio</h2><p class="gl-fw-sub">A selection of recent work</p></div><div class="gl-fw-hero">Featured Project</div><div class="gl-fw-row"><div class="gl-fw-item gl-fw-i1">Project 1</div><div class="gl-fw-item gl-fw-i2">Project 2</div><div class="gl-fw-item gl-fw-i3">Project 3</div><div class="gl-fw-item gl-fw-i4">Project 4</div></div></section>`
+      }
+    }
+  },
+]
+
+// ─── MISC SECTIONS (6 premium presets) ───
+
+const MISC_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-cookie-banner',
+    label: 'Cookie Consent',
+    category: 'components',
+    subcategory: 'misc',
+    tags: ['cookie', 'banner', 'consent', 'gdpr', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Cookie Consent',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: {
+        html: `<style>.ck-bn{background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;position:relative;min-height:200px;display:flex;align-items:flex-end;justify-content:center;padding:20px}.ck-bn-bar{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px;width:100%;max-width:800px;animation:ckSlide 0.5s ease-out;backdrop-filter:blur(12px)}.ck-bn-text{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.5;margin:0}.ck-bn-text strong{color:#fff;font-weight:600}.ck-bn-btns{display:flex;gap:8px;flex-shrink:0}.ck-bn-accept{font-size:13px;font-weight:600;color:#0a0a0a;background:#fff;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;transition:transform 0.2s;font-family:inherit}.ck-bn-accept:hover{transform:translateY(-1px)}.ck-bn-decline{font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);background:transparent;padding:10px 20px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:border-color 0.3s,color 0.3s;font-family:inherit}.ck-bn-decline:hover{border-color:rgba(255,255,255,0.25);color:#fff}@keyframes ckSlide{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}@media(max-width:640px){.ck-bn-bar{flex-direction:column;text-align:center}.ck-bn-btns{width:100%}.ck-bn-accept,.ck-bn-decline{flex:1}}</style><div class="ck-bn"><div class="ck-bn-bar"><p class="ck-bn-text"><strong>We value your privacy.</strong> We use cookies to enhance your experience. By continuing, you agree to our cookie policy.</p><div class="ck-bn-btns"><button class="ck-bn-decline">Decline</button><button class="ck-bn-accept">Accept All</button></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-notification-toast',
+    label: 'Notification Toast',
+    category: 'components',
+    subcategory: 'misc',
+    tags: ['toast', 'notification', 'alert', 'dismiss', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Notification Toast',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: {
+        html: `<style>.nt-ts{background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;min-height:160px;display:flex;justify-content:flex-end;align-items:flex-start;padding:24px}.nt-ts-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px 20px;display:flex;align-items:flex-start;gap:14px;min-width:320px;max-width:400px;animation:ntSlide 0.4s ease-out;position:relative;overflow:hidden;backdrop-filter:blur(12px)}.nt-ts-icon{width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:#22c55e}.nt-ts-body{flex:1;display:flex;flex-direction:column;gap:4px}.nt-ts-title{font-size:14px;font-weight:600;color:#fff;margin:0}.nt-ts-msg{font-size:13px;color:rgba(255,255,255,0.4);margin:0;line-height:1.4}.nt-ts-close{background:none;border:none;color:rgba(255,255,255,0.3);font-size:16px;cursor:pointer;padding:0;line-height:1;transition:color 0.3s;flex-shrink:0}.nt-ts-close:hover{color:#fff}.nt-ts-timer{position:absolute;bottom:0;left:0;height:2px;background:rgba(34,197,94,0.4);animation:ntTimer 5s linear forwards;border-radius:0 0 12px 12px}@keyframes ntSlide{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}@keyframes ntTimer{from{width:100%}to{width:0%}}</style><div class="nt-ts"><div class="nt-ts-card"><div class="nt-ts-icon">&#10003;</div><div class="nt-ts-body"><p class="nt-ts-title">Changes saved</p><p class="nt-ts-msg">Your project has been updated successfully.</p></div><button class="nt-ts-close">&times;</button><div class="nt-ts-timer"></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-modal-dialog',
+    label: 'Modal Dialog',
+    category: 'components',
+    subcategory: 'misc',
+    tags: ['modal', 'dialog', 'overlay', 'confirm', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Modal Dialog',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: {
+        html: `<style>.md-dl{background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;min-height:400px;display:flex;align-items:center;justify-content:center;position:relative}.md-dl-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.6);cursor:pointer}.md-dl-box{position:relative;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px;width:100%;max-width:440px;animation:mdFade 0.3s ease-out;z-index:1}.md-dl-close{position:absolute;top:16px;right:16px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:18px;cursor:pointer;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:background 0.3s,color 0.3s}.md-dl-close:hover{background:rgba(255,255,255,0.08);color:#fff}.md-dl-h{font-size:20px;font-weight:700;color:#fff;margin:0 0 12px 0;letter-spacing:-0.02em}.md-dl-p{font-size:14px;color:rgba(255,255,255,0.45);margin:0 0 28px 0;line-height:1.6}.md-dl-btns{display:flex;justify-content:flex-end;gap:10px}.md-dl-cancel{font-size:14px;font-weight:500;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);padding:10px 20px;border-radius:8px;border:none;cursor:pointer;transition:background 0.3s;font-family:inherit}.md-dl-cancel:hover{background:rgba(255,255,255,0.1)}.md-dl-confirm{font-size:14px;font-weight:600;color:#0a0a0a;background:#fff;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;transition:transform 0.2s;font-family:inherit}.md-dl-confirm:hover{transform:translateY(-1px)}@keyframes mdFade{from{transform:scale(0.96);opacity:0}to{transform:scale(1);opacity:1}}</style><div class="md-dl"><div class="md-dl-backdrop"></div><div class="md-dl-box"><button class="md-dl-close">&times;</button><h3 class="md-dl-h">Delete project?</h3><p class="md-dl-p">This action cannot be undone. All data associated with this project will be permanently removed from our servers.</p><div class="md-dl-btns"><button class="md-dl-cancel">Cancel</button><button class="md-dl-confirm">Confirm</button></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-back-to-top',
+    label: 'Back to Top',
+    category: 'components',
+    subcategory: 'misc',
+    tags: ['back-to-top', 'scroll', 'button', 'utility', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Back to Top',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: {
+        html: `<style>.btt{background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;min-height:200px;display:flex;align-items:flex-end;justify-content:flex-end;padding:32px;position:relative}.btt-info{position:absolute;top:24px;left:24px;font-size:13px;color:rgba(255,255,255,0.2);font-style:italic}.btt-btn{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.3s,transform 0.3s,border-color 0.3s;animation:bttPulse 2s ease-in-out infinite}.btt-btn:hover{background:rgba(255,255,255,0.15);transform:translateY(-2px);border-color:rgba(255,255,255,0.25);animation:none}.btt-btn svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2}@keyframes bttPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0.1)}50%{box-shadow:0 0 0 8px rgba(255,255,255,0)}}</style><div class="btt"><span class="btt-info">Appears on scroll (demo)</span><button class="btt-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg></button></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-breadcrumb',
+    label: 'Breadcrumbs',
+    category: 'components',
+    subcategory: 'misc',
+    tags: ['breadcrumb', 'navigation', 'path', 'utility', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Breadcrumbs',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<style>.bc-nav{background:#0a0a0a;padding:20px 48px;font-family:system-ui,-apple-system,sans-serif}.bc-list{display:flex;align-items:center;gap:8px;list-style:none;margin:0;padding:0;flex-wrap:wrap}.bc-item{display:flex;align-items:center;gap:8px}.bc-link{font-size:14px;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.3s;cursor:pointer}.bc-link:hover{color:#fff}.bc-sep{font-size:12px;color:rgba(255,255,255,0.15)}.bc-current{font-size:14px;color:#fff;font-weight:500}</style><nav class="bc-nav"><ol class="bc-list"><li class="bc-item"><a class="bc-link" href="#">Home</a><span class="bc-sep">&rsaquo;</span></li><li class="bc-item"><a class="bc-link" href="#">Products</a><span class="bc-sep">&rsaquo;</span></li><li class="bc-item"><a class="bc-link" href="#">Electronics</a><span class="bc-sep">&rsaquo;</span></li><li class="bc-item"><span class="bc-current">Wireless Headphones</span></li></ol></nav>`
+      }
+    }
+  },
+  {
+    id: 'comp-empty-state',
+    label: 'Empty State',
+    category: 'components',
+    subcategory: 'misc',
+    tags: ['empty-state', 'placeholder', 'no-data', 'illustration', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Empty State',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: {
+        html: `<style>.es-wrap{background:#0a0a0a;display:flex;align-items:center;justify-content:center;padding:80px 48px;font-family:system-ui,-apple-system,sans-serif;min-height:400px}.es-box{display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px;max-width:400px}.es-illust{width:120px;height:120px;border-radius:24px;background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center}.es-illust svg{width:48px;height:48px;stroke:rgba(255,255,255,0.15);fill:none;stroke-width:1.5}.es-h{font-size:20px;font-weight:700;color:#fff;margin:0;letter-spacing:-0.02em}.es-p{font-size:14px;color:rgba(255,255,255,0.4);margin:0;line-height:1.6}.es-btn{font-size:14px;font-weight:600;color:#0a0a0a;background:#fff;padding:12px 28px;border-radius:8px;border:none;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit;margin-top:4px}.es-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,255,255,0.15)}</style><div class="es-wrap"><div class="es-box"><div class="es-illust"><svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><h3 class="es-h">No projects yet</h3><p class="es-p">Get started by creating your first project. It only takes a minute to set up.</p><button class="es-btn">Create Project</button></div></div>`
+      }
+    }
+  },
+]
+
+// ─── FORMS (8 premium form presets) ───
+
+const FORMS: LibraryElementItem[] = [
+  {
+    id: 'comp-form-contact',
+    label: 'Contact Form',
+    category: 'components',
+    subcategory: 'forms',
+    tags: ['form', 'contact', 'email', 'message', 'glassmorphic'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Contact Form',
+      defaultStyle: { width: '100%', minHeight: '420px' },
+      defaultContent: {
+        html: `<style>.cf-wrap{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:48px;max-width:520px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.cf-title{font-size:24px;font-weight:600;color:#f0f0f0;margin:0 0 8px}.cf-sub{font-size:14px;color:rgba(255,255,255,0.45);margin:0 0 32px;line-height:1.6}.cf-field{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}.cf-label{font-size:12px;font-weight:500;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.06em}.cf-input{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;font-size:14px;color:#f0f0f0;outline:none;transition:border-color 0.3s,box-shadow 0.3s;font-family:inherit}.cf-input:focus{border-color:rgba(99,139,255,0.6);box-shadow:0 0 0 3px rgba(99,139,255,0.15)}.cf-textarea{resize:vertical;min-height:110px}.cf-btn{width:100%;padding:14px;background:linear-gradient(135deg,#4F6EF7,#638BFF);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit;margin-top:8px}.cf-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(79,110,247,0.3)}</style><div class="cf-wrap"><h3 class="cf-title">Get in Touch</h3><p class="cf-sub">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p><div class="cf-field"><label class="cf-label">Full Name</label><input class="cf-input" type="text" placeholder="John Doe"/></div><div class="cf-field"><label class="cf-label">Email</label><input class="cf-input" type="email" placeholder="john@example.com"/></div><div class="cf-field"><label class="cf-label">Message</label><textarea class="cf-input cf-textarea" placeholder="Your message..."></textarea></div><button class="cf-btn">Send Message</button></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-form-newsletter',
+    label: 'Newsletter Inline',
+    category: 'components',
+    subcategory: 'forms',
+    tags: ['form', 'newsletter', 'email', 'subscribe', 'inline', 'minimal'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Newsletter Form',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: {
+        html: `<style>.nl-wrap{display:flex;align-items:center;gap:12px;max-width:520px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.nl-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:14px 18px;font-size:14px;color:#f0f0f0;outline:none;transition:border-color 0.3s;font-family:inherit}.nl-input::placeholder{color:rgba(255,255,255,0.3)}.nl-input:focus{border-color:rgba(99,139,255,0.5)}.nl-btn{padding:14px 28px;background:#fff;color:#0a0a0a;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:transform 0.2s,opacity 0.2s;font-family:inherit}.nl-btn:hover{transform:translateY(-1px);opacity:0.9}</style><div class="nl-wrap"><input class="nl-input" type="email" placeholder="Enter your email address"/><button class="nl-btn">Subscribe</button></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-form-login',
+    label: 'Login Form',
+    category: 'components',
+    subcategory: 'forms',
+    tags: ['form', 'login', 'auth', 'sign-in', 'card'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Login Form',
+      defaultStyle: { width: '100%', minHeight: '380px' },
+      defaultContent: {
+        html: `<style>.lf-wrap{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:48px;max-width:400px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;text-align:center}.lf-title{font-size:22px;font-weight:600;color:#f0f0f0;margin:0 0 6px}.lf-sub{font-size:13px;color:rgba(255,255,255,0.4);margin:0 0 32px}.lf-field{text-align:left;margin-bottom:18px}.lf-label{display:block;font-size:12px;font-weight:500;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}.lf-input{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;font-size:14px;color:#f0f0f0;outline:none;transition:border-color 0.3s,box-shadow 0.3s;font-family:inherit}.lf-input:focus{border-color:rgba(99,139,255,0.6);box-shadow:0 0 0 3px rgba(99,139,255,0.15)}.lf-btn{width:100%;padding:14px;background:linear-gradient(135deg,#4F6EF7,#638BFF);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit;margin-top:8px}.lf-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(79,110,247,0.3)}.lf-forgot{display:inline-block;margin-top:16px;font-size:13px;color:rgba(99,139,255,0.8);text-decoration:none;cursor:pointer;transition:color 0.3s}.lf-forgot:hover{color:#638BFF}</style><div class="lf-wrap"><h3 class="lf-title">Welcome Back</h3><p class="lf-sub">Sign in to your account</p><div class="lf-field"><label class="lf-label">Email</label><input class="lf-input" type="email" placeholder="you@example.com"/></div><div class="lf-field"><label class="lf-label">Password</label><input class="lf-input" type="password" placeholder="••••••••"/></div><button class="lf-btn">Sign In</button><a class="lf-forgot">Forgot password?</a></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-form-signup',
+    label: 'Signup Form',
+    category: 'components',
+    subcategory: 'forms',
+    tags: ['form', 'signup', 'register', 'auth', 'card'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Signup Form',
+      defaultStyle: { width: '100%', minHeight: '520px' },
+      defaultContent: {
+        html: `<style>.sf-wrap{background:#fff;border-radius:16px;padding:48px;max-width:440px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;box-shadow:0 4px 32px rgba(0,0,0,0.06)}.sf-title{font-size:22px;font-weight:600;color:#111;margin:0 0 6px}.sf-sub{font-size:13px;color:#888;margin:0 0 28px}.sf-field{margin-bottom:16px}.sf-label{display:block;font-size:12px;font-weight:500;color:#555;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}.sf-input{width:100%;box-sizing:border-box;background:#f7f7f8;border:1px solid #e5e5e5;border-radius:10px;padding:12px 16px;font-size:14px;color:#111;outline:none;transition:border-color 0.3s,box-shadow 0.3s;font-family:inherit}.sf-input:focus{border-color:#4F6EF7;box-shadow:0 0 0 3px rgba(79,110,247,0.1)}.sf-check{display:flex;align-items:flex-start;gap:8px;margin:20px 0 24px}.sf-checkbox{width:16px;height:16px;margin-top:2px;accent-color:#4F6EF7;cursor:pointer}.sf-check-text{font-size:13px;color:#666;line-height:1.5}.sf-check-text a{color:#4F6EF7;text-decoration:none}.sf-btn{width:100%;padding:14px;background:#111;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:transform 0.2s,opacity 0.2s;font-family:inherit}.sf-btn:hover{transform:translateY(-1px);opacity:0.9}</style><div class="sf-wrap"><h3 class="sf-title">Create Account</h3><p class="sf-sub">Start your journey with us today</p><div class="sf-field"><label class="sf-label">Full Name</label><input class="sf-input" type="text" placeholder="John Doe"/></div><div class="sf-field"><label class="sf-label">Email</label><input class="sf-input" type="email" placeholder="john@example.com"/></div><div class="sf-field"><label class="sf-label">Password</label><input class="sf-input" type="password" placeholder="Min. 8 characters"/></div><div class="sf-field"><label class="sf-label">Confirm Password</label><input class="sf-input" type="password" placeholder="Re-enter password"/></div><div class="sf-check"><input class="sf-checkbox" type="checkbox"/><span class="sf-check-text">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span></div><button class="sf-btn">Create Account</button></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-form-search',
+    label: 'Search Bar',
+    category: 'components',
+    subcategory: 'forms',
+    tags: ['form', 'search', 'input', 'minimal', 'full-width'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Search Bar',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<style>.sb-wrap{max-width:640px;margin:0 auto;position:relative;font-family:system-ui,-apple-system,sans-serif}.sb-input{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px 52px 16px 48px;font-size:16px;color:#f0f0f0;outline:none;transition:border-color 0.3s,box-shadow 0.3s;font-family:inherit}.sb-input::placeholder{color:rgba(255,255,255,0.3)}.sb-input:focus{border-color:rgba(99,139,255,0.5);box-shadow:0 0 0 3px rgba(99,139,255,0.12)}.sb-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:rgba(255,255,255,0.35)}.sb-clear{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.08);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;padding:0}.sb-clear:hover{background:rgba(255,255,255,0.15)}.sb-clear svg{width:14px;height:14px;color:rgba(255,255,255,0.5)}</style><div class="sb-wrap"><svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input class="sb-input" type="text" placeholder="Search anything..."/><button class="sb-clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-form-multi-step',
+    label: 'Multi-Step Form',
+    category: 'components',
+    subcategory: 'forms',
+    tags: ['form', 'multi-step', 'wizard', 'progress', 'steps'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Multi-Step Form',
+      defaultStyle: { width: '100%', minHeight: '380px' },
+      defaultContent: {
+        html: `<style>.ms-wrap{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:48px;max-width:480px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.ms-steps{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:36px}.ms-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.3s}.ms-dot.active{background:#638BFF;box-shadow:0 0 12px rgba(99,139,255,0.4)}.ms-bar{width:40px;height:2px;background:rgba(255,255,255,0.08);border-radius:1px}.ms-title{font-size:18px;font-weight:600;color:#f0f0f0;margin:0 0 6px}.ms-sub{font-size:13px;color:rgba(255,255,255,0.4);margin:0 0 28px}.ms-field{margin-bottom:18px}.ms-label{display:block;font-size:12px;font-weight:500;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}.ms-input{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;font-size:14px;color:#f0f0f0;outline:none;transition:border-color 0.3s;font-family:inherit}.ms-input:focus{border-color:rgba(99,139,255,0.5)}.ms-btn{width:100%;padding:14px;background:linear-gradient(135deg,#4F6EF7,#638BFF);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}.ms-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(79,110,247,0.3)}.ms-btn svg{width:16px;height:16px}</style><div class="ms-wrap"><div class="ms-steps"><span class="ms-dot active"></span><span class="ms-bar"></span><span class="ms-dot"></span><span class="ms-bar"></span><span class="ms-dot"></span></div><h3 class="ms-title">Personal Info</h3><p class="ms-sub">Step 1 of 3 — Tell us about yourself</p><div class="ms-field"><label class="ms-label">First Name</label><input class="ms-input" type="text" placeholder="John"/></div><div class="ms-field"><label class="ms-label">Last Name</label><input class="ms-input" type="text" placeholder="Doe"/></div><button class="ms-btn">Next Step <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-form-booking',
+    label: 'Booking Form',
+    category: 'components',
+    subcategory: 'forms',
+    tags: ['form', 'booking', 'appointment', 'date', 'schedule', 'service'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Booking Form',
+      defaultStyle: { width: '100%', minHeight: '520px' },
+      defaultContent: {
+        html: `<style>.bk-wrap{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:48px;max-width:480px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.bk-title{font-size:22px;font-weight:600;color:#f0f0f0;margin:0 0 6px}.bk-sub{font-size:13px;color:rgba(255,255,255,0.4);margin:0 0 28px}.bk-section{margin-bottom:24px}.bk-label{display:block;font-size:12px;font-weight:500;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px}.bk-date-wrap{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.3s}.bk-date-wrap:hover{border-color:rgba(99,139,255,0.4)}.bk-date-wrap svg{width:18px;height:18px;color:rgba(255,255,255,0.4)}.bk-date-text{font-size:14px;color:rgba(255,255,255,0.5)}.bk-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.bk-slot{padding:10px 4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:13px;color:rgba(255,255,255,0.6);text-align:center;cursor:pointer;transition:all 0.2s;font-family:inherit}.bk-slot:hover,.bk-slot.sel{background:rgba(99,139,255,0.15);border-color:rgba(99,139,255,0.4);color:#638BFF}.bk-field{margin-bottom:16px}.bk-input{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;font-size:14px;color:#f0f0f0;outline:none;transition:border-color 0.3s;font-family:inherit}.bk-input:focus{border-color:rgba(99,139,255,0.5)}.bk-btn{width:100%;padding:14px;background:linear-gradient(135deg,#4F6EF7,#638BFF);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit;margin-top:4px}.bk-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(79,110,247,0.3)}</style><div class="bk-wrap"><h3 class="bk-title">Book a Session</h3><p class="bk-sub">Choose a date and time that works for you</p><div class="bk-section"><label class="bk-label">Select Date</label><div class="bk-date-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg><span class="bk-date-text">Choose a date...</span></div></div><div class="bk-section"><label class="bk-label">Available Slots</label><div class="bk-slots"><span class="bk-slot">09:00</span><span class="bk-slot sel">10:00</span><span class="bk-slot">11:00</span><span class="bk-slot">14:00</span><span class="bk-slot">15:00</span><span class="bk-slot">16:00</span><span class="bk-slot">17:00</span><span class="bk-slot">18:00</span></div></div><div class="bk-field"><label class="bk-label">Your Name</label><input class="bk-input" type="text" placeholder="John Doe"/></div><div class="bk-field"><label class="bk-label">Email</label><input class="bk-input" type="email" placeholder="john@example.com"/></div><button class="bk-btn">Confirm Booking</button></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-form-feedback',
+    label: 'Feedback Form',
+    category: 'components',
+    subcategory: 'forms',
+    tags: ['form', 'feedback', 'rating', 'stars', 'review', 'customer'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Feedback Form',
+      defaultStyle: { width: '100%', minHeight: '360px' },
+      defaultContent: {
+        html: `<style>.fb-wrap{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:48px;max-width:440px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;text-align:center}.fb-title{font-size:22px;font-weight:600;color:#f0f0f0;margin:0 0 6px}.fb-sub{font-size:13px;color:rgba(255,255,255,0.4);margin:0 0 28px}.fb-stars{display:flex;justify-content:center;gap:8px;margin-bottom:28px}.fb-star{width:36px;height:36px;cursor:pointer;transition:transform 0.2s;color:rgba(255,255,255,0.15)}.fb-star:hover,.fb-star.on{color:#FBBF24;transform:scale(1.15)}.fb-star svg{width:100%;height:100%}.fb-textarea{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px 16px;font-size:14px;color:#f0f0f0;outline:none;resize:vertical;min-height:100px;transition:border-color 0.3s;font-family:inherit;margin-bottom:20px}.fb-textarea::placeholder{color:rgba(255,255,255,0.3)}.fb-textarea:focus{border-color:rgba(99,139,255,0.5)}.fb-btn{width:100%;padding:14px;background:linear-gradient(135deg,#4F6EF7,#638BFF);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit}.fb-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(79,110,247,0.3)}</style><div class="fb-wrap"><h3 class="fb-title">How was your experience?</h3><p class="fb-sub">Your feedback helps us improve</p><div class="fb-stars"><span class="fb-star on"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span><span class="fb-star on"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span><span class="fb-star on"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span><span class="fb-star on"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span><span class="fb-star"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span></div><textarea class="fb-textarea" placeholder="Tell us what you think..."></textarea><button class="fb-btn">Submit Feedback</button></div>`
+      },
+    },
+  },
+]
+
+// ─── TESTIMONIALS (6 premium testimonial presets) ───
+
+const TESTIMONIALS: LibraryElementItem[] = [
+  {
+    id: 'comp-testimonial-card',
+    label: 'Testimonial Card',
+    category: 'components',
+    subcategory: 'testimonials',
+    tags: ['testimonial', 'quote', 'review', 'glassmorphic', 'avatar'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Testimonial Card',
+      defaultStyle: { width: '100%', minHeight: '280px' },
+      defaultContent: {
+        html: `<style>.tc-wrap{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px;max-width:480px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.tc-quote-mark{font-size:48px;line-height:1;color:rgba(99,139,255,0.4);font-family:Georgia,serif;margin-bottom:8px}.tc-text{font-size:16px;line-height:1.7;color:rgba(255,255,255,0.75);margin:0 0 28px;font-style:italic}.tc-author{display:flex;align-items:center;gap:14px}.tc-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4F6EF7,#638BFF);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#fff;flex-shrink:0}.tc-info{display:flex;flex-direction:column;gap:2px}.tc-name{font-size:14px;font-weight:600;color:#f0f0f0}.tc-role{font-size:12px;color:rgba(255,255,255,0.4)}</style><div class="tc-wrap"><div class="tc-quote-mark">\u201C</div><p class="tc-text">Working with this team has been an absolute game-changer. The attention to detail and quality of delivery exceeded all our expectations.</p><div class="tc-author"><div class="tc-avatar">SL</div><div class="tc-info"><span class="tc-name">Sarah Laurent</span><span class="tc-role">CEO, Laurent Design</span></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-testimonial-minimal',
+    label: 'Testimonial Minimal',
+    category: 'components',
+    subcategory: 'testimonials',
+    tags: ['testimonial', 'quote', 'minimal', 'serif', 'centered'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Testimonial Minimal',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: {
+        html: `<style>.tm-wrap{text-align:center;max-width:600px;margin:0 auto;padding:40px 20px;font-family:system-ui,-apple-system,sans-serif}.tm-quote{font-family:Georgia,"Cormorant Garamond","Times New Roman",serif;font-size:clamp(20px,3vw,28px);font-style:italic;font-weight:300;line-height:1.7;color:rgba(255,255,255,0.8);margin:0 0 24px}.tm-dash{width:32px;height:1px;background:rgba(255,255,255,0.2);margin:0 auto 16px}.tm-name{font-size:13px;font-weight:500;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase}</style><div class="tm-wrap"><p class="tm-quote">\u201CAn experience crafted with meticulous attention to detail, where every element speaks to a legacy of uncompromising excellence.\u201D</p><div class="tm-dash"></div><span class="tm-name">Marie Dupont</span></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-testimonial-stars',
+    label: 'Testimonial with Stars',
+    category: 'components',
+    subcategory: 'testimonials',
+    tags: ['testimonial', 'stars', 'rating', 'review', 'card'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Testimonial Stars',
+      defaultStyle: { width: '100%', minHeight: '240px' },
+      defaultContent: {
+        html: `<style>.ts-wrap{background:#fff;border-radius:14px;padding:36px;max-width:440px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;box-shadow:0 2px 20px rgba(0,0,0,0.05)}.ts-stars{display:flex;gap:4px;margin-bottom:20px}.ts-star{width:18px;height:18px;color:#FBBF24}.ts-text{font-size:15px;line-height:1.7;color:#444;margin:0 0 24px}.ts-author{display:flex;align-items:center;gap:12px}.ts-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f0e6d9,#d4c4b0);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#4a2711;flex-shrink:0}.ts-info{display:flex;flex-direction:column;gap:1px}.ts-name{font-size:14px;font-weight:600;color:#111}.ts-company{font-size:12px;color:#999}</style><div class="ts-wrap"><div class="ts-stars"><svg class="ts-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="ts-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="ts-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="ts-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="ts-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><p class="ts-text">\u201CThe quality of their work is outstanding. Every pixel is perfectly placed, and the final product exceeded our expectations by far.\u201D</p><div class="ts-author"><div class="ts-avatar">AP</div><div class="ts-info"><span class="ts-name">Antoine Petit</span><span class="ts-company">Atelier Petit & Co</span></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-testimonial-side',
+    label: 'Testimonial Side Layout',
+    category: 'components',
+    subcategory: 'testimonials',
+    tags: ['testimonial', 'editorial', 'image', 'side', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Testimonial Side',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: {
+        html: `<style>.tsd-wrap{display:flex;align-items:stretch;max-width:720px;margin:0 auto;border-radius:16px;overflow:hidden;font-family:system-ui,-apple-system,sans-serif;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08)}.tsd-img{width:280px;min-height:300px;background:linear-gradient(135deg,#1a1a2e,#16213e);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-size:48px;font-family:Georgia,serif}.tsd-content{flex:1;padding:44px 40px;display:flex;flex-direction:column;justify-content:center;gap:20px}.tsd-quote{font-family:Georgia,"Times New Roman",serif;font-size:18px;font-style:italic;line-height:1.7;color:rgba(255,255,255,0.75);margin:0}.tsd-dash{width:40px;height:2px;background:linear-gradient(90deg,#638BFF,transparent)}.tsd-name{font-size:15px;font-weight:600;color:#f0f0f0;margin:0}.tsd-role{font-size:13px;color:rgba(255,255,255,0.4);margin:4px 0 0}</style><div class="tsd-wrap"><div class="tsd-img">\u201C</div><div class="tsd-content"><p class="tsd-quote">Their creative vision transformed our brand identity entirely. The collaboration was seamless from day one, and the results speak for themselves.</p><div class="tsd-dash"></div><p class="tsd-name">Camille Roux</p><p class="tsd-role">Creative Director, Maison Roux</p></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-testimonial-twitter',
+    label: 'Social Proof Tweet',
+    category: 'components',
+    subcategory: 'testimonials',
+    tags: ['testimonial', 'twitter', 'social', 'tweet', 'card'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Tweet Testimonial',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: {
+        html: `<style>.tw-wrap{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;max-width:440px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.tw-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}.tw-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1DA1F2,#0d8bd9);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}.tw-meta{flex:1}.tw-name{font-size:14px;font-weight:600;color:#f0f0f0}.tw-handle{font-size:13px;color:rgba(255,255,255,0.35)}.tw-bird{width:20px;height:20px;color:rgba(29,161,242,0.6)}.tw-text{font-size:15px;line-height:1.7;color:rgba(255,255,255,0.75);margin:0 0 20px}.tw-actions{display:flex;gap:28px}.tw-action{display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,0.3);cursor:pointer;transition:color 0.2s;background:none;border:none;padding:0;font-family:inherit}.tw-action:hover{color:rgba(255,255,255,0.6)}.tw-action svg{width:16px;height:16px}</style><div class="tw-wrap"><div class="tw-header"><div class="tw-avatar">JD</div><div class="tw-meta"><div class="tw-name">Julie Deschamps</div><div class="tw-handle">@juliedesch</div></div><svg class="tw-bird" viewBox="0 0 24 24" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg></div><p class="tw-text">Just launched our new site built by @jlstudio and it's absolutely insane. The animations, the feel, everything is premium. Can't recommend enough.</p><div class="tw-actions"><button class="tw-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>247</button><button class="tw-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>58</button><button class="tw-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>12</button></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-testimonial-video',
+    label: 'Video Testimonial',
+    category: 'components',
+    subcategory: 'testimonials',
+    tags: ['testimonial', 'video', 'play', 'thumbnail', 'media'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Video Testimonial',
+      defaultStyle: { width: '100%', minHeight: '360px' },
+      defaultContent: {
+        html: `<style>.tv-wrap{max-width:480px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.tv-thumb{position:relative;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#1a1a2e,#0f0f1e);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:20px}.tv-thumb::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.3);transition:background 0.3s}.tv-thumb:hover::before{background:rgba(0,0,0,0.15)}.tv-play{position:relative;z-index:1;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);border:2px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;transition:transform 0.3s,background 0.3s}.tv-thumb:hover .tv-play{transform:scale(1.1);background:rgba(255,255,255,0.25)}.tv-play svg{width:24px;height:24px;color:#fff;margin-left:3px}.tv-dur{position:absolute;bottom:12px;right:12px;z-index:1;background:rgba(0,0,0,0.6);padding:4px 10px;border-radius:6px;font-size:12px;font-weight:500;color:#fff}.tv-info{display:flex;align-items:center;gap:14px;padding:0 4px}.tv-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4F6EF7,#638BFF);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#fff;flex-shrink:0}.tv-meta{display:flex;flex-direction:column;gap:2px}.tv-name{font-size:14px;font-weight:600;color:#f0f0f0}.tv-role{font-size:12px;color:rgba(255,255,255,0.4)}</style><div class="tv-wrap"><div class="tv-thumb"><div class="tv-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="tv-dur">2:34</span></div><div class="tv-info"><div class="tv-avatar">MV</div><div class="tv-meta"><span class="tv-name">Marc Vaillant</span><span class="tv-role">Founder, Studio Vaillant</span></div></div></div>`
+      },
+    },
+  },
+]
+
+// ─── PRICING (6 premium pricing presets) ───
+
+const PRICING: LibraryElementItem[] = [
+  {
+    id: 'comp-pricing-simple',
+    label: 'Pricing Simple',
+    category: 'components',
+    subcategory: 'pricing',
+    tags: ['pricing', 'plan', 'card', 'features', 'cta', 'clean'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Pricing Simple',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: {
+        html: `<style>.ps-wrap{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px;max-width:340px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;text-align:center}.ps-name{font-size:14px;font-weight:600;color:rgba(99,139,255,0.8);text-transform:uppercase;letter-spacing:0.1em;margin:0 0 12px}.ps-price{font-size:48px;font-weight:700;color:#f0f0f0;margin:0 0 4px;line-height:1}.ps-price span{font-size:16px;font-weight:400;color:rgba(255,255,255,0.35)}.ps-desc{font-size:13px;color:rgba(255,255,255,0.4);margin:0 0 28px}.ps-divider{height:1px;background:rgba(255,255,255,0.08);margin-bottom:24px}.ps-features{list-style:none;padding:0;margin:0 0 32px;text-align:left}.ps-features li{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;color:rgba(255,255,255,0.65)}.ps-check{width:18px;height:18px;border-radius:50%;background:rgba(99,139,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}.ps-check svg{width:12px;height:12px;color:#638BFF}.ps-btn{width:100%;padding:14px;background:linear-gradient(135deg,#4F6EF7,#638BFF);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit}.ps-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(79,110,247,0.3)}</style><div class="ps-wrap"><div class="ps-name">Pro</div><div class="ps-price">\u20AC49<span>/mo</span></div><p class="ps-desc">Perfect for growing businesses</p><div class="ps-divider"></div><ul class="ps-features"><li><span class="ps-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Unlimited projects</li><li><span class="ps-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Priority support</li><li><span class="ps-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Advanced analytics</li><li><span class="ps-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Custom integrations</li><li><span class="ps-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Team collaboration</li></ul><button class="ps-btn">Get Started</button></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-pricing-popular',
+    label: 'Pricing 3-Tier Popular',
+    category: 'components',
+    subcategory: 'pricing',
+    tags: ['pricing', 'tiers', 'popular', 'badge', 'comparison'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Pricing Popular',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<style>.pp-wrap{display:flex;gap:20px;justify-content:center;align-items:flex-end;max-width:900px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;padding:20px 0;flex-wrap:wrap}.pp-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:36px 32px;width:260px;text-align:center;transition:transform 0.3s,box-shadow 0.3s;position:relative}.pp-card:hover{transform:translateY(-4px)}.pp-card.pop{background:rgba(99,139,255,0.06);border-color:rgba(99,139,255,0.25);padding:44px 32px;box-shadow:0 8px 40px rgba(99,139,255,0.12)}.pp-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#4F6EF7,#638BFF);color:#fff;font-size:11px;font-weight:600;padding:4px 16px;border-radius:99px;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}.pp-name{font-size:14px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 12px}.pp-price{font-size:40px;font-weight:700;color:#f0f0f0;margin:0 0 4px;line-height:1}.pp-price span{font-size:15px;font-weight:400;color:rgba(255,255,255,0.3)}.pp-desc{font-size:12px;color:rgba(255,255,255,0.35);margin:0 0 24px}.pp-list{list-style:none;padding:0;margin:0 0 28px;text-align:left}.pp-list li{padding:6px 0;font-size:13px;color:rgba(255,255,255,0.55);display:flex;align-items:center;gap:8px}.pp-list li::before{content:'\\2713';color:#638BFF;font-weight:700;font-size:12px}.pp-btn{width:100%;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit}.pp-btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7)}.pp-btn-outline:hover{border-color:rgba(255,255,255,0.3);color:#fff}.pp-btn-fill{background:linear-gradient(135deg,#4F6EF7,#638BFF);color:#fff;border:none}.pp-btn-fill:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(79,110,247,0.3)}</style><div class="pp-wrap"><div class="pp-card"><div class="pp-name">Starter</div><div class="pp-price">\u20AC19<span>/mo</span></div><p class="pp-desc">For individuals</p><ul class="pp-list"><li>5 projects</li><li>Basic analytics</li><li>Email support</li></ul><button class="pp-btn pp-btn-outline">Choose Plan</button></div><div class="pp-card pop"><span class="pp-badge">Most Popular</span><div class="pp-name">Pro</div><div class="pp-price">\u20AC49<span>/mo</span></div><p class="pp-desc">For growing teams</p><ul class="pp-list"><li>Unlimited projects</li><li>Advanced analytics</li><li>Priority support</li><li>Custom integrations</li></ul><button class="pp-btn pp-btn-fill">Choose Plan</button></div><div class="pp-card"><div class="pp-name">Business</div><div class="pp-price">\u20AC99<span>/mo</span></div><p class="pp-desc">For enterprises</p><ul class="pp-list"><li>Everything in Pro</li><li>Dedicated manager</li><li>SLA guarantee</li><li>Custom branding</li></ul><button class="pp-btn pp-btn-outline">Choose Plan</button></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-pricing-toggle',
+    label: 'Pricing Toggle Monthly/Yearly',
+    category: 'components',
+    subcategory: 'pricing',
+    tags: ['pricing', 'toggle', 'monthly', 'yearly', 'switch'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Pricing Toggle',
+      defaultStyle: { width: '100%', minHeight: '460px' },
+      defaultContent: {
+        html: `<style>.pt-wrap{max-width:680px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;text-align:center}.pt-toggle{display:inline-flex;align-items:center;gap:14px;margin-bottom:36px;padding:6px;background:rgba(255,255,255,0.04);border-radius:99px;border:1px solid rgba(255,255,255,0.08)}.pt-opt{padding:8px 20px;border-radius:99px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.45);cursor:pointer;transition:all 0.3s;border:none;background:transparent;font-family:inherit}.pt-opt.active{background:rgba(99,139,255,0.15);color:#638BFF}.pt-save{font-size:11px;font-weight:600;color:#34D399;background:rgba(52,211,153,0.1);padding:3px 10px;border-radius:99px}.pt-cards{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}.pt-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:36px 32px;width:300px;text-align:center;transition:transform 0.3s}.pt-card:hover{transform:translateY(-4px)}.pt-name{font-size:14px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 12px}.pt-price{font-size:44px;font-weight:700;color:#f0f0f0;margin:0 0 4px;line-height:1}.pt-price span{font-size:14px;font-weight:400;color:rgba(255,255,255,0.3)}.pt-desc{font-size:12px;color:rgba(255,255,255,0.35);margin:0 0 24px}.pt-list{list-style:none;padding:0;margin:0 0 28px;text-align:left}.pt-list li{padding:6px 0;font-size:13px;color:rgba(255,255,255,0.55);display:flex;align-items:center;gap:8px}.pt-list li::before{content:'\\2713';color:#638BFF;font-weight:700;font-size:12px}.pt-btn{width:100%;padding:12px;background:linear-gradient(135deg,#4F6EF7,#638BFF);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:transform 0.2s;font-family:inherit}.pt-btn:hover{transform:translateY(-1px)}</style><div class="pt-wrap"><div class="pt-toggle"><button class="pt-opt active">Monthly</button><button class="pt-opt">Yearly</button><span class="pt-save">Save 20%</span></div><div class="pt-cards"><div class="pt-card"><div class="pt-name">Starter</div><div class="pt-price">\u20AC29<span>/mo</span></div><p class="pt-desc">Everything to get started</p><ul class="pt-list"><li>10 projects</li><li>Basic analytics</li><li>Email support</li><li>1 team member</li></ul><button class="pt-btn">Start Free Trial</button></div><div class="pt-card"><div class="pt-name">Professional</div><div class="pt-price">\u20AC79<span>/mo</span></div><p class="pt-desc">For scaling businesses</p><ul class="pt-list"><li>Unlimited projects</li><li>Advanced analytics</li><li>Priority support</li><li>10 team members</li><li>API access</li></ul><button class="pt-btn">Start Free Trial</button></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-pricing-gradient',
+    label: 'Pricing Gradient Cards',
+    category: 'components',
+    subcategory: 'pricing',
+    tags: ['pricing', 'gradient', 'dark', 'premium', 'border'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Pricing Gradient',
+      defaultStyle: { width: '100%', minHeight: '420px' },
+      defaultContent: {
+        html: `<style>.pg-wrap{display:flex;gap:24px;justify-content:center;max-width:720px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;flex-wrap:wrap}.pg-card{position:relative;border-radius:16px;padding:2px;background:linear-gradient(135deg,rgba(99,139,255,0.4),rgba(139,92,246,0.4),rgba(236,72,153,0.3));width:320px;transition:transform 0.3s}.pg-card:hover{transform:translateY(-4px)}.pg-inner{background:#0d0d12;border-radius:14px;padding:40px 32px;text-align:center;height:100%;box-sizing:border-box}.pg-name{font-size:14px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 16px}.pg-price{font-size:48px;font-weight:700;background:linear-gradient(135deg,#638BFF,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 6px;line-height:1}.pg-price span{font-size:15px;font-weight:400;-webkit-text-fill-color:rgba(255,255,255,0.3);background:none}.pg-desc{font-size:12px;color:rgba(255,255,255,0.35);margin:0 0 28px}.pg-list{list-style:none;padding:0;margin:0 0 32px;text-align:left}.pg-list li{padding:7px 0;font-size:13px;color:rgba(255,255,255,0.55);display:flex;align-items:center;gap:8px}.pg-list li::before{content:'\\2713';color:#A78BFA;font-weight:700;font-size:12px}.pg-btn{width:100%;padding:12px;background:linear-gradient(135deg,#4F6EF7,#8B5CF6);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:box-shadow 0.3s;font-family:inherit}.pg-btn:hover{box-shadow:0 8px 32px rgba(99,139,255,0.25)}</style><div class="pg-wrap"><div class="pg-card"><div class="pg-inner"><div class="pg-name">Growth</div><div class="pg-price">\u20AC59<span>/mo</span></div><p class="pg-desc">Scale with confidence</p><ul class="pg-list"><li>Unlimited projects</li><li>Advanced analytics</li><li>Priority support</li><li>API access</li><li>Custom domains</li></ul><button class="pg-btn">Get Started</button></div></div><div class="pg-card"><div class="pg-inner"><div class="pg-name">Scale</div><div class="pg-price">\u20AC129<span>/mo</span></div><p class="pg-desc">Enterprise-ready tools</p><ul class="pg-list"><li>Everything in Growth</li><li>SSO & SAML</li><li>Dedicated support</li><li>Custom SLA</li><li>Audit logs</li></ul><button class="pg-btn">Get Started</button></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-pricing-minimal',
+    label: 'Pricing Minimal',
+    category: 'components',
+    subcategory: 'pricing',
+    tags: ['pricing', 'minimal', 'simple', 'clean', 'text-link'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Pricing Minimal',
+      defaultStyle: { width: '100%', minHeight: '240px' },
+      defaultContent: {
+        html: `<style>.pm-wrap{text-align:center;max-width:320px;margin:0 auto;padding:40px 20px;font-family:system-ui,-apple-system,sans-serif}.pm-name{font-size:13px;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;margin:0 0 16px}.pm-price{font-size:56px;font-weight:700;color:#f0f0f0;margin:0 0 24px;line-height:1}.pm-price span{font-size:16px;font-weight:400;color:rgba(255,255,255,0.3)}.pm-features{list-style:none;padding:0;margin:0 0 28px}.pm-features li{padding:5px 0;font-size:14px;color:rgba(255,255,255,0.5)}.pm-link{font-size:13px;color:#638BFF;text-decoration:none;cursor:pointer;border-bottom:1px solid rgba(99,139,255,0.3);padding-bottom:2px;transition:border-color 0.3s;font-family:inherit;background:none;border-top:none;border-left:none;border-right:none}.pm-link:hover{border-bottom-color:#638BFF}</style><div class="pm-wrap"><div class="pm-name">Essential</div><div class="pm-price">\u20AC29<span>/mo</span></div><ul class="pm-features"><li>Unlimited projects</li><li>Priority support</li><li>Advanced analytics</li></ul><button class="pm-link">Start your free trial \u2192</button></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-pricing-enterprise',
+    label: 'Pricing Enterprise',
+    category: 'components',
+    subcategory: 'pricing',
+    tags: ['pricing', 'enterprise', 'custom', 'contact', 'dark', 'premium'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Pricing Enterprise',
+      defaultStyle: { width: '100%', minHeight: '380px' },
+      defaultContent: {
+        html: `<style>.pe-wrap{background:rgba(255,255,255,0.03);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:48px;max-width:500px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.pe-badge{display:inline-block;font-size:11px;font-weight:600;color:#C5A572;text-transform:uppercase;letter-spacing:0.1em;border:1px solid rgba(197,165,114,0.3);padding:4px 14px;border-radius:99px;margin-bottom:20px}.pe-title{font-size:28px;font-weight:700;color:#f0f0f0;margin:0 0 6px}.pe-price{font-size:16px;color:rgba(255,255,255,0.4);margin:0 0 28px}.pe-divider{height:1px;background:rgba(255,255,255,0.06);margin-bottom:28px}.pe-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin-bottom:36px}.pe-feature{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.6)}.pe-feature svg{width:16px;height:16px;color:#C5A572;flex-shrink:0}.pe-btn{width:100%;padding:16px;background:linear-gradient(135deg,#C5A572,#A68B5B);color:#0d0d0d;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;font-family:inherit}.pe-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(197,165,114,0.25)}</style><div class="pe-wrap"><span class="pe-badge">Enterprise</span><h3 class="pe-title">Custom Plan</h3><p class="pe-price">Tailored pricing for your organization</p><div class="pe-divider"></div><div class="pe-grid"><span class="pe-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Unlimited everything</span><span class="pe-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Dedicated manager</span><span class="pe-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>SSO & SAML</span><span class="pe-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>99.99% SLA</span><span class="pe-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Custom integrations</span><span class="pe-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Priority onboarding</span></div><button class="pe-btn">Contact Sales</button></div>`
+      },
+    },
+  },
+]
+
+// ─── FAQ COMPONENTS (4 premium FAQ presets) ───
+
+const FAQ_COMPONENTS: LibraryElementItem[] = [
+  {
+    id: 'comp-faq-accordion',
+    label: 'FAQ Accordion',
+    category: 'components',
+    subcategory: 'faq',
+    tags: ['faq', 'accordion', 'toggle', 'questions', 'dark'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'FAQ Accordion',
+      defaultStyle: { width: '100%', minHeight: '360px' },
+      defaultContent: {
+        html: `<style>.fa-wrap{max-width:600px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.fa-item{border-bottom:1px solid rgba(255,255,255,0.06)}.fa-q{width:100%;display:flex;justify-content:space-between;align-items:center;padding:20px 0;background:none;border:none;cursor:pointer;text-align:left;font-family:inherit}.fa-q-text{font-size:16px;font-weight:500;color:#f0f0f0;flex:1;padding-right:16px}.fa-icon{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;transition:transform 0.3s,background 0.3s;flex-shrink:0}.fa-icon svg{width:12px;height:12px;color:rgba(255,255,255,0.5)}.fa-item.open .fa-icon{transform:rotate(45deg);background:rgba(99,139,255,0.15)}.fa-item.open .fa-icon svg{color:#638BFF}.fa-a{max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.4s ease;padding:0 0}.fa-item.open .fa-a{max-height:200px;padding:0 0 20px}.fa-a-text{font-size:14px;line-height:1.7;color:rgba(255,255,255,0.5);margin:0}</style><div class="fa-wrap"><div class="fa-item open"><button class="fa-q"><span class="fa-q-text">What services do you offer?</span><span class="fa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span></button><div class="fa-a"><p class="fa-a-text">We offer a comprehensive suite of design and development services including branding, web design, mobile apps, and digital strategy consulting.</p></div></div><div class="fa-item"><button class="fa-q"><span class="fa-q-text">How long does a typical project take?</span><span class="fa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span></button><div class="fa-a"><p class="fa-a-text">Project timelines vary based on scope and complexity. A typical website project takes 4-8 weeks from kickoff to launch.</p></div></div><div class="fa-item"><button class="fa-q"><span class="fa-q-text">Do you provide ongoing support?</span><span class="fa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span></button><div class="fa-a"><p class="fa-a-text">Yes, we offer maintenance packages and ongoing support to ensure your website stays up-to-date and performs optimally.</p></div></div><div class="fa-item"><button class="fa-q"><span class="fa-q-text">What is your pricing model?</span><span class="fa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span></button><div class="fa-a"><p class="fa-a-text">We offer both project-based and retainer pricing. Each project is quoted individually based on requirements and scope.</p></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-faq-simple',
+    label: 'FAQ Simple List',
+    category: 'components',
+    subcategory: 'faq',
+    tags: ['faq', 'simple', 'list', 'questions', 'visible'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'FAQ Simple',
+      defaultStyle: { width: '100%', minHeight: '400px' },
+      defaultContent: {
+        html: `<style>.fs-wrap{max-width:600px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.fs-item{padding:28px 0;border-bottom:1px solid rgba(255,255,255,0.06)}.fs-item:last-child{border-bottom:none}.fs-q{font-size:17px;font-weight:600;color:#f0f0f0;margin:0 0 10px}.fs-a{font-size:14px;line-height:1.7;color:rgba(255,255,255,0.5);margin:0}</style><div class="fs-wrap"><div class="fs-item"><h4 class="fs-q">What makes your service unique?</h4><p class="fs-a">We combine strategy, design, and technology to deliver premium digital experiences that drive measurable results for ambitious brands.</p></div><div class="fs-item"><h4 class="fs-q">Can I request revisions during the project?</h4><p class="fs-a">Absolutely. Each project phase includes revision rounds to ensure the final product perfectly matches your vision and goals.</p></div><div class="fs-item"><h4 class="fs-q">Do you work with international clients?</h4><p class="fs-a">Yes, we work with clients globally. Our process is designed for seamless remote collaboration across time zones.</p></div><div class="fs-item"><h4 class="fs-q">What technologies do you use?</h4><p class="fs-a">We use cutting-edge technologies including React, Next.js, Node.js, and modern design tools to build fast, scalable, and beautiful products.</p></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-faq-two-col',
+    label: 'FAQ Two Columns',
+    category: 'components',
+    subcategory: 'faq',
+    tags: ['faq', 'two-column', 'split', 'layout', 'heading'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'FAQ Two Columns',
+      defaultStyle: { width: '100%', minHeight: '380px' },
+      defaultContent: {
+        html: `<style>.ft-wrap{display:flex;gap:60px;max-width:800px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;align-items:flex-start;flex-wrap:wrap}.ft-left{flex:0 0 240px}.ft-heading{font-size:32px;font-weight:700;color:#f0f0f0;margin:0 0 12px;line-height:1.2}.ft-sub{font-size:14px;color:rgba(255,255,255,0.4);margin:0;line-height:1.6}.ft-right{flex:1;min-width:300px}.ft-item{border-bottom:1px solid rgba(255,255,255,0.06)}.ft-q{width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 0;background:none;border:none;cursor:pointer;text-align:left;font-family:inherit}.ft-q-text{font-size:15px;font-weight:500;color:#f0f0f0;flex:1;padding-right:12px}.ft-chevron{width:16px;height:16px;color:rgba(255,255,255,0.3);transition:transform 0.3s;flex-shrink:0}.ft-item.open .ft-chevron{transform:rotate(180deg);color:#638BFF}.ft-a{max-height:0;overflow:hidden;transition:max-height 0.4s ease}.ft-item.open .ft-a{max-height:150px}.ft-a-text{font-size:14px;line-height:1.7;color:rgba(255,255,255,0.45);margin:0;padding-bottom:18px}</style><div class="ft-wrap"><div class="ft-left"><h2 class="ft-heading">Frequently Asked Questions</h2><p class="ft-sub">Everything you need to know about our services.</p></div><div class="ft-right"><div class="ft-item open"><button class="ft-q"><span class="ft-q-text">How do I get started?</span><svg class="ft-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="ft-a"><p class="ft-a-text">Simply reach out through our contact form or schedule a free consultation call. We'll discuss your needs and create a tailored proposal.</p></div></div><div class="ft-item"><button class="ft-q"><span class="ft-q-text">What is your turnaround time?</span><svg class="ft-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="ft-a"><p class="ft-a-text">Most projects are delivered within 4-8 weeks, depending on scope and complexity.</p></div></div><div class="ft-item"><button class="ft-q"><span class="ft-q-text">Do you offer refunds?</span><svg class="ft-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="ft-a"><p class="ft-a-text">We work in milestone-based phases. If you're not satisfied after the first milestone, we offer a full refund.</p></div></div></div></div>`
+      },
+    },
+  },
+  {
+    id: 'comp-faq-cards',
+    label: 'FAQ Cards Grid',
+    category: 'components',
+    subcategory: 'faq',
+    tags: ['faq', 'cards', 'grid', 'glassmorphic', 'questions'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'FAQ Cards',
+      defaultStyle: { width: '100%', minHeight: '360px' },
+      defaultContent: {
+        html: `<style>.fc-wrap{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:700px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif}.fc-card{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:28px;transition:border-color 0.3s,transform 0.3s}.fc-card:hover{border-color:rgba(99,139,255,0.2);transform:translateY(-2px)}.fc-q{font-size:15px;font-weight:600;color:#f0f0f0;margin:0 0 10px;line-height:1.4}.fc-a{font-size:13px;line-height:1.7;color:rgba(255,255,255,0.45);margin:0}</style><div class="fc-wrap"><div class="fc-card"><h4 class="fc-q">Is there a free trial?</h4><p class="fc-a">Yes, we offer a 14-day free trial with full access to all features. No credit card required.</p></div><div class="fc-card"><h4 class="fc-q">Can I cancel anytime?</h4><p class="fc-a">Absolutely. You can cancel your subscription at any time with no cancellation fees or hidden charges.</p></div><div class="fc-card"><h4 class="fc-q">Do you offer team plans?</h4><p class="fc-a">Yes, our Pro and Enterprise plans support unlimited team members with role-based access controls.</p></div><div class="fc-card"><h4 class="fc-q">How secure is my data?</h4><p class="fc-a">We use enterprise-grade encryption, regular backups, and comply with GDPR and SOC 2 standards.</p></div></div>`
+      },
+    },
+  },
+]
+
 export const LIBRARY_COMPONENTS: LibraryElementItem[] = [
   ...BUTTONS,
   ...BADGES,
@@ -2463,4 +4005,18 @@ export const LIBRARY_COMPONENTS: LibraryElementItem[] = [
   ...INTERACTIVE_PREMIUM,
   ...CONTENT_PREMIUM,
   ...SITE_INSPIRED,
+  ...NAVBARS_FULL,
+  ...FOOTERS_FULL,
+  ...CTA_SECTIONS,
+  ...HERO_SECTIONS,
+  ...FEATURE_SECTIONS,
+  ...SOCIAL_PROOF,
+  ...BLOG_SECTIONS,
+  ...TEAM_SECTIONS,
+  ...GALLERY_SECTIONS,
+  ...MISC_SECTIONS,
+  ...FORMS,
+  ...TESTIMONIALS,
+  ...PRICING,
+  ...FAQ_COMPONENTS,
 ]
