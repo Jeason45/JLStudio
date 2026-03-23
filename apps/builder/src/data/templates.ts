@@ -2086,7 +2086,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     name: 'Obscura — Studio Photo',
     description: 'Template studio photo commercial premium — noir profond/or, Playfair Display, dark moody, galerie portfolio, slider parallax, services corporate',
     category: 'photographe',
-    universe: 'dark',
+    universe: 'luxe',
     emoji: '\uD83D\uDCF7',
     preview: 'from-gray-800 to-gray-900',
     brand: {
@@ -2587,7 +2587,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     name: 'Atelier Carr\u00e9 \u2014 Architecture & Design',
     description: 'Template premium pour cabinet d\'architecture haut de gamme \u2014 projets, services, agence, t\u00e9moignages, blog et pages l\u00e9gales',
     category: 'architecte',
-    universe: 'minimal',
+    universe: 'corporate',
     emoji: '\uD83C\uDFD7\uFE0F',
     preview: 'from-stone-600 to-stone-800',
     brand: {
@@ -2708,7 +2708,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     name: 'Encre — Studio de Tatouage',
     description: 'Template premium pour studio de tatouage avec design dark, artistique et edgy',
     category: 'tatoueur',
-    universe: 'dark' as TemplateUniverse,
+    universe: 'bold',
     emoji: '\uD83D\uDD8B\uFE0F',
     preview: 'from-gray-900 to-black',
     brand: {
@@ -2950,7 +2950,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     name: 'Pulse — DJ & Événementiel',
     description: 'Site premium pour DJ professionnel et événementiel — events, mixes, galerie, témoignages, blog et pages légales',
     category: 'dj',
-    universe: 'dark',
+    universe: 'bold',
     emoji: '🎧',
     preview: 'from-purple-600 to-pink-600',
     brand: {
@@ -3314,7 +3314,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     name: 'Z\u00e9nith \u2014 Yoga & Pilates',
     description: 'Site premium studio yoga & pilates \u2014 cours, planning, instructeurs, t\u00e9moignages, blog et pages l\u00e9gales',
     category: 'yoga',
-    universe: 'zen',
+    universe: 'luxe',
     emoji: '\ud83e\uddd8',
     preview: 'from-violet-400 to-purple-600',
     brand: {
@@ -3436,7 +3436,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     name: 'Miel — Pâtisserie Artisanale',
     description: 'Site premium pour pâtisserie artisanale haut de gamme — créations signature, commandes sur mesure, histoire de la maison, blog et pages légales',
     category: 'patisserie',
-    universe: 'warm',
+    universe: 'luxe',
     emoji: '🍰',
     preview: 'from-amber-400 to-orange-500',
     brand: {
@@ -3681,7 +3681,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     name: 'JL Studio — Agence Web Premium',
     description: 'Site vitrine premium pour JL Studio — agence web haut de gamme, portfolio clients, services sur-mesure, blog et pages completes',
     category: 'agency',
-    universe: 'dark',
+    universe: 'bold',
     emoji: '⚡',
     preview: 'from-blue-600 to-indigo-800',
     brand: {
