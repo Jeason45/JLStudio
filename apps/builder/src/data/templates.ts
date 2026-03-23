@@ -165,7 +165,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     preview: 'from-rose-500 to-orange-500',
     brand: {
       colors: { primary: '#E11D48', secondary: '#0F172A', accent: '#E11D48', background: '#FFFFFF', foreground: '#0F172A', muted: '#F8FAFC' },
-      typography: { headingFont: 'DM Sans', bodyFont: 'Inter', defaultWeight: '500' },
+      typography: { heading: 'DM Sans', body: 'Inter', size: 'default' },
       borderRadius: 'lg',
       spacing: 'relaxed',
     },
@@ -285,7 +285,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     preview: 'from-slate-600 to-blue-700',
     brand: {
       colors: { primary: '#1E3A5F', secondary: '#0F172A', accent: '#2563EB', background: '#FFFFFF', foreground: '#0F172A', muted: '#F1F5F9' },
-      typography: { headingFont: 'DM Sans', bodyFont: 'Inter', defaultWeight: '500' },
+      typography: { heading: 'DM Sans', body: 'Inter', size: 'default' },
       borderRadius: 'sm',
       spacing: 'relaxed',
     },
@@ -405,7 +405,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     preview: 'from-amber-600 to-yellow-500',
     brand: {
       colors: { primary: '#1A1A1A', secondary: '#2D2D2D', accent: '#C4A76C', background: '#FAFAF8', foreground: '#1A1A1A', muted: '#F5F5F0' },
-      typography: { headingFont: 'Cormorant Garamond', bodyFont: 'Inter', defaultWeight: '400' },
+      typography: { heading: 'Cormorant Garamond', body: 'Inter', size: 'default' },
       borderRadius: 'none',
       spacing: 'relaxed',
     },
@@ -522,9 +522,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     preview: 'from-cyan-500 to-blue-600',
     brand: {
       colors: { primary: '#0F172A', secondary: '#1E293B', accent: '#06B6D4', background: '#0F172A', foreground: '#F8FAFC', muted: '#1E293B' },
-      typography: { headingFont: 'JetBrains Mono', bodyFont: 'Inter', defaultWeight: '500' },
+      typography: { heading: 'JetBrains Mono', body: 'Inter', size: 'default' },
       borderRadius: 'lg',
-      spacing: 'balanced',
+      spacing: 'default',
     },
     sections: [
       { type: 'site-header', variant: 'glass', content: { logo: 'Lucas.dev', links: [{ id: '1', label: 'Projets', href: '/projets' }, { id: '2', label: 'Stack', href: '/stack' }, { id: '3', label: 'À propos', href: '/a-propos' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Contact', href: '/contact' }], ctaLabel: 'Me contacter', ctaHref: '/contact' }, style: { background: 'dark', paddingY: 'none' }, visible: true },
@@ -641,9 +641,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     preview: 'from-emerald-500 to-teal-600',
     brand: {
       colors: { primary: '#065F46', secondary: '#064E3B', accent: '#10B981', background: '#FAFAF9', foreground: '#1C1917', muted: '#F5F5F4' },
-      typography: { headingFont: 'DM Serif Display', bodyFont: 'Inter', defaultWeight: '400' },
+      typography: { heading: 'DM Serif Display', body: 'Inter', size: 'default' },
       borderRadius: 'md',
-      spacing: 'balanced',
+      spacing: 'default',
     },
     sections: [
       { type: 'site-header', variant: 'ecommerce', content: { logo: 'NaturShop', links: [{ id: '1', label: 'Boutique', href: '/boutique' }, { id: '2', label: 'Collections', href: '/collections' }, { id: '3', label: 'Notre Histoire', href: '/notre-histoire' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Contact', href: '/contact' }], ctaLabel: 'Panier (0)', ctaHref: '#' }, style: { background: 'white', paddingY: 'none' }, visible: true },
@@ -2350,7 +2350,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       colors: { primary: '#0A0A0A', secondary: '#F97316', accent: '#F97316', background: '#0A0A0A', foreground: '#FFFFFF', muted: '#1A1A1A' },
       typography: { heading: "'Bebas Neue', 'Impact', sans-serif", body: "'Inter', sans-serif", size: 'default' as const },
       borderRadius: 'none' as const,
-      spacing: 'balanced' as const,
+      spacing: 'default' as const,
     },
     sections: [
       { type: 'site-header', variant: 'forge', content: { logo: 'FORGE', links: [{ id: '1', label: 'Programmes', href: '/programmes' }, { id: '2', label: 'Coaching', href: '/coaching' }, { id: '3', label: 'Résultats', href: '/resultats' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Contact', href: '/contact' }], ctaLabel: 'Réserver ma séance', ctaHref: '/contact' }, style: { background: 'dark', paddingY: 'none' }, visible: true },
@@ -2714,7 +2714,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       colors: { primary: '#0A0A0A', secondary: '#D4A574', accent: '#D4A574', background: '#0A0A0A', foreground: '#F5F5F5', muted: '#1A1A1A' },
       typography: { heading: "'Space Grotesk', sans-serif", body: "'Inter', sans-serif", size: 'default' as const },
       borderRadius: 'none' as const,
-      spacing: 'balanced' as const,
+      spacing: 'default' as const,
     },
     sections: [
       { type: 'site-header', variant: 'encre', content: { logo: 'Encre', links: [{ id: '1', label: 'Galerie', href: '/galerie' }, { id: '2', label: 'Styles', href: '/styles' }, { id: '3', label: 'Artistes', href: '/artistes' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Contact', href: '/contact' }], ctaLabel: 'R\u00e9server', ctaHref: '/contact' }, style: { background: 'dark' as any, paddingY: 'none' }, visible: true },
@@ -2956,7 +2956,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       colors: { primary: '#A855F7', secondary: '#EC4899', accent: '#A855F7', background: '#0A0A0A', foreground: '#FAFAFA', muted: '#1A1A2E' },
       typography: { heading: "'Space Grotesk', sans-serif", body: "'Inter', sans-serif", size: 'default' as const },
       borderRadius: 'lg' as const,
-      spacing: 'balanced' as const,
+      spacing: 'default' as const,
     },
     sections: [
       { type: 'site-header', variant: 'pulse', content: { logo: 'Pulse', links: [{ id: '1', label: 'Events', href: '/events' }, { id: '2', label: 'Mixes', href: '/mixes' }, { id: '3', label: 'À propos', href: '/a-propos' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Contact', href: '/contact' }], ctaLabel: 'Réserver', ctaHref: '/contact' }, style: { background: 'dark', paddingY: 'none' }, visible: true },
@@ -3197,7 +3197,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       colors: { primary: '#0F0F0F', secondary: '#84CC16', accent: '#84CC16', background: '#0F0F0F', foreground: '#FAFAFA', muted: '#1A1A1A' },
       typography: { heading: "'Bebas Neue', sans-serif", body: "'Inter', sans-serif", size: 'default' as const },
       borderRadius: 'none' as const,
-      spacing: 'balanced' as const,
+      spacing: 'default' as const,
     },
     sections: [
       { type: 'site-header', variant: 'ascent', content: { logo: 'Ascent', links: [{ id: '1', label: 'Programmes', href: '/programmes' }, { id: '2', label: 'Coaching', href: '/coaching' }, { id: '3', label: 'La Salle', href: '/salle' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Contact', href: '/contact' }], ctaLabel: 'Essai gratuit', ctaHref: '/contact' }, style: { background: 'dark' as any, paddingY: 'none' }, visible: true },
@@ -3564,7 +3564,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       colors: { primary: '#312E81', secondary: '#A78BFA', accent: '#A78BFA', background: '#FFFFFF', foreground: '#1E1B4B', muted: '#F5F3FF' },
       typography: { heading: "'DM Sans', sans-serif", body: "'DM Sans', sans-serif", size: 'default' as const },
       borderRadius: 'lg' as const,
-      spacing: 'balanced' as const,
+      spacing: 'default' as const,
     },
     sections: [
       { type: 'site-header', variant: 'prisme', content: { logo: 'Prisme', links: [{ id: '1', label: 'Collections', href: '/collections' }, { id: '2', label: 'Services', href: '/services' }, { id: '3', label: 'La Boutique', href: '/boutique' }, { id: '4', label: 'Blog', href: '/blog' }, { id: '5', label: 'Contact', href: '/contact' }], ctaLabel: 'Prendre rendez-vous', ctaHref: '/contact' }, style: { background: 'white', paddingY: 'none' }, visible: true },
