@@ -6,6 +6,7 @@ export interface TemplatePageDef {
   slug: string
   title: string
   sections: Omit<SectionConfig, 'id'>[]
+  isUtilityPage?: boolean
 }
 
 export interface PageTemplate {
