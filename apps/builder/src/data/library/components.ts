@@ -4489,6 +4489,192 @@ const MAP_SECTIONS: LibraryElementItem[] = [
   },
 ]
 
+// ─── SLIDER SECTIONS (6 premium presets) ───
+
+const SLIDER_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-slider-hero',
+    label: 'Hero Slider',
+    category: 'components',
+    subcategory: 'sliders',
+    tags: ['slider', 'hero', 'fullscreen', 'carousel', 'autoplay', 'cta'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Hero Slider',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<div class="jl-hero-slider" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-hs-wrap{position:relative;width:100%;min-height:600px;overflow:hidden;background:#0a0a0a}.jl-hs-track{display:flex;width:300%;transition:transform 0.8s cubic-bezier(0.22,1,0.36,1)}.jl-hs-slide{width:33.333%;min-height:600px;position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0}.jl-hs-slide::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.7) 100%);z-index:1}.jl-hs-s1{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)}.jl-hs-s2{background:linear-gradient(135deg,#2d1b4e 0%,#1a1a2e 50%,#0f0f1a 100%)}.jl-hs-s3{background:linear-gradient(135deg,#0f3460 0%,#1a1a2e 50%,#16213e 100%)}.jl-hs-content{position:relative;z-index:2;text-align:center;max-width:680px;padding:0 40px}.jl-hs-content h2{font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#fff;margin:0 0 20px;line-height:1.1;letter-spacing:-0.02em}.jl-hs-content p{font-size:1.125rem;color:rgba(255,255,255,0.65);margin:0 0 36px;line-height:1.6}.jl-hs-cta{display:inline-block;padding:16px 40px;background:rgba(99,139,255,0.9);color:#fff;font-size:0.9375rem;font-weight:600;border-radius:8px;text-decoration:none;transition:all 0.3s ease;letter-spacing:0.01em}.jl-hs-cta:hover{background:#638BFF;transform:translateY(-2px);box-shadow:0 8px 24px rgba(99,139,255,0.3)}.jl-hs-dots{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:3}.jl-hs-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:all 0.3s}.jl-hs-dot.active{background:#638BFF;border-color:#638BFF;box-shadow:0 0 12px rgba(99,139,255,0.4)}.jl-hs-arrows{position:absolute;top:50%;width:100%;display:flex;justify-content:space-between;padding:0 24px;box-sizing:border-box;z-index:3;transform:translateY(-50%);pointer-events:none}.jl-hs-arrow{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:all;transition:all 0.3s}.jl-hs-arrow:hover{background:rgba(255,255,255,0.15)}.jl-hs-arrow svg{width:20px;height:20px;color:#fff}</style><div class="jl-hs-wrap"><div class="jl-hs-track"><div class="jl-hs-slide jl-hs-s1"><div class="jl-hs-content"><h2>Crafting Digital Excellence</h2><p>We design premium experiences that elevate your brand above the competition.</p><a class="jl-hs-cta" href="#">Discover More</a></div></div><div class="jl-hs-slide jl-hs-s2"><div class="jl-hs-content"><h2>Innovation Meets Design</h2><p>Every pixel, every interaction, meticulously crafted for perfection.</p><a class="jl-hs-cta" href="#">Our Process</a></div></div><div class="jl-hs-slide jl-hs-s3"><div class="jl-hs-content"><h2>Results That Matter</h2><p>Transforming visions into high-converting digital masterpieces.</p><a class="jl-hs-cta" href="#">Get Started</a></div></div></div><div class="jl-hs-dots"><div class="jl-hs-dot active"></div><div class="jl-hs-dot"></div><div class="jl-hs-dot"></div></div><div class="jl-hs-arrows"><div class="jl-hs-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></div><div class="jl-hs-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></div></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-slider-testimonials',
+    label: 'Testimonials Slider',
+    category: 'components',
+    subcategory: 'sliders',
+    tags: ['slider', 'testimonials', 'quote', 'social-proof', 'carousel'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Testimonials Slider',
+      defaultStyle: { width: '100%', minHeight: '420px' },
+      defaultContent: {
+        html: `<div class="jl-test-slider" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-ts-wrap{position:relative;width:100%;min-height:420px;background:#0a0a0a;border-radius:24px;padding:80px 60px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid rgba(255,255,255,0.06)}.jl-ts-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(99,139,255,0.06) 0%,transparent 60%)}.jl-ts-content{position:relative;z-index:1;max-width:640px;text-align:center}.jl-ts-quote-icon{font-size:64px;line-height:1;color:rgba(99,139,255,0.2);font-family:Georgia,serif;margin-bottom:12px}.jl-ts-quote{font-size:1.375rem;font-weight:400;color:rgba(255,255,255,0.85);line-height:1.7;margin:0 0 40px;font-style:italic;letter-spacing:0.01em}.jl-ts-author{display:flex;flex-direction:column;align-items:center;gap:8px}.jl-ts-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(99,139,255,0.3),rgba(99,139,255,0.1));border:2px solid rgba(99,139,255,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#638BFF}.jl-ts-name{font-size:1rem;font-weight:600;color:#f0f0f0;margin:0}.jl-ts-role{font-size:0.8125rem;color:rgba(255,255,255,0.4);margin:0}.jl-ts-arrows{position:absolute;top:50%;width:100%;display:flex;justify-content:space-between;padding:0 20px;box-sizing:border-box;transform:translateY(-50%);z-index:2;pointer-events:none}.jl-ts-arrow{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.06);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:all;transition:all 0.3s}.jl-ts-arrow:hover{background:rgba(255,255,255,0.12)}.jl-ts-arrow svg{width:18px;height:18px;color:rgba(255,255,255,0.6)}</style><div class="jl-ts-wrap"><div class="jl-ts-bg"></div><div class="jl-ts-content"><div class="jl-ts-quote-icon">&ldquo;</div><p class="jl-ts-quote">The attention to detail and creative vision exceeded every expectation. Our brand has never looked more refined and professional. Truly exceptional work from start to finish.</p><div class="jl-ts-author"><div class="jl-ts-avatar">SM</div><p class="jl-ts-name">Sarah Mitchell</p><p class="jl-ts-role">CEO, Luminary Design</p></div></div><div class="jl-ts-arrows"><div class="jl-ts-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></div><div class="jl-ts-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></div></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-slider-cards',
+    label: 'Card Slider',
+    category: 'components',
+    subcategory: 'sliders',
+    tags: ['slider', 'cards', 'horizontal', 'scroll', 'features', 'services'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Card Slider',
+      defaultStyle: { width: '100%', minHeight: '420px' },
+      defaultContent: {
+        html: `<div class="jl-card-slider" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-cs-wrap{position:relative;padding:60px 0;background:#0a0a0a}.jl-cs-header{max-width:820px;margin:0 auto 40px;padding:0 40px;display:flex;align-items:flex-end;justify-content:space-between}.jl-cs-header h2{font-size:2rem;font-weight:700;color:#f0f0f0;margin:0;letter-spacing:-0.02em}.jl-cs-nav{display:flex;gap:8px}.jl-cs-nav-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s}.jl-cs-nav-btn:hover{background:rgba(99,139,255,0.15);border-color:rgba(99,139,255,0.3)}.jl-cs-nav-btn svg{width:16px;height:16px;color:rgba(255,255,255,0.6)}.jl-cs-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 40px 20px;scrollbar-width:none;-ms-overflow-style:none;max-width:860px;margin:0 auto}.jl-cs-track::-webkit-scrollbar{display:none}.jl-cs-card{flex:0 0 240px;scroll-snap-align:start;padding:36px 28px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;transition:all 0.3s}.jl-cs-card:hover{border-color:rgba(99,139,255,0.2);transform:translateY(-4px)}.jl-cs-icon{width:48px;height:48px;border-radius:14px;background:rgba(99,139,255,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:24px}.jl-cs-icon svg{width:22px;height:22px;color:#638BFF}.jl-cs-card h3{font-size:1.0625rem;font-weight:600;color:#f0f0f0;margin:0 0 10px}.jl-cs-card p{font-size:0.875rem;color:rgba(255,255,255,0.45);margin:0;line-height:1.6}</style><div class="jl-cs-wrap"><div class="jl-cs-header"><h2>Our Services</h2><div class="jl-cs-nav"><div class="jl-cs-nav-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></div><div class="jl-cs-nav-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></div></div></div><div class="jl-cs-track"><div class="jl-cs-card"><div class="jl-cs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div><h3>Web Design</h3><p>Premium custom websites that captivate and convert your audience.</p></div><div class="jl-cs-card"><div class="jl-cs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h3>Branding</h3><p>Distinctive brand identities that resonate with your target market.</p></div><div class="jl-cs-card"><div class="jl-cs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg></div><h3>Analytics</h3><p>Data-driven insights to optimize performance and growth.</p></div><div class="jl-cs-card"><div class="jl-cs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>Consulting</h3><p>Strategic guidance to elevate your digital presence and ROI.</p></div></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-slider-fullpage',
+    label: 'Full Page Slider',
+    category: 'components',
+    subcategory: 'sliders',
+    tags: ['slider', 'fullpage', 'vertical', 'scroll-snap', 'sections', 'immersive'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Full Page Slider',
+      defaultStyle: { width: '100%', minHeight: '600px' },
+      defaultContent: {
+        html: `<div class="jl-fp-slider" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-fp-wrap{width:100%;height:600px;overflow-y:auto;scroll-snap-type:y mandatory;border-radius:20px;border:1px solid rgba(255,255,255,0.08)}.jl-fp-section{width:100%;height:600px;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}.jl-fp-s1{background:linear-gradient(135deg,#0f0f1a 0%,#1a1a2e 50%,#16213e 100%)}.jl-fp-s2{background:linear-gradient(135deg,#1a0f2e 0%,#2d1b4e 50%,#1a1a2e 100%)}.jl-fp-s3{background:linear-gradient(135deg,#0f2e1a 0%,#1a2e1a 50%,#0a1a0f 100%)}.jl-fp-content{text-align:center;max-width:560px;padding:0 40px;position:relative;z-index:1}.jl-fp-badge{display:inline-block;padding:6px 16px;border-radius:99px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);font-size:0.75rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:24px}.jl-fp-content h2{font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#fff;margin:0 0 16px;line-height:1.15;letter-spacing:-0.02em}.jl-fp-content p{font-size:1.0625rem;color:rgba(255,255,255,0.55);margin:0 0 32px;line-height:1.65}.jl-fp-cta{display:inline-block;padding:14px 36px;border-radius:8px;font-size:0.875rem;font-weight:600;text-decoration:none;transition:all 0.3s}.jl-fp-cta-primary{background:rgba(99,139,255,0.85);color:#fff}.jl-fp-cta-primary:hover{background:#638BFF;box-shadow:0 8px 24px rgba(99,139,255,0.3)}.jl-fp-cta-outline{background:transparent;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.2)}.jl-fp-cta-outline:hover{border-color:rgba(255,255,255,0.4);color:#fff}.jl-fp-dots{position:absolute;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:2}.jl-fp-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.1);cursor:pointer;transition:all 0.3s}.jl-fp-dot.active{background:#638BFF;border-color:#638BFF;height:24px;border-radius:4px}.jl-fp-scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:rgba(255,255,255,0.3);font-size:0.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em}.jl-fp-scroll-hint svg{width:16px;height:16px;animation:jl-fp-bounce 2s infinite}@keyframes jl-fp-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}</style><div class="jl-fp-wrap"><div class="jl-fp-section jl-fp-s1"><div class="jl-fp-content"><span class="jl-fp-badge">Section 01</span><h2>Design Without Limits</h2><p>Push creative boundaries with our innovative design system built for the modern web.</p><a class="jl-fp-cta jl-fp-cta-primary" href="#">Explore</a></div><div class="jl-fp-scroll-hint"><span>Scroll</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></div></div><div class="jl-fp-section jl-fp-s2"><div class="jl-fp-content"><span class="jl-fp-badge">Section 02</span><h2>Powered by Innovation</h2><p>Cutting-edge technology meets timeless design principles for exceptional results.</p><a class="jl-fp-cta jl-fp-cta-outline" href="#">Learn More</a></div></div><div class="jl-fp-section jl-fp-s3"><div class="jl-fp-content"><span class="jl-fp-badge">Section 03</span><h2>Sustainable Growth</h2><p>Build a lasting digital presence that scales with your ambitions and goals.</p><a class="jl-fp-cta jl-fp-cta-primary" href="#">Get Started</a></div></div></div><div class="jl-fp-dots"><div class="jl-fp-dot active"></div><div class="jl-fp-dot"></div><div class="jl-fp-dot"></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-slider-before-after',
+    label: 'Before/After Slider',
+    category: 'components',
+    subcategory: 'sliders',
+    tags: ['slider', 'before-after', 'comparison', 'drag', 'interactive'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Before/After Slider',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<div class="jl-ba-slider" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-ba-wrap{position:relative;width:100%;max-width:780px;margin:0 auto;aspect-ratio:16/10;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);cursor:col-resize}.jl-ba-before,.jl-ba-after{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}.jl-ba-before{background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%);z-index:1;clip-path:inset(0 50% 0 0)}.jl-ba-after{background:linear-gradient(135deg,#0f3460 0%,#1a1a2e 50%,#16213e 100%);z-index:0}.jl-ba-label{position:absolute;top:20px;padding:6px 16px;border-radius:99px;font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;z-index:3}.jl-ba-before .jl-ba-label{left:20px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5)}.jl-ba-after .jl-ba-label{right:20px;background:rgba(99,139,255,0.15);color:#638BFF}.jl-ba-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:40px 40px}.jl-ba-text{position:relative;z-index:1;text-align:center}.jl-ba-before .jl-ba-text h3{font-size:2rem;font-weight:700;color:rgba(255,255,255,0.25);margin:0 0 8px}.jl-ba-before .jl-ba-text p{font-size:0.875rem;color:rgba(255,255,255,0.15);margin:0}.jl-ba-after .jl-ba-text h3{font-size:2rem;font-weight:700;color:#f0f0f0;margin:0 0 8px}.jl-ba-after .jl-ba-text p{font-size:0.875rem;color:rgba(255,255,255,0.5);margin:0}.jl-ba-divider{position:absolute;top:0;bottom:0;left:50%;width:3px;background:rgba(255,255,255,0.8);z-index:4;transform:translateX(-50%)}.jl-ba-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.95);box-shadow:0 4px 20px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:5;cursor:col-resize}.jl-ba-handle svg{width:20px;height:20px;color:#0a0a0a}</style><div class="jl-ba-wrap"><div class="jl-ba-before"><div class="jl-ba-grid"></div><span class="jl-ba-label">Before</span><div class="jl-ba-text"><h3>Original</h3><p>Standard design</p></div></div><div class="jl-ba-after"><div class="jl-ba-grid"></div><span class="jl-ba-label">After</span><div class="jl-ba-text"><h3>Redesigned</h3><p>Premium experience</p></div></div><div class="jl-ba-divider"></div><div class="jl-ba-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M8 18l-4-6 4-6"/><path d="M16 18l4-6-4-6"/></svg></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-slider-image-gallery',
+    label: 'Image Gallery Slider',
+    category: 'components',
+    subcategory: 'sliders',
+    tags: ['slider', 'gallery', 'thumbnails', 'images', 'lightbox', 'portfolio'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Image Gallery Slider',
+      defaultStyle: { width: '100%', minHeight: '520px' },
+      defaultContent: {
+        html: `<div class="jl-ig-slider" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-ig-wrap{max-width:780px;margin:0 auto}.jl-ig-main{position:relative;width:100%;aspect-ratio:16/10;background:#0a0a0a;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);margin-bottom:16px;display:flex;align-items:center;justify-content:center}.jl-ig-main-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:32px 32px}.jl-ig-main-content{position:relative;z-index:1;text-align:center}.jl-ig-main-content svg{width:48px;height:48px;color:rgba(99,139,255,0.4);margin-bottom:12px}.jl-ig-main-content p{font-size:0.875rem;color:rgba(255,255,255,0.3);margin:0}.jl-ig-counter{position:absolute;top:16px;right:16px;padding:4px 12px;border-radius:99px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);font-size:0.75rem;font-weight:600;color:rgba(255,255,255,0.6);z-index:2}.jl-ig-thumbs{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:4px}.jl-ig-thumbs::-webkit-scrollbar{display:none}.jl-ig-thumb{flex:0 0 120px;aspect-ratio:16/10;background:#0a0a0a;border-radius:12px;overflow:hidden;border:2px solid rgba(255,255,255,0.06);cursor:pointer;transition:all 0.3s;position:relative;display:flex;align-items:center;justify-content:center}.jl-ig-thumb:hover{border-color:rgba(99,139,255,0.3)}.jl-ig-thumb.active{border-color:#638BFF;box-shadow:0 0 16px rgba(99,139,255,0.2)}.jl-ig-thumb-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:16px 16px}.jl-ig-thumb-label{position:relative;z-index:1;font-size:0.625rem;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.08em}</style><div class="jl-ig-wrap"><div class="jl-ig-main"><div class="jl-ig-main-pattern"></div><div class="jl-ig-main-content"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg><p>Selected image preview</p></div><span class="jl-ig-counter">1 / 5</span></div><div class="jl-ig-thumbs"><div class="jl-ig-thumb active"><div class="jl-ig-thumb-pattern"></div><span class="jl-ig-thumb-label">IMG 01</span></div><div class="jl-ig-thumb"><div class="jl-ig-thumb-pattern"></div><span class="jl-ig-thumb-label">IMG 02</span></div><div class="jl-ig-thumb"><div class="jl-ig-thumb-pattern"></div><span class="jl-ig-thumb-label">IMG 03</span></div><div class="jl-ig-thumb"><div class="jl-ig-thumb-pattern"></div><span class="jl-ig-thumb-label">IMG 04</span></div><div class="jl-ig-thumb"><div class="jl-ig-thumb-pattern"></div><span class="jl-ig-thumb-label">IMG 05</span></div></div></div></div>`
+      }
+    }
+  },
+]
+
+// ─── PROCESS SECTIONS (5 premium presets) ───
+
+const PROCESS_SECTIONS: LibraryElementItem[] = [
+  {
+    id: 'comp-process-horizontal',
+    label: 'Horizontal Steps',
+    category: 'components',
+    subcategory: 'process',
+    tags: ['process', 'steps', 'horizontal', 'numbered', 'workflow', 'timeline'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Horizontal Steps',
+      defaultStyle: { width: '100%', minHeight: '320px' },
+      defaultContent: {
+        html: `<div class="jl-proc-h" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-ph-wrap{max-width:820px;margin:0 auto;padding:60px 40px}.jl-ph-heading{text-align:center;margin-bottom:56px}.jl-ph-heading h2{font-size:2rem;font-weight:700;color:#f0f0f0;margin:0 0 12px;letter-spacing:-0.02em}.jl-ph-heading p{font-size:1rem;color:rgba(255,255,255,0.4);margin:0}.jl-ph-steps{display:flex;align-items:flex-start;position:relative}.jl-ph-line{position:absolute;top:28px;left:28px;right:28px;height:2px;background:rgba(255,255,255,0.06)}.jl-ph-line-fill{width:75%;height:100%;background:linear-gradient(90deg,#638BFF,rgba(99,139,255,0.2))}.jl-ph-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1}.jl-ph-num{width:56px;height:56px;border-radius:50%;background:#0a0a0a;border:2px solid rgba(99,139,255,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:20px;transition:all 0.3s}.jl-ph-step:hover .jl-ph-num{border-color:#638BFF;box-shadow:0 0 20px rgba(99,139,255,0.2)}.jl-ph-num-inner{width:40px;height:40px;border-radius:50%;background:rgba(99,139,255,0.1);display:flex;align-items:center;justify-content:center}.jl-ph-num-inner svg{width:20px;height:20px;color:#638BFF}.jl-ph-step h3{font-size:0.9375rem;font-weight:600;color:#f0f0f0;margin:0 0 8px}.jl-ph-step p{font-size:0.8125rem;color:rgba(255,255,255,0.4);margin:0;max-width:160px;line-height:1.5}</style><div class="jl-ph-wrap"><div class="jl-ph-heading"><h2>Our Process</h2><p>Four simple steps to bring your vision to life</p></div><div class="jl-ph-steps"><div class="jl-ph-line"><div class="jl-ph-line-fill"></div></div><div class="jl-ph-step"><div class="jl-ph-num"><div class="jl-ph-num-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div></div><h3>Discovery</h3><p>Understanding your goals, audience, and vision</p></div><div class="jl-ph-step"><div class="jl-ph-num"><div class="jl-ph-num-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838.838-2.872a2 2 0 0 1 .506-.854z"/></svg></div></div><h3>Design</h3><p>Crafting unique visuals and user experiences</p></div><div class="jl-ph-step"><div class="jl-ph-num"><div class="jl-ph-num-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div></div><h3>Development</h3><p>Building with clean, performant code</p></div><div class="jl-ph-step"><div class="jl-ph-num"><div class="jl-ph-num-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div></div><h3>Launch</h3><p>Deploying and optimizing for success</p></div></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-process-vertical',
+    label: 'Vertical Timeline',
+    category: 'components',
+    subcategory: 'process',
+    tags: ['process', 'timeline', 'vertical', 'steps', 'alternating'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Vertical Timeline',
+      defaultStyle: { width: '100%', minHeight: '580px' },
+      defaultContent: {
+        html: `<div class="jl-proc-v" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-pv-wrap{max-width:700px;margin:0 auto;padding:60px 40px}.jl-pv-heading{text-align:center;margin-bottom:56px}.jl-pv-heading h2{font-size:2rem;font-weight:700;color:#f0f0f0;margin:0 0 12px;letter-spacing:-0.02em}.jl-pv-heading p{font-size:1rem;color:rgba(255,255,255,0.4);margin:0}.jl-pv-timeline{position:relative;padding-left:0}.jl-pv-line{position:absolute;left:50%;top:0;bottom:0;width:2px;background:rgba(255,255,255,0.06);transform:translateX(-50%)}.jl-pv-item{display:flex;align-items:flex-start;margin-bottom:48px;position:relative}.jl-pv-item:last-child{margin-bottom:0}.jl-pv-item-left{flex:1;text-align:right;padding-right:40px}.jl-pv-item-right{flex:1;text-align:left;padding-left:40px}.jl-pv-dot{position:absolute;left:50%;top:4px;transform:translateX(-50%);width:16px;height:16px;border-radius:50%;background:#0a0a0a;border:3px solid #638BFF;z-index:1;box-shadow:0 0 16px rgba(99,139,255,0.25)}.jl-pv-num{display:inline-block;padding:4px 12px;border-radius:99px;background:rgba(99,139,255,0.1);font-size:0.6875rem;font-weight:700;color:#638BFF;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px}.jl-pv-item h3{font-size:1.0625rem;font-weight:600;color:#f0f0f0;margin:0 0 8px}.jl-pv-item p{font-size:0.875rem;color:rgba(255,255,255,0.45);margin:0;line-height:1.6}</style><div class="jl-pv-wrap"><div class="jl-pv-heading"><h2>How We Work</h2><p>A proven process for exceptional results</p></div><div class="jl-pv-timeline"><div class="jl-pv-line"></div><div class="jl-pv-item"><div class="jl-pv-item-left"><span class="jl-pv-num">Step 01</span><h3>Discovery</h3><p>Deep-dive into your brand, goals, and target audience to build a solid foundation.</p></div><div class="jl-pv-dot"></div><div class="jl-pv-item-right"></div></div><div class="jl-pv-item"><div class="jl-pv-item-left"></div><div class="jl-pv-dot"></div><div class="jl-pv-item-right"><span class="jl-pv-num">Step 02</span><h3>Design</h3><p>Creating wireframes and high-fidelity mockups that bring your vision to life.</p></div></div><div class="jl-pv-item"><div class="jl-pv-item-left"><span class="jl-pv-num">Step 03</span><h3>Development</h3><p>Clean, performant code with pixel-perfect attention to every detail.</p></div><div class="jl-pv-dot"></div><div class="jl-pv-item-right"></div></div><div class="jl-pv-item"><div class="jl-pv-item-left"></div><div class="jl-pv-dot"></div><div class="jl-pv-item-right"><span class="jl-pv-num">Step 04</span><h3>Launch & Optimize</h3><p>Go live with confidence and continuous optimization for peak performance.</p></div></div></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-process-cards',
+    label: 'Step Cards',
+    category: 'components',
+    subcategory: 'process',
+    tags: ['process', 'cards', 'grid', 'numbered', 'glassmorphism', 'steps'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Step Cards',
+      defaultStyle: { width: '100%', minHeight: '480px' },
+      defaultContent: {
+        html: `<div class="jl-proc-cards" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-pc-wrap{max-width:820px;margin:0 auto;padding:60px 40px}.jl-pc-heading{text-align:center;margin-bottom:48px}.jl-pc-heading h2{font-size:2rem;font-weight:700;color:#f0f0f0;margin:0 0 12px;letter-spacing:-0.02em}.jl-pc-heading p{font-size:1rem;color:rgba(255,255,255,0.4);margin:0}.jl-pc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}.jl-pc-card{padding:40px 32px;background:rgba(255,255,255,0.03);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;transition:all 0.4s ease;position:relative;overflow:hidden}.jl-pc-card:hover{border-color:rgba(99,139,255,0.2);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.2)}.jl-pc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(99,139,255,0.3),transparent);opacity:0;transition:opacity 0.4s}.jl-pc-card:hover::before{opacity:1}.jl-pc-number{font-size:3.5rem;font-weight:800;color:rgba(99,139,255,0.12);line-height:1;margin-bottom:20px;font-variant-numeric:tabular-nums}.jl-pc-card h3{font-size:1.125rem;font-weight:600;color:#f0f0f0;margin:0 0 12px}.jl-pc-card p{font-size:0.875rem;color:rgba(255,255,255,0.45);margin:0;line-height:1.65}</style><div class="jl-pc-wrap"><div class="jl-pc-heading"><h2>Our Approach</h2><p>A structured methodology for premium results</p></div><div class="jl-pc-grid"><div class="jl-pc-card"><div class="jl-pc-number">01</div><h3>Discovery & Research</h3><p>We immerse ourselves in your brand, analyzing competitors, audience, and market positioning to craft the perfect strategy.</p></div><div class="jl-pc-card"><div class="jl-pc-number">02</div><h3>Design & Prototyping</h3><p>High-fidelity mockups and interactive prototypes ensure every detail aligns with your vision before development begins.</p></div><div class="jl-pc-card"><div class="jl-pc-number">03</div><h3>Development & Testing</h3><p>Clean, performant code built with modern technologies. Rigorous testing across devices and browsers for flawless execution.</p></div><div class="jl-pc-card"><div class="jl-pc-number">04</div><h3>Launch & Growth</h3><p>Strategic deployment with analytics setup, SEO optimization, and ongoing support to maximize your digital impact.</p></div></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-process-tabs',
+    label: 'Tabbed Process',
+    category: 'components',
+    subcategory: 'process',
+    tags: ['process', 'tabs', 'interactive', 'steps', 'detailed'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Tabbed Process',
+      defaultStyle: { width: '100%', minHeight: '440px' },
+      defaultContent: {
+        html: `<div class="jl-proc-tabs" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-pt-wrap{max-width:780px;margin:0 auto;padding:60px 40px}.jl-pt-heading{text-align:center;margin-bottom:48px}.jl-pt-heading h2{font-size:2rem;font-weight:700;color:#f0f0f0;margin:0 0 12px;letter-spacing:-0.02em}.jl-pt-heading p{font-size:1rem;color:rgba(255,255,255,0.4);margin:0}.jl-pt-tabs{display:flex;gap:4px;padding:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;margin-bottom:36px}.jl-pt-tab{flex:1;padding:14px 8px;border-radius:11px;text-align:center;cursor:pointer;transition:all 0.3s;font-size:0.8125rem;font-weight:600;color:rgba(255,255,255,0.4)}.jl-pt-tab:hover{color:rgba(255,255,255,0.6)}.jl-pt-tab.active{background:rgba(99,139,255,0.12);color:#638BFF;box-shadow:0 2px 12px rgba(99,139,255,0.1)}.jl-pt-content{display:flex;gap:40px;align-items:center;padding:40px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:20px;flex-wrap:wrap}.jl-pt-icon-wrap{flex:0 0 120px;display:flex;align-items:center;justify-content:center}.jl-pt-icon{width:100px;height:100px;border-radius:24px;background:rgba(99,139,255,0.08);border:1px solid rgba(99,139,255,0.15);display:flex;align-items:center;justify-content:center}.jl-pt-icon svg{width:44px;height:44px;color:#638BFF}.jl-pt-detail{flex:1;min-width:280px}.jl-pt-detail h3{font-size:1.375rem;font-weight:700;color:#f0f0f0;margin:0 0 12px}.jl-pt-detail p{font-size:0.9375rem;color:rgba(255,255,255,0.5);margin:0 0 20px;line-height:1.65}.jl-pt-features{display:flex;flex-direction:column;gap:10px}.jl-pt-feature{display:flex;align-items:center;gap:10px;font-size:0.8125rem;color:rgba(255,255,255,0.55)}.jl-pt-feature svg{width:16px;height:16px;color:#638BFF;flex-shrink:0}</style><div class="jl-pt-wrap"><div class="jl-pt-heading"><h2>Our Workflow</h2><p>Click each phase to learn more about our process</p></div><div class="jl-pt-tabs"><div class="jl-pt-tab active">Decouverte</div><div class="jl-pt-tab">Design</div><div class="jl-pt-tab">Developpement</div><div class="jl-pt-tab">Lancement</div></div><div class="jl-pt-content"><div class="jl-pt-icon-wrap"><div class="jl-pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div></div><div class="jl-pt-detail"><h3>Discovery Phase</h3><p>We begin by understanding your brand DNA, business objectives, and target audience through in-depth workshops and research sessions.</p><div class="jl-pt-features"><div class="jl-pt-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Brand & competitor analysis</div><div class="jl-pt-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>User persona development</div><div class="jl-pt-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Strategic roadmap creation</div></div></div></div></div></div>`
+      }
+    }
+  },
+  {
+    id: 'comp-process-progress',
+    label: 'Progress Line',
+    category: 'components',
+    subcategory: 'process',
+    tags: ['process', 'progress', 'line', 'animated', 'nodes', 'steps'],
+    dropType: 'element' as const,
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Progress Line',
+      defaultStyle: { width: '100%', minHeight: '280px' },
+      defaultContent: {
+        html: `<div class="jl-proc-prog" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-pp-wrap{max-width:820px;margin:0 auto;padding:60px 40px}.jl-pp-heading{text-align:center;margin-bottom:56px}.jl-pp-heading h2{font-size:2rem;font-weight:700;color:#f0f0f0;margin:0 0 12px;letter-spacing:-0.02em}.jl-pp-heading p{font-size:1rem;color:rgba(255,255,255,0.4);margin:0}.jl-pp-track{position:relative;display:flex;align-items:flex-start;justify-content:space-between}.jl-pp-line{position:absolute;top:20px;left:40px;right:40px;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}.jl-pp-line-fill{height:100%;width:60%;background:linear-gradient(90deg,#638BFF,rgba(99,139,255,0.4));border-radius:2px;position:relative}.jl-pp-line-fill::after{content:'';position:absolute;right:0;top:-3px;width:9px;height:9px;border-radius:50%;background:#638BFF;box-shadow:0 0 12px rgba(99,139,255,0.5)}.jl-pp-node{display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1;flex:0 0 auto}.jl-pp-dot{width:40px;height:40px;border-radius:50%;background:#0a0a0a;border:3px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:16px;transition:all 0.3s}.jl-pp-dot.done{border-color:#638BFF;background:rgba(99,139,255,0.1)}.jl-pp-dot.done svg{color:#638BFF}.jl-pp-dot.current{border-color:#638BFF;box-shadow:0 0 20px rgba(99,139,255,0.3);animation:jl-pp-pulse 2s infinite}.jl-pp-dot svg{width:16px;height:16px;color:rgba(255,255,255,0.25)}@keyframes jl-pp-pulse{0%,100%{box-shadow:0 0 20px rgba(99,139,255,0.3)}50%{box-shadow:0 0 30px rgba(99,139,255,0.5)}}.jl-pp-node h4{font-size:0.8125rem;font-weight:600;color:#f0f0f0;margin:0 0 4px}.jl-pp-node p{font-size:0.6875rem;color:rgba(255,255,255,0.35);margin:0;max-width:120px}</style><div class="jl-pp-wrap"><div class="jl-pp-heading"><h2>Project Progress</h2><p>Track every milestone of your project journey</p></div><div class="jl-pp-track"><div class="jl-pp-line"><div class="jl-pp-line-fill"></div></div><div class="jl-pp-node"><div class="jl-pp-dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><h4>Brief</h4><p>Requirements gathered</p></div><div class="jl-pp-node"><div class="jl-pp-dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><h4>Wireframes</h4><p>Layout approved</p></div><div class="jl-pp-node"><div class="jl-pp-dot current"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838.838-2.872a2 2 0 0 1 .506-.854z"/></svg></div><h4>Development</h4><p>In progress</p></div><div class="jl-pp-node"><div class="jl-pp-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/></svg></div><h4>Launch</h4><p>Upcoming</p></div></div></div></div>`
+      }
+    }
+  },
+]
+
 export const LIBRARY_COMPONENTS: LibraryElementItem[] = [
   ...BUTTONS,
   ...BADGES,
@@ -4525,4 +4711,6 @@ export const LIBRARY_COMPONENTS: LibraryElementItem[] = [
   ...COMPARISON_SECTIONS,
   ...VIDEO_SECTIONS,
   ...MAP_SECTIONS,
+  ...SLIDER_SECTIONS,
+  ...PROCESS_SECTIONS,
 ]

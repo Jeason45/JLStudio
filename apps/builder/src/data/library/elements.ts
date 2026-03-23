@@ -1931,6 +1931,131 @@ const VIDEO_ELEMENTS: LibraryElementItem[] = [
   },
 ]
 
+// ─── BUTTONS STANDALONE (8 premium presets) ───
+
+const BUTTONS_STANDALONE: LibraryElementItem[] = [
+  {
+    id: 'el-btn-primary',
+    label: 'Primary Button',
+    category: 'elements', subcategory: 'buttons',
+    tags: ['button', 'primary', 'solid', 'cta', 'accent', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Primary Button',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-btn-prim" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-bp-wrap{display:flex;align-items:center;justify-content:center;padding:16px}.jl-bp-btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 36px;background:#638BFF;color:#fff;font-size:0.9375rem;font-weight:600;border-radius:10px;border:none;cursor:pointer;text-decoration:none;letter-spacing:0.01em;transition:all 0.35s cubic-bezier(0.22,1,0.36,1);box-shadow:0 4px 16px rgba(99,139,255,0.25)}.jl-bp-btn:hover{background:#5178e6;transform:translateY(-2px);box-shadow:0 8px 28px rgba(99,139,255,0.35)}.jl-bp-btn:active{transform:translateY(0);box-shadow:0 2px 8px rgba(99,139,255,0.2)}</style><div class="jl-bp-wrap"><a class="jl-bp-btn" href="#">Get Started</a></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-btn-secondary',
+    label: 'Secondary Button',
+    category: 'elements', subcategory: 'buttons',
+    tags: ['button', 'secondary', 'outline', 'border', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Secondary Button',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-btn-sec" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-bs-wrap{display:flex;align-items:center;justify-content:center;padding:16px}.jl-bs-btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 36px;background:transparent;color:rgba(255,255,255,0.8);font-size:0.9375rem;font-weight:600;border-radius:10px;border:1.5px solid rgba(255,255,255,0.2);cursor:pointer;text-decoration:none;letter-spacing:0.01em;transition:all 0.35s cubic-bezier(0.22,1,0.36,1)}.jl-bs-btn:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.4);color:#fff;transform:translateY(-2px)}.jl-bs-btn:active{transform:translateY(0)}</style><div class="jl-bs-wrap"><a class="jl-bs-btn" href="#">Learn More</a></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-btn-ghost',
+    label: 'Ghost Button',
+    category: 'elements', subcategory: 'buttons',
+    tags: ['button', 'ghost', 'text', 'minimal', 'underline', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Ghost Button',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-btn-ghost" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-bg-wrap{display:flex;align-items:center;justify-content:center;padding:16px}.jl-bg-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 4px;background:none;color:rgba(255,255,255,0.6);font-size:0.9375rem;font-weight:500;border:none;cursor:pointer;text-decoration:none;letter-spacing:0.01em;position:relative;transition:color 0.3s}.jl-bg-btn::after{content:'';position:absolute;bottom:6px;left:4px;right:4px;height:1px;background:rgba(255,255,255,0.3);transform:scaleX(0);transform-origin:left;transition:transform 0.4s cubic-bezier(0.22,1,0.36,1)}.jl-bg-btn:hover{color:#fff}.jl-bg-btn:hover::after{transform:scaleX(1)}</style><div class="jl-bg-wrap"><a class="jl-bg-btn" href="#">View Details</a></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-btn-icon',
+    label: 'Icon Button',
+    category: 'elements', subcategory: 'buttons',
+    tags: ['button', 'icon', 'arrow', 'animated', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Icon Button',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-btn-icon" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-bi-wrap{display:flex;align-items:center;justify-content:center;padding:16px}.jl-bi-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.8);font-size:0.9375rem;font-weight:600;border-radius:10px;border:1px solid rgba(255,255,255,0.1);cursor:pointer;text-decoration:none;letter-spacing:0.01em;transition:all 0.35s cubic-bezier(0.22,1,0.36,1)}.jl-bi-btn svg{width:18px;height:18px;transition:transform 0.35s cubic-bezier(0.22,1,0.36,1)}.jl-bi-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff}.jl-bi-btn:hover svg{transform:translateX(4px)}</style><div class="jl-bi-wrap"><a class="jl-bi-btn" href="#">Explore Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-btn-pill',
+    label: 'Pill Button',
+    category: 'elements', subcategory: 'buttons',
+    tags: ['button', 'pill', 'rounded', 'gradient', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Pill Button',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-btn-pill" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-bpl-wrap{display:flex;align-items:center;justify-content:center;padding:16px}.jl-bpl-btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 40px;background:linear-gradient(135deg,#638BFF 0%,#8B5CF6 100%);color:#fff;font-size:0.9375rem;font-weight:600;border-radius:99px;border:none;cursor:pointer;text-decoration:none;letter-spacing:0.01em;transition:all 0.35s cubic-bezier(0.22,1,0.36,1);box-shadow:0 4px 20px rgba(99,139,255,0.3)}.jl-bpl-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(99,139,255,0.4)}.jl-bpl-btn:active{transform:translateY(0);box-shadow:0 2px 12px rgba(99,139,255,0.2)}</style><div class="jl-bpl-wrap"><a class="jl-bpl-btn" href="#">Start Free Trial</a></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-btn-loading',
+    label: 'Loading Button',
+    category: 'elements', subcategory: 'buttons',
+    tags: ['button', 'loading', 'spinner', 'state', 'interactive', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Loading Button',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-btn-load" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-bl-wrap{display:flex;align-items:center;justify-content:center;padding:16px;gap:16px}.jl-bl-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 36px;background:#638BFF;color:#fff;font-size:0.9375rem;font-weight:600;border-radius:10px;border:none;cursor:pointer;text-decoration:none;letter-spacing:0.01em;transition:all 0.35s;box-shadow:0 4px 16px rgba(99,139,255,0.25);min-width:160px}.jl-bl-btn:hover{background:#5178e6}.jl-bl-btn-loading{background:rgba(99,139,255,0.6);cursor:wait;pointer-events:none}.jl-bl-spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:jl-bl-spin 0.7s linear infinite;flex-shrink:0}@keyframes jl-bl-spin{to{transform:rotate(360deg)}}</style><div class="jl-bl-wrap"><a class="jl-bl-btn" href="#">Submit</a><a class="jl-bl-btn jl-bl-btn-loading" href="#"><span class="jl-bl-spinner"></span>Loading...</a></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-btn-group',
+    label: 'Button Group',
+    category: 'elements', subcategory: 'buttons',
+    tags: ['button', 'group', 'multiple', 'row', 'showcase', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Button Group',
+      defaultStyle: { width: '100%', minHeight: '60px' },
+      defaultContent: {
+        html: `<div class="jl-btn-grp" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-bgr-wrap{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px;flex-wrap:wrap}.jl-bgr-primary{display:inline-flex;align-items:center;justify-content:center;padding:14px 32px;background:#638BFF;color:#fff;font-size:0.875rem;font-weight:600;border-radius:10px;border:none;cursor:pointer;text-decoration:none;transition:all 0.35s cubic-bezier(0.22,1,0.36,1);box-shadow:0 4px 16px rgba(99,139,255,0.25)}.jl-bgr-primary:hover{background:#5178e6;transform:translateY(-2px)}.jl-bgr-secondary{display:inline-flex;align-items:center;justify-content:center;padding:14px 32px;background:transparent;color:rgba(255,255,255,0.8);font-size:0.875rem;font-weight:600;border-radius:10px;border:1.5px solid rgba(255,255,255,0.2);cursor:pointer;text-decoration:none;transition:all 0.35s cubic-bezier(0.22,1,0.36,1)}.jl-bgr-secondary:hover{border-color:rgba(255,255,255,0.4);color:#fff;transform:translateY(-2px)}.jl-bgr-ghost{display:inline-flex;align-items:center;gap:6px;padding:14px 20px;background:none;color:rgba(255,255,255,0.5);font-size:0.875rem;font-weight:500;border:none;cursor:pointer;text-decoration:none;transition:color 0.3s}.jl-bgr-ghost:hover{color:#fff}.jl-bgr-ghost svg{width:16px;height:16px;transition:transform 0.3s}.jl-bgr-ghost:hover svg{transform:translateX(3px)}</style><div class="jl-bgr-wrap"><a class="jl-bgr-primary" href="#">Get Started</a><a class="jl-bgr-secondary" href="#">Learn More</a><a class="jl-bgr-ghost" href="#">View Demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div></div>`
+      }
+    }
+  },
+  {
+    id: 'el-btn-cta-animated',
+    label: 'Animated CTA',
+    category: 'elements', subcategory: 'buttons',
+    tags: ['button', 'cta', 'animated', 'gradient', 'glow', 'premium', 'dark'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed' as const,
+      label: 'Animated CTA',
+      defaultStyle: { width: '100%', minHeight: '80px' },
+      defaultContent: {
+        html: `<div class="jl-btn-cta-anim" style="font-family:system-ui,-apple-system,sans-serif"><style>.jl-bca-wrap{display:flex;align-items:center;justify-content:center;padding:20px}.jl-bca-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;padding:16px 44px;background:#0a0a0a;color:#fff;font-size:1rem;font-weight:600;border-radius:12px;border:none;cursor:pointer;text-decoration:none;letter-spacing:0.01em;overflow:hidden;z-index:0;transition:transform 0.35s cubic-bezier(0.22,1,0.36,1)}.jl-bca-btn::before{content:'';position:absolute;inset:-2px;border-radius:14px;padding:2px;background:linear-gradient(135deg,#638BFF,#8B5CF6,#EC4899,#638BFF);background-size:300% 300%;animation:jl-bca-gradient 4s ease infinite;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;z-index:-1}.jl-bca-btn::after{content:'';position:absolute;inset:0;border-radius:12px;background:linear-gradient(135deg,rgba(99,139,255,0.1),rgba(139,92,246,0.1),rgba(236,72,153,0.1));background-size:300% 300%;animation:jl-bca-gradient 4s ease infinite;opacity:0;transition:opacity 0.3s;z-index:-1}.jl-bca-btn:hover::after{opacity:1}.jl-bca-btn:hover{transform:translateY(-2px)}.jl-bca-glow{position:absolute;inset:-20px;border-radius:30px;background:linear-gradient(135deg,rgba(99,139,255,0.15),rgba(139,92,246,0.15),rgba(236,72,153,0.15));background-size:300% 300%;animation:jl-bca-gradient 4s ease infinite;filter:blur(20px);z-index:-2;opacity:0.6}@keyframes jl-bca-gradient{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}.jl-bca-pulse{position:absolute;inset:-4px;border-radius:16px;border:1px solid rgba(99,139,255,0.15);animation:jl-bca-pulse-anim 2.5s ease-in-out infinite}@keyframes jl-bca-pulse-anim{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:0;transform:scale(1.05)}}</style><div class="jl-bca-wrap"><a class="jl-bca-btn" href="#"><span class="jl-bca-glow"></span><span class="jl-bca-pulse"></span>Start Your Project</a></div></div>`
+      }
+    }
+  },
+]
+
 export const LIBRARY_ELEMENTS: LibraryElementItem[] = [
   ...HEADINGS,
   ...TEXTS,
@@ -1954,4 +2079,5 @@ export const LIBRARY_ELEMENTS: LibraryElementItem[] = [
   ...LISTS,
   ...BLOCKQUOTES,
   ...VIDEO_ELEMENTS,
+  ...BUTTONS_STANDALONE,
 ]
