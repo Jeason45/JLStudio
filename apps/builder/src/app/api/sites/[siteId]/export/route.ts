@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/db'
 import type { SiteConfig } from '@/types/site'
-import { exportSite } from '@/lib/export/exportSite'
 import { sendDeployNotification } from '@/lib/deployEmails'
 
 /**
@@ -47,6 +46,9 @@ export async function POST(
 
     // CSS is loaded via Tailwind CDN in the HTML — allCss is for additional custom CSS
     const customCss = ''
+
+    // Dynamic import to avoid Turbopack tracing client components into server module graph
+    const { exportSite } = await import('@/lib/export/exportSite')
 
     // Run the export
     const result = await exportSite(siteConfig, site.slug, customCss)

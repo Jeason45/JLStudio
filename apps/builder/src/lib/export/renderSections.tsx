@@ -1,17 +1,15 @@
 import { createElement } from 'react'
-import { renderToStaticMarkup } from 'react-dom/server'
 import type { SiteConfig, SectionConfig, SectionStyle, DividerConfig } from '@/types/site'
 import type { CustomElement } from '@/types/elements'
-import { getSectionComponent } from '@/components/sections'
-import { CustomElementRenderer } from '@/components/sections/custom/CustomSection'
-import { resolveInstanceContent } from '@/lib/componentResolver'
-import {
-  applySectionOverrides,
-  getSectionBgClass,
-  getSectionBgStyle,
-  getPaddingTopClass,
-  getPaddingBottomClass,
-} from '@/components/sections/_utils'
+
+// Dynamic requires to avoid Turbopack static analysis tracing client components
+// into the server API route module graph
+/* eslint-disable @typescript-eslint/no-require-imports */
+const { renderToStaticMarkup } = require('react-dom/server') as typeof import('react-dom/server')
+const { getSectionComponent } = require('@/components/sections') as typeof import('@/components/sections')
+const { CustomElementRenderer } = require('@/components/sections/custom/CustomSection') as { CustomElementRenderer: React.ComponentType<{ element: CustomElement; sectionId: string }> }
+const { resolveInstanceContent } = require('@/lib/componentResolver') as typeof import('@/lib/componentResolver')
+const { applySectionOverrides, getSectionBgClass, getSectionBgStyle, getPaddingTopClass, getPaddingBottomClass } = require('@/components/sections/_utils') as typeof import('@/components/sections/_utils')
 
 /**
  * Server-render all visible sections of a page to a static HTML string.
