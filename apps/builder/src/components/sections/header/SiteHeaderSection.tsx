@@ -1,3 +1,4 @@
+'use client'
 import { cn } from '@/lib/utils'
 import type { SectionConfig } from '@/types/site'
 import type { SiteHeaderContent, NavLink } from '@/types/sections'
