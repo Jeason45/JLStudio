@@ -258,9 +258,181 @@ const DECORATIVE: LibraryElementItem[] = [
   },
 ]
 
+// ─── MESH GRADIENTS ───
+
+const MESH_GRADIENTS: LibraryElementItem[] = [
+  {
+    id: 'ill-mesh-warm',
+    label: 'Warm Mesh Gradient',
+    category: 'illustrations', subcategory: 'mesh-gradients',
+    tags: ['gradient', 'mesh', 'warm', 'amber', 'rose', 'luxury'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Warm Mesh',
+      defaultStyle: { width: '100%', height: '300px' },
+      defaultContent: { html: '<div style="width:100%;height:100%;background:conic-gradient(from 180deg at 50% 50%,#f59e0b 0deg,#e11d48 120deg,#f97316 240deg,#f59e0b 360deg);position:relative;overflow:hidden"><div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(251,191,36,0.8) 0%,transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(244,63,94,0.6) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(249,115,22,0.7) 0%,transparent 50%)"></div></div>' },
+    },
+  },
+  {
+    id: 'ill-mesh-cool',
+    label: 'Cool Mesh Gradient',
+    category: 'illustrations', subcategory: 'mesh-gradients',
+    tags: ['gradient', 'mesh', 'cool', 'blue', 'cyan', 'tech'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Cool Mesh',
+      defaultStyle: { width: '100%', height: '300px' },
+      defaultContent: { html: '<div style="width:100%;height:100%;background:conic-gradient(from 90deg at 50% 50%,#3b82f6 0deg,#06b6d4 120deg,#8b5cf6 240deg,#3b82f6 360deg);position:relative;overflow:hidden"><div style="position:absolute;inset:0;background:radial-gradient(ellipse at 25% 30%,rgba(59,130,246,0.8) 0%,transparent 50%),radial-gradient(ellipse at 75% 50%,rgba(6,182,212,0.6) 0%,transparent 50%),radial-gradient(ellipse at 40% 75%,rgba(139,92,246,0.7) 0%,transparent 50%)"></div></div>' },
+    },
+  },
+  {
+    id: 'ill-mesh-aurora',
+    label: 'Aurora Mesh Gradient',
+    category: 'illustrations', subcategory: 'mesh-gradients',
+    tags: ['gradient', 'mesh', 'aurora', 'green', 'blue', 'purple'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Aurora Mesh',
+      defaultStyle: { width: '100%', height: '300px' },
+      defaultContent: { html: '<div style="width:100%;height:100%;background:linear-gradient(180deg,#0f172a 0%,#0f172a 100%);position:relative;overflow:hidden"><div style="position:absolute;inset:0;background:radial-gradient(ellipse 120% 40% at 20% 40%,rgba(34,197,94,0.5) 0%,transparent 70%),radial-gradient(ellipse 100% 35% at 50% 35%,rgba(59,130,246,0.4) 0%,transparent 70%),radial-gradient(ellipse 110% 30% at 80% 50%,rgba(168,85,247,0.45) 0%,transparent 70%),radial-gradient(ellipse 80% 25% at 35% 30%,rgba(6,182,212,0.3) 0%,transparent 60%)"></div></div>' },
+    },
+  },
+]
+
+// ─── ABSTRACT SHAPES ───
+
+const ABSTRACT_SHAPES: LibraryElementItem[] = [
+  {
+    id: 'ill-shape-topographic',
+    label: 'Topographic Lines',
+    category: 'illustrations', subcategory: 'shapes',
+    tags: ['shape', 'topographic', 'contour', 'lines', 'trendy'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Topographic',
+      defaultStyle: { width: '100%', height: '300px', opacity: 0.15 },
+      defaultContent: { html: '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%" preserveAspectRatio="xMidYMid slice"><ellipse cx="200" cy="150" rx="180" ry="130" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.3"/><ellipse cx="200" cy="150" rx="150" ry="110" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.4"/><ellipse cx="200" cy="150" rx="120" ry="88" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.5"/><ellipse cx="200" cy="150" rx="90" ry="65" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/><ellipse cx="200" cy="150" rx="60" ry="42" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.7"/><ellipse cx="200" cy="150" rx="30" ry="20" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.8"/><ellipse cx="180" cy="140" rx="160" ry="115" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.35"/><ellipse cx="220" cy="160" rx="140" ry="100" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.45"/></svg>' },
+    },
+  },
+  {
+    id: 'ill-shape-circuit',
+    label: 'Circuit Board',
+    category: 'illustrations', subcategory: 'shapes',
+    tags: ['shape', 'circuit', 'tech', 'pattern', 'digital'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Circuit Board',
+      defaultStyle: { width: '100%', height: '300px', opacity: 0.12 },
+      defaultContent: { html: '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%" preserveAspectRatio="xMidYMid slice"><g stroke="currentColor" stroke-width="1" fill="none"><line x1="50" y1="50" x2="150" y2="50"/><line x1="150" y1="50" x2="150" y2="120"/><line x1="150" y1="120" x2="250" y2="120"/><line x1="250" y1="120" x2="250" y2="50"/><line x1="250" y1="50" x2="350" y2="50"/><line x1="100" y1="150" x2="200" y2="150"/><line x1="200" y1="150" x2="200" y2="220"/><line x1="200" y1="220" x2="300" y2="220"/><line x1="50" y1="250" x2="120" y2="250"/><line x1="120" y1="250" x2="120" y2="180"/><line x1="300" y1="220" x2="300" y2="270"/><line x1="300" y1="270" x2="380" y2="270"/></g><g fill="currentColor"><circle cx="50" cy="50" r="3"/><circle cx="150" cy="50" r="3"/><circle cx="250" cy="50" r="3"/><circle cx="350" cy="50" r="3"/><circle cx="150" cy="120" r="3"/><circle cx="250" cy="120" r="3"/><circle cx="100" cy="150" r="3"/><circle cx="200" cy="150" r="3"/><circle cx="200" cy="220" r="3"/><circle cx="300" cy="220" r="3"/><circle cx="50" cy="250" r="3"/><circle cx="120" cy="250" r="3"/><circle cx="120" cy="180" r="3"/><circle cx="300" cy="270" r="3"/><circle cx="380" cy="270" r="3"/></g></svg>' },
+    },
+  },
+  {
+    id: 'ill-shape-isometric-grid',
+    label: 'Isometric Grid',
+    category: 'illustrations', subcategory: 'shapes',
+    tags: ['shape', 'isometric', 'grid', '3d', 'modern'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Isometric Grid',
+      defaultStyle: { width: '100%', height: '300px', opacity: 0.1 },
+      defaultContent: { html: '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="iso-grid-lib" x="0" y="0" width="56" height="32" patternUnits="userSpaceOnUse"><path d="M0 32 L28 16 L56 32 M28 16 L28 0" stroke="currentColor" stroke-width="0.5" fill="none"/></pattern></defs><rect width="100%" height="100%" fill="url(#iso-grid-lib)"/></svg>' },
+    },
+  },
+  {
+    id: 'ill-shape-gradient-orb-3d',
+    label: '3D Gradient Orb',
+    category: 'illustrations', subcategory: 'shapes',
+    tags: ['shape', 'orb', '3d', 'sphere', 'gradient', 'modern'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: '3D Orb',
+      defaultStyle: {
+        width: '250px', height: '250px', borderRadius: '99px',
+        background: 'radial-gradient(circle at 35% 30%, rgba(255,255,255,0.4) 0%, rgba(99,102,241,0.8) 30%, rgba(79,70,229,0.9) 60%, rgba(49,46,129,1) 100%)',
+        boxShadow: '0 20px 60px rgba(99,102,241,0.3), inset 0 -10px 30px rgba(0,0,0,0.2)',
+      },
+      defaultContent: {},
+    },
+  },
+  {
+    id: 'ill-shape-line-art-corners',
+    label: 'Corner Line Art',
+    category: 'illustrations', subcategory: 'shapes',
+    tags: ['shape', 'line-art', 'corners', 'gold', 'luxury', 'decorative'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Corner Lines',
+      defaultStyle: { width: '100%', height: '300px' },
+      defaultContent: { html: '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%" preserveAspectRatio="none"><g stroke="#c8a97e" stroke-width="0.75" fill="none" opacity="0.6"><polyline points="10,40 10,10 40,10"/><polyline points="10,50 10,10 50,10"/><line x1="10" y1="10" x2="30" y2="30" stroke-width="0.5"/><polyline points="360,10 390,10 390,40"/><polyline points="350,10 390,10 390,50"/><line x1="390" y1="10" x2="370" y2="30" stroke-width="0.5"/><polyline points="10,260 10,290 40,290"/><polyline points="10,250 10,290 50,290"/><line x1="10" y1="290" x2="30" y2="270" stroke-width="0.5"/><polyline points="360,290 390,290 390,260"/><polyline points="350,290 390,290 390,250"/><line x1="390" y1="290" x2="370" y2="270" stroke-width="0.5"/></g></svg>' },
+    },
+  },
+]
+
+// ─── GLASSMORPHIC ───
+
+const GLASSMORPHIC: LibraryElementItem[] = [
+  {
+    id: 'ill-glass-card',
+    label: 'Glassmorphic Card',
+    category: 'illustrations', subcategory: 'glassmorphic',
+    tags: ['glass', 'glassmorphism', 'card', 'blur', 'modern'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Glass Card',
+      defaultStyle: {
+        width: '350px', height: '220px', borderRadius: '1rem',
+        backgroundColor: 'rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(16px)',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.12)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+      },
+      defaultContent: {},
+    },
+  },
+  {
+    id: 'ill-glass-circle',
+    label: 'Glassmorphic Circle',
+    category: 'illustrations', subcategory: 'glassmorphic',
+    tags: ['glass', 'glassmorphism', 'circle', 'blur', 'modern'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Glass Circle',
+      defaultStyle: {
+        width: '200px', height: '200px', borderRadius: '99px',
+        backgroundColor: 'rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(16px)',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.12)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+      },
+      defaultContent: {},
+    },
+  },
+  {
+    id: 'ill-glass-pill',
+    label: 'Glassmorphic Pill',
+    category: 'illustrations', subcategory: 'glassmorphic',
+    tags: ['glass', 'glassmorphism', 'pill', 'capsule', 'blur', 'modern'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Glass Pill',
+      defaultStyle: {
+        width: '300px', height: '80px', borderRadius: '99px',
+        backgroundColor: 'rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(16px)',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.12)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+      },
+      defaultContent: {},
+    },
+  },
+]
+
 export const LIBRARY_ILLUSTRATIONS: LibraryElementItem[] = [
   ...BLOBS,
   ...GRADIENTS,
   ...PATTERNS,
   ...DECORATIVE,
+  ...MESH_GRADIENTS,
+  ...ABSTRACT_SHAPES,
+  ...GLASSMORPHIC,
 ]

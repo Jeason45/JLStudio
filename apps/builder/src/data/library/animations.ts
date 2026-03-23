@@ -1822,6 +1822,594 @@ const KEYFRAME_EFFECTS: LibraryElementItem[] = [
   },
 ]
 
+// ─── CURSOR EFFECTS ───
+
+const CURSOR_EFFECTS: LibraryElementItem[] = [
+  {
+    id: 'anim-magnetic-button',
+    label: 'Magnetic Button',
+    category: 'animations', subcategory: 'cursor',
+    tags: ['animation', 'cursor', 'magnetic', 'button', 'hover', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Magnetic Button',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;min-height:200px;background:#0a0a0a;overflow:hidden"><style>.mgb-wrap{position:relative;display:inline-block}.mgb-btn{padding:1rem 2.5rem;background:transparent;border:1px solid #c8a97e;color:#f6efe5;font-size:.875rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:background .3s ease,transform .15s ease;border-radius:.5rem}.mgb-btn:hover{background:rgba(200,169,126,.12)}</style><div class="mgb-wrap" id="mgbWrap"><button class="mgb-btn" id="mgbBtn">Hover Near Me</button></div><script>(function(){var w=document.getElementById("mgbWrap"),b=document.getElementById("mgbBtn"),rect;function upd(e){rect=w.getBoundingClientRect();var cx=rect.left+rect.width/2,cy=rect.top+rect.height/2,dx=e.clientX-cx,dy=e.clientY-cy,dist=Math.sqrt(dx*dx+dy*dy),maxD=180;if(dist<maxD){var f=(1-dist/maxD)*.35;b.style.transform="translate("+dx*f+"px,"+dy*f+"px)"}else{b.style.transform="translate(0,0)"}}document.addEventListener("mousemove",upd);w.addEventListener("mouseleave",function(){b.style.transform="translate(0,0)"})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-custom-cursor',
+    label: 'Custom Cursor Dot + Ring',
+    category: 'animations', subcategory: 'cursor',
+    tags: ['animation', 'cursor', 'custom', 'dot', 'ring', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Custom Cursor Dot + Ring',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: '<div style="position:relative;min-height:250px;background:#0a0a0a;overflow:hidden;cursor:none" id="ccArea"><style>.cc-dot{position:absolute;width:6px;height:6px;background:#c8a97e;border-radius:50%;pointer-events:none;z-index:10;transition:transform .05s ease}.cc-ring{position:absolute;width:36px;height:36px;border:1.5px solid rgba(200,169,126,.5);border-radius:50%;pointer-events:none;z-index:10;transition:transform .12s ease,width .25s ease,height .25s ease,border-color .25s ease}.cc-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(246,239,229,.4);font-size:.8125rem;letter-spacing:.08em;text-transform:uppercase;pointer-events:none}</style><div class="cc-dot" id="ccDot"></div><div class="cc-ring" id="ccRing"></div><div class="cc-label">Move cursor here</div><div style="position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);padding:.75rem 2rem;border:1px solid rgba(200,169,126,.3);border-radius:.5rem;color:#f6efe5;font-size:.8125rem;cursor:none" id="ccHover" onmouseenter="document.getElementById(\'ccRing\').style.width=\'52px\';document.getElementById(\'ccRing\').style.height=\'52px\';document.getElementById(\'ccRing\').style.borderColor=\'#c8a97e\'" onmouseleave="document.getElementById(\'ccRing\').style.width=\'36px\';document.getElementById(\'ccRing\').style.height=\'36px\';document.getElementById(\'ccRing\').style.borderColor=\'rgba(200,169,126,.5)\'">Hover me</div><script>(function(){var a=document.getElementById("ccArea"),d=document.getElementById("ccDot"),r=document.getElementById("ccRing");a.addEventListener("mousemove",function(e){var rect=a.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;d.style.left=x-3+"px";d.style.top=y-3+"px";r.style.left=x-18+"px";r.style.top=y-18+"px"})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-tilt-card-3d',
+    label: '3D Tilt Card',
+    category: 'animations', subcategory: 'cursor',
+    tags: ['animation', 'cursor', 'tilt', '3d', 'perspective', 'card', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: '3D Tilt Card',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;min-height:300px;background:#0a0a0a;perspective:800px"><style>.tlt-card{width:280px;padding:2.5rem 2rem;background:linear-gradient(145deg,rgba(200,169,126,.08),rgba(200,169,126,.02));border:1px solid rgba(200,169,126,.15);border-radius:1rem;text-align:center;transition:transform .1s ease,box-shadow .3s ease;transform-style:preserve-3d;will-change:transform}.tlt-card:hover{box-shadow:0 20px 60px rgba(0,0,0,.4)}.tlt-icon{font-size:2rem;margin-bottom:1rem}.tlt-title{color:#f6efe5;font-size:1.125rem;font-weight:600;margin-bottom:.5rem}.tlt-desc{color:rgba(246,239,229,.5);font-size:.8125rem;line-height:1.6}</style><div class="tlt-card" id="tltCard"><div class="tlt-icon">&#9670;</div><div class="tlt-title">Premium Card</div><div class="tlt-desc">Move your mouse across this card to see the 3D tilt effect</div></div><script>(function(){var c=document.getElementById("tltCard");c.addEventListener("mousemove",function(e){var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height,rotY=(x-.5)*20,rotX=(y-.5)*-20;c.style.transform="rotateX("+rotX+"deg) rotateY("+rotY+"deg)"});c.addEventListener("mouseleave",function(){c.style.transform="rotateX(0) rotateY(0)"})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-cursor-trail',
+    label: 'Cursor Trail',
+    category: 'animations', subcategory: 'cursor',
+    tags: ['animation', 'cursor', 'trail', 'particles', 'dots', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Cursor Trail',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: '<div style="position:relative;min-height:250px;background:#0a0a0a;overflow:hidden;cursor:crosshair" id="ctArea"><style>.ct-dot{position:absolute;width:8px;height:8px;background:#c8a97e;border-radius:50%;pointer-events:none;opacity:0;transition:none}.ct-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(246,239,229,.35);font-size:.8125rem;letter-spacing:.08em;text-transform:uppercase;pointer-events:none}</style><div class="ct-label">Move cursor to see trail</div><script>(function(){var a=document.getElementById("ctArea"),dots=[],N=16;for(var i=0;i<N;i++){var d=document.createElement("div");d.className="ct-dot";a.appendChild(d);dots.push({el:d,x:0,y:0})}var mx=-100,my=-100;a.addEventListener("mousemove",function(e){var r=a.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});function tick(){var px=mx,py=my;for(var i=0;i<N;i++){var d=dots[i];d.x+=(px-d.x)*.35;d.y+=(py-d.y)*.35;d.el.style.left=d.x-4+"px";d.el.style.top=d.y-4+"px";var s=1-i/N;d.el.style.opacity=s*.7;d.el.style.transform="scale("+s+")";px=d.x;py=d.y}requestAnimationFrame(tick)}tick()})()</script></div>' },
+    },
+  },
+]
+
+// ─── TEXT PREMIUM ───
+
+const TEXT_PREMIUM: LibraryElementItem[] = [
+  {
+    id: 'anim-text-scramble',
+    label: 'Text Scramble Effect',
+    category: 'animations', subcategory: 'text-premium',
+    tags: ['animation', 'text', 'scramble', 'decode', 'glitch', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Text Scramble Effect',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;min-height:120px;background:#0a0a0a"><style>.tsc-text{color:#f6efe5;font-size:1.5rem;font-weight:600;letter-spacing:.04em;font-family:monospace;cursor:pointer;user-select:none}.tsc-text:hover{color:#c8a97e}</style><div class="tsc-text" id="tscEl">PREMIUM QUALITY</div><script>(function(){var el=document.getElementById("tscEl"),final="PREMIUM QUALITY",chars="!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",running=false;function scramble(){if(running)return;running=true;var iteration=0,interval=setInterval(function(){el.textContent=final.split("").map(function(c,i){if(i<iteration)return final[i];return chars[Math.floor(Math.random()*chars.length)]}).join("");if(iteration>=final.length){clearInterval(interval);running=false}iteration+=1/2},40)}el.addEventListener("mouseenter",scramble);scramble()})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-typewriter-pro',
+    label: 'Typewriter Pro',
+    category: 'animations', subcategory: 'text-premium',
+    tags: ['animation', 'text', 'typewriter', 'typing', 'cursor', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Typewriter Pro',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;min-height:120px;background:#0a0a0a"><style>.twp-wrap{font-size:1.25rem;color:#f6efe5;font-weight:500;letter-spacing:.02em}.twp-cursor{display:inline-block;width:2px;height:1.2em;background:#c8a97e;margin-left:2px;vertical-align:text-bottom;animation:twpBlink 1s step-end infinite}@keyframes twpBlink{0%,100%{opacity:1}50%{opacity:0}}</style><div class="twp-wrap"><span id="twpText"></span><span class="twp-cursor"></span></div><script>(function(){var el=document.getElementById("twpText"),phrases=["Building premium experiences.","Crafted with precision.","Designed for excellence."],pi=0,ci=0,deleting=false,speed=80;function tick(){var phrase=phrases[pi];if(!deleting){el.textContent=phrase.substring(0,ci+1);ci++;if(ci>=phrase.length){setTimeout(function(){deleting=true;tick()},2000);return}}else{el.textContent=phrase.substring(0,ci-1);ci--;if(ci<=0){deleting=false;pi=(pi+1)%phrases.length}}setTimeout(tick,deleting?40:speed)}tick()})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-text-highlight',
+    label: 'Text Marker Highlight',
+    category: 'animations', subcategory: 'text-premium',
+    tags: ['animation', 'text', 'highlight', 'marker', 'underline', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Text Marker Highlight',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;min-height:120px;background:#0a0a0a"><style>.tmh-text{color:#f6efe5;font-size:1.25rem;font-weight:500;line-height:1.8}.tmh-mark{background:linear-gradient(transparent 55%,rgba(200,169,126,.3) 55%);background-size:0% 100%;background-repeat:no-repeat;padding:0 .25rem;animation:tmhGrow 1.2s .5s cubic-bezier(.25,.46,.45,.94) forwards}@keyframes tmhGrow{to{background-size:100% 100%}}</style><div class="tmh-text">We create <span class="tmh-mark">premium digital</span> experiences that <span class="tmh-mark" style="animation-delay:.9s">stand out</span> from the crowd.</div></div>' },
+    },
+  },
+  {
+    id: 'anim-rotating-words',
+    label: 'Rotating Words',
+    category: 'animations', subcategory: 'text-premium',
+    tags: ['animation', 'text', 'rotating', 'words', 'cycle', 'swap', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Rotating Words',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;min-height:120px;background:#0a0a0a"><style>.rw-line{color:#f6efe5;font-size:1.25rem;font-weight:500;letter-spacing:.02em}.rw-slot{display:inline-block;position:relative;color:#c8a97e;min-width:120px;text-align:left}.rw-word{display:inline-block;opacity:0;transform:translateY(12px);transition:opacity .4s ease,transform .4s ease;position:absolute;left:0;white-space:nowrap}.rw-word.rw-active{opacity:1;transform:translateY(0);position:relative}</style><div class="rw-line">We build <span class="rw-slot" id="rwSlot"><span class="rw-word rw-active">stunning</span></span> websites.</div><script>(function(){var words=["stunning","premium","elegant","powerful","bespoke"],slot=document.getElementById("rwSlot"),idx=0;function next(){var prev=slot.querySelector(".rw-active");if(prev){prev.classList.remove("rw-active");prev.style.transform="translateY(-12px)";prev.style.opacity="0"}idx=(idx+1)%words.length;var el=document.createElement("span");el.className="rw-word";el.textContent=words[idx];slot.appendChild(el);requestAnimationFrame(function(){el.classList.add("rw-active")});setTimeout(function(){if(prev&&prev.parentNode)prev.parentNode.removeChild(prev)},500)}setInterval(next,2200)})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-circular-text',
+    label: 'Circular Rotating Text',
+    category: 'animations', subcategory: 'text-premium',
+    tags: ['animation', 'text', 'circular', 'rotate', 'badge', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Circular Rotating Text',
+      defaultStyle: { width: '100%', minHeight: '220px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;min-height:220px;background:#0a0a0a"><style>.crt-wrap{position:relative;width:140px;height:140px;animation:crtSpin 12s linear infinite}@keyframes crtSpin{to{transform:rotate(360deg)}}.crt-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:rgba(200,169,126,.15);border:1px solid rgba(200,169,126,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c8a97e;font-size:.875rem;font-weight:700}</style><div class="crt-wrap" id="crtWrap"><div class="crt-center">JL</div></div><script>(function(){var w=document.getElementById("crtWrap"),text="PREMIUM STUDIO \u2022 CRAFTED WITH CARE \u2022 ",r=60;var svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.setAttribute("viewBox","-70 -70 140 140");svg.style.position="absolute";svg.style.top="0";svg.style.left="0";svg.style.width="100%";svg.style.height="100%";for(var i=0;i<text.length;i++){var angle=(i/text.length)*360-90;var rad=angle*Math.PI/180;var t=document.createElementNS("http://www.w3.org/2000/svg","text");t.setAttribute("x",Math.cos(rad)*r);t.setAttribute("y",Math.sin(rad)*r);t.setAttribute("text-anchor","middle");t.setAttribute("dominant-baseline","central");t.setAttribute("transform","rotate("+(angle+90)+" "+Math.cos(rad)*r+" "+Math.sin(rad)*r+")");t.setAttribute("fill","#f6efe5");t.setAttribute("font-size","8");t.setAttribute("font-weight","500");t.setAttribute("letter-spacing","1");t.textContent=text[i];svg.appendChild(t)}w.insertBefore(svg,w.firstChild)})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-text-clip-image',
+    label: 'Text Clip Gradient',
+    category: 'animations', subcategory: 'text-premium',
+    tags: ['animation', 'text', 'clip', 'gradient', 'background', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Text Clip Gradient',
+      defaultStyle: { width: '100%', minHeight: '160px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;min-height:160px;background:#0a0a0a"><style>.tcg-text{font-size:3rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;background:linear-gradient(135deg,#c8a97e 0%,#f6efe5 25%,#c8a97e 50%,#f6efe5 75%,#c8a97e 100%);background-size:300% 300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:tcgShift 4s ease infinite}@keyframes tcgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}</style><div class="tcg-text">LUXURY</div></div>' },
+    },
+  },
+]
+
+// ─── SCROLL PREMIUM ───
+
+const SCROLL_PREMIUM: LibraryElementItem[] = [
+  {
+    id: 'anim-horizontal-scroll-pro',
+    label: 'Horizontal Scroll Section',
+    category: 'animations', subcategory: 'scroll-premium',
+    tags: ['animation', 'scroll', 'horizontal', 'panels', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Horizontal Scroll Section',
+      defaultStyle: { width: '100%', minHeight: '350px' },
+      defaultContent: { html: '<div style="position:relative;height:350px;background:#0a0a0a;overflow:hidden" id="hsArea"><style>.hs-track{display:flex;height:100%;transition:transform .1s ease}.hs-panel{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.75rem}.hs-panel:nth-child(1){background:linear-gradient(135deg,rgba(200,169,126,.08),transparent)}.hs-panel:nth-child(2){background:linear-gradient(135deg,rgba(200,169,126,.15),transparent)}.hs-panel:nth-child(3){background:linear-gradient(135deg,rgba(200,169,126,.06),transparent)}.hs-panel:nth-child(4){background:linear-gradient(135deg,rgba(200,169,126,.12),transparent)}.hs-num{font-size:3rem;font-weight:700;color:#c8a97e}.hs-label{color:rgba(246,239,229,.5);font-size:.8125rem;letter-spacing:.1em;text-transform:uppercase}.hs-dots{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.5rem}.hs-dot{width:8px;height:8px;border-radius:50%;background:rgba(246,239,229,.15);transition:background .3s ease}.hs-dot.hs-active{background:#c8a97e}</style><div class="hs-track" id="hsTrack"><div class="hs-panel"><div class="hs-num">01</div><div class="hs-label">Strategy</div></div><div class="hs-panel"><div class="hs-num">02</div><div class="hs-label">Design</div></div><div class="hs-panel"><div class="hs-num">03</div><div class="hs-label">Develop</div></div><div class="hs-panel"><div class="hs-num">04</div><div class="hs-label">Launch</div></div></div><div class="hs-dots"><div class="hs-dot hs-active"></div><div class="hs-dot"></div><div class="hs-dot"></div><div class="hs-dot"></div></div><script>(function(){var area=document.getElementById("hsArea"),track=document.getElementById("hsTrack"),dots=area.querySelectorAll(".hs-dot"),idx=0,total=4;area.addEventListener("wheel",function(e){e.preventDefault();if(e.deltaY>0&&idx<total-1)idx++;else if(e.deltaY<0&&idx>0)idx--;track.style.transform="translateX(-"+idx*100+"%)";dots.forEach(function(d,i){d.classList.toggle("hs-active",i===idx)})},{passive:false})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-stacked-cards',
+    label: 'Stacked Cards Scroll',
+    category: 'animations', subcategory: 'scroll-premium',
+    tags: ['animation', 'scroll', 'stacked', 'cards', 'sticky', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Stacked Cards Scroll',
+      defaultStyle: { width: '100%', minHeight: '350px' },
+      defaultContent: { html: '<div style="position:relative;min-height:350px;background:#0a0a0a;overflow-y:auto;padding:2rem" id="scArea"><style>.sc-stack{position:relative;display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1rem 0}.sc-card{width:300px;padding:2rem;border-radius:1rem;text-align:center;position:sticky;top:2rem;transition:transform .3s ease,opacity .3s ease}.sc-card:nth-child(1){background:linear-gradient(135deg,rgba(200,169,126,.15),rgba(200,169,126,.05));border:1px solid rgba(200,169,126,.2);z-index:3}.sc-card:nth-child(2){background:linear-gradient(135deg,rgba(200,169,126,.1),rgba(200,169,126,.03));border:1px solid rgba(200,169,126,.15);z-index:2;top:3rem}.sc-card:nth-child(3){background:linear-gradient(135deg,rgba(200,169,126,.06),rgba(200,169,126,.02));border:1px solid rgba(200,169,126,.1);z-index:1;top:4rem}.sc-title{color:#f6efe5;font-size:1.125rem;font-weight:600;margin-bottom:.5rem}.sc-desc{color:rgba(246,239,229,.45);font-size:.8125rem;line-height:1.6}</style><div class="sc-stack"><div class="sc-card"><div class="sc-title">Discovery</div><div class="sc-desc">Understanding your vision, goals and audience to build the perfect strategy.</div></div><div class="sc-card"><div class="sc-title">Creation</div><div class="sc-desc">Crafting pixel-perfect designs with attention to every detail.</div></div><div class="sc-card"><div class="sc-title">Delivery</div><div class="sc-desc">Deploying a polished, performant product that exceeds expectations.</div></div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-snap-sections',
+    label: 'Snap Scroll Sections',
+    category: 'animations', subcategory: 'scroll-premium',
+    tags: ['animation', 'scroll', 'snap', 'sections', 'fullscreen', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Snap Scroll Sections',
+      defaultStyle: { width: '100%', minHeight: '350px' },
+      defaultContent: { html: '<div style="height:350px;overflow-y:auto;scroll-snap-type:y mandatory;background:#0a0a0a" id="snpWrap"><style>.snp-sec{height:350px;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.75rem}.snp-sec:nth-child(1){background:linear-gradient(180deg,rgba(200,169,126,.1),transparent)}.snp-sec:nth-child(2){background:linear-gradient(180deg,rgba(200,169,126,.05),rgba(200,169,126,.12))}.snp-sec:nth-child(3){background:linear-gradient(180deg,rgba(200,169,126,.12),rgba(200,169,126,.03))}.snp-num{font-size:2.5rem;font-weight:700;color:#c8a97e}.snp-title{color:#f6efe5;font-size:1rem;font-weight:500}.snp-hint{color:rgba(246,239,229,.3);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase}</style><div class="snp-sec"><div class="snp-num">01</div><div class="snp-title">First Section</div><div class="snp-hint">Scroll down</div></div><div class="snp-sec"><div class="snp-num">02</div><div class="snp-title">Second Section</div><div class="snp-hint">Keep scrolling</div></div><div class="snp-sec"><div class="snp-num">03</div><div class="snp-title">Third Section</div><div class="snp-hint">End</div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-scroll-progress',
+    label: 'Scroll Progress Bar',
+    category: 'animations', subcategory: 'scroll-premium',
+    tags: ['animation', 'scroll', 'progress', 'bar', 'indicator', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Scroll Progress Bar',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: '<div style="position:relative;height:300px;overflow-y:auto;background:#0a0a0a" id="spbWrap"><style>.spb-bar{position:sticky;top:0;left:0;height:3px;background:#c8a97e;width:0%;z-index:10;transition:width .05s linear}.spb-content{padding:2rem;display:flex;flex-direction:column;gap:1.5rem}.spb-block{padding:1.5rem;background:rgba(200,169,126,.05);border:1px solid rgba(200,169,126,.1);border-radius:.75rem;color:rgba(246,239,229,.5);font-size:.8125rem;line-height:1.7}</style><div class="spb-bar" id="spbBar"></div><div class="spb-content"><div class="spb-block">Scroll this container to see the progress bar at the top fill up. This simulates a reading progress indicator commonly used on editorial and blog pages.</div><div class="spb-block">The bar tracks how far you have scrolled through the content area, providing a subtle visual cue of reading progress.</div><div class="spb-block">This pattern works beautifully for long-form content, articles, case studies, and documentation pages.</div><div class="spb-block">When combined with a sticky navigation, it creates an elegant and informative reading experience that users appreciate.</div><div class="spb-block">The golden accent color ties into the premium design language, maintaining visual consistency throughout the interface.</div></div><script>(function(){var w=document.getElementById("spbWrap"),b=document.getElementById("spbBar");w.addEventListener("scroll",function(){var pct=w.scrollTop/(w.scrollHeight-w.clientHeight)*100;b.style.width=pct+"%"})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-parallax-multilayer',
+    label: 'Parallax Multi-Layer',
+    category: 'animations', subcategory: 'scroll-premium',
+    tags: ['animation', 'scroll', 'parallax', 'layers', 'depth', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Parallax Multi-Layer',
+      defaultStyle: { width: '100%', minHeight: '350px' },
+      defaultContent: { html: '<div style="position:relative;height:350px;overflow-y:auto;background:#0a0a0a" id="pmlWrap"><style>.pml-scene{position:relative;height:700px;overflow:hidden}.pml-layer{position:absolute;width:100%;display:flex;align-items:center;justify-content:center;pointer-events:none}.pml-l1{top:50px;z-index:1}.pml-l2{top:150px;z-index:2}.pml-l3{top:280px;z-index:3}.pml-shape{border-radius:50%;opacity:.15}.pml-s1{width:200px;height:200px;background:radial-gradient(circle,#c8a97e,transparent)}.pml-s2{width:150px;height:150px;background:radial-gradient(circle,#f6efe5,transparent);opacity:.1}.pml-s3{width:100px;height:100px;background:radial-gradient(circle,#c8a97e,transparent);opacity:.2}.pml-title{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);z-index:5;color:#f6efe5;font-size:1.5rem;font-weight:600;text-align:center;pointer-events:none}.pml-sub{color:rgba(246,239,229,.4);font-size:.8125rem;margin-top:.5rem}</style><div class="pml-scene"><div class="pml-title">Multi-Layer Parallax<div class="pml-sub">Scroll to see layers move at different speeds</div></div><div class="pml-layer pml-l1" id="pmlL1"><div class="pml-shape pml-s1"></div></div><div class="pml-layer pml-l2" id="pmlL2"><div class="pml-shape pml-s2"></div></div><div class="pml-layer pml-l3" id="pmlL3"><div class="pml-shape pml-s3"></div></div></div><script>(function(){var w=document.getElementById("pmlWrap"),l1=document.getElementById("pmlL1"),l2=document.getElementById("pmlL2"),l3=document.getElementById("pmlL3");w.addEventListener("scroll",function(){var s=w.scrollTop;l1.style.transform="translateY("+s*.1+"px)";l2.style.transform="translateY("+s*.3+"px)";l3.style.transform="translateY("+s*.5+"px)"})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-pin-reveal-pro',
+    label: 'Pin & Reveal Content',
+    category: 'animations', subcategory: 'scroll-premium',
+    tags: ['animation', 'scroll', 'pin', 'reveal', 'sticky', 'progressive', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Pin & Reveal Content',
+      defaultStyle: { width: '100%', minHeight: '350px' },
+      defaultContent: { html: '<div style="position:relative;height:350px;overflow-y:auto;background:#0a0a0a" id="prWrap"><style>.pr-container{display:flex;min-height:700px}.pr-left{position:sticky;top:0;width:50%;height:350px;display:flex;align-items:center;justify-content:center;padding:2rem}.pr-right{width:50%;display:flex;flex-direction:column;gap:0}.pr-item{padding:3rem 2rem;border-bottom:1px solid rgba(200,169,126,.08);opacity:.3;transition:opacity .4s ease}.pr-item.pr-vis{opacity:1}.pr-num{color:#c8a97e;font-size:2rem;font-weight:700;margin-bottom:.5rem}.pr-txt{color:rgba(246,239,229,.6);font-size:.8125rem;line-height:1.6}.pr-big{color:#f6efe5;font-size:1.5rem;font-weight:600}.pr-sub{color:rgba(246,239,229,.4);font-size:.8125rem;margin-top:.5rem}</style><div class="pr-container"><div class="pr-left"><div><div class="pr-big">Our Process</div><div class="pr-sub">Scroll to reveal each step</div></div></div><div class="pr-right"><div class="pr-item pr-vis"><div class="pr-num">01</div><div class="pr-txt">Research and strategic planning phase to align vision with execution.</div></div><div class="pr-item"><div class="pr-num">02</div><div class="pr-txt">Design exploration with iterative prototyping and client feedback loops.</div></div><div class="pr-item"><div class="pr-num">03</div><div class="pr-txt">Development with clean architecture, performance optimization, and testing.</div></div><div class="pr-item"><div class="pr-num">04</div><div class="pr-txt">Launch, monitoring, and continuous refinement based on real data.</div></div></div></div><script>(function(){var w=document.getElementById("prWrap"),items=w.querySelectorAll(".pr-item");w.addEventListener("scroll",function(){items.forEach(function(it){var r=it.getBoundingClientRect(),wr=w.getBoundingClientRect();var vis=r.top<wr.bottom-50&&r.bottom>wr.top+50;it.classList.toggle("pr-vis",vis)})})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-image-scale-scroll',
+    label: 'Image Scale on Scroll',
+    category: 'animations', subcategory: 'scroll-premium',
+    tags: ['animation', 'scroll', 'image', 'scale', 'zoom', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Image Scale on Scroll',
+      defaultStyle: { width: '100%', minHeight: '350px' },
+      defaultContent: { html: '<div style="position:relative;height:350px;overflow-y:auto;background:#0a0a0a" id="issWrap"><style>.iss-spacer{height:100px}.iss-img-wrap{display:flex;align-items:center;justify-content:center;padding:2rem;overflow:hidden;border-radius:1rem;margin:0 2rem}.iss-img{width:280px;height:180px;background:linear-gradient(135deg,rgba(200,169,126,.2),rgba(200,169,126,.05));border:1px solid rgba(200,169,126,.15);border-radius:.75rem;display:flex;align-items:center;justify-content:center;color:rgba(246,239,229,.4);font-size:.8125rem;letter-spacing:.05em;transform:scale(.8);opacity:.6;transition:transform .05s linear,opacity .05s linear}.iss-spacer-b{height:200px}</style><div class="iss-spacer"></div><div class="iss-img-wrap"><div class="iss-img" id="issImg">Scroll to Scale</div></div><div class="iss-spacer-b"></div><script>(function(){var w=document.getElementById("issWrap"),img=document.getElementById("issImg");w.addEventListener("scroll",function(){var r=img.getBoundingClientRect(),wr=w.getBoundingClientRect(),center=wr.top+wr.height/2,imgCenter=r.top+r.height/2,dist=Math.abs(center-imgCenter),maxDist=wr.height/2,progress=1-Math.min(dist/maxDist,1),scale=.8+progress*.2,opacity=.6+progress*.4;img.style.transform="scale("+scale+")";img.style.opacity=opacity})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-number-counter-scroll',
+    label: 'Number Counter on Scroll',
+    category: 'animations', subcategory: 'scroll-premium',
+    tags: ['animation', 'scroll', 'counter', 'number', 'stats', 'intersection', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Number Counter on Scroll',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;gap:3rem;min-height:200px;background:#0a0a0a;padding:2rem" id="ncWrap"><style>.nc-stat{text-align:center}.nc-num{font-size:2.5rem;font-weight:700;color:#c8a97e;font-variant-numeric:tabular-nums}.nc-label{color:rgba(246,239,229,.4);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.25rem}.nc-plus{color:rgba(200,169,126,.6)}</style><div class="nc-stat"><div class="nc-num"><span id="ncN1">0</span><span class="nc-plus">+</span></div><div class="nc-label">Projects</div></div><div class="nc-stat"><div class="nc-num"><span id="ncN2">0</span><span class="nc-plus">%</span></div><div class="nc-label">Satisfaction</div></div><div class="nc-stat"><div class="nc-num"><span id="ncN3">0</span><span class="nc-plus">+</span></div><div class="nc-label">Clients</div></div><script>(function(){function animCount(el,target,dur){var start=0,startTime=null;function step(ts){if(!startTime)startTime=ts;var p=Math.min((ts-startTime)/dur,1);el.textContent=Math.floor(p*target);if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)}var obs=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){animCount(document.getElementById("ncN1"),2500,2000);animCount(document.getElementById("ncN2"),98,1800);animCount(document.getElementById("ncN3"),150,1600);obs.disconnect()}})},{threshold:.5});obs.observe(document.getElementById("ncWrap"))})()</script></div>' },
+    },
+  },
+]
+
+// ─── HOVER PREMIUM ───
+
+const HOVER_PREMIUM: LibraryElementItem[] = [
+  {
+    id: 'anim-hover-reveal-image',
+    label: 'Hover Reveal Image',
+    category: 'animations', subcategory: 'hover-premium',
+    tags: ['animation', 'hover', 'reveal', 'image', 'cursor', 'link', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Hover Reveal Image',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: '<div style="display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:3rem;background:#0a0a0a;position:relative;overflow:hidden" id="hriWrap"><style>.hri-link{font-size:1.5rem;font-weight:600;color:#f6efe5;text-decoration:none;padding:.75rem 0;border-bottom:1px solid rgba(200,169,126,.1);width:100%;display:block;transition:color .3s ease;cursor:pointer;position:relative;z-index:2}.hri-link:hover{color:#c8a97e}.hri-preview{position:absolute;width:200px;height:130px;border-radius:.75rem;pointer-events:none;opacity:0;transition:opacity .25s ease;z-index:1;background-size:cover;background-position:center}</style><a class="hri-link" data-bg="linear-gradient(135deg,rgba(200,169,126,.3),rgba(200,169,126,.1))">Residential Projects</a><a class="hri-link" data-bg="linear-gradient(135deg,rgba(200,169,126,.15),rgba(100,80,50,.3))">Commercial Spaces</a><a class="hri-link" data-bg="linear-gradient(135deg,rgba(246,239,229,.1),rgba(200,169,126,.2))">Interior Design</a><div class="hri-preview" id="hriPrev"></div><script>(function(){var w=document.getElementById("hriWrap"),prev=document.getElementById("hriPrev"),links=w.querySelectorAll(".hri-link");links.forEach(function(l){l.addEventListener("mouseenter",function(){prev.style.background=l.dataset.bg;prev.style.opacity="1"});l.addEventListener("mousemove",function(e){var r=w.getBoundingClientRect();prev.style.left=e.clientX-r.left+20+"px";prev.style.top=e.clientY-r.top-65+"px"});l.addEventListener("mouseleave",function(){prev.style.opacity="0"})})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-border-draw',
+    label: 'Border Draw on Hover',
+    category: 'animations', subcategory: 'hover-premium',
+    tags: ['animation', 'hover', 'border', 'draw', 'outline', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Border Draw on Hover',
+      defaultStyle: { width: '100%', minHeight: '180px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;gap:2rem;min-height:180px;background:#0a0a0a"><style>.bdr-box{position:relative;padding:1.5rem 2.5rem;color:#f6efe5;font-size:.875rem;font-weight:500;letter-spacing:.05em;cursor:pointer;background:transparent}.bdr-box::before,.bdr-box::after{content:"";position:absolute;width:0;height:0;border:1.5px solid transparent;transition:width .25s ease,height .25s ease,border-color 0s}.bdr-box::before{top:0;left:0;border-top-color:transparent;border-right-color:transparent}.bdr-box::after{bottom:0;right:0;border-bottom-color:transparent;border-left-color:transparent}.bdr-box:hover::before{width:100%;height:100%;border-top-color:#c8a97e;border-right-color:#c8a97e;transition:width .25s ease,height .25s ease .25s,border-color 0s}.bdr-box:hover::after{width:100%;height:100%;border-bottom-color:#c8a97e;border-left-color:#c8a97e;transition:width .25s ease,height .25s ease .25s,border-color 0s}</style><div class="bdr-box">Hover to Draw</div></div>' },
+    },
+  },
+  {
+    id: 'anim-underline-slide',
+    label: 'Underline Slide',
+    category: 'animations', subcategory: 'hover-premium',
+    tags: ['animation', 'hover', 'underline', 'slide', 'link', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Underline Slide',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;gap:2.5rem;min-height:120px;background:#0a0a0a"><style>.uds-link{position:relative;color:#f6efe5;font-size:.9375rem;font-weight:500;text-decoration:none;cursor:pointer;padding-bottom:4px}.uds-link::after{content:"";position:absolute;bottom:0;left:0;width:0;height:1.5px;background:#c8a97e;transition:width .35s cubic-bezier(.25,.46,.45,.94)}.uds-link:hover::after{width:100%}.uds-link:not(:hover)::after{left:auto;right:0;transition:width .35s cubic-bezier(.25,.46,.45,.94)}</style><a class="uds-link">About</a><a class="uds-link">Services</a><a class="uds-link">Portfolio</a><a class="uds-link">Contact</a></div>' },
+    },
+  },
+  {
+    id: 'anim-image-distortion',
+    label: 'Image Hover Distortion',
+    category: 'animations', subcategory: 'hover-premium',
+    tags: ['animation', 'hover', 'image', 'distortion', 'wave', 'filter', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Image Hover Distortion',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;min-height:250px;background:#0a0a0a"><style>.imd-card{width:260px;height:180px;border-radius:.75rem;overflow:hidden;cursor:pointer;position:relative}.imd-inner{width:100%;height:100%;background:linear-gradient(135deg,rgba(200,169,126,.2),rgba(200,169,126,.05));display:flex;align-items:center;justify-content:center;color:rgba(246,239,229,.5);font-size:.8125rem;letter-spacing:.05em;transition:filter .4s ease,transform .4s ease;filter:none}.imd-card:hover .imd-inner{filter:url(#imdTurb);transform:scale(1.03)}.imd-card:hover .imd-overlay{opacity:1}</style><svg style="position:absolute;width:0;height:0"><defs><filter id="imdTurb"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg><div class="imd-card"><div class="imd-inner">Hover for Distortion</div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-magnetic-link',
+    label: 'Magnetic Link',
+    category: 'animations', subcategory: 'hover-premium',
+    tags: ['animation', 'hover', 'magnetic', 'link', 'cursor', 'follow', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Magnetic Link',
+      defaultStyle: { width: '100%', minHeight: '120px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;gap:3rem;min-height:120px;background:#0a0a0a"><style>.mgl-link{color:#f6efe5;font-size:1rem;font-weight:500;cursor:pointer;display:inline-block;transition:color .3s ease,transform .08s ease;letter-spacing:.02em}.mgl-link:hover{color:#c8a97e}</style><span class="mgl-link" id="mgl1">About</span><span class="mgl-link" id="mgl2">Work</span><span class="mgl-link" id="mgl3">Contact</span><script>(function(){document.querySelectorAll(".mgl-link").forEach(function(el){el.addEventListener("mousemove",function(e){var r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=(e.clientX-cx)*.25,dy=(e.clientY-cy)*.25;el.style.transform="translate("+dx+"px,"+dy+"px)"});el.addEventListener("mouseleave",function(){el.style.transform="translate(0,0)"})})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-bg-clip-text-hover',
+    label: 'Background Clip Text Hover',
+    category: 'animations', subcategory: 'hover-premium',
+    tags: ['animation', 'hover', 'text', 'clip', 'background', 'image', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Background Clip Text Hover',
+      defaultStyle: { width: '100%', minHeight: '180px' },
+      defaultContent: { html: '<div style="display:flex;align-items:center;justify-content:center;min-height:180px;background:#0a0a0a"><style>.bct-text{font-size:3.5rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#f6efe5;cursor:pointer;transition:all .4s ease;-webkit-background-clip:text;background-clip:text}.bct-text:hover{background:linear-gradient(135deg,#c8a97e,#e8d5b5,#c8a97e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}</style><div class="bct-text">STUDIO</div></div>' },
+    },
+  },
+]
+
+// ─── SECTION TRANSITIONS ───
+
+const SECTION_TRANSITIONS: LibraryElementItem[] = [
+  {
+    id: 'anim-clip-circle-reveal',
+    label: 'Circle Clip Reveal',
+    category: 'animations', subcategory: 'transitions',
+    tags: ['animation', 'transition', 'clip', 'circle', 'reveal', 'section', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Circle Clip Reveal',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: '<div style="position:relative;min-height:250px;background:#0a0a0a;overflow:hidden"><style>.ccr-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,169,126,.15),rgba(200,169,126,.05));clip-path:circle(0% at 50% 50%);transition:clip-path .8s cubic-bezier(.25,.46,.45,.94)}.ccr-bg.ccr-vis{clip-path:circle(75% at 50% 50%)}.ccr-content{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:250px;flex-direction:column;gap:.5rem}.ccr-title{color:#f6efe5;font-size:1.25rem;font-weight:600}.ccr-sub{color:rgba(246,239,229,.4);font-size:.8125rem}</style><div class="ccr-bg" id="ccrBg"></div><div class="ccr-content"><div class="ccr-title">Circle Reveal</div><div class="ccr-sub">Revealed via expanding clip-path</div></div><script>(function(){var bg=document.getElementById("ccrBg");var obs=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting)bg.classList.add("ccr-vis")})},{threshold:.3});obs.observe(bg)})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-curtain-wipe',
+    label: 'Curtain Wipe Reveal',
+    category: 'animations', subcategory: 'transitions',
+    tags: ['animation', 'transition', 'curtain', 'wipe', 'reveal', 'section', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Curtain Wipe Reveal',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: '<div style="position:relative;min-height:250px;background:#0a0a0a;overflow:hidden"><style>.cwp-curtain{position:absolute;inset:0;background:#c8a97e;transform:translateY(0);z-index:3}.cwp-curtain.cwp-open{animation:cwpSlide .8s cubic-bezier(.65,.05,.36,1) forwards}@keyframes cwpSlide{to{transform:translateY(-100%)}}.cwp-content{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:250px;flex-direction:column;gap:.5rem}.cwp-title{color:#f6efe5;font-size:1.25rem;font-weight:600}.cwp-sub{color:rgba(246,239,229,.4);font-size:.8125rem}</style><div class="cwp-curtain" id="cwpCurtain"></div><div class="cwp-content"><div class="cwp-title">Curtain Wipe</div><div class="cwp-sub">Golden curtain slides away to reveal content</div></div><script>(function(){var c=document.getElementById("cwpCurtain");var obs=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting)c.classList.add("cwp-open")})},{threshold:.3});obs.observe(c)})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-diagonal-slice',
+    label: 'Diagonal Slice Transition',
+    category: 'animations', subcategory: 'transitions',
+    tags: ['animation', 'transition', 'diagonal', 'slice', 'clip-path', 'section', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Diagonal Slice Transition',
+      defaultStyle: { width: '100%', minHeight: '250px' },
+      defaultContent: { html: '<div style="position:relative;min-height:250px;overflow:hidden"><style>.dgs-top{min-height:125px;background:#0a0a0a;display:flex;align-items:center;justify-content:center;clip-path:polygon(0 0,100% 0,100% 80%,0 100%)}.dgs-bottom{min-height:125px;background:linear-gradient(135deg,rgba(200,169,126,.12),rgba(200,169,126,.04));display:flex;align-items:center;justify-content:center;clip-path:polygon(0 20%,100% 0,100% 100%,0 100%);margin-top:-25px}.dgs-text{color:#f6efe5;font-size:1rem;font-weight:500;letter-spacing:.04em}.dgs-text2{color:rgba(246,239,229,.5);font-size:.875rem}</style><div class="dgs-top"><div class="dgs-text">Section One</div></div><div class="dgs-bottom"><div class="dgs-text2">Section Two</div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-color-block-reveal',
+    label: 'Color Block Reveal',
+    category: 'animations', subcategory: 'transitions',
+    tags: ['animation', 'transition', 'color', 'block', 'reveal', 'wipe', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Color Block Reveal',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="position:relative;min-height:200px;background:#0a0a0a;overflow:hidden;display:flex;align-items:center;justify-content:center"><style>.cbr-block{position:absolute;inset:0;background:#c8a97e;transform:translateX(-101%);z-index:3}.cbr-block.cbr-go{animation:cbrIn .5s cubic-bezier(.65,.05,.36,1) forwards,cbrOut .5s cubic-bezier(.65,.05,.36,1) .5s forwards}@keyframes cbrIn{to{transform:translateX(0)}}@keyframes cbrOut{to{transform:translateX(101%)}}.cbr-content{opacity:0;transition:opacity .3s ease .5s;z-index:2;text-align:center}.cbr-content.cbr-show{opacity:1}.cbr-title{color:#f6efe5;font-size:1.25rem;font-weight:600;margin-bottom:.25rem}.cbr-sub{color:rgba(246,239,229,.4);font-size:.8125rem}</style><div class="cbr-block" id="cbrBlock"></div><div class="cbr-content" id="cbrContent"><div class="cbr-title">Block Reveal</div><div class="cbr-sub">Color block wipes through to reveal</div></div><script>(function(){var b=document.getElementById("cbrBlock"),c=document.getElementById("cbrContent");var obs=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){b.classList.add("cbr-go");c.classList.add("cbr-show")}})},{threshold:.3});obs.observe(b)})()</script></div>' },
+    },
+  },
+]
+
+// ─── BACKGROUNDS PREMIUM ───
+
+const BACKGROUNDS_PREMIUM: LibraryElementItem[] = [
+  {
+    id: 'anim-bg-aurora',
+    label: 'Aurora Background',
+    category: 'animations', subcategory: 'backgrounds-premium',
+    tags: ['animation', 'background', 'aurora', 'northern-lights', 'gradient', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Aurora Background',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: '<div style="position:relative;min-height:300px;background:#0a0a0a;overflow:hidden"><style>.aur-layer{position:absolute;inset:0;opacity:.4;filter:blur(80px)}.aur-l1{background:radial-gradient(ellipse at 20% 50%,rgba(100,180,255,.4),transparent 60%);animation:aurDrift1 8s ease-in-out infinite alternate}.aur-l2{background:radial-gradient(ellipse at 60% 30%,rgba(130,100,220,.35),transparent 60%);animation:aurDrift2 10s ease-in-out infinite alternate}.aur-l3{background:radial-gradient(ellipse at 80% 70%,rgba(80,200,150,.3),transparent 60%);animation:aurDrift3 12s ease-in-out infinite alternate}@keyframes aurDrift1{0%{transform:translate(-10%,-5%) scale(1)}100%{transform:translate(15%,10%) scale(1.15)}}@keyframes aurDrift2{0%{transform:translate(10%,5%) scale(1.1)}100%{transform:translate(-15%,-8%) scale(0.95)}}@keyframes aurDrift3{0%{transform:translate(5%,-10%) scale(0.9)}100%{transform:translate(-10%,15%) scale(1.1)}}.aur-content{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:300px;flex-direction:column;gap:.5rem}.aur-title{color:#f6efe5;font-size:1.5rem;font-weight:600}.aur-sub{color:rgba(246,239,229,.4);font-size:.8125rem}</style><div class="aur-layer aur-l1"></div><div class="aur-layer aur-l2"></div><div class="aur-layer aur-l3"></div><div class="aur-content"><div class="aur-title">Aurora</div><div class="aur-sub">Animated northern lights effect</div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-bg-mesh-gradient',
+    label: 'Animated Mesh Gradient',
+    category: 'animations', subcategory: 'backgrounds-premium',
+    tags: ['animation', 'background', 'mesh', 'gradient', 'organic', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Animated Mesh Gradient',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: '<div style="position:relative;min-height:300px;overflow:hidden"><style>.amg-bg{position:absolute;inset:0;background:linear-gradient(45deg,#0a0a0a 0%,rgba(200,169,126,.08) 25%,#0a0a0a 50%,rgba(200,169,126,.12) 75%,#0a0a0a 100%);background-size:400% 400%;animation:amgShift 10s ease infinite}@keyframes amgShift{0%{background-position:0% 50%}25%{background-position:100% 0%}50%{background-position:100% 100%}75%{background-position:0% 100%}100%{background-position:0% 50%}}.amg-orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.25}.amg-o1{width:200px;height:200px;background:#c8a97e;top:10%;left:20%;animation:amgFloat1 7s ease-in-out infinite alternate}.amg-o2{width:180px;height:180px;background:rgba(200,169,126,.6);bottom:10%;right:15%;animation:amgFloat2 9s ease-in-out infinite alternate}@keyframes amgFloat1{to{transform:translate(60px,40px)}}@keyframes amgFloat2{to{transform:translate(-50px,-30px)}}.amg-content{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:300px;flex-direction:column;gap:.5rem}.amg-title{color:#f6efe5;font-size:1.5rem;font-weight:600}.amg-sub{color:rgba(246,239,229,.4);font-size:.8125rem}</style><div class="amg-bg"></div><div class="amg-orb amg-o1"></div><div class="amg-orb amg-o2"></div><div class="amg-content"><div class="amg-title">Mesh Gradient</div><div class="amg-sub">Organic gradient with floating orbs</div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-bg-particle-network',
+    label: 'Particle Network',
+    category: 'animations', subcategory: 'backgrounds-premium',
+    tags: ['animation', 'background', 'particles', 'network', 'canvas', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Particle Network',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: '<div style="position:relative;min-height:300px;background:#0a0a0a;overflow:hidden"><canvas id="pnCanvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas><div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:300px;flex-direction:column;gap:.5rem"><div style="color:#f6efe5;font-size:1.5rem;font-weight:600">Particle Network</div><div style="color:rgba(246,239,229,.4);font-size:.8125rem">Connected dots with subtle movement</div></div><script>(function(){var c=document.getElementById("pnCanvas"),ctx=c.getContext("2d"),W,H,pts=[];function resize(){var r=c.parentElement.getBoundingClientRect();W=c.width=r.width;H=c.height=r.height}resize();window.addEventListener("resize",resize);for(var i=0;i<40;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3});function draw(){ctx.clearRect(0,0,W,H);for(var i=0;i<pts.length;i++){var p=pts[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,2,0,Math.PI*2);ctx.fillStyle="rgba(200,169,126,.5)";ctx.fill();for(var j=i+1;j<pts.length;j++){var q=pts[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle="rgba(200,169,126,"+(1-d/120)*.15+")";ctx.stroke()}}}requestAnimationFrame(draw)}draw()})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-bg-floating-orbs',
+    label: 'Floating Color Orbs',
+    category: 'animations', subcategory: 'backgrounds-premium',
+    tags: ['animation', 'background', 'orbs', 'floating', 'blur', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Floating Color Orbs',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: '<div style="position:relative;min-height:300px;background:#0a0a0a;overflow:hidden"><style>.fco-orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.3}.fco-o1{width:220px;height:220px;background:#c8a97e;top:-30px;left:10%;animation:fcoF1 8s ease-in-out infinite alternate}.fco-o2{width:180px;height:180px;background:rgba(100,150,200,.6);top:50%;right:5%;animation:fcoF2 10s ease-in-out infinite alternate}.fco-o3{width:160px;height:160px;background:rgba(180,120,200,.5);bottom:-20px;left:35%;animation:fcoF3 12s ease-in-out infinite alternate}.fco-o4{width:140px;height:140px;background:rgba(120,200,170,.4);top:20%;left:55%;animation:fcoF4 9s ease-in-out infinite alternate}@keyframes fcoF1{to{transform:translate(80px,60px) scale(1.1)}}@keyframes fcoF2{to{transform:translate(-60px,-40px) scale(.9)}}@keyframes fcoF3{to{transform:translate(50px,-50px) scale(1.15)}}@keyframes fcoF4{to{transform:translate(-40px,50px) scale(.85)}}.fco-content{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:300px;flex-direction:column;gap:.5rem}.fco-title{color:#f6efe5;font-size:1.5rem;font-weight:600}.fco-sub{color:rgba(246,239,229,.4);font-size:.8125rem}</style><div class="fco-orb fco-o1"></div><div class="fco-orb fco-o2"></div><div class="fco-orb fco-o3"></div><div class="fco-orb fco-o4"></div><div class="fco-content"><div class="fco-title">Floating Orbs</div><div class="fco-sub">Blurred color orbs drifting gently</div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-bg-grid-distortion',
+    label: 'Grid Distortion',
+    category: 'animations', subcategory: 'backgrounds-premium',
+    tags: ['animation', 'background', 'grid', 'distortion', 'pattern', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Grid Distortion',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: '<div style="position:relative;min-height:300px;background:#0a0a0a;overflow:hidden"><style>.grd-svg{position:absolute;inset:0;width:100%;height:100%;opacity:.15}.grd-line{stroke:rgba(200,169,126,.4);stroke-width:.5;fill:none}.grd-content{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:300px;flex-direction:column;gap:.5rem}.grd-title{color:#f6efe5;font-size:1.5rem;font-weight:600}.grd-sub{color:rgba(246,239,229,.4);font-size:.8125rem}</style><svg class="grd-svg" id="grdSvg"></svg><div class="grd-content"><div class="grd-title">Grid Distortion</div><div class="grd-sub">Subtle warping grid pattern</div></div><script>(function(){var svg=document.getElementById("grdSvg"),W=600,H=300,gap=30;svg.setAttribute("viewBox","0 0 "+W+" "+H);var t=0;function draw(){t+=.005;while(svg.firstChild)svg.removeChild(svg.firstChild);for(var x=0;x<=W;x+=gap){var d="M";for(var y=0;y<=H;y+=5){var ox=Math.sin(y*.02+t*2+x*.01)*4;d+=(x+ox)+","+y+" "}var p=document.createElementNS("http://www.w3.org/2000/svg","path");p.setAttribute("d",d);p.setAttribute("class","grd-line");svg.appendChild(p)}for(var y=0;y<=H;y+=gap){var d="M";for(var x=0;x<=W;x+=5){var oy=Math.cos(x*.02+t*2+y*.01)*4;d+=x+","+(y+oy)+" "}var p=document.createElementNS("http://www.w3.org/2000/svg","path");p.setAttribute("d",d);p.setAttribute("class","grd-line");svg.appendChild(p)}requestAnimationFrame(draw)}draw()})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-bg-starfield',
+    label: 'Starfield Parallax',
+    category: 'animations', subcategory: 'backgrounds-premium',
+    tags: ['animation', 'background', 'stars', 'starfield', 'parallax', 'space', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Starfield Parallax',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: '<div style="position:relative;min-height:300px;background:#0a0a0a;overflow:hidden"><style>.sf-layer{position:absolute;inset:0;background-repeat:repeat}.sf-l1{background-image:radial-gradient(1px 1px at 50px 30px,rgba(246,239,229,.6),transparent),radial-gradient(1px 1px at 150px 80px,rgba(246,239,229,.5),transparent),radial-gradient(1px 1px at 280px 150px,rgba(246,239,229,.4),transparent),radial-gradient(1px 1px at 400px 50px,rgba(246,239,229,.5),transparent),radial-gradient(1px 1px at 520px 120px,rgba(246,239,229,.3),transparent),radial-gradient(1px 1px at 100px 200px,rgba(246,239,229,.6),transparent),radial-gradient(1px 1px at 350px 250px,rgba(246,239,229,.4),transparent),radial-gradient(1px 1px at 450px 180px,rgba(246,239,229,.5),transparent);background-size:600px 300px;animation:sfScroll1 25s linear infinite}@keyframes sfScroll1{to{background-position:600px 0}}.sf-l2{background-image:radial-gradient(1.5px 1.5px at 80px 60px,rgba(200,169,126,.5),transparent),radial-gradient(1.5px 1.5px at 220px 100px,rgba(200,169,126,.4),transparent),radial-gradient(1.5px 1.5px at 380px 200px,rgba(200,169,126,.3),transparent),radial-gradient(1.5px 1.5px at 500px 40px,rgba(200,169,126,.5),transparent),radial-gradient(1.5px 1.5px at 180px 240px,rgba(200,169,126,.4),transparent);background-size:600px 300px;animation:sfScroll2 18s linear infinite}@keyframes sfScroll2{to{background-position:600px 0}}.sf-l3{background-image:radial-gradient(2px 2px at 120px 90px,rgba(246,239,229,.7),transparent),radial-gradient(2px 2px at 350px 170px,rgba(246,239,229,.6),transparent),radial-gradient(2px 2px at 480px 60px,rgba(246,239,229,.5),transparent);background-size:600px 300px;animation:sfScroll3 12s linear infinite}@keyframes sfScroll3{to{background-position:600px 0}}.sf-content{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:300px;flex-direction:column;gap:.5rem}.sf-title{color:#f6efe5;font-size:1.5rem;font-weight:600}.sf-sub{color:rgba(246,239,229,.4);font-size:.8125rem}</style><div class="sf-layer sf-l1"></div><div class="sf-layer sf-l2"></div><div class="sf-layer sf-l3"></div><div class="sf-content"><div class="sf-title">Starfield</div><div class="sf-sub">Multi-layer parallax star field</div></div></div>' },
+    },
+  },
+]
+
+// ─── SITE-INSPIRED ANIMATIONS ───
+// Premium presets inspired by Linear, Stripe, Apple, Vercel, Cuberto, Locomotive, Aman, Arc
+
+const SITE_INSPIRED: LibraryElementItem[] = [
+  {
+    id: 'anim-spotlight-card',
+    label: 'Spotlight Card (Linear)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'hover', 'spotlight', 'radial', 'gradient', 'card', 'linear', 'mouse-tracking', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Spotlight Card',
+      defaultStyle: { width: '100%', minHeight: '240px' },
+      defaultContent: { html: '<div style="width:100%;min-height:240px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.si-spot-card{position:relative;width:300px;height:200px;border-radius:.75rem;background:#141414;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;--mx:50%;--my:50%}.si-spot-card::before{content:"";position:absolute;inset:0;background:radial-gradient(300px circle at var(--mx) var(--my),rgba(99,102,241,.08),transparent);pointer-events:none;transition:opacity .3s}.si-spot-card:not(:hover)::before{opacity:0}.si-spot-title{color:#ededed;font-size:1rem;font-weight:600;letter-spacing:-.01em;z-index:1}.si-spot-sub{color:rgba(237,237,237,.45);font-size:.8rem;margin-top:.5rem;z-index:1}</style><div class="si-spot-card" id="siSpotCard"><span class="si-spot-title">Spotlight Effect</span><span class="si-spot-sub">Move your cursor over this card</span></div><script>(function(){var c=document.getElementById("siSpotCard");if(!c)return;c.addEventListener("mousemove",function(e){var r=c.getBoundingClientRect();c.style.setProperty("--mx",(e.clientX-r.left)+"px");c.style.setProperty("--my",(e.clientY-r.top)+"px")})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-rotating-gradient-border',
+    label: 'Rotating Gradient Border (Stripe)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'border', 'gradient', 'rotating', 'conic', 'stripe', 'card', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Rotating Border',
+      defaultStyle: { width: '100%', minHeight: '240px' },
+      defaultContent: { html: '<div style="width:100%;min-height:240px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>@property --si-border-angle{syntax:"<angle>";initial-value:0deg;inherits:false}.si-rot-wrap{position:relative;width:280px;height:180px;border-radius:.875rem;padding:1px;background:conic-gradient(from var(--si-border-angle),transparent 30%,#818cf8 50%,#6366f1 55%,transparent 70%);animation:siRotBorder 4s linear infinite}.si-rot-inner{width:100%;height:100%;border-radius:calc(.875rem - 1px);background:#141414;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem}.si-rot-inner span:first-child{color:#ededed;font-size:1rem;font-weight:600}.si-rot-inner span:last-child{color:rgba(237,237,237,.4);font-size:.8rem}@keyframes siRotBorder{to{--si-border-angle:360deg}}</style><div class="si-rot-wrap"><div class="si-rot-inner"><span>Rotating Border</span><span>CSS @property magic</span></div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-code-stagger',
+    label: 'Code Lines Stagger (Vercel)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'stagger', 'code', 'vercel', 'entrance', 'lines', 'developer', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Code Stagger',
+      defaultStyle: { width: '100%', minHeight: '240px' },
+      defaultContent: { html: '<div style="width:100%;min-height:240px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.si-code-block{background:#111;border:1px solid rgba(255,255,255,.06);border-radius:.625rem;padding:1.25rem 1.5rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem;line-height:1.8;width:340px}.si-code-line{opacity:0;transform:translateY(8px);animation:siCodeIn .5s ease forwards}.si-code-line:nth-child(1){animation-delay:0s}.si-code-line:nth-child(2){animation-delay:80ms}.si-code-line:nth-child(3){animation-delay:160ms}.si-code-line:nth-child(4){animation-delay:240ms}.si-code-line:nth-child(5){animation-delay:320ms}@keyframes siCodeIn{to{opacity:1;transform:translateY(0)}}.si-kw{color:#93c5fd}.si-str{color:#86efac}.si-fn{color:#c4b5fd}.si-txt{color:#d4d4d4}.si-cm{color:#6b7280}</style><div class="si-code-block"><div class="si-code-line"><span class="si-kw">const</span> <span class="si-txt">app</span> <span class="si-kw">=</span> <span class="si-fn">createApp</span><span class="si-txt">({</span></div><div class="si-code-line"><span class="si-txt">&nbsp;&nbsp;name: </span><span class="si-str">"JL Studio"</span><span class="si-txt">,</span></div><div class="si-code-line"><span class="si-txt">&nbsp;&nbsp;theme: </span><span class="si-str">"premium-dark"</span><span class="si-txt">,</span></div><div class="si-code-line"><span class="si-txt">&nbsp;&nbsp;quality: </span><span class="si-str">"irr&eacute;prochable"</span></div><div class="si-code-line"><span class="si-txt">})</span></div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-clip-image-reveal',
+    label: 'Clip-Path Image Reveal (Apple)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'clip-path', 'reveal', 'image', 'apple', 'hover', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Clip Image Reveal',
+      defaultStyle: { width: '100%', minHeight: '240px' },
+      defaultContent: { html: '<div style="width:100%;min-height:240px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.si-clip-wrap{width:320px;height:200px;border-radius:.75rem;overflow:hidden;cursor:pointer;position:relative}.si-clip-img{width:100%;height:100%;background:linear-gradient(135deg,#1e1b4b,#312e81,#4338ca,#6366f1);clip-path:inset(0 100% 0 0);transition:clip-path 1.2s cubic-bezier(.77,0,.175,1)}.si-clip-wrap:hover .si-clip-img{clip-path:inset(0 0 0 0)}.si-clip-label{position:absolute;bottom:1rem;left:1.25rem;color:#ededed;font-size:.85rem;font-weight:500;opacity:.7;pointer-events:none}</style><div class="si-clip-wrap"><div class="si-clip-img"></div><span class="si-clip-label">Hover to reveal</span></div></div>' },
+    },
+  },
+  {
+    id: 'anim-page-wipe-transition',
+    label: 'Page Wipe Transition (Cuberto)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'transition', 'wipe', 'page', 'cuberto', 'fullscreen', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Page Wipe',
+      defaultStyle: { width: '100%', minHeight: '260px' },
+      defaultContent: { html: '<div style="width:100%;min-height:260px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.si-wipe-demo{position:relative;width:340px;height:220px;border-radius:.75rem;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}.si-wipe-overlay{position:absolute;inset:0;background:#6366f1;transform:scaleY(0);transform-origin:bottom;z-index:2;pointer-events:none}.si-wipe-demo.si-wipe-active .si-wipe-overlay{animation:siWipeIn .6s cubic-bezier(.86,0,.07,1) forwards,siWipeOut .6s cubic-bezier(.86,0,.07,1) .6s forwards}@keyframes siWipeIn{from{transform:scaleY(0);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}@keyframes siWipeOut{from{transform:scaleY(1);transform-origin:top}to{transform:scaleY(0);transform-origin:top}}.si-wipe-btn{padding:.625rem 1.5rem;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);border-radius:.5rem;color:#a5b4fc;font-size:.8rem;font-weight:500;cursor:pointer;z-index:3;transition:background .2s}.si-wipe-btn:hover{background:rgba(99,102,241,.2)}</style><div class="si-wipe-demo" id="siWipeDemo"><div class="si-wipe-overlay"></div><button class="si-wipe-btn" id="siWipeBtn">Trigger Wipe</button></div><script>(function(){var d=document.getElementById("siWipeDemo"),b=document.getElementById("siWipeBtn");if(!d||!b)return;b.addEventListener("click",function(){d.classList.remove("si-wipe-active");void d.offsetWidth;d.classList.add("si-wipe-active");setTimeout(function(){d.classList.remove("si-wipe-active")},1400)})})()</script></div>' },
+    },
+  },
+  {
+    id: 'anim-elastic-press',
+    label: 'Elastic Press Button (Arc)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'button', 'press', 'elastic', 'spring', 'arc', 'micro-interaction', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Elastic Press',
+      defaultStyle: { width: '100%', minHeight: '160px' },
+      defaultContent: { html: '<div style="width:100%;min-height:160px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem;gap:1.5rem"><style>.si-elastic-btn{padding:.75rem 2rem;background:linear-gradient(135deg,#6366f1,#818cf8);border:none;border-radius:.625rem;color:#fff;font-size:.875rem;font-weight:600;letter-spacing:-.01em;cursor:pointer;transform:scale(1);transition:transform .4s cubic-bezier(.34,1.56,.64,1);user-select:none;-webkit-user-select:none}.si-elastic-btn:active{transform:scale(.96);transition:transform .1s ease}.si-elastic-btn:hover{box-shadow:0 0 24px rgba(99,102,241,.3)}.si-elastic-alt{padding:.75rem 2rem;background:transparent;border:1px solid rgba(237,237,237,.15);border-radius:.625rem;color:#ededed;font-size:.875rem;font-weight:500;cursor:pointer;transform:scale(1);transition:transform .4s cubic-bezier(.34,1.56,.64,1),border-color .2s;user-select:none;-webkit-user-select:none}.si-elastic-alt:active{transform:scale(.96);transition:transform .1s ease}.si-elastic-alt:hover{border-color:rgba(237,237,237,.3)}</style><button class="si-elastic-btn">Get Started</button><button class="si-elastic-alt">Learn More</button></div>' },
+    },
+  },
+  {
+    id: 'anim-stacked-sticky-cards',
+    label: 'Stacked Sticky Cards (Locomotive)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'scroll', 'sticky', 'cards', 'stacked', 'locomotive', 'storytelling', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Sticky Stack',
+      defaultStyle: { width: '100%', minHeight: '300px' },
+      defaultContent: { html: '<div style="width:100%;display:flex;align-items:flex-start;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:1rem"><style>.si-sticky-scroll{width:360px;height:500px;overflow-y:auto;position:relative;border-radius:.75rem;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent}.si-sticky-scroll::-webkit-scrollbar{width:4px}.si-sticky-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}.si-sticky-spacer{height:200px}.si-sticky-card{position:sticky;width:320px;margin:0 auto;height:180px;border-radius:.75rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;border:1px solid rgba(255,255,255,.06);box-shadow:0 8px 32px rgba(0,0,0,.4)}.si-sticky-card:nth-child(1){top:20px;background:linear-gradient(135deg,#1e1b4b,#312e81)}.si-sticky-card:nth-child(2){top:40px;background:linear-gradient(135deg,#1a2e05,#365314)}.si-sticky-card:nth-child(3){top:60px;background:linear-gradient(135deg,#451a03,#78350f)}.si-sticky-card span:first-child{color:#ededed;font-size:.95rem;font-weight:600}.si-sticky-card span:last-child{color:rgba(237,237,237,.45);font-size:.75rem}.si-sticky-hint{text-align:center;color:rgba(237,237,237,.25);font-size:.7rem;padding:.75rem}</style><div class="si-sticky-scroll"><div class="si-sticky-hint">Scroll down &darr;</div><div class="si-sticky-card"><span>Design</span><span>Pixel-perfect interfaces</span></div><div class="si-sticky-spacer"></div><div class="si-sticky-card"><span>Develop</span><span>Production-grade code</span></div><div class="si-sticky-spacer"></div><div class="si-sticky-card"><span>Deploy</span><span>Ship to the world</span></div><div class="si-sticky-spacer"></div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-ken-burns-ambient',
+    label: 'Ken Burns Ambient (Aman)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'ken-burns', 'zoom', 'ambient', 'aman', 'luxury', 'image', 'slow', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Ken Burns',
+      defaultStyle: { width: '100%', minHeight: '240px' },
+      defaultContent: { html: '<div style="width:100%;min-height:240px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.si-kb-wrap{width:340px;height:200px;border-radius:.75rem;overflow:hidden;position:relative}.si-kb-img{width:100%;height:100%;background:linear-gradient(160deg,#0c0a09,#1c1917 30%,#292524 60%,#44403c);animation:siKenBurns 15s ease-in-out infinite alternate;transform-origin:center}.si-kb-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.6),transparent 50%);pointer-events:none}.si-kb-text{position:absolute;bottom:1.25rem;left:1.5rem;color:#ededed;font-size:.85rem;font-weight:500;letter-spacing:.05em;opacity:.7}@keyframes siKenBurns{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.05) translate(-1%,-1%)}}</style><div class="si-kb-wrap"><div class="si-kb-img"></div><div class="si-kb-overlay"></div><span class="si-kb-text">AMBIENT LUXURY</span></div></div>' },
+    },
+  },
+  {
+    id: 'anim-light-beam',
+    label: 'Light Beam Sweep (Stripe)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'light', 'beam', 'sweep', 'stripe', 'ambient', 'dark', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Light Beam',
+      defaultStyle: { width: '100%', minHeight: '200px' },
+      defaultContent: { html: '<div style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.si-beam-card{position:relative;width:340px;height:160px;border-radius:.75rem;background:#111;border:1px solid rgba(255,255,255,.04);overflow:hidden;display:flex;align-items:center;justify-content:center}.si-beam-card::before{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.03) 45%,rgba(255,255,255,.05) 50%,rgba(255,255,255,.03) 55%,transparent 60%);animation:siBeamDrift 8s ease-in-out infinite;pointer-events:none}@keyframes siBeamDrift{0%{transform:translateX(-30%) rotate(-15deg)}50%{transform:translateX(30%) rotate(-15deg)}100%{transform:translateX(-30%) rotate(-15deg)}}.si-beam-txt{color:#ededed;font-size:.9rem;font-weight:500;z-index:1;opacity:.6}</style><div class="si-beam-card"><span class="si-beam-txt">Subtle light beam</span></div></div>' },
+    },
+  },
+  {
+    id: 'anim-text-swap-hover',
+    label: 'Text Swap Hover (Cuberto)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'text', 'swap', 'hover', 'cuberto', 'navigation', 'link', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Text Swap',
+      defaultStyle: { width: '100%', minHeight: '160px' },
+      defaultContent: { html: '<div style="width:100%;min-height:160px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem;gap:2.5rem"><style>.si-swap-link{position:relative;overflow:hidden;height:1.5em;display:inline-flex;flex-direction:column;cursor:pointer;text-decoration:none}.si-swap-link span{display:block;font-size:1.1rem;font-weight:500;letter-spacing:-.01em;transition:transform .4s cubic-bezier(.77,0,.175,1)}.si-swap-link span:first-child{color:#ededed}.si-swap-link span:last-child{color:#818cf8;position:absolute;top:100%}.si-swap-link:hover span{transform:translateY(-100%)}</style><a class="si-swap-link" href="#!"><span>Work</span><span>Work</span></a><a class="si-swap-link" href="#!"><span>About</span><span>About</span></a><a class="si-swap-link" href="#!"><span>Contact</span><span>Contact</span></a></div>' },
+    },
+  },
+  {
+    id: 'anim-list-hover-expand',
+    label: 'List Hover Expand (Linear)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'list', 'hover', 'expand', 'linear', 'accordion', 'content', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'List Expand',
+      defaultStyle: { width: '100%', minHeight: '280px' },
+      defaultContent: { html: '<div style="width:100%;min-height:280px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem"><style>.si-xlist{width:360px;display:flex;flex-direction:column}.si-xlist-item{border-top:1px solid rgba(255,255,255,.06);padding:1rem 0;cursor:pointer}.si-xlist-item:last-child{border-bottom:1px solid rgba(255,255,255,.06)}.si-xlist-head{display:flex;align-items:center;gap:.75rem;transition:transform .35s cubic-bezier(.25,.46,.45,.94)}.si-xlist-num{color:rgba(237,237,237,.2);font-size:.75rem;font-weight:600;font-variant-numeric:tabular-nums;min-width:1.5rem}.si-xlist-title{color:#ededed;font-size:.95rem;font-weight:500}.si-xlist-desc{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.25,.46,.45,.94),opacity .35s;opacity:0;padding-left:2.25rem;color:rgba(237,237,237,.4);font-size:.8rem;line-height:1.6}.si-xlist-item:hover .si-xlist-head{transform:translateX(2rem)}.si-xlist-item:hover .si-xlist-desc{max-height:80px;opacity:1}</style><div class="si-xlist"><div class="si-xlist-item"><div class="si-xlist-head"><span class="si-xlist-num">01</span><span class="si-xlist-title">Strategy</span></div><div class="si-xlist-desc">Define goals, audience, and brand positioning for maximum impact.</div></div><div class="si-xlist-item"><div class="si-xlist-head"><span class="si-xlist-num">02</span><span class="si-xlist-title">Design</span></div><div class="si-xlist-desc">Craft pixel-perfect interfaces with premium attention to detail.</div></div><div class="si-xlist-item"><div class="si-xlist-head"><span class="si-xlist-num">03</span><span class="si-xlist-title">Development</span></div><div class="si-xlist-desc">Build with modern tech stack, optimized for performance.</div></div></div></div>' },
+    },
+  },
+  {
+    id: 'anim-glossy-cursor-reflection',
+    label: 'Glossy Cursor Reflection (Apple)',
+    category: 'animations', subcategory: 'site-inspired',
+    tags: ['animation', 'hover', '3d', 'tilt', 'glossy', 'reflection', 'apple', 'mouse-tracking', 'premium'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Glossy Tilt',
+      defaultStyle: { width: '100%', minHeight: '260px' },
+      defaultContent: { html: '<div style="width:100%;min-height:260px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-radius:.75rem;padding:2rem;perspective:900px"><style>.si-glossy-card{position:relative;width:300px;height:200px;border-radius:.875rem;background:linear-gradient(145deg,#18181b,#1f1f23);border:1px solid rgba(255,255,255,.05);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;cursor:pointer;transform-style:preserve-3d;transition:transform .15s ease-out;overflow:hidden;--gx:50%;--gy:50%}.si-glossy-card::after{content:"";position:absolute;inset:0;background:radial-gradient(280px circle at var(--gx) var(--gy),rgba(255,255,255,.15),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;border-radius:.875rem}.si-glossy-card:hover::after{opacity:1}.si-glossy-title{color:#ededed;font-size:1rem;font-weight:600;z-index:1}.si-glossy-sub{color:rgba(237,237,237,.4);font-size:.8rem;z-index:1}</style><div class="si-glossy-card" id="siGlossyCard"><span class="si-glossy-title">3D Glossy Card</span><span class="si-glossy-sub">Tilt + light reflection</span></div><script>(function(){var c=document.getElementById("siGlossyCard");if(!c)return;c.addEventListener("mousemove",function(e){var r=c.getBoundingClientRect();var x=(e.clientX-r.left)/r.width-.5;var y=(e.clientY-r.top)/r.height-.5;c.style.transform="rotateY("+x*15+"deg) rotateX("+(-y*15)+"deg)";c.style.setProperty("--gx",(e.clientX-r.left)+"px");c.style.setProperty("--gy",(e.clientY-r.top)+"px")});c.addEventListener("mouseleave",function(){c.style.transform="rotateY(0) rotateX(0)"})})()</script></div>' },
+    },
+  },
+]
+
 // ─── EXPORT ───
 
 export const LIBRARY_ANIMATIONS: LibraryElementItem[] = [
@@ -1845,4 +2433,11 @@ export const LIBRARY_ANIMATIONS: LibraryElementItem[] = [
   ...BACKGROUNDS,
   ...LINK_EFFECTS,
   ...KEYFRAME_EFFECTS,
+  ...CURSOR_EFFECTS,
+  ...TEXT_PREMIUM,
+  ...SCROLL_PREMIUM,
+  ...HOVER_PREMIUM,
+  ...SECTION_TRANSITIONS,
+  ...BACKGROUNDS_PREMIUM,
+  ...SITE_INSPIRED,
 ]
