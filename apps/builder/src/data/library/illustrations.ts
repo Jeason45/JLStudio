@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────
-// LIBRARY — Illustrations & decorations (Brixsa-quality premium)
+// LIBRARY — Illustrations & decorations (neutral premium defaults)
 // ─────────────────────────────────────────────
 
 import type { LibraryElementItem } from '@/types/library'
@@ -16,7 +16,7 @@ const BLOBS: LibraryElementItem[] = [
     elementDef: {
       type: 'custom-embed', label: 'Warm Blob',
       defaultStyle: { width: '400px', height: '400px', position: 'absolute', opacity: 0.2 },
-      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="#4a2711" d="M39.5,-65.3C50.3,-57.5,57.5,-45.4,63.8,-32.8C70,-20.2,75.2,-7,73.3,5.1C71.4,17.1,62.4,28.1,53.2,38.4C44,48.6,34.6,58.2,22.9,63.7C11.3,69.2,-2.6,70.7,-16.8,68.3C-31,65.9,-45.5,59.7,-55.2,49.2C-64.9,38.7,-69.8,23.9,-72.1,8.5C-74.4,-6.8,-74.2,-22.8,-67.2,-35.2C-60.3,-47.7,-46.7,-56.6,-33.2,-63C-19.7,-69.4,-6.3,-73.4,4.6,-80.6C15.4,-87.9,28.8,-73.1,39.5,-65.3Z" transform="translate(100 100)" /></svg>' },
+      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="#1e293b" d="M39.5,-65.3C50.3,-57.5,57.5,-45.4,63.8,-32.8C70,-20.2,75.2,-7,73.3,5.1C71.4,17.1,62.4,28.1,53.2,38.4C44,48.6,34.6,58.2,22.9,63.7C11.3,69.2,-2.6,70.7,-16.8,68.3C-31,65.9,-45.5,59.7,-55.2,49.2C-64.9,38.7,-69.8,23.9,-72.1,8.5C-74.4,-6.8,-74.2,-22.8,-67.2,-35.2C-60.3,-47.7,-46.7,-56.6,-33.2,-63C-19.7,-69.4,-6.3,-73.4,4.6,-80.6C15.4,-87.9,28.8,-73.1,39.5,-65.3Z" transform="translate(100 100)" /></svg>' },
     },
   },
   {
@@ -28,7 +28,7 @@ const BLOBS: LibraryElementItem[] = [
     elementDef: {
       type: 'custom-embed', label: 'Purple Blob',
       defaultStyle: { width: '350px', height: '350px', position: 'absolute', opacity: 0.15 },
-      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="#6366f1" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,79.7,-45.8C87.6,-32.5,90.3,-16.3,88.9,-0.8C87.5,14.7,82,29.4,73.1,41.4C64.2,53.5,51.9,63,38.3,70.1C24.7,77.3,9.8,82.1,-4.2,88.3C-18.2,94.5,-31.4,102.1,-42.4,98.3C-53.5,94.4,-62.4,79.1,-69.5,64.2C-76.6,49.3,-82,34.8,-83.6,20.1C-85.3,5.3,-83.3,-9.7,-78.1,-23.3C-72.9,-36.9,-64.6,-49.2,-53,-57.6C-41.5,-66,-26.7,-70.6,-11.6,-73.3C3.5,-76,30.6,-83.5,44.7,-76.4Z" transform="translate(100 100)" /></svg>' },
+      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="#64748b" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,79.7,-45.8C87.6,-32.5,90.3,-16.3,88.9,-0.8C87.5,14.7,82,29.4,73.1,41.4C64.2,53.5,51.9,63,38.3,70.1C24.7,77.3,9.8,82.1,-4.2,88.3C-18.2,94.5,-31.4,102.1,-42.4,98.3C-53.5,94.4,-62.4,79.1,-69.5,64.2C-76.6,49.3,-82,34.8,-83.6,20.1C-85.3,5.3,-83.3,-9.7,-78.1,-23.3C-72.9,-36.9,-64.6,-49.2,-53,-57.6C-41.5,-66,-26.7,-70.6,-11.6,-73.3C3.5,-76,30.6,-83.5,44.7,-76.4Z" transform="translate(100 100)" /></svg>' },
     },
   },
   {
@@ -41,7 +41,7 @@ const BLOBS: LibraryElementItem[] = [
       type: 'custom-container', label: 'Gold Glow',
       defaultStyle: {
         width: '300px', height: '300px', position: 'absolute',
-        backgroundColor: '#c8a97e', borderRadius: '99px',
+        backgroundColor: '#94a3b8', borderRadius: '99px',
         opacity: 0.12, filter: 'blur(80px)',
       },
       defaultContent: {},
@@ -57,7 +57,7 @@ const BLOBS: LibraryElementItem[] = [
       type: 'custom-container', label: 'Indigo Glow',
       defaultStyle: {
         width: '400px', height: '400px', position: 'absolute',
-        backgroundColor: '#6366f1', borderRadius: '99px',
+        backgroundColor: '#64748b', borderRadius: '99px',
         opacity: 0.1, filter: 'blur(100px)',
       },
       defaultContent: {},
@@ -69,15 +69,15 @@ const BLOBS: LibraryElementItem[] = [
 
 const GRADIENTS: LibraryElementItem[] = [
   {
-    id: 'ill-gradient-brixsa-dark',
-    label: 'Brixsa Dark Gradient',
+    id: 'ill-gradient-dark-neutral',
+    label: 'Dark Neutral Gradient',
     category: 'illustrations', subcategory: 'gradients',
-    tags: ['gradient', 'dark', 'brown', 'brixsa', 'luxury'],
+    tags: ['gradient', 'dark', 'brown', 'neutral', 'luxury'],
     dropType: 'element',
     elementDef: {
       type: 'custom-embed', label: 'Dark Gradient',
       defaultStyle: { width: '100%', height: '400px', borderRadius: '0.75rem' },
-      defaultContent: { html: '<div style="width:100%;height:100%;background:linear-gradient(135deg,#2c1e14 0%,#3d2b1a 50%,#1a120b 100%);border-radius:inherit"></div>' },
+      defaultContent: { html: '<div style="width:100%;height:100%;background:linear-gradient(135deg,#1e293b 0%,#334155 50%,#0f172a 100%);border-radius:inherit"></div>' },
     },
   },
   {
@@ -108,12 +108,12 @@ const GRADIENTS: LibraryElementItem[] = [
     id: 'ill-gradient-warm-cream',
     label: 'Warm Cream Gradient',
     category: 'illustrations', subcategory: 'gradients',
-    tags: ['gradient', 'warm', 'cream', 'brixsa'],
+    tags: ['gradient', 'warm', 'cream', 'neutral'],
     dropType: 'element',
     elementDef: {
       type: 'custom-embed', label: 'Warm Cream',
       defaultStyle: { width: '100%', height: '300px', borderRadius: '0.75rem' },
-      defaultContent: { html: '<div style="width:100%;height:100%;background:linear-gradient(135deg,#f6efe5 0%,#e8ddd0 50%,#d4c5b3 100%);border-radius:inherit"></div>' },
+      defaultContent: { html: '<div style="width:100%;height:100%;background:linear-gradient(135deg,#f5f5f5 0%,#e8ddd0 50%,#d4c5b3 100%);border-radius:inherit"></div>' },
     },
   },
 ]
@@ -171,7 +171,7 @@ const DECORATIVE: LibraryElementItem[] = [
     elementDef: {
       type: 'custom-embed', label: 'Wave',
       defaultStyle: { width: '100%', height: '80px' },
-      defaultContent: { html: '<svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:100%"><path d="M0 40 C 360 80, 720 0, 1080 40 S 1440 80, 1440 40 L 1440 80 L 0 80 Z" fill="#f6efe5"/></svg>' },
+      defaultContent: { html: '<svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:100%"><path d="M0 40 C 360 80, 720 0, 1080 40 S 1440 80, 1440 40 L 1440 80 L 0 80 Z" fill="#f5f5f5"/></svg>' },
     },
   },
   {
@@ -183,7 +183,7 @@ const DECORATIVE: LibraryElementItem[] = [
     elementDef: {
       type: 'custom-embed', label: 'Wave Dark',
       defaultStyle: { width: '100%', height: '80px' },
-      defaultContent: { html: '<svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:100%"><path d="M0 40 C 360 80, 720 0, 1080 40 S 1440 80, 1440 40 L 1440 80 L 0 80 Z" fill="#140c08"/></svg>' },
+      defaultContent: { html: '<svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:100%"><path d="M0 40 C 360 80, 720 0, 1080 40 S 1440 80, 1440 40 L 1440 80 L 0 80 Z" fill="#0f172a"/></svg>' },
     },
   },
   {
@@ -195,7 +195,7 @@ const DECORATIVE: LibraryElementItem[] = [
     elementDef: {
       type: 'custom-embed', label: 'Gold Line',
       defaultStyle: { width: '120px', height: '3px' },
-      defaultContent: { html: '<div style="width:100%;height:100%;background:linear-gradient(90deg,#c8a97e,#4a2711);border-radius:99px"></div>' },
+      defaultContent: { html: '<div style="width:100%;height:100%;background:linear-gradient(90deg,#94a3b8,#1e293b);border-radius:99px"></div>' },
     },
   },
   {
@@ -208,7 +208,7 @@ const DECORATIVE: LibraryElementItem[] = [
       type: 'custom-container', label: 'Glow Circle',
       defaultStyle: {
         width: '200px', height: '200px',
-        backgroundColor: '#c8a97e', borderRadius: '99px',
+        backgroundColor: '#94a3b8', borderRadius: '99px',
         boxShadow: '0 0 80px 30px rgba(200,169,126,0.25)',
         opacity: 0.5,
       },
@@ -363,7 +363,7 @@ const ABSTRACT_SHAPES: LibraryElementItem[] = [
     elementDef: {
       type: 'custom-embed', label: 'Corner Lines',
       defaultStyle: { width: '100%', height: '300px' },
-      defaultContent: { html: '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%" preserveAspectRatio="none"><g stroke="#c8a97e" stroke-width="0.75" fill="none" opacity="0.6"><polyline points="10,40 10,10 40,10"/><polyline points="10,50 10,10 50,10"/><line x1="10" y1="10" x2="30" y2="30" stroke-width="0.5"/><polyline points="360,10 390,10 390,40"/><polyline points="350,10 390,10 390,50"/><line x1="390" y1="10" x2="370" y2="30" stroke-width="0.5"/><polyline points="10,260 10,290 40,290"/><polyline points="10,250 10,290 50,290"/><line x1="10" y1="290" x2="30" y2="270" stroke-width="0.5"/><polyline points="360,290 390,290 390,260"/><polyline points="350,290 390,290 390,250"/><line x1="390" y1="290" x2="370" y2="270" stroke-width="0.5"/></g></svg>' },
+      defaultContent: { html: '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%" preserveAspectRatio="none"><g stroke="#94a3b8" stroke-width="0.75" fill="none" opacity="0.6"><polyline points="10,40 10,10 40,10"/><polyline points="10,50 10,10 50,10"/><line x1="10" y1="10" x2="30" y2="30" stroke-width="0.5"/><polyline points="360,10 390,10 390,40"/><polyline points="350,10 390,10 390,50"/><line x1="390" y1="10" x2="370" y2="30" stroke-width="0.5"/><polyline points="10,260 10,290 40,290"/><polyline points="10,250 10,290 50,290"/><line x1="10" y1="290" x2="30" y2="270" stroke-width="0.5"/><polyline points="360,290 390,290 390,260"/><polyline points="350,290 390,290 390,250"/><line x1="390" y1="290" x2="370" y2="270" stroke-width="0.5"/></g></svg>' },
     },
   },
 ]
@@ -431,18 +431,6 @@ const GLASSMORPHIC: LibraryElementItem[] = [
 
 const GEOMETRIC_PATTERNS: LibraryElementItem[] = [
   {
-    id: 'illus-grid-dots',
-    label: 'Dot Grid',
-    category: 'illustrations', subcategory: 'patterns',
-    tags: ['pattern', 'dots', 'grid', 'subtle', 'background'],
-    dropType: 'element',
-    elementDef: {
-      type: 'custom-embed', label: 'Dot Grid',
-      defaultStyle: { width: '200px', height: '200px', opacity: 0.15 },
-      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#0f172a"/><defs><pattern id="dot-grid-geo" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="rgba(255,255,255,0.4)"/></pattern></defs><rect width="200" height="200" fill="url(#dot-grid-geo)"/></svg>' },
-    },
-  },
-  {
     id: 'illus-isometric-cubes',
     label: 'Isometric Cubes',
     category: 'illustrations', subcategory: 'patterns',
@@ -452,18 +440,6 @@ const GEOMETRIC_PATTERNS: LibraryElementItem[] = [
       type: 'custom-embed', label: 'Isometric Cubes',
       defaultStyle: { width: '200px', height: '200px', opacity: 0.2 },
       defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="iso-cubes-geo" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><path d="M30 0 L60 17.3 L60 52 L30 34.7 Z" fill="rgba(255,255,255,0.08)"/><path d="M30 0 L0 17.3 L0 52 L30 34.7 Z" fill="rgba(255,255,255,0.15)"/><path d="M0 17.3 L30 0 L60 17.3 L30 34.7 Z" fill="rgba(255,255,255,0.22)"/></pattern></defs><rect width="200" height="200" fill="url(#iso-cubes-geo)"/></svg>' },
-    },
-  },
-  {
-    id: 'illus-diagonal-lines',
-    label: 'Diagonal Lines',
-    category: 'illustrations', subcategory: 'patterns',
-    tags: ['pattern', 'diagonal', 'lines', 'subtle', 'overlay'],
-    dropType: 'element',
-    elementDef: {
-      type: 'custom-embed', label: 'Diagonal Lines',
-      defaultStyle: { width: '200px', height: '200px', opacity: 0.12 },
-      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="diag-lines-geo" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="14" stroke="rgba(255,255,255,0.3)" stroke-width="0.75"/></pattern></defs><rect width="200" height="200" fill="url(#diag-lines-geo)"/></svg>' },
     },
   },
   {
@@ -492,7 +468,7 @@ const LINE_ART: LibraryElementItem[] = [
     elementDef: {
       type: 'custom-embed', label: 'Wave Line',
       defaultStyle: { width: '200px', height: '200px' },
-      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M10 100 C 40 60, 70 140, 100 100 S 160 60, 190 100" fill="none" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/></svg>' },
+      defaultContent: { html: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M10 100 C 40 60, 70 140, 100 100 S 160 60, 190 100" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"/></svg>' },
     },
   },
   {
