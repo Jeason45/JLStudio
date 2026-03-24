@@ -5869,6 +5869,408 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
     )
   }
 
+  if (universe === 'warm') {
+    const accent = accentColor ?? '#b4654a'
+    const layout = variant.replace('warm-', '')
+
+    const header = (
+      <div className={cn("mb-16 space-y-5", textAlign ? getTextAlignClass(textAlign) : 'text-center')}>
+        {eyebrow ? (
+          <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-xs font-medium tracking-[0.15em] uppercase" style={{ color: accent }}>
+            {eyebrow}
+          </span>
+        ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="eyebrow" type="badge" className="mb-4" />}
+        <div className="w-12 h-px mx-auto" style={{ background: accent, opacity: 0.4 }} />
+        {title && (
+          <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: customTextColor ?? '#3d2b1f', fontFamily: 'Georgia, serif' }}>
+            {title}
+          </h2>
+        )}
+        {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto leading-relaxed" style={{ color: '#78593e' }}>{subtitle}</p>}
+      </div>
+    )
+
+    if (layout === 'grid' || layout === 'minimal') {
+      return (
+        <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#faf7f2' }} className="py-24">
+          <div className="max-w-5xl mx-auto px-6">
+            {header}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+              {items.map((item, i) => (
+                <div key={item.id} className="space-y-4 text-center">
+                  <div className="w-12 h-12 mx-auto rounded flex items-center justify-center" style={{ backgroundColor: `${accent}12` }}>
+                    <DynamicIcon name={item.icon} className="w-5 h-5" fallbackClassName="text-xl leading-none" style={{ color: accent }} />
+                  </div>
+                  <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-medium text-base" style={{ color: '#3d2b1f', fontFamily: 'Georgia, serif' }}>{item.title}</h3>
+                  <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm leading-relaxed" style={{ color: '#78593e' }}>{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // List
+    return (
+      <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#faf7f2' }} className="py-24">
+        <div className="max-w-3xl mx-auto px-6">
+          {header}
+          <div className="space-y-0 divide-y" style={{ borderColor: `${accent}15` }}>
+            {items.map((item, i) => (
+              <div key={item.id} className="flex items-start gap-5 py-6">
+                <span className="text-sm font-medium shrink-0 mt-1" style={{ color: accent }}>0{i + 1}</span>
+                <div className="flex-1">
+                  <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-medium mb-1" style={{ color: '#3d2b1f', fontFamily: 'Georgia, serif' }}>{item.title}</h3>
+                  <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm leading-relaxed" style={{ color: '#78593e' }}>{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // PLAYFUL — Duolingo/Figma, bold rounded, vibrant
+  // ═══════════════════════════════════════════
+
+  if (universe === 'playful') {
+    const accent = accentColor ?? '#7c3aed'
+    const layout = variant.replace('playful-', '')
+
+    const header = (
+      <div className={cn("text-center mb-14 space-y-4", textAlign && getTextAlignClass(textAlign))}>
+        {eyebrow ? (
+          <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-flex items-center gap-2 text-sm font-bold px-5 py-2 rounded-full text-white" style={{ backgroundColor: accent }}>
+            {eyebrow}
+          </span>
+        ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="eyebrow" type="badge" className="mb-4" />}
+        {title && (
+          <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-extrabold text-zinc-900 leading-tight", titleSize && getTitleSizeClass(titleSize))} style={customTextColor ? { color: customTextColor } : undefined}>
+            {title}
+          </h2>
+        )}
+        {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg text-zinc-500 max-w-2xl mx-auto font-medium">{subtitle}</p>}
+      </div>
+    )
+
+    if (layout === 'grid' || layout === 'cards') {
+      return (
+        <section className="bg-white py-20" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+          <div className="max-w-6xl mx-auto px-6">
+            {header}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {items.map((item, i) => {
+                const colors = ['#7c3aed', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#ef4444']
+                const c = colors[i % colors.length]
+                return (
+                  <div key={item.id} className="rounded-2xl p-7 border-2 border-zinc-100 hover:border-violet-200 transition-all hover:shadow-lg hover:-translate-y-1" style={{ background: '#faf5ff' }}>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-5" style={{ backgroundColor: `${c}15` }}>
+                      <DynamicIcon name={item.icon} className="w-5 h-5" fallbackClassName="text-xl leading-none" style={{ color: c }} />
+                    </div>
+                    <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-bold text-zinc-900 mb-2">{item.title}</h3>
+                    <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm text-zinc-500 leading-relaxed">{item.description}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // List
+    return (
+      <section className="bg-white py-20" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+        <div className="max-w-3xl mx-auto px-6">
+          {header}
+          <div className="space-y-4">
+            {items.map((item, i) => (
+              <div key={item.id} className="flex items-center gap-5 p-5 rounded-2xl border-2 border-zinc-100 hover:border-violet-200 transition-all">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${accent}12` }}>
+                  <DynamicIcon name={item.icon} className="w-5 h-5" fallbackClassName="text-lg leading-none" style={{ color: accent }} />
+                </div>
+                <div className="flex-1">
+                  <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-bold text-zinc-900 mb-0.5">{item.title}</h3>
+                  <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm text-zinc-500">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // RETRO — Vintage, slab, amber, sharp edges
+  // ═══════════════════════════════════════════
+
+  if (universe === 'retro') {
+    const accent = accentColor ?? '#d97706'
+    const layout = variant.replace('retro-', '')
+
+    const header = (
+      <div className={cn("text-center mb-14 space-y-4", textAlign && getTextAlignClass(textAlign))}>
+        <div className="flex items-center justify-center gap-4 mb-2">
+          <div className="w-12 h-0.5" style={{ backgroundColor: '#92400e' }} />
+          <span style={{ color: '#92400e', fontSize: '1rem' }}>✦</span>
+          <div className="w-12 h-0.5" style={{ backgroundColor: '#92400e' }} />
+        </div>
+        {eyebrow && <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-xs font-extrabold tracking-[0.2em] uppercase px-3 py-1" style={{ backgroundColor: accent, color: '#fffbeb' }}>{eyebrow}</span>}
+        {title && (
+          <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-black uppercase tracking-wide leading-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: customTextColor ?? '#451a03' }}>
+            {title}
+          </h2>
+        )}
+        {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto" style={{ color: '#78350f' }}>{subtitle}</p>}
+      </div>
+    )
+
+    if (layout === 'grid' || layout === 'cards') {
+      return (
+        <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#fffbeb' }} className="py-20">
+          <div className="max-w-6xl mx-auto px-6">
+            {header}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {items.map((item, i) => (
+                <div key={item.id} className="p-6 border-2 hover:shadow-md transition-shadow" style={{ borderColor: '#92400e', background: '#fff' }}>
+                  <div className="text-2xl font-black mb-4" style={{ color: accent }}>0{i + 1}</div>
+                  <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-extrabold uppercase tracking-wide text-sm mb-2" style={{ color: '#451a03' }}>{item.title}</h3>
+                  <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm leading-relaxed" style={{ color: '#78350f' }}>{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // List
+    return (
+      <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#fffbeb' }} className="py-20">
+        <div className="max-w-3xl mx-auto px-6">
+          {header}
+          <div className="space-y-0 divide-y-2" style={{ borderColor: '#92400e' }}>
+            {items.map((item, i) => (
+              <div key={item.id} className="flex items-start gap-5 py-6">
+                <span className="text-2xl font-black shrink-0" style={{ color: accent }}>0{i + 1}</span>
+                <div className="flex-1">
+                  <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-extrabold uppercase tracking-wide text-sm mb-1" style={{ color: '#451a03' }}>{item.title}</h3>
+                  <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm leading-relaxed" style={{ color: '#78350f' }}>{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // DARK-PREMIUM — Noir & gold, ultra-thin, cinematic
+  // ═══════════════════════════════════════════
+
+  if (variant.startsWith('dark-premium')) {
+    const gold = accentColor ?? '#d4af37'
+    const layout = variant.replace('dark-premium-', '')
+
+    const header = (
+      <div className={cn("text-center mb-16 space-y-6", textAlign && getTextAlignClass(textAlign))}>
+        {eyebrow && (
+          <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-[0.6875rem] font-normal tracking-[0.3em] uppercase" style={{ color: gold }}>
+            {eyebrow}
+          </span>
+        )}
+        <div className="w-16 h-px mx-auto" style={{ background: `linear-gradient(90deg, transparent, ${gold}, transparent)` }} />
+        {title && (
+          <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-extralight leading-tight tracking-[0.04em] uppercase text-white", titleSize && getTitleSizeClass(titleSize))} style={customTextColor ? { color: customTextColor } : undefined}>
+            {title}
+          </h2>
+        )}
+        {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto font-light tracking-wide" style={{ color: `${gold}80` }}>{subtitle}</p>}
+      </div>
+    )
+
+    if (layout === 'grid' || layout === 'cards') {
+      return (
+        <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#0a0a0a' }} className="py-24">
+          <div className="max-w-5xl mx-auto px-6">
+            {header}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {items.map((item, i) => (
+                <div key={item.id} className="p-7 border transition-colors hover:border-opacity-40" style={{ borderColor: `${gold}20`, background: 'rgba(255,255,255,0.02)' }}>
+                  <div className="w-10 h-10 flex items-center justify-center mb-5 border" style={{ borderColor: `${gold}30` }}>
+                    <DynamicIcon name={item.icon} className="w-4 h-4" fallbackClassName="text-lg leading-none" style={{ color: gold }} />
+                  </div>
+                  <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-light text-sm tracking-[0.08em] uppercase text-white mb-3">{item.title}</h3>
+                  <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm leading-relaxed font-light" style={{ color: 'rgba(250,250,249,0.45)' }}>{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // List
+    return (
+      <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#0a0a0a' }} className="py-24">
+        <div className="max-w-3xl mx-auto px-6">
+          {header}
+          <div className="space-y-0 divide-y" style={{ borderColor: `${gold}15` }}>
+            {items.map((item, i) => (
+              <div key={item.id} className="flex items-start gap-6 py-7">
+                <div className="w-10 h-10 flex items-center justify-center shrink-0 border" style={{ borderColor: `${gold}20` }}>
+                  <DynamicIcon name={item.icon} className="w-4 h-4" fallbackClassName="text-lg leading-none" style={{ color: gold }} />
+                </div>
+                <div className="flex-1">
+                  <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-light text-sm tracking-[0.08em] uppercase text-white mb-1.5">{item.title}</h3>
+                  <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm leading-relaxed font-light" style={{ color: 'rgba(250,250,249,0.4)' }}>{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // EDITORIAL — NYT/Medium, serif, rules, asymmetric
+  // ═══════════════════════════════════════════
+
+  if (universe === 'editorial') {
+    const layout = variant.replace('editorial-', '')
+
+    const header = (
+      <div className={cn("mb-16 space-y-4", textAlign ? getTextAlignClass(textAlign) : 'text-center')}>
+        {eyebrow && (
+          <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-[0.6875rem] font-normal tracking-[0.15em] uppercase text-zinc-900">
+            {eyebrow}
+          </span>
+        )}
+        <div className="w-full h-px bg-zinc-900 mx-auto max-w-[120px]" />
+        {title && (
+          <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-normal leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: customTextColor ?? '#18181b', fontFamily: 'Georgia, serif' }}>
+            {title}
+          </h2>
+        )}
+        {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto leading-relaxed" style={{ color: '#52525b', fontFamily: 'Georgia, serif' }}>{subtitle}</p>}
+      </div>
+    )
+
+    if (layout === 'grid' || layout === 'cards') {
+      return (
+        <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#fafaf9' }} className="py-24">
+          <div className="max-w-5xl mx-auto px-6">
+            {header}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {items.map((item, i) => (
+                <div key={item.id} className="space-y-3 pt-5 border-t border-zinc-900">
+                  <span className="text-[0.6875rem] tracking-[0.12em] uppercase text-zinc-400">0{i + 1}</span>
+                  <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-normal text-base" style={{ color: '#18181b', fontFamily: 'Georgia, serif' }}>{item.title}</h3>
+                  <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm leading-relaxed" style={{ color: '#52525b', fontFamily: 'Georgia, serif' }}>{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // List
+    return (
+      <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#fafaf9' }} className="py-24">
+        <div className="max-w-3xl mx-auto px-6">
+          {header}
+          <div className="space-y-0 divide-y divide-zinc-900">
+            {items.map((item, i) => (
+              <div key={item.id} className="flex items-start gap-6 py-7">
+                <span className="text-[0.6875rem] tracking-[0.12em] text-zinc-400 shrink-0 mt-1">0{i + 1}</span>
+                <div className="flex-1">
+                  <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-normal text-base mb-1" style={{ color: '#18181b', fontFamily: 'Georgia, serif' }}>{item.title}</h3>
+                  <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm leading-relaxed" style={{ color: '#52525b', fontFamily: 'Georgia, serif' }}>{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // ORGANIC — Nature, rounded, green, earthy
+  // ═══════════════════════════════════════════
+
+  if (universe === 'organic') {
+    const green = accentColor ?? '#3f6212'
+    const layout = variant.replace('organic-', '')
+
+    const header = (
+      <div className={cn("text-center mb-14 space-y-4", textAlign && getTextAlignClass(textAlign))}>
+        {eyebrow ? (
+          <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-flex items-center gap-2 text-xs font-medium tracking-[0.08em] uppercase px-4 py-1.5 rounded-full" style={{ backgroundColor: `${green}12`, color: green }}>
+            <span>🌿</span>
+            {eyebrow}
+          </span>
+        ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="eyebrow" type="badge" className="mb-4" />}
+        {title && (
+          <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: customTextColor ?? '#1a2e05', fontFamily: 'Georgia, serif' }}>
+            {title}
+          </h2>
+        )}
+        {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto leading-relaxed" style={{ color: '#4d7c0f' }}>{subtitle}</p>}
+      </div>
+    )
+
+    if (layout === 'grid' || layout === 'cards') {
+      return (
+        <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#f7fee7' }} className="py-24">
+          <div className="max-w-6xl mx-auto px-6">
+            {header}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {items.map((item, i) => (
+                <div key={item.id} className="rounded-xl p-7 border transition-all hover:shadow-md" style={{ borderColor: `${green}15`, background: '#ffffff' }}>
+                  <div className="w-11 h-11 rounded-full flex items-center justify-center text-lg mb-5" style={{ backgroundColor: `${green}10` }}>
+                    <DynamicIcon name={item.icon} className="w-5 h-5" fallbackClassName="text-xl leading-none" style={{ color: green }} />
+                  </div>
+                  <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-semibold mb-2" style={{ color: '#1a2e05' }}>{item.title}</h3>
+                  <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm leading-relaxed" style={{ color: '#4d7c0f' }}>{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // List
+    return (
+      <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#f7fee7' }} className="py-24">
+        <div className="max-w-3xl mx-auto px-6">
+          {header}
+          <div className="space-y-4">
+            {items.map((item, i) => (
+              <div key={item.id} className="flex items-start gap-5 p-5 rounded-xl border" style={{ borderColor: `${green}12`, background: '#ffffff' }}>
+                <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${green}10` }}>
+                  <DynamicIcon name={item.icon} className="w-4 h-4" fallbackClassName="text-lg leading-none" style={{ color: green }} />
+                </div>
+                <div className="flex-1">
+                  <h3 {...elementProps(config.id, `items.${i}.title`, 'heading')} className="font-semibold mb-1" style={{ color: '#1a2e05' }}>{item.title}</h3>
+                  <p {...elementProps(config.id, `items.${i}.description`, 'text')} className="text-sm leading-relaxed" style={{ color: '#4d7c0f' }}>{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // fallback → startup-grid
   return <FeaturesSection config={{ ...config, variant: 'startup-grid' }} />
 }
@@ -5907,6 +6309,8 @@ export const featuresMeta = {
     'prisme-accordion',
     'petale-accordion',
     'jlstudio-scroll-pin',
+  
+    'warm-grid', 'warm-list', 'playful-grid', 'playful-list', 'retro-grid', 'retro-list', 'dark-premium-grid', 'dark-premium-list', 'editorial-grid', 'editorial-list', 'organic-grid', 'organic-list',
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

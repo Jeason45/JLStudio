@@ -1715,6 +1715,692 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
     )
   }
 
+  if (universe === 'warm') {
+    const terracotta = accentColor ?? '#b4654a'
+
+    const badgeEl = badge ? (
+      <span {...elementProps(config.id, 'badge', 'badge')} className="inline-block text-xs tracking-[0.15em] uppercase font-light" style={{ color: terracotta, fontFamily: 'Georgia, serif' }}>
+        {badge}
+      </span>
+    ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />
+
+    const primaryBtn = content.primaryButton && (
+      <a
+        {...elementProps(config.id, 'primaryButton', 'button')}
+        href={content.primaryButton.href}
+        className="px-8 py-3 text-sm font-light tracking-wide transition-colors hover:brightness-110"
+        style={{ backgroundColor: terracotta, color: '#faf7f2', borderRadius: '0.25rem', fontFamily: 'Georgia, serif' }}
+      >
+        {content.primaryButton.label}
+      </a>
+    )
+
+    const secondaryBtn = content.secondaryButton && (
+      <a
+        {...elementProps(config.id, 'secondaryButton', 'button')}
+        href={content.secondaryButton.href}
+        className="px-8 py-3 text-sm font-light tracking-wide border transition-colors hover:bg-black/5"
+        style={{ borderColor: terracotta, color: terracotta, borderRadius: '0.25rem', fontFamily: 'Georgia, serif' }}
+      >
+        {content.secondaryButton.label}
+      </a>
+    )
+
+    // Centered
+    if (layout === 'centered') {
+      return (
+        <section className="py-24" style={{ backgroundColor: '#faf7f2', fontFamily: 'Georgia, serif' }}>
+          <div className={cn("max-w-4xl mx-auto px-6 text-center space-y-6", textAlign && getTextAlignClass(textAlign))}>
+            {badgeEl}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: '#3d2c2c', fontFamily: 'Georgia, serif', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+            <div className="w-12 h-px mx-auto" style={{ backgroundColor: terracotta, opacity: 0.4 }} />
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto font-light" style={{ color: '#8b7355' }}>{subtitle}</p>}
+            <div className="flex flex-wrap gap-4 justify-center pt-4">
+              {primaryBtn}
+              {secondaryBtn}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // Split
+    if (layout === 'split') {
+      return (
+        <section className="py-24" style={{ backgroundColor: '#faf7f2', fontFamily: 'Georgia, serif' }}>
+          <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-10">
+            <div className="space-y-5 flex-1">
+              {badgeEl}
+              <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: '#3d2c2c', fontFamily: 'Georgia, serif', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+              <div className="w-12 h-px" style={{ backgroundColor: terracotta, opacity: 0.4 }} />
+              {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-md font-light" style={{ color: '#8b7355' }}>{subtitle}</p>}
+            </div>
+            <div className="flex flex-col gap-4 shrink-0">
+              {primaryBtn}
+              {secondaryBtn}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // Card
+    return (
+      <section className="py-24" style={{ backgroundColor: '#f3ede4', fontFamily: 'Georgia, serif' }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <div className={cn("p-10 md:p-16 text-center space-y-6", textAlign && getTextAlignClass(textAlign))} style={{ backgroundColor: '#faf7f2', borderRadius: '0.25rem', border: '1px solid rgba(180,101,74,0.15)' }}>
+            <div className="w-16 h-px mx-auto" style={{ backgroundColor: terracotta, opacity: 0.4 }} />
+            {badge ? (
+              <span {...elementProps(config.id, 'badge', 'badge')} className="inline-block text-xs tracking-[0.15em] uppercase font-light" style={{ color: terracotta }}>
+                {badge}
+              </span>
+            ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: '#3d2c2c', fontFamily: 'Georgia, serif', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto font-light" style={{ color: '#8b7355' }}>{subtitle}</p>}
+            <div className="w-16 h-px mx-auto" style={{ backgroundColor: terracotta, opacity: 0.4 }} />
+            <div className="flex flex-wrap gap-4 justify-center pt-4">
+              {content.primaryButton && (
+                <a
+                  {...elementProps(config.id, 'primaryButton', 'button')}
+                  href={content.primaryButton.href}
+                  className="px-8 py-3 text-sm font-light tracking-wide transition-colors hover:brightness-110"
+                  style={{ backgroundColor: terracotta, color: '#faf7f2', borderRadius: '0.25rem' }}
+                >
+                  {content.primaryButton.label}
+                </a>
+              )}
+              {content.secondaryButton && (
+                <a
+                  {...elementProps(config.id, 'secondaryButton', 'button')}
+                  href={content.secondaryButton.href}
+                  className="px-8 py-3 text-sm font-light tracking-wide border transition-colors hover:bg-black/5"
+                  style={{ borderColor: terracotta, color: terracotta, borderRadius: '0.25rem' }}
+                >
+                  {content.secondaryButton.label}
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // PLAYFUL — Duolingo / Figma
+  // ═══════════════════════════════════════════
+
+  if (universe === 'playful') {
+    const violet = accentColor ?? '#7c3aed'
+    const pink = '#ec4899'
+
+    const badgeEl = badge ? (
+      <span {...elementProps(config.id, 'badge', 'badge')} className="inline-flex items-center gap-2 text-xs font-extrabold px-4 py-1.5 rounded-2xl text-white" style={{ background: `linear-gradient(135deg, ${violet}, ${pink})` }}>
+        {badge}
+      </span>
+    ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />
+
+    const primaryBtn = content.primaryButton && (
+      <a
+        {...elementProps(config.id, 'primaryButton', 'button')}
+        href={content.primaryButton.href}
+        className="px-8 py-3.5 rounded-2xl font-extrabold text-sm text-white transition-all hover:scale-105 hover:-translate-y-0.5"
+        style={{ background: `linear-gradient(135deg, ${violet}, ${pink})`, boxShadow: `0 8px 24px ${violet}40` }}
+      >
+        {content.primaryButton.label}
+      </a>
+    )
+
+    const secondaryBtn = content.secondaryButton && (
+      <a
+        {...elementProps(config.id, 'secondaryButton', 'button')}
+        href={content.secondaryButton.href}
+        className="px-8 py-3.5 rounded-2xl font-bold text-sm border-2 transition-all hover:scale-105"
+        style={{ borderColor: violet, color: violet }}
+      >
+        {content.secondaryButton.label}
+      </a>
+    )
+
+    // Centered
+    if (layout === 'centered') {
+      return (
+        <section className="bg-white py-20" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+          <div className={cn("max-w-4xl mx-auto px-6 text-center space-y-6", textAlign && getTextAlignClass(textAlign))}>
+            {badgeEl}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-5xl font-extrabold text-zinc-900 leading-tight", titleSize && getTitleSizeClass(titleSize))} style={textColor ? { color: textColor } : undefined}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg text-zinc-500 max-w-xl mx-auto font-medium">{subtitle}</p>}
+            <div className="flex flex-wrap gap-4 justify-center pt-2">
+              {primaryBtn}
+              {secondaryBtn}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // Split
+    if (layout === 'split') {
+      return (
+        <section className="bg-white py-20" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+          <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="space-y-4 flex-1">
+              {badgeEl}
+              <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-5xl font-extrabold text-zinc-900 leading-tight", titleSize && getTitleSizeClass(titleSize))} style={textColor ? { color: textColor } : undefined}>{title}</h2>
+              {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base text-zinc-500 max-w-md font-medium">{subtitle}</p>}
+            </div>
+            <div className="flex flex-col gap-4 shrink-0">
+              {primaryBtn}
+              {secondaryBtn}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // Card
+    return (
+      <section className="py-20" style={{ backgroundColor: '#faf5ff', fontFamily: 'var(--font-body, inherit)' }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <div className={cn("rounded-2xl p-10 md:p-14 text-center space-y-6 bg-white border-2", textAlign && getTextAlignClass(textAlign))} style={{ borderColor: `${violet}30`, boxShadow: `0 12px 40px ${violet}15` }}>
+            {badge ? (
+              <span {...elementProps(config.id, 'badge', 'badge')} className="inline-flex items-center gap-2 text-xs font-extrabold px-4 py-1.5 rounded-2xl text-white" style={{ background: `linear-gradient(135deg, ${violet}, ${pink})` }}>
+                {badge}
+              </span>
+            ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-5xl font-extrabold text-zinc-900 leading-tight", titleSize && getTitleSizeClass(titleSize))} style={textColor ? { color: textColor } : undefined}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg text-zinc-500 max-w-xl mx-auto font-medium">{subtitle}</p>}
+            <div className="flex flex-wrap gap-4 justify-center pt-2">
+              {content.primaryButton && (
+                <a
+                  {...elementProps(config.id, 'primaryButton', 'button')}
+                  href={content.primaryButton.href}
+                  className="px-8 py-3.5 rounded-2xl font-extrabold text-sm text-white transition-all hover:scale-105"
+                  style={{ background: `linear-gradient(135deg, ${violet}, ${pink})`, boxShadow: `0 8px 24px ${violet}40` }}
+                >
+                  {content.primaryButton.label}
+                </a>
+              )}
+              {content.secondaryButton && (
+                <a
+                  {...elementProps(config.id, 'secondaryButton', 'button')}
+                  href={content.secondaryButton.href}
+                  className="px-8 py-3.5 rounded-2xl font-bold text-sm border-2 transition-all hover:scale-105"
+                  style={{ borderColor: violet, color: violet }}
+                >
+                  {content.secondaryButton.label}
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // RETRO — Vintage / Amber
+  // ═══════════════════════════════════════════
+
+  if (universe === 'retro') {
+    const amber = accentColor ?? '#d97706'
+    const darkBrown = '#92400e'
+
+    const badgeEl = badge ? (
+      <span {...elementProps(config.id, 'badge', 'badge')} className="inline-block text-xs font-extrabold uppercase tracking-[0.2em] px-3 py-1 border-2" style={{ borderColor: darkBrown, color: darkBrown, backgroundColor: '#fef3c7' }}>
+        {badge}
+      </span>
+    ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />
+
+    const primaryBtn = content.primaryButton && (
+      <a
+        {...elementProps(config.id, 'primaryButton', 'button')}
+        href={content.primaryButton.href}
+        className="px-8 py-3.5 font-extrabold text-sm uppercase tracking-[0.15em] text-white transition-colors hover:brightness-110"
+        style={{ backgroundColor: amber }}
+      >
+        {content.primaryButton.label}
+      </a>
+    )
+
+    const secondaryBtn = content.secondaryButton && (
+      <a
+        {...elementProps(config.id, 'secondaryButton', 'button')}
+        href={content.secondaryButton.href}
+        className="px-8 py-3.5 font-extrabold text-sm uppercase tracking-[0.15em] border-2 transition-colors hover:bg-amber-50"
+        style={{ borderColor: darkBrown, color: darkBrown }}
+      >
+        {content.secondaryButton.label}
+      </a>
+    )
+
+    // Centered
+    if (layout === 'centered') {
+      return (
+        <section className="py-20" style={{ backgroundColor: '#fffbeb', fontFamily: 'var(--font-body, inherit)' }}>
+          <div className={cn("max-w-4xl mx-auto px-6 text-center space-y-6", textAlign && getTextAlignClass(textAlign))}>
+            {badgeEl}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-5xl font-extrabold uppercase tracking-wide leading-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: darkBrown, ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+            <div className="w-20 h-0.5 mx-auto" style={{ backgroundColor: amber }} />
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto font-medium" style={{ color: '#a16207' }}>{subtitle}</p>}
+            <div className="flex flex-wrap gap-4 justify-center pt-4">
+              {primaryBtn}
+              {secondaryBtn}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // Split
+    if (layout === 'split') {
+      return (
+        <section className="py-20" style={{ backgroundColor: '#fffbeb', fontFamily: 'var(--font-body, inherit)' }}>
+          <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-10">
+            <div className="space-y-5 flex-1">
+              {badgeEl}
+              <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-5xl font-extrabold uppercase tracking-wide leading-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: darkBrown, ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+              <div className="w-20 h-0.5" style={{ backgroundColor: amber }} />
+              {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-md font-medium" style={{ color: '#a16207' }}>{subtitle}</p>}
+            </div>
+            <div className="flex flex-col gap-4 shrink-0">
+              {primaryBtn}
+              {secondaryBtn}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // Card
+    return (
+      <section className="py-20" style={{ backgroundColor: '#fef9c3', fontFamily: 'var(--font-body, inherit)' }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <div className={cn("p-10 md:p-14 text-center space-y-6 border-2", textAlign && getTextAlignClass(textAlign))} style={{ backgroundColor: '#fffbeb', borderColor: darkBrown }}>
+            {badge ? (
+              <span {...elementProps(config.id, 'badge', 'badge')} className="inline-block text-xs font-extrabold uppercase tracking-[0.2em] px-3 py-1 border-2" style={{ borderColor: darkBrown, color: darkBrown, backgroundColor: '#fef3c7' }}>
+                {badge}
+              </span>
+            ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-5xl font-extrabold uppercase tracking-wide leading-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: darkBrown, ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto font-medium" style={{ color: '#a16207' }}>{subtitle}</p>}
+            <div className="w-20 h-0.5 mx-auto" style={{ backgroundColor: amber }} />
+            <div className="flex flex-wrap gap-4 justify-center pt-4">
+              {content.primaryButton && (
+                <a
+                  {...elementProps(config.id, 'primaryButton', 'button')}
+                  href={content.primaryButton.href}
+                  className="px-8 py-3.5 font-extrabold text-sm uppercase tracking-[0.15em] text-white transition-colors hover:brightness-110"
+                  style={{ backgroundColor: amber }}
+                >
+                  {content.primaryButton.label}
+                </a>
+              )}
+              {content.secondaryButton && (
+                <a
+                  {...elementProps(config.id, 'secondaryButton', 'button')}
+                  href={content.secondaryButton.href}
+                  className="px-8 py-3.5 font-extrabold text-sm uppercase tracking-[0.15em] border-2 transition-colors hover:bg-amber-50"
+                  style={{ borderColor: darkBrown, color: darkBrown }}
+                >
+                  {content.secondaryButton.label}
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // DARK-PREMIUM — Noir / Gold
+  // ═══════════════════════════════════════════
+
+  if (universe === 'dark-premium') {
+    const gold = accentColor ?? '#d4af37'
+
+    const badgeEl = badge ? (
+      <span {...elementProps(config.id, 'badge', 'badge')} className="inline-block text-xs font-extralight tracking-[0.2em] uppercase" style={{ color: gold }}>
+        {badge}
+      </span>
+    ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />
+
+    const primaryBtn = content.primaryButton && (
+      <a
+        {...elementProps(config.id, 'primaryButton', 'button')}
+        href={content.primaryButton.href}
+        className="px-10 py-3.5 font-extralight text-sm tracking-[0.2em] uppercase border transition-colors hover:bg-white/5"
+        style={{ borderColor: gold, color: gold }}
+      >
+        {content.primaryButton.label}
+      </a>
+    )
+
+    const secondaryBtn = content.secondaryButton && (
+      <a
+        {...elementProps(config.id, 'secondaryButton', 'button')}
+        href={content.secondaryButton.href}
+        className="px-10 py-3.5 font-extralight text-sm tracking-[0.2em] uppercase text-zinc-500 border border-zinc-700 hover:border-zinc-600 transition-colors"
+      >
+        {content.secondaryButton.label}
+      </a>
+    )
+
+    // Centered
+    if (layout === 'centered') {
+      return (
+        <section className="py-28" style={{ backgroundColor: '#0a0a0a', fontFamily: 'var(--font-body, inherit)' }}>
+          <div className={cn("max-w-4xl mx-auto px-6 text-center space-y-8", textAlign && getTextAlignClass(textAlign))}>
+            {badgeEl}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-extralight uppercase tracking-[0.2em] leading-relaxed", titleSize && getTitleSizeClass(titleSize))} style={{ color: '#e5e5e5', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+            <div className="w-16 h-px mx-auto" style={{ backgroundColor: gold }} />
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto font-extralight tracking-wide" style={{ color: '#737373' }}>{subtitle}</p>}
+            <div className="flex flex-wrap gap-4 justify-center pt-4">
+              {primaryBtn}
+              {secondaryBtn}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // Split
+    if (layout === 'split') {
+      return (
+        <section className="py-28" style={{ backgroundColor: '#0a0a0a', fontFamily: 'var(--font-body, inherit)' }}>
+          <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="space-y-6 flex-1">
+              {badgeEl}
+              <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-extralight uppercase tracking-[0.2em] leading-relaxed", titleSize && getTitleSizeClass(titleSize))} style={{ color: '#e5e5e5', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+              <div className="w-16 h-px" style={{ backgroundColor: gold }} />
+              {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-md font-extralight tracking-wide" style={{ color: '#737373' }}>{subtitle}</p>}
+            </div>
+            <div className="flex flex-col gap-4 shrink-0">
+              {primaryBtn}
+              {secondaryBtn}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // Card
+    return (
+      <section className="py-28" style={{ backgroundColor: '#050505', fontFamily: 'var(--font-body, inherit)' }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <div className={cn("p-10 md:p-16 text-center space-y-8 border", textAlign && getTextAlignClass(textAlign))} style={{ backgroundColor: '#0a0a0a', borderColor: `${gold}20` }}>
+            <div className="w-20 h-px mx-auto" style={{ backgroundColor: gold }} />
+            {badge ? (
+              <span {...elementProps(config.id, 'badge', 'badge')} className="inline-block text-xs font-extralight tracking-[0.2em] uppercase" style={{ color: gold }}>
+                {badge}
+              </span>
+            ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-extralight uppercase tracking-[0.2em] leading-relaxed", titleSize && getTitleSizeClass(titleSize))} style={{ color: '#e5e5e5', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto font-extralight tracking-wide" style={{ color: '#737373' }}>{subtitle}</p>}
+            <div className="w-20 h-px mx-auto" style={{ backgroundColor: gold }} />
+            <div className="flex flex-wrap gap-4 justify-center pt-4">
+              {content.primaryButton && (
+                <a
+                  {...elementProps(config.id, 'primaryButton', 'button')}
+                  href={content.primaryButton.href}
+                  className="px-10 py-3.5 font-extralight text-sm tracking-[0.2em] uppercase text-black transition-colors hover:brightness-110"
+                  style={{ backgroundColor: gold }}
+                >
+                  {content.primaryButton.label}
+                </a>
+              )}
+              {content.secondaryButton && (
+                <a
+                  {...elementProps(config.id, 'secondaryButton', 'button')}
+                  href={content.secondaryButton.href}
+                  className="px-10 py-3.5 font-extralight text-sm tracking-[0.2em] uppercase border transition-colors hover:bg-white/5"
+                  style={{ borderColor: gold, color: gold }}
+                >
+                  {content.secondaryButton.label}
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // EDITORIAL — NYT / Medium
+  // ═══════════════════════════════════════════
+
+  if (universe === 'editorial') {
+    const black = accentColor ?? '#18181b'
+
+    const badgeEl = badge ? (
+      <span {...elementProps(config.id, 'badge', 'badge')} className="inline-block text-xs font-normal tracking-wide uppercase" style={{ color: '#71717a', fontFamily: 'Georgia, serif' }}>
+        {badge}
+      </span>
+    ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />
+
+    const primaryBtn = content.primaryButton && (
+      <a
+        {...elementProps(config.id, 'primaryButton', 'button')}
+        href={content.primaryButton.href}
+        className="px-8 py-3 font-normal text-sm tracking-wide transition-colors hover:bg-zinc-800"
+        style={{ backgroundColor: black, color: '#fafaf9', fontFamily: 'Georgia, serif' }}
+      >
+        {content.primaryButton.label}
+      </a>
+    )
+
+    const secondaryBtn = content.secondaryButton && (
+      <a
+        {...elementProps(config.id, 'secondaryButton', 'button')}
+        href={content.secondaryButton.href}
+        className="px-8 py-3 font-normal text-sm tracking-wide border transition-colors hover:bg-zinc-100"
+        style={{ borderColor: black, color: black, fontFamily: 'Georgia, serif' }}
+      >
+        {content.secondaryButton.label}
+      </a>
+    )
+
+    // Centered
+    if (layout === 'centered') {
+      return (
+        <section className="py-24" style={{ backgroundColor: '#fafaf9', fontFamily: 'Georgia, serif' }}>
+          <div className={cn("max-w-3xl mx-auto px-6 text-center space-y-6", textAlign && getTextAlignClass(textAlign))}>
+            <div className="w-full h-px mx-auto" style={{ backgroundColor: '#d4d4d8' }} />
+            {badgeEl}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-normal leading-snug", titleSize && getTitleSizeClass(titleSize))} style={{ color: black, fontFamily: 'Georgia, serif', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-lg mx-auto font-normal leading-relaxed" style={{ color: '#52525b', fontFamily: 'Georgia, serif' }}>{subtitle}</p>}
+            <div className="flex flex-wrap gap-4 justify-center pt-4">
+              {primaryBtn}
+              {secondaryBtn}
+            </div>
+            <div className="w-full h-px mx-auto" style={{ backgroundColor: '#d4d4d8' }} />
+          </div>
+        </section>
+      )
+    }
+
+    // Split
+    if (layout === 'split') {
+      return (
+        <section className="py-24" style={{ backgroundColor: '#fafaf9', fontFamily: 'Georgia, serif' }}>
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="w-full h-px mb-12" style={{ backgroundColor: '#d4d4d8' }} />
+            <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+              <div className="space-y-5 flex-1">
+                {badgeEl}
+                <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-normal leading-snug", titleSize && getTitleSizeClass(titleSize))} style={{ color: black, fontFamily: 'Georgia, serif', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+                {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-md font-normal leading-relaxed" style={{ color: '#52525b', fontFamily: 'Georgia, serif' }}>{subtitle}</p>}
+              </div>
+              <div className="flex flex-col gap-4 shrink-0">
+                {primaryBtn}
+                {secondaryBtn}
+              </div>
+            </div>
+            <div className="w-full h-px mt-12" style={{ backgroundColor: '#d4d4d8' }} />
+          </div>
+        </section>
+      )
+    }
+
+    // Card
+    return (
+      <section className="py-24" style={{ backgroundColor: '#f4f4f5', fontFamily: 'Georgia, serif' }}>
+        <div className="max-w-3xl mx-auto px-6">
+          <div className={cn("p-10 md:p-14 text-center space-y-6 border", textAlign && getTextAlignClass(textAlign))} style={{ backgroundColor: '#fafaf9', borderColor: '#d4d4d8' }}>
+            <div className="w-full h-px mx-auto" style={{ backgroundColor: '#d4d4d8' }} />
+            {badge ? (
+              <span {...elementProps(config.id, 'badge', 'badge')} className="inline-block text-xs font-normal tracking-wide uppercase" style={{ color: '#71717a' }}>
+                {badge}
+              </span>
+            ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-normal leading-snug", titleSize && getTitleSizeClass(titleSize))} style={{ color: black, fontFamily: 'Georgia, serif', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-lg mx-auto font-normal leading-relaxed" style={{ color: '#52525b', fontFamily: 'Georgia, serif' }}>{subtitle}</p>}
+            <div className="w-full h-px mx-auto" style={{ backgroundColor: '#d4d4d8' }} />
+            <div className="flex flex-wrap gap-4 justify-center pt-4">
+              {content.primaryButton && (
+                <a
+                  {...elementProps(config.id, 'primaryButton', 'button')}
+                  href={content.primaryButton.href}
+                  className="px-8 py-3 font-normal text-sm tracking-wide transition-colors hover:bg-zinc-800"
+                  style={{ backgroundColor: black, color: '#fafaf9' }}
+                >
+                  {content.primaryButton.label}
+                </a>
+              )}
+              {content.secondaryButton && (
+                <a
+                  {...elementProps(config.id, 'secondaryButton', 'button')}
+                  href={content.secondaryButton.href}
+                  className="px-8 py-3 font-normal text-sm tracking-wide border transition-colors hover:bg-zinc-100"
+                  style={{ borderColor: black, color: black }}
+                >
+                  {content.secondaryButton.label}
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════
+  // ORGANIC — Nature / Green
+  // ═══════════════════════════════════════════
+
+  if (universe === 'organic') {
+    const green = accentColor ?? '#3f6212'
+
+    const badgeEl = badge ? (
+      <span {...elementProps(config.id, 'badge', 'badge')} className="inline-flex items-center gap-1.5 text-xs font-light tracking-wide px-4 py-1.5 rounded-full border" style={{ borderColor: `${green}30`, color: green, backgroundColor: '#ecfccb', fontFamily: 'Georgia, serif' }}>
+        <span>&#127807;</span>
+        {badge}
+      </span>
+    ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />
+
+    const primaryBtn = content.primaryButton && (
+      <a
+        {...elementProps(config.id, 'primaryButton', 'button')}
+        href={content.primaryButton.href}
+        className="px-8 py-3 font-light text-sm tracking-wide text-white rounded-full transition-colors hover:brightness-110"
+        style={{ backgroundColor: green, fontFamily: 'Georgia, serif' }}
+      >
+        {content.primaryButton.label}
+      </a>
+    )
+
+    const secondaryBtn = content.secondaryButton && (
+      <a
+        {...elementProps(config.id, 'secondaryButton', 'button')}
+        href={content.secondaryButton.href}
+        className="px-8 py-3 font-light text-sm tracking-wide rounded-full border transition-colors hover:bg-green-50"
+        style={{ borderColor: green, color: green, fontFamily: 'Georgia, serif' }}
+      >
+        {content.secondaryButton.label}
+      </a>
+    )
+
+    // Centered
+    if (layout === 'centered') {
+      return (
+        <section className="py-24" style={{ backgroundColor: '#f7fee7', fontFamily: 'Georgia, serif' }}>
+          <div className={cn("max-w-4xl mx-auto px-6 text-center space-y-6", textAlign && getTextAlignClass(textAlign))}>
+            {badgeEl}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light leading-relaxed", titleSize && getTitleSizeClass(titleSize))} style={{ color: '#1a2e05', fontFamily: 'Georgia, serif', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto font-light leading-relaxed" style={{ color: '#4d7c0f', fontFamily: 'Georgia, serif' }}>{subtitle}</p>}
+            <div className="flex flex-wrap gap-4 justify-center pt-4">
+              {primaryBtn}
+              {secondaryBtn}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // Split
+    if (layout === 'split') {
+      return (
+        <section className="py-24" style={{ backgroundColor: '#f7fee7', fontFamily: 'Georgia, serif' }}>
+          <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-10">
+            <div className="space-y-5 flex-1">
+              {badgeEl}
+              <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light leading-relaxed", titleSize && getTitleSizeClass(titleSize))} style={{ color: '#1a2e05', fontFamily: 'Georgia, serif', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+              {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-md font-light leading-relaxed" style={{ color: '#4d7c0f', fontFamily: 'Georgia, serif' }}>{subtitle}</p>}
+            </div>
+            <div className="flex flex-col gap-4 shrink-0">
+              {primaryBtn}
+              {secondaryBtn}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    // Card
+    return (
+      <section className="py-24" style={{ backgroundColor: '#ecfccb', fontFamily: 'Georgia, serif' }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <div className={cn("p-10 md:p-14 text-center space-y-6 border", textAlign && getTextAlignClass(textAlign))} style={{ backgroundColor: '#f7fee7', borderColor: `${green}20`, borderRadius: '2rem' }}>
+            {badge ? (
+              <span {...elementProps(config.id, 'badge', 'badge')} className="inline-flex items-center gap-1.5 text-xs font-light tracking-wide px-4 py-1.5 rounded-full border" style={{ borderColor: `${green}30`, color: green, backgroundColor: '#ecfccb' }}>
+                <span>&#127807;</span>
+                {badge}
+              </span>
+            ) : isEditing && <EditablePlaceholder sectionId={config.id} contentPath="badge" type="badge" className="mb-4" />}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light leading-relaxed", titleSize && getTitleSizeClass(titleSize))} style={{ color: '#1a2e05', fontFamily: 'Georgia, serif', ...(textColor ? { color: textColor } : {}) }}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base max-w-xl mx-auto font-light leading-relaxed" style={{ color: '#4d7c0f', fontFamily: 'Georgia, serif' }}>{subtitle}</p>}
+            <div className="flex flex-wrap gap-4 justify-center pt-4">
+              {content.primaryButton && (
+                <a
+                  {...elementProps(config.id, 'primaryButton', 'button')}
+                  href={content.primaryButton.href}
+                  className="px-8 py-3 font-light text-sm tracking-wide text-white rounded-full transition-colors hover:brightness-110"
+                  style={{ backgroundColor: green }}
+                >
+                  {content.primaryButton.label}
+                </a>
+              )}
+              {content.secondaryButton && (
+                <a
+                  {...elementProps(config.id, 'secondaryButton', 'button')}
+                  href={content.secondaryButton.href}
+                  className="px-8 py-3 font-light text-sm tracking-wide rounded-full border transition-colors hover:bg-green-50"
+                  style={{ borderColor: green, color: green }}
+                >
+                  {content.secondaryButton.label}
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+
+
   // Fallback -> startup-centered
   return <CTASection config={{ ...config, variant: 'startup-centered' }} isEditing={isEditing} />
 }
@@ -1736,6 +2422,12 @@ export const ctaMeta = {
     'brixsa-centered',
     'prisme-centered',
     'petale-centered',
+    'warm-centered', 'warm-split', 'warm-card',
+    'playful-centered', 'playful-split', 'playful-card',
+    'retro-centered', 'retro-split', 'retro-card',
+    'dark-premium-centered', 'dark-premium-split', 'dark-premium-card',
+    'editorial-centered', 'editorial-split', 'editorial-card',
+    'organic-centered', 'organic-split', 'organic-card',
   ],
   defaultVariant: 'startup-centered',
   defaultContent: {},

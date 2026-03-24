@@ -7454,6 +7454,474 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     )
   }
 
+  if (variant === 'warm') {
+    const accent = accentColor ?? '#b4654a'
+    return (
+      <section className="relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)', background: '#faf7f2' }}>
+        <div className="relative max-w-7xl mx-auto px-6 py-24 lg:py-32 flex flex-col lg:flex-row items-center gap-16">
+          {/* Text side */}
+          <div className={cn("flex-1 space-y-8", textAlign && getTextAlignClass(textAlign))}>
+            {content.eyebrow && (
+              <span
+                {...elementProps(config.id, 'eyebrow', 'badge')}
+                className="inline-block text-xs font-medium tracking-[0.15em] uppercase"
+                style={{ color: accent }}
+              >
+                {content.eyebrow}
+              </span>
+            )}
+            <div className="w-12 h-px" style={{ background: accent, opacity: 0.4 }} />
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              className={cn("text-4xl md:text-5xl lg:text-6xl font-light leading-[1.1] tracking-tight", titleSize && getTitleSizeClass(titleSize))}
+              style={{ color: customTextColor ?? '#3d2b1f', fontFamily: 'Georgia, "Times New Roman", serif' }}
+            >
+              {title}
+            </h1>
+            <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg leading-relaxed max-w-lg" style={{ color: '#78593e' }}>
+              {subtitle}
+            </p>
+            <div className="flex flex-wrap gap-4 pt-2">
+              {content.primaryButton && (
+                <a
+                  {...elementProps(config.id, 'primaryButton', 'button')}
+                  href={content.primaryButton.href}
+                  className="px-8 py-3.5 text-sm font-medium tracking-[0.05em] transition-all hover:brightness-110"
+                  style={{ backgroundColor: accent, color: '#faf7f2', borderRadius: '0.25rem' }}
+                >
+                  {content.primaryButton.label}
+                </a>
+              )}
+              {content.secondaryButton && (
+                <a
+                  {...elementProps(config.id, 'secondaryButton', 'button')}
+                  href={content.secondaryButton.href}
+                  className="px-8 py-3.5 text-sm font-medium tracking-[0.05em] border transition-colors hover:bg-black/5"
+                  style={{ borderColor: `${accent}40`, color: accent, borderRadius: '0.25rem' }}
+                >
+                  {content.secondaryButton.label}
+                </a>
+              )}
+            </div>
+          </div>
+          {/* Image side */}
+          <div className="flex-1 w-full max-w-xl">
+            <div className="relative aspect-[4/5] overflow-hidden rounded" style={{ borderRadius: '0.25rem' }}>
+              {heroImage || bgImage ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  {...elementProps(config.id, 'image', 'image')}
+                  src={heroImage || bgImage!}
+                  alt={content.image?.alt ?? ''}
+                  className="w-full h-full object-cover"
+                />
+              ) : isEditing ? (
+                <EditablePlaceholder sectionId={config.id} contentPath="image.src" type="image" />
+              ) : (
+                <div className="w-full h-full" style={{ background: '#e8ddd0' }} />
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ─── VARIANT: playful ───
+  // Duolingo/Figma — bold rounded, vibrant gradients, bouncy feel, emoji accents
+  if (variant === 'playful') {
+    const accent = accentColor ?? '#7c3aed'
+    return (
+      <section className="relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)', background: '#ffffff' }}>
+        {/* Fun gradient blob background */}
+        <div
+          className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full blur-3xl pointer-events-none"
+          style={{ background: `radial-gradient(circle, ${accent}20, transparent 70%)` }}
+        />
+        <div
+          className="absolute bottom-[-15%] left-[-10%] w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(236,72,153,0.12), transparent 70%)' }}
+        />
+        <div className={cn("relative max-w-5xl mx-auto px-6 pt-20 pb-16 flex flex-col items-center text-center gap-6", textAlign && getTextAlignClass(textAlign))}>
+          {content.eyebrow && (
+            <span
+              {...elementProps(config.id, 'eyebrow', 'badge')}
+              className="inline-flex items-center gap-2 text-sm font-bold px-5 py-2 rounded-full text-white"
+              style={{ backgroundColor: accent }}
+            >
+              {content.eyebrow}
+            </span>
+          )}
+          <h1
+            {...elementProps(config.id, 'title', 'heading')}
+            className={cn("text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight text-zinc-900", titleSize && getTitleSizeClass(titleSize))}
+            style={customTextColor ? { color: customTextColor } : undefined}
+          >
+            {title}
+          </h1>
+          <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg md:text-xl text-zinc-500 max-w-2xl leading-relaxed font-medium">
+            {subtitle}
+          </p>
+          <div className="flex flex-wrap gap-3 pt-4">
+            {content.primaryButton && (
+              <a
+                {...elementProps(config.id, 'primaryButton', 'button')}
+                href={content.primaryButton.href}
+                className="px-8 py-4 rounded-2xl text-base font-bold text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.03] flex items-center gap-2"
+                style={{ backgroundColor: accent, boxShadow: `0 8px 25px ${accent}30` }}
+              >
+                {content.primaryButton.label}
+                <ArrowRight className="w-5 h-5" />
+              </a>
+            )}
+            {content.secondaryButton && (
+              <a
+                {...elementProps(config.id, 'secondaryButton', 'button')}
+                href={content.secondaryButton.href}
+                className="px-8 py-4 rounded-2xl text-base font-bold border-2 border-zinc-200 text-zinc-700 hover:bg-zinc-50 transition-colors"
+              >
+                {content.secondaryButton.label}
+              </a>
+            )}
+          </div>
+          {/* Hero image */}
+          {(heroImage || bgImage || isEditing) && (
+            <div className="mt-12 w-full max-w-4xl">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-2 border-zinc-100 aspect-video bg-zinc-50">
+                {heroImage ? (
+                  renderHeroImage('rounded-3xl')
+                ) : bgImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={bgImage} alt="" className="w-full h-full object-cover rounded-3xl" />
+                ) : isEditing ? (
+                  <EditablePlaceholder sectionId={config.id} contentPath="image.src" type="image" className="rounded-3xl" />
+                ) : null}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  // ─── VARIANT: retro ───
+  // Vintage/Art Deco — slab serif, amber palette, no radius, bold uppercase, texture
+  if (variant === 'retro') {
+    const accent = accentColor ?? '#d97706'
+    return (
+      <section className="relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)', background: '#fffbeb' }}>
+        {/* Noise texture overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'200\' height=\'200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence baseFrequency=\'0.65\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")' }} />
+        <div className={cn("relative max-w-5xl mx-auto px-6 py-20 lg:py-28 text-center", textAlign && getTextAlignClass(textAlign))}>
+          {content.eyebrow && (
+            <span
+              {...elementProps(config.id, 'eyebrow', 'badge')}
+              className="inline-block text-xs font-extrabold tracking-[0.2em] uppercase px-4 py-1.5 mb-8"
+              style={{ backgroundColor: accent, color: '#fffbeb' }}
+            >
+              {content.eyebrow}
+            </span>
+          )}
+          {/* Decorative line */}
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-16 h-0.5" style={{ backgroundColor: '#92400e' }} />
+            <span style={{ color: '#92400e', fontSize: '1.25rem' }}>✦</span>
+            <div className="w-16 h-0.5" style={{ backgroundColor: '#92400e' }} />
+          </div>
+          <h1
+            {...elementProps(config.id, 'title', 'heading')}
+            className={cn("text-4xl md:text-6xl lg:text-7xl font-black leading-[1] tracking-wide uppercase", titleSize && getTitleSizeClass(titleSize))}
+            style={{ color: customTextColor ?? '#451a03' }}
+          >
+            {title}
+          </h1>
+          <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg max-w-2xl mx-auto mt-6 leading-relaxed" style={{ color: '#78350f' }}>
+            {subtitle}
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center pt-8">
+            {content.primaryButton && (
+              <a
+                {...elementProps(config.id, 'primaryButton', 'button')}
+                href={content.primaryButton.href}
+                className="px-8 py-4 text-sm font-extrabold tracking-[0.1em] uppercase transition-all hover:brightness-110"
+                style={{ backgroundColor: accent, color: '#fffbeb', borderRadius: 0 }}
+              >
+                {content.primaryButton.label}
+              </a>
+            )}
+            {content.secondaryButton && (
+              <a
+                {...elementProps(config.id, 'secondaryButton', 'button')}
+                href={content.secondaryButton.href}
+                className="px-8 py-4 text-sm font-extrabold tracking-[0.1em] uppercase border-2 transition-colors hover:bg-amber-50"
+                style={{ borderColor: '#92400e', color: '#92400e', borderRadius: 0 }}
+              >
+                {content.secondaryButton.label}
+              </a>
+            )}
+          </div>
+          {/* Image with retro frame */}
+          {(heroImage || bgImage || isEditing) && (
+            <div className="mt-12 w-full max-w-4xl mx-auto">
+              <div className="relative overflow-hidden border-4 aspect-video" style={{ borderColor: '#92400e', background: '#fef3c7' }}>
+                {heroImage ? (
+                  renderHeroImage()
+                ) : bgImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={bgImage} alt="" className="w-full h-full object-cover" />
+                ) : isEditing ? (
+                  <EditablePlaceholder sectionId={config.id} contentPath="image.src" type="image" />
+                ) : null}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  // ─── VARIANT: dark-premium ───
+  // Noir/Gold luxury — ultra-thin typography, gold accents, cinematic fullscreen, sparse
+  if (variant === 'dark-premium') {
+    const gold = accentColor ?? '#d4af37'
+    return (
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)', background: '#0a0a0a' }}>
+        {/* Background image */}
+        {(bgImage || heroImage) ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            {...elementProps(config.id, 'image', 'image')}
+            src={bgImage || heroImage!}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : null}
+        {content.videoUrl && (
+          <div className="absolute inset-0">{renderVideoBg()}</div>
+        )}
+        {/* Heavy dark overlay */}
+        <div className="absolute inset-0 bg-black/60" />
+        {/* Vignette */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%)' }} />
+        {/* Gold ambient glow */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
+          style={{ background: `radial-gradient(circle, ${gold}08, transparent 70%)` }}
+        />
+        <div className={cn("relative z-10 max-w-4xl mx-auto px-6 text-center py-24 space-y-10", textAlign && getTextAlignClass(textAlign))}>
+          {content.eyebrow && (
+            <span
+              {...elementProps(config.id, 'eyebrow', 'badge')}
+              className="inline-block text-[0.6875rem] font-normal tracking-[0.3em] uppercase"
+              style={{ color: gold }}
+            >
+              {content.eyebrow}
+            </span>
+          )}
+          {/* Gold line */}
+          <div className="w-16 h-px mx-auto" style={{ background: `linear-gradient(90deg, transparent, ${gold}, transparent)` }} />
+          <h1
+            {...elementProps(config.id, 'title', 'heading')}
+            className={cn("text-5xl md:text-6xl lg:text-8xl font-extralight leading-[1.05] tracking-[0.04em] uppercase text-white", titleSize && getTitleSizeClass(titleSize))}
+            style={customTextColor ? { color: customTextColor } : undefined}
+          >
+            {title}
+          </h1>
+          <p
+            {...elementProps(config.id, 'subtitle', 'text')}
+            className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-light tracking-wide"
+            style={{ color: `${gold}90` }}
+          >
+            {subtitle}
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center pt-6">
+            {content.primaryButton && (
+              <a
+                {...elementProps(config.id, 'primaryButton', 'button')}
+                href={content.primaryButton.href}
+                className="px-10 py-4 text-xs font-normal tracking-[0.2em] uppercase border transition-all hover:bg-white/5"
+                style={{ borderColor: gold, color: gold }}
+              >
+                {content.primaryButton.label}
+              </a>
+            )}
+            {content.secondaryButton && (
+              <a
+                {...elementProps(config.id, 'secondaryButton', 'button')}
+                href={content.secondaryButton.href}
+                className="px-10 py-4 text-xs font-normal tracking-[0.2em] uppercase text-white/40 hover:text-white/70 transition-colors"
+              >
+                {content.secondaryButton.label}
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ─── VARIANT: editorial ───
+  // NYT/Medium magazine — oversized serif, asymmetric layout, black & white dominant, editorial rules
+  if (variant === 'editorial') {
+    return (
+      <section className="relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)', background: '#fafaf9' }}>
+        <div className="relative max-w-7xl mx-auto px-6 py-20 lg:py-28">
+          {/* Top rule */}
+          <div className="w-full h-px bg-zinc-900 mb-12" />
+          <div className="flex flex-col lg:flex-row items-start gap-12">
+            {/* Text column — 60% */}
+            <div className={cn("flex-[3] space-y-6", textAlign && getTextAlignClass(textAlign))}>
+              {content.eyebrow && (
+                <span
+                  {...elementProps(config.id, 'eyebrow', 'badge')}
+                  className="inline-block text-[0.6875rem] font-normal tracking-[0.15em] uppercase text-zinc-900"
+                >
+                  {content.eyebrow}
+                </span>
+              )}
+              <h1
+                {...elementProps(config.id, 'title', 'heading')}
+                className={cn("text-5xl md:text-6xl lg:text-[5.5rem] font-normal leading-[0.95] tracking-tight", titleSize && getTitleSizeClass(titleSize))}
+                style={{ color: customTextColor ?? '#18181b', fontFamily: 'Georgia, "Times New Roman", serif' }}
+              >
+                {title}
+              </h1>
+              <p
+                {...elementProps(config.id, 'subtitle', 'text')}
+                className="text-lg max-w-xl leading-relaxed"
+                style={{ color: '#52525b', fontFamily: 'Georgia, "Times New Roman", serif' }}
+              >
+                {subtitle}
+              </p>
+              <div className="flex flex-wrap gap-4 pt-4">
+                {content.primaryButton && (
+                  <a
+                    {...elementProps(config.id, 'primaryButton', 'button')}
+                    href={content.primaryButton.href}
+                    className="px-8 py-3.5 text-xs font-normal tracking-[0.12em] uppercase bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
+                  >
+                    {content.primaryButton.label}
+                  </a>
+                )}
+                {content.secondaryButton && (
+                  <a
+                    {...elementProps(config.id, 'secondaryButton', 'button')}
+                    href={content.secondaryButton.href}
+                    className="px-8 py-3.5 text-xs font-normal tracking-[0.12em] uppercase border border-zinc-900 text-zinc-900 hover:bg-zinc-100 transition-colors"
+                  >
+                    {content.secondaryButton.label}
+                  </a>
+                )}
+              </div>
+            </div>
+            {/* Image column — 40% */}
+            <div className="flex-[2] w-full">
+              <div className="relative aspect-[3/4] overflow-hidden">
+                {heroImage || bgImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    {...elementProps(config.id, 'image', 'image')}
+                    src={heroImage || bgImage!}
+                    alt={content.image?.alt ?? ''}
+                    className="w-full h-full object-cover"
+                  />
+                ) : isEditing ? (
+                  <EditablePlaceholder sectionId={config.id} contentPath="image.src" type="image" />
+                ) : (
+                  <div className="w-full h-full bg-zinc-200" />
+                )}
+              </div>
+              {/* Caption line below image */}
+              <div className="mt-3 pt-3 border-t border-zinc-200">
+                <p className="text-xs text-zinc-400 tracking-wide">Photography — Editorial</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ─── VARIANT: organic ───
+  // Nature/sustainability — soft greens, rounded shapes, earthy feel, leaf-inspired
+  if (variant === 'organic') {
+    const green = accentColor ?? '#3f6212'
+    return (
+      <section className="relative overflow-hidden" style={{ fontFamily: 'var(--font-body, inherit)', background: '#f7fee7' }}>
+        {/* Subtle leaf-shaped gradient blob */}
+        <div
+          className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(63,98,18,0.08), transparent 70%)' }}
+        />
+        <div className="relative max-w-7xl mx-auto px-6 py-24 lg:py-32 flex flex-col lg:flex-row items-center gap-16">
+          {/* Text side */}
+          <div className={cn("flex-1 space-y-7", textAlign && getTextAlignClass(textAlign))}>
+            {content.eyebrow && (
+              <span
+                {...elementProps(config.id, 'eyebrow', 'badge')}
+                className="inline-flex items-center gap-2 text-xs font-medium tracking-[0.08em] uppercase px-4 py-1.5 rounded-full"
+                style={{ backgroundColor: `${green}12`, color: green }}
+              >
+                <span>🌿</span>
+                {content.eyebrow}
+              </span>
+            )}
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              className={cn("text-4xl md:text-5xl lg:text-6xl font-light leading-[1.1] tracking-tight", titleSize && getTitleSizeClass(titleSize))}
+              style={{ color: customTextColor ?? '#1a2e05', fontFamily: 'Georgia, "Times New Roman", serif' }}
+            >
+              {title}
+            </h1>
+            <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg leading-relaxed max-w-lg" style={{ color: '#4d7c0f' }}>
+              {subtitle}
+            </p>
+            <div className="flex flex-wrap gap-4 pt-2">
+              {content.primaryButton && (
+                <a
+                  {...elementProps(config.id, 'primaryButton', 'button')}
+                  href={content.primaryButton.href}
+                  className="px-8 py-3.5 text-sm font-medium rounded-full text-white transition-all hover:brightness-110"
+                  style={{ backgroundColor: green }}
+                >
+                  {content.primaryButton.label}
+                </a>
+              )}
+              {content.secondaryButton && (
+                <a
+                  {...elementProps(config.id, 'secondaryButton', 'button')}
+                  href={content.secondaryButton.href}
+                  className="px-8 py-3.5 text-sm font-medium rounded-full border transition-colors hover:bg-white/60"
+                  style={{ borderColor: `${green}30`, color: green }}
+                >
+                  {content.secondaryButton.label}
+                </a>
+              )}
+            </div>
+          </div>
+          {/* Image side — rounded organic shape */}
+          <div className="flex-1 w-full max-w-xl">
+            <div className="relative aspect-[4/5] overflow-hidden" style={{ borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%' }}>
+              {heroImage || bgImage ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  {...elementProps(config.id, 'image', 'image')}
+                  src={heroImage || bgImage!}
+                  alt={content.image?.alt ?? ''}
+                  className="w-full h-full object-cover"
+                />
+              ) : isEditing ? (
+                <EditablePlaceholder sectionId={config.id} contentPath="image.src" type="image" />
+              ) : (
+                <div className="w-full h-full" style={{ background: '#d9f99d' }} />
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // fallback → startup
   return <HeroSection config={{ ...config, variant: 'startup' }} isEditing={isEditing} />
 }
@@ -9148,6 +9616,8 @@ function ZmrAgencyHero({ config, content, bgImage, customTextColor }: {
     }
   }, [currentIndex, videoUrls.length])
 
+
+
   return (
     <section
       className="relative w-full overflow-hidden"
@@ -9180,7 +9650,9 @@ export const heroMeta = {
   type: 'hero',
   label: 'Hero',
   icon: '⚡',
-  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith', 'miel', 'prisme', 'jlstudio'],
+  variants: ['startup', 'corporate', 'luxe', 'creative', 'ecommerce', 'glass', 'brixsa-page', 'brixsa', 'zmr-agency', 'zmr-talent-profile', 'braise', 'forge', 'ciseaux', 'atelier', 'encre', 'serenite', 'pulse', 'saveur', 'ascent', 'zenith', 'miel', 'prisme', 'jlstudio',
+    'warm', 'playful', 'retro', 'dark-premium', 'editorial', 'organic',
+  ],
   defaultVariant: 'startup',
   defaultContent: {},
 }

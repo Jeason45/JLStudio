@@ -79,6 +79,159 @@ const HEADINGS: LibraryElementItem[] = [
       defaultContent: { text: 'Feature Title', tag: 'h3' },
     },
   },
+
+  // ─── Universe headings ───
+
+  // Warm — Aman/Aesop serif elegance
+  {
+    id: 'el-heading-warm-serif',
+    label: 'Warm Serif Display',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'warm', 'serif', 'h1', 'earthy'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Warm Serif',
+      defaultStyle: { fontSize: '3.5rem', fontWeight: 300, lineHeight: '1.1', letterSpacing: '-0.02em', color: '#3d2b1f', fontFamily: 'Georgia, serif' },
+      defaultContent: { text: 'Crafted with\nIntention', tag: 'h1' },
+    },
+  },
+  {
+    id: 'el-heading-warm-section',
+    label: 'Warm Section Heading',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'warm', 'section', 'h2', 'terracotta'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Warm Section',
+      defaultStyle: { fontSize: '2.25rem', fontWeight: 400, lineHeight: '1.2', letterSpacing: '-0.01em', color: '#b4654a' },
+      defaultContent: { text: 'Our Philosophy', tag: 'h2' },
+    },
+  },
+  // Playful — Duolingo/Figma bouncy rounded
+  {
+    id: 'el-heading-playful-bold',
+    label: 'Playful Bold Display',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'playful', 'bold', 'h1', 'fun'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Playful Bold',
+      defaultStyle: { fontSize: '4rem', fontWeight: 800, lineHeight: '1.05', letterSpacing: '-0.03em', color: '#7c3aed' },
+      defaultContent: { text: 'Make it\nawesome!', tag: 'h1' },
+    },
+  },
+  {
+    id: 'el-heading-playful-section',
+    label: 'Playful Section',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'playful', 'section', 'h2', 'colorful'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Playful Section',
+      defaultStyle: { fontSize: '2.25rem', fontWeight: 700, lineHeight: '1.2', color: '#18181b' },
+      defaultContent: { text: 'How it works', tag: 'h2' },
+    },
+  },
+  // Retro — Vintage slab/deco
+  {
+    id: 'el-heading-retro-slab',
+    label: 'Retro Slab Display',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'retro', 'slab', 'h1', 'vintage'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Retro Slab',
+      defaultStyle: { fontSize: '3.75rem', fontWeight: 900, lineHeight: '1.05', letterSpacing: '0.02em', textTransform: 'uppercase', color: '#92400e' },
+      defaultContent: { text: 'GOOD\nOLD DAYS', tag: 'h1' },
+    },
+  },
+  {
+    id: 'el-heading-retro-deco',
+    label: 'Retro Art Deco',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'retro', 'deco', 'h2', 'vintage'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Art Deco',
+      defaultStyle: { fontSize: '2.5rem', fontWeight: 300, lineHeight: '1.15', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#451a03' },
+      defaultContent: { text: 'THE EXPERIENCE', tag: 'h2' },
+    },
+  },
+  // Dark Premium — Thin/gold luxury
+  {
+    id: 'el-heading-dark-prem-thin',
+    label: 'Dark Premium Thin',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'dark-premium', 'thin', 'h1', 'luxury'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Dark Thin',
+      defaultStyle: { fontSize: '4rem', fontWeight: 200, lineHeight: '1.1', letterSpacing: '0.05em', color: '#fafaf9' },
+      defaultContent: { text: 'TIMELESS\nELEGANCE', tag: 'h1' },
+    },
+  },
+  {
+    id: 'el-heading-dark-prem-gold',
+    label: 'Dark Premium Gold',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'dark-premium', 'gold', 'h2', 'luxury'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Gold Heading',
+      defaultStyle: { fontSize: '2.5rem', fontWeight: 300, lineHeight: '1.2', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#d4af37' },
+      defaultContent: { text: 'THE COLLECTION', tag: 'h2' },
+    },
+  },
+  // Editorial — Magazine display XXL
+  {
+    id: 'el-heading-editorial-display',
+    label: 'Editorial Display XXL',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'editorial', 'display', 'h1', 'magazine'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Editorial Display',
+      defaultStyle: { fontSize: '5.5rem', fontWeight: 400, lineHeight: '0.95', letterSpacing: '-0.04em', color: '#18181b', fontFamily: 'Georgia, serif' },
+      defaultContent: { text: 'The Art of\nStorytelling', tag: 'h1' },
+    },
+  },
+  {
+    id: 'el-heading-editorial-section',
+    label: 'Editorial Section',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'editorial', 'section', 'h2', 'serif'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Editorial Section',
+      defaultStyle: { fontSize: '2rem', fontWeight: 400, lineHeight: '1.3', letterSpacing: '-0.01em', color: '#18181b', fontFamily: 'Georgia, serif', fontStyle: 'italic' },
+      defaultContent: { text: 'A deeper perspective', tag: 'h2' },
+    },
+  },
+  // Organic — Nature flowing
+  {
+    id: 'el-heading-organic-nature',
+    label: 'Organic Nature Display',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'organic', 'nature', 'h1', 'green'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Organic Display',
+      defaultStyle: { fontSize: '3.5rem', fontWeight: 300, lineHeight: '1.15', letterSpacing: '-0.02em', color: '#1a2e05', fontFamily: 'Georgia, serif' },
+      defaultContent: { text: 'Rooted in\nNature', tag: 'h1' },
+    },
+  },
+  {
+    id: 'el-heading-organic-section',
+    label: 'Organic Section',
+    category: 'elements', subcategory: 'headings',
+    tags: ['heading', 'organic', 'section', 'h2', 'leaf'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-heading', label: 'Organic Section',
+      defaultStyle: { fontSize: '2.25rem', fontWeight: 400, lineHeight: '1.25', color: '#3f6212' },
+      defaultContent: { text: 'Sustainable Living', tag: 'h2' },
+    },
+  },
 ]
 
 // ─── TEXTS ───
@@ -244,6 +397,81 @@ const TEXTS: LibraryElementItem[] = [
       defaultContent: { text: '\u00A9 2026 Brand. Tous droits r\u00E9serv\u00E9s.' },
     },
   },
+
+  // ─── Universe texts ───
+
+  {
+    id: 'el-text-warm-lead',
+    label: 'Warm Lead Text',
+    category: 'elements', subcategory: 'text',
+    tags: ['text', 'warm', 'lead', 'earthy', 'serif'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Warm Lead',
+      defaultStyle: { fontSize: '1.125rem', lineHeight: '1.75', color: '#78593e', fontFamily: 'Georgia, serif' },
+      defaultContent: { text: 'Every detail has been considered with care, creating spaces that feel both timeless and deeply personal.' },
+    },
+  },
+  {
+    id: 'el-text-playful-lead',
+    label: 'Playful Lead Text',
+    category: 'elements', subcategory: 'text',
+    tags: ['text', 'playful', 'lead', 'fun'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Playful Lead',
+      defaultStyle: { fontSize: '1.1875rem', lineHeight: '1.7', color: '#52525b', fontWeight: 500 },
+      defaultContent: { text: 'We believe great products should be fun to use. That\'s why we obsess over every interaction.' },
+    },
+  },
+  {
+    id: 'el-text-retro-body',
+    label: 'Retro Body Text',
+    category: 'elements', subcategory: 'text',
+    tags: ['text', 'retro', 'body', 'vintage'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Retro Body',
+      defaultStyle: { fontSize: '1rem', lineHeight: '1.8', color: '#57534e', letterSpacing: '0.01em' },
+      defaultContent: { text: 'In a world of fleeting trends, we champion the enduring. Our craft is a bridge between the soul of yesterday and the spirit of tomorrow.' },
+    },
+  },
+  {
+    id: 'el-text-dark-prem-lead',
+    label: 'Dark Premium Lead',
+    category: 'elements', subcategory: 'text',
+    tags: ['text', 'dark-premium', 'lead', 'luxury'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Dark Premium Lead',
+      defaultStyle: { fontSize: '1.125rem', lineHeight: '1.75', color: 'rgba(212,175,55,0.7)', letterSpacing: '0.02em' },
+      defaultContent: { text: 'An exclusive experience reserved for those who appreciate the finest things in life.' },
+    },
+  },
+  {
+    id: 'el-text-editorial-lead',
+    label: 'Editorial Lead',
+    category: 'elements', subcategory: 'text',
+    tags: ['text', 'editorial', 'lead', 'magazine', 'serif'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Editorial Lead',
+      defaultStyle: { fontSize: '1.375rem', lineHeight: '1.65', color: '#3f3f46', fontFamily: 'Georgia, serif' },
+      defaultContent: { text: 'The conversation around design has shifted. What was once considered radical is now essential, and what follows will redefine the landscape entirely.' },
+    },
+  },
+  {
+    id: 'el-text-organic-lead',
+    label: 'Organic Lead Text',
+    category: 'elements', subcategory: 'text',
+    tags: ['text', 'organic', 'lead', 'nature'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Organic Lead',
+      defaultStyle: { fontSize: '1.125rem', lineHeight: '1.8', color: '#4d7c0f' },
+      defaultContent: { text: 'Grown from the earth, shaped by the seasons. Our commitment to sustainability runs through everything we create.' },
+    },
+  },
 ]
 
 // ─── DIVIDERS ───
@@ -295,6 +523,81 @@ const DIVIDERS: LibraryElementItem[] = [
       type: 'custom-embed', label: 'Short Line',
       defaultStyle: { width: '60px', height: '3px' },
       defaultContent: { html: '<div style="width:100%;height:100%;background:#1e293b;border-radius:99px"></div>' },
+    },
+  },
+
+  // ─── Universe dividers ───
+
+  {
+    id: 'el-divider-warm-terracotta',
+    label: 'Warm Terracotta Line',
+    category: 'elements', subcategory: 'dividers',
+    tags: ['divider', 'warm', 'terracotta', 'earthy'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Warm Line',
+      defaultStyle: { width: '80px', height: '2px' },
+      defaultContent: { html: '<div style="width:100%;height:100%;background:linear-gradient(90deg,#b4654a,rgba(180,101,74,0.2))"></div>' },
+    },
+  },
+  {
+    id: 'el-divider-playful-gradient',
+    label: 'Playful Rainbow Line',
+    category: 'elements', subcategory: 'dividers',
+    tags: ['divider', 'playful', 'gradient', 'colorful'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Rainbow Line',
+      defaultStyle: { width: '100%', height: '3px' },
+      defaultContent: { html: '<div style="width:100%;height:100%;background:linear-gradient(90deg,#7c3aed,#ec4899,#f59e0b,#10b981);border-radius:99px"></div>' },
+    },
+  },
+  {
+    id: 'el-divider-retro-dashed',
+    label: 'Retro Dashed Line',
+    category: 'elements', subcategory: 'dividers',
+    tags: ['divider', 'retro', 'dashed', 'vintage'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Retro Dashed',
+      defaultStyle: { width: '100%', height: '2px' },
+      defaultContent: { html: '<div style="width:100%;border-top:2px dashed #92400e"></div>' },
+    },
+  },
+  {
+    id: 'el-divider-dark-prem-gold',
+    label: 'Dark Gold Line',
+    category: 'elements', subcategory: 'dividers',
+    tags: ['divider', 'dark-premium', 'gold', 'luxury'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Gold Line',
+      defaultStyle: { width: '100%', height: '1px' },
+      defaultContent: { html: '<div style="width:100%;height:1px;background:linear-gradient(90deg,transparent,#d4af37,transparent)"></div>' },
+    },
+  },
+  {
+    id: 'el-divider-editorial-rule',
+    label: 'Editorial Rule',
+    category: 'elements', subcategory: 'dividers',
+    tags: ['divider', 'editorial', 'rule', 'magazine'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Editorial Rule',
+      defaultStyle: { width: '100%', height: '2px' },
+      defaultContent: { html: '<div style="width:100%;height:2px;background:#18181b"></div>' },
+    },
+  },
+  {
+    id: 'el-divider-organic-leaf',
+    label: 'Organic Leaf Line',
+    category: 'elements', subcategory: 'dividers',
+    tags: ['divider', 'organic', 'leaf', 'nature'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-embed', label: 'Organic Line',
+      defaultStyle: { width: '120px', height: '2px' },
+      defaultContent: { html: '<div style="width:100%;height:100%;background:linear-gradient(90deg,transparent,#3f6212,transparent);border-radius:99px"></div>' },
     },
   },
 ]
@@ -376,6 +679,112 @@ const CONTAINERS: LibraryElementItem[] = [
         backgroundColor: '#ffffff',
         borderRadius: '0.75rem',
         boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.06)',
+      },
+      defaultContent: {},
+    },
+  },
+
+  // ─── Universe containers ───
+
+  {
+    id: 'el-container-warm-linen',
+    label: 'Warm Linen Panel',
+    category: 'elements', subcategory: 'containers',
+    tags: ['container', 'warm', 'linen', 'earthy'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Warm Linen',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1.25rem', padding: '2.5rem',
+        backgroundColor: '#faf7f2',
+        borderRadius: '0.25rem',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(180,101,74,0.15)',
+      },
+      defaultContent: {},
+    },
+  },
+  {
+    id: 'el-container-playful-bubble',
+    label: 'Playful Bubble',
+    category: 'elements', subcategory: 'containers',
+    tags: ['container', 'playful', 'bubble', 'fun', 'rounded'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Playful Bubble',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1rem', padding: '2rem',
+        backgroundColor: '#faf5ff',
+        borderRadius: '1.5rem',
+        borderWidth: '2px', borderStyle: 'solid', borderColor: '#e9d5ff',
+        boxShadow: '0 4px 20px rgba(124,58,237,0.08)',
+      },
+      defaultContent: {},
+    },
+  },
+  {
+    id: 'el-container-retro-frame',
+    label: 'Retro Frame',
+    category: 'elements', subcategory: 'containers',
+    tags: ['container', 'retro', 'frame', 'vintage'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Retro Frame',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1rem', padding: '2rem',
+        backgroundColor: '#fffbeb',
+        borderRadius: '0',
+        borderWidth: '3px', borderStyle: 'solid', borderColor: '#92400e',
+      },
+      defaultContent: {},
+    },
+  },
+  {
+    id: 'el-container-dark-prem-obsidian',
+    label: 'Dark Obsidian Panel',
+    category: 'elements', subcategory: 'containers',
+    tags: ['container', 'dark-premium', 'obsidian', 'luxury'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Obsidian Panel',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1.25rem', padding: '2.5rem',
+        backgroundColor: '#0a0a0a',
+        borderRadius: '0',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(212,175,55,0.2)',
+      },
+      defaultContent: {},
+    },
+  },
+  {
+    id: 'el-container-editorial-bordered',
+    label: 'Editorial Bordered',
+    category: 'elements', subcategory: 'containers',
+    tags: ['container', 'editorial', 'bordered', 'magazine'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Editorial Box',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1rem', padding: '2rem',
+        backgroundColor: '#fafaf9',
+        borderRadius: '0',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: '#18181b',
+      },
+      defaultContent: {},
+    },
+  },
+  {
+    id: 'el-container-organic-leaf',
+    label: 'Organic Leaf Panel',
+    category: 'elements', subcategory: 'containers',
+    tags: ['container', 'organic', 'leaf', 'nature'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Organic Panel',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1rem', padding: '2rem',
+        backgroundColor: '#f7fee7',
+        borderRadius: '1rem',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(63,98,18,0.15)',
       },
       defaultContent: {},
     },

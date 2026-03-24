@@ -286,6 +286,362 @@ const BUTTONS: LibraryElementItem[] = [
       defaultContent: { html: '<style>.btn-circ-nav{display:inline-flex;align-items:center;justify-content:center;width:50px;height:50px;background:rgba(255,255,255,0.08);color:#f5f5f5;border:1px solid rgba(255,255,255,0.12);border-radius:99px;cursor:pointer;font-size:1.25rem;backdrop-filter:blur(16px);transition:all 0.35s ease}.btn-circ-nav:hover{transform:scale(1.1);background:rgba(255,255,255,0.15)}</style><button class="btn-circ-nav">&rarr;</button>' },
     },
   },
+  // ─── Warm / Earthy buttons ───
+  {
+    id: 'comp-btn-warm-solid',
+    label: 'Warm Terracotta',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'warm', 'terracotta', 'earthy', 'solid'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Warm Button',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2.25rem',
+        backgroundColor: '#b4654a', color: '#faf7f2',
+        borderRadius: '0.25rem', fontSize: '0.9375rem', fontWeight: 500,
+        cursor: 'pointer', textAlign: 'center', letterSpacing: '0.02em',
+        transition: 'all 0.5s ease',
+      },
+      defaultContent: { label: 'Discover', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-warm-outline',
+    label: 'Warm Outline',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'warm', 'outline', 'earthy'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Warm Outline',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2.25rem',
+        backgroundColor: 'transparent', color: '#b4654a',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: '#b4654a',
+        borderRadius: '0.25rem', fontSize: '0.9375rem', fontWeight: 500,
+        cursor: 'pointer', textAlign: 'center',
+        transition: 'all 0.5s ease',
+      },
+      defaultContent: { label: 'Learn More', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-warm-text',
+    label: 'Warm Text Link',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'warm', 'text', 'link', 'underline'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Warm Link',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.5rem 0',
+        backgroundColor: 'transparent', color: '#8b5e3c',
+        borderRadius: '0', fontSize: '0.9375rem', fontWeight: 500,
+        cursor: 'pointer', textAlign: 'center', letterSpacing: '0.02em',
+        borderBottomWidth: '1px', borderBottomStyle: 'solid', borderBottomColor: '#8b5e3c',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'View Collection →', href: '#' },
+    },
+  },
+
+  // ─── Playful / Fun buttons ───
+  {
+    id: 'comp-btn-playful-gradient',
+    label: 'Playful Gradient',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'playful', 'gradient', 'fun', 'bouncy'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Playful Gradient',
+      defaultStyle: {
+        display: 'inline-block', padding: '1rem 2.5rem',
+        backgroundColor: '#7c3aed', color: '#ffffff',
+        borderRadius: '2rem', fontSize: '1rem', fontWeight: 700,
+        cursor: 'pointer', textAlign: 'center',
+        boxShadow: '0 4px 16px rgba(124,58,237,0.35)',
+        transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+      },
+      defaultContent: { label: 'Let\'s Go!', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-playful-pill',
+    label: 'Playful Candy Pill',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'playful', 'pill', 'candy', 'rounded'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Candy Pill',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2rem',
+        backgroundColor: '#ec4899', color: '#ffffff',
+        borderRadius: '99px', fontSize: '0.9375rem', fontWeight: 600,
+        cursor: 'pointer', textAlign: 'center',
+        transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+      },
+      defaultContent: { label: 'Try Free', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-playful-outline',
+    label: 'Playful Outline',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'playful', 'outline', 'fun'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Playful Outline',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2rem',
+        backgroundColor: 'transparent', color: '#7c3aed',
+        borderWidth: '2px', borderStyle: 'solid', borderColor: '#7c3aed',
+        borderRadius: '2rem', fontSize: '0.9375rem', fontWeight: 600,
+        cursor: 'pointer', textAlign: 'center',
+        transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+      },
+      defaultContent: { label: 'See More', href: '#' },
+    },
+  },
+
+  // ─── Retro / Vintage buttons ───
+  {
+    id: 'comp-btn-retro-slab',
+    label: 'Retro Slab',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'retro', 'slab', 'vintage', 'bold'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Retro Slab',
+      defaultStyle: {
+        display: 'inline-block', padding: '1rem 2.25rem',
+        backgroundColor: '#d97706', color: '#fffbeb',
+        borderRadius: '0', fontSize: '1rem', fontWeight: 800,
+        cursor: 'pointer', textAlign: 'center', textTransform: 'uppercase',
+        letterSpacing: '0.08em',
+        transition: 'all 0.3s ease',
+      },
+      defaultContent: { label: 'SHOP NOW', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-retro-outline',
+    label: 'Retro Outline',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'retro', 'outline', 'vintage'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Retro Outline',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2rem',
+        backgroundColor: 'transparent', color: '#92400e',
+        borderWidth: '3px', borderStyle: 'solid', borderColor: '#92400e',
+        borderRadius: '0', fontSize: '0.9375rem', fontWeight: 700,
+        cursor: 'pointer', textAlign: 'center', textTransform: 'uppercase',
+        letterSpacing: '0.06em',
+        transition: 'all 0.3s ease',
+      },
+      defaultContent: { label: 'EXPLORE', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-retro-neon',
+    label: 'Retro Neon',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'retro', 'neon', '80s', 'glow'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Retro Neon',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2rem',
+        backgroundColor: 'transparent', color: '#f472b6',
+        borderWidth: '2px', borderStyle: 'solid', borderColor: '#f472b6',
+        borderRadius: '0', fontSize: '0.9375rem', fontWeight: 700,
+        cursor: 'pointer', textAlign: 'center', textTransform: 'uppercase',
+        letterSpacing: '0.1em',
+        boxShadow: '0 0 10px rgba(244,114,182,0.5), inset 0 0 10px rgba(244,114,182,0.1)',
+        transition: 'all 0.3s ease',
+      },
+      defaultContent: { label: 'PLAY', href: '#' },
+    },
+  },
+
+  // ─── Dark Premium buttons ───
+  {
+    id: 'comp-btn-dark-prem-gold',
+    label: 'Dark Premium Gold',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'dark-premium', 'gold', 'luxury'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Gold Button',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2.5rem',
+        backgroundColor: 'transparent', color: '#d4af37',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: '#d4af37',
+        borderRadius: '0', fontSize: '0.8125rem', fontWeight: 400,
+        cursor: 'pointer', textAlign: 'center', textTransform: 'uppercase',
+        letterSpacing: '0.2em',
+        transition: 'all 0.6s ease',
+      },
+      defaultContent: { label: 'DISCOVER', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-dark-prem-solid',
+    label: 'Dark Premium Solid',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'dark-premium', 'solid', 'platine'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Platine Button',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2.5rem',
+        backgroundColor: '#d4af37', color: '#0a0a0a',
+        borderRadius: '0', fontSize: '0.8125rem', fontWeight: 500,
+        cursor: 'pointer', textAlign: 'center', textTransform: 'uppercase',
+        letterSpacing: '0.15em',
+        transition: 'all 0.6s ease',
+      },
+      defaultContent: { label: 'RESERVE', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-dark-prem-glow',
+    label: 'Dark Premium Glow',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'dark-premium', 'glow', 'neon'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Glow Button',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2.5rem',
+        backgroundColor: 'rgba(212,175,55,0.1)', color: '#d4af37',
+        borderRadius: '0.25rem', fontSize: '0.8125rem', fontWeight: 500,
+        cursor: 'pointer', textAlign: 'center', textTransform: 'uppercase',
+        letterSpacing: '0.15em',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(212,175,55,0.3)',
+        boxShadow: '0 0 20px rgba(212,175,55,0.15)',
+        transition: 'all 0.6s ease',
+      },
+      defaultContent: { label: 'EXPLORE', href: '#' },
+    },
+  },
+
+  // ─── Editorial / Magazine buttons ───
+  {
+    id: 'comp-btn-editorial-serif',
+    label: 'Editorial Serif',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'editorial', 'serif', 'magazine'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Editorial Button',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2.25rem',
+        backgroundColor: '#18181b', color: '#fafaf9',
+        borderRadius: '0', fontSize: '0.8125rem', fontWeight: 400,
+        cursor: 'pointer', textAlign: 'center', textTransform: 'uppercase',
+        letterSpacing: '0.12em',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'READ MORE', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-editorial-outline',
+    label: 'Editorial Outline',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'editorial', 'outline', 'fine'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Editorial Outline',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2.25rem',
+        backgroundColor: 'transparent', color: '#18181b',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: '#18181b',
+        borderRadius: '0', fontSize: '0.8125rem', fontWeight: 400,
+        cursor: 'pointer', textAlign: 'center', textTransform: 'uppercase',
+        letterSpacing: '0.12em',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'VIEW ARTICLE', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-editorial-link',
+    label: 'Editorial Underline',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'editorial', 'link', 'underline'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Editorial Link',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.375rem 0',
+        backgroundColor: 'transparent', color: '#18181b',
+        borderRadius: '0', fontSize: '0.875rem', fontWeight: 400,
+        cursor: 'pointer', textAlign: 'center',
+        borderBottomWidth: '1px', borderBottomStyle: 'solid', borderBottomColor: '#18181b',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'Continue Reading →', href: '#' },
+    },
+  },
+
+  // ─── Organic / Nature buttons ───
+  {
+    id: 'comp-btn-organic-leaf',
+    label: 'Organic Leaf',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'organic', 'nature', 'green', 'leaf'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Organic Button',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2.25rem',
+        backgroundColor: '#3f6212', color: '#f7fee7',
+        borderRadius: '99px', fontSize: '0.9375rem', fontWeight: 500,
+        cursor: 'pointer', textAlign: 'center',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'Explore Nature', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-organic-outline',
+    label: 'Organic Outline',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'organic', 'outline', 'nature'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Organic Outline',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2.25rem',
+        backgroundColor: 'transparent', color: '#3f6212',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: '#3f6212',
+        borderRadius: '99px', fontSize: '0.9375rem', fontWeight: 500,
+        cursor: 'pointer', textAlign: 'center',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'Learn More', href: '#' },
+    },
+  },
+  {
+    id: 'comp-btn-organic-soft',
+    label: 'Organic Soft',
+    category: 'components', subcategory: 'buttons',
+    tags: ['button', 'organic', 'soft', 'eco'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-button', label: 'Eco Soft',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.875rem 2rem',
+        backgroundColor: 'rgba(63,98,18,0.1)', color: '#3f6212',
+        borderRadius: '99px', fontSize: '0.9375rem', fontWeight: 500,
+        cursor: 'pointer', textAlign: 'center',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: { label: 'Discover', href: '#' },
+    },
+  },
 ]
 
 // ─── BADGES (10 styles) ───
@@ -521,6 +877,192 @@ const BADGES: LibraryElementItem[] = [
       type: 'custom-embed', label: 'Badge Pulse Dot',
       defaultStyle: { display: 'inline-block' },
       defaultContent: { html: '<style>@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.85)}}</style><span style="display:inline-flex;align-items:center;gap:0.375rem;padding:0.3125rem 0.75rem;background:rgba(16,185,129,0.08);color:#e1e1e1;border-radius:99px;font-size:0.75rem;font-weight:500;border:1px solid rgba(16,185,129,0.2)"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#10b981;animation:pulse-dot 2s ease-in-out infinite"></span>En ligne</span>' },
+    },
+  },
+  // ─── Universe badges ───
+  {
+    id: 'comp-badge-warm',
+    label: 'Badge Warm',
+    category: 'components', subcategory: 'badges',
+    tags: ['badge', 'warm', 'terracotta', 'earthy'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Badge Warm',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.3125rem 0.875rem',
+        backgroundColor: 'rgba(180,101,74,0.12)', color: '#b4654a',
+        borderRadius: '0.25rem', fontSize: '0.75rem', fontWeight: 600,
+        letterSpacing: '0.03em',
+      },
+      defaultContent: { text: 'Artisan' },
+    },
+  },
+  {
+    id: 'comp-badge-warm-pill',
+    label: 'Badge Warm Pill',
+    category: 'components', subcategory: 'badges',
+    tags: ['badge', 'warm', 'pill', 'earthy'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Badge Warm Pill',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.375rem 1rem',
+        backgroundColor: '#b4654a', color: '#faf7f2',
+        borderRadius: '99px', fontSize: '0.75rem', fontWeight: 500,
+      },
+      defaultContent: { text: 'Collection' },
+    },
+  },
+  {
+    id: 'comp-badge-playful',
+    label: 'Badge Playful',
+    category: 'components', subcategory: 'badges',
+    tags: ['badge', 'playful', 'fun', 'colorful'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Badge Playful',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.375rem 1rem',
+        backgroundColor: '#7c3aed', color: '#ffffff',
+        borderRadius: '2rem', fontSize: '0.75rem', fontWeight: 700,
+      },
+      defaultContent: { text: 'New!' },
+    },
+  },
+  {
+    id: 'comp-badge-playful-candy',
+    label: 'Badge Candy',
+    category: 'components', subcategory: 'badges',
+    tags: ['badge', 'playful', 'candy', 'pink'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Badge Candy',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.375rem 1rem',
+        backgroundColor: '#ec4899', color: '#ffffff',
+        borderRadius: '2rem', fontSize: '0.75rem', fontWeight: 700,
+      },
+      defaultContent: { text: 'Popular' },
+    },
+  },
+  {
+    id: 'comp-badge-retro',
+    label: 'Badge Retro',
+    category: 'components', subcategory: 'badges',
+    tags: ['badge', 'retro', 'vintage', 'slab'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Badge Retro',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.25rem 0.75rem',
+        backgroundColor: '#d97706', color: '#fffbeb',
+        borderRadius: '0', fontSize: '0.6875rem', fontWeight: 800,
+        textTransform: 'uppercase', letterSpacing: '0.1em',
+      },
+      defaultContent: { text: 'VINTAGE' },
+    },
+  },
+  {
+    id: 'comp-badge-retro-outline',
+    label: 'Badge Retro Outline',
+    category: 'components', subcategory: 'badges',
+    tags: ['badge', 'retro', 'vintage', 'outline'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Badge Retro Outline',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.25rem 0.75rem',
+        backgroundColor: 'transparent', color: '#92400e',
+        borderWidth: '2px', borderStyle: 'solid', borderColor: '#92400e',
+        borderRadius: '0', fontSize: '0.6875rem', fontWeight: 800,
+        textTransform: 'uppercase', letterSpacing: '0.1em',
+      },
+      defaultContent: { text: 'CLASSIC' },
+    },
+  },
+  {
+    id: 'comp-badge-dark-prem-gold',
+    label: 'Badge Dark Gold',
+    category: 'components', subcategory: 'badges',
+    tags: ['badge', 'dark-premium', 'gold'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Badge Dark Gold',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.3125rem 1rem',
+        backgroundColor: 'rgba(212,175,55,0.1)', color: '#d4af37',
+        borderRadius: '0', fontSize: '0.6875rem', fontWeight: 400,
+        textTransform: 'uppercase', letterSpacing: '0.2em',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(212,175,55,0.25)',
+      },
+      defaultContent: { text: 'EXCLUSIVE' },
+    },
+  },
+  {
+    id: 'comp-badge-editorial',
+    label: 'Badge Editorial',
+    category: 'components', subcategory: 'badges',
+    tags: ['badge', 'editorial', 'magazine', 'serif'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Badge Editorial',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.25rem 0.75rem',
+        backgroundColor: '#18181b', color: '#fafaf9',
+        borderRadius: '0', fontSize: '0.6875rem', fontWeight: 400,
+        textTransform: 'uppercase', letterSpacing: '0.12em',
+      },
+      defaultContent: { text: 'EDITOR\'S PICK' },
+    },
+  },
+  {
+    id: 'comp-badge-editorial-outline',
+    label: 'Badge Editorial Outline',
+    category: 'components', subcategory: 'badges',
+    tags: ['badge', 'editorial', 'outline'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Badge Editorial Outline',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.25rem 0.75rem',
+        backgroundColor: 'transparent', color: '#18181b',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: '#18181b',
+        borderRadius: '0', fontSize: '0.6875rem', fontWeight: 400,
+        textTransform: 'uppercase', letterSpacing: '0.12em',
+      },
+      defaultContent: { text: 'FEATURE' },
+    },
+  },
+  {
+    id: 'comp-badge-organic',
+    label: 'Badge Organic',
+    category: 'components', subcategory: 'badges',
+    tags: ['badge', 'organic', 'nature', 'leaf', 'green'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Badge Organic',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.375rem 1rem',
+        backgroundColor: 'rgba(63,98,18,0.1)', color: '#3f6212',
+        borderRadius: '99px', fontSize: '0.75rem', fontWeight: 500,
+      },
+      defaultContent: { text: '🌿 Eco' },
+    },
+  },
+  {
+    id: 'comp-badge-organic-solid',
+    label: 'Badge Organic Solid',
+    category: 'components', subcategory: 'badges',
+    tags: ['badge', 'organic', 'solid', 'nature'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-text', label: 'Badge Organic Solid',
+      defaultStyle: {
+        display: 'inline-block', padding: '0.375rem 1rem',
+        backgroundColor: '#3f6212', color: '#f7fee7',
+        borderRadius: '99px', fontSize: '0.75rem', fontWeight: 500,
+      },
+      defaultContent: { text: 'Natural' },
     },
   },
 ]
@@ -990,6 +1532,321 @@ const CARDS: LibraryElementItem[] = [
       ],
     },
   },
+  // ─── Universe cards ───
+
+  // Warm — Aman/Aesop inspired
+  {
+    id: 'comp-card-warm-service',
+    label: 'Warm Service Card',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'warm', 'service', 'earthy'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Warm Service',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1.25rem',
+        padding: '2.5rem',
+        backgroundColor: '#faf7f2',
+        borderRadius: '0.25rem',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(180,101,74,0.12)',
+        transition: 'all 0.5s ease',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-text', label: 'Number', defaultStyle: { fontSize: '0.75rem', fontWeight: 600, color: '#b4654a', letterSpacing: '0.1em' }, defaultContent: { text: '01' } },
+        { type: 'custom-heading', label: 'Title', defaultStyle: { fontSize: '1.25rem', fontWeight: 400, color: '#3d2b1f', lineHeight: '1.3', fontFamily: 'Georgia, serif' }, defaultContent: { text: 'Artisan Craftsmanship', tag: 'h3' } },
+        { type: 'custom-text', label: 'Desc', defaultStyle: { fontSize: '0.9375rem', lineHeight: '1.7', color: '#78593e' }, defaultContent: { text: 'Each piece is handcrafted with attention to detail, using techniques passed down through generations.' } },
+      ],
+    },
+  },
+  {
+    id: 'comp-card-warm-testimonial',
+    label: 'Warm Testimonial',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'warm', 'testimonial', 'quote'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Warm Testimonial',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1.5rem',
+        padding: '2.5rem',
+        backgroundColor: '#fff',
+        borderRadius: '0.25rem',
+        borderLeftWidth: '3px', borderLeftStyle: 'solid', borderLeftColor: '#b4654a',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-text', label: 'Quote', defaultStyle: { fontSize: '1.0625rem', lineHeight: '1.7', color: '#3d2b1f', fontStyle: 'italic', fontFamily: 'Georgia, serif' }, defaultContent: { text: '"The warmth and authenticity of their approach made us feel truly valued. Every detail exceeded our expectations."' } },
+        { type: 'custom-container', label: 'Author', defaultStyle: { display: 'flex', flexDirection: 'column', gap: '0.125rem' }, defaultContent: {}, children: [
+          { type: 'custom-text', label: 'Name', defaultStyle: { fontSize: '0.9375rem', fontWeight: 600, color: '#3d2b1f' }, defaultContent: { text: 'Marie Laurent' } },
+          { type: 'custom-text', label: 'Role', defaultStyle: { fontSize: '0.8125rem', color: '#b4654a' }, defaultContent: { text: 'Interior Designer' } },
+        ]},
+      ],
+    },
+  },
+
+  // Playful — Duolingo/Notion inspired
+  {
+    id: 'comp-card-playful-feature',
+    label: 'Playful Feature Card',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'playful', 'feature', 'fun', 'colorful'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Playful Feature',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1rem',
+        padding: '2rem',
+        backgroundColor: '#faf5ff',
+        borderRadius: '1.5rem',
+        borderWidth: '2px', borderStyle: 'solid', borderColor: '#e9d5ff',
+        transition: 'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-container', label: 'Icon', defaultStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: '52px', height: '52px', backgroundColor: '#7c3aed', borderRadius: '1rem' }, defaultContent: {}, children: [
+          { type: 'custom-text', label: 'Emoji', defaultStyle: { fontSize: '1.5rem' }, defaultContent: { text: '🚀' } },
+        ]},
+        { type: 'custom-heading', label: 'Title', defaultStyle: { fontSize: '1.25rem', fontWeight: 700, color: '#18181b', lineHeight: '1.3' }, defaultContent: { text: 'Lightning Fast', tag: 'h3' } },
+        { type: 'custom-text', label: 'Desc', defaultStyle: { fontSize: '0.9375rem', lineHeight: '1.6', color: '#52525b' }, defaultContent: { text: 'Built for speed, optimized for fun. Everything loads in a snap!' } },
+      ],
+    },
+  },
+  {
+    id: 'comp-card-playful-pricing',
+    label: 'Playful Pricing',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'playful', 'pricing', 'colorful'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Playful Pricing',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1.5rem',
+        padding: '2rem',
+        backgroundColor: '#ffffff',
+        borderRadius: '1.5rem',
+        borderWidth: '2px', borderStyle: 'solid', borderColor: '#e5e7eb',
+        transition: 'all 0.3s ease',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-text', label: 'Badge', defaultStyle: { display: 'inline-block', padding: '0.25rem 0.75rem', backgroundColor: '#7c3aed', color: '#fff', borderRadius: '99px', fontSize: '0.75rem', fontWeight: 700, alignSelf: 'flex-start' }, defaultContent: { text: 'Most Popular' } },
+        { type: 'custom-heading', label: 'Price', defaultStyle: { fontSize: '3rem', fontWeight: 800, color: '#18181b', lineHeight: '1' }, defaultContent: { text: '$29', tag: 'h2' } },
+        { type: 'custom-text', label: 'Period', defaultStyle: { fontSize: '0.875rem', color: '#71717a', marginTop: '-0.5rem' }, defaultContent: { text: 'per month, billed yearly' } },
+        { type: 'custom-container', label: 'Features', defaultStyle: { display: 'flex', flexDirection: 'column', gap: '0.625rem' }, defaultContent: {}, children: [
+          { type: 'custom-text', label: 'F1', defaultStyle: { fontSize: '0.9375rem', color: '#3f3f46' }, defaultContent: { text: '✅ Unlimited projects' } },
+          { type: 'custom-text', label: 'F2', defaultStyle: { fontSize: '0.9375rem', color: '#3f3f46' }, defaultContent: { text: '✅ Priority support' } },
+          { type: 'custom-text', label: 'F3', defaultStyle: { fontSize: '0.9375rem', color: '#3f3f46' }, defaultContent: { text: '✅ Custom branding' } },
+        ]},
+        { type: 'custom-button', label: 'CTA', defaultStyle: { display: 'block', padding: '0.875rem 2rem', backgroundColor: '#7c3aed', color: '#fff', borderRadius: '1rem', fontSize: '0.9375rem', fontWeight: 700, cursor: 'pointer', textAlign: 'center', transition: 'all 0.3s cubic-bezier(0.34,1.56,0.64,1)' }, defaultContent: { label: 'Get Started 🎉', href: '#' } },
+      ],
+    },
+  },
+
+  // Retro — Vintage/Art Deco
+  {
+    id: 'comp-card-retro-feature',
+    label: 'Retro Feature Card',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'retro', 'feature', 'vintage'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Retro Feature',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1.25rem',
+        padding: '2rem',
+        backgroundColor: '#fffbeb',
+        borderRadius: '0',
+        borderWidth: '2px', borderStyle: 'solid', borderColor: '#92400e',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-text', label: 'Number', defaultStyle: { fontSize: '2rem', fontWeight: 900, color: '#d97706', lineHeight: '1' }, defaultContent: { text: '01' } },
+        { type: 'custom-heading', label: 'Title', defaultStyle: { fontSize: '1.25rem', fontWeight: 800, color: '#451a03', lineHeight: '1.3', textTransform: 'uppercase', letterSpacing: '0.03em' }, defaultContent: { text: 'Heritage Quality', tag: 'h3' } },
+        { type: 'custom-text', label: 'Desc', defaultStyle: { fontSize: '0.9375rem', lineHeight: '1.7', color: '#78350f' }, defaultContent: { text: 'Built to last, designed to impress. Our time-tested methods guarantee quality that endures.' } },
+      ],
+    },
+  },
+  {
+    id: 'comp-card-retro-neon',
+    label: 'Retro Neon Card',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'retro', 'neon', 'dark', 'glow'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Neon Card',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1rem',
+        padding: '2rem',
+        backgroundColor: '#1c1917',
+        borderRadius: '0',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: '#ec4899',
+        boxShadow: '0 0 20px rgba(236,72,153,0.15), inset 0 0 20px rgba(236,72,153,0.05)',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-heading', label: 'Title', defaultStyle: { fontSize: '1.25rem', fontWeight: 800, color: '#ec4899', lineHeight: '1.3', textTransform: 'uppercase', letterSpacing: '0.05em' }, defaultContent: { text: 'LIVE TONIGHT', tag: 'h3' } },
+        { type: 'custom-text', label: 'Desc', defaultStyle: { fontSize: '0.9375rem', lineHeight: '1.6', color: '#d6d3d1' }, defaultContent: { text: 'An unforgettable evening of retro beats and neon lights awaits you.' } },
+        { type: 'custom-text', label: 'Link', defaultStyle: { fontSize: '0.875rem', fontWeight: 700, color: '#ec4899', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.1em' }, defaultContent: { text: 'GET TICKETS →' } },
+      ],
+    },
+  },
+
+  // Dark Premium — Luxury/Noir
+  {
+    id: 'comp-card-dark-prem-service',
+    label: 'Dark Premium Service',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'dark-premium', 'service', 'luxury', 'gold'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Dark Service',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1.5rem',
+        padding: '2.5rem',
+        backgroundColor: '#0a0a0a',
+        borderRadius: '0',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(212,175,55,0.2)',
+        transition: 'all 0.5s ease',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-container', label: 'Icon', defaultStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: '48px', height: '48px', borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(212,175,55,0.3)', borderRadius: '0' }, defaultContent: {}, children: [
+          { type: 'custom-text', label: 'Symbol', defaultStyle: { fontSize: '1.25rem', color: '#d4af37' }, defaultContent: { text: '◆' } },
+        ]},
+        { type: 'custom-heading', label: 'Title', defaultStyle: { fontSize: '1.125rem', fontWeight: 300, color: '#fafaf9', lineHeight: '1.35', letterSpacing: '0.08em', textTransform: 'uppercase' }, defaultContent: { text: 'Private Concierge', tag: 'h3' } },
+        { type: 'custom-text', label: 'Desc', defaultStyle: { fontSize: '0.9375rem', lineHeight: '1.7', color: 'rgba(250,250,249,0.5)' }, defaultContent: { text: 'A dedicated liaison to curate every moment of your experience with unmatched discretion.' } },
+      ],
+    },
+  },
+  {
+    id: 'comp-card-dark-prem-stat',
+    label: 'Dark Premium Stat',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'dark-premium', 'stat', 'number', 'gold'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Dark Stat',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '0.5rem',
+        padding: '2rem',
+        textAlign: 'center',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(212,175,55,0.1)',
+        borderRadius: '0',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-heading', label: 'Number', defaultStyle: { fontSize: '3.5rem', fontWeight: 200, color: '#d4af37', lineHeight: '1', letterSpacing: '0.05em' }, defaultContent: { text: '150+', tag: 'h2' } },
+        { type: 'custom-text', label: 'Label', defaultStyle: { fontSize: '0.75rem', fontWeight: 400, color: 'rgba(250,250,249,0.4)', letterSpacing: '0.2em', textTransform: 'uppercase' }, defaultContent: { text: 'EXCLUSIVE RESIDENCES' } },
+      ],
+    },
+  },
+
+  // Editorial — Magazine/NYT
+  {
+    id: 'comp-card-editorial-article',
+    label: 'Editorial Article Card',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'editorial', 'article', 'magazine', 'blog'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Article Card',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column',
+        borderRadius: '0', overflow: 'hidden',
+        borderBottomWidth: '1px', borderBottomStyle: 'solid', borderBottomColor: '#e5e5e5',
+        paddingBottom: '1.5rem',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-container', label: 'Image Wrap', defaultStyle: { overflow: 'hidden', height: '240px', marginBottom: '1.25rem' }, defaultContent: {}, children: [
+          { type: 'custom-image', label: 'Photo', defaultStyle: { width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s ease' }, defaultContent: { src: '', alt: 'Article' } },
+        ]},
+        { type: 'custom-text', label: 'Category', defaultStyle: { fontSize: '0.6875rem', fontWeight: 400, color: '#18181b', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '0.5rem' }, defaultContent: { text: 'DESIGN' } },
+        { type: 'custom-heading', label: 'Title', defaultStyle: { fontSize: '1.5rem', fontWeight: 400, color: '#18181b', lineHeight: '1.3', fontFamily: 'Georgia, serif' }, defaultContent: { text: 'The Architecture of Silence: How Empty Space Speaks', tag: 'h3' } },
+        { type: 'custom-text', label: 'Excerpt', defaultStyle: { fontSize: '0.9375rem', lineHeight: '1.65', color: '#52525b', fontFamily: 'Georgia, serif' }, defaultContent: { text: 'In a world obsessed with filling every corner, the most powerful design choice remains the deliberate pause.' } },
+        { type: 'custom-text', label: 'Meta', defaultStyle: { fontSize: '0.75rem', color: '#a1a1aa', marginTop: '0.75rem' }, defaultContent: { text: 'March 15, 2026 · 8 min read' } },
+      ],
+    },
+  },
+  {
+    id: 'comp-card-editorial-quote',
+    label: 'Editorial Pull Quote',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'editorial', 'quote', 'magazine'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Pull Quote',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1rem',
+        padding: '2.5rem 2rem',
+        borderTopWidth: '2px', borderTopStyle: 'solid', borderTopColor: '#18181b',
+        borderBottomWidth: '2px', borderBottomStyle: 'solid', borderBottomColor: '#18181b',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-text', label: 'Quote', defaultStyle: { fontSize: '1.75rem', fontWeight: 400, color: '#18181b', lineHeight: '1.4', fontFamily: 'Georgia, serif', fontStyle: 'italic' }, defaultContent: { text: '"Design is not just what it looks like and feels like. Design is how it works."' } },
+        { type: 'custom-text', label: 'Attribution', defaultStyle: { fontSize: '0.8125rem', fontWeight: 400, color: '#71717a', letterSpacing: '0.08em', textTransform: 'uppercase' }, defaultContent: { text: '— Steve Jobs' } },
+      ],
+    },
+  },
+
+  // Organic — Nature/Sustainability
+  {
+    id: 'comp-card-organic-feature',
+    label: 'Organic Feature Card',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'organic', 'feature', 'nature', 'green'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Organic Feature',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1.25rem',
+        padding: '2rem',
+        backgroundColor: '#f7fee7',
+        borderRadius: '1rem',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(63,98,18,0.12)',
+        transition: 'all 0.4s ease',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-container', label: 'Icon', defaultStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: '48px', height: '48px', backgroundColor: 'rgba(63,98,18,0.1)', borderRadius: '99px' }, defaultContent: {}, children: [
+          { type: 'custom-text', label: 'Emoji', defaultStyle: { fontSize: '1.25rem' }, defaultContent: { text: '🌱' } },
+        ]},
+        { type: 'custom-heading', label: 'Title', defaultStyle: { fontSize: '1.125rem', fontWeight: 600, color: '#1a2e05', lineHeight: '1.35' }, defaultContent: { text: 'Zero Waste Process', tag: 'h3' } },
+        { type: 'custom-text', label: 'Desc', defaultStyle: { fontSize: '0.9375rem', lineHeight: '1.7', color: '#4d7c0f' }, defaultContent: { text: 'Every step of our production cycle is designed to minimize waste and maximize positive impact.' } },
+      ],
+    },
+  },
+  {
+    id: 'comp-card-organic-testimonial',
+    label: 'Organic Testimonial',
+    category: 'components', subcategory: 'cards',
+    tags: ['card', 'organic', 'testimonial', 'nature'],
+    dropType: 'element',
+    elementDef: {
+      type: 'custom-container', label: 'Organic Testimonial',
+      defaultStyle: {
+        display: 'flex', flexDirection: 'column', gap: '1.25rem',
+        padding: '2rem',
+        backgroundColor: '#ffffff',
+        borderRadius: '1rem',
+        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(63,98,18,0.15)',
+      },
+      defaultContent: {},
+      children: [
+        { type: 'custom-text', label: 'Stars', defaultStyle: { fontSize: '0.875rem', color: '#3f6212', letterSpacing: '0.1em' }, defaultContent: { text: '★ ★ ★ ★ ★' } },
+        { type: 'custom-text', label: 'Quote', defaultStyle: { fontSize: '1rem', lineHeight: '1.7', color: '#1a2e05', fontStyle: 'italic' }, defaultContent: { text: '"Finally a brand that walks the talk. Their commitment to sustainability shows in every detail of the product."' } },
+        { type: 'custom-container', label: 'Author', defaultStyle: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.75rem' }, defaultContent: {}, children: [
+          { type: 'custom-image', label: 'Avatar', defaultStyle: { width: '40px', height: '40px', borderRadius: '99px', objectFit: 'cover' }, defaultContent: { src: '', alt: 'Avatar' } },
+          { type: 'custom-container', label: 'Info', defaultStyle: { display: 'flex', flexDirection: 'column', gap: '0.125rem' }, defaultContent: {}, children: [
+            { type: 'custom-text', label: 'Name', defaultStyle: { fontSize: '0.875rem', fontWeight: 600, color: '#1a2e05' }, defaultContent: { text: 'Claire Dubois' } },
+            { type: 'custom-text', label: 'Role', defaultStyle: { fontSize: '0.75rem', color: '#4d7c0f' }, defaultContent: { text: 'Eco-conscious Chef' } },
+          ]},
+        ]},
+      ],
+    },
+  },
 ]
 
 // ─── NAVBARS ───
@@ -1012,13 +1869,13 @@ const NAVBARS: LibraryElementItem[] = [
       },
       defaultContent: {},
       children: [
-        { type: 'custom-text', label: 'Logo', defaultStyle: { fontSize: '1.25rem', fontWeight: 700, color: '#f5f5f5', letterSpacing: '-0.02em' }, defaultContent: { text: 'STUDIO' } },
+        { type: 'custom-text', label: 'Logo', defaultStyle: { fontSize: '1.25rem', fontWeight: 700, color: '#f6efe5', letterSpacing: '-0.02em' }, defaultContent: { text: 'BRIXSA' } },
         { type: 'custom-container', label: 'Links', defaultStyle: { display: 'flex', flexDirection: 'row', gap: '2rem', alignItems: 'center' }, defaultContent: {}, children: [
           { type: 'custom-text', label: 'Link 1', defaultStyle: { fontSize: '0.875rem', color: 'rgba(225,225,225,0.7)', cursor: 'pointer' }, defaultContent: { text: 'Properties' } },
           { type: 'custom-text', label: 'Link 2', defaultStyle: { fontSize: '0.875rem', color: 'rgba(225,225,225,0.7)', cursor: 'pointer' }, defaultContent: { text: 'About' } },
           { type: 'custom-text', label: 'Link 3', defaultStyle: { fontSize: '0.875rem', color: 'rgba(225,225,225,0.7)', cursor: 'pointer' }, defaultContent: { text: 'Contact' } },
         ]},
-        { type: 'custom-button', label: 'CTA', defaultStyle: { display: 'inline-block', padding: '0.625rem 1.5rem', backgroundColor: 'rgba(128,117,117,0.5)', color: '#f5f5f5', borderRadius: '99px', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', textAlign: 'center', backdropFilter: 'blur(12px)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.1)', transition: 'all 0.3s ease' }, defaultContent: { label: 'Get Started', href: '#' } },
+        { type: 'custom-button', label: 'CTA', defaultStyle: { display: 'inline-block', padding: '0.625rem 1.5rem', backgroundColor: 'rgba(128,117,117,0.5)', color: '#f6efe5', borderRadius: '99px', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', textAlign: 'center', backdropFilter: 'blur(12px)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.1)', transition: 'all 0.3s ease' }, defaultContent: { label: 'Get Started', href: '#' } },
       ],
     },
   },
@@ -1038,23 +1895,23 @@ const FOOTERS: LibraryElementItem[] = [
       defaultStyle: {
         display: 'flex', flexDirection: 'row', gap: '4rem',
         padding: '4rem 3rem 2rem',
-        backgroundColor: '#f5f5f5', width: '100%',
+        backgroundColor: '#f6efe5', width: '100%',
       },
       defaultContent: {},
       children: [
         { type: 'custom-container', label: 'Brand', defaultStyle: { display: 'flex', flexDirection: 'column', gap: '1rem', flex: '1', maxWidth: '320px' }, defaultContent: {}, children: [
-          { type: 'custom-text', label: 'Logo', defaultStyle: { fontSize: '1.25rem', fontWeight: 700, color: '#0f172a' }, defaultContent: { text: 'BRAND' } },
+          { type: 'custom-text', label: 'Logo', defaultStyle: { fontSize: '1.25rem', fontWeight: 700, color: '#140c08' }, defaultContent: { text: 'BRAND' } },
           { type: 'custom-text', label: 'Description', defaultStyle: { fontSize: '0.875rem', lineHeight: '1.65', color: '#56595a' }, defaultContent: { text: 'Creating exceptional digital experiences for visionary brands since 2020.' } },
         ]},
         { type: 'custom-container', label: 'Links Col', defaultStyle: { display: 'flex', flexDirection: 'column', gap: '0.75rem' }, defaultContent: {}, children: [
-          { type: 'custom-text', label: 'Title', defaultStyle: { fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.25rem' }, defaultContent: { text: 'Navigation' } },
+          { type: 'custom-text', label: 'Title', defaultStyle: { fontSize: '0.8125rem', fontWeight: 600, color: '#140c08', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.25rem' }, defaultContent: { text: 'Navigation' } },
           { type: 'custom-text', label: 'L1', defaultStyle: { fontSize: '0.875rem', color: '#56595a', cursor: 'pointer' }, defaultContent: { text: 'Home' } },
           { type: 'custom-text', label: 'L2', defaultStyle: { fontSize: '0.875rem', color: '#56595a', cursor: 'pointer' }, defaultContent: { text: 'About' } },
           { type: 'custom-text', label: 'L3', defaultStyle: { fontSize: '0.875rem', color: '#56595a', cursor: 'pointer' }, defaultContent: { text: 'Services' } },
           { type: 'custom-text', label: 'L4', defaultStyle: { fontSize: '0.875rem', color: '#56595a', cursor: 'pointer' }, defaultContent: { text: 'Contact' } },
         ]},
         { type: 'custom-container', label: 'Links Col 2', defaultStyle: { display: 'flex', flexDirection: 'column', gap: '0.75rem' }, defaultContent: {}, children: [
-          { type: 'custom-text', label: 'Title', defaultStyle: { fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.25rem' }, defaultContent: { text: 'Legal' } },
+          { type: 'custom-text', label: 'Title', defaultStyle: { fontSize: '0.8125rem', fontWeight: 600, color: '#140c08', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.25rem' }, defaultContent: { text: 'Legal' } },
           { type: 'custom-text', label: 'L1', defaultStyle: { fontSize: '0.875rem', color: '#56595a', cursor: 'pointer' }, defaultContent: { text: 'Privacy Policy' } },
           { type: 'custom-text', label: 'L2', defaultStyle: { fontSize: '0.875rem', color: '#56595a', cursor: 'pointer' }, defaultContent: { text: 'Terms of Service' } },
           { type: 'custom-text', label: 'L3', defaultStyle: { fontSize: '0.875rem', color: '#56595a', cursor: 'pointer' }, defaultContent: { text: 'Cookie Policy' } },
@@ -1062,6 +1919,7 @@ const FOOTERS: LibraryElementItem[] = [
       ],
     },
   },
+
 ]
 
 // ─── MISC UI ───

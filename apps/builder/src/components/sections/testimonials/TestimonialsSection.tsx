@@ -4240,6 +4240,14 @@ const SLIDER_CONFIGS = {
   creative: { bg: 'bg-amber-50', cardBg: 'bg-white border-2 border-zinc-900', dotActive: 'bg-zinc-900', dotInactive: 'bg-zinc-400', arrowBg: 'bg-yellow-300 border-2 border-zinc-900', arrowText: 'text-zinc-900' },
   ecommerce: { bg: 'bg-white', cardBg: 'bg-white border-zinc-200', dotActive: 'bg-emerald-600', dotInactive: 'bg-zinc-300', arrowBg: 'bg-white shadow-md', arrowText: 'text-zinc-700' },
   glass: { bg: 'bg-zinc-950', cardBg: 'bg-white/5 border-white/10 backdrop-blur-sm', dotActive: 'bg-purple-500', dotInactive: 'bg-zinc-700', arrowBg: 'bg-white/10 border border-white/10', arrowText: 'text-white' },
+  'dark-premium': { bg: 'bg-[#0a0a0a]', cardBg: 'bg-[#111] border-[#d4af3725]', dotActive: 'bg-[#d4af37]', dotInactive: 'bg-zinc-800', arrowBg: 'bg-[#111] border border-[#d4af3730]', arrowText: 'text-[#d4af37]' },
+
+  warm: { bg: 'bg-[#faf7f2]', cardBg: 'bg-white border-[#e8e0d8]', dotActive: 'bg-[#b4654a]', dotInactive: 'bg-[#d6cdc4]', arrowBg: 'bg-white border border-[#e8e0d8]', arrowText: 'text-[#3d2b1f]' },
+  playful: { bg: 'bg-white', cardBg: 'bg-purple-50 border-2 border-purple-300', dotActive: 'bg-violet-600', dotInactive: 'bg-zinc-300', arrowBg: 'bg-violet-100 border-2 border-violet-400', arrowText: 'text-violet-700' },
+  retro: { bg: 'bg-[#fffbeb]', cardBg: 'bg-white border-2 border-amber-600', dotActive: 'bg-amber-600', dotInactive: 'bg-amber-300', arrowBg: 'bg-amber-100 border-2 border-amber-600', arrowText: 'text-amber-900' },
+  editorial: { bg: 'bg-[#fafaf9]', cardBg: 'bg-[#fafaf9] border-zinc-300', dotActive: 'bg-zinc-900', dotInactive: 'bg-zinc-300', arrowBg: 'bg-white border border-zinc-300', arrowText: 'text-zinc-900' },
+  organic: { bg: 'bg-[#f7fee7]', cardBg: 'bg-white border-[#3f621220]', dotActive: 'bg-[#3f6212]', dotInactive: 'bg-[#c6dda0]', arrowBg: 'bg-white border border-[#3f621230]', arrowText: 'text-[#3f6212]' },
+
 } as const
 
 function makeSliderVariant(
@@ -4332,6 +4340,811 @@ const GlassSlider = makeSliderVariant('glass',
   (props) => <GlassHeader {...props} />,
   (props) => <GlassCard {...props} />,
 )
+
+const WarmSlider = makeSliderVariant('warm',
+  (props) => <WarmHeader {...props} />,
+  (props) => <WarmCard {...props} />,
+)
+const PlayfulSlider = makeSliderVariant('playful',
+  (props) => <PlayfulHeader {...props} />,
+  (props) => <PlayfulCard {...props} />,
+)
+const RetroSlider = makeSliderVariant('retro',
+  (props) => <RetroHeader {...props} />,
+  (props) => <RetroCard {...props} />,
+)
+const DarkPremiumSlider = makeSliderVariant('dark-premium',
+  (props) => <DarkPremiumHeader {...props} />,
+  (props) => <DarkPremiumCard {...props} />,
+)
+const EditorialSlider = makeSliderVariant('editorial',
+  ({ content, accent, styleOverrides, sectionId }) => <EditorialHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />,
+  ({ item, accent, sectionId, itemIndex }) => <EditorialCard item={item} accent={accent} sectionId={sectionId} itemIndex={itemIndex} />,
+)
+const OrganicSlider = makeSliderVariant('organic',
+  (props) => <OrganicHeader {...props} />,
+  (props) => <OrganicCard {...props} />,
+)
+
+// ─────────────────────────────────────────────
+// WARM — Aman/Aesop — terracotta #b4654a, linen #faf7f2, serif Georgia
+// ─────────────────────────────────────────────
+
+function WarmStars({ rating = 5 }: { rating?: number }) {
+  return (
+    <div className="flex gap-1 mb-3">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <span key={i} className="text-sm" style={{ color: i < rating ? '#b4654a' : '#d6cdc4' }}>★</span>
+      ))}
+    </div>
+  )
+}
+
+function WarmHeader({ content, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const { titleSize, textAlign, textColor } = styleOverrides ?? {}
+  return (
+    <div className={cn("mb-16 text-center space-y-4", textAlign && getTextAlignClass(textAlign))}>
+      {content.eyebrow && (
+        <span className="inline-block text-[11px] font-light tracking-[0.2em] uppercase" style={{ color: accent }}>
+          {content.eyebrow}
+        </span>
+      )}
+      {content.title && (
+        <h2
+          {...elementProps(sectionId, 'title', 'heading')}
+          className={cn("text-3xl md:text-4xl lg:text-5xl font-light", titleSize && getTitleSizeClass(titleSize))}
+          style={{ fontFamily: 'Georgia, serif', color: textColor ?? '#3d2b1f' }}
+        >
+          {content.title}
+        </h2>
+      )}
+      {content.subtitle && (
+        <p {...elementProps(sectionId, 'subtitle', 'text')} className="text-base max-w-2xl mx-auto font-light" style={{ color: '#8c7b6b' }}>
+          {content.subtitle}
+        </p>
+      )}
+    </div>
+  )
+}
+
+function WarmCard({ item, accent, large, sectionId, itemIndex }: { item: TestimonialItem; accent: string; large?: boolean; sectionId: string; itemIndex: number }) {
+  return (
+    <div
+      className={cn('p-7', large && 'flex flex-col justify-center')}
+      style={{ backgroundColor: '#fff', borderRadius: '0.25rem', border: '1px solid #e8e0d8' }}
+    >
+      <WarmStars rating={item.rating} />
+      <p
+        {...elementProps(sectionId, `items.${itemIndex}.quote`, 'text')}
+        className={cn('leading-relaxed mb-5 font-light', large ? 'text-lg mb-6' : 'text-sm')}
+        style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic', color: '#5c4a3a' }}
+      >
+        &ldquo;{item.quote}&rdquo;
+      </p>
+      <div className="flex items-center gap-3">
+        <div
+          {...elementProps(sectionId, `items.${itemIndex}.avatar`, 'image')}
+          className={cn('flex items-center justify-center font-light shrink-0', large ? 'w-11 h-11 text-base' : 'w-9 h-9 text-sm')}
+          style={{ borderRadius: '0.25rem', backgroundColor: `${accent}18`, color: accent }}
+        >
+          {item.author.charAt(0)}
+        </div>
+        <div>
+          <p {...elementProps(sectionId, `items.${itemIndex}.author`, 'text')} className={cn('font-normal', large ? 'text-base' : 'text-sm')} style={{ color: '#3d2b1f' }}>{item.author}</p>
+          <p {...elementProps(sectionId, `items.${itemIndex}.role`, 'text')} className={cn('font-light', large ? 'text-sm' : 'text-xs')} style={{ color: '#8c7b6b' }}>{item.role}{item.company ? ` · ${item.company}` : ''}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function WarmGrid({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  return (
+    <section className="py-24" style={{ backgroundColor: '#faf7f2', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <WarmHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((item, i) => <WarmCard key={item.id} item={item} accent={accent} sectionId={sectionId} itemIndex={i} />)}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function WarmFeatured({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [main, ...rest] = items
+  return (
+    <section className="py-24" style={{ backgroundColor: '#faf7f2', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <WarmHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid lg:grid-cols-2 gap-6">
+          <WarmCard item={main} accent={accent} large sectionId={sectionId} itemIndex={0} />
+          <div className="space-y-4">
+            {rest.map((item, i) => <WarmCard key={item.id} item={item} accent={accent} sectionId={sectionId} itemIndex={i + 1} />)}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function WarmMarquee({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const doubled = [...items, ...items]
+  return (
+    <section className="py-24" style={{ backgroundColor: '#faf7f2', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <WarmHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+      </div>
+      <div className="overflow-hidden relative">
+        <div className="flex gap-6 animate-[marquee_30s_linear_infinite] hover:[animation-play-state:paused]" style={{ width: 'max-content' }}>
+          {doubled.map((item, i) => (
+            <div key={`${item.id}-${i}`} className="w-[320px] shrink-0">
+              <WarmCard item={item} accent={accent} sectionId={sectionId} itemIndex={i % items.length} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────
+// PLAYFUL — Duolingo/Figma — violet #7c3aed, pink #ec4899, bold, bouncy rounded-2xl
+// ─────────────────────────────────────────────
+
+function PlayfulStars({ rating = 5 }: { rating?: number }) {
+  return (
+    <div className="flex gap-0.5 mb-3">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <span key={i} className="text-base" style={{ color: i < rating ? '#ec4899' : '#e5e7eb' }}>★</span>
+      ))}
+    </div>
+  )
+}
+
+function PlayfulHeader({ content, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const { titleSize, textAlign, textColor } = styleOverrides ?? {}
+  return (
+    <div className={cn("mb-12 text-center space-y-3", textAlign && getTextAlignClass(textAlign))}>
+      {content.eyebrow && (
+        <span
+          className="inline-block text-xs font-extrabold uppercase tracking-wider px-4 py-1.5 rounded-2xl"
+          style={{ backgroundColor: '#f3e8ff', color: accent, border: `2px solid ${accent}` }}
+        >
+          {content.eyebrow}
+        </span>
+      )}
+      {content.title && (
+        <h2
+          {...elementProps(sectionId, 'title', 'heading')}
+          className={cn("text-3xl md:text-4xl lg:text-5xl font-extrabold", titleSize && getTitleSizeClass(titleSize))}
+          style={{ color: textColor ?? '#18181b' }}
+        >
+          {content.title}
+        </h2>
+      )}
+      {content.subtitle && (
+        <p {...elementProps(sectionId, 'subtitle', 'text')} className="text-lg max-w-2xl mx-auto font-semibold" style={{ color: '#6b7280' }}>
+          {content.subtitle}
+        </p>
+      )}
+    </div>
+  )
+}
+
+function PlayfulCard({ item, accent, large, sectionId, itemIndex }: { item: TestimonialItem; accent: string; large?: boolean; sectionId: string; itemIndex: number }) {
+  const bgColors = ['#f3e8ff', '#fce7f3', '#e0f2fe', '#fef3c7', '#dcfce7']
+  const bgColor = bgColors[itemIndex % bgColors.length]
+  return (
+    <div
+      className={cn('rounded-2xl p-6 border-2', large && 'flex flex-col justify-center')}
+      style={{ backgroundColor: bgColor, borderColor: `${accent}40` }}
+    >
+      <PlayfulStars rating={item.rating} />
+      <p
+        {...elementProps(sectionId, `items.${itemIndex}.quote`, 'text')}
+        className={cn('leading-relaxed mb-4 font-bold', large ? 'text-lg mb-6' : 'text-sm')}
+        style={{ color: '#18181b' }}
+      >
+        &ldquo;{item.quote}&rdquo;
+      </p>
+      <div className="flex items-center gap-3">
+        <div
+          {...elementProps(sectionId, `items.${itemIndex}.avatar`, 'image')}
+          className={cn('rounded-2xl flex items-center justify-center font-extrabold shrink-0 text-white', large ? 'w-12 h-12 text-lg' : 'w-9 h-9 text-sm')}
+          style={{ backgroundColor: accent }}
+        >
+          {item.author.charAt(0)}
+        </div>
+        <div>
+          <p {...elementProps(sectionId, `items.${itemIndex}.author`, 'text')} className={cn('font-extrabold', large ? 'text-base' : 'text-sm')} style={{ color: '#18181b' }}>{item.author}</p>
+          <p {...elementProps(sectionId, `items.${itemIndex}.role`, 'text')} className={cn('font-semibold', large ? 'text-sm' : 'text-xs')} style={{ color: '#6b7280' }}>{item.role}{item.company ? ` · ${item.company}` : ''}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PlayfulGrid({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  return (
+    <section className="py-24 bg-white" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <PlayfulHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((item, i) => <PlayfulCard key={item.id} item={item} accent={accent} sectionId={sectionId} itemIndex={i} />)}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function PlayfulFeatured({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [main, ...rest] = items
+  return (
+    <section className="py-24 bg-white" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <PlayfulHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid lg:grid-cols-2 gap-6">
+          <PlayfulCard item={main} accent={accent} large sectionId={sectionId} itemIndex={0} />
+          <div className="space-y-4">
+            {rest.map((item, i) => <PlayfulCard key={item.id} item={item} accent={accent} sectionId={sectionId} itemIndex={i + 1} />)}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function PlayfulMarquee({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const doubled = [...items, ...items]
+  return (
+    <section className="py-24 bg-white" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <PlayfulHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+      </div>
+      <div className="overflow-hidden relative">
+        <div className="flex gap-6 animate-[marquee_30s_linear_infinite] hover:[animation-play-state:paused]" style={{ width: 'max-content' }}>
+          {doubled.map((item, i) => (
+            <div key={`${item.id}-${i}`} className="w-[320px] shrink-0">
+              <PlayfulCard item={item} accent={accent} sectionId={sectionId} itemIndex={i % items.length} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────
+// RETRO — Vintage — amber #d97706, dark brown #92400e, bg #fffbeb, no radius, uppercase, extrabold
+// ─────────────────────────────────────────────
+
+function RetroStars({ rating = 5 }: { rating?: number }) {
+  return (
+    <div className="flex gap-0.5 mb-3">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <span key={i} className="text-base" style={{ color: i < rating ? '#d97706' : '#d6cfc0' }}>★</span>
+      ))}
+    </div>
+  )
+}
+
+function RetroHeader({ content, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const { titleSize, textAlign, textColor } = styleOverrides ?? {}
+  return (
+    <div className={cn("mb-14 text-center space-y-4", textAlign && getTextAlignClass(textAlign))}>
+      {content.eyebrow && (
+        <span
+          className="inline-block text-[11px] font-extrabold tracking-[0.2em] uppercase px-4 py-1.5"
+          style={{ backgroundColor: accent, color: '#fffbeb' }}
+        >
+          {content.eyebrow}
+        </span>
+      )}
+      {content.title && (
+        <h2
+          {...elementProps(sectionId, 'title', 'heading')}
+          className={cn("text-3xl md:text-4xl lg:text-5xl font-extrabold uppercase tracking-wide", titleSize && getTitleSizeClass(titleSize))}
+          style={{ color: textColor ?? '#92400e' }}
+        >
+          {content.title}
+        </h2>
+      )}
+      {content.subtitle && (
+        <p {...elementProps(sectionId, 'subtitle', 'text')} className="text-base max-w-2xl mx-auto font-medium" style={{ color: '#a16207' }}>
+          {content.subtitle}
+        </p>
+      )}
+      <div className="flex items-center justify-center gap-4 pt-2">
+        <span className="h-0.5 w-16" style={{ backgroundColor: accent }} />
+        <span className="text-lg" style={{ color: accent }}>&#9670;</span>
+        <span className="h-0.5 w-16" style={{ backgroundColor: accent }} />
+      </div>
+    </div>
+  )
+}
+
+function RetroCard({ item, accent, large, sectionId, itemIndex }: { item: TestimonialItem; accent: string; large?: boolean; sectionId: string; itemIndex: number }) {
+  return (
+    <div
+      className={cn('p-6', large && 'flex flex-col justify-center')}
+      style={{ backgroundColor: '#fff', border: `2px solid ${accent}`, borderRadius: 0 }}
+    >
+      <RetroStars rating={item.rating} />
+      <p
+        {...elementProps(sectionId, `items.${itemIndex}.quote`, 'text')}
+        className={cn('leading-relaxed mb-4 font-semibold', large ? 'text-lg mb-6' : 'text-sm')}
+        style={{ color: '#92400e' }}
+      >
+        &ldquo;{item.quote}&rdquo;
+      </p>
+      <div className="pt-4" style={{ borderTop: `2px solid ${accent}40` }}>
+        <div className="flex items-center gap-3">
+          <div
+            {...elementProps(sectionId, `items.${itemIndex}.avatar`, 'image')}
+            className={cn('flex items-center justify-center font-extrabold shrink-0 text-white', large ? 'w-11 h-11 text-base' : 'w-9 h-9 text-sm')}
+            style={{ backgroundColor: '#92400e', borderRadius: 0 }}
+          >
+            {item.author.charAt(0)}
+          </div>
+          <div>
+            <p {...elementProps(sectionId, `items.${itemIndex}.author`, 'text')} className={cn('font-extrabold uppercase tracking-wider', large ? 'text-base' : 'text-sm')} style={{ color: '#92400e' }}>{item.author}</p>
+            <p {...elementProps(sectionId, `items.${itemIndex}.role`, 'text')} className={cn('font-medium', large ? 'text-sm' : 'text-xs')} style={{ color: '#a16207' }}>{item.role}{item.company ? ` · ${item.company}` : ''}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function RetroGrid({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  return (
+    <section className="py-24" style={{ backgroundColor: '#fffbeb', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <RetroHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((item, i) => <RetroCard key={item.id} item={item} accent={accent} sectionId={sectionId} itemIndex={i} />)}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function RetroFeatured({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [main, ...rest] = items
+  return (
+    <section className="py-24" style={{ backgroundColor: '#fffbeb', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <RetroHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid lg:grid-cols-2 gap-6">
+          <RetroCard item={main} accent={accent} large sectionId={sectionId} itemIndex={0} />
+          <div className="space-y-4">
+            {rest.map((item, i) => <RetroCard key={item.id} item={item} accent={accent} sectionId={sectionId} itemIndex={i + 1} />)}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function RetroMarquee({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const doubled = [...items, ...items]
+  return (
+    <section className="py-24" style={{ backgroundColor: '#fffbeb', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <RetroHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+      </div>
+      <div className="overflow-hidden relative">
+        <div className="flex gap-6 animate-[marquee_30s_linear_infinite] hover:[animation-play-state:paused]" style={{ width: 'max-content' }}>
+          {doubled.map((item, i) => (
+            <div key={`${item.id}-${i}`} className="w-[320px] shrink-0">
+              <RetroCard item={item} accent={accent} sectionId={sectionId} itemIndex={i % items.length} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────
+// DARK-PREMIUM — Noir/gold — gold #d4af37, bg #0a0a0a, extralight 200, tracking 0.2em, uppercase
+// ─────────────────────────────────────────────
+
+function DarkPremiumStars({ rating = 5 }: { rating?: number }) {
+  return (
+    <div className="flex gap-1 mb-4 justify-center">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <span key={i} className="text-sm" style={{ color: i < rating ? '#d4af37' : '#333' }}>★</span>
+      ))}
+    </div>
+  )
+}
+
+function DarkPremiumHeader({ content, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const { titleSize, textAlign, textColor } = styleOverrides ?? {}
+  return (
+    <div className={cn("mb-16 text-center space-y-5", textAlign && getTextAlignClass(textAlign))}>
+      {content.eyebrow && (
+        <span className="inline-block text-[10px] font-extralight uppercase" style={{ color: accent, letterSpacing: '0.3em' }}>
+          {content.eyebrow}
+        </span>
+      )}
+      {content.title && (
+        <>
+          <div className="flex items-center justify-center gap-6 mb-2">
+            <span className="h-px w-16" style={{ backgroundColor: `${accent}60` }} />
+            <h2
+              {...elementProps(sectionId, 'title', 'heading')}
+              className={cn("text-3xl md:text-4xl lg:text-5xl font-extralight uppercase", titleSize && getTitleSizeClass(titleSize))}
+              style={{ color: textColor ?? '#e5e5e5', letterSpacing: '0.2em' }}
+            >
+              {content.title}
+            </h2>
+            <span className="h-px w-16" style={{ backgroundColor: `${accent}60` }} />
+          </div>
+        </>
+      )}
+      {content.subtitle && (
+        <p {...elementProps(sectionId, 'subtitle', 'text')} className="text-sm max-w-2xl mx-auto font-extralight uppercase" style={{ color: '#666', letterSpacing: '0.15em' }}>
+          {content.subtitle}
+        </p>
+      )}
+    </div>
+  )
+}
+
+function DarkPremiumCard({ item, accent, large, sectionId, itemIndex }: { item: TestimonialItem; accent: string; large?: boolean; sectionId: string; itemIndex: number }) {
+  return (
+    <div
+      className={cn('p-8 text-center', large && 'flex flex-col justify-center')}
+      style={{ backgroundColor: '#111', border: `1px solid ${accent}25`, borderRadius: 0 }}
+    >
+      <DarkPremiumStars rating={item.rating} />
+      <p
+        {...elementProps(sectionId, `items.${itemIndex}.quote`, 'text')}
+        className={cn('leading-relaxed mb-6 font-extralight', large ? 'text-lg' : 'text-sm')}
+        style={{ color: '#999', fontStyle: 'italic', letterSpacing: '0.02em' }}
+      >
+        &ldquo;{item.quote}&rdquo;
+      </p>
+      <div className="mx-auto w-8 h-px mb-5" style={{ backgroundColor: accent }} />
+      <p
+        {...elementProps(sectionId, `items.${itemIndex}.author`, 'text')}
+        className="text-xs font-extralight uppercase"
+        style={{ color: '#e5e5e5', letterSpacing: '0.2em' }}
+      >
+        {item.author}
+      </p>
+      <p
+        {...elementProps(sectionId, `items.${itemIndex}.role`, 'text')}
+        className="text-[11px] font-extralight uppercase mt-1"
+        style={{ color: accent, letterSpacing: '0.15em' }}
+      >
+        {item.role}{item.company ? ` · ${item.company}` : ''}
+      </p>
+    </div>
+  )
+}
+
+function DarkPremiumGrid({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  return (
+    <section className="py-24" style={{ backgroundColor: '#0a0a0a', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <DarkPremiumHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-0" style={{ border: `1px solid ${accent}25` }}>
+          {items.map((item, i) => (
+            <div key={item.id} style={{ borderRight: i % 3 !== 2 ? `1px solid ${accent}15` : undefined, borderBottom: i < items.length - 3 ? `1px solid ${accent}15` : undefined }}>
+              <DarkPremiumCard item={item} accent={accent} sectionId={sectionId} itemIndex={i} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function DarkPremiumFeatured({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [main, ...rest] = items
+  return (
+    <section className="py-24" style={{ backgroundColor: '#0a0a0a', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <DarkPremiumHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid lg:grid-cols-2 gap-0" style={{ border: `1px solid ${accent}25` }}>
+          <DarkPremiumCard item={main} accent={accent} large sectionId={sectionId} itemIndex={0} />
+          <div style={{ borderLeft: `1px solid ${accent}15` }}>
+            {rest.map((item, i) => (
+              <div key={item.id} style={{ borderBottom: i < rest.length - 1 ? `1px solid ${accent}15` : undefined }}>
+                <DarkPremiumCard item={item} accent={accent} sectionId={sectionId} itemIndex={i + 1} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function DarkPremiumMarquee({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const doubled = [...items, ...items]
+  return (
+    <section className="py-24" style={{ backgroundColor: '#0a0a0a', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <DarkPremiumHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+      </div>
+      <div className="overflow-hidden relative">
+        <div className="flex gap-0 animate-[marquee_30s_linear_infinite] hover:[animation-play-state:paused]" style={{ width: 'max-content' }}>
+          {doubled.map((item, i) => (
+            <div key={`${item.id}-${i}`} className="w-[360px] shrink-0" style={{ borderRight: `1px solid ${accent}15` }}>
+              <DarkPremiumCard item={item} accent={accent} sectionId={sectionId} itemIndex={i % items.length} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────
+// EDITORIAL — NYT/Medium — black #18181b, bg #fafaf9, Georgia serif, rules/borders
+// ─────────────────────────────────────────────
+
+function EditorialStars({ rating = 5 }: { rating?: number }) {
+  return (
+    <div className="flex gap-0.5 mb-3">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <span key={i} className="text-sm" style={{ color: i < rating ? '#18181b' : '#d4d4d8' }}>★</span>
+      ))}
+    </div>
+  )
+}
+
+function EditorialHeader({ content, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const { titleSize, textAlign, textColor } = styleOverrides ?? {}
+  return (
+    <div className={cn("mb-14 text-center space-y-4", textAlign && getTextAlignClass(textAlign))}>
+      {content.eyebrow && (
+        <span className="inline-block text-[11px] font-normal tracking-[0.15em] uppercase" style={{ color: '#71717a' }}>
+          {content.eyebrow}
+        </span>
+      )}
+      {content.title && (
+        <h2
+          {...elementProps(sectionId, 'title', 'heading')}
+          className={cn("text-3xl md:text-4xl lg:text-5xl font-normal", titleSize && getTitleSizeClass(titleSize))}
+          style={{ fontFamily: 'Georgia, serif', color: textColor ?? '#18181b' }}
+        >
+          {content.title}
+        </h2>
+      )}
+      {content.subtitle && (
+        <p {...elementProps(sectionId, 'subtitle', 'text')} className="text-base max-w-2xl mx-auto font-normal" style={{ color: '#71717a', fontFamily: 'Georgia, serif' }}>
+          {content.subtitle}
+        </p>
+      )}
+      <div className="mx-auto pt-2" style={{ width: '60px', borderBottom: '1px solid #18181b' }} />
+    </div>
+  )
+}
+
+function EditorialCard({ item, large, sectionId, itemIndex }: { item: TestimonialItem; accent: string; large?: boolean; sectionId: string; itemIndex: number }) {
+  return (
+    <div
+      className={cn('p-7', large && 'flex flex-col justify-center')}
+      style={{ borderTop: '1px solid #d4d4d8' }}
+    >
+      <EditorialStars rating={item.rating} />
+      <p
+        {...elementProps(sectionId, `items.${itemIndex}.quote`, 'text')}
+        className={cn('leading-relaxed mb-5 font-normal', large ? 'text-xl mb-6' : 'text-base')}
+        style={{ fontFamily: 'Georgia, serif', color: '#18181b' }}
+      >
+        &ldquo;{item.quote}&rdquo;
+      </p>
+      <div className="flex items-center gap-3">
+        <div
+          {...elementProps(sectionId, `items.${itemIndex}.avatar`, 'image')}
+          className={cn('rounded-full flex items-center justify-center font-normal shrink-0', large ? 'w-11 h-11 text-base' : 'w-9 h-9 text-sm')}
+          style={{ backgroundColor: '#f4f4f5', color: '#18181b', border: '1px solid #d4d4d8' }}
+        >
+          {item.author.charAt(0)}
+        </div>
+        <div>
+          <p {...elementProps(sectionId, `items.${itemIndex}.author`, 'text')} className={cn('font-normal', large ? 'text-base' : 'text-sm')} style={{ color: '#18181b', fontFamily: 'Georgia, serif' }}>{item.author}</p>
+          <p {...elementProps(sectionId, `items.${itemIndex}.role`, 'text')} className={cn('font-normal', large ? 'text-sm' : 'text-xs')} style={{ color: '#71717a' }}>{item.role}{item.company ? ` · ${item.company}` : ''}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function EditorialGrid({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  return (
+    <section className="py-24" style={{ backgroundColor: '#fafaf9', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-5xl mx-auto px-6">
+        <EditorialHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-0">
+          {items.map((item, i) => (
+            <div key={item.id} style={{ borderRight: i % 3 !== 2 ? '1px solid #d4d4d8' : undefined }}>
+              <EditorialCard item={item} accent={accent} sectionId={sectionId} itemIndex={i} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function EditorialFeatured({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [main, ...rest] = items
+  return (
+    <section className="py-24" style={{ backgroundColor: '#fafaf9', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-5xl mx-auto px-6">
+        <EditorialHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid lg:grid-cols-2 gap-0" style={{ border: '1px solid #d4d4d8' }}>
+          <EditorialCard item={main} accent={accent} large sectionId={sectionId} itemIndex={0} />
+          <div style={{ borderLeft: '1px solid #d4d4d8' }}>
+            {rest.map((item, i) => <EditorialCard key={item.id} item={item} accent={accent} sectionId={sectionId} itemIndex={i + 1} />)}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function EditorialMarquee({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const doubled = [...items, ...items]
+  return (
+    <section className="py-24" style={{ backgroundColor: '#fafaf9', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-5xl mx-auto px-6">
+        <EditorialHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+      </div>
+      <div className="overflow-hidden relative" style={{ borderTop: '1px solid #d4d4d8', borderBottom: '1px solid #d4d4d8' }}>
+        <div className="flex gap-0 animate-[marquee_30s_linear_infinite] hover:[animation-play-state:paused]" style={{ width: 'max-content' }}>
+          {doubled.map((item, i) => (
+            <div key={`${item.id}-${i}`} className="w-[380px] shrink-0" style={{ borderRight: '1px solid #d4d4d8' }}>
+              <EditorialCard item={item} accent={accent} sectionId={sectionId} itemIndex={i % items.length} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────
+// ORGANIC — Nature — green #3f6212, bg #f7fee7, rounded-full pills, light serif
+// ─────────────────────────────────────────────
+
+function OrganicStars({ rating = 5 }: { rating?: number }) {
+  return (
+    <div className="flex gap-0.5 mb-3">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <span key={i} className="text-sm" style={{ color: i < rating ? '#3f6212' : '#c6dda0' }}>★</span>
+      ))}
+    </div>
+  )
+}
+
+function OrganicHeader({ content, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const { titleSize, textAlign, textColor } = styleOverrides ?? {}
+  return (
+    <div className={cn("mb-14 text-center space-y-4", textAlign && getTextAlignClass(textAlign))}>
+      {content.eyebrow && (
+        <span
+          className="inline-block text-xs font-light px-4 py-1.5 rounded-full"
+          style={{ backgroundColor: '#dcfce7', color: accent, border: `1px solid ${accent}30` }}
+        >
+          &#127807; {content.eyebrow}
+        </span>
+      )}
+      {content.title && (
+        <h2
+          {...elementProps(sectionId, 'title', 'heading')}
+          className={cn("text-3xl md:text-4xl lg:text-5xl font-light", titleSize && getTitleSizeClass(titleSize))}
+          style={{ fontFamily: 'Georgia, serif', color: textColor ?? '#1a2e05' }}
+        >
+          {content.title}
+        </h2>
+      )}
+      {content.subtitle && (
+        <p {...elementProps(sectionId, 'subtitle', 'text')} className="text-base max-w-2xl mx-auto font-light" style={{ color: '#4d7c0f' }}>
+          {content.subtitle}
+        </p>
+      )}
+    </div>
+  )
+}
+
+function OrganicCard({ item, accent, large, sectionId, itemIndex }: { item: TestimonialItem; accent: string; large?: boolean; sectionId: string; itemIndex: number }) {
+  return (
+    <div
+      className={cn('p-6 rounded-3xl', large && 'flex flex-col justify-center')}
+      style={{ backgroundColor: '#fff', border: `1px solid ${accent}20` }}
+    >
+      <OrganicStars rating={item.rating} />
+      <p
+        {...elementProps(sectionId, `items.${itemIndex}.quote`, 'text')}
+        className={cn('leading-relaxed mb-5 font-light', large ? 'text-lg mb-6' : 'text-sm')}
+        style={{ fontFamily: 'Georgia, serif', color: '#3d5a0f' }}
+      >
+        &ldquo;{item.quote}&rdquo;
+      </p>
+      <div className="flex items-center gap-3">
+        <div
+          {...elementProps(sectionId, `items.${itemIndex}.avatar`, 'image')}
+          className={cn('rounded-full flex items-center justify-center font-light shrink-0', large ? 'w-11 h-11 text-base' : 'w-9 h-9 text-sm')}
+          style={{ backgroundColor: '#dcfce7', color: accent }}
+        >
+          {item.author.charAt(0)}
+        </div>
+        <div>
+          <p {...elementProps(sectionId, `items.${itemIndex}.author`, 'text')} className={cn('font-normal', large ? 'text-base' : 'text-sm')} style={{ color: '#1a2e05' }}>{item.author}</p>
+          <p {...elementProps(sectionId, `items.${itemIndex}.role`, 'text')} className={cn('font-light', large ? 'text-sm' : 'text-xs')} style={{ color: '#4d7c0f' }}>
+            {item.role}{item.company ? ` · ${item.company}` : ''}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function OrganicGrid({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  return (
+    <section className="py-24" style={{ backgroundColor: '#f7fee7', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <OrganicHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((item, i) => <OrganicCard key={item.id} item={item} accent={accent} sectionId={sectionId} itemIndex={i} />)}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function OrganicFeatured({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const [main, ...rest] = items
+  return (
+    <section className="py-24" style={{ backgroundColor: '#f7fee7', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <OrganicHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+        <div className="grid lg:grid-cols-2 gap-6">
+          <OrganicCard item={main} accent={accent} large sectionId={sectionId} itemIndex={0} />
+          <div className="space-y-4">
+            {rest.map((item, i) => <OrganicCard key={item.id} item={item} accent={accent} sectionId={sectionId} itemIndex={i + 1} />)}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function OrganicMarquee({ content, items, accent, styleOverrides, sectionId }: { content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string }) {
+  const doubled = [...items, ...items]
+  return (
+    <section className="py-24" style={{ backgroundColor: '#f7fee7', fontFamily: 'var(--font-body, inherit)' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <OrganicHeader content={content} accent={accent} styleOverrides={styleOverrides} sectionId={sectionId} />
+      </div>
+      <div className="overflow-hidden relative">
+        <div className="flex gap-6 animate-[marquee_30s_linear_infinite] hover:[animation-play-state:paused]" style={{ width: 'max-content' }}>
+          {doubled.map((item, i) => (
+            <div key={`${item.id}-${i}`} className="w-[320px] shrink-0">
+              <OrganicCard item={item} accent={accent} sectionId={sectionId} itemIndex={i % items.length} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────
+// MAIN COMPONENT — routes to 49 variants
+// ─────────────────────────────────────────────
+
+interface StyleOverrides { titleSize?: SectionTitleSize; textAlign?: SectionTextAlign; textColor?: string }
+
 
 // ─────────────────────────────────────────────
 // JLSTUDIO — 3-col glassmorphism cards, quote mark, initials circle
@@ -4525,6 +5338,8 @@ function JlstudioTestimonialCard({ item, index, sectionId }: { item: Testimonial
 
 interface StyleOverrides { titleSize?: SectionTitleSize; textAlign?: SectionTextAlign; textColor?: string }
 
+
+
 const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsContent>; items: TestimonialItem[]; accent: string; styleOverrides?: StyleOverrides; sectionId: string; isEditing?: boolean }>> = {
   'startup-grid': StartupGrid,
   'startup-featured': StartupFeatured,
@@ -4568,6 +5383,31 @@ const VARIANT_MAP: Record<string, React.FC<{ content: Partial<TestimonialsConten
   'prisme-featured': PrismeFeatured,
   'petale-featured': PetaleFeatured,
   'jlstudio-parallax': JlstudioParallax,
+  'warm-grid': WarmGrid,
+  'warm-featured': WarmFeatured,
+  'warm-marquee': WarmMarquee,
+  'warm-slider': WarmSlider,
+  'playful-grid': PlayfulGrid,
+  'playful-featured': PlayfulFeatured,
+  'playful-marquee': PlayfulMarquee,
+  'playful-slider': PlayfulSlider,
+  'retro-grid': RetroGrid,
+  'retro-featured': RetroFeatured,
+  'retro-marquee': RetroMarquee,
+  'retro-slider': RetroSlider,
+  'dark-premium-grid': DarkPremiumGrid,
+  'dark-premium-featured': DarkPremiumFeatured,
+  'dark-premium-marquee': DarkPremiumMarquee,
+  'dark-premium-slider': DarkPremiumSlider,
+  'editorial-grid': EditorialGrid,
+  'editorial-featured': EditorialFeatured,
+  'editorial-marquee': EditorialMarquee,
+  'editorial-slider': EditorialSlider,
+  'organic-grid': OrganicGrid,
+  'organic-featured': OrganicFeatured,
+  'organic-marquee': OrganicMarquee,
+  'organic-slider': OrganicSlider,
+
 }
 
 export function TestimonialsSection({ config, isEditing }: TestimonialsSectionProps) {
@@ -4605,6 +5445,12 @@ export function TestimonialsSection({ config, isEditing }: TestimonialsSectionPr
     prisme: '#B8D4E3',
     petale: '#D4A574',
     jlstudio: '#638BFF',
+    warm: '#b4654a',
+    playful: '#7c3aed',
+    retro: '#d97706',
+    'dark-premium': '#d4af37',
+    editorial: '#18181b',
+    organic: '#3f6212',
   }
   const accent = accentColor ?? defaultAccents[universe] ?? '#6366f1'
 
@@ -4644,6 +5490,12 @@ export const testimonialsMeta = {
     'prisme-featured',
     'petale-featured',
     'jlstudio-parallax',
+    'warm-grid', 'warm-featured', 'warm-marquee', 'warm-slider',
+    'playful-grid', 'playful-featured', 'playful-marquee', 'playful-slider',
+    'retro-grid', 'retro-featured', 'retro-marquee', 'retro-slider',
+    'dark-premium-grid', 'dark-premium-featured', 'dark-premium-marquee', 'dark-premium-slider',
+    'editorial-grid', 'editorial-featured', 'editorial-marquee', 'editorial-slider',
+    'organic-grid', 'organic-featured', 'organic-marquee', 'organic-slider'
   ],
   defaultVariant: 'startup-grid',
   defaultContent: {},

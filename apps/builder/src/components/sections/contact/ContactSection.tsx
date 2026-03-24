@@ -1066,6 +1066,218 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
     return <ZmrContact config={config} title={title} subtitle={subtitle} email={email} phone={phone} address={address} buttonLabel={buttonLabel} customTextColor={customTextColor} titleSize={titleSize} isEditing={isEditing} />
   }
 
+
+  if (universe === 'warm') {
+    const accent = accentColor ?? '#b4654a'
+    const inputClass = 'w-full h-11 border-b bg-transparent px-0 text-sm font-light text-zinc-800 placeholder:text-zinc-400 focus:outline-none disabled:cursor-default'
+
+    return (
+      <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#faf7f2' }} className="py-24">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            {/* Info */}
+            <div className="space-y-6">
+              {eyebrow && <span className="inline-block text-xs font-medium tracking-[0.15em] uppercase" style={{ color: accent }}>{eyebrow}</span>}
+              <div className="w-12 h-px" style={{ background: accent, opacity: 0.4 }} />
+              <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: customTextColor ?? '#3d2b1f', fontFamily: 'Georgia, serif' }}>{title}</h2>
+              {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base leading-relaxed" style={{ color: '#78593e' }}>{subtitle}</p>}
+              <div className="space-y-5 pt-2">
+                {email && <div className="flex items-center gap-4"><Mail className="w-4 h-4 shrink-0" style={{ color: accent }} /><div><p className="text-[11px] tracking-[0.1em] uppercase" style={{ color: '#78593e' }}>Email</p><p className="text-sm" style={{ color: '#3d2b1f' }}>{email}</p></div></div>}
+                {phone && <div className="flex items-center gap-4"><Phone className="w-4 h-4 shrink-0" style={{ color: accent }} /><div><p className="text-[11px] tracking-[0.1em] uppercase" style={{ color: '#78593e' }}>Téléphone</p><p className="text-sm" style={{ color: '#3d2b1f' }}>{phone}</p></div></div>}
+                {address && <div className="flex items-center gap-4"><MapPin className="w-4 h-4 shrink-0" style={{ color: accent }} /><div><p className="text-[11px] tracking-[0.1em] uppercase" style={{ color: '#78593e' }}>Adresse</p><p className="text-sm" style={{ color: '#3d2b1f' }}>{address}</p></div></div>}
+              </div>
+            </div>
+            {/* Form */}
+            <div className="p-8 space-y-6 bg-white rounded" style={{ borderRadius: '0.25rem' }}>
+              {formTitle && <h3 className="font-light" style={{ color: '#3d2b1f', fontFamily: 'Georgia, serif' }}>{formTitle}</h3>}
+              <div className="grid grid-cols-2 gap-6">
+                <input className={inputClass} style={{ borderColor: `${accent}25` }} placeholder="Prénom" disabled={isEditing} />
+                <input className={inputClass} style={{ borderColor: `${accent}25` }} placeholder="Nom" disabled={isEditing} />
+              </div>
+              <input className={inputClass} style={{ borderColor: `${accent}25` }} placeholder="Email" disabled={isEditing} />
+              <textarea className={cn(inputClass, 'h-28 resize-none py-3')} style={{ borderColor: `${accent}25` }} placeholder="Votre message..." disabled={isEditing} />
+              <button {...elementProps(config.id, 'formButtonLabel', 'button')} disabled={isEditing} className="w-full py-3 text-sm font-medium tracking-[0.05em] text-white transition-colors hover:brightness-110 disabled:cursor-default" style={{ backgroundColor: accent, borderRadius: '0.25rem' }}>{buttonLabel}</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // PLAYFUL — Duolingo/Figma, bold, rounded, vibrant
+  // ═══════════════════════════════════════════════════════
+  if (universe === 'playful') {
+    const accent = accentColor ?? '#7c3aed'
+    const inputClass = 'w-full h-12 rounded-xl border-2 border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-violet-400 disabled:cursor-default'
+
+    return (
+      <section className="bg-white py-20" style={{ fontFamily: 'var(--font-body, inherit)' }}>
+        <div className="max-w-lg mx-auto px-6">
+          <div className={cn("text-center mb-10 space-y-4", textAlign && getTextAlignClass(textAlign))}>
+            {eyebrow && <span className="inline-flex items-center gap-2 text-sm font-bold px-5 py-2 rounded-full text-white" style={{ backgroundColor: accent }}>{eyebrow}</span>}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-extrabold text-zinc-900 leading-tight", titleSize && getTitleSizeClass(titleSize))} style={customTextColor ? { color: customTextColor } : undefined}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg text-zinc-500 font-medium">{subtitle}</p>}
+          </div>
+          <div className="p-8 rounded-3xl border-2 border-zinc-100 space-y-5" style={{ background: '#faf5ff' }}>
+            <div className="grid grid-cols-2 gap-4">
+              <input className={inputClass} placeholder="Prénom" disabled={isEditing} />
+              <input className={inputClass} placeholder="Nom" disabled={isEditing} />
+            </div>
+            <input className={inputClass} placeholder="Email" disabled={isEditing} />
+            <textarea className={cn(inputClass, 'h-28 resize-none py-3 rounded-xl')} placeholder="Votre message..." disabled={isEditing} />
+            <button {...elementProps(config.id, 'formButtonLabel', 'button')} disabled={isEditing} className="w-full py-3.5 rounded-xl text-base font-bold text-white transition-all hover:shadow-lg hover:scale-[1.02] disabled:cursor-default" style={{ backgroundColor: accent }}>{buttonLabel} 🚀</button>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // RETRO — Vintage, slab, amber, sharp
+  // ═══════════════════════════════════════════════════════
+  if (universe === 'retro') {
+    const accent = accentColor ?? '#d97706'
+    const inputClass = 'w-full h-11 border-b-2 bg-transparent px-0 text-sm font-bold text-zinc-900 placeholder:text-zinc-400 focus:outline-none disabled:cursor-default'
+
+    return (
+      <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#fffbeb' }} className="py-20">
+        <div className="max-w-lg mx-auto px-6">
+          <div className={cn("text-center mb-10 space-y-4", textAlign && getTextAlignClass(textAlign))}>
+            <div className="flex items-center justify-center gap-4 mb-2">
+              <div className="w-12 h-0.5" style={{ backgroundColor: '#92400e' }} />
+              <span style={{ color: '#92400e' }}>✦</span>
+              <div className="w-12 h-0.5" style={{ backgroundColor: '#92400e' }} />
+            </div>
+            {eyebrow && <span className="inline-block text-xs font-extrabold tracking-[0.2em] uppercase px-3 py-1" style={{ backgroundColor: accent, color: '#fffbeb' }}>{eyebrow}</span>}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-black uppercase tracking-wide", titleSize && getTitleSizeClass(titleSize))} style={{ color: customTextColor ?? '#451a03' }}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base" style={{ color: '#78350f' }}>{subtitle}</p>}
+          </div>
+          <div className="p-8 border-2 space-y-6" style={{ borderColor: '#92400e', background: '#fff' }}>
+            <div className="grid grid-cols-2 gap-6">
+              <input className={inputClass} style={{ borderColor: '#92400e' }} placeholder="PRÉNOM" disabled={isEditing} />
+              <input className={inputClass} style={{ borderColor: '#92400e' }} placeholder="NOM" disabled={isEditing} />
+            </div>
+            <input className={inputClass} style={{ borderColor: '#92400e' }} placeholder="EMAIL" disabled={isEditing} />
+            <textarea className={cn(inputClass, 'h-28 resize-none py-3')} style={{ borderColor: '#92400e' }} placeholder="VOTRE MESSAGE..." disabled={isEditing} />
+            <button {...elementProps(config.id, 'formButtonLabel', 'button')} disabled={isEditing} className="w-full py-3.5 text-sm font-extrabold tracking-[0.1em] uppercase text-white transition-all hover:brightness-110 disabled:cursor-default" style={{ backgroundColor: accent, borderRadius: 0 }}>{buttonLabel}</button>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // DARK-PREMIUM — Noir & gold, ultra-thin
+  // ═══════════════════════════════════════════════════════
+  if (variant.startsWith('dark-premium') || (universe === 'dark' && variant.includes('premium'))) {
+    const gold = accentColor ?? '#d4af37'
+    const inputClass = 'w-full h-11 border-b bg-transparent px-0 text-sm font-light tracking-wide text-white placeholder:text-white/30 focus:outline-none disabled:cursor-default'
+
+    return (
+      <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#0a0a0a' }} className="py-24">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            {/* Info */}
+            <div className="space-y-8">
+              {eyebrow && <span className="inline-block text-[0.6875rem] font-normal tracking-[0.3em] uppercase" style={{ color: gold }}>{eyebrow}</span>}
+              <div className="w-16 h-px" style={{ background: `linear-gradient(90deg, ${gold}, transparent)` }} />
+              <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-extralight leading-tight tracking-[0.04em] uppercase text-white", titleSize && getTitleSizeClass(titleSize))} style={customTextColor ? { color: customTextColor } : undefined}>{title}</h2>
+              {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base font-light tracking-wide" style={{ color: `${gold}80` }}>{subtitle}</p>}
+              <div className="space-y-6 pt-2">
+                {email && <div className="flex items-center gap-4"><Mail className="w-4 h-4 shrink-0" style={{ color: gold }} /><div><p className="text-[10px] tracking-[0.2em] uppercase" style={{ color: `${gold}60` }}>Email</p><p className="text-sm font-light text-white">{email}</p></div></div>}
+                {phone && <div className="flex items-center gap-4"><Phone className="w-4 h-4 shrink-0" style={{ color: gold }} /><div><p className="text-[10px] tracking-[0.2em] uppercase" style={{ color: `${gold}60` }}>Téléphone</p><p className="text-sm font-light text-white">{phone}</p></div></div>}
+                {address && <div className="flex items-center gap-4"><MapPin className="w-4 h-4 shrink-0" style={{ color: gold }} /><div><p className="text-[10px] tracking-[0.2em] uppercase" style={{ color: `${gold}60` }}>Adresse</p><p className="text-sm font-light text-white">{address}</p></div></div>}
+              </div>
+            </div>
+            {/* Form */}
+            <div className="p-8 space-y-6 border" style={{ borderColor: `${gold}20` }}>
+              {formTitle && <h3 className="font-light text-sm tracking-[0.1em] uppercase text-white">{formTitle}</h3>}
+              <div className="grid grid-cols-2 gap-6">
+                <input className={inputClass} style={{ borderColor: `${gold}20` }} placeholder="Prénom" disabled={isEditing} />
+                <input className={inputClass} style={{ borderColor: `${gold}20` }} placeholder="Nom" disabled={isEditing} />
+              </div>
+              <input className={inputClass} style={{ borderColor: `${gold}20` }} placeholder="Email" disabled={isEditing} />
+              <textarea className={cn(inputClass, 'h-28 resize-none py-3')} style={{ borderColor: `${gold}20` }} placeholder="Votre message..." disabled={isEditing} />
+              <button {...elementProps(config.id, 'formButtonLabel', 'button')} disabled={isEditing} className="w-full py-3.5 text-xs font-normal tracking-[0.2em] uppercase border text-white transition-all hover:bg-white/5 disabled:cursor-default" style={{ borderColor: gold, color: gold }}>{buttonLabel}</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // EDITORIAL — NYT/Medium, serif, rules
+  // ═══════════════════════════════════════════════════════
+  if (universe === 'editorial') {
+    const inputClass = 'w-full h-11 border-b bg-transparent px-0 text-sm font-normal text-zinc-900 placeholder:text-zinc-400 focus:outline-none disabled:cursor-default'
+
+    return (
+      <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#fafaf9' }} className="py-24">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="w-full h-px bg-zinc-900 mb-12" />
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            {/* Info */}
+            <div className="space-y-6">
+              {eyebrow && <span className="inline-block text-[0.6875rem] font-normal tracking-[0.15em] uppercase text-zinc-900">{eyebrow}</span>}
+              <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-normal leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: customTextColor ?? '#18181b', fontFamily: 'Georgia, serif' }}>{title}</h2>
+              {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base leading-relaxed" style={{ color: '#52525b', fontFamily: 'Georgia, serif' }}>{subtitle}</p>}
+              <div className="w-full h-px bg-zinc-200" />
+              <div className="space-y-5">
+                {email && <div className="flex items-center gap-4"><Mail className="w-4 h-4 shrink-0 text-zinc-400" /><div><p className="text-[0.6875rem] tracking-[0.12em] uppercase text-zinc-400">Email</p><p className="text-sm text-zinc-900">{email}</p></div></div>}
+                {phone && <div className="flex items-center gap-4"><Phone className="w-4 h-4 shrink-0 text-zinc-400" /><div><p className="text-[0.6875rem] tracking-[0.12em] uppercase text-zinc-400">Téléphone</p><p className="text-sm text-zinc-900">{phone}</p></div></div>}
+                {address && <div className="flex items-center gap-4"><MapPin className="w-4 h-4 shrink-0 text-zinc-400" /><div><p className="text-[0.6875rem] tracking-[0.12em] uppercase text-zinc-400">Adresse</p><p className="text-sm text-zinc-900">{address}</p></div></div>}
+              </div>
+            </div>
+            {/* Form */}
+            <div className="space-y-6">
+              {formTitle && <h3 className="font-normal" style={{ color: '#18181b', fontFamily: 'Georgia, serif' }}>{formTitle}</h3>}
+              <div className="grid grid-cols-2 gap-6">
+                <input className={inputClass} style={{ borderColor: '#18181b' }} placeholder="Prénom" disabled={isEditing} />
+                <input className={inputClass} style={{ borderColor: '#18181b' }} placeholder="Nom" disabled={isEditing} />
+              </div>
+              <input className={inputClass} style={{ borderColor: '#18181b' }} placeholder="Email" disabled={isEditing} />
+              <textarea className={cn(inputClass, 'h-28 resize-none py-3')} style={{ borderColor: '#18181b' }} placeholder="Votre message..." disabled={isEditing} />
+              <button {...elementProps(config.id, 'formButtonLabel', 'button')} disabled={isEditing} className="w-full py-3.5 text-xs font-normal tracking-[0.12em] uppercase bg-zinc-900 text-white hover:bg-zinc-800 transition-colors disabled:cursor-default">{buttonLabel}</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // ORGANIC — Nature, green, rounded
+  // ═══════════════════════════════════════════════════════
+  if (universe === 'organic') {
+    const green = accentColor ?? '#3f6212'
+    const inputClass = 'w-full h-12 rounded-lg border bg-white px-4 text-sm text-zinc-800 placeholder:text-zinc-400 focus:outline-none disabled:cursor-default'
+
+    return (
+      <section style={{ fontFamily: 'var(--font-body, inherit)', background: '#f7fee7' }} className="py-24">
+        <div className="max-w-lg mx-auto px-6">
+          <div className={cn("text-center mb-10 space-y-4", textAlign && getTextAlignClass(textAlign))}>
+            {eyebrow && <span className="inline-flex items-center gap-2 text-xs font-medium tracking-[0.08em] uppercase px-4 py-1.5 rounded-full" style={{ backgroundColor: `${green}12`, color: green }}>🌿 {eyebrow}</span>}
+            <h2 {...elementProps(config.id, 'title', 'heading')} className={cn("text-3xl md:text-4xl font-light leading-tight tracking-tight", titleSize && getTitleSizeClass(titleSize))} style={{ color: customTextColor ?? '#1a2e05', fontFamily: 'Georgia, serif' }}>{title}</h2>
+            {subtitle && <p {...elementProps(config.id, 'subtitle', 'text')} className="text-base leading-relaxed" style={{ color: '#4d7c0f' }}>{subtitle}</p>}
+          </div>
+          <div className="p-8 rounded-2xl bg-white border space-y-5" style={{ borderColor: `${green}15` }}>
+            <div className="grid grid-cols-2 gap-4">
+              <input className={inputClass} style={{ borderColor: `${green}20` }} placeholder="Prénom" disabled={isEditing} />
+              <input className={inputClass} style={{ borderColor: `${green}20` }} placeholder="Nom" disabled={isEditing} />
+            </div>
+            <input className={inputClass} style={{ borderColor: `${green}20` }} placeholder="Email" disabled={isEditing} />
+            <textarea className={cn(inputClass, 'h-28 resize-none py-3')} style={{ borderColor: `${green}20` }} placeholder="Votre message..." disabled={isEditing} />
+            <button {...elementProps(config.id, 'formButtonLabel', 'button')} disabled={isEditing} className="w-full py-3.5 rounded-full text-sm font-medium text-white transition-all hover:brightness-110 disabled:cursor-default" style={{ backgroundColor: green }}>{buttonLabel}</button>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+
+
   // Fallback — unknown universe, render nothing
   return null
 }
@@ -1466,6 +1678,12 @@ export const contactMeta = {
     'brixsa-simple', 'brixsa-with-info',
     'zmr-simple', 'zmr-with-info',
     'jlstudio-split',
+    'warm-simple', 'warm-with-info',
+    'playful-simple', 'playful-with-info',
+    'retro-simple', 'retro-with-info',
+    'dark-premium-simple', 'dark-premium-with-info',
+    'editorial-simple', 'editorial-with-info',
+    'organic-simple', 'organic-with-info',
   ],
   defaultVariant: 'startup-with-info',
   defaultContent: {},
