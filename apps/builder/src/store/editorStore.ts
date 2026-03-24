@@ -178,6 +178,9 @@ interface EditorState {
   // Tag styles
   updateTagStyle: (tag: TagStyleKey, styleUpdates: Partial<ElementStyleOverride>) => void
   resetTagStyle: (tag: TagStyleKey) => void
+  // Class library import
+  importClassPreset: (presetId: string) => string | null
+  importClassCollection: (collectionId: string) => string[]
   // Timeline CRUD
   setTimelineOpen: (open: boolean) => void
   setTimelinePanelHeight: (height: number) => void
@@ -1926,6 +1929,66 @@ export const useEditorStore = create<EditorState>()(
         state.isDirty = true
       })
       get()._pushHistory()
+    },
+
+    // ── Class Library Import ──
+
+    importClassPreset: (presetId) => {
+      const { getPresetById } = require('@/data/classLibrary')
+      const preset = getPresetById(presetId)
+      if (!preset) return null
+
+      // Check if a class with same name already exists
+      const existing = get().siteConfig?.classes?.find(c => c.name === preset.name)
+      if (existing) return existing.id
+
+      const newId = crypto.randomUUID()
+      set((state) => {
+        if (!state.siteConfig) return
+        if (!state.siteConfig.classes) state.siteConfig.classes = []
+        state.siteConfig.classes.push({
+          id: newId,
+          name: preset.name,
+          styles: JSON.parse(JSON.stringify(preset.styles)),
+          ...(preset.stateOverrides && { stateOverrides: JSON.parse(JSON.stringify(preset.stateOverrides)) }),
+          ...(preset.breakpointOverrides && { breakpointOverrides: JSON.parse(JSON.stringify(preset.breakpointOverrides)) }),
+        })
+        state.isDirty = true
+      })
+      get()._pushHistory()
+      return newId
+    },
+
+    importClassCollection: (collectionId) => {
+      const { getCollectionById } = require('@/data/classLibrary')
+      const collection = getCollectionById(collectionId)
+      if (!collection) return []
+
+      const importedIds: string[] = []
+      set((state) => {
+        if (!state.siteConfig) return
+        if (!state.siteConfig.classes) state.siteConfig.classes = []
+
+        for (const preset of collection.presets) {
+          const existing = state.siteConfig.classes.find(c => c.name === preset.name)
+          if (existing) {
+            importedIds.push(existing.id)
+            continue
+          }
+          const newId = crypto.randomUUID()
+          state.siteConfig.classes.push({
+            id: newId,
+            name: preset.name,
+            styles: JSON.parse(JSON.stringify(preset.styles)),
+            ...(preset.stateOverrides && { stateOverrides: JSON.parse(JSON.stringify(preset.stateOverrides)) }),
+            ...(preset.breakpointOverrides && { breakpointOverrides: JSON.parse(JSON.stringify(preset.breakpointOverrides)) }),
+          })
+          importedIds.push(newId)
+        }
+        state.isDirty = true
+      })
+      get()._pushHistory()
+      return importedIds
     },
 
     // ── Theme Presets ──
