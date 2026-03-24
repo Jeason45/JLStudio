@@ -580,7 +580,7 @@ export function StatsSection({ config }: StatsSectionProps) {
       <section
         {...elementProps(config.id, 'section', 'container')}
         style={{
-          backgroundColor: '#f5f0e8',
+          backgroundColor: 'var(--color-muted, #f5f0e8)',
           padding: '80px 0',
           fontFamily: "'GeneralSans Variable', sans-serif",
         }}
@@ -634,7 +634,7 @@ export function StatsSection({ config }: StatsSectionProps) {
                   style={{
                     fontSize: '48px',
                     fontWeight: 700,
-                    color: '#140c08',
+                    color: 'var(--color-foreground, #140c08)',
                     lineHeight: 1.1,
                     marginBottom: '8px',
                   }}

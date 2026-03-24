@@ -885,7 +885,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
       <footer
         {...elementProps(config.id, 'wrapper', 'container', 'Footer')}
         className="relative"
-        style={{ backgroundColor: '#f6efe5', color: '#140c08', fontFamily: bodyFont }}
+        style={{ backgroundColor: 'var(--color-muted, #f6efe5)', color: 'var(--color-foreground, #140c08)', fontFamily: bodyFont }}
       >
         {/* Inject hover animations for text-mask effect */}
         <style>{`
@@ -907,14 +907,14 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
             <div {...elementProps(config.id, 'brandCol', 'container', 'Brand Column')} className="flex-shrink-0 flex flex-col" style={{ flex: '1 1 auto', maxWidth: '312px' }}>
               <p
                 {...elementProps(config.id, 'logo', 'image')}
-                style={{ fontFamily: headingFont, fontSize: 28, fontWeight: 600, color: '#140c08', marginBottom: 30 }}
+                style={{ fontFamily: headingFont, fontSize: 28, fontWeight: 600, color: 'var(--color-foreground, #140c08)', marginBottom: 30 }}
               >
                 {renderLogo(logo)}<sup style={{ fontSize: '0.5em', verticalAlign: 'super' }}>&reg;</sup>
               </p>
               {(content.tagline) && (
                 <p
                   {...elementProps(config.id, 'tagline', 'text')}
-                  style={{ fontFamily: bodyFont, fontSize: 16, fontWeight: 400, lineHeight: '150%', color: '#140c08' }}
+                  style={{ fontFamily: bodyFont, fontSize: 16, fontWeight: 400, lineHeight: '150%', color: 'var(--color-foreground, #140c08)' }}
                 >
                   {content.tagline}
                 </p>
@@ -927,7 +927,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
                   href={socials.instagram ?? '#'}
                   aria-label="Instagram"
                   className="brixsa-social-icon"
-                  style={{ color: '#140c08', transition: 'transform 0.5s' }}
+                  style={{ color: 'var(--color-foreground, #140c08)', transition: 'transform 0.5s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.2)' }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)' }}
                 >
@@ -942,7 +942,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
                   {...elementProps(config.id, 'socials.facebook', 'link')}
                   href={(socials as Record<string, string | undefined>).facebook ?? '#'}
                   aria-label="Facebook"
-                  style={{ color: '#140c08', transition: 'transform 0.5s' }}
+                  style={{ color: 'var(--color-foreground, #140c08)', transition: 'transform 0.5s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.2)' }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)' }}
                 >
@@ -955,7 +955,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
                   {...elementProps(config.id, 'socials.twitter', 'link')}
                   href={socials.twitter ?? '#'}
                   aria-label="X"
-                  style={{ color: '#140c08', transition: 'transform 0.5s' }}
+                  style={{ color: 'var(--color-foreground, #140c08)', transition: 'transform 0.5s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.2)' }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)' }}
                 >
@@ -968,7 +968,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
                   {...elementProps(config.id, 'socials.linkedin', 'link')}
                   href={socials.linkedin ?? '#'}
                   aria-label="LinkedIn"
-                  style={{ color: '#140c08', transition: 'transform 0.5s' }}
+                  style={{ color: 'var(--color-foreground, #140c08)', transition: 'transform 0.5s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.2)' }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)' }}
                 >
@@ -995,7 +995,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
                         fontWeight: 500,
                         fontSize: 'clamp(1.125rem, 0.5357rem + 2.619vw, 2.5rem)',
                         lineHeight: '125%',
-                        color: '#140c08',
+                        color: 'var(--color-foreground, #140c08)',
                         textDecoration: 'none',
                         paddingLeft: 0,
                         transition: 'padding 0.5s ease',
@@ -1029,7 +1029,7 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
                               {...elementProps(config.id, `columns.${colIndex}.links.${li}.label`, 'link')}
                               href={link.href}
                               className="brixsa-link-mask"
-                              style={{ color: '#140c08', textDecoration: 'none', fontSize: 14 }}
+                              style={{ color: 'var(--color-foreground, #140c08)', textDecoration: 'none', fontSize: 14 }}
                             >
                               <span className="brixsa-text-main">{link.label}</span>
                               <span className="brixsa-text-alt">{link.label}</span>
@@ -1055,13 +1055,13 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
             {...elementProps(config.id, 'copyright', 'link')}
             href="#"
             className="hover:underline"
-            style={{ color: '#140c08', textDecoration: 'none', fontSize: 14 }}
+            style={{ color: 'var(--color-foreground, #140c08)', textDecoration: 'none', fontSize: 14 }}
           >
             {content.copyright ?? 'Flowfye'}
           </a>
           <span
             {...elementProps(config.id, 'poweredBy', 'text')}
-            style={{ color: '#140c08', fontSize: 14 }}
+            style={{ color: 'var(--color-foreground, #140c08)', fontSize: 14 }}
           >
             Powered by Brixsa
           </span>

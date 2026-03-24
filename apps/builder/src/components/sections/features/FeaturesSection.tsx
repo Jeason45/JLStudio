@@ -2590,7 +2590,7 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
       : defaultPanelLabels.map((label, i) => ({ title: label, image: panelImages[i], id: `default-${i}` }))
 
     return (
-      <section {...elementProps(config.id, 'wrapper', 'container', 'Services Section')} className="overflow-hidden" style={{ backgroundColor: '#f6efe5', fontFamily: 'var(--font-body, inherit)' }}>
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Services Section')} className="overflow-hidden" style={{ backgroundColor: 'var(--color-muted, #f6efe5)', fontFamily: 'var(--font-body, inherit)' }}>
         {/* Header area */}
         <div {...elementProps(config.id, 'headerArea', 'container', 'Header Area')} style={{ padding: '0 60px' }}>
           <div style={{ maxWidth: 1320, margin: '0 auto', textAlign: 'center' }}>
@@ -2608,7 +2608,7 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
                     lineHeight: '110%',
                     textTransform: 'capitalize' as const,
                     marginBottom: 60,
-                    ...(customTextColor ? { color: customTextColor } : { color: '#140c08' }),
+                    ...(customTextColor ? { color: customTextColor } : { color: 'var(--color-foreground, #140c08)' }),
                   }}
                 >
                   {title}
@@ -2637,8 +2637,8 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
               style={{
                 flex: '1 1 0%',
                 minHeight: 700,
-                backgroundColor: '#140c08',
-                color: '#e1e1e1',
+                backgroundColor: 'var(--color-foreground, #140c08)',
+                color: 'var(--color-background, #e1e1e1)',
               }}
             >
               {/* Background image */}
@@ -2794,7 +2794,7 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
             {...elementProps(config.id, 'contentPanel', 'container', 'Content Panel')}
             style={{
               width: '50%',
-              backgroundColor: '#140c08',
+              backgroundColor: 'var(--color-foreground, #140c08)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -2816,7 +2816,7 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
                       fontSize: 'clamp(1.25rem, 1rem + 1.2vw, 2rem)',
                       fontWeight: 500,
                       lineHeight: '130%',
-                      color: isActive ? '#ffffff' : '#e1e1e1',
+                      color: isActive ? '#ffffff' : 'var(--color-background, #e1e1e1)',
                       opacity: isActive ? 1 : 0.4,
                       cursor: 'pointer',
                       margin: 0,
@@ -2844,7 +2844,7 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
                     fontFamily: 'var(--font-body, inherit)',
                     fontSize: 16,
                     lineHeight: '170%',
-                    color: '#e1e1e1',
+                    color: 'var(--color-background, #e1e1e1)',
                     opacity: activeIndex === i ? 0.7 : 0,
                     margin: 0,
                     maxWidth: 420,
@@ -2913,8 +2913,8 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
       <section
         {...elementProps(config.id, 'wrapper', 'container', 'Locations Section')}
         style={{
-          backgroundColor: '#140c08',
-          color: '#e1e1e1',
+          backgroundColor: 'var(--color-foreground, #140c08)',
+          color: 'var(--color-background, #e1e1e1)',
           position: 'relative',
           padding: '220px 60px',
           fontFamily: 'var(--font-body, inherit)',
@@ -2977,9 +2977,9 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
                     textDecoration: 'underline',
                     textUnderlineOffset: '5px',
                     textDecorationThickness: '3px',
-                    textDecorationColor: activeCity === i ? '#e1e1e1' : 'transparent',
+                    textDecorationColor: activeCity === i ? 'var(--color-background, #e1e1e1)' : 'transparent',
                     transition: 'text-decoration-color 0.5s ease',
-                    color: '#e1e1e1',
+                    color: 'var(--color-background, #e1e1e1)',
                   }}
                 >
                   {city}
@@ -2994,7 +2994,7 @@ export function FeaturesSection({ config, isEditing }: FeaturesSectionProps) {
                     fontWeight: 500,
                     lineHeight: '100%',
                     opacity: 0.1,
-                    color: '#e1e1e1',
+                    color: 'var(--color-background, #e1e1e1)',
                   }}
                 >
                   /

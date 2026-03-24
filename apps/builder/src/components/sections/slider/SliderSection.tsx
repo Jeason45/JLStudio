@@ -617,14 +617,14 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
             minHeight: '100svh',
             position: 'relative',
             overflow: 'hidden',
-            color: '#e1e1e1',
+            color: 'var(--color-background, #e1e1e1)',
             ...(slide.image ? {
               backgroundImage: `url(${slide.image})`,
               backgroundAttachment: 'fixed',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              backgroundColor: '#4a2711',
-            } : { backgroundColor: '#4a2711' }),
+              backgroundColor: 'var(--color-primary, #4a2711)',
+            } : { backgroundColor: 'var(--color-primary, #4a2711)' }),
           }}
         >
           <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(20, 12, 8, 0.8) 14%, rgba(255, 255, 255, 0) 39%)' }} />
@@ -642,7 +642,7 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
                 </h2>
                 <p
                   {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
-                  style={{ fontSize: 16, lineHeight: '150%', color: '#e1e1e1' }}
+                  style={{ fontSize: 16, lineHeight: '150%', color: 'var(--color-background, #e1e1e1)' }}
                 >
                   {slide.subtitle}
                 </p>
@@ -654,7 +654,7 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
                 >
                   {slide.badge}
                 </h5>
-                <span style={{ fontSize: 16, color: '#e1e1e1' }}>/Monthly</span>
+                <span style={{ fontSize: 16, color: 'var(--color-background, #e1e1e1)' }}>/Monthly</span>
               </div>
             </div>
           </div>
@@ -668,7 +668,7 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
     <div
       ref={wrapRef}
       {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
-      style={{ minHeight: '100svh', position: 'relative', overflow: 'hidden', backgroundColor: '#4a2711', color: '#e1e1e1' }}
+      style={{ minHeight: '100svh', position: 'relative', overflow: 'hidden', backgroundColor: 'var(--color-primary, #4a2711)', color: 'var(--color-background, #e1e1e1)' }}
     >
       {slide.image && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -695,7 +695,7 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
             </h2>
             <p
               {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
-              style={{ fontSize: 16, lineHeight: '150%', color: '#e1e1e1' }}
+              style={{ fontSize: 16, lineHeight: '150%', color: 'var(--color-background, #e1e1e1)' }}
             >
               {slide.subtitle}
             </p>
@@ -707,7 +707,7 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
             >
               {slide.badge}
             </h5>
-            <span style={{ fontSize: 16, color: '#e1e1e1' }}>/Monthly</span>
+            <span style={{ fontSize: 16, color: 'var(--color-background, #e1e1e1)' }}>/Monthly</span>
           </div>
         </div>
       </div>

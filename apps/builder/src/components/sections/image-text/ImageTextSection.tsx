@@ -2024,14 +2024,14 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
       fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
       fontWeight: 500,
       lineHeight: '110%',
-      color: '#140c08',
+      color: 'var(--color-foreground, #140c08)',
     } as const
 
     const paraStyle = {
       fontSize: '16px',
       fontWeight: 400,
       lineHeight: '150%',
-      color: '#140c08',
+      color: 'var(--color-foreground, #140c08)',
       fontFamily: "'Inter Variable', var(--font-body, sans-serif)",
     } as const
 
@@ -2044,7 +2044,7 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
     return (
       <section
         {...elementProps(config.id, 'wrapper', 'container', 'About Section')}
-        style={{ backgroundColor: '#f6efe5', padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)', fontFamily: 'var(--font-body, inherit)' }}
+        style={{ backgroundColor: 'var(--color-muted, #f6efe5)', padding: 'clamp(60px, 12vw, 180px) clamp(20px, 5vw, 60px)', fontFamily: 'var(--font-body, inherit)' }}
       >
         <style>{`
           @media (max-width: 768px) {
@@ -2065,7 +2065,7 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
               fontWeight: 500,
               lineHeight: '110%',
               textTransform: 'capitalize',
-              color: customTextColor ?? '#140c08',
+              color: customTextColor ?? 'var(--color-foreground, #140c08)',
               maxWidth: '680px',
             }}
           >
@@ -2107,7 +2107,7 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
                 <span ref={counter500Ref}>0</span>
                 <span>+</span>
               </div>
-              <p style={{ marginTop: '4px', fontSize: '16px', fontWeight: 400, color: '#140c08' }}>
+              <p style={{ marginTop: '4px', fontSize: '16px', fontWeight: 400, color: 'var(--color-foreground, #140c08)' }}>
                 Happy Clients Served
               </p>
             </div>
@@ -2117,7 +2117,7 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
                 <span ref={counter50Ref}>0</span>
                 <span>M+</span>
               </div>
-              <p style={{ marginTop: '4px', fontSize: '16px', fontWeight: 400, color: '#140c08' }}>
+              <p style={{ marginTop: '4px', fontSize: '16px', fontWeight: 400, color: 'var(--color-foreground, #140c08)' }}>
                 Total Property Sales
               </p>
             </div>
@@ -2137,7 +2137,7 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
       fontSize: '28px',
       fontWeight: 700,
       lineHeight: '130%',
-      color: customTextColor ?? '#140c08',
+      color: customTextColor ?? 'var(--color-foreground, #140c08)',
       margin: 0,
     } as const
 
@@ -2150,12 +2150,12 @@ export function ImageTextSection({ config, isEditing }: { config: SectionConfig;
       margin: 0,
     } as const
 
-    const bulletColor = accentColor ?? '#140c08'
+    const bulletColor = accentColor ?? 'var(--color-foreground, #140c08)'
 
     return (
       <section
         {...elementProps(config.id, 'wrapper', 'container', 'Privacy Section')}
-        style={{ backgroundColor: '#f5f0e8', padding: '100px 24px', fontFamily: 'var(--font-body, inherit)' }}
+        style={{ backgroundColor: 'var(--color-muted, #f5f0e8)', padding: '100px 24px', fontFamily: 'var(--font-body, inherit)' }}
       >
         <div
           {...elementProps(config.id, 'container', 'container', 'Container')}

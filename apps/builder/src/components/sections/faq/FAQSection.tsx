@@ -191,7 +191,7 @@ function BrixsaAccordionItem({ item, sectionId, itemIndex }: { item: FAQItem; se
             fontFamily: "'GeneralSans Variable', sans-serif",
             fontSize: 'clamp(16px, 3vw, 20px)',
             fontWeight: 500,
-            color: hovered ? '#c8a97e' : '#e1e1e1',
+            color: hovered ? 'var(--color-accent, #c8a97e)' : 'var(--color-background, #e1e1e1)',
             transition: 'color 0.2s ease',
             lineHeight: 1.4,
           }}
@@ -207,7 +207,7 @@ function BrixsaAccordionItem({ item, sectionId, itemIndex }: { item: FAQItem; se
             textAlign: 'center',
             lineHeight: 1,
             userSelect: 'none',
-            color: hovered ? '#c8a97e' : '#e1e1e1',
+            color: hovered ? 'var(--color-accent, #c8a97e)' : 'var(--color-background, #e1e1e1)',
             transition: 'color 0.2s ease',
           }}
         >
@@ -656,7 +656,7 @@ export function FAQSection({ config }: FAQSectionProps) {
     return (
       <section
         style={{
-          backgroundColor: '#140c08',
+          backgroundColor: 'var(--color-foreground, #140c08)',
           padding: '96px 0',
           overflow: 'hidden',
           fontFamily: "'Inter Variable', sans-serif",
@@ -671,7 +671,7 @@ export function FAQSection({ config }: FAQSectionProps) {
                   fontFamily: "'GeneralSans Variable', sans-serif",
                   fontSize: '40px',
                   fontWeight: 600,
-                  color: customTextColor ?? '#e1e1e1',
+                  color: customTextColor ?? 'var(--color-background, #e1e1e1)',
                   lineHeight: 1.2,
                   margin: 0,
                   letterSpacing: '-0.01em',

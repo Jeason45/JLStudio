@@ -1684,7 +1684,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
                     transform: menuOpen ? 'translateY(0)' : 'translateY(20px)',
                     transitionDelay: `${i * 0.05}s`,
                   }}
-                  onMouseEnter={(e) => { (e.target as HTMLElement).style.color = '#c8a97e' }}
+                  onMouseEnter={(e) => { (e.target as HTMLElement).style.color = 'var(--color-accent, #c8a97e)' }}
                   onMouseLeave={(e) => { (e.target as HTMLElement).style.color = i < 6 ? 'white' : 'rgba(255,255,255,0.5)' }}
                 >
                   {link.label}
@@ -1742,7 +1742,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
                   alignItems: 'center',
                   gap: '8px',
                   padding: '12px 28px',
-                  backgroundColor: '#c8a97e',
+                  backgroundColor: 'var(--color-accent, #c8a97e)',
                   color: '#1a1a1a',
                   fontSize: '14px',
                   fontWeight: 600,
@@ -1753,7 +1753,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
                   transition: 'background-color 0.3s',
                 }}
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#d4b88e' }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#c8a97e' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-accent, #c8a97e)' }}
               >
                 Get in touch
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>

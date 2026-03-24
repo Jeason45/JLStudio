@@ -45,9 +45,9 @@ const UNIVERSE_CONFIGS = {
     contentBg: 'bg-white/5 backdrop-blur-md border border-white/10', accent: '#a855f7', border: 'border-white/10',
   },
   brixsa: {
-    bg: 'bg-[#140c08]', text: 'text-[#e1e1e1]', sub: 'text-[#e1e1e1]/60', eyebrow: 'text-[#e1e1e1]',
-    tabBg: 'bg-transparent', tabActive: 'text-[#e1e1e1] opacity-100', tabInactive: 'text-[#e1e1e1]/40 hover:text-[#e1e1e1]/70',
-    contentBg: 'bg-transparent', accent: '#4a2711', border: 'border-[#e1e1e1]/10',
+    bg: 'bg-zinc-900', text: 'text-white', sub: 'text-white/60', eyebrow: 'text-white',
+    tabBg: 'bg-transparent', tabActive: 'text-white opacity-100', tabInactive: 'text-white/40 hover:text-white/70',
+    contentBg: 'bg-transparent', accent: 'var(--color-primary, #4a2711)', border: 'border-white/10',
   },
 } as const
 
@@ -142,7 +142,7 @@ function BrixsaTabButton({
         fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
         fontWeight: 500,
         lineHeight: '125%',
-        color: '#e1e1e1',
+        color: 'var(--color-background, #e1e1e1)',
         opacity: isActive ? 1 : 0.4,
         transition: 'opacity 0.6s',
         paddingTop: '8px',
@@ -252,7 +252,7 @@ export function TabsSection({ config, isEditing }: { config: SectionConfig; isEd
     )
 
     const tabsPanel = (
-      <div {...elementProps(config.id, 'tabsPanel', 'container', 'Tabs Panel')} className="relative flex flex-col justify-center" style={{ backgroundColor: '#140c08', color: '#e1e1e1', padding: 'clamp(20px, 5vw, 52px)' }}>
+      <div {...elementProps(config.id, 'tabsPanel', 'container', 'Tabs Panel')} className="relative flex flex-col justify-center" style={{ backgroundColor: 'var(--color-foreground, #140c08)', color: 'var(--color-background, #e1e1e1)', padding: 'clamp(20px, 5vw, 52px)' }}>
         {/* Tab list */}
         <div {...elementProps(config.id, 'tabList', 'container', 'Tab List')} role="tablist" aria-orientation="vertical" className="flex flex-col">
           {brixsaItems.map((item, i) => (
@@ -293,7 +293,7 @@ export function TabsSection({ config, isEditing }: { config: SectionConfig; isEd
                   fontSize: '16px',
                   fontWeight: 400,
                   lineHeight: '150%',
-                  color: '#e1e1e1',
+                  color: 'var(--color-background, #e1e1e1)',
                 }}
               >
                 {item.content}

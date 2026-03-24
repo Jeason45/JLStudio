@@ -561,7 +561,7 @@ export function TeamSection({ config }: TeamSectionProps) {
     const doubled = [...agents, ...agents]
 
     return (
-      <section {...elementProps(config.id, 'wrapper', 'container', 'Agents Section')} className="overflow-hidden" style={{ backgroundColor: '#f6efe5', paddingTop: '180px', paddingBottom: '180px', fontFamily: 'var(--font-body, inherit)' }}>
+      <section {...elementProps(config.id, 'wrapper', 'container', 'Agents Section')} className="overflow-hidden" style={{ backgroundColor: 'var(--color-muted, #f6efe5)', paddingTop: '180px', paddingBottom: '180px', fontFamily: 'var(--font-body, inherit)' }}>
         <style>{`
           @keyframes brixsa-marquee {
             from { transform: translateX(0); }
@@ -582,7 +582,7 @@ export function TeamSection({ config }: TeamSectionProps) {
                     fontWeight: 500,
                     lineHeight: '110%',
                     textTransform: 'capitalize' as const,
-                    color: customTextColor ?? '#140c08',
+                    color: customTextColor ?? 'var(--color-foreground, #140c08)',
                   }}
                 >
                   {title}
@@ -601,20 +601,20 @@ export function TeamSection({ config }: TeamSectionProps) {
                   {...elementProps(config.id, 'subtitle', 'text')}
                   href="/agents"
                   className="brixsa-btn-agents flex items-center shrink-0 relative overflow-hidden"
-                  style={{ fontSize: '20px', fontWeight: 500, padding: '10px 12px 10px 20px', gap: '10px', color: '#140c08', borderRadius: '6px', textDecoration: 'none' }}
+                  style={{ fontSize: '20px', fontWeight: 500, padding: '10px 12px 10px 20px', gap: '10px', color: 'var(--color-foreground, #140c08)', borderRadius: '6px', textDecoration: 'none' }}
                 >
                   <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="brixsa-btn-label-agents relative" style={{ zIndex: 10 }}>{subtitle}</span>
                   <span
                     {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
                     className="flex items-center justify-center"
-                    style={{ backgroundColor: '#4a2711', borderRadius: '4px', width: '28px', height: '28px', position: 'relative', zIndex: 10, flexShrink: 0 }}
+                    style={{ backgroundColor: 'var(--color-primary, #4a2711)', borderRadius: '4px', width: '28px', height: '28px', position: 'relative', zIndex: 10, flexShrink: 0 }}
                   >
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M1 7h12M8 2l5 5-5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
                   <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
-                    <span className="brixsa-btn-fill-agents" style={{ display: 'block', backgroundColor: '#4a2711', width: '100%', height: '100%' }} />
+                    <span className="brixsa-btn-fill-agents" style={{ display: 'block', backgroundColor: 'var(--color-primary, #4a2711)', width: '100%', height: '100%' }} />
                   </span>
                 </a>
               </>
@@ -670,7 +670,7 @@ export function TeamSection({ config }: TeamSectionProps) {
                   <div style={{ marginTop: '16px' }}>
                     <p
                       {...(isFirstSet ? elementProps(config.id, `members.${realIndex}.name`, 'heading') : {})}
-                      style={{ fontSize: '18px', fontWeight: 500, marginBottom: '4px', color: '#140c08' }}
+                      style={{ fontSize: '18px', fontWeight: 500, marginBottom: '4px', color: 'var(--color-foreground, #140c08)' }}
                     >
                       {member.name}
                     </p>
@@ -732,7 +732,7 @@ export function TeamSection({ config }: TeamSectionProps) {
     return (
       <section
         {...elementProps(config.id, 'wrapper', 'container', 'Agent Detail Section')}
-        style={{ backgroundColor: '#f5f0e8', fontFamily: "'Inter Variable', var(--font-body, sans-serif)", margin: 0, padding: 0 }}
+        style={{ backgroundColor: 'var(--color-muted, #f5f0e8)', fontFamily: "'Inter Variable', var(--font-body, sans-serif)", margin: 0, padding: 0 }}
       >
         {/* Hero — two column */}
         <div
@@ -761,7 +761,7 @@ export function TeamSection({ config }: TeamSectionProps) {
             {/* Name */}
             <h1
               {...elementProps(config.id, 'members.0.name', 'heading')}
-              style={{ fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)", fontSize: '40px', fontWeight: 700, lineHeight: '1.15', color: customTextColor ?? '#140c08', margin: 0, marginBottom: '8px' }}
+              style={{ fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)", fontSize: '40px', fontWeight: 700, lineHeight: '1.15', color: customTextColor ?? 'var(--color-foreground, #140c08)', margin: 0, marginBottom: '8px' }}
             >
               {agent.name}
             </h1>
@@ -795,7 +795,7 @@ export function TeamSection({ config }: TeamSectionProps) {
                 >
                   <p
                     {...elementProps(config.id, `stat.${si}.value`, 'text')}
-                    style={{ fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)", fontSize: '24px', fontWeight: 600, color: '#140c08', margin: 0, marginBottom: '4px' }}
+                    style={{ fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)", fontSize: '24px', fontWeight: 600, color: 'var(--color-foreground, #140c08)', margin: 0, marginBottom: '4px' }}
                   >
                     {stat.value}
                   </p>
@@ -819,10 +819,10 @@ export function TeamSection({ config }: TeamSectionProps) {
                 {...elementProps(config.id, 'contactPhone', 'container', 'Phone')}
                 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
               >
-                <svg {...elementProps(config.id, 'phoneIcon', 'icon', 'Phone Icon')} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4a2711" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <svg {...elementProps(config.id, 'phoneIcon', 'icon', 'Phone Icon')} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary, #4a2711)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 <span
                   {...elementProps(config.id, 'phoneValue', 'text', 'Phone Number')}
-                  style={{ fontSize: '15px', color: '#140c08', fontWeight: 400 }}
+                  style={{ fontSize: '15px', color: 'var(--color-foreground, #140c08)', fontWeight: 400 }}
                 >
                   {agent.phone}
                 </span>
@@ -832,10 +832,10 @@ export function TeamSection({ config }: TeamSectionProps) {
                 {...elementProps(config.id, 'contactEmail', 'container', 'Email')}
                 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
               >
-                <svg {...elementProps(config.id, 'emailIcon', 'icon', 'Email Icon')} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4a2711" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <svg {...elementProps(config.id, 'emailIcon', 'icon', 'Email Icon')} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary, #4a2711)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 <span
                   {...elementProps(config.id, 'emailValue', 'text', 'Email Address')}
-                  style={{ fontSize: '15px', color: '#140c08', fontWeight: 400 }}
+                  style={{ fontSize: '15px', color: 'var(--color-foreground, #140c08)', fontWeight: 400 }}
                 >
                   {agent.email}
                 </span>
@@ -845,10 +845,10 @@ export function TeamSection({ config }: TeamSectionProps) {
                 {...elementProps(config.id, 'contactAddress', 'container', 'Address')}
                 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
               >
-                <svg {...elementProps(config.id, 'addressIcon', 'icon', 'Address Icon')} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4a2711" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <svg {...elementProps(config.id, 'addressIcon', 'icon', 'Address Icon')} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary, #4a2711)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <span
                   {...elementProps(config.id, 'addressValue', 'text', 'Address')}
-                  style={{ fontSize: '15px', color: '#140c08', fontWeight: 400 }}
+                  style={{ fontSize: '15px', color: 'var(--color-foreground, #140c08)', fontWeight: 400 }}
                 >
                   {agent.address}
                 </span>
@@ -867,7 +867,7 @@ export function TeamSection({ config }: TeamSectionProps) {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '42px', height: '42px', borderRadius: '50%', backgroundColor: '#4a2711', color: '#ffffff', transition: 'opacity 0.2s' }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '42px', height: '42px', borderRadius: '50%', backgroundColor: 'var(--color-primary, #4a2711)', color: '#ffffff', transition: 'opacity 0.2s' }}
                 >
                   {s.svg}
                 </a>
@@ -883,7 +883,7 @@ export function TeamSection({ config }: TeamSectionProps) {
         >
           <h2
             {...elementProps(config.id, 'listingsTitle', 'heading', 'Listings Heading')}
-            style={{ fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)", fontSize: '32px', fontWeight: 600, color: customTextColor ?? '#140c08', marginBottom: '40px', marginTop: 0 }}
+            style={{ fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)", fontSize: '32px', fontWeight: 600, color: customTextColor ?? 'var(--color-foreground, #140c08)', marginBottom: '40px', marginTop: 0 }}
           >
             Agent Listings
           </h2>
@@ -911,7 +911,7 @@ export function TeamSection({ config }: TeamSectionProps) {
                 >
                   <p
                     {...elementProps(config.id, `listing.${li}.price`, 'text', 'Price')}
-                    style={{ fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)", fontSize: '20px', fontWeight: 600, color: '#140c08', margin: 0, marginBottom: '6px' }}
+                    style={{ fontFamily: "'GeneralSans Variable', var(--font-heading, sans-serif)", fontSize: '20px', fontWeight: 600, color: 'var(--color-foreground, #140c08)', margin: 0, marginBottom: '6px' }}
                   >
                     {(listing.price as string) || ''}
                   </p>

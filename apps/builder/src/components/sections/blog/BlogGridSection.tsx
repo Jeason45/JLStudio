@@ -708,7 +708,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
       <section
         {...elementProps(config.id, 'wrapper', 'container', 'Blog Section')}
         style={{
-          backgroundColor: '#f6efe5',
+          backgroundColor: 'var(--color-muted, #f6efe5)',
           paddingTop: 'clamp(60px, 12vw, 180px)',
           paddingBottom: 'clamp(60px, 12vw, 180px)',
           paddingLeft: 'clamp(20px, 5vw, 60px)',
@@ -738,7 +738,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                   fontWeight: 500,
                   lineHeight: '110%',
                   textTransform: 'capitalize',
-                  color: customTextColor ?? '#140c08',
+                  color: customTextColor ?? 'var(--color-foreground, #140c08)',
                 }}
               >
                 {title ?? 'Our Journal'}
@@ -764,14 +764,14 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                 textDecoration: 'none',
               }}
             >
-              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="brixsa-btn-label-blog relative" style={{ zIndex: 10, color: '#140c08' }}>
+              <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="brixsa-btn-label-blog relative" style={{ zIndex: 10, color: 'var(--color-foreground, #140c08)' }}>
                 {ctaLabel ?? 'View all Blogs'}
               </span>
               <span
                 {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
                 className="flex items-center justify-center"
                 style={{
-                  backgroundColor: '#4a2711',
+                  backgroundColor: 'var(--color-primary, #4a2711)',
                   color: '#ffffff',
                   borderRadius: '4px',
                   width: '28px',
@@ -784,7 +784,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                 <ArrowRight style={{ width: '16px', height: '16px' }} />
               </span>
               <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }} aria-hidden="true">
-                <span className="brixsa-btn-fill-blog" style={{ display: 'block', backgroundColor: '#4a2711', width: '100%', height: '100%' }} />
+                <span className="brixsa-btn-fill-blog" style={{ display: 'block', backgroundColor: 'var(--color-primary, #4a2711)', width: '100%', height: '100%' }} />
               </span>
             </a>
           </div>
@@ -831,7 +831,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                       style={{
                         fontSize: '16px',
                         fontWeight: 500,
-                        color: '#140c08',
+                        color: 'var(--color-foreground, #140c08)',
                         marginBottom: '8px',
                       }}
                     >
@@ -845,7 +845,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                       fontWeight: 500,
                       lineHeight: '150%',
                       fontFamily: '"Inter Variable", "Inter", var(--font-body, sans-serif)',
-                      color: '#140c08',
+                      color: 'var(--color-foreground, #140c08)',
                     }}
                   >
                     {post.title}
@@ -873,7 +873,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
       <section
         {...elementProps(config.id, 'wrapper', 'container', 'Blog Detail Section')}
         style={{
-          backgroundColor: '#f5f0e8',
+          backgroundColor: 'var(--color-muted, #f5f0e8)',
           paddingTop: 'clamp(60px, 10vw, 120px)',
           paddingBottom: 'clamp(60px, 10vw, 120px)',
           paddingLeft: '24px',
@@ -896,7 +896,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                   fontSize: '13px',
                   fontWeight: 600,
                   color: '#ffffff',
-                  backgroundColor: '#4a2711',
+                  backgroundColor: 'var(--color-primary, #4a2711)',
                   borderRadius: '4px',
                   padding: '6px 16px',
                   marginBottom: '24px',
@@ -916,7 +916,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                 fontSize: '40px',
                 fontWeight: 700,
                 lineHeight: '120%',
-                color: customTextColor ?? '#140c08',
+                color: customTextColor ?? 'var(--color-foreground, #140c08)',
                 marginBottom: '32px',
               }}
             >
@@ -940,7 +940,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                   width: '48px',
                   height: '48px',
                   borderRadius: '50%',
-                  backgroundColor: '#c8a97e',
+                  backgroundColor: 'var(--color-accent, #c8a97e)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -958,7 +958,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                   style={{
                     fontSize: '15px',
                     fontWeight: 600,
-                    color: '#140c08',
+                    color: 'var(--color-foreground, #140c08)',
                     margin: 0,
                     lineHeight: '1.4',
                   }}
@@ -1036,7 +1036,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                 fontSize: '28px',
                 fontWeight: 600,
                 lineHeight: '130%',
-                color: '#140c08',
+                color: 'var(--color-foreground, #140c08)',
                 marginBottom: '16px',
                 marginTop: '48px',
               }}
@@ -1092,7 +1092,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                 fontSize: '22px',
                 fontWeight: 600,
                 lineHeight: '130%',
-                color: '#140c08',
+                color: 'var(--color-foreground, #140c08)',
                 marginBottom: '16px',
                 marginTop: '40px',
               }}
@@ -1141,7 +1141,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
           >
             <span
               {...elementProps(config.id, 'shareLabel', 'text', 'Share Label')}
-              style={{ fontSize: '14px', fontWeight: 600, color: '#140c08' }}
+              style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-foreground, #140c08)' }}
             >
               Share this article
             </span>
@@ -1154,7 +1154,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                   width: '36px',
                   height: '36px',
                   borderRadius: '50%',
-                  backgroundColor: '#140c08',
+                  backgroundColor: 'var(--color-foreground, #140c08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1173,7 +1173,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                   width: '36px',
                   height: '36px',
                   borderRadius: '50%',
-                  backgroundColor: '#140c08',
+                  backgroundColor: 'var(--color-foreground, #140c08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1192,7 +1192,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                   width: '36px',
                   height: '36px',
                   borderRadius: '50%',
-                  backgroundColor: '#140c08',
+                  backgroundColor: 'var(--color-foreground, #140c08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1211,7 +1211,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                   width: '36px',
                   height: '36px',
                   borderRadius: '50%',
-                  backgroundColor: '#140c08',
+                  backgroundColor: 'var(--color-foreground, #140c08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1245,7 +1245,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                 gap: '8px',
                 fontSize: '15px',
                 fontWeight: 500,
-                color: '#140c08',
+                color: 'var(--color-foreground, #140c08)',
                 textDecoration: 'none',
                 transition: 'opacity 0.2s',
               }}
@@ -1262,7 +1262,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                 gap: '8px',
                 fontSize: '15px',
                 fontWeight: 500,
-                color: '#140c08',
+                color: 'var(--color-foreground, #140c08)',
                 textDecoration: 'none',
                 transition: 'opacity 0.2s',
               }}
@@ -1281,7 +1281,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                   fontFamily: '"General Sans Variable", "General Sans", var(--font-heading, sans-serif)',
                   fontSize: '32px',
                   fontWeight: 600,
-                  color: '#140c08',
+                  color: 'var(--color-foreground, #140c08)',
                   marginBottom: '40px',
                 }}
               >
@@ -1322,7 +1322,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                         style={{
                           fontSize: '13px',
                           fontWeight: 600,
-                          color: '#4a2711',
+                          color: 'var(--color-primary, #4a2711)',
                           marginBottom: '8px',
                           textTransform: 'uppercase',
                           letterSpacing: '0.02em',
@@ -1339,7 +1339,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
                         fontSize: '18px',
                         fontWeight: 500,
                         lineHeight: '140%',
-                        color: '#140c08',
+                        color: 'var(--color-foreground, #140c08)',
                         marginBottom: '8px',
                       }}
                     >

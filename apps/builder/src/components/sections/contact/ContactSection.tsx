@@ -613,7 +613,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
   // ═══════════════════════════════════════════════════════
 
   if (universe === 'brixsa') {
-    const gold = accentColor ?? '#c8a97e'
+    const gold = accentColor ?? 'var(--color-accent, #c8a97e)'
 
     const heroImage = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80'
 
@@ -625,7 +625,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
       borderRadius: '4px',
       padding: '0 16px',
       fontSize: '14px',
-      color: '#e1e1e1',
+      color: 'var(--color-background, #e1e1e1)',
       outline: 'none',
       fontFamily: "'Inter Variable', Inter, sans-serif",
     }
@@ -709,7 +709,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
             width: '100%',
             padding: '14px 0',
             backgroundColor: gold,
-            color: '#140c08',
+            color: 'var(--color-foreground, #140c08)',
             fontSize: '14px',
             fontWeight: 600,
             letterSpacing: '0.5px',
@@ -733,7 +733,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
           style={{
             fontSize: '42px',
             fontWeight: 600,
-            color: customTextColor ?? '#e1e1e1',
+            color: customTextColor ?? 'var(--color-background, #e1e1e1)',
             lineHeight: 1.15,
             margin: 0,
             fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
@@ -780,7 +780,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
       return (
         <section
           {...elementProps(config.id, 'section', 'container')}
-          style={{ backgroundColor: '#140c08', fontFamily: "'Inter Variable', Inter, sans-serif" }}
+          style={{ backgroundColor: 'var(--color-foreground, #140c08)', fontFamily: "'Inter Variable', Inter, sans-serif" }}
         >
           {/* Hero image */}
           <div
@@ -824,7 +824,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
                 style={{
                   fontSize: '38px',
                   fontWeight: 600,
-                  color: customTextColor ?? '#e1e1e1',
+                  color: customTextColor ?? 'var(--color-background, #e1e1e1)',
                   lineHeight: 1.15,
                   margin: '0 0 12px',
                   fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
@@ -854,7 +854,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
     return (
       <section
         {...elementProps(config.id, 'wrapper', 'container', 'Contact Section')}
-        style={{ backgroundColor: '#140c08', fontFamily: "'Inter Variable', Inter, sans-serif" }}
+        style={{ backgroundColor: 'var(--color-foreground, #140c08)', fontFamily: "'Inter Variable', Inter, sans-serif" }}
       >
         {/* Hero image */}
         <div

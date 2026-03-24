@@ -612,14 +612,14 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
           width: '100%',
           height: '60vh',
           minHeight: '400px',
-          backgroundColor: '#140c08',
+          backgroundColor: 'var(--color-foreground, #140c08)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
-          color: '#e1e1e1',
+          color: 'var(--color-background, #e1e1e1)',
         }}
       >
         {/* Background image */}
@@ -683,7 +683,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
               fontWeight: 600,
               lineHeight: 1.1,
               letterSpacing: '-0.02em',
-              color: '#e1e1e1',
+              color: 'var(--color-background, #e1e1e1)',
               margin: 0,
               maxWidth: '800px',
             }}
@@ -1917,7 +1917,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
     // Chevron SVG for filter dropdowns
     const ChevronDown = () => (
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 6L8 10L12 6" stroke="#e1e1e1" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M4 6L8 10L12 6" stroke="var(--color-background, #e1e1e1)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     )
 
@@ -1964,7 +1964,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
         className="relative overflow-hidden"
         style={{
           height: '100vh',
-          backgroundColor: '#140c08',
+          backgroundColor: 'var(--color-foreground, #140c08)',
           color: '#ffffff',
           fontFamily: "'GeneralSans Variable', 'General Sans', sans-serif",
         }}
@@ -2083,7 +2083,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
                     {...elementProps(config.id, `filters.${i}.label`, 'text')}
                     onClick={() => setOpenFilter(openFilter === label ? null : label)}
                     style={{
-                      color: selectedFilters[label] ? '#c8a97e' : '#e1e1e1',
+                      color: selectedFilters[label] ? 'var(--color-accent, #c8a97e)' : 'var(--color-background, #e1e1e1)',
                       fontSize: '14px',
                       gap: '6px',
                       cursor: 'pointer',
@@ -2129,7 +2129,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
                           onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
                           style={{
                             padding: '8px 14px',
-                            color: selectedFilters[label] === option ? '#c8a97e' : '#e1e1e1',
+                            color: selectedFilters[label] === option ? 'var(--color-accent, #c8a97e)' : 'var(--color-background, #e1e1e1)',
                             fontSize: '14px',
                             cursor: 'pointer',
                             borderRadius: '4px',
@@ -2163,14 +2163,14 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
                 }}
               />
               <span {...elementProps(config.id, 'searchIcon', 'icon', 'Search Icon')} className="absolute top-1/2 -translate-y-1/2" style={{ left: '14px' }}>
-                <Search style={{ width: '16px', height: '16px', color: '#e1e1e1' }} />
+                <Search style={{ width: '16px', height: '16px', color: 'var(--color-background, #e1e1e1)' }} />
               </span>
               <div
                 {...elementProps(config.id, 'primaryButton', 'button')}
                 role="button"
                 className="absolute right-0 top-0 bottom-0 text-white"
                 style={{
-                  backgroundColor: '#140c08',
+                  backgroundColor: 'var(--color-foreground, #140c08)',
                   borderRadius: '99px',
                   paddingLeft: '18px',
                   paddingRight: '18px',

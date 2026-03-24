@@ -1839,7 +1839,7 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
       <section
         {...elementProps(config.id, 'wrapper', 'container', 'Properties Section')}
         style={{
-          background: '#f6efe5',
+          background: 'var(--color-muted, #f6efe5)',
           paddingTop: 'clamp(60px, 12vw, 180px)',
           paddingBottom: 'clamp(60px, 12vw, 180px)',
           paddingLeft: 'clamp(20px, 5vw, 60px)',
@@ -1861,7 +1861,7 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
                     fontWeight: 500,
                     lineHeight: '110%',
                     textTransform: 'capitalize',
-                    color: '#140c08',
+                    color: 'var(--color-foreground, #140c08)',
                   }}
                 >
                   {content.title ?? 'Explore Our Properties'}
@@ -1872,14 +1872,14 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
               {...elementProps(config.id, 'subtitle', 'text')}
               href="/property"
               className="brixsa-btn flex items-center relative overflow-hidden"
-              style={{ fontSize: '20px', fontWeight: 500, color: '#140c08', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
+              style={{ fontSize: '20px', fontWeight: 500, color: 'var(--color-foreground, #140c08)', padding: '10px 12px 10px 20px', gap: '10px', borderRadius: '6px', textDecoration: 'none' }}
             >
               <span {...elementProps(config.id, 'viewAllLabel', 'text', 'Link Text')} className="brixsa-btn-label relative" style={{ zIndex: 10 }}>View all Property</span>
               <span
                 {...elementProps(config.id, 'viewAllIcon', 'icon', 'Arrow Icon')}
                 className="flex items-center justify-center"
                 style={{
-                  background: '#4a2711',
+                  background: 'var(--color-primary, #4a2711)',
                   color: '#fff',
                   borderRadius: '4px',
                   width: '28px',
@@ -1895,7 +1895,7 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
               </span>
               {/* Animated bg — fills from right to left */}
               <span className="absolute inset-0 pointer-events-none" style={{ overflow: 'hidden', borderRadius: '6px' }}>
-                <span className="brixsa-btn-fill" style={{ display: 'block', background: '#4a2711', width: '100%', height: '100%' }} />
+                <span className="brixsa-btn-fill" style={{ display: 'block', background: 'var(--color-primary, #4a2711)', width: '100%', height: '100%' }} />
               </span>
             </a>
           </div>
@@ -2009,7 +2009,7 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
                           fontSize: '24px',
                           fontWeight: 500,
                           lineHeight: '36px',
-                          color: '#140c08',
+                          color: 'var(--color-foreground, #140c08)',
                           fontFamily: '"Inter Variable", Inter, sans-serif',
                         }}
                       >
@@ -2021,7 +2021,7 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
                           fontSize: '24px',
                           fontWeight: 500,
                           lineHeight: '36px',
-                          color: '#140c08',
+                          color: 'var(--color-foreground, #140c08)',
                           display: 'block',
                         }}
                       >
@@ -2087,8 +2087,8 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
       { label: 'Community Feedback', value: 'Residents appreciate the modern amenities and the vibrant community atmosphere.' },
     ]
 
-    const dark = '#140c08'
-    const cream = '#f5f0e8'
+    const dark = 'var(--color-foreground, #140c08)'
+    const cream = 'var(--color-muted, #f5f0e8)'
     const warmGray = '#56595a'
     const headingFont = '"GeneralSans Variable", sans-serif'
     const bodyFont = '"Inter Variable", Inter, sans-serif'

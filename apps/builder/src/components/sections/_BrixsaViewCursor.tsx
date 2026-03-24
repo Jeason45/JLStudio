@@ -51,7 +51,7 @@ export function BrixsaViewCursor({ children, className, style }: BrixsaViewCurso
           opacity: visible ? 1 : 0,
           transition: 'opacity 0.3s ease',
           zIndex: 50,
-          color: '#e1e1e1',
+          color: 'var(--color-background, #e1e1e1)',
           fontSize: 14,
           fontWeight: 500,
         }}

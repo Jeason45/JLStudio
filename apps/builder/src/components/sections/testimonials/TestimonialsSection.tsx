@@ -1331,7 +1331,7 @@ function BrixsaFeatured({ content, items, sectionId, isEditing }: { content: Par
   ]
 
   return (
-    <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: '#140c08', color: '#e1e1e1', fontFamily: 'var(--font-body, inherit)' }}>
+    <section {...elementProps(sectionId, 'wrapper', 'container', 'Testimonials Section')} style={{ backgroundColor: 'var(--color-foreground, #140c08)', color: 'var(--color-background, #e1e1e1)', fontFamily: 'var(--font-body, inherit)' }}>
       <div {...elementProps(sectionId, 'splitLayout', 'container', 'Split Layout')} className="flex flex-row w-full" style={{ aspectRatio: '1440/860' }}>
         {/* LEFT — Images (50%) */}
         <div {...elementProps(sectionId, 'imagePanel', 'container', 'Image Panel')} className="relative overflow-hidden" style={{ flex: '1 1 50%' }}>
@@ -1363,11 +1363,11 @@ function BrixsaFeatured({ content, items, sectionId, isEditing }: { content: Par
         </div>
 
         {/* RIGHT — Content (50%) */}
-        <div {...elementProps(sectionId, 'contentPanel', 'container', 'Content Panel')} className="flex flex-col" style={{ flex: '1 1 50%', backgroundColor: '#140c08', color: '#e1e1e1', padding: '60px' }}>
+        <div {...elementProps(sectionId, 'contentPanel', 'container', 'Content Panel')} className="flex flex-col" style={{ flex: '1 1 50%', backgroundColor: 'var(--color-foreground, #140c08)', color: 'var(--color-background, #e1e1e1)', padding: '60px' }}>
           {/* Top label */}
           <p
             {...elementProps(sectionId, 'eyebrow', 'text')}
-            style={{ fontSize: '16px', fontWeight: 400, color: '#e1e1e1', marginBottom: 'auto' }}
+            style={{ fontSize: '16px', fontWeight: 400, color: 'var(--color-background, #e1e1e1)', marginBottom: 'auto' }}
           >
             {content.eyebrow || content.title || 'The satisfaction of our customer'}
           </p>
@@ -1385,7 +1385,7 @@ function BrixsaFeatured({ content, items, sectionId, isEditing }: { content: Par
                       fontSize: 'clamp(1.5rem, 1.0714rem + 1.9048vw, 2.5rem)',
                       fontWeight: 400,
                       lineHeight: '125%',
-                      color: '#e1e1e1',
+                      color: 'var(--color-background, #e1e1e1)',
                     }}
                   >
                     &ldquo;{quote}&rdquo;
@@ -1419,7 +1419,7 @@ function BrixsaFeatured({ content, items, sectionId, isEditing }: { content: Par
                 >
                   <span {...elementProps(sectionId, 'prevIcon', 'icon', 'Previous Arrow')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ display: 'block' }}>
-                      <path d="M15 6L9 12L15 18" stroke="#e1e1e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M15 6L9 12L15 18" stroke="var(--color-background, #e1e1e1)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
                 </div>
@@ -1445,7 +1445,7 @@ function BrixsaFeatured({ content, items, sectionId, isEditing }: { content: Par
                 >
                   <span {...elementProps(sectionId, 'nextIcon', 'icon', 'Next Arrow')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ display: 'block' }}>
-                      <path d="M9 6L15 12L9 18" stroke="#e1e1e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M9 6L15 12L9 18" stroke="var(--color-background, #e1e1e1)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
                 </div>
@@ -4590,7 +4590,7 @@ export function TestimonialsSection({ config, isEditing }: TestimonialsSectionPr
     canopy: '#D4A853',
     obscura: '#D4A853',
     nacre: '#C9A96E',
-    brixsa: '#e1e1e1',
+    brixsa: 'var(--color-background, #e1e1e1)',
     braise: '#C8A96E',
     forge: '#FF4D00',
     ciseaux: '#B76E79',
