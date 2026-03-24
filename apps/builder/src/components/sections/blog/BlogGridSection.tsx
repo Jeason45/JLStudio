@@ -1060,7 +1060,7 @@ export function BlogGridSection({ config }: { config: SectionConfig }) {
             <blockquote
               {...elementProps(config.id, 'blockquote', 'container', 'Block Quote')}
               style={{
-                borderLeft: '4px solid #c8a97e',
+                borderLeft: '4px solid var(--color-accent, #c8a97e)',
                 paddingLeft: '24px',
                 paddingTop: '8px',
                 paddingBottom: '8px',

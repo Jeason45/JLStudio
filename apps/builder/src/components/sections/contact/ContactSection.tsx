@@ -634,7 +634,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
       display: 'block',
       fontSize: '13px',
       fontWeight: 500,
-      color: 'rgba(225,225,225,0.7)',
+      color: 'color-mix(in srgb, var(--color-background, #e1e1e1) 70%, transparent)',
       marginBottom: '6px',
       fontFamily: "'Inter Variable', Inter, sans-serif",
     }
@@ -745,7 +745,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
           {...elementProps(config.id, 'subtitle', 'text')}
           style={{
             fontSize: '16px',
-            color: 'rgba(225,225,225,0.6)',
+            color: 'color-mix(in srgb, var(--color-background, #e1e1e1) 60%, transparent)',
             lineHeight: 1.6,
             margin: 0,
             fontFamily: "'Inter Variable', Inter, sans-serif",
@@ -757,19 +757,19 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
           {email && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Mail style={{ width: '18px', height: '18px', color: gold, flexShrink: 0 }} />
-              <span style={{ fontSize: '14px', color: 'rgba(225,225,225,0.8)', fontFamily: "'Inter Variable', Inter, sans-serif" }}>{email}</span>
+              <span style={{ fontSize: '14px', color: 'color-mix(in srgb, var(--color-background, #e1e1e1) 80%, transparent)', fontFamily: "'Inter Variable', Inter, sans-serif" }}>{email}</span>
             </div>
           )}
           {phone && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Phone style={{ width: '18px', height: '18px', color: gold, flexShrink: 0 }} />
-              <span style={{ fontSize: '14px', color: 'rgba(225,225,225,0.8)', fontFamily: "'Inter Variable', Inter, sans-serif" }}>{phone}</span>
+              <span style={{ fontSize: '14px', color: 'color-mix(in srgb, var(--color-background, #e1e1e1) 80%, transparent)', fontFamily: "'Inter Variable', Inter, sans-serif" }}>{phone}</span>
             </div>
           )}
           {address && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <MapPin style={{ width: '18px', height: '18px', color: gold, flexShrink: 0 }} />
-              <span style={{ fontSize: '14px', color: 'rgba(225,225,225,0.8)', fontFamily: "'Inter Variable', Inter, sans-serif" }}>{address}</span>
+              <span style={{ fontSize: '14px', color: 'color-mix(in srgb, var(--color-background, #e1e1e1) 80%, transparent)', fontFamily: "'Inter Variable', Inter, sans-serif" }}>{address}</span>
             </div>
           )}
         </div>
@@ -810,7 +810,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
               left: 0,
               right: 0,
               height: '120px',
-              background: 'linear-gradient(to top, #140c08, transparent)',
+              background: 'linear-gradient(to top, var(--color-foreground, #140c08), transparent)',
             }} />
           </div>
 
@@ -836,7 +836,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
                 {...elementProps(config.id, 'subtitle', 'text')}
                 style={{
                   fontSize: '16px',
-                  color: 'rgba(225,225,225,0.6)',
+                  color: 'color-mix(in srgb, var(--color-background, #e1e1e1) 60%, transparent)',
                   lineHeight: 1.6,
                   margin: 0,
                 }}
@@ -884,7 +884,7 @@ export function ContactSection({ config, isEditing }: ContactSectionProps) {
             left: 0,
             right: 0,
             height: '120px',
-            background: 'linear-gradient(to top, #140c08, transparent)',
+            background: 'linear-gradient(to top, var(--color-foreground, #140c08), transparent)',
           }} />
         </div>
 

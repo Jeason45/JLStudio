@@ -229,7 +229,7 @@ function BrixsaAccordionItem({ item, sectionId, itemIndex }: { item: FAQItem; se
               fontFamily: "'Inter Variable', sans-serif",
               fontSize: '15px',
               lineHeight: 1.7,
-              color: 'rgba(225,225,225,0.6)',
+              color: 'color-mix(in srgb, var(--color-background, #e1e1e1) 60%, transparent)',
               paddingBottom: '24px',
               margin: 0,
             }}
@@ -685,7 +685,7 @@ export function FAQSection({ config }: FAQSectionProps) {
                 {...elementProps(config.id, 'subtitle', 'text')}
                 style={{
                   fontSize: '16px',
-                  color: 'rgba(225,225,225,0.5)',
+                  color: 'color-mix(in srgb, var(--color-background, #e1e1e1) 50%, transparent)',
                   maxWidth: '540px',
                   margin: '16px auto 0',
                   lineHeight: 1.6,
