@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/db'
 import type { SiteConfig } from '@/types/site'
 import { sendDeployNotification } from '@/lib/deployEmails'
+import { deploySiteToCoolify, isCoolifyConfigured } from '@/lib/coolify'
+import { collectExportedFiles } from '@/lib/deploy/collectExportedFiles'
 
 /**
  * POST /api/sites/[siteId]/export
  *
- * Exports a site to static HTML files and writes them to the filesystem.
- * Creates a Deploy record and updates the site status to PUBLISHED on success.
+ * Exports a site to static HTML, pushes to GitHub, and deploys via Coolify.
+ * If Coolify is not configured, falls back to filesystem-only export.
  */
 export async function POST(
   _request: NextRequest,
@@ -18,7 +20,6 @@ export async function POST(
   try {
     const { siteId } = await params
 
-    // Fetch site from DB
     const site = await prisma.site.findUnique({
       where: { id: siteId },
     })
@@ -33,7 +34,6 @@ export async function POST(
       return NextResponse.json({ error: 'Aucune page à exporter' }, { status: 400 })
     }
 
-    // Ensure the siteConfig has the site ID (needed for form submissions, component resolution, etc.)
     if (!siteConfig.id) {
       siteConfig.id = siteId
     }
@@ -44,28 +44,32 @@ export async function POST(
     )
     console.log(`[Export] Starting export for "${site.name}" (${site.slug}): ${siteConfig.pages.length} pages, ${totalSections} sections`)
 
-    // CSS is loaded via Tailwind CDN in the HTML — allCss is for additional custom CSS
+    // Create a PENDING deploy record
+    const deploy = await prisma.deploy.create({
+      data: {
+        siteId,
+        status: 'PENDING',
+        environment: 'production',
+      },
+    })
+
+    // CSS is loaded via Tailwind CDN in the HTML
     const customCss = ''
 
     // Dynamic import to avoid Turbopack tracing client components into server module graph
     const { exportSite } = await import('@/lib/export/exportSite')
 
-    // Run the export
+    // Step 1: Export to filesystem
     const result = await exportSite(siteConfig, site.slug, customCss)
-
-    const deployUrl = siteConfig.meta.url || `https://${site.slug}.jlstudio.dev`
-    const totalDuration = Date.now() - startTime
 
     if (!result.success) {
       console.error(`[Export] Failed for "${site.slug}":`, result.error)
 
-      // Record failed deploy
-      await prisma.deploy.create({
+      await prisma.deploy.update({
+        where: { id: deploy.id },
         data: {
-          siteId,
           status: 'FAILED',
-          pagesExported: 0,
-          duration: totalDuration,
+          duration: Date.now() - startTime,
           outputDir: result.outputDir,
           error: result.error,
         },
@@ -77,7 +81,67 @@ export async function POST(
       }, { status: 500 })
     }
 
-    // Update site status to PUBLISHED
+    const defaultDomain = `${site.slug}.jlstudio.dev`
+    const customDomain = siteConfig.deploy?.customDomain
+    const deployUrl = customDomain
+      ? `https://${customDomain}`
+      : siteConfig.meta.url || `https://${defaultDomain}`
+
+    // Step 2: Deploy to Coolify (if configured)
+    let coolifyDeployId: string | null = null
+    let coolifyAppUuid = site.coolifyAppUuid
+
+    if (isCoolifyConfigured()) {
+      console.log(`[Export] Coolify is configured — deploying to Coolify...`)
+
+      await prisma.deploy.update({
+        where: { id: deploy.id },
+        data: { status: 'BUILDING' },
+      })
+
+      const files = await collectExportedFiles(result.outputDir)
+      const coolifyResult = await deploySiteToCoolify(
+        site.slug,
+        files,
+        coolifyAppUuid,
+        customDomain || defaultDomain,
+      )
+
+      if (!coolifyResult.success) {
+        console.error(`[Export] Coolify deploy failed for "${site.slug}":`, coolifyResult.error)
+
+        await prisma.deploy.update({
+          where: { id: deploy.id },
+          data: {
+            status: 'FAILED',
+            duration: Date.now() - startTime,
+            outputDir: result.outputDir,
+            error: `Export OK, Coolify failed: ${coolifyResult.error}`,
+          },
+        })
+
+        return NextResponse.json({
+          error: 'Export réussi mais déploiement Coolify échoué',
+          details: coolifyResult.error,
+          pagesExported: result.pagesExported,
+        }, { status: 500 })
+      }
+
+      coolifyDeployId = coolifyResult.deploymentUuid || null
+      coolifyAppUuid = coolifyResult.appUuid || null
+
+      // Save app UUID on the site for future deploys
+      if (coolifyResult.appUuid && coolifyResult.appUuid !== site.coolifyAppUuid) {
+        await prisma.site.update({
+          where: { id: siteId },
+          data: { coolifyAppUuid: coolifyResult.appUuid },
+        })
+      }
+    }
+
+    const totalDuration = Date.now() - startTime
+
+    // Update site status
     await prisma.site.update({
       where: { id: siteId },
       data: {
@@ -86,19 +150,20 @@ export async function POST(
       },
     })
 
-    // Record successful deploy
-    const deploy = await prisma.deploy.create({
+    // Update deploy record
+    await prisma.deploy.update({
+      where: { id: deploy.id },
       data: {
-        siteId,
-        status: 'SUCCESS',
+        status: coolifyDeployId ? 'BUILDING' : 'SUCCESS',
         pagesExported: result.pagesExported,
         duration: totalDuration,
         outputDir: result.outputDir,
         deployUrl,
+        coolifyDeployId,
       },
     })
 
-    console.log(`[Export] Success for "${site.slug}": ${result.pagesExported} pages in ${totalDuration}ms → ${result.outputDir}`)
+    console.log(`[Export] ${coolifyDeployId ? 'Building' : 'Success'} for "${site.slug}": ${result.pagesExported} pages in ${totalDuration}ms → ${result.outputDir}`)
 
     // Send deploy notification email (non-blocking)
     sendDeployNotification(
@@ -116,6 +181,9 @@ export async function POST(
       duration: totalDuration,
       outputDir: result.outputDir,
       deployUrl,
+      coolifyDeployId,
+      coolifyAppUuid,
+      building: !!coolifyDeployId,
     })
   } catch (error) {
     console.error('[Export] Error:', error)

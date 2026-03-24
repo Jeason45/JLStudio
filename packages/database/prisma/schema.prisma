@@ -27,16 +27,17 @@ model BuilderUser {
 // ─────────────────────────────────────────────
 
 model Site {
-  id          String     @id @default(cuid())
-  name        String
-  slug        String     @unique
-  description String?
-  config      Json       @default("{}")
-  status      SiteStatus @default(DRAFT)
-  deployUrl   String?
-  thumbnail   String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id              String     @id @default(cuid())
+  name            String
+  slug            String     @unique
+  description     String?
+  config          Json       @default("{}")
+  status          SiteStatus @default(DRAFT)
+  deployUrl       String?
+  coolifyAppUuid  String?
+  thumbnail       String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 
   pages             Page[]
   contacts          Contact[]
@@ -80,15 +81,17 @@ enum SiteStatus {
 // ─────────────────────────────────────────────
 
 model Deploy {
-  id            String       @id @default(cuid())
-  siteId        String
-  status        DeployStatus @default(PENDING)
-  pagesExported Int          @default(0)
-  duration      Int          @default(0)
-  outputDir     String?
-  deployUrl     String?
-  error         String?      @db.Text
-  createdAt     DateTime     @default(now())
+  id               String       @id @default(cuid())
+  siteId           String
+  status           DeployStatus @default(PENDING)
+  environment      String       @default("production")
+  pagesExported    Int          @default(0)
+  duration         Int          @default(0)
+  outputDir        String?
+  deployUrl        String?
+  coolifyDeployId  String?
+  error            String?      @db.Text
+  createdAt        DateTime     @default(now())
 
   site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
 
@@ -97,6 +100,7 @@ model Deploy {
 
 enum DeployStatus {
   PENDING
+  BUILDING
   SUCCESS
   FAILED
 }

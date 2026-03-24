@@ -1,8 +1,11 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { useEditorStore } from '@/store/editorStore'
-import { Rocket, Copy, Check, ExternalLink, Clock, ToggleLeft, ToggleRight, AlertCircle, CheckCircle2, XCircle, History } from 'lucide-react'
+import {
+  Rocket, Copy, Check, ExternalLink, Clock, ToggleLeft, ToggleRight,
+  AlertCircle, CheckCircle2, XCircle, History, Globe, Loader2,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface PublishPanelProps {
@@ -18,14 +21,19 @@ interface ExportResponse {
   duration?: number
   deployUrl?: string
   deployId?: string
+  coolifyDeployId?: string
+  coolifyAppUuid?: string
+  building?: boolean
 }
 
 interface DeployRecord {
   id: string
-  status: 'PENDING' | 'SUCCESS' | 'FAILED'
+  status: 'PENDING' | 'BUILDING' | 'SUCCESS' | 'FAILED'
+  environment: string
   pagesExported: number
   duration: number
   deployUrl: string | null
+  coolifyDeployId: string | null
   error: string | null
   createdAt: string
 }
@@ -44,16 +52,25 @@ function formatDuration(ms: number): string {
   return `${(ms / 1000).toFixed(1)}s`
 }
 
+const STATUS_CONFIG = {
+  PENDING: { icon: Clock, color: 'text-yellow-500', label: 'En attente' },
+  BUILDING: { icon: Loader2, color: 'text-blue-400', label: 'Déploiement...' },
+  SUCCESS: { icon: CheckCircle2, color: 'text-green-500', label: 'Publié' },
+  FAILED: { icon: XCircle, color: 'text-red-500', label: 'Échoué' },
+} as const
+
 export function PublishPanel({ open, onClose }: PublishPanelProps) {
   const { siteConfig, updateDeploy } = useEditorStore()
   const [isPublishing, setIsPublishing] = useState(false)
-  const [publishResult, setPublishResult] = useState<'success' | 'error' | null>(null)
+  const [publishResult, setPublishResult] = useState<'success' | 'building' | 'error' | null>(null)
   const [publishError, setPublishError] = useState<string | null>(null)
   const [publishStats, setPublishStats] = useState<{ pages: number; duration: number } | null>(null)
   const [copiedField, setCopiedField] = useState<string | null>(null)
   const [activeEnv, setActiveEnv] = useState<'staging' | 'production'>('production')
   const [deploys, setDeploys] = useState<DeployRecord[]>([])
   const [loadingHistory, setLoadingHistory] = useState(false)
+  const [activeBuildDeployId, setActiveBuildDeployId] = useState<string | null>(null)
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const deploy = siteConfig?.deploy ?? {}
   const siteId = siteConfig?.id
@@ -62,6 +79,13 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
 
   const stagingUrl = deploy.stagingUrl || `https://${slugified}.staging.jlstudio.dev`
   const productionUrl = deploy.productionUrl || deploy.deployUrl || `https://${slugified}.jlstudio.dev`
+
+  // Cleanup poll on unmount
+  useEffect(() => {
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current)
+    }
+  }, [])
 
   const fetchDeploys = useCallback(async () => {
     if (!siteId) return
@@ -78,6 +102,42 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
       setLoadingHistory(false)
     }
   }, [siteId])
+
+  // Poll for build status
+  const startPolling = useCallback((deployId: string) => {
+    if (pollRef.current) clearInterval(pollRef.current)
+
+    setActiveBuildDeployId(deployId)
+
+    pollRef.current = setInterval(async () => {
+      if (!siteId) return
+
+      try {
+        const res = await fetch(`/api/sites/${siteId}/deploys/${deployId}`)
+        if (!res.ok) return
+
+        const data = await res.json()
+        const status = data.deploy?.status
+
+        if (status === 'SUCCESS') {
+          setPublishResult('success')
+          setActiveBuildDeployId(null)
+          if (pollRef.current) clearInterval(pollRef.current)
+          fetchDeploys()
+          setTimeout(() => setPublishResult(null), 5000)
+        } else if (status === 'FAILED') {
+          setPublishResult('error')
+          setPublishError(data.deploy?.error || 'Deploy Coolify échoué')
+          setActiveBuildDeployId(null)
+          if (pollRef.current) clearInterval(pollRef.current)
+          fetchDeploys()
+        }
+        // BUILDING — keep polling
+      } catch {
+        // Silently continue polling
+      }
+    }, 3000)
+  }, [siteId, fetchDeploys])
 
   useEffect(() => {
     if (open && siteId) {
@@ -106,11 +166,20 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
       updateDeploy({
         lastPublishedAt: new Date().toISOString(),
         deployUrl: data.deployUrl,
+        coolifyAppUuid: data.coolifyAppUuid,
       })
       setPublishStats({ pages: data.pagesExported ?? 0, duration: data.duration ?? 0 })
-      setPublishResult('success')
+
+      if (data.building && data.deployId) {
+        // Coolify is building — start polling
+        setPublishResult('building')
+        startPolling(data.deployId)
+      } else {
+        setPublishResult('success')
+        setTimeout(() => setPublishResult(null), 5000)
+      }
+
       fetchDeploys()
-      setTimeout(() => setPublishResult(null), 5000)
     } catch (err) {
       setPublishResult('error')
       setPublishError(String(err))
@@ -145,10 +214,10 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
           <div>
             <button
               onClick={handlePublish}
-              disabled={isPublishing}
+              disabled={isPublishing || publishResult === 'building'}
               className={cn(
                 'w-full h-11 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2',
-                isPublishing
+                isPublishing || publishResult === 'building'
                   ? 'bg-green-700 text-green-100 cursor-wait'
                   : publishResult === 'success'
                     ? 'bg-green-600 text-white'
@@ -157,8 +226,13 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
             >
               {isPublishing ? (
                 <>
-                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Publishing...
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Exporting...
+                </>
+              ) : publishResult === 'building' ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Deploying to Coolify...
                 </>
               ) : publishResult === 'success' ? (
                 <>
@@ -178,6 +252,13 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
                 <AlertCircle className="w-3 h-3 mt-0.5 shrink-0" />
                 <span>{publishError}</span>
               </div>
+            )}
+
+            {publishResult === 'building' && publishStats && (
+              <p className="text-[10px] text-blue-400 mt-2 flex items-center gap-1">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                {publishStats.pages} page{publishStats.pages > 1 ? 's' : ''} exported — deploying via Coolify...
+              </p>
             )}
 
             {publishResult === 'success' && publishStats && (
@@ -226,7 +307,10 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
           {/* URLs */}
           <div className="space-y-3">
             <div>
-              <p className="text-[10px] text-zinc-500 mb-1">Staging URL</p>
+              <p className="text-[10px] text-zinc-500 mb-1 flex items-center gap-1">
+                <Globe className="w-3 h-3" />
+                Staging URL
+              </p>
               <div className="flex items-center gap-1">
                 <div className="flex-1 h-7 bg-zinc-800 border border-zinc-700 rounded px-2 flex items-center">
                   <span className="text-[11px] text-zinc-400 truncate">{stagingUrl}</span>
@@ -251,7 +335,10 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
             </div>
 
             <div>
-              <p className="text-[10px] text-zinc-500 mb-1">Production URL</p>
+              <p className="text-[10px] text-zinc-500 mb-1 flex items-center gap-1">
+                <Globe className="w-3 h-3" />
+                Production URL
+              </p>
               <div className="flex items-center gap-1">
                 <div className="flex-1 h-7 bg-zinc-800 border border-zinc-700 rounded px-2 flex items-center">
                   <span className="text-[11px] text-zinc-400 truncate">{productionUrl}</span>
@@ -303,48 +390,64 @@ export function PublishPanel({ open, onClose }: PublishPanelProps) {
 
             {loadingHistory ? (
               <div className="flex items-center justify-center py-4">
-                <span className="w-4 h-4 border-2 border-zinc-700 border-t-zinc-400 rounded-full animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
               </div>
             ) : deploys.length === 0 ? (
               <p className="text-[10px] text-zinc-600 py-2">No deploys yet</p>
             ) : (
               <div className="space-y-1.5">
-                {deploys.map((d) => (
-                  <div
-                    key={d.id}
-                    className="flex items-center gap-2 p-2 bg-zinc-800/50 border border-zinc-700/50 rounded text-[10px]"
-                  >
-                    {d.status === 'SUCCESS' ? (
-                      <CheckCircle2 className="w-3 h-3 text-green-500 shrink-0" />
-                    ) : d.status === 'FAILED' ? (
-                      <XCircle className="w-3 h-3 text-red-500 shrink-0" />
-                    ) : (
-                      <Clock className="w-3 h-3 text-yellow-500 shrink-0" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className={cn(
-                          'font-medium',
-                          d.status === 'SUCCESS' ? 'text-zinc-300' : d.status === 'FAILED' ? 'text-red-400' : 'text-yellow-400'
-                        )}>
-                          {d.status === 'SUCCESS' ? `${d.pagesExported} pages` : d.status === 'FAILED' ? 'Failed' : 'Pending'}
-                        </span>
-                        <span className="text-zinc-600">{formatDuration(d.duration)}</span>
-                      </div>
-                      <p className="text-zinc-600 truncate">{formatDate(d.createdAt)}</p>
-                      {d.status === 'FAILED' && d.error && (
-                        <p className="text-red-500/70 truncate mt-0.5">{d.error}</p>
+                {deploys.map((d) => {
+                  const config = STATUS_CONFIG[d.status] || STATUS_CONFIG.PENDING
+                  const Icon = config.icon
+                  const isActive = d.id === activeBuildDeployId
+
+                  return (
+                    <div
+                      key={d.id}
+                      className={cn(
+                        'flex items-center gap-2 p-2 border rounded text-[10px]',
+                        isActive
+                          ? 'bg-blue-500/5 border-blue-500/20'
+                          : 'bg-zinc-800/50 border-zinc-700/50'
                       )}
+                    >
+                      <Icon className={cn(
+                        'w-3 h-3 shrink-0',
+                        config.color,
+                        (d.status === 'BUILDING' || d.status === 'PENDING') && 'animate-spin'
+                      )} />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <span className={cn(
+                            'font-medium',
+                            d.status === 'SUCCESS' ? 'text-zinc-300'
+                              : d.status === 'FAILED' ? 'text-red-400'
+                              : d.status === 'BUILDING' ? 'text-blue-400'
+                              : 'text-yellow-400'
+                          )}>
+                            {d.status === 'SUCCESS'
+                              ? `${d.pagesExported} pages`
+                              : config.label}
+                          </span>
+                          {d.duration > 0 && (
+                            <span className="text-zinc-600">{formatDuration(d.duration)}</span>
+                          )}
+                        </div>
+                        <p className="text-zinc-600 truncate">{formatDate(d.createdAt)}</p>
+                        {d.status === 'FAILED' && d.error && (
+                          <p className="text-red-500/70 truncate mt-0.5">{d.error}</p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
           </div>
 
           {/* Info */}
           <div className="p-3 bg-zinc-800/50 border border-zinc-700 rounded text-[10px] text-zinc-500">
-            Export generates static HTML files served by Nginx. No server runtime needed.
+            Export generates static HTML served by Nginx via Coolify. SSL is provisioned automatically via Let&apos;s Encrypt.
           </div>
         </div>
       </SheetContent>

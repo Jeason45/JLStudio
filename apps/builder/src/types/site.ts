@@ -164,6 +164,10 @@ export interface DeployConfig {
   productionUrl?: string
   deployUrl?: string
   autoDeploy?: boolean
+  /** Coolify application UUID — set after first deploy */
+  coolifyAppUuid?: string
+  /** Custom domain for the site (e.g. www.client.com) */
+  customDomain?: string
 }
 
 // ─────────────────────────────────────────────
