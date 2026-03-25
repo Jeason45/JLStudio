@@ -6,7 +6,7 @@ import type { SectionConfig } from '@/types/site'
 import { cn } from '@/lib/utils'
 import { GripVertical, Trash2, EyeOff, Eye, ChevronUp, ChevronDown, Settings } from 'lucide-react'
 import { getSectionComponent } from '@/components/sections'
-import { CustomElementRenderer } from '@/components/sections/custom/CustomSection'
+import { CustomElementRenderer, SortableElementList, SortableElement } from '@/components/sections/custom/CustomSection'
 import { SectionDivider } from '@/components/sections/SectionDivider'
 import { applySectionOverrides, getPaddingTopClass, getPaddingBottomClass, getSectionBgStyle, getSectionBgClass } from '@/components/sections/_utils'
 import { AnimationController } from './animations/AnimationController'
@@ -327,7 +327,14 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
             <PlaceholderSection section={section} />
           )}
         </SectionErrorBoundary>
-        {section.type !== 'custom' && (section.elements?.length ?? 0) > 0 && (
+        {section.type !== 'custom' && (section.elements?.length ?? 0) > 0 && !previewMode && (
+          <div className="relative">
+            <SortableElementList elements={section.elements!} sectionId={section.id} parentId={null}>
+              {(el) => <SortableElement key={el.id} element={el} sectionId={section.id} />}
+            </SortableElementList>
+          </div>
+        )}
+        {section.type !== 'custom' && (section.elements?.length ?? 0) > 0 && previewMode && (
           <div className="relative">
             {section.elements!.map(el => (
               <CustomElementRenderer key={el.id} element={el} sectionId={section.id} />

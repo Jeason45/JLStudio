@@ -38,9 +38,7 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
     const { active } = event
     const data = active.data.current
 
-    console.log('[DnD DEBUG] dragStart', { id: active.id, type: data?.type, data })
-
-    setActiveDragId(String(active.id))
+setActiveDragId(String(active.id))
     setIsDragging(true)
 
     if (data?.type === 'new-section') {
@@ -63,8 +61,7 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
   }, [])
 
   const handleDragCancel = useCallback(() => {
-    console.log('[DnD DEBUG] dragCancel')
-    setActiveDragId(null)
+setActiveDragId(null)
     setActiveDragType(null)
     setActiveDragLabel('')
     setIsDragging(false)
@@ -74,15 +71,7 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event
 
-    console.log('[DnD DEBUG] dragEnd', {
-      activeId: active.id,
-      activeType: active.data.current?.type,
-      overId: over?.id ?? 'NULL',
-      overType: over?.data?.current?.type ?? 'NULL',
-      selectedPageId,
-    })
-
-    setActiveDragId(null)
+setActiveDragId(null)
     setActiveDragType(null)
     setActiveDragLabel('')
     setIsDragging(false)
@@ -165,7 +154,7 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
     // Case 4: Add new element from sidebar
     if (activeData?.type === 'new-element') {
       const elementDef = activeData.elementDef
-      if (!elementDef) return
+if (!elementDef) return
 
       // Find target section
       let targetSectionId: string | null = null
@@ -187,8 +176,13 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
         targetSectionId = overData.sectionId as string
         targetParentId = overData.parentId as string | null
       } else if (overData?.type === 'section') {
-        // Dropped on a section directly
+        // Dropped on a section directly — append at end
         targetSectionId = String(over.id)
+        const page = siteConfig?.pages.find(p => p.id === selectedPageId)
+        if (page) {
+          const section = page.sections.find(s => s.id === targetSectionId)
+          targetIndex = section?.elements?.length ?? 0
+        }
       }
 
       if (!targetSectionId) {
@@ -220,7 +214,7 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
         }))
       }
 
-      addCustomElement(targetSectionId, {
+      const newElement = {
         id: `el-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         type: elementDef.type,
         label: elementDef.label,
@@ -228,7 +222,8 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
         style: { ...elementDef.defaultStyle },
         children: expandChildren(elementDef.children),
         visible: true,
-      }, targetParentId ?? undefined, targetIndex)
+      }
+      addCustomElement(targetSectionId, newElement, targetParentId ?? undefined, targetIndex)
     }
   }, [siteConfig, selectedPageId, moveSection, addSection, moveCustomElement, addCustomElement, selectSection, setIsDragging])
 

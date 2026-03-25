@@ -165,7 +165,7 @@ function ElementContent({ element, sectionId }: { element: CustomElement; sectio
 }
 
 // Sortable wrapper for each element on the canvas
-function SortableElement({ element, sectionId }: { element: CustomElement; sectionId: string }) {
+export function SortableElement({ element, sectionId }: { element: CustomElement; sectionId: string }) {
   const {
     attributes,
     listeners,
@@ -223,7 +223,7 @@ function SortableElement({ element, sectionId }: { element: CustomElement; secti
 }
 
 // Wrapper that provides SortableContext for a list of elements
-function SortableElementList({
+export function SortableElementList({
   elements,
   sectionId,
   parentId,
