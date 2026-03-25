@@ -8,10 +8,17 @@ import { MiniSectionPreview } from '@/components/editor/MiniSectionPreview'
 const POPULAR_IDS = [
   'jlstudio-agency',
   'real-estate-brixsa',
+  'fashion-maison-elise',
+  'hotel-domaine-pins',
   'ecommerce-canopy',
+  'saas-landing',
+  'agency-creative',
+  'agency-corporate',
   'nail-salon-nacre',
   'photographe-obscura',
   'restaurant-braise',
+  'portfolio-artist',
+  'portfolio-dev',
   'coach-forge',
   'coiffeur-ciseaux',
   'architecte-atelier',
@@ -24,6 +31,13 @@ const POPULAR_IDS = [
   'patisserie-miel',
   'opticien-prisme',
   'fleuriste-petale',
+  'ecommerce-boutique',
+  'zmr-models-agency',
+  'beard-x-barbershop',
+  'medical-dentist',
+  'events-eclat',
+  'education-horizon',
+  'legal-mercier',
 ]
 
 export function PopularTemplates() {
