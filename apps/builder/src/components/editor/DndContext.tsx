@@ -248,7 +248,15 @@ setActiveDragId(null)
         children: expandChildren(elementDef.children),
         visible: true,
       }
+      console.log('[DnD] DROP', { targetSectionId, dropPosition, positionStyle, newElement, targetParentId, targetIndex })
       addCustomElement(targetSectionId, newElement, targetParentId ?? undefined, targetIndex)
+      // Verify element was added
+      setTimeout(() => {
+        const s = useEditorStore.getState().siteConfig
+        const page = s?.pages.find(p => p.id === selectedPageId)
+        const sec = page?.sections.find(sec => sec.id === targetSectionId)
+        console.log('[DnD] VERIFY', { sectionType: sec?.type, elementsCount: sec?.elements?.length, elements: sec?.elements })
+      }, 100)
     }
   }, [siteConfig, selectedPageId, moveSection, addSection, moveCustomElement, addCustomElement, selectSection, setIsDragging])
 
