@@ -277,37 +277,25 @@ setActiveDragId(null)
   )
 }
 
-// Helper: compute drop position relative to a section, accounting for canvas zoom
+// Helper: compute drop position relative to the section content wrapper, accounting for canvas zoom
 function getDropPositionInSection(
   sectionId: string | null,
   pointer: { x: number; y: number },
 ): { x: number; y: number } | null {
   const zoom = useEditorStore.getState().canvasZoom
-  // Find the section DOM node
-  let sectionEl: Element | null = null
-  if (sectionId) {
-    // SortableSectionWrapper renders with data-section-id or we find by matching sortable id
-    const canvas = document.getElementById('site-canvas')
-    if (canvas) {
-      // Sections are direct children wrappers — find the one containing this section id
-      const allSections = canvas.querySelectorAll('[data-section-id]')
-      allSections.forEach(el => {
-        if (el.getAttribute('data-section-id') === sectionId) sectionEl = el
-      })
-      // Fallback: use the sortable node which has the section id in its structure
-      if (!sectionEl) {
-        sectionEl = canvas.querySelector(`[data-rbd-draggable-id="${sectionId}"]`) ?? canvas
-      }
-    }
-  }
-  if (!sectionEl) {
-    // Try the whole canvas
-    sectionEl = document.getElementById('site-canvas')
-  }
-  if (!sectionEl) return null
 
-  const rect = sectionEl.getBoundingClientRect()
-  // Convert pointer (viewport coords) to section-relative coords, accounting for zoom
+  // Find the section content wrapper (position: relative parent for absolute elements)
+  let contentEl: Element | null = null
+  if (sectionId) {
+    contentEl = document.querySelector(`[data-section-content="${sectionId}"]`)
+  }
+  if (!contentEl) {
+    contentEl = document.getElementById('site-canvas')
+  }
+  if (!contentEl) return null
+
+  const rect = contentEl.getBoundingClientRect()
+  // Convert pointer (viewport coords) to content-relative coords, accounting for zoom
   const x = (pointer.x - rect.left) / zoom
   const y = (pointer.y - rect.top) / zoom
 

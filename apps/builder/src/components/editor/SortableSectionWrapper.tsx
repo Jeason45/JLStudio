@@ -302,6 +302,7 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
 
       {/* Content */}
       <div
+        data-section-content={section.id}
         className={cn(
           'relative',
           // When bg is overridden or bg image is active, make child element transparent so our wrapper bg shows through
@@ -328,20 +329,27 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
             <PlaceholderSection section={section} />
           )}
         </SectionErrorBoundary>
-        {section.type !== 'custom' && (section.elements?.length ?? 0) > 0 && !previewMode && (
-          <div className="relative">
-            <SortableElementList elements={section.elements!} sectionId={section.id} parentId={null}>
-              {(el) => <SortableElement key={el.id} element={el} sectionId={section.id} />}
-            </SortableElementList>
-          </div>
-        )}
-        {section.type !== 'custom' && (section.elements?.length ?? 0) > 0 && previewMode && (
-          <div className="relative">
-            {section.elements!.map(el => (
-              <CustomElementRenderer key={el.id} element={el} sectionId={section.id} />
-            ))}
-          </div>
-        )}
+        {/* Custom elements overlay — split into flow (sortable) and absolute (free) */}
+        {section.type !== 'custom' && !previewMode && (() => {
+          const allEls = section.elements ?? []
+          const flowEls = allEls.filter(el => el.style?.position !== 'absolute')
+          const absEls = allEls.filter(el => el.style?.position === 'absolute')
+          return (
+            <>
+              {flowEls.length > 0 && (
+                <SortableElementList elements={flowEls} sectionId={section.id} parentId={null}>
+                  {(el) => <SortableElement key={el.id} element={el} sectionId={section.id} />}
+                </SortableElementList>
+              )}
+              {absEls.map(el => (
+                <CustomElementRenderer key={el.id} element={el} sectionId={section.id} />
+              ))}
+            </>
+          )
+        })()}
+        {section.type !== 'custom' && previewMode && (section.elements ?? []).map(el => (
+          <CustomElementRenderer key={el.id} element={el} sectionId={section.id} />
+        ))}
         <AnimationController
           sectionId={section.id}
           interactions={(section.content.__interactions ?? {}) as Record<string, AnimationConfig[]>}
