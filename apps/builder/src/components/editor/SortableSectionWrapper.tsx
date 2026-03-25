@@ -157,6 +157,7 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
   return (
     <div
       ref={setNodeRef}
+      data-section-id={section.id}
       style={{
         ...style,
         ...overrides.style,

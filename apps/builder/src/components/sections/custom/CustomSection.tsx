@@ -186,12 +186,14 @@ export function SortableElement({ element, sectionId }: { element: CustomElement
   if (!element.visible) return null
 
   const css = styleToCss(element.style)
+  const isAbsolute = css.position === 'absolute'
   const style: CSSProperties = {
     ...css,
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.4 : undefined,
-    position: 'relative',
+    // Keep absolute positioning if set, otherwise use relative for sortable
+    ...(!isAbsolute ? { position: 'relative' } : {}),
   }
 
   const isContainer = element.type === 'custom-container'
