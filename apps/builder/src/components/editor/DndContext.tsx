@@ -38,6 +38,8 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
     const { active } = event
     const data = active.data.current
 
+    console.log('[DnD DEBUG] dragStart', { id: active.id, type: data?.type, data })
+
     setActiveDragId(String(active.id))
     setIsDragging(true)
 
@@ -61,6 +63,7 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
   }, [])
 
   const handleDragCancel = useCallback(() => {
+    console.log('[DnD DEBUG] dragCancel')
     setActiveDragId(null)
     setActiveDragType(null)
     setActiveDragLabel('')
@@ -70,6 +73,14 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event
+
+    console.log('[DnD DEBUG] dragEnd', {
+      activeId: active.id,
+      activeType: active.data.current?.type,
+      overId: over?.id ?? 'NULL',
+      overType: over?.data?.current?.type ?? 'NULL',
+      selectedPageId,
+    })
 
     setActiveDragId(null)
     setActiveDragType(null)
