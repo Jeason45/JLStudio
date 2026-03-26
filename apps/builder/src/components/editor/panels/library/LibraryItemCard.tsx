@@ -477,26 +477,36 @@ function ItemPreview({ item, isHovered }: { item: LibraryElementItem | LibraryIc
 export function LibraryItemCard({ item, index, onAdd }: LibraryItemCardProps) {
   const [isHovered, setIsHovered] = useState(false)
 
-  const dragData = item.dropType === 'section'
-    ? {
+  // Build drag data based on item type
+  const dragData = (() => {
+    if (item.dropType === 'section') {
+      return {
         type: 'new-section' as const,
         sectionType: (item as LibrarySectionItem).sectionType,
         label: item.label,
         defaultContent: (item as LibrarySectionItem).content,
         defaultVariant: (item as LibrarySectionItem).variant,
       }
-    : {
+    }
+    if (item.dropType === 'icon') {
+      return {
         type: 'new-element' as const,
-        elementDef: item.dropType === 'icon'
-          ? {
-              type: 'custom-embed' as const,
-              label: (item as LibraryIconItem).iconName,
-              defaultStyle: { width: '24px', height: '24px' },
-              defaultContent: { html: (item as LibraryIconItem).svg },
-            }
-          : (item as LibraryElementItem).elementDef,
+        elementDef: {
+          type: 'custom-embed' as const,
+          label: (item as LibraryIconItem).iconName,
+          defaultStyle: { width: '24px', height: '24px' },
+          defaultContent: { html: (item as LibraryIconItem).svg },
+        },
         label: item.label,
       }
+    }
+    // element (components, elements, animations, illustrations)
+    return {
+      type: 'new-element' as const,
+      elementDef: (item as LibraryElementItem).elementDef,
+      label: item.label,
+    }
+  })()
 
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `library-${item.id}-${index}`,

@@ -1143,23 +1143,31 @@ export const useEditorStore = create<EditorState>()(
     deleteSelected: () => {
       const state = get()
       if (state.selectedElementPath) {
-        // Delete element style overrides
         const parsed = parseElementId(state.selectedElementPath)
         if (parsed) {
-          set((s) => {
-            if (!s.siteConfig) return
-            for (const page of s.siteConfig.pages) {
-              const section = page.sections.find(sec => sec.id === parsed.sectionId)
-              if (section) {
-                const styles = section.content.__elementStyles as Record<string, unknown> | undefined
-                if (styles) delete styles[parsed.contentPath]
-                s.isDirty = true
-                break
+          const isCustomElement = parsed.contentPath.startsWith('__el.')
+          if (isCustomElement) {
+            // Delete custom element from section.elements tree
+            const customElementId = parsed.contentPath.replace('__el.', '')
+            state.removeCustomElement(parsed.sectionId, customElementId)
+            set((s) => { s.selectedElementPath = null })
+          } else {
+            // Delete element style overrides for built-in section elements
+            set((s) => {
+              if (!s.siteConfig) return
+              for (const page of s.siteConfig.pages) {
+                const section = page.sections.find(sec => sec.id === parsed.sectionId)
+                if (section) {
+                  const styles = section.content.__elementStyles as Record<string, unknown> | undefined
+                  if (styles) delete styles[parsed.contentPath]
+                  s.isDirty = true
+                  break
+                }
               }
-            }
-            s.selectedElementPath = null
-          })
-          get()._pushHistory()
+              s.selectedElementPath = null
+            })
+            get()._pushHistory()
+          }
         }
       } else if (state.selectedSectionId && state.selectedPageId) {
         state.removeSection(state.selectedPageId, state.selectedSectionId)

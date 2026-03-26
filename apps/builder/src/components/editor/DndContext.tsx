@@ -23,7 +23,7 @@ interface EditorDndContextProps {
 export function EditorDndContext({ children }: EditorDndContextProps) {
   const { siteConfig, selectedPageId, moveSection, addSection, moveCustomElement, addCustomElement, selectSection, setIsDragging } = useEditorStore()
   const [activeDragId, setActiveDragId] = useState<string | null>(null)
-  const [activeDragType, setActiveDragType] = useState<'section' | 'new-section' | 'element' | 'new-element' | null>(null)
+  const [activeDragType, setActiveDragType] = useState<'section' | 'new-section' | 'element' | 'new-element' | 'new-template' | null>(null)
   const [activeDragLabel, setActiveDragLabel] = useState<string>('')
 
   // Track pointer position for absolute drop placement
@@ -48,7 +48,7 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
     const { active } = event
     const data = active.data.current
 
-setActiveDragId(String(active.id))
+    setActiveDragId(String(active.id))
     setIsDragging(true)
 
     if (data?.type === 'new-section') {
@@ -56,6 +56,9 @@ setActiveDragId(String(active.id))
       setActiveDragLabel(data.label ?? data.sectionType ?? '')
     } else if (data?.type === 'new-element') {
       setActiveDragType('new-element')
+      setActiveDragLabel(data.label ?? '')
+    } else if (data?.type === 'new-template') {
+      setActiveDragType('new-template')
       setActiveDragLabel(data.label ?? '')
     } else if (data?.type === 'element') {
       setActiveDragType('element')
@@ -71,7 +74,7 @@ setActiveDragId(String(active.id))
   }, [])
 
   const handleDragCancel = useCallback(() => {
-setActiveDragId(null)
+    setActiveDragId(null)
     setActiveDragType(null)
     setActiveDragLabel('')
     setIsDragging(false)
@@ -81,7 +84,7 @@ setActiveDragId(null)
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event
 
-setActiveDragId(null)
+    setActiveDragId(null)
     setActiveDragType(null)
     setActiveDragLabel('')
     setIsDragging(false)
@@ -130,6 +133,7 @@ setActiveDragId(null)
         style: { background: 'white', paddingY: 'lg' },
         visible: true,
       }, insertIndex)
+      return
     }
 
     // Case 3: Reorder elements within a section
@@ -139,29 +143,25 @@ setActiveDragId(null)
 
       if (!sectionId || !elementId) return
 
-      // Determine where it's being dropped
       if (overData?.type === 'element') {
-        // Dropped on another element — reorder in same parent
         const overElementId = overData.elementId as string
         const page = siteConfig?.pages.find(p => p.id === selectedPageId)
         if (!page) return
         const section = page.sections.find(s => s.id === sectionId)
         if (!section?.elements) return
 
-        // Find the parent and index of the over element
         const { parentId, index } = findElementPosition(section.elements, overElementId)
         if (index !== -1) {
           moveCustomElement(sectionId, elementId, parentId, index)
         }
       } else if (overData?.type === 'element-container') {
-        // Dropped on a container droppable
         const targetParentId = overData.parentId as string | null
         moveCustomElement(sectionId, elementId, targetParentId, 0)
       }
       return
     }
 
-    // Case 4: Add new element from sidebar
+    // Case 4: Add new element from sidebar (components, elements, animations, icons, illustrations)
     if (activeData?.type === 'new-element') {
       const elementDef = activeData.elementDef
       if (!elementDef) return
@@ -187,7 +187,6 @@ setActiveDragId(null)
         targetSectionId = overData.sectionId as string
         targetParentId = overData.parentId as string | null
       } else if (overData?.type === 'section') {
-        // Dropped on a section — position absolutely at cursor
         targetSectionId = String(over.id)
         const page = siteConfig?.pages.find(p => p.id === selectedPageId)
         if (page) {
@@ -195,13 +194,9 @@ setActiveDragId(null)
           targetIndex = section?.elements?.length ?? 0
         }
         dropPosition = getDropPositionInSection(targetSectionId, pointerRef.current)
-      } else if (overData?.type === 'canvas') {
-        // Dropped on canvas background — find nearest section or create one
-        dropPosition = getDropPositionInSection(null, pointerRef.current)
       }
 
       if (!targetSectionId) {
-        // No target section — create a custom section
         targetSectionId = `section-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
         addSection(selectedPageId, {
           id: targetSectionId,
@@ -212,11 +207,9 @@ setActiveDragId(null)
           visible: true,
         })
         selectSection(targetSectionId)
-        // Recalculate position for the new section (will be at 0,0 since section just appeared)
         dropPosition = { x: 100, y: 40 }
       }
 
-      // Support pre-built elements with children (from Library presets)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const expandChildren = (defs?: any[]): any[] | undefined => {
         if (!defs || defs.length === 0) return elementDef.type === 'custom-container' ? [] : undefined
@@ -231,7 +224,6 @@ setActiveDragId(null)
         }))
       }
 
-      // Merge absolute positioning into style when dropping on section surface
       const positionStyle = dropPosition ? {
         position: 'absolute' as const,
         left: `${dropPosition.x}px`,
@@ -239,7 +231,7 @@ setActiveDragId(null)
         zIndex: 10,
       } : {}
 
-      const newElement = {
+      addCustomElement(targetSectionId, {
         id: `el-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         type: elementDef.type,
         label: elementDef.label,
@@ -247,16 +239,45 @@ setActiveDragId(null)
         style: { ...elementDef.defaultStyle, ...positionStyle },
         children: expandChildren(elementDef.children),
         visible: true,
+      }, targetParentId ?? undefined, targetIndex)
+      return
+    }
+
+    // Case 5: Add template/wireframe (multiple sections at once)
+    if (activeData?.type === 'new-template') {
+      const sections = activeData.sections as Array<{
+        type: string
+        variant: string
+        content: Record<string, unknown>
+        style: { background: string; customBgColor?: string; paddingY: string }
+      }>
+      if (!sections?.length) return
+
+      let insertIndex: number | undefined
+      if (overData?.type === 'section') {
+        const page = siteConfig?.pages.find(p => p.id === selectedPageId)
+        if (page) {
+          const overIndex = page.sections.findIndex(s => s.id === over.id)
+          if (overIndex !== -1) insertIndex = overIndex
+        }
       }
-      console.log('[DnD] DROP', { targetSectionId, dropPosition, positionStyle, newElement, targetParentId, targetIndex })
-      addCustomElement(targetSectionId, newElement, targetParentId ?? undefined, targetIndex)
-      // Verify element was added
-      setTimeout(() => {
-        const s = useEditorStore.getState().siteConfig
-        const page = s?.pages.find(p => p.id === selectedPageId)
-        const sec = page?.sections.find(sec => sec.id === targetSectionId)
-        console.log('[DnD] VERIFY', { sectionType: sec?.type, elementsCount: sec?.elements?.length, elements: sec?.elements })
-      }, 100)
+
+      for (let i = 0; i < sections.length; i++) {
+        const s = sections[i]
+        addSection(selectedPageId, {
+          id: `section-${Date.now()}-${Math.random().toString(36).slice(2, 6)}-${i}`,
+          type: s.type,
+          variant: s.variant,
+          content: { ...s.content },
+          style: {
+            background: s.style.background,
+            customBgColor: s.style.customBgColor,
+            paddingY: s.style.paddingY,
+          },
+          visible: true,
+        }, insertIndex !== undefined ? insertIndex + i : undefined)
+      }
+      return
     }
   }, [siteConfig, selectedPageId, moveSection, addSection, moveCustomElement, addCustomElement, selectSection, setIsDragging])
 
@@ -292,7 +313,6 @@ function getDropPositionInSection(
 ): { x: number; y: number } | null {
   const zoom = useEditorStore.getState().canvasZoom
 
-  // Find the section content wrapper (position: relative parent for absolute elements)
   let contentEl: Element | null = null
   if (sectionId) {
     contentEl = document.querySelector(`[data-section-content="${sectionId}"]`)
@@ -303,7 +323,6 @@ function getDropPositionInSection(
   if (!contentEl) return null
 
   const rect = contentEl.getBoundingClientRect()
-  // Convert pointer (viewport coords) to content-relative coords, accounting for zoom
   const x = (pointer.x - rect.left) / zoom
   const y = (pointer.y - rect.top) / zoom
 

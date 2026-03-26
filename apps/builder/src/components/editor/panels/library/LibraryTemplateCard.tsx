@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useDraggable } from '@dnd-kit/core'
 import { cn } from '@/lib/utils'
 import { Layers, ArrowDown } from 'lucide-react'
 import type { LibraryTemplateItem } from '@/types/library'
@@ -398,14 +399,27 @@ export function LibraryTemplateCard({ item, onApply }: LibraryTemplateCardProps)
   const [isHovered, setIsHovered] = useState(false)
   const isWireframe = item.category === 'wireframes'
 
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `library-tpl-${item.id}`,
+    data: {
+      type: 'new-template' as const,
+      sections: item.sections,
+      label: item.label,
+    },
+  })
+
   return (
     <button
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
       onClick={onApply}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={cn(
         'group flex flex-col rounded-lg border overflow-hidden text-left',
-        'transition-all duration-300',
+        'transition-all duration-300 cursor-grab active:cursor-grabbing',
+        isDragging && 'opacity-40',
         isHovered
           ? 'border-zinc-500 shadow-lg shadow-black/30 -translate-y-0.5'
           : 'border-zinc-700/40',
