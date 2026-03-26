@@ -1142,13 +1142,17 @@ export const useEditorStore = create<EditorState>()(
 
     deleteSelected: () => {
       const state = get()
+      console.log('[DELETE]', { selectedElementPath: state.selectedElementPath, selectedSectionId: state.selectedSectionId })
       if (state.selectedElementPath) {
         const parsed = parseElementId(state.selectedElementPath)
+        console.log('[DELETE] parsed', parsed)
         if (parsed) {
           const isCustomElement = parsed.contentPath.startsWith('__el.')
+          console.log('[DELETE] isCustomElement', isCustomElement, 'contentPath', parsed.contentPath)
           if (isCustomElement) {
             // Delete custom element from section.elements tree
             const customElementId = parsed.contentPath.replace('__el.', '')
+            console.log('[DELETE] removing', { sectionId: parsed.sectionId, customElementId })
             state.removeCustomElement(parsed.sectionId, customElementId)
             set((s) => { s.selectedElementPath = null })
           } else {
