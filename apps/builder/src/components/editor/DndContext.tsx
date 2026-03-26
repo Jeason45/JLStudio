@@ -249,7 +249,7 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
         type: string
         variant: string
         content: Record<string, unknown>
-        style: { background: string; customBgColor?: string; paddingY: string }
+        style: import('@/types/library').LibrarySectionStyle
       }>
       if (!sections?.length) return
 
