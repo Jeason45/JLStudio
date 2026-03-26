@@ -67,7 +67,7 @@ export function EditorContextMenu({ x, y, onClose }: ContextMenuProps) {
       label: 'Supprimer',
       shortcut: '⌫',
       icon: Trash2,
-      action: () => { deleteSelected(); onClose() },
+      action: () => { console.log('[CTX] Supprimer clicked', { selectedElementPath, selectedSectionId }); deleteSelected(); onClose() },
       disabled: !selectedElementPath && !selectedSectionId,
       danger: true,
     },
