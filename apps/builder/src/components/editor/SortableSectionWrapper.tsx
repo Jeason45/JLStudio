@@ -329,17 +329,11 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
             <PlaceholderSection section={section} />
           )}
         </SectionErrorBoundary>
-        {/* Custom elements added from library — overlay on top of section content */}
+        {/* Custom elements added from library */}
         {section.type !== 'custom' && (section.elements?.length ?? 0) > 0 && (
-          <div
-            className="absolute inset-0"
-            style={{ zIndex: 5, pointerEvents: 'none' }}
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="relative" style={{ zIndex: 3 }}>
             {section.elements!.map(el => (
-              <div key={el.id} style={{ pointerEvents: 'auto', position: 'relative' }}>
-                <CustomElementRenderer element={el} sectionId={section.id} />
-              </div>
+              <CustomElementRenderer key={el.id} element={el} sectionId={section.id} />
             ))}
           </div>
         )}
