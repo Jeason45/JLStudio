@@ -41,6 +41,7 @@ export function ElementSelectionOverlay() {
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
   const [spacingValues, setSpacingValues] = useState<SpacingValues | null>(null)
   const [resizing, setResizing] = useState<{ handle: string; startX: number; startY: number; startW: number; startH: number } | null>(null)
+  const [repositioning, setRepositioning] = useState(false)
   const [richTextTarget, setRichTextTarget] = useState<{ element: HTMLElement; id: string; type: ElementType } | null>(null)
   const [altHeld, setAltHeld] = useState(false)
   const [distanceLines, setDistanceLines] = useState<DistanceLine[]>([])
@@ -502,7 +503,7 @@ export function ElementSelectionOverlay() {
             </>
           )}
 
-          {/* Selection border */}
+          {/* Selection border — also serves as drag-to-move handle for custom elements */}
           <div
             className="absolute border-[1.5px] border-wf-blue rounded-[1px]"
             style={{
@@ -510,6 +511,85 @@ export function ElementSelectionOverlay() {
               left: selectedRect.left,
               width: selectedRect.width,
               height: selectedRect.height,
+              cursor: selectedElementPath?.includes('::__el.') ? 'move' : undefined,
+              pointerEvents: selectedElementPath?.includes('::__el.') ? 'auto' : undefined,
+            }}
+            onMouseDown={(e) => {
+              if (!selectedElementPath?.includes('::__el.')) return
+              const parsed = parseElementId(selectedElementPath)
+              if (!parsed) return
+
+              // Check if element is on a pre-built section (not custom)
+              const store = useEditorStore.getState()
+              const section = store.siteConfig?.pages.flatMap(p => p.sections).find(s => s.id === parsed.sectionId)
+              if (!section || section.type === 'custom') return
+
+              const elementId = parsed.contentPath.replace('__el.', '')
+              const findEl = (elements: typeof section.elements, id: string): NonNullable<typeof section.elements>[number] | null => {
+                if (!elements) return null
+                for (const el of elements) {
+                  if (el.id === id) return el
+                  if (el.children) { const f = findEl(el.children, id); if (f) return f }
+                }
+                return null
+              }
+              const el = findEl(section.elements ?? [], elementId)
+              if (!el || el.style?.position !== 'absolute') return
+
+              e.stopPropagation()
+              e.preventDefault()
+
+              const startX = e.clientX
+              const startY = e.clientY
+              const startTop = parseFloat(String(el.style.top)) || 0
+              const startLeft = parseFloat(String(el.style.left)) || 0
+              const topUnit = String(el.style.top || '0px').match(/[a-z%]+$/i)?.[0] || 'px'
+              const leftUnit = String(el.style.left || '0px').match(/[a-z%]+$/i)?.[0] || 'px'
+              const zoom = store.canvasZoom
+              let hasMoved = false
+
+              // For % positioning, get section dimensions
+              const sectionEl = document.querySelector(`[data-section-content="${parsed.sectionId}"]`) as HTMLElement
+              const sectionRect = sectionEl?.getBoundingClientRect()
+
+              const onMove = (me: MouseEvent) => {
+                const dx = (me.clientX - startX) / zoom
+                const dy = (me.clientY - startY) / zoom
+                if (!hasMoved && Math.abs(dx) < 3 && Math.abs(dy) < 3) return
+                hasMoved = true
+                setRepositioning(true)
+
+                let newTop: string
+                let newLeft: string
+
+                if (topUnit === '%' && sectionRect) {
+                  const sectionH = sectionRect.height / zoom
+                  newTop = `${Math.round((startTop + (dy / sectionH) * 100) * 100) / 100}%`
+                } else {
+                  newTop = `${Math.round(startTop + dy)}px`
+                }
+
+                if (leftUnit === '%' && sectionRect) {
+                  const sectionW = sectionRect.width / zoom
+                  newLeft = `${Math.round((startLeft + (dx / sectionW) * 100) * 100) / 100}%`
+                } else {
+                  newLeft = `${Math.round(startLeft + dx)}px`
+                }
+
+                store.updateCustomElementStyle(parsed.sectionId, elementId, {
+                  top: newTop,
+                  left: newLeft,
+                })
+              }
+
+              const onUp = () => {
+                setRepositioning(false)
+                window.removeEventListener('mousemove', onMove)
+                window.removeEventListener('mouseup', onUp)
+              }
+
+              window.addEventListener('mousemove', onMove)
+              window.addEventListener('mouseup', onUp)
             }}
           />
 
@@ -663,7 +743,12 @@ export function ElementSelectionOverlay() {
                     updates.height = `${Math.round(numVal * ratio * 100) / 100}${unit}`
                   }
                 }
-                useEditorStore.getState().updateElementStyle(parsed.sectionId, parsed.contentPath, updates)
+                if (parsed.contentPath.startsWith('__el.')) {
+                  const elId = parsed.contentPath.replace('__el.', '')
+                  useEditorStore.getState().updateCustomElementStyle(parsed.sectionId, elId, updates)
+                } else {
+                  useEditorStore.getState().updateElementStyle(parsed.sectionId, parsed.contentPath, updates)
+                }
               }
 
               const onUp = () => {
@@ -691,6 +776,21 @@ export function ElementSelectionOverlay() {
               />
             ))
           })()}
+
+          {/* Position tooltip during drag-to-move */}
+          {repositioning && (
+            <div
+              className="absolute bg-zinc-900 text-white text-[10px] px-2.5 py-1 rounded shadow-lg border border-zinc-700 whitespace-nowrap font-medium"
+              style={{
+                top: selectedRect.top - 30,
+                left: selectedRect.left + selectedRect.width / 2,
+                transform: 'translateX(-50%)',
+                zIndex: 10,
+              }}
+            >
+              {Math.round(selectedRect.left)}px, {Math.round(selectedRect.top)}px
+            </div>
+          )}
 
           {/* Dimension tooltip during resize (larger, centered) */}
           {resizing && (

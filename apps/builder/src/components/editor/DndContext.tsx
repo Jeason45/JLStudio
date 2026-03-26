@@ -212,12 +212,25 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
         }))
       }
 
+      // For pre-built sections, default to absolute positioning (centered)
+      const page2 = siteConfig?.pages.find(p => p.id === selectedPageId)
+      const targetSection = page2?.sections.find(s => s.id === targetSectionId)
+      const isPrebuilt = targetSection && targetSection.type !== 'custom'
+
+      const finalStyle = { ...elementDef.defaultStyle }
+      if (isPrebuilt) {
+        finalStyle.position = 'absolute'
+        finalStyle.top = '40%'
+        finalStyle.left = '50%'
+        finalStyle.zIndex = 10
+      }
+
       addCustomElement(targetSectionId, {
         id: `el-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         type: elementDef.type,
         label: elementDef.label,
         content: { ...elementDef.defaultContent },
-        style: { ...elementDef.defaultStyle },
+        style: finalStyle,
         children: expandChildren(elementDef.children),
         visible: true,
       }, targetParentId ?? undefined, targetIndex)
