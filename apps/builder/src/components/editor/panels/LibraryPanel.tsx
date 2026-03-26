@@ -36,7 +36,7 @@ export function LibraryPanel() {
   const [search, setSearch] = useState('')
 
   const {
-    selectedPageId, selectedSectionId, siteConfig,
+    selectedPageId, selectedSectionId,
     addSection, addCustomElement, selectSection,
   } = useEditorStore()
 
@@ -70,7 +70,8 @@ export function LibraryPanel() {
       : expandLibraryElement((item as LibraryElementItem).elementDef)
 
     // For pre-built sections, default to absolute positioning
-    const targetSection = siteConfig?.pages.flatMap(p => p.sections).find(s => s.id === targetSectionId)
+    const currentConfig = useEditorStore.getState().siteConfig
+    const targetSection = currentConfig?.pages.flatMap(p => p.sections).find(s => s.id === targetSectionId)
     if (targetSection && targetSection.type !== 'custom') {
       element.style = {
         ...element.style,
@@ -82,7 +83,7 @@ export function LibraryPanel() {
     }
 
     addCustomElement(targetSectionId, element)
-  }, [selectedSectionId, selectedPageId, siteConfig, addSection, addCustomElement, selectSection])
+  }, [selectedSectionId, selectedPageId, addSection, addCustomElement, selectSection])
 
   const handleAddSection = useCallback((item: LibrarySectionItem) => {
     if (!selectedPageId) return
