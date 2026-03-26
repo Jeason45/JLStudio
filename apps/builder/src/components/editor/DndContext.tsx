@@ -10,7 +10,7 @@ import {
   type DragEndEvent,
   type DragOverEvent,
 } from '@dnd-kit/core'
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useEditorStore } from '@/store/editorStore'
 import { SectionDragOverlay } from './SectionDragOverlay'
 import { clearActiveSmartGuides } from './SmartGuidesOverlay'
@@ -25,16 +25,6 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
   const [activeDragId, setActiveDragId] = useState<string | null>(null)
   const [activeDragType, setActiveDragType] = useState<'section' | 'new-section' | 'element' | 'new-element' | 'new-template' | null>(null)
   const [activeDragLabel, setActiveDragLabel] = useState<string>('')
-
-  // Track pointer position for absolute drop placement
-  const pointerRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
-  useEffect(() => {
-    const handler = (e: PointerEvent) => {
-      pointerRef.current = { x: e.clientX, y: e.clientY }
-    }
-    window.addEventListener('pointermove', handler)
-    return () => window.removeEventListener('pointermove', handler)
-  }, [])
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -161,16 +151,14 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
       return
     }
 
-    // Case 4: Add new element from sidebar (components, elements, animations, icons, illustrations)
+    // Case 4: Add new element from sidebar (flow insertion — append to section)
     if (activeData?.type === 'new-element') {
       const elementDef = activeData.elementDef
       if (!elementDef) return
 
-      // Find target section
       let targetSectionId: string | null = null
       let targetParentId: string | null = null
       let targetIndex = 0
-      let dropPosition: { x: number; y: number } | null = null
 
       if (overData?.type === 'element') {
         targetSectionId = overData.sectionId as string
@@ -187,16 +175,17 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
         targetSectionId = overData.sectionId as string
         targetParentId = overData.parentId as string | null
       } else if (overData?.type === 'section') {
+        // Dropped on section — append at end
         targetSectionId = String(over.id)
         const page = siteConfig?.pages.find(p => p.id === selectedPageId)
         if (page) {
           const section = page.sections.find(s => s.id === targetSectionId)
           targetIndex = section?.elements?.length ?? 0
         }
-        dropPosition = getDropPositionInSection(targetSectionId, pointerRef.current)
       }
 
       if (!targetSectionId) {
+        // No target — create a custom section
         targetSectionId = `section-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
         addSection(selectedPageId, {
           id: targetSectionId,
@@ -207,7 +196,6 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
           visible: true,
         })
         selectSection(targetSectionId)
-        dropPosition = { x: 100, y: 40 }
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -224,19 +212,12 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
         }))
       }
 
-      const positionStyle = dropPosition ? {
-        position: 'absolute' as const,
-        left: `${dropPosition.x}px`,
-        top: `${dropPosition.y}px`,
-        zIndex: 10,
-      } : {}
-
       addCustomElement(targetSectionId, {
         id: `el-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         type: elementDef.type,
         label: elementDef.label,
         content: { ...elementDef.defaultContent },
-        style: { ...elementDef.defaultStyle, ...positionStyle },
+        style: { ...elementDef.defaultStyle },
         children: expandChildren(elementDef.children),
         visible: true,
       }, targetParentId ?? undefined, targetIndex)
@@ -304,29 +285,6 @@ export function EditorDndContext({ children }: EditorDndContextProps) {
       </DragOverlay>
     </DndContext>
   )
-}
-
-// Helper: compute drop position relative to the section content wrapper, accounting for canvas zoom
-function getDropPositionInSection(
-  sectionId: string | null,
-  pointer: { x: number; y: number },
-): { x: number; y: number } | null {
-  const zoom = useEditorStore.getState().canvasZoom
-
-  let contentEl: Element | null = null
-  if (sectionId) {
-    contentEl = document.querySelector(`[data-section-content="${sectionId}"]`)
-  }
-  if (!contentEl) {
-    contentEl = document.getElementById('site-canvas')
-  }
-  if (!contentEl) return null
-
-  const rect = contentEl.getBoundingClientRect()
-  const x = (pointer.x - rect.left) / zoom
-  const y = (pointer.y - rect.top) / zoom
-
-  return { x: Math.max(0, Math.round(x)), y: Math.max(0, Math.round(y)) }
 }
 
 // Helper: find the parent and index of an element in the tree

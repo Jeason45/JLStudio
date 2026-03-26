@@ -6,7 +6,7 @@ import type { SectionConfig } from '@/types/site'
 import { cn } from '@/lib/utils'
 import { GripVertical, Trash2, EyeOff, Eye, ChevronUp, ChevronDown, Settings } from 'lucide-react'
 import { getSectionComponent } from '@/components/sections'
-import { CustomElementRenderer, SortableElementList, SortableElement } from '@/components/sections/custom/CustomSection'
+import { CustomElementRenderer } from '@/components/sections/custom/CustomSection'
 import { SectionDivider } from '@/components/sections/SectionDivider'
 import { applySectionOverrides, getPaddingTopClass, getPaddingBottomClass, getSectionBgStyle, getSectionBgClass } from '@/components/sections/_utils'
 import { AnimationController } from './animations/AnimationController'
@@ -329,27 +329,14 @@ export function SortableSectionWrapper({ section, pageId }: SortableSectionWrapp
             <PlaceholderSection section={section} />
           )}
         </SectionErrorBoundary>
-        {/* Custom elements overlay — split into flow (sortable) and absolute (free) */}
-        {section.type !== 'custom' && !previewMode && (() => {
-          const allEls = section.elements ?? []
-          const flowEls = allEls.filter(el => el.style?.position !== 'absolute')
-          const absEls = allEls.filter(el => el.style?.position === 'absolute')
-          return (
-            <>
-              {flowEls.length > 0 && (
-                <SortableElementList elements={flowEls} sectionId={section.id} parentId={null}>
-                  {(el) => <SortableElement key={el.id} element={el} sectionId={section.id} />}
-                </SortableElementList>
-              )}
-              {absEls.map(el => (
-                <CustomElementRenderer key={el.id} element={el} sectionId={section.id} />
-              ))}
-            </>
-          )
-        })()}
-        {section.type !== 'custom' && previewMode && (section.elements ?? []).map(el => (
-          <CustomElementRenderer key={el.id} element={el} sectionId={section.id} />
-        ))}
+        {/* Custom elements added from library */}
+        {section.type !== 'custom' && (section.elements?.length ?? 0) > 0 && (
+          <div className="relative">
+            {section.elements!.map(el => (
+              <CustomElementRenderer key={el.id} element={el} sectionId={section.id} />
+            ))}
+          </div>
+        )}
         <AnimationController
           sectionId={section.id}
           interactions={(section.content.__interactions ?? {}) as Record<string, AnimationConfig[]>}
