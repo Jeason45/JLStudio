@@ -1,6 +1,9 @@
 'use client'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useEditorStore } from '@/store/editorStore'
+import { useSelection, useSelectionActions } from '@/store/hooks/useSelectionState'
+import { selectCanvasZoom } from '@/store/selectors/canvasSelectors'
+import { selectIsInlineEditing, selectActiveBreakpoint } from '@/store/selectors/selectionSelectors'
 import { parseElementId, getByPath } from '@/lib/elementHelpers'
 import { EditorContextMenu } from './ContextMenu'
 import { InlineRichTextEditor } from './InlineRichTextEditor'
@@ -31,10 +34,12 @@ interface DistanceLine {
 }
 
 export function ElementSelectionOverlay() {
-  const {
-    selectedElementPath, selectElement, setInlineEditing, isInlineEditing, activeBreakpoint,
-    canvasZoom, selectedElementPaths, addToSelection, removeFromSelection, clearSelection,
-  } = useEditorStore()
+  const { selectedElementPath, selectedElementPaths } = useSelection()
+  const { selectElement, addToSelection, removeFromSelection, clearSelection } = useSelectionActions()
+  const canvasZoom = useEditorStore(selectCanvasZoom)
+  const isInlineEditing = useEditorStore(selectIsInlineEditing)
+  const activeBreakpoint = useEditorStore(selectActiveBreakpoint)
+  const setInlineEditing = useEditorStore(s => s.setInlineEditing)
   const [hoveredElement, setHoveredElement] = useState<ElementInfo | null>(null)
   const [selectedRect, setSelectedRect] = useState<OverlayRect | null>(null)
   const [selectedLabel, setSelectedLabel] = useState<string>('')

@@ -1,6 +1,9 @@
 'use client'
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { useEditorStore } from '@/store/editorStore'
+import { useShallow } from 'zustand/react/shallow'
+import { useSelection } from '@/store/hooks'
+import { selectSiteConfig, selectSelectedPageId } from '@/store/selectors'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   ChevronRight, Type, MousePointer, Image, Square, Eye, EyeOff,
@@ -175,10 +178,14 @@ function NavigatorContextMenu({
   onClose: () => void
 }) {
   const menuRef = useRef<HTMLDivElement>(null)
-  const {
-    selectedPageId, duplicateSection, removeSection, moveSection,
-    removeCustomElement, addCustomElement,
-  } = useEditorStore()
+  const selectedPageId = useEditorStore(selectSelectedPageId)
+  const { duplicateSection, removeSection, moveSection, removeCustomElement, addCustomElement } = useEditorStore(useShallow(s => ({
+    duplicateSection: s.duplicateSection,
+    removeSection: s.removeSection,
+    moveSection: s.moveSection,
+    removeCustomElement: s.removeCustomElement,
+    addCustomElement: s.addCustomElement,
+  })))
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -322,11 +329,18 @@ type DropTarget =
 // ─── Main Component ───
 
 export function NavigatorPanel() {
-  const {
-    siteConfig, selectedPageId, selectedSectionId, selectedElementPath,
-    selectSection, selectElement, updateSection, updateCustomElement,
-    moveSection, moveCustomElement, toggleLockElement, lockedElements,
-  } = useEditorStore()
+  const { selectedPageId, selectedSectionId, selectedElementPath } = useSelection()
+  const siteConfig = useEditorStore(selectSiteConfig)
+  const { selectSection, selectElement, updateSection, updateCustomElement, moveSection, moveCustomElement, toggleLockElement, lockedElements } = useEditorStore(useShallow(s => ({
+    selectSection: s.selectSection,
+    selectElement: s.selectElement,
+    updateSection: s.updateSection,
+    updateCustomElement: s.updateCustomElement,
+    moveSection: s.moveSection,
+    moveCustomElement: s.moveCustomElement,
+    toggleLockElement: s.toggleLockElement,
+    lockedElements: s.lockedElements,
+  })))
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set())
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set())
   const [renamingId, setRenamingId] = useState<string | null>(null)

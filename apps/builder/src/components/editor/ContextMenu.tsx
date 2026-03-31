@@ -1,6 +1,8 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import { useEditorStore } from '@/store/editorStore'
+import { useShallow } from 'zustand/react/shallow'
+import { useSelection } from '@/store/hooks'
 import { Copy, Clipboard, ClipboardPaste, CopyPlus, Trash2, BoxSelect } from 'lucide-react'
 
 const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.userAgent)
@@ -14,7 +16,16 @@ interface ContextMenuProps {
 
 export function EditorContextMenu({ x, y, onClose }: ContextMenuProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const { selectedElementPath, selectedSectionId, selectedPageId, clipboard, copyElement, pasteElement, copyElementStyle, pasteElementStyle, duplicateSection, deleteSelected } = useEditorStore()
+  const { selectedElementPath, selectedSectionId, selectedPageId } = useSelection()
+  const { clipboard, copyElement, pasteElement, copyElementStyle, pasteElementStyle, duplicateSection, deleteSelected } = useEditorStore(useShallow(s => ({
+    clipboard: s.clipboard,
+    copyElement: s.copyElement,
+    pasteElement: s.pasteElement,
+    copyElementStyle: s.copyElementStyle,
+    pasteElementStyle: s.pasteElementStyle,
+    duplicateSection: s.duplicateSection,
+    deleteSelected: s.deleteSelected,
+  })))
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {

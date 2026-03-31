@@ -1,6 +1,8 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { useEditorStore } from '@/store/editorStore'
+import { useShallow } from 'zustand/react/shallow'
+import { selectSiteConfig, selectSelectedElementPath, selectActiveBreakpoint, selectActiveState } from '@/store/selectors'
 import { PanelSection } from '../PanelSection'
 import { FieldBoxModel } from '../fields/FieldBoxModel'
 import { FieldColor } from '../fields/FieldColor'
@@ -35,13 +37,27 @@ const SECTION_LABEL = 'text-[10px] text-zinc-500 leading-none'
 // ─── Component ───
 
 export function ElementStyleTab() {
+  const selectedElementPath = useEditorStore(selectSelectedElementPath)
+  const siteConfig = useEditorStore(selectSiteConfig)
+  const activeBreakpoint = useEditorStore(selectActiveBreakpoint)
+  const activeState = useEditorStore(selectActiveState)
   const {
-    selectedElementPath, siteConfig,
     updateElementStyle, updateCustomElementStyle, updateClassStyles,
-    activeBreakpoint, updateClassBreakpointStyles, updateElementBreakpointStyle,
+    updateClassBreakpointStyles, updateElementBreakpointStyle,
     resetClassBreakpointProp, resetElementBreakpointProp,
-    activeState, setActiveState, updateClassStateStyles, resetClassStateProp,
-  } = useEditorStore()
+    setActiveState, updateClassStateStyles, resetClassStateProp,
+  } = useEditorStore(useShallow(s => ({
+    updateElementStyle: s.updateElementStyle,
+    updateCustomElementStyle: s.updateCustomElementStyle,
+    updateClassStyles: s.updateClassStyles,
+    updateClassBreakpointStyles: s.updateClassBreakpointStyles,
+    updateElementBreakpointStyle: s.updateElementBreakpointStyle,
+    resetClassBreakpointProp: s.resetClassBreakpointProp,
+    resetElementBreakpointProp: s.resetElementBreakpointProp,
+    setActiveState: s.setActiveState,
+    updateClassStateStyles: s.updateClassStateStyles,
+    resetClassStateProp: s.resetClassStateProp,
+  })))
   const [showMoreType, setShowMoreType] = useState(false)
   const [showMoreSize, setShowMoreSize] = useState(false)
   const [showObjPos, setShowObjPos] = useState(false)

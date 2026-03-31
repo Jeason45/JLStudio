@@ -12,6 +12,8 @@ import {
 } from '@dnd-kit/core'
 import { useState, useCallback, useMemo } from 'react'
 import { useEditorStore } from '@/store/editorStore'
+import { useShallow } from 'zustand/react/shallow'
+import { selectSiteConfig, selectSelectedPageId } from '@/store/selectors'
 import { SectionDragOverlay } from './SectionDragOverlay'
 import { clearActiveSmartGuides } from './SmartGuidesOverlay'
 import { snapModifier } from '@/lib/snapModifier'
@@ -21,7 +23,16 @@ interface EditorDndContextProps {
 }
 
 export function EditorDndContext({ children }: EditorDndContextProps) {
-  const { siteConfig, selectedPageId, moveSection, addSection, moveCustomElement, addCustomElement, selectSection, setIsDragging } = useEditorStore()
+  const siteConfig = useEditorStore(selectSiteConfig)
+  const selectedPageId = useEditorStore(selectSelectedPageId)
+  const { moveSection, addSection, moveCustomElement, addCustomElement, selectSection, setIsDragging } = useEditorStore(useShallow(s => ({
+    moveSection: s.moveSection,
+    addSection: s.addSection,
+    moveCustomElement: s.moveCustomElement,
+    addCustomElement: s.addCustomElement,
+    selectSection: s.selectSection,
+    setIsDragging: s.setIsDragging,
+  })))
   const [activeDragId, setActiveDragId] = useState<string | null>(null)
   const [activeDragType, setActiveDragType] = useState<'section' | 'new-section' | 'element' | 'new-element' | 'new-template' | null>(null)
   const [activeDragLabel, setActiveDragLabel] = useState<string>('')

@@ -1,6 +1,9 @@
 'use client'
 import Link from 'next/link'
 import { useEditorStore } from '@/store/editorStore'
+import { useShallow } from 'zustand/react/shallow'
+import { useEditorFlags } from '@/store/hooks'
+import { selectSiteConfig } from '@/store/selectors'
 import { Button } from '@/components/ui/button'
 import {
   ChevronLeft, Globe, Loader2, Palette, Sparkles, LayoutTemplate,
@@ -25,11 +28,14 @@ interface EditorHeaderProps {
 }
 
 export function EditorHeader({ siteName, siteId }: EditorHeaderProps) {
-  const {
-    isDirty, isSaving,
-    selectedPageId, siteConfig, updatePage, selectPage,
-    previewMode, setPreviewMode,
-  } = useEditorStore()
+  const { isDirty, isSaving, previewMode } = useEditorFlags()
+  const siteConfig = useEditorStore(selectSiteConfig)
+  const selectedPageId = useEditorStore(s => s.selectedPageId)
+  const { updatePage, selectPage, setPreviewMode } = useEditorStore(useShallow(s => ({
+    updatePage: s.updatePage,
+    selectPage: s.selectPage,
+    setPreviewMode: s.setPreviewMode,
+  })))
   const [brandOpen, setBrandOpen] = useState(false)
   const [crmOpen, setCrmOpen] = useState(false)
   const [cmsOpen, setCmsOpen] = useState(false)

@@ -1,5 +1,7 @@
 'use client'
 import { useEditorStore } from '@/store/editorStore'
+import { useShallow } from 'zustand/react/shallow'
+import { selectSiteConfig } from '@/store/selectors'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { PanelSection } from '../PanelSection'
 import { Globe, Download, ExternalLink, Webhook, Plus, Trash2, Code } from 'lucide-react'
@@ -12,7 +14,16 @@ const TEXTAREA = 'w-full bg-zinc-800 border border-zinc-700 text-white text-[11p
 const LBL = 'text-[10px] text-zinc-500'
 
 export function SiteSettingsPanel() {
-  const { siteConfig, updateSiteMeta, updateIntegrations, addRedirect, updateRedirect, removeRedirect, setRobotsTxt, setJsonLd } = useEditorStore()
+  const siteConfig = useEditorStore(selectSiteConfig)
+  const { updateSiteMeta, updateIntegrations, addRedirect, updateRedirect, removeRedirect, setRobotsTxt, setJsonLd } = useEditorStore(useShallow(s => ({
+    updateSiteMeta: s.updateSiteMeta,
+    updateIntegrations: s.updateIntegrations,
+    addRedirect: s.addRedirect,
+    updateRedirect: s.updateRedirect,
+    removeRedirect: s.removeRedirect,
+    setRobotsTxt: s.setRobotsTxt,
+    setJsonLd: s.setJsonLd,
+  })))
   const [showIntegrations, setShowIntegrations] = useState(false)
   const [showWebhooks, setShowWebhooks] = useState(false)
   const meta = siteConfig?.meta

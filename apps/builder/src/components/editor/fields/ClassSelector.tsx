@@ -1,6 +1,9 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { useEditorStore } from '@/store/editorStore'
+import { useShallow } from 'zustand/react/shallow'
+import { useClassActions } from '@/store/hooks'
+import { selectSiteConfig, selectSelectedElementPath, selectActiveState } from '@/store/selectors'
 import { parseElementId } from '@/lib/elementHelpers'
 import { X, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -13,12 +16,11 @@ interface ClassSelectorProps {
 }
 
 export function ClassSelector({ elementName, onClassSelect, editingClassId }: ClassSelectorProps) {
-  const {
-    selectedElementPath, siteConfig,
-    addClass, assignClassToElement, removeClassFromElement,
-    assignClassToCustomElement, removeClassFromCustomElement,
-    activeState, setActiveState,
-  } = useEditorStore()
+  const selectedElementPath = useEditorStore(selectSelectedElementPath)
+  const siteConfig = useEditorStore(selectSiteConfig)
+  const activeState = useEditorStore(selectActiveState)
+  const { addClass, assignClassToElement, removeClassFromElement, assignClassToCustomElement, removeClassFromCustomElement } = useClassActions()
+  const setActiveState = useEditorStore(s => s.setActiveState)
 
   const [isEditing, setIsEditing] = useState(false)
   const [inputValue, setInputValue] = useState('')

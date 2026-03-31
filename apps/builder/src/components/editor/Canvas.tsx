@@ -1,6 +1,10 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import { useEditorStore } from '@/store/editorStore'
+import { useCanvasViewport, useCanvasTools, useCanvasActions } from '@/store/hooks/useCanvasState'
+import { useSelection, useSelectionActions, useEditorFlags } from '@/store/hooks/useSelectionState'
+import { selectSiteConfig } from '@/store/selectors/siteConfigSelectors'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useDroppable } from '@dnd-kit/core'
 import { SortableSectionWrapper } from './SortableSectionWrapper'
@@ -277,16 +281,17 @@ function BreakpointIcon({ bp, active, onClick }: { bp: BreakpointDef; active: bo
 }
 
 export function Canvas() {
-  const {
-    siteConfig, selectedPageId, selectSection, selectElement, isDragging,
-    activeBreakpoint, setActiveBreakpoint, activeState, previewMode,
-    selectedSectionId, selectedElementPath, editingComponentId,
-    undo, redo, canUndo, canRedo,
-    canvasZoom, canvasOffset, setCanvasZoom, setCanvasOffset,
-    zoomIn, zoomOut, zoomTo100, isPanning, setIsPanning,
-    showRulers, toggleRulers, showGrid, toggleGrid, showColumns, toggleColumns,
-    snapEnabled, toggleSnap, clearSelection, selectPage,
-  } = useEditorStore()
+  // Optimized selectors — each hook only re-renders when its slice changes
+  const siteConfig = useEditorStore(selectSiteConfig)
+  const { canvasZoom, canvasOffset, isPanning } = useCanvasViewport()
+  const { showRulers, showGrid, showColumns, snapEnabled } = useCanvasTools()
+  const { setCanvasZoom, setCanvasOffset, zoomIn, zoomOut, zoomTo100, setIsPanning, toggleRulers, toggleGrid, toggleColumns, toggleSnap } = useCanvasActions()
+  const { selectedPageId, selectedSectionId, selectedElementPath } = useSelection()
+  const { selectSection, selectElement, clearSelection, selectPage } = useSelectionActions()
+  const { isDragging, activeBreakpoint, activeState, previewMode, editingComponentId } = useEditorFlags()
+  const { undo, redo, canUndo, canRedo, setActiveBreakpoint } = useEditorStore(useShallow(s => ({
+    undo: s.undo, redo: s.redo, canUndo: s.canUndo, canRedo: s.canRedo, setActiveBreakpoint: s.setActiveBreakpoint,
+  })))
   const currentPage = siteConfig?.pages.find(p => p.id === selectedPageId)
   const editingComponent = editingComponentId ? siteConfig?.components?.find(c => c.id === editingComponentId) : null
   const sectionIds = editingComponent

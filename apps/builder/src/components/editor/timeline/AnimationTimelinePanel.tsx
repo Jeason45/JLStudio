@@ -1,6 +1,8 @@
 'use client'
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useEditorStore } from '@/store/editorStore'
+import { useShallow } from 'zustand/react/shallow'
+import { selectSiteConfig, selectSelectedSectionId } from '@/store/selectors'
 import { TimelineToolbar } from './TimelineToolbar'
 import { TimelineTrackRow } from './TimelineTrackRow'
 import { TimelineScrubber } from './TimelineScrubber'
@@ -11,24 +13,31 @@ import { cn } from '@/lib/utils'
 import type { TimelineConfig, TimelineAction } from '@/types/interactions'
 
 export function AnimationTimelinePanel() {
+  const siteConfig = useEditorStore(selectSiteConfig)
+  const selectedSectionId = useEditorStore(selectSelectedSectionId)
   const {
-    timelineOpen,
-    setTimelineOpen,
-    timelinePanelHeight,
-    setTimelinePanelHeight,
-    activeTimelineId,
-    setActiveTimelineId,
-    scrubberTime,
-    setScrubberTime,
-    siteConfig,
-    selectedSectionId,
-    updateTimelineAction,
-    removeTimelineAction,
-    moveTimelineAction,
-    removeTimelineTrack,
-    createTimeline,
-    updateTimeline,
-  } = useEditorStore()
+    timelineOpen, setTimelineOpen,
+    timelinePanelHeight, setTimelinePanelHeight,
+    activeTimelineId, setActiveTimelineId,
+    scrubberTime, setScrubberTime,
+    updateTimelineAction, removeTimelineAction, moveTimelineAction,
+    removeTimelineTrack, createTimeline, updateTimeline,
+  } = useEditorStore(useShallow(s => ({
+    timelineOpen: s.timelineOpen,
+    setTimelineOpen: s.setTimelineOpen,
+    timelinePanelHeight: s.timelinePanelHeight,
+    setTimelinePanelHeight: s.setTimelinePanelHeight,
+    activeTimelineId: s.activeTimelineId,
+    setActiveTimelineId: s.setActiveTimelineId,
+    scrubberTime: s.scrubberTime,
+    setScrubberTime: s.setScrubberTime,
+    updateTimelineAction: s.updateTimelineAction,
+    removeTimelineAction: s.removeTimelineAction,
+    moveTimelineAction: s.moveTimelineAction,
+    removeTimelineTrack: s.removeTimelineTrack,
+    createTimeline: s.createTimeline,
+    updateTimeline: s.updateTimeline,
+  })))
 
   const [zoom, setZoom] = useState(1)
   const [selectedActionId, setSelectedActionId] = useState<string | null>(null)

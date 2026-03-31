@@ -1,6 +1,8 @@
 'use client'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useEditorStore } from '@/store/editorStore'
+import { useShallow } from 'zustand/react/shallow'
+import { selectSiteConfig, selectSelectedPageId } from '@/store/selectors'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { FileText, Home, FolderOpen, Plus, Search, Settings, X, ChevronDown, AlertTriangle, KeyRound, Copy, Trash2, Database, Code, Lock, LockOpen, GripVertical, FolderPlus } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -13,10 +15,17 @@ const UTILITY_PAGES = [
 ] as const
 
 export function PagesPanel() {
-  const {
-    siteConfig, selectedPageId, selectPage,
-    addPage, deletePage, duplicatePage, updatePage, setPagePassword, reorderPages,
-  } = useEditorStore()
+  const siteConfig = useEditorStore(selectSiteConfig)
+  const selectedPageId = useEditorStore(selectSelectedPageId)
+  const { selectPage, addPage, deletePage, duplicatePage, updatePage, setPagePassword, reorderPages } = useEditorStore(useShallow(s => ({
+    selectPage: s.selectPage,
+    addPage: s.addPage,
+    deletePage: s.deletePage,
+    duplicatePage: s.duplicatePage,
+    updatePage: s.updatePage,
+    setPagePassword: s.setPagePassword,
+    reorderPages: s.reorderPages,
+  })))
   const [search, setSearch] = useState('')
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['pages', 'utility']))
   const [isAdding, setIsAdding] = useState(false)

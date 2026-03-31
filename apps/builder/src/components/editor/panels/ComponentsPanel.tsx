@@ -1,16 +1,17 @@
 'use client'
 import { useState } from 'react'
 import { useEditorStore } from '@/store/editorStore'
+import { useShallow } from 'zustand/react/shallow'
+import { useSelection, useComponentActions } from '@/store/hooks'
+import { selectSiteConfig } from '@/store/selectors'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Puzzle, Plus, Search, X, Trash2, Pencil, Settings2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function ComponentsPanel() {
-  const {
-    siteConfig, selectedSectionId, selectedPageId,
-    createComponentFromSection, instantiateComponent, deleteComponent,
-    enterComponentEditor,
-  } = useEditorStore()
+  const siteConfig = useEditorStore(selectSiteConfig)
+  const { selectedSectionId, selectedPageId } = useSelection()
+  const { createComponentFromSection, instantiateComponent, deleteComponent, enterComponentEditor } = useComponentActions()
   const [search, setSearch] = useState('')
   const [naming, setNaming] = useState(false)
   const [newName, setNewName] = useState('')
