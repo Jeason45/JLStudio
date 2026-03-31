@@ -38,7 +38,7 @@ RUN cd apps/portal && pnpm build
 FROM node:20-slim AS runner
 WORKDIR /app
 
-# Install openssl + Playwright/Chromium dependencies
+# Install openssl + Playwright/Chromium dependencies + Chromium browser
 RUN apt-get update -y && apt-get install -y \
     openssl \
     libnss3 libatk-bridge2.0-0 libdrm2 libxcomposite1 libxdamage1 \
@@ -60,10 +60,9 @@ COPY --from=builder /app/apps/portal/.next/static ./apps/portal/.next/static
 COPY --from=builder /app/packages/database/generated ./packages/database/generated
 COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
 
-# Install Playwright Chromium browser
-COPY --from=builder /app/node_modules/playwright-core ./node_modules/playwright-core
-COPY --from=builder /app/node_modules/playwright ./node_modules/playwright
-RUN npx playwright install chromium --with-deps 2>/dev/null || true
+# Install Playwright + Chromium directly in runner (pnpm hoists packages, can't copy from builder)
+RUN npm install playwright-core@1.50.0 playwright@1.50.0 --no-save 2>/dev/null && \
+    npx playwright install chromium 2>/dev/null || true
 
 USER nextjs
 
