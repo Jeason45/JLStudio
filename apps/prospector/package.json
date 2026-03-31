@@ -1,0 +1,26 @@
+{
+  "name": "@jlstudio/prospector",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prospect": "tsx src/index.ts",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@jlstudio/database": "workspace:*",
+    "@prisma/client": "6.8.2",
+    "axios": "^1.7.0",
+    "chalk": "^5.4.0",
+    "commander": "^13.0.0",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^16.4.0",
+    "ora": "^8.2.0",
+    "playwright": "^1.50.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.0"
+  }
+}
