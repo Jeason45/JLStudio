@@ -39,14 +39,24 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Install Chromium from apt (system package — always works, no Playwright path issues)
-RUN apt-get update -y && apt-get install -y \
-    openssl ca-certificates \
-    chromium \
+# Minimal deps for headless Chrome (no GTK, no Python, no LLVM)
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    openssl ca-certificates wget gnupg \
+    libnss3 libatk-bridge2.0-0 libdrm2 libxcomposite1 libxdamage1 \
+    libxfixes3 libxrandr2 libgbm1 libasound2 libpango-1.0-0 \
+    libcairo2 libcups2 libxkbcommon0 libatspi2.0-0 libxshmfence1 \
+    fonts-liberation \
     && rm -rf /var/lib/apt/lists/*
 
-# Tell our scraper where to find the system Chromium
-ENV CHROMIUM_PATH=/usr/bin/chromium
+# Install Chrome for Testing (headless, minimal, ~130MB instead of 921MB)
+RUN wget -q https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chrome-headless-shell-linux64.zip -O /tmp/chrome.zip \
+    && apt-get update -y && apt-get install -y --no-install-recommends unzip && rm -rf /var/lib/apt/lists/* \
+    && unzip -q /tmp/chrome.zip -d /opt \
+    && rm /tmp/chrome.zip \
+    && ln -s /opt/chrome-headless-shell-linux64/chrome-headless-shell /usr/local/bin/chrome-headless-shell \
+    && chmod +x /opt/chrome-headless-shell-linux64/chrome-headless-shell
+
+ENV CHROMIUM_PATH=/usr/local/bin/chrome-headless-shell
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs

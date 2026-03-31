@@ -5,15 +5,20 @@ const BASE_URL = 'https://www.pagesjaunes.fr/annuaire/chercherlespros'
 const DELAY_MS = 2000
 const TIMEOUT_MS = 15000
 
-// Use system Chromium (apt install chromium) — set via CHROMIUM_PATH env var
-// Falls back to common paths
+// Use Chrome headless shell — set via CHROMIUM_PATH env var
 function getChromiumPath(): string {
   if (process.env.CHROMIUM_PATH) return process.env.CHROMIUM_PATH
-  const candidates = ['/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome']
+  const candidates = [
+    '/usr/local/bin/chrome-headless-shell',
+    '/opt/chrome-headless-shell-linux64/chrome-headless-shell',
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/google-chrome',
+  ]
   for (const c of candidates) {
     try { require('fs').accessSync(c); return c } catch {}
   }
-  throw new Error('Chromium not found. Set CHROMIUM_PATH or install chromium via apt.')
+  throw new Error('Chrome not found. Set CHROMIUM_PATH env var.')
 }
 
 function delay(ms: number): Promise<void> {
