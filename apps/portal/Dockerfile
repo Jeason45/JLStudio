@@ -38,7 +38,7 @@ RUN cd apps/portal && pnpm build
 FROM node:20-slim AS runner
 WORKDIR /app
 
-# Install openssl + Playwright/Chromium dependencies + Chromium browser
+# Install openssl + Chromium dependencies
 RUN apt-get update -y && apt-get install -y \
     openssl \
     libnss3 libatk-bridge2.0-0 libdrm2 libxcomposite1 libxdamage1 \
@@ -48,6 +48,17 @@ RUN apt-get update -y && apt-get install -y \
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Install Playwright + Chromium BEFORE creating the user
+# This puts the browser in /root/.cache/ms-playwright/
+RUN npm install playwright-core@1.50.0 playwright@1.50.0 --no-save 2>/dev/null && \
+    npx playwright install chromium
+
+# Move browsers to a shared location accessible by nextjs user
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
+RUN mkdir -p /opt/pw-browsers && \
+    cp -r /root/.cache/ms-playwright/* /opt/pw-browsers/ && \
+    chmod -R 755 /opt/pw-browsers
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
@@ -59,10 +70,6 @@ COPY --from=builder /app/apps/portal/.next/static ./apps/portal/.next/static
 # Prisma generated client from centralized package
 COPY --from=builder /app/packages/database/generated ./packages/database/generated
 COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
-
-# Install Playwright + Chromium directly in runner (pnpm hoists packages, can't copy from builder)
-RUN npm install playwright-core@1.50.0 playwright@1.50.0 --no-save 2>/dev/null && \
-    npx playwright install chromium 2>/dev/null || true
 
 USER nextjs
 
