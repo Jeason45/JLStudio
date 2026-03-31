@@ -52,15 +52,16 @@ RUN apt-get update -y && apt-get install -y \
     fonts-liberation libappindicator3-1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Playwright and download Chromium to shared path
+# Install Playwright and ALL chromium variants to shared path
 RUN npm install -g playwright@1.50.0 && \
     mkdir -p /ms-playwright && \
     playwright install chromium && \
+    playwright install chromium-headless-shell && \
     chmod -R 755 /ms-playwright
 
-# Verify the browser is installed
-RUN ls -la /ms-playwright/ && \
-    find /ms-playwright -name "chrome*" -type f | head -5
+# Verify the browsers are installed
+RUN echo "=== Installed browsers ===" && \
+    find /ms-playwright -name "chrome*" -type f -executable | head -10
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs

@@ -1,7 +1,30 @@
 import { chromium, type Browser, type Page } from 'playwright'
+import { existsSync } from 'fs'
 import type { RawProspect } from './types'
 
 const BASE_URL = 'https://www.pagesjaunes.fr/annuaire/chercherlespros'
+
+// Find Chromium executable — Playwright stores browsers in different locations
+function findChromiumPath(): string | undefined {
+  const basePaths = [
+    process.env.PLAYWRIGHT_BROWSERS_PATH || '',
+    '/ms-playwright',
+    '/root/.cache/ms-playwright',
+  ]
+  for (const base of basePaths) {
+    if (!base) continue
+    // Try headless shell first (what Playwright prefers)
+    const candidates = [
+      `${base}/chromium_headless_shell-1208/chrome-headless-shell-linux64/chrome-headless-shell`,
+      `${base}/chromium-1208/chrome-linux/chrome`,
+      `${base}/chromium-1148/chrome-linux/chrome`,
+    ]
+    for (const c of candidates) {
+      if (existsSync(c)) return c
+    }
+  }
+  return undefined
+}
 const DELAY_MS = 2000
 const TIMEOUT_MS = 15000
 
@@ -19,7 +42,12 @@ export async function scrapePagesJaunes(
   let browser: Browser | null = null
 
   try {
-    browser = await chromium.launch({ headless: true })
+    const executablePath = findChromiumPath()
+    browser = await chromium.launch({
+      headless: true,
+      ...(executablePath ? { executablePath } : {}),
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+    })
     const context = await browser.newContext({
       userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
       viewport: { width: 1280, height: 800 },
