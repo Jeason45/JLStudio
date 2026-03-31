@@ -38,27 +38,29 @@ RUN cd apps/portal && pnpm build
 FROM node:20-slim AS runner
 WORKDIR /app
 
-# Install openssl + Chromium dependencies
-RUN apt-get update -y && apt-get install -y \
-    openssl \
-    libnss3 libatk-bridge2.0-0 libdrm2 libxcomposite1 libxdamage1 \
-    libxfixes3 libxrandr2 libgbm1 libasound2 libpango-1.0-0 \
-    libcairo2 libcups2 libxkbcommon0 libatspi2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
-
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+# Playwright browsers stored here, accessible by all users
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
-# Install Playwright + Chromium BEFORE creating the user
-# This puts the browser in /root/.cache/ms-playwright/
-RUN npm install playwright-core@1.50.0 playwright@1.50.0 --no-save 2>/dev/null && \
-    npx playwright install chromium
+# Install system dependencies for Chromium + openssl
+RUN apt-get update -y && apt-get install -y \
+    openssl ca-certificates \
+    libnss3 libatk-bridge2.0-0 libdrm2 libxcomposite1 libxdamage1 \
+    libxfixes3 libxrandr2 libgbm1 libasound2 libpango-1.0-0 \
+    libcairo2 libcups2 libxkbcommon0 libatspi2.0-0 libxshmfence1 \
+    fonts-liberation libappindicator3-1 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Move browsers to a shared location accessible by nextjs user
-ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
-RUN mkdir -p /opt/pw-browsers && \
-    cp -r /root/.cache/ms-playwright/* /opt/pw-browsers/ && \
-    chmod -R 755 /opt/pw-browsers
+# Install Playwright and download Chromium to shared path
+RUN npm install -g playwright@1.50.0 && \
+    mkdir -p /ms-playwright && \
+    playwright install chromium && \
+    chmod -R 755 /ms-playwright
+
+# Verify the browser is installed
+RUN ls -la /ms-playwright/ && \
+    find /ms-playwright -name "chrome*" -type f | head -5
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
