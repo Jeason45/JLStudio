@@ -38,7 +38,13 @@ RUN cd apps/portal && pnpm build
 FROM node:20-slim AS runner
 WORKDIR /app
 
-RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+# Install openssl + Playwright/Chromium dependencies
+RUN apt-get update -y && apt-get install -y \
+    openssl \
+    libnss3 libatk-bridge2.0-0 libdrm2 libxcomposite1 libxdamage1 \
+    libxfixes3 libxrandr2 libgbm1 libasound2 libpango-1.0-0 \
+    libcairo2 libcups2 libxkbcommon0 libatspi2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -53,6 +59,11 @@ COPY --from=builder /app/apps/portal/.next/static ./apps/portal/.next/static
 # Prisma generated client from centralized package
 COPY --from=builder /app/packages/database/generated ./packages/database/generated
 COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
+
+# Install Playwright Chromium browser
+COPY --from=builder /app/node_modules/playwright-core ./node_modules/playwright-core
+COPY --from=builder /app/node_modules/playwright ./node_modules/playwright
+RUN npx playwright install chromium --with-deps 2>/dev/null || true
 
 USER nextjs
 
