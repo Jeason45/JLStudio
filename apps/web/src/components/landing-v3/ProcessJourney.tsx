@@ -291,7 +291,7 @@ export default function ProcessJourney() {
         </div>
         {/* Horizontal scan line */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute left-0 right-0 h-[1px]" style={{
+          <div className="absolute left-0 right-0 h-[1px] top-0 will-change-transform" style={{
             background: 'linear-gradient(90deg, transparent, rgba(99,139,255,0.15), transparent)',
             animation: 'scan-line 8s ease-in-out infinite',
           }} />
@@ -303,7 +303,7 @@ export default function ProcessJourney() {
       </div>
       {/* Section header */}
       <div className="relative z-10 pt-20 pb-12 md:pt-32 md:pb-24 text-center">
-        <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-4">Méthode</p>
+        <p className="text-[#638BFF] text-xs tracking-[0.4em] uppercase mb-4">Méthode</p>
         <h2 className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-5xl font-black text-white">
           Notre processus
         </h2>

@@ -221,7 +221,7 @@ export default function PortfolioStack() {
     return (
       <section id="projets" className="relative bg-[#0a0a0a] py-16 px-4">
         <div className="text-center mb-10">
-          <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-3">Portfolio</p>
+          <p className="text-[#638BFF] text-xs tracking-[0.4em] uppercase mb-3">Portfolio</p>
           <h2 className="font-[family-name:var(--font-outfit)] text-3xl font-black text-white">
             Nos réalisations
           </h2>
@@ -233,7 +233,7 @@ export default function PortfolioStack() {
                 <Image src={project.image} alt={project.title} fill className="object-cover object-top" sizes="100vw" priority={i === 0} />
               </div>
               <div className="p-5">
-                <p className="text-[#638BFF]/70 text-xs font-medium tracking-[0.3em] uppercase mb-2">{project.category}</p>
+                <p className="text-[#638BFF] text-xs font-medium tracking-[0.3em] uppercase mb-2">{project.category}</p>
                 <h3 className="font-[family-name:var(--font-outfit)] font-black text-white text-xl mb-3">{project.title}</h3>
                 <p className="text-white/55 text-sm leading-relaxed mb-4">{project.description}</p>
                 {project.features && (
@@ -283,7 +283,7 @@ export default function PortfolioStack() {
 
       {/* Section title */}
       <div className="text-center mb-20 relative z-[5]">
-        <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-3">Portfolio</p>
+        <p className="text-[#638BFF] text-xs tracking-[0.4em] uppercase mb-3">Portfolio</p>
         <h2
           data-section-title
           className="font-[family-name:var(--font-outfit)] text-4xl md:text-5xl font-black text-white"
@@ -352,7 +352,7 @@ export default function PortfolioStack() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#111114] via-transparent to-transparent" />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <p className="text-[#638BFF]/70 text-[10px] font-medium tracking-[0.3em] uppercase mb-1.5">
+                  <p className="text-[#638BFF] text-[10px] font-medium tracking-[0.3em] uppercase mb-1.5">
                     {project.category}
                   </p>
                   <h3 className="font-[family-name:var(--font-outfit)] font-bold text-white text-lg leading-tight">
@@ -397,7 +397,7 @@ export default function PortfolioStack() {
               <Image src={projects[activeCard].image} alt={projects[activeCard].title} fill className="object-cover object-top" sizes="55vw" />
             </div>
             <div className="flex flex-col justify-center p-10 lg:p-14">
-              <p className="text-[#638BFF]/70 text-xs font-medium tracking-[0.4em] uppercase mb-3">
+              <p className="text-[#638BFF] text-xs font-medium tracking-[0.4em] uppercase mb-3">
                 {projects[activeCard].category}
               </p>
               <h3

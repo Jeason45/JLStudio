@@ -112,8 +112,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 }
 
 @keyframes scan-line {
-  0% { top: -2%; }
-  100% { top: 102%; }
+  0% { transform: translateY(-2vh); }
+  100% { transform: translateY(102vh); }
 }
 
 /* Ensure content is visible if JS/GSAP fails to load */

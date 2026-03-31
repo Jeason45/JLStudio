@@ -185,7 +185,7 @@ export default function ContactParallax() {
           {/* Title overlay */}
           <div className={`relative z-10 flex items-end h-full ${isMobile ? 'p-5 pb-6' : 'p-12 lg:p-20'}`}>
             <div>
-              <p className="text-[#638BFF]/70 text-xs tracking-[0.4em] uppercase mb-3 sm:mb-4">
+              <p className="text-[#638BFF] text-xs tracking-[0.4em] uppercase mb-3 sm:mb-4">
                 Contact
               </p>
               <SplitTextReveal
@@ -247,6 +247,7 @@ export default function ContactParallax() {
                 <select
                   value={projectType || ''}
                   onChange={(e) => setProjectType(e.target.value || null)}
+                  aria-label="Type de projet"
                   className="sm:hidden w-full bg-transparent border-b border-white/[0.08] text-white py-3 text-base outline-none focus:border-[#638BFF]/60 appearance-none"
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='rgba(255,255,255,0.3)' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E")`,
@@ -367,7 +368,7 @@ export default function ContactParallax() {
               </div>
 
               {/* Honeypot anti-spam */}
-              <input name="website" autoComplete="off" tabIndex={-1} className="absolute left-[-9999px] opacity-0 h-0 w-0" />
+              <input name="website" autoComplete="off" tabIndex={-1} aria-hidden="true" className="absolute left-[-9999px] opacity-0 h-0 w-0" />
 
               {/* Callback */}
               <div className="form-field" style={{ opacity: 0 }}>

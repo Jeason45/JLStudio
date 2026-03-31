@@ -590,6 +590,7 @@ export default function QualifierPage() {
                   name="website"
                   autoComplete="off"
                   tabIndex={-1}
+                  aria-hidden="true"
                   className="absolute left-[-9999px] opacity-0 h-0 w-0"
                 />
               </div>

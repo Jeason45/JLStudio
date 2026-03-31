@@ -286,6 +286,7 @@ export default function HeroParallax() {
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 120vw"
+            quality={55}
             priority
           />
           {/* Color grading — warm shadows, cool highlights */}
