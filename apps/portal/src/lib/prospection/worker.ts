@@ -8,6 +8,7 @@ import {
   enrichWithSirene,
   extractEmails,
   detectSocial,
+  findBestEmail,
 } from './analyzers'
 import { scoreProspect } from './scorer'
 import type { SiteAnalysis, SireneData } from './types'
@@ -119,10 +120,20 @@ export async function runProspectionCampaign(campaignId: string) {
           withoutSite++
         }
 
-        // c. Score
+        // c. Email verification & pattern matching
+        let bestEmail: string | null = null
+        try {
+          let domain: string | null = null
+          if (prospect.url) { try { domain = new URL(prospect.url).hostname.replace('www.', '') } catch {} }
+          const extractedEmails = analysis?.emails || []
+          const emailResult = await findBestEmail(domain, null, extractedEmails)
+          if (emailResult.email) bestEmail = emailResult.email
+        } catch { /* best effort */ }
+
+        // d. Score
         const scored = scoreProspect(prospect, analysis, sirene)
 
-        // d. Save as ProspectionResult
+        // e. Save as ProspectionResult
         await prisma.prospectionResult.create({
           data: {
             campaignId,
@@ -131,7 +142,7 @@ export async function runProspectionCampaign(campaignId: string) {
             phone: prospect.phone,
             address: prospect.address,
             city: prospect.city,
-            email: scored.primaryEmail,
+            email: bestEmail || scored.primaryEmail,
             category: scored.category,
             priorityScore: scored.priorityScore,
             status: scored.status,

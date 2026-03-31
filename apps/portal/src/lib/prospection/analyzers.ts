@@ -1,4 +1,5 @@
 import dns from 'dns/promises'
+import net from 'net'
 import type { SiteAnalysis, SireneData } from './types'
 
 const USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
@@ -456,6 +457,95 @@ export function detectSocial(html: string): { links: Record<string, string | nul
 
   const count = Object.values(links).filter(Boolean).length
   return { links, count }
+}
+
+// ── Email Verification (SMTP) ──
+
+async function checkMx(domain: string): Promise<string | null> {
+  try {
+    const records = await dns.resolveMx(domain)
+    if (records.length === 0) return null
+    records.sort((a, b) => a.priority - b.priority)
+    return records[0].exchange
+  } catch { return null }
+}
+
+function smtpVerify(email: string, mxHost: string): Promise<boolean | null> {
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => { socket.destroy(); resolve(null) }, 8000)
+    const socket = net.createConnection(25, mxHost)
+    let step = 0
+    let buffer = ''
+    socket.setEncoding('utf8')
+    socket.on('data', (data: string) => {
+      buffer += data
+      if (!buffer.includes('\r\n')) return
+      const lines = buffer.split('\r\n')
+      buffer = lines.pop() || ''
+      for (const line of lines) {
+        const code = parseInt(line.slice(0, 3))
+        if (isNaN(code)) continue
+        if (step === 0 && code === 220) { socket.write('HELO prospector.local\r\n'); step = 1 }
+        else if (step === 1 && code === 250) { socket.write('MAIL FROM:<verify@prospector.local>\r\n'); step = 2 }
+        else if (step === 2 && code === 250) { socket.write(`RCPT TO:<${email}>\r\n`); step = 3 }
+        else if (step === 3) {
+          socket.write('QUIT\r\n'); clearTimeout(timeout); socket.destroy()
+          resolve(code === 250 || code === 251 ? true : code >= 550 ? false : null)
+          return
+        }
+      }
+    })
+    socket.on('error', () => { clearTimeout(timeout); resolve(null) })
+  })
+}
+
+function generateEmailPatterns(firstName: string, lastName: string, domain: string): string[] {
+  const fn = firstName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z]/g, '')
+  const ln = lastName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z]/g, '')
+  if (!fn || !ln) return [`contact@${domain}`]
+  return [`${fn}.${ln}@${domain}`, `${fn[0]}.${ln}@${domain}`, `${fn}@${domain}`, `contact@${domain}`, `info@${domain}`]
+}
+
+export async function findBestEmail(
+  domain: string | null,
+  dirigeantName: string | null,
+  extractedEmails: string[],
+): Promise<{ email: string; confidence: 'high' | 'medium' | 'low' | 'unknown'; method: string }> {
+  // 1. Try extracted emails
+  for (const extracted of extractedEmails) {
+    const d = extracted.split('@')[1]
+    if (d) {
+      const mx = await checkMx(d)
+      if (mx) {
+        const valid = await smtpVerify(extracted, mx)
+        if (valid === true) return { email: extracted, confidence: 'high', method: 'extracted_verified' }
+      }
+    }
+  }
+  if (extractedEmails.length > 0) {
+    const best = extractedEmails.find(e => /^(contact|info|hello)@/i.test(e)) || extractedEmails[0]
+    return { email: best, confidence: 'medium', method: 'extracted' }
+  }
+
+  // 2. Pattern from dirigeant name
+  if (domain && dirigeantName) {
+    const parts = dirigeantName.trim().split(/\s+/)
+    if (parts.length >= 2) {
+      const patterns = generateEmailPatterns(parts[0], parts.slice(1).join(' '), domain)
+      for (const p of patterns.slice(0, 3)) {
+        const mx = await checkMx(domain)
+        if (mx) {
+          const valid = await smtpVerify(p, mx)
+          if (valid === true) return { email: p, confidence: 'high', method: 'pattern_verified' }
+        }
+      }
+      return { email: patterns[0], confidence: 'low', method: 'pattern_guess' }
+    }
+  }
+
+  // 3. Fallback
+  if (domain) return { email: `contact@${domain}`, confidence: 'low', method: 'fallback' }
+  return { email: '', confidence: 'unknown', method: 'none' }
 }
 
 // ── Helpers ──

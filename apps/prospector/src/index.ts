@@ -9,6 +9,7 @@ import { analyzeObservatory } from './analyzer/observatory.js'
 import { enrichWithSirene, type SireneData } from './analyzer/sirene.js'
 import { extractEmails } from './analyzer/emailExtractor.js'
 import { detectSocialPresence } from './analyzer/socialDetector.js'
+import { findBestEmail } from './analyzer/emailVerifier.js'
 import { scoreProspect } from './scorer/scorer.js'
 import { exportCSV } from './output/csv.js'
 import { injectIntoCRM } from './output/crm.js'
@@ -156,7 +157,29 @@ program
         }
       }
 
+      // Email verification & pattern matching
+      let domain: string | null = null
+      if (p.url) {
+        try { domain = new URL(p.url).hostname.replace('www.', '') } catch {}
+      }
+      const extractedEmails = analysis?.emailData?.emails || []
+      const dirigeant = sirene ? null : null // SIRENE doesn't give dirigeant name
+      let emailResult: { email: string; confidence: string; method: string } | null = null
+      try {
+        emailResult = await findBestEmail(domain, dirigeant, extractedEmails)
+        if (verbose && emailResult.email) {
+          const icon = emailResult.confidence === 'high' ? '✅' : emailResult.confidence === 'medium' ? '📧' : '❓'
+          log.dim(`  ${icon} Email: ${emailResult.email} (${emailResult.confidence} — ${emailResult.method})`)
+        }
+      } catch { /* best effort */ }
+
       const result = scoreProspect(p, analysis, sirene)
+      // Override realEmail with verified one
+      if (emailResult?.email) {
+        result.realEmail = emailResult.email
+        ;(result as any).emailConfidence = emailResult.confidence
+        ;(result as any).emailMethod = emailResult.method
+      }
       scored.push(result)
 
       if (verbose) {
