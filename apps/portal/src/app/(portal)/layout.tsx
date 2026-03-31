@@ -50,6 +50,7 @@ export default async function PortalLayout({ children }: { children: React.React
     moduleProjets: data.config.moduleProjets,
     moduleCMS: data.config.moduleCMS,
     moduleCalendrier: data.config.moduleCalendrier,
+    moduleProspection: data.config.moduleProspection,
   } : null;
 
   return (

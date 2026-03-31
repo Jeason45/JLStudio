@@ -63,6 +63,7 @@ model Site {
   portalAppointments      PortalAppointment[]
   portalProjects          PortalProject[]
   portalCompanySettings   PortalCompanySettings?
+  prospectionCampaigns    ProspectionCampaign[]
   activities              Activity[]
   deploys                 Deploy[]
 
@@ -199,6 +200,7 @@ model Contact {
   portalAppointments PortalAppointment[]
   portalProjects     PortalProject[]
   portalUsers        PortalUser[]
+  prospectionResults ProspectionResult[]
 
   // Relations Web standalone (sign flow, reminders, email logging)
   interactions Interaction[]
@@ -539,7 +541,8 @@ model PortalConfig {
   moduleContrats   Boolean  @default(false)
   moduleProjets    Boolean  @default(false)
   moduleCMS        Boolean  @default(false)
-  moduleCalendrier Boolean  @default(false)
+  moduleCalendrier    Boolean  @default(false)
+  moduleProspection   Boolean  @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -1057,5 +1060,67 @@ model MailLog {
 
   @@index([status, createdAt])
   @@index([createdAt])
+}
+
+// ─────────────────────────────────────────────
+// PROSPECTION
+// ─────────────────────────────────────────────
+
+model ProspectionCampaign {
+  id          String                    @id @default(cuid())
+  siteId      String
+  metier      String
+  ville       String
+  limit       Int                       @default(20)
+  status      ProspectionCampaignStatus @default(PENDING)
+  progress    Int                       @default(0)
+  totalFound  Int?
+  withSite    Int?
+  withoutSite Int?
+  error       String?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
+
+  site    Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  results ProspectionResult[]
+
+  @@index([siteId, createdAt])
+}
+
+enum ProspectionCampaignStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model ProspectionResult {
+  id          String  @id @default(cuid())
+  campaignId  String
+  contactId   String?
+
+  name          String
+  url           String?
+  phone         String?
+  address       String?
+  city          String?
+  email         String?
+  category      String    // "creation" | "refonte"
+
+  priorityScore Int       @default(0)
+  status        String    // "Chaud" | "Tiède" | "Froid"
+  breakdown     Json      @default("[]")
+
+  analysisData  Json?
+  sireneData    Json?
+
+  createdAt DateTime @default(now())
+
+  campaign ProspectionCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  contact  Contact?            @relation(fields: [contactId], references: [id])
+
+  @@index([campaignId, priorityScore])
 }
 

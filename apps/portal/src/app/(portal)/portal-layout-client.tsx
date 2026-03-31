@@ -16,7 +16,7 @@ function PortalContent({ children, siteName }: { children: React.ReactNode; site
   // Skip onboarding if modules are already configured (existing sites created by builder)
   const hasModulesConfigured = config !== null && (
     config.moduleCRM || config.moduleDevis || config.moduleFactures ||
-    config.moduleContrats || config.moduleProjets || config.moduleCMS || config.moduleCalendrier
+    config.moduleContrats || config.moduleProjets || config.moduleCMS || config.moduleCalendrier || config.moduleProspection
   );
   const needsOnboarding = config !== null && !config.onboardingDone && !hasModulesConfigured && !isOnboardingPage;
 

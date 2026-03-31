@@ -81,6 +81,7 @@ export default function PortalHeader({ siteName }: { siteName?: string }) {
     { href: '/projets', label: 'Projets', module: 'moduleProjets' as const },
     { href: '/mon-site', label: 'Mon Site', module: 'moduleCMS' as const },
     { href: '/calendrier', label: 'Calendrier', module: 'moduleCalendrier' as const },
+    { href: '/prospection', label: 'Prospection', module: 'moduleProspection' as const },
   ];
 
   const navItems = allNavItems.filter((item) => {

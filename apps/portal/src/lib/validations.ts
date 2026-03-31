@@ -45,6 +45,7 @@ export const portalConfigUpdateSchema = z.object({
   moduleProjets: z.boolean().optional(),
   moduleCMS: z.boolean().optional(),
   moduleCalendrier: z.boolean().optional(),
+  moduleProspection: z.boolean().optional(),
 });
 
 export const onboardingSchema = z.object({
@@ -55,6 +56,7 @@ export const onboardingSchema = z.object({
   moduleProjets: z.boolean(),
   moduleCMS: z.boolean(),
   moduleCalendrier: z.boolean(),
+  moduleProspection: z.boolean(),
   primaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Couleur HEX invalide').optional(),
 });
 

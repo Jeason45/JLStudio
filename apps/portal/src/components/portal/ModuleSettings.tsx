@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useSidebar } from './SidebarContext';
 import {
-  Users, FileText, Receipt, FileSignature, FolderKanban, Globe, Calendar,
+  Users, FileText, Receipt, FileSignature, FolderKanban, Globe, Calendar, Radar,
   Save,
 } from 'lucide-react';
 
@@ -15,6 +15,7 @@ const MODULE_INFO: { key: string; label: string; description: string; icon: Reac
   { key: 'moduleProjets', label: 'Projets', description: 'Suivi de projets', icon: <FolderKanban size={16} /> },
   { key: 'moduleCMS', label: 'Mon Site', description: 'Contenu du site', icon: <Globe size={16} /> },
   { key: 'moduleCalendrier', label: 'Calendrier', description: 'Rendez-vous et planning', icon: <Calendar size={16} /> },
+  { key: 'moduleProspection', label: 'Prospection', description: 'Recherche de prospects', icon: <Radar size={16} /> },
 ];
 
 export default function ModuleSettings() {
@@ -24,7 +25,7 @@ export default function ModuleSettings() {
   const [modules, setModules] = useState<Record<string, boolean>>(() => {
     if (!config) return {
       moduleCRM: false, moduleDevis: false, moduleFactures: false,
-      moduleContrats: false, moduleProjets: false, moduleCMS: false, moduleCalendrier: false,
+      moduleContrats: false, moduleProjets: false, moduleCMS: false, moduleCalendrier: false, moduleProspection: false,
     };
     return {
       moduleCRM: config.moduleCRM,
@@ -34,6 +35,7 @@ export default function ModuleSettings() {
       moduleProjets: config.moduleProjets,
       moduleCMS: config.moduleCMS,
       moduleCalendrier: config.moduleCalendrier,
+      moduleProspection: config.moduleProspection,
     };
   });
 

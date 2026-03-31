@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useSidebar } from './SidebarContext';
-import { Settings, LogOut, Menu, X, ChevronLeft, Share2, Upload, Star, Plus, Copy, FileText, Calendar, Send, Bell, Phone, LayoutDashboard, Users, Receipt, FileSignature, FolderKanban, Globe } from 'lucide-react';
+import { Settings, LogOut, Menu, X, ChevronLeft, Share2, Upload, Star, Plus, Copy, FileText, Calendar, Send, Bell, Phone, LayoutDashboard, Users, Receipt, FileSignature, FolderKanban, Globe, Radar } from 'lucide-react';
 import { useEffect } from 'react';
 import Link from 'next/link';
 
@@ -42,6 +42,7 @@ export default function PortalSidebar() {
     { href: '/projets', icon: <FolderKanban size={18} />, label: 'Projets', module: 'moduleProjets' as const, adminOnly: true },
     { href: '/mon-site', icon: <Globe size={18} />, label: 'Mon Site', module: 'moduleCMS' as const },
     { href: '/calendrier', icon: <Calendar size={18} />, label: 'Calendrier', module: 'moduleCalendrier' as const, adminOnly: true },
+    { href: '/prospection', icon: <Radar size={18} />, label: 'Prospection', module: 'moduleProspection' as const, adminOnly: true },
   ];
 
   const navItems = allNavItems.filter((item) => {

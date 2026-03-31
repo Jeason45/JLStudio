@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSidebar } from '@/components/portal/SidebarContext';
 import {
-  Users, FileText, Receipt, FileSignature, FolderKanban, Globe, Calendar,
+  Users, FileText, Receipt, FileSignature, FolderKanban, Globe, Calendar, Radar,
   Check, ArrowRight, Sparkles, SkipForward,
 } from 'lucide-react';
 
@@ -58,6 +58,12 @@ const MODULES: ModuleOption[] = [
     description: 'Rendez-vous, planning et reservations',
     icon: <Calendar size={22} />,
   },
+  {
+    key: 'moduleProspection',
+    label: 'Prospection',
+    description: 'Recherche automatique de prospects par metier et ville',
+    icon: <Radar size={22} />,
+  },
 ];
 
 const PRESETS: { label: string; key: string; modules: string[] }[] = [
@@ -110,6 +116,7 @@ export default function OnboardingPage() {
     moduleProjets: false,
     moduleCMS: false,
     moduleCalendrier: false,
+    moduleProspection: false,
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -8,6 +8,7 @@ export interface PortalModules {
   moduleProjets: boolean;
   moduleCMS: boolean;
   moduleCalendrier: boolean;
+  moduleProspection: boolean;
 }
 
 export interface PortalConfigData extends PortalModules {
