@@ -35,6 +35,9 @@ export async function exportCSV(prospects: ScoredProspect[], metier: string, vil
       { id: 'isResponsive', title: 'Responsive' },
       { id: 'hasAnalytics', title: 'Analytics' },
       { id: 'observatoryGrade', title: 'Sécurité' },
+      { id: 'w3cErrors', title: 'Erreurs HTML' },
+      { id: 'yellowLabScore', title: 'Yellow Lab' },
+      { id: 'topOpportunities', title: 'Opportunités PageSpeed' },
     ],
     encoding: 'utf8',
     fieldDelimiter: ';',
@@ -62,6 +65,9 @@ export async function exportCSV(prospects: ScoredProspect[], metier: string, vil
     isResponsive: p.analysis ? (p.analysis.isResponsive ? 'Oui' : 'Non') : '',
     hasAnalytics: p.analysis ? (p.analysis.hasAnalytics ? 'Oui' : 'Non') : '',
     observatoryGrade: p.analysis?.observatoryGrade || '',
+    w3cErrors: p.analysis?.w3cErrors ?? '',
+    yellowLabScore: p.analysis?.yellowLabScore ?? '',
+    topOpportunities: p.analysis?.mobileOpportunities?.slice(0, 3).map(o => o.title).join(' | ') || '',
   }))
 
   await csvWriter.writeRecords(records)

@@ -10,6 +10,8 @@ import { enrichWithSirene, type SireneData } from './analyzer/sirene.js'
 import { extractEmails } from './analyzer/emailExtractor.js'
 import { detectSocialPresence } from './analyzer/socialDetector.js'
 import { findBestEmail } from './analyzer/emailVerifier.js'
+import { validateHtml } from './analyzer/w3cValidator.js'
+import { analyzeYellowLab } from './analyzer/yellowLab.js'
 import { scoreProspect } from './scorer/scorer.js'
 import { exportCSV } from './output/csv.js'
 import { injectIntoCRM } from './output/crm.js'
@@ -99,6 +101,10 @@ program
         analysis = {
           url: p.url,
           mobileScore: null, desktopScore: null, mobileFCP: null, mobileLCP: null,
+          mobileTBT: null, mobileCLS: null, mobileSI: null,
+          mobileOpportunities: [], mobileDiagnostics: [],
+          desktopOpportunities: [], desktopDiagnostics: [],
+          mobilePassedAudits: 0, mobileTotalAudits: 0,
           isHttps: false, isResponsive: false, cmsDetected: null, estimatedAge: null,
           loadTimeMs: null, pageSizeKB: null,
           hasAnalytics: false, hasFavicon: false, hasMetaDescription: false, hasOpenGraph: false,
@@ -107,6 +113,8 @@ program
           internalLinkCount: 0, redirectCount: 0,
           observatoryGrade: null, observatoryScore: null,
           emailData: null, socialPresence: null,
+          w3cErrors: null, w3cWarnings: null, w3cTopErrors: [],
+          yellowLabScore: null, yellowLabCategories: [], yellowLabTopIssues: [],
           error: null,
         }
 
@@ -138,13 +146,39 @@ program
             }
           } catch { /* best effort */ }
 
-          // PageSpeed
+          // PageSpeed (detailed — opportunities + diagnostics)
           if (config.pageSpeedApiKey) {
             try {
               const ps = await analyzePageSpeed(p.url)
               Object.assign(analysis, ps)
+              if (verbose && ps.mobileScore !== null) {
+                const oppCount = ps.mobileOpportunities.length
+                log.dim(`  ⚡ PageSpeed mobile: ${ps.mobileScore}/100 (${oppCount} opportunités)`)
+              }
             } catch { /* best effort */ }
           }
+
+          // W3C HTML Validation
+          try {
+            const w3c = await validateHtml(p.url)
+            analysis.w3cErrors = w3c.errorCount
+            analysis.w3cWarnings = w3c.warningCount
+            analysis.w3cTopErrors = w3c.topErrors
+            if (verbose && w3c.errorCount > 0) {
+              log.dim(`  🔴 W3C: ${w3c.errorCount} erreurs HTML, ${w3c.warningCount} warnings`)
+            }
+          } catch { /* best effort */ }
+
+          // Yellow Lab Tools
+          try {
+            const ylt = await analyzeYellowLab(p.url)
+            analysis.yellowLabScore = ylt.globalScore
+            analysis.yellowLabCategories = ylt.categories
+            analysis.yellowLabTopIssues = ylt.topIssues
+            if (verbose && ylt.globalScore !== null) {
+              log.dim(`  🔬 Yellow Lab: ${ylt.globalScore}/100 (${ylt.topIssues.length} problèmes)`)
+            }
+          } catch { /* best effort */ }
 
           // Mozilla Observatory
           try {

@@ -156,6 +156,25 @@ function scoreRefonte(prospect: RawProspect, analysis: SiteAnalysis, sirene: Sir
     breakdown.push({ label: 'Site minimal', points: 10, reason: `${analysis.internalLinkCount} liens internes` })
   }
 
+  // ── W3C Validation ──
+  if (analysis.w3cErrors !== null && analysis.w3cErrors > 20) {
+    const pts = analysis.w3cErrors > 50 ? 10 : 5
+    rawScore += pts
+    breakdown.push({ label: 'HTML invalide', points: pts, reason: `${analysis.w3cErrors} erreurs W3C` })
+  }
+
+  // ── Yellow Lab Tools ──
+  if (analysis.yellowLabScore !== null && analysis.yellowLabScore < 40) {
+    rawScore += 10
+    breakdown.push({ label: 'Qualité code faible', points: 10, reason: `Yellow Lab: ${analysis.yellowLabScore}/100` })
+  }
+
+  // ── PageSpeed opportunities ──
+  if (analysis.mobileOpportunities.length > 5) {
+    rawScore += 5
+    breakdown.push({ label: 'Nombreuses optimisations possibles', points: 5, reason: `${analysis.mobileOpportunities.length} opportunités PageSpeed` })
+  }
+
   // ── Sirene enrichment ──
   if (sirene?.statusActif) {
     rawScore += 5
@@ -179,7 +198,7 @@ export function scoreProspect(
     ? scoreRefonte(prospect, analysis, sirene)
     : scoreCreation(prospect, sirene)
 
-  const maxPossible = hasWebsite ? 190 : 90
+  const maxPossible = hasWebsite ? 215 : 90
   const normalizedScore = Math.min(100, Math.round((rawScore / maxPossible) * 100))
 
   let status: ScoredProspect['status']

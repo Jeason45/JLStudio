@@ -6,6 +6,8 @@ const USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/
 const HTTP_TIMEOUT = 15000
 const PAGESPEED_URL = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed'
 const SIRENE_URL = 'https://recherche-entreprises.api.gouv.fr/search'
+const W3C_URL = 'https://validator.w3.org/nu/'
+const YELLOWLAB_URL = 'https://yellowlab.tools/api'
 
 // ── CMS patterns ──
 
@@ -546,6 +548,61 @@ export async function findBestEmail(
   // 3. Fallback
   if (domain) return { email: `contact@${domain}`, confidence: 'low', method: 'fallback' }
   return { email: '', confidence: 'unknown', method: 'none' }
+}
+
+// ── W3C HTML Validator ──
+
+export async function validateHtml(url: string): Promise<{ errorCount: number; warningCount: number; topErrors: string[] }> {
+  try {
+    const res = await fetch(`${W3C_URL}?doc=${encodeURIComponent(url)}&out=json`, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; JLStudio)' },
+      signal: AbortSignal.timeout(20000),
+    })
+    const data = await res.json() as { messages?: Array<{ type: string; subType?: string; message?: string }> }
+    const messages = data.messages || []
+    let errorCount = 0, warningCount = 0
+    const topErrors: string[] = []
+    for (const msg of messages) {
+      if (msg.type === 'error') { errorCount++; if (topErrors.length < 5) topErrors.push((msg.message || '').slice(0, 120)) }
+      else if (msg.type === 'info' && msg.subType === 'warning') warningCount++
+    }
+    return { errorCount, warningCount, topErrors }
+  } catch { return { errorCount: 0, warningCount: 0, topErrors: [] } }
+}
+
+// ── Yellow Lab Tools ──
+
+export async function analyzeYellowLab(url: string): Promise<{ globalScore: number | null; topIssues: string[] }> {
+  try {
+    const startRes = await fetch(`${YELLOWLAB_URL}/runs`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, waitForResponse: false }),
+      signal: AbortSignal.timeout(10000),
+    })
+    const startData = await startRes.json() as { runId?: string }
+    if (!startData.runId) return { globalScore: null, topIssues: [] }
+
+    for (let i = 0; i < 15; i++) {
+      await new Promise(r => setTimeout(r, 4000))
+      try {
+        const res = await fetch(`${YELLOWLAB_URL}/runs/${startData.runId}`, { signal: AbortSignal.timeout(10000) })
+        const data = await res.json() as any
+        if (data?.status?.statusCode === 'running') continue
+        if (data?.status?.statusCode === 'failed') return { globalScore: null, topIssues: [] }
+        const scores = data?.scoreProfiles?.generic
+        if (!scores) return { globalScore: null, topIssues: [] }
+        const topIssues: string[] = []
+        for (const cat of Object.values(scores.categories || {}) as any[]) {
+          for (const rule of Object.values(cat.rules || {}) as any[]) {
+            if (rule.bad && rule.policy?.label) topIssues.push(rule.policy.label)
+          }
+        }
+        return { globalScore: scores.globalScore ?? null, topIssues: topIssues.slice(0, 5) }
+      } catch { continue }
+    }
+    return { globalScore: null, topIssues: [] }
+  } catch { return { globalScore: null, topIssues: [] } }
 }
 
 // ── Helpers ──
