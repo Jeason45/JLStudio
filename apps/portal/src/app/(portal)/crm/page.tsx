@@ -135,6 +135,17 @@ export default function CRMPage() {
     if (res.ok) fetchLeads();
   };
 
+  // ─── Delete contact ───
+  const deleteContact = async (contactId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm('Supprimer ce contact ?')) return;
+    const res = await fetch(`/api/portal/contacts/${contactId}`, { method: 'DELETE' });
+    if (res.ok) {
+      if (selectedId === contactId) setSelectedId(null);
+      fetchContacts();
+    }
+  };
+
   const statusCounts = {
     total: contacts.length,
     NEW: contacts.filter((c) => c.status === 'NEW').length,
@@ -295,7 +306,7 @@ export default function CRMPage() {
                     </div>
                   </div>
                   <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{c.company || '—'}</span>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px' }}>
                     <div style={{
                       padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 500,
                       background: c.status === 'ACTIVE' ? 'var(--success-light)' : c.status === 'NEW' ? 'var(--accent-light)' : 'var(--bg-badge)',
@@ -303,6 +314,19 @@ export default function CRMPage() {
                     }}>
                       {c.status === 'NEW' ? 'Nouveau' : c.status === 'ACTIVE' ? 'Actif' : 'Inactif'}
                     </div>
+                    <button
+                      onClick={(e) => deleteContact(c.id, e)}
+                      title="Supprimer"
+                      style={{
+                        background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
+                        color: 'var(--text-tertiary)', borderRadius: '4px', display: 'flex', alignItems: 'center',
+                        transition: 'color 0.15s, background 0.15s',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--danger)'; e.currentTarget.style.background = 'var(--danger-light, rgba(239,68,68,0.1))'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'none'; }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
                   </div>
                 </div>
               ))}
