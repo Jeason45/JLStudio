@@ -1,32 +1,20 @@
-import { chromium, type Browser, type Page } from 'playwright'
-import { existsSync } from 'fs'
+import { chromium, type Browser, type Page } from 'playwright-core'
 import type { RawProspect } from './types'
 
 const BASE_URL = 'https://www.pagesjaunes.fr/annuaire/chercherlespros'
-
-// Find Chromium executable — Playwright stores browsers in different locations
-function findChromiumPath(): string | undefined {
-  const basePaths = [
-    process.env.PLAYWRIGHT_BROWSERS_PATH || '',
-    '/ms-playwright',
-    '/root/.cache/ms-playwright',
-  ]
-  for (const base of basePaths) {
-    if (!base) continue
-    // Try headless shell first (what Playwright prefers)
-    const candidates = [
-      `${base}/chromium_headless_shell-1208/chrome-headless-shell-linux64/chrome-headless-shell`,
-      `${base}/chromium-1208/chrome-linux/chrome`,
-      `${base}/chromium-1148/chrome-linux/chrome`,
-    ]
-    for (const c of candidates) {
-      if (existsSync(c)) return c
-    }
-  }
-  return undefined
-}
 const DELAY_MS = 2000
 const TIMEOUT_MS = 15000
+
+// Use system Chromium (apt install chromium) — set via CHROMIUM_PATH env var
+// Falls back to common paths
+function getChromiumPath(): string {
+  if (process.env.CHROMIUM_PATH) return process.env.CHROMIUM_PATH
+  const candidates = ['/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome']
+  for (const c of candidates) {
+    try { require('fs').accessSync(c); return c } catch {}
+  }
+  throw new Error('Chromium not found. Set CHROMIUM_PATH or install chromium via apt.')
+}
 
 function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -42,14 +30,13 @@ export async function scrapePagesJaunes(
   let browser: Browser | null = null
 
   try {
-    const executablePath = findChromiumPath()
     browser = await chromium.launch({
       headless: true,
-      ...(executablePath ? { executablePath } : {}),
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+      executablePath: getChromiumPath(),
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
     })
     const context = await browser.newContext({
-      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+      userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
       viewport: { width: 1280, height: 800 },
     })
     const page = await context.newPage()
@@ -75,7 +62,7 @@ export async function scrapePagesJaunes(
         } catch { /* no popup */ }
       }
 
-      const results = await extractResults(page, metier, ville)
+      const results = await extractResults(page, ville)
       if (results.length === 0) break
 
       for (const r of results) {
@@ -99,7 +86,7 @@ export async function scrapePagesJaunes(
   return prospects
 }
 
-async function extractResults(page: Page, metier: string, ville: string): Promise<RawProspect[]> {
+async function extractResults(page: Page, ville: string): Promise<RawProspect[]> {
   return page.evaluate(({ ville }) => {
     const results: Array<{
       name: string
@@ -115,7 +102,6 @@ async function extractResults(page: Page, metier: string, ville: string): Promis
       const name = nameEl?.textContent?.trim() || ''
       if (!name) return
 
-      // Website link
       const siteLink = card.querySelector('a[data-pjax="website"], a.bi-website, a[href*="website"], .bi-cta-website a')
       let url: string | null = null
       if (siteLink) {
@@ -125,11 +111,9 @@ async function extractResults(page: Page, metier: string, ville: string): Promis
         }
       }
 
-      // Phone
       const phoneEl = card.querySelector('.bi-phone .tel, [data-phone-number], .number-phone')
       const phone = phoneEl?.textContent?.trim()?.replace(/\s+/g, '') || null
 
-      // Address
       const addressEl = card.querySelector('.bi-address .address, .bi-adresse, .address-container')
       const address = addressEl?.textContent?.trim() || null
 
