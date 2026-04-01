@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Search, Globe, Shield, Zap, Eye, CheckCircle, XCircle, AlertTriangle, Leaf } from 'lucide-react';
 
 interface AuditResult {
@@ -94,11 +95,24 @@ function formatBytes(bytes: number | null): string {
 }
 
 export default function AuditPage() {
+  const searchParams = useSearchParams();
   const [url, setUrl] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [audit, setAudit] = useState<AuditResult | null>(null);
+  const [autoStarted, setAutoStarted] = useState(false);
+
+  // Auto-fill from query params (from search page "Auditer" button)
+  useEffect(() => {
+    const paramUrl = searchParams.get('url');
+    const paramName = searchParams.get('name');
+    if (paramUrl && !autoStarted) {
+      setUrl(paramUrl);
+      if (paramName) setCompanyName(paramName);
+      setAutoStarted(true);
+    }
+  }, [searchParams, autoStarted]);
 
   const runAudit = async () => {
     if (!url) return;

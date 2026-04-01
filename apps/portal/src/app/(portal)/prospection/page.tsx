@@ -313,6 +313,13 @@ export default function ProspectionPage() {
         </div>
         {!selectedCampaign && (
           <div style={{ display: 'flex', gap: '8px' }}>
+            <a href="/prospection/search" style={{
+              display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
+              background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border)',
+              cursor: 'pointer', fontSize: '13px', fontWeight: 500, textDecoration: 'none',
+            }}>
+              <Search size={16} /> Recherche entreprises
+            </a>
             <a href="/prospection/audit" style={{
               display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
               background: 'var(--bg-secondary)', color: 'var(--accent)', border: '1px solid var(--accent)',
