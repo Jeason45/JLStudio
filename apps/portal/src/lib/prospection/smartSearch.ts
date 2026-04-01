@@ -155,13 +155,16 @@ export async function searchBusinesses(
     console.error('SIRENE search error:', err)
   }
 
-  // Filter: only keep businesses actually in the target city/area
-  const villeUpper = ville.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  // Filter: only keep businesses in the target city/postal codes area
+  const villeNorm = ville.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z ]/g, '')
   const filtered = results.filter(r => {
-    const businessCity = (r.city || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    const businessCity = (r.city || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z ]/g, '')
     const businessCP = r.postalCode || ''
-    // Match by city name or by postal code prefix
-    return businessCity.includes(villeUpper) || villeUpper.includes(businessCity) || postalCodes.includes(businessCP)
+    // Match by postal code (most reliable)
+    if (postalCodes.includes(businessCP)) return true
+    // Match by city name (fuzzy — handles "BORDEAUX", "BORDEAUX CEDEX", etc.)
+    if (businessCity.startsWith(villeNorm) || villeNorm.startsWith(businessCity)) return true
+    return false
   })
 
   // Find websites via DuckDuckGo (only for first 15 to avoid rate limiting)
@@ -238,13 +241,36 @@ async function findWebsite(companyName: string, city: string): Promise<string | 
       'duckduckgo.com', 'bing.com', 'pagesjaunes.fr', 'facebook.com',
       'instagram.com', 'linkedin.com', 'twitter.com', 'youtube.com',
       'mesdepanneurs.fr', 'habitatpresto.com', 'lesbonsartisans.fr',
-      'societe.com', 'annuaire', '118', 'yelp', 'tripadvisor',
-      'google.com', 'wikipedia.org', 'tiktok.com',
+      'societe.com', 'annuaire', '118712', '118000', '118218', 'yelp', 'tripadvisor',
+      'google.com', 'wikipedia.org', 'tiktok.com', 'kompass.com', 'cylex.fr',
+      'infobel.com', 'horairesdouverture24.fr', 'fr.mappy.com', 'justacote.com',
+      'telephone.city', 'local.fr', 'gralon.net', 'starofservice.com',
+      'appointmenttrading.com', 'europages.fr', 'manageo.fr', 'verif.com',
+      'pappers.fr', 'infogreffe.fr', 'bodacc.fr', 'sirene.fr',
+      'linternaute.com', 'lefigaro.fr', 'lemonde.fr', 'bfrancia.com',
+      'quelresto.fr', 'lafourchette.com', 'thefork.com', 'booking.com',
+      'groupon.fr', 'amazon.', 'ebay.',
+    ]
+
+    // Also filter generic directories/aggregators
+    const directoryPatterns = [
+      /annuaire/i, /directory/i, /listing/i, /avis/i, /review/i,
+      /comparateur/i, /devis/i, /trouver/i, /recherche/i,
     ]
 
     for (const match of matches) {
       const decoded = decodeURIComponent(match[1])
-      if (blacklist.some(b => decoded.includes(b))) continue
+      if (blacklist.some(b => decoded.toLowerCase().includes(b))) continue
+      if (directoryPatterns.some(p => p.test(decoded))) continue
+
+      // Basic check: the URL should look like a real company site (not too many path segments)
+      try {
+        const urlObj = new URL(decoded)
+        const pathParts = urlObj.pathname.split('/').filter(Boolean)
+        // Skip deep links into directory sites (e.g. /bordeaux/plombier/12345)
+        if (pathParts.length > 3) continue
+      } catch { continue }
+
       return decoded
     }
 

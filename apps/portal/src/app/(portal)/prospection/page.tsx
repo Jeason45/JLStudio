@@ -475,13 +475,32 @@ export default function ProspectionPage() {
                     )}
 
                     {/* Meta row */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
-                        {new Date(campaign.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
-                      </span>
-                      <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>
-                        {campaign._count.results} resultat{campaign._count.results !== 1 ? 's' : ''}
-                      </span>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
+                          {new Date(campaign.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </span>
+                        <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                          {campaign._count.results} resultat{campaign._count.results !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          if (!confirm('Supprimer cette campagne ?')) return;
+                          await fetch(`/api/portal/prospection/campaigns/${campaign.id}`, { method: 'DELETE' });
+                          fetchCampaigns();
+                        }}
+                        title="Supprimer"
+                        style={{
+                          background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
+                          color: 'var(--text-tertiary)', borderRadius: '4px', display: 'flex', alignItems: 'center',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--danger)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-tertiary)'; }}
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </div>
                   </div>
                 );
