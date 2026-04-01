@@ -59,3 +59,27 @@ export async function DELETE(
   await logActivity(siteId, userId, 'delete', 'prospectionCampaign', id);
   return NextResponse.json({ success: true });
 }
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const siteId = extractSiteId(req.headers);
+  const { id } = await params;
+  if (!siteId) return NextResponse.json({ error: 'Non autorise' }, { status: 401 });
+
+  const campaign = await prisma.prospectionCampaign.findFirst({
+    where: { id, siteId },
+  });
+
+  if (!campaign) return NextResponse.json({ error: 'Campagne introuvable' }, { status: 404 });
+
+  const body = await req.json();
+  const data: Record<string, unknown> = {};
+  if (body.status) data.status = body.status;
+  if (body.error !== undefined) data.error = body.error;
+  if (body.status === 'FAILED' || body.status === 'COMPLETED') data.completedAt = new Date();
+
+  const updated = await prisma.prospectionCampaign.update({ where: { id }, data });
+  return NextResponse.json(updated);
+}

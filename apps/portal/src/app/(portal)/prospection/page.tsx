@@ -507,7 +507,7 @@ export default function ProspectionPage() {
               <div style={{ marginTop: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-                    {currentStatus === 'PENDING' ? 'Demarrage...' : 'Analyse en cours...'}
+                    {currentStatus === 'PENDING' ? 'En attente de l\'agent local...' : 'Analyse en cours...'}
                   </span>
                   <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--info, #3b82f6)' }}>
                     {currentProgress}%
@@ -521,6 +521,20 @@ export default function ProspectionPage() {
                     animation: currentStatus === 'RUNNING' ? 'shimmer 2s ease-in-out infinite' : 'none',
                   }} />
                 </div>
+              </div>
+            )}
+
+            {/* Agent hint for pending campaigns */}
+            {currentStatus === 'PENDING' && currentProgress === 0 && (
+              <div style={{
+                marginTop: '10px', padding: '10px 14px', borderRadius: '8px',
+                background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)',
+                fontSize: '11px', color: 'var(--info, #3b82f6)', lineHeight: '1.5',
+              }}>
+                Lancez l'agent local pour executer cette campagne :<br />
+                <code style={{ background: 'rgba(0,0,0,0.1)', padding: '2px 6px', borderRadius: '4px', fontSize: '11px' }}>
+                  cd apps/prospector && npm run agent
+                </code>
               </div>
             )}
 
@@ -855,6 +869,25 @@ export default function ProspectionPage() {
                   background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)',
                   boxShadow: 'var(--shadow-card)', padding: '14px 16px', marginBottom: '16px',
                 }}>
+                  {(currentStatus === 'RUNNING' || currentStatus === 'PENDING') && (
+                    <button
+                      onClick={async () => {
+                        await fetch(`/api/portal/prospection/campaigns/${selectedCampaign.id}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ status: 'FAILED', error: 'Arrêtée manuellement' }),
+                        });
+                        setSelectedCampaign({ ...selectedCampaign, status: 'FAILED' });
+                      }}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
+                        background: 'rgba(239,68,68,0.1)', color: 'var(--danger)', border: '1px solid var(--danger)',
+                        cursor: 'pointer', fontSize: '12px', fontWeight: 600, marginBottom: '8px',
+                      }}
+                    >
+                      ■ Arrêter la campagne
+                    </button>
+                  )}
                   {!confirmDelete ? (
                     <button
                       onClick={() => setConfirmDelete(true)}

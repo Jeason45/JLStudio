@@ -10,10 +10,18 @@ export async function logActivity(
   details?: Record<string, unknown>
 ) {
   try {
+    // Verify userId is a valid PortalUser before linking
+    // (admin logins use BuilderUser IDs which don't exist in PortalUser table)
+    let validUserId: string | null = null;
+    if (userId) {
+      const portalUser = await prisma.portalUser.findUnique({ where: { id: userId }, select: { id: true } });
+      if (portalUser) validUserId = userId;
+    }
+
     await prisma.activity.create({
       data: {
         siteId,
-        userId,
+        userId: validUserId,
         action,
         entity,
         entityId,
