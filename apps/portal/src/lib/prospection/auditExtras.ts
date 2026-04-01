@@ -38,7 +38,7 @@ export async function analyzePageSpeedFull(url: string, apiKey: string): Promise
     function extractFailed(audits: any, ids: string[]): PageSpeedAudit[] {
       return ids.map(id => audits[id]).filter(a => a && a.score !== null && a.score < 1).map(a => ({
         id: a.id, title: a.title || a.id, score: a.score, displayValue: a.displayValue || null,
-      })).slice(0, 10)
+      }))
     }
 
     const perfIds = ['render-blocking-resources','unused-css-rules','unused-javascript','modern-image-formats','offscreen-images','uses-optimized-images','uses-text-compression','server-response-time','dom-size','legacy-javascript','total-byte-weight','mainthread-work-breakdown','bootup-time','long-tasks']

@@ -355,24 +355,79 @@ export default function AuditPage() {
             </div>
           </div>
 
-          {/* Audits détaillés */}
-          {[
-            { title: 'Problemes de performance', audits: audit.mobilePerformanceAudits },
-            { title: 'Problemes d\'accessibilite', audits: audit.mobileAccessibilityAudits },
-            { title: 'Problemes SEO', audits: audit.mobileSEOAudits },
-            { title: 'Problemes de bonnes pratiques', audits: audit.mobileBestPracticesAudits },
-          ].filter(s => s.audits.length > 0).map(section => (
-            <div key={section.title} style={{ ...cardStyle, marginBottom: '16px' }}>
+          {/* Heaviest Resources */}
+          {audit.heaviestResources && audit.heaviestResources.length > 0 && (
+            <div style={{ ...cardStyle, marginBottom: '16px' }}>
               <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px' }}>
                 <AlertTriangle size={14} style={{ verticalAlign: 'middle', marginRight: '6px', color: '#f59e0b' }} />
-                {section.title}
+                Ressources les plus lourdes
               </h3>
-              {section.audits.map(a => (
-                <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid var(--border-light)' }}>
-                  <span style={{ fontSize: '12px', color: 'var(--text-primary)' }}>{a.title}</span>
-                  {a.displayValue && <span style={{ fontSize: '11px', color: '#f59e0b', fontWeight: 500 }}>{a.displayValue}</span>}
-                </div>
-              ))}
+              {audit.heaviestResources.map((r, i) => {
+                const sizeStr = r.size < 1024 ? `${r.size}B` : r.size < 1024 * 1024 ? `${(r.size / 1024).toFixed(0)}KB` : `${(r.size / (1024 * 1024)).toFixed(1)}MB`;
+                const barWidth = Math.min(100, (r.size / (audit.heaviestResources[0]?.size || 1)) * 100);
+                const filename = r.url.split('/').pop()?.split('?')[0] || r.url;
+                return (
+                  <div key={i} style={{ padding: '6px 0', borderBottom: i < audit.heaviestResources.length - 1 ? '1px solid var(--border-light)' : 'none' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--text-primary)', maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={r.url}>
+                        {filename}
+                      </span>
+                      <span style={{ fontSize: '11px', fontWeight: 600, color: r.size > 500000 ? '#ef4444' : r.size > 100000 ? '#f59e0b' : 'var(--text-secondary)' }}>
+                        {sizeStr}
+                      </span>
+                    </div>
+                    <div style={{ width: '100%', height: '4px', borderRadius: '2px', background: 'var(--bg-secondary)' }}>
+                      <div style={{ width: `${barWidth}%`, height: '100%', borderRadius: '2px', background: r.size > 500000 ? '#ef4444' : r.size > 100000 ? '#f59e0b' : 'var(--accent)' }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Audits détaillés */}
+          {[
+            { title: 'Problemes de performance', audits: audit.mobilePerformanceAudits, color: '#ef4444' },
+            { title: 'Problemes d\'accessibilite', audits: audit.mobileAccessibilityAudits, color: '#8b5cf6' },
+            { title: 'Problemes SEO', audits: audit.mobileSEOAudits, color: '#3b82f6' },
+            { title: 'Problemes de bonnes pratiques', audits: audit.mobileBestPracticesAudits, color: '#f59e0b' },
+          ].filter(s => s.audits.length > 0).map(section => (
+            <div key={section.title} style={{ ...cardStyle, marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>
+                <AlertTriangle size={14} style={{ verticalAlign: 'middle', marginRight: '6px', color: section.color }} />
+                {section.title}
+                <span style={{ fontSize: '11px', fontWeight: 400, color: 'var(--text-tertiary)', marginLeft: '8px' }}>
+                  {section.audits.length} probleme{section.audits.length > 1 ? 's' : ''}
+                </span>
+              </h3>
+              {section.audits.map((a, i) => {
+                const scoreColor = a.score === null ? 'var(--text-tertiary)' : a.score === 0 ? '#ef4444' : '#f59e0b';
+                return (
+                  <div key={a.id} style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    padding: '8px 10px', marginBottom: '4px', borderRadius: '6px',
+                    background: i % 2 === 0 ? 'var(--bg-secondary)' : 'transparent',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                      <div style={{
+                        width: '6px', height: '6px', borderRadius: '50%', flexShrink: 0,
+                        background: scoreColor,
+                      }} />
+                      <span style={{ fontSize: '12px', color: 'var(--text-primary)' }}>{a.title}</span>
+                    </div>
+                    {a.displayValue && (
+                      <span style={{
+                        fontSize: '11px', fontWeight: 600, color: scoreColor,
+                        padding: '2px 8px', borderRadius: '4px',
+                        background: a.score === 0 ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)',
+                        whiteSpace: 'nowrap', marginLeft: '8px',
+                      }}>
+                        {a.displayValue}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           ))}
 
