@@ -67,7 +67,7 @@ export async function exportCSV(prospects: ScoredProspect[], metier: string, vil
     observatoryGrade: p.analysis?.observatoryGrade || '',
     w3cErrors: p.analysis?.w3cErrors ?? '',
     yellowLabScore: p.analysis?.yellowLabScore ?? '',
-    topOpportunities: p.analysis?.mobileOpportunities?.slice(0, 3).map(o => o.title).join(' | ') || '',
+    topOpportunities: p.analysis?.mobilePerformanceAudits?.slice(0, 3).map(o => o.title).join(' | ') || '',
   }))
 
   await csvWriter.writeRecords(records)

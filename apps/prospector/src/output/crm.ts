@@ -74,7 +74,7 @@ export async function injectIntoCRM(
       metadata.estimatedAge = prospect.analysis.estimatedAge
       metadata.w3cErrors = prospect.analysis.w3cErrors
       metadata.yellowLabScore = prospect.analysis.yellowLabScore
-      metadata.mobileOpportunities = prospect.analysis.mobileOpportunities?.map(o => `${o.title}${o.displayValue ? ` (${o.displayValue})` : ''}`).slice(0, 10)
+      metadata.mobileOpportunities = prospect.analysis.mobilePerformanceAudits?.map(o => `${o.title}${o.displayValue ? ` (${o.displayValue})` : ''}`).slice(0, 10)
       metadata.yellowLabTopIssues = prospect.analysis.yellowLabTopIssues
       metadata.mobileTBT = prospect.analysis.mobileTBT
       metadata.mobileCLS = prospect.analysis.mobileCLS

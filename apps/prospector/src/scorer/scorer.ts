@@ -170,9 +170,9 @@ function scoreRefonte(prospect: RawProspect, analysis: SiteAnalysis, sirene: Sir
   }
 
   // ── PageSpeed opportunities ──
-  if (analysis.mobileOpportunities.length > 5) {
+  if (analysis.mobilePerformanceAudits.length > 5) {
     rawScore += 5
-    breakdown.push({ label: 'Nombreuses optimisations possibles', points: 5, reason: `${analysis.mobileOpportunities.length} opportunités PageSpeed` })
+    breakdown.push({ label: 'Nombreuses optimisations possibles', points: 5, reason: `${analysis.mobilePerformanceAudits.length} opportunités PageSpeed` })
   }
 
   // ── Sirene enrichment ──

@@ -12,6 +12,8 @@ import { detectSocialPresence } from './analyzer/socialDetector.js'
 import { findBestEmail } from './analyzer/emailVerifier.js'
 import { validateHtml } from './analyzer/w3cValidator.js'
 import { analyzeYellowLab } from './analyzer/yellowLab.js'
+import { checkSSL, checkSecurityHeaders } from './analyzer/sslChecker.js'
+import { checkCarbon } from './analyzer/carbonChecker.js'
 import { scoreProspect } from './scorer/scorer.js'
 import { exportCSV } from './output/csv.js'
 import { injectIntoCRM } from './output/crm.js'
@@ -100,21 +102,29 @@ program
       if (p.url) {
         analysis = {
           url: p.url,
-          mobileScore: null, desktopScore: null, mobileFCP: null, mobileLCP: null,
-          mobileTBT: null, mobileCLS: null, mobileSI: null,
-          mobileOpportunities: [], mobileDiagnostics: [],
-          desktopOpportunities: [], desktopDiagnostics: [],
-          mobilePassedAudits: 0, mobileTotalAudits: 0,
+          // PageSpeed 4 categories
+          mobileScore: null, mobileAccessibility: null, mobileSEO: null, mobileBestPractices: null,
+          desktopScore: null, desktopAccessibility: null, desktopSEO: null, desktopBestPractices: null,
+          mobileFCP: null, mobileLCP: null, mobileTBT: null, mobileCLS: null, mobileSI: null,
+          mobilePerformanceAudits: [], mobileAccessibilityAudits: [],
+          mobileSEOAudits: [], mobileBestPracticesAudits: [],
+          desktopPerformanceAudits: [],
+          totalByteWeight: null, totalRequestCount: null, heaviestResources: [],
+          mobileScreenshot: null,
+          mobilePassedAudits: 0, mobileTotalAudits: 0, pageSpeedSecurityIssues: [],
+          // Tech
           isHttps: false, isResponsive: false, cmsDetected: null, estimatedAge: null,
           loadTimeMs: null, pageSizeKB: null,
           hasAnalytics: false, hasFavicon: false, hasMetaDescription: false, hasOpenGraph: false,
           hasSitemap: false, hasRobotsTxt: false,
           usesJquery: false, usesFlash: false, hasObsoleteTags: false, usesModernImages: false,
           internalLinkCount: 0, redirectCount: 0,
+          // External APIs
           observatoryGrade: null, observatoryScore: null,
           emailData: null, socialPresence: null,
           w3cErrors: null, w3cWarnings: null, w3cTopErrors: [],
           yellowLabScore: null, yellowLabCategories: [], yellowLabTopIssues: [],
+          sslResult: null, securityHeaders: null, carbonResult: null,
           error: null,
         }
 
@@ -152,7 +162,7 @@ program
               const ps = await analyzePageSpeed(p.url)
               Object.assign(analysis, ps)
               if (verbose && ps.mobileScore !== null) {
-                const oppCount = ps.mobileOpportunities.length
+                const oppCount = ps.mobilePerformanceAudits.length
                 log.dim(`  ⚡ PageSpeed mobile: ${ps.mobileScore}/100 (${oppCount} opportunités)`)
               }
             } catch { /* best effort */ }
@@ -177,6 +187,30 @@ program
             analysis.yellowLabTopIssues = ylt.topIssues
             if (verbose && ylt.globalScore !== null) {
               log.dim(`  🔬 Yellow Lab: ${ylt.globalScore}/100 (${ylt.topIssues.length} problèmes)`)
+            }
+          } catch { /* best effort */ }
+
+          // SSL Certificate
+          try {
+            analysis.sslResult = await checkSSL(p.url)
+            if (verbose && analysis.sslResult.isValid) {
+              log.dim(`  🔒 SSL: ${analysis.sslResult.protocol} — expire dans ${analysis.sslResult.daysUntilExpiry}j`)
+            }
+          } catch { /* best effort */ }
+
+          // Security Headers
+          try {
+            analysis.securityHeaders = await checkSecurityHeaders(p.url)
+            if (verbose) {
+              log.dim(`  🛡️ Headers sécurité: ${analysis.securityHeaders.score}/${analysis.securityHeaders.total}`)
+            }
+          } catch { /* best effort */ }
+
+          // Carbon Footprint
+          try {
+            analysis.carbonResult = await checkCarbon(p.url)
+            if (verbose && analysis.carbonResult.rating) {
+              log.dim(`  🌱 Carbone: ${analysis.carbonResult.rating} (${analysis.carbonResult.co2PerView?.toFixed(2)}g CO2/vue)`)
             }
           } catch { /* best effort */ }
 
