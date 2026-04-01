@@ -1,980 +1,1153 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useSidebar } from '@/components/portal/SidebarContext';
-import { Radar, Plus, ArrowLeft, Trash2, X, Download, Filter, Search } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Search, Globe, Shield, Zap, Eye, CheckCircle, XCircle, AlertTriangle, Leaf, X, FileText, UserPlus, Trash2, Clock, Building2, ExternalLink, Loader2, StickyNote } from 'lucide-react';
 
 // ─── Types ───
 
-interface CampaignListItem {
+interface Session {
   id: string;
-  metier: string;
-  ville: string;
-  limit: number;
-  status: 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
-  progress: number;
-  totalFound: number | null;
-  withSite: number | null;
-  withoutSite: number | null;
-  error: string | null;
+  type: string;
+  query: string | null;
   createdAt: string;
-  _count: { results: number };
+  _count: { prospects: number };
+  prospects?: Prospect[];
 }
 
-interface ProspectionResult {
+interface AuditData {
+  url: string;
+  analyzedAt: string;
+  mobileScore: number | null;
+  mobileAccessibility: number | null;
+  mobileSEO: number | null;
+  mobileBestPractices: number | null;
+  desktopScore: number | null;
+  mobileFCP: number | null;
+  mobileLCP: number | null;
+  mobileTBT: number | null;
+  mobileCLS: number | null;
+  mobileSI: number | null;
+  mobilePerformanceAudits: Array<{ id: string; title: string; score: number | null; displayValue: string | null }>;
+  mobileAccessibilityAudits: Array<{ id: string; title: string; score: number | null; displayValue: string | null }>;
+  mobileSEOAudits: Array<{ id: string; title: string; score: number | null; displayValue: string | null }>;
+  mobileBestPracticesAudits: Array<{ id: string; title: string; score: number | null; displayValue: string | null }>;
+  totalByteWeight: number | null;
+  totalRequestCount: number | null;
+  heaviestResources: Array<{ url: string; size: number }>;
+  mobileScreenshot: string | null;
+  isHttps: boolean;
+  isResponsive: boolean;
+  cmsDetected: string | null;
+  estimatedAge: number | null;
+  loadTimeMs: number | null;
+  hasAnalytics: boolean;
+  hasFavicon: boolean;
+  hasMetaDescription: boolean;
+  hasOpenGraph: boolean;
+  hasSitemap: boolean;
+  hasRobotsTxt: boolean;
+  usesJquery: boolean;
+  usesFlash: boolean;
+  hasObsoleteTags: boolean;
+  usesModernImages: boolean;
+  internalLinkCount: number;
+  ssl: { isValid: boolean; issuer: string | null; protocol: string | null; daysUntilExpiry: number | null; isExpiringSoon: boolean } | null;
+  securityHeaders: { score: number; total: number; strictTransportSecurity: boolean; contentSecurityPolicy: boolean; xFrameOptions: boolean; xContentTypeOptions: boolean; referrerPolicy: boolean; permissionsPolicy: boolean } | null;
+  observatoryGrade: string | null;
+  carbon: { co2PerView: number | null; rating: string | null; isGreen: boolean; cleanerThan: number | null } | null;
+  w3cErrors: number;
+  w3cWarnings: number;
+  w3cTopErrors: string[];
+  yellowLabScore: number | null;
+  yellowLabTopIssues: string[];
+  socialPresence: { links: Record<string, string | null>; count: number };
+  primaryEmail: string | null;
+  emailConfidence: string;
+  emails: string[];
+}
+
+interface Prospect {
   id: string;
+  sessionId: string;
+  contactId: string | null;
   name: string;
-  url: string | null;
-  phone: string | null;
+  siret: string | null;
   address: string | null;
   city: string | null;
+  postalCode: string | null;
+  dateCreation: string | null;
+  nafLabel: string | null;
+  website: string | null;
   email: string | null;
+  phone: string | null;
   category: string;
-  priorityScore: number;
-  status: string;
-  breakdown: { label: string; score: number }[];
-  sireneData: { siret?: string } | null;
-  contactId: string | null;
-}
-
-interface CampaignDetail {
-  id: string;
-  metier: string;
-  ville: string;
-  limit: number;
-  status: 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
-  progress: number;
-  totalFound: number | null;
-  withSite: number | null;
-  withoutSite: number | null;
-  error: string | null;
+  auditData: AuditData | null;
+  auditScore: number | null;
+  auditedAt: string | null;
+  addedToCRM: boolean;
+  notes: string | null;
   createdAt: string;
-  results: ProspectionResult[];
 }
 
-// ─── Status config ───
+// ─── Helpers ───
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  PENDING: { label: 'En attente', color: 'var(--text-tertiary)', bg: 'var(--bg-secondary)' },
-  RUNNING: { label: 'En cours', color: 'var(--info, #3b82f6)', bg: 'rgba(59,130,246,0.1)' },
-  COMPLETED: { label: 'Termine', color: 'var(--success, #22c55e)', bg: 'rgba(34,197,94,0.1)' },
-  FAILED: { label: 'Echoue', color: 'var(--danger, #ef4444)', bg: 'rgba(239,68,68,0.1)' },
+function scoreColor(score: number | null): string {
+  if (score === null) return 'var(--text-tertiary)';
+  if (score >= 90) return '#22c55e';
+  if (score >= 50) return '#f59e0b';
+  return '#ef4444';
+}
+
+function scoreBg(score: number | null): string {
+  if (score === null) return 'var(--bg-secondary)';
+  if (score >= 90) return 'rgba(34,197,94,0.1)';
+  if (score >= 50) return 'rgba(245,158,11,0.1)';
+  return 'rgba(239,68,68,0.1)';
+}
+
+function formatMs(ms: number | null): string {
+  if (ms === null) return '—';
+  return ms < 1000 ? `${Math.round(ms)}ms` : `${(ms / 1000).toFixed(1)}s`;
+}
+
+function formatBytes(bytes: number | null): string {
+  if (bytes === null) return '—';
+  if (bytes < 1024) return `${bytes}B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)}KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
+}
+
+function ScoreCircle({ score, label, size = 70 }: { score: number | null; label: string; size?: number }) {
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <div style={{
+        width: size, height: size, borderRadius: '50%', background: scoreBg(score),
+        border: `3px solid ${scoreColor(score)}`, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        margin: '0 auto 6px',
+      }}>
+        <span style={{ fontSize: size * 0.35, fontWeight: 700, color: scoreColor(score) }}>{score ?? '—'}</span>
+      </div>
+      <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 500 }}>{label}</span>
+    </div>
+  );
+}
+
+function Check({ ok, label }: { ok: boolean; label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 0', fontSize: '12px' }}>
+      {ok ? <CheckCircle size={14} color="#22c55e" /> : <XCircle size={14} color="#ef4444" />}
+      <span style={{ color: 'var(--text-primary)' }}>{label}</span>
+    </div>
+  );
+}
+
+// ─── Styles ───
+
+const cardStyle: React.CSSProperties = {
+  background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)',
+  padding: '16px', boxShadow: 'var(--shadow-card)',
 };
 
+const inputStyle: React.CSSProperties = {
+  padding: '10px 14px', borderRadius: '8px', fontSize: '14px',
+  background: 'var(--bg-input)', border: '1px solid var(--border-input)', color: 'var(--text-primary)',
+  outline: 'none',
+};
+
+const btnPrimary: React.CSSProperties = {
+  padding: '10px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+  background: 'var(--accent)', color: 'white', fontWeight: 600, fontSize: '13px',
+};
+
+const btnSecondary: React.CSSProperties = {
+  padding: '6px 12px', borderRadius: '6px', border: '1px solid var(--border)',
+  background: 'var(--bg-card)', color: 'var(--text-primary)', fontWeight: 500, fontSize: '12px',
+  cursor: 'pointer',
+};
+
+// ─── Main Page ───
+
 export default function ProspectionPage() {
-  const { isMobile } = useSidebar();
+  // Sessions
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [activeSession, setActiveSession] = useState<Session | null>(null);
+  const [prospects, setProspects] = useState<Prospect[]>([]);
+  const [loadingSessions, setLoadingSessions] = useState(true);
 
-  // ─── List state ───
-  const [campaigns, setCampaigns] = useState<CampaignListItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Search form
+  const [searchMetier, setSearchMetier] = useState('');
+  const [searchVille, setSearchVille] = useState('');
+  const [searching, setSearching] = useState(false);
 
-  // ─── Creation modal ───
-  const [showCreate, setShowCreate] = useState(false);
-  const [createForm, setCreateForm] = useState({ metier: '', ville: '', limit: 20 });
-  const [creating, setCreating] = useState(false);
-  const [createError, setCreateError] = useState('');
+  // Audit URL form
+  const [auditUrl, setAuditUrl] = useState('');
+  const [auditing, setAuditing] = useState(false);
 
-  // ─── Detail state ───
-  const [selectedCampaign, setSelectedCampaign] = useState<CampaignDetail | null>(null);
-  const [loadingDetail, setLoadingDetail] = useState(false);
+  // Filters + Sort
+  const [filter, setFilter] = useState('all');
+  const [sort, setSort] = useState('score');
 
-  // ─── Progress polling ───
-  const [liveProgress, setLiveProgress] = useState<{ status: string; progress: number; resultCount: number } | null>(null);
-  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Detail panel
+  const [selectedProspect, setSelectedProspect] = useState<Prospect | null>(null);
 
-  // ─── Filters ───
-  const [filterStatus, setFilterStatus] = useState('');
-  const [filterCategory, setFilterCategory] = useState('');
+  // Inline audit loading
+  const [auditingId, setAuditingId] = useState<string | null>(null);
 
-  // ─── Inject ───
-  const [injecting, setInjecting] = useState(false);
-  const [injectResult, setInjectResult] = useState<{ injected: number; total: number } | null>(null);
+  // Notes editing
+  const [editingNotes, setEditingNotes] = useState<string | null>(null);
+  const [notesText, setNotesText] = useState('');
 
-  // ─── Deleting ───
-  const [deleting, setDeleting] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  // Error
+  const [error, setError] = useState('');
 
-  // ─── Styles ───
-  const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '8px 12px', borderRadius: '8px',
-    background: 'var(--bg-input)', border: '1px solid var(--border-input)',
-    color: 'var(--text-primary)', fontSize: '13px', outline: 'none',
-  };
+  // ─── Load sessions ───
 
-  // ─── Fetch campaigns list ───
-  const fetchCampaigns = useCallback(() => {
-    fetch('/api/portal/prospection/campaigns')
-      .then((r) => r.json())
-      .then((res) => {
-        setCampaigns(res.data ?? res);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  useEffect(() => { fetchCampaigns(); }, [fetchCampaigns]);
-
-  // ─── Fetch campaign detail ───
-  const fetchDetail = useCallback((id: string) => {
-    setLoadingDetail(true);
-    const params = new URLSearchParams();
-    if (filterStatus) params.set('status', filterStatus);
-    if (filterCategory) params.set('category', filterCategory);
-    fetch(`/api/portal/prospection/campaigns/${id}?${params}`)
-      .then((r) => r.json())
-      .then((data) => {
-        setSelectedCampaign(data);
-        setLoadingDetail(false);
-      })
-      .catch(() => setLoadingDetail(false));
-  }, [filterStatus, filterCategory]);
-
-  // ─── Poll progress for running campaigns ───
-  const startPolling = useCallback((id: string) => {
-    if (pollingRef.current) clearInterval(pollingRef.current);
-    pollingRef.current = setInterval(() => {
-      fetch(`/api/portal/prospection/campaigns/${id}/progress`)
-        .then((r) => r.json())
-        .then((data) => {
-          setLiveProgress({ status: data.status, progress: data.progress, resultCount: data.resultCount });
-          if (data.status !== 'RUNNING' && data.status !== 'PENDING') {
-            if (pollingRef.current) clearInterval(pollingRef.current);
-            pollingRef.current = null;
-            // Refresh full detail
-            fetchDetail(id);
-            fetchCampaigns();
-          }
-        })
-        .catch(() => {});
-    }, 2000);
-  }, [fetchDetail, fetchCampaigns]);
-
-  useEffect(() => {
-    return () => {
-      if (pollingRef.current) clearInterval(pollingRef.current);
-    };
-  }, []);
-
-  // Start polling when viewing a running campaign
-  useEffect(() => {
-    if (selectedCampaign && (selectedCampaign.status === 'RUNNING' || selectedCampaign.status === 'PENDING')) {
-      startPolling(selectedCampaign.id);
-    } else {
-      if (pollingRef.current) {
-        clearInterval(pollingRef.current);
-        pollingRef.current = null;
-      }
-      setLiveProgress(null);
-    }
-  }, [selectedCampaign?.id, selectedCampaign?.status, startPolling]);
-
-  // Re-fetch detail when filters change
-  useEffect(() => {
-    if (selectedCampaign) {
-      fetchDetail(selectedCampaign.id);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterStatus, filterCategory]);
-
-  // ─── Create campaign ───
-  const handleCreate = async () => {
-    if (!createForm.metier || !createForm.ville) return;
-    setCreating(true);
-    setCreateError('');
+  const loadSessions = useCallback(async () => {
     try {
-      const res = await fetch('/api/portal/prospection/campaigns', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(createForm),
-      });
-      if (!res.ok) {
+      const res = await fetch('/api/portal/prospection/sessions');
+      if (res.ok) {
         const data = await res.json();
-        setCreateError(data.error || 'Erreur lors de la creation');
-        setCreating(false);
-        return;
+        setSessions(data);
       }
-      const campaign = await res.json();
-
-      // Immediately run the campaign
-      await fetch(`/api/portal/prospection/campaigns/${campaign.id}/run`, { method: 'POST' });
-
-      setShowCreate(false);
-      setCreateForm({ metier: '', ville: '', limit: 20 });
-      setCreating(false);
-      fetchCampaigns();
-
-      // Open the campaign detail and start polling
-      setSelectedCampaign({ ...campaign, status: 'RUNNING', results: [] });
-    } catch {
-      setCreateError('Erreur reseau');
-      setCreating(false);
+    } catch {} finally {
+      setLoadingSessions(false);
     }
-  };
+  }, []);
 
-  // ─── Select campaign from list ───
-  const handleSelectCampaign = (campaign: CampaignListItem) => {
-    setFilterStatus('');
-    setFilterCategory('');
-    setInjectResult(null);
-    setConfirmDelete(false);
-    fetchDetail(campaign.id);
-  };
+  useEffect(() => { loadSessions(); }, [loadSessions]);
 
-  // ─── Back to list ───
-  const handleBack = () => {
-    setSelectedCampaign(null);
-    setLiveProgress(null);
-    setFilterStatus('');
-    setFilterCategory('');
-    setInjectResult(null);
-    setConfirmDelete(false);
-    if (pollingRef.current) {
-      clearInterval(pollingRef.current);
-      pollingRef.current = null;
-    }
-    fetchCampaigns();
-  };
+  // ─── Load session detail ───
 
-  // ─── Inject into CRM ───
-  const handleInject = async () => {
-    if (!selectedCampaign) return;
-    setInjecting(true);
-    setInjectResult(null);
+  const loadSessionDetail = useCallback(async (sessionId: string) => {
     try {
-      const res = await fetch(`/api/portal/prospection/campaigns/${selectedCampaign.id}/inject`, {
+      const res = await fetch(`/api/portal/prospection/sessions/${sessionId}?filter=${filter}&sort=${sort}`);
+      if (res.ok) {
+        const data = await res.json();
+        setActiveSession(data);
+        setProspects(data.prospects || []);
+      }
+    } catch {}
+  }, [filter, sort]);
+
+  // Reload when filter/sort changes
+  useEffect(() => {
+    if (activeSession?.id) loadSessionDetail(activeSession.id);
+  }, [filter, sort]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ─── Search ───
+
+  const handleSearch = useCallback(async () => {
+    if (!searchMetier || !searchVille) return;
+    setSearching(true);
+    setError('');
+    setSelectedProspect(null);
+    try {
+      const res = await fetch('/api/portal/prospection/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ type: 'search', metier: searchMetier, ville: searchVille }),
       });
       const data = await res.json();
-      setInjectResult(data);
-      // Refresh detail to update contactId links
-      fetchDetail(selectedCampaign.id);
-    } catch {
-      setInjectResult({ injected: 0, total: 0 });
-    }
-    setInjecting(false);
-  };
+      if (!res.ok) { setError(data.error || 'Erreur'); return; }
+      setActiveSession(data);
+      setProspects(data.prospects || []);
+      loadSessions(); // Refresh sidebar
+    } catch { setError('Erreur de connexion'); } finally { setSearching(false); }
+  }, [searchMetier, searchVille, loadSessions]);
 
-  // ─── Delete campaign ───
-  const handleDelete = async () => {
-    if (!selectedCampaign) return;
-    setDeleting(true);
+  // ─── Audit URL ───
+
+  const handleAuditUrl = useCallback(async () => {
+    if (!auditUrl) return;
+    setAuditing(true);
+    setError('');
+    setSelectedProspect(null);
     try {
-      await fetch(`/api/portal/prospection/campaigns/${selectedCampaign.id}`, { method: 'DELETE' });
-      setSelectedCampaign(null);
-      setDeleting(false);
-      setConfirmDelete(false);
-      fetchCampaigns();
-    } catch {
-      setDeleting(false);
+      const res = await fetch('/api/portal/prospection/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'audit', url: auditUrl }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setError(data.error || 'Erreur'); return; }
+      setActiveSession(data);
+      setProspects(data.prospects || []);
+      if (data.prospects?.[0]) setSelectedProspect(data.prospects[0]);
+      loadSessions();
+    } catch { setError('Erreur de connexion'); } finally { setAuditing(false); }
+  }, [auditUrl, loadSessions]);
+
+  // ─── Audit single prospect ───
+
+  const handleAuditProspect = useCallback(async (prospect: Prospect) => {
+    if (!activeSession || !prospect.website) return;
+    setAuditingId(prospect.id);
+    try {
+      const res = await fetch(`/api/portal/prospection/sessions/${activeSession.id}/prospects/${prospect.id}/audit`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setProspects(prev => prev.map(p => p.id === prospect.id ? data : p));
+        setSelectedProspect(data);
+      }
+    } catch {} finally { setAuditingId(null); }
+  }, [activeSession]);
+
+  // ─── Add to CRM ───
+
+  const handleAddCRM = useCallback(async (prospect: Prospect) => {
+    if (!activeSession) return;
+    try {
+      const res = await fetch(`/api/portal/prospection/sessions/${activeSession.id}/prospects/${prospect.id}/crm`, {
+        method: 'POST',
+      });
+      if (res.ok) {
+        setProspects(prev => prev.map(p => p.id === prospect.id ? { ...p, addedToCRM: true } : p));
+        if (selectedProspect?.id === prospect.id) setSelectedProspect({ ...prospect, addedToCRM: true });
+      }
+    } catch {}
+  }, [activeSession, selectedProspect]);
+
+  // ─── Save notes ───
+
+  const handleSaveNotes = useCallback(async (prospect: Prospect) => {
+    if (!activeSession) return;
+    try {
+      const res = await fetch(`/api/portal/prospection/sessions/${activeSession.id}/prospects/${prospect.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes: notesText }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProspects(prev => prev.map(p => p.id === prospect.id ? data : p));
+        setEditingNotes(null);
+      }
+    } catch {}
+  }, [activeSession, notesText]);
+
+  // ─── Delete prospect ───
+
+  const handleDeleteProspect = useCallback(async (prospect: Prospect) => {
+    if (!activeSession) return;
+    try {
+      const res = await fetch(`/api/portal/prospection/sessions/${activeSession.id}/prospects/${prospect.id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        setProspects(prev => prev.filter(p => p.id !== prospect.id));
+        if (selectedProspect?.id === prospect.id) setSelectedProspect(null);
+      }
+    } catch {}
+  }, [activeSession, selectedProspect]);
+
+  // ─── Delete session ───
+
+  const handleDeleteSession = useCallback(async (sessionId: string) => {
+    try {
+      const res = await fetch(`/api/portal/prospection/sessions/${sessionId}`, { method: 'DELETE' });
+      if (res.ok) {
+        setSessions(prev => prev.filter(s => s.id !== sessionId));
+        if (activeSession?.id === sessionId) {
+          setActiveSession(null);
+          setProspects([]);
+          setSelectedProspect(null);
+        }
+      }
+    } catch {}
+  }, [activeSession]);
+
+  // ─── Bulk actions ───
+
+  const handleAuditAll = useCallback(async () => {
+    const toAudit = prospects.filter(p => p.website && !p.auditedAt);
+    for (const p of toAudit) {
+      await handleAuditProspect(p);
     }
-  };
+  }, [prospects, handleAuditProspect]);
 
-  // ─── Compute stats from results ───
-  const results = selectedCampaign?.results ?? [];
-  const stats = {
-    chaud: results.filter((r) => r.status === 'Chaud').length,
-    tiede: results.filter((r) => r.status === 'Tiede' || r.status === 'Ti\u00e8de').length,
-    froid: results.filter((r) => r.status === 'Froid').length,
-    creation: results.filter((r) => r.category === 'creation').length,
-    refonte: results.filter((r) => r.category === 'refonte').length,
-  };
+  const handleAllToCRM = useCallback(async () => {
+    const toAdd = prospects.filter(p => !p.addedToCRM);
+    for (const p of toAdd) {
+      await handleAddCRM(p);
+    }
+  }, [prospects, handleAddCRM]);
 
-  // ─── Filtered results ───
-  const filteredResults = results;
+  // ─── Client filter (for instant UX) ───
 
-  const currentStatus = liveProgress?.status ?? selectedCampaign?.status ?? 'PENDING';
-  const currentProgress = liveProgress?.progress ?? selectedCampaign?.progress ?? 0;
+  const filteredProspects = prospects; // Server-side filtered already, but we keep the array as-is
 
-  // ═══════════════════════════════════════════════
-  // RENDER
-  // ═══════════════════════════════════════════════
+  // ─── Stats ───
+
+  const stats = activeSession ? {
+    total: prospects.length,
+    withSite: prospects.filter(p => p.website).length,
+    withoutSite: prospects.filter(p => !p.website).length,
+    audited: prospects.filter(p => p.auditedAt).length,
+  } : null;
+
+  // ─── Render ───
 
   return (
-    <div>
-      {/* ─── Header ─── */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {selectedCampaign && (
-            <button onClick={handleBack} style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              width: '32px', height: '32px', borderRadius: '8px',
-              background: 'var(--bg-secondary)', border: '1px solid var(--border)',
-              cursor: 'pointer', color: 'var(--text-secondary)',
-            }}>
-              <ArrowLeft size={16} />
-            </button>
-          )}
-          <Radar size={20} style={{ color: 'var(--accent)' }} />
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em', margin: 0 }}>
-            Prospection
-          </h1>
+    <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Search size={20} color="var(--accent)" />
+          </div>
+          <div>
+            <h1 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Prospection</h1>
+            <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: 0 }}>Recherche, audit et gestion de prospects</p>
+          </div>
         </div>
-        {!selectedCampaign && (
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <a href="/prospection/search" style={{
-              display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-              background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border)',
-              cursor: 'pointer', fontSize: '13px', fontWeight: 500, textDecoration: 'none',
-            }}>
-              <Search size={16} /> Recherche entreprises
-            </a>
-            <a href="/prospection/audit" style={{
-              display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-              background: 'var(--bg-secondary)', color: 'var(--accent)', border: '1px solid var(--accent)',
-              cursor: 'pointer', fontSize: '13px', fontWeight: 500, textDecoration: 'none',
-            }}>
-              <Search size={16} /> Audit site web
-            </a>
-            <button onClick={() => setShowCreate(true)} style={{
-              display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-              background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500,
-            }}>
-              <Plus size={16} /> Nouvelle campagne
-            </button>
+
+        {/* History dropdown */}
+        {sessions.length > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Clock size={14} color="var(--text-tertiary)" />
+            <select
+              value={activeSession?.id || ''}
+              onChange={(e) => {
+                const sid = e.target.value;
+                if (sid) {
+                  loadSessionDetail(sid);
+                  setSelectedProspect(null);
+                }
+              }}
+              style={{
+                ...inputStyle, padding: '6px 10px', fontSize: '12px', minWidth: '220px',
+              }}
+            >
+              <option value="">-- Historique des sessions --</option>
+              {sessions.map(s => (
+                <option key={s.id} value={s.id}>
+                  {s.type === 'search' ? s.query : s.query} ({s._count.prospects} prospects) — {new Date(s.createdAt).toLocaleDateString('fr-FR')}
+                </option>
+              ))}
+            </select>
+            {activeSession && (
+              <button onClick={() => handleDeleteSession(activeSession.id)} style={{ ...btnSecondary, padding: '6px 8px', color: 'var(--danger)' }} title="Supprimer la session">
+                <Trash2 size={14} />
+              </button>
+            )}
           </div>
         )}
       </div>
 
-      {/* ═══════════════════ CREATE MODAL ═══════════════════ */}
-      {showCreate && (
-        <>
-          <div onClick={() => setShowCreate(false)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'var(--overlay)', zIndex: 2000 }} />
-          <div style={{
-            position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-            width: '440px', maxWidth: '95vw', background: 'var(--bg-card)',
-            borderRadius: '12px', border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow-card)',
-            padding: '24px', zIndex: 2001,
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>Nouvelle campagne</h3>
-              <button onClick={() => setShowCreate(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)' }}>
-                <X size={16} />
+      {/* Search zone */}
+      <div style={{ ...cardStyle, marginBottom: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          {/* Search businesses */}
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Building2 size={14} /> Rechercher des entreprises
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                placeholder="Metier (coiffeur, plombier...)"
+                value={searchMetier}
+                onChange={(e) => setSearchMetier(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                style={{ ...inputStyle, flex: 1 }}
+              />
+              <input
+                placeholder="Ville"
+                value={searchVille}
+                onChange={(e) => setSearchVille(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                style={{ ...inputStyle, flex: 1 }}
+              />
+              <button
+                onClick={handleSearch}
+                disabled={searching || !searchMetier || !searchVille}
+                style={{ ...btnPrimary, opacity: searching || !searchMetier || !searchVille ? 0.5 : 1, whiteSpace: 'nowrap' }}
+              >
+                {searching ? 'Recherche...' : 'Rechercher'}
               </button>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div>
-                <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-tertiary)', marginBottom: '4px', display: 'block' }}>Metier *</label>
-                <input
-                  placeholder="ex: Boulangerie, Plombier, Restaurant..."
-                  value={createForm.metier}
-                  onChange={(e) => setCreateForm({ ...createForm, metier: e.target.value })}
-                  style={inputStyle}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-tertiary)', marginBottom: '4px', display: 'block' }}>Ville *</label>
-                <input
-                  placeholder="ex: Paris, Lyon, Marseille..."
-                  value={createForm.ville}
-                  onChange={(e) => setCreateForm({ ...createForm, ville: e.target.value })}
-                  style={inputStyle}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-tertiary)', marginBottom: '4px', display: 'block' }}>Nombre max de resultats</label>
-                <input
-                  type="number"
-                  min={1}
-                  max={200}
-                  value={createForm.limit}
-                  onChange={(e) => setCreateForm({ ...createForm, limit: parseInt(e.target.value) || 20 })}
-                  style={inputStyle}
-                />
-              </div>
-              {createError && <p style={{ color: 'var(--danger)', fontSize: '12px', margin: 0 }}>{createError}</p>}
-              <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-                <button
-                  onClick={handleCreate}
-                  disabled={creating || !createForm.metier || !createForm.ville}
-                  style={{
-                    padding: '8px 20px', borderRadius: '8px', background: 'var(--accent)', color: 'white',
-                    border: 'none', cursor: 'pointer', fontWeight: 500, fontSize: '13px',
-                    opacity: creating || !createForm.metier || !createForm.ville ? 0.5 : 1,
-                  }}
-                >
-                  {creating ? 'Lancement...' : 'Lancer la prospection'}
-                </button>
-                <button onClick={() => setShowCreate(false)} style={{
-                  padding: '8px 20px', borderRadius: '8px', background: 'var(--bg-secondary)',
-                  color: 'var(--text-secondary)', border: 'none', cursor: 'pointer', fontWeight: 500, fontSize: '13px',
-                }}>Annuler</button>
-              </div>
-            </div>
+            {searching && <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '6px' }}>Recherche SIRENE + detection de sites web (30-60s)...</div>}
           </div>
-        </>
+
+          {/* Audit URL */}
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Globe size={14} /> Auditer un site
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                placeholder="URL du site (ex: restaurant-bordeaux.fr)"
+                value={auditUrl}
+                onChange={(e) => setAuditUrl(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAuditUrl()}
+                style={{ ...inputStyle, flex: 1 }}
+              />
+              <button
+                onClick={handleAuditUrl}
+                disabled={auditing || !auditUrl}
+                style={{ ...btnPrimary, opacity: auditing || !auditUrl ? 0.5 : 1, whiteSpace: 'nowrap' }}
+              >
+                {auditing ? 'Analyse...' : 'Auditer'}
+              </button>
+            </div>
+            {auditing && <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '6px' }}>Audit complet en cours (30-60s)...</div>}
+          </div>
+        </div>
+      </div>
+
+      {/* Error */}
+      {error && (
+        <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'rgba(239,68,68,0.1)', color: '#ef4444', fontSize: '13px', marginBottom: '16px' }}>
+          {error}
+        </div>
       )}
 
-      {/* ═══════════════════ CAMPAIGN LIST ═══════════════════ */}
-      {!selectedCampaign && (
-        <>
-          {loading ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)', fontSize: '13px' }}>Chargement...</div>
-          ) : campaigns.length === 0 ? (
-            <div style={{
-              textAlign: 'center', padding: '60px 20px', background: 'var(--bg-card)',
-              borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)',
-            }}>
-              <Radar size={40} style={{ color: 'var(--text-tertiary)', marginBottom: '12px' }} />
-              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Aucune campagne</p>
-              <p style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>Lancez votre premiere campagne de prospection</p>
+      {/* Stats cards */}
+      {stats && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '16px' }}>
+          {[
+            { label: 'Total', value: stats.total, color: 'var(--accent)' },
+            { label: 'Avec site', value: stats.withSite, color: '#22c55e' },
+            { label: 'Sans site', value: stats.withoutSite, color: '#f59e0b' },
+            { label: 'Audites', value: stats.audited, color: '#8b5cf6' },
+          ].map(s => (
+            <div key={s.label} style={{ ...cardStyle, padding: '12px 16px', textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 700, color: s.color }}>{s.value}</div>
+              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>{s.label}</div>
             </div>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(320px, 1fr))', gap: '12px' }}>
-              {campaigns.map((campaign) => {
-                const conf = STATUS_CONFIG[campaign.status] ?? STATUS_CONFIG.PENDING;
+          ))}
+        </div>
+      )}
+
+      {/* Filter pills + Sort */}
+      {activeSession && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            {[
+              { key: 'all', label: 'Tous' },
+              { key: 'withSite', label: 'Avec site' },
+              { key: 'withoutSite', label: 'Sans site' },
+              { key: 'audited', label: 'Audites' },
+              { key: 'inCRM', label: 'Dans CRM' },
+            ].map(f => (
+              <button
+                key={f.key}
+                onClick={() => setFilter(f.key)}
+                style={{
+                  padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: 500,
+                  border: filter === f.key ? '1px solid var(--accent)' : '1px solid var(--border)',
+                  background: filter === f.key ? 'var(--accent-light)' : 'var(--bg-card)',
+                  color: filter === f.key ? 'var(--accent)' : 'var(--text-secondary)',
+                  cursor: 'pointer',
+                }}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            style={{ ...inputStyle, padding: '6px 10px', fontSize: '12px' }}
+          >
+            <option value="score">Tri: Score</option>
+            <option value="name">Tri: Nom</option>
+            <option value="date">Tri: Date</option>
+          </select>
+        </div>
+      )}
+
+      {/* Main content: prospect list + detail panel */}
+      {activeSession && (
+        <div style={{ display: 'grid', gridTemplateColumns: selectedProspect ? '60% 40%' : '1fr', gap: '16px', alignItems: 'start' }}>
+          {/* Prospect list */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: 'calc(100vh - 380px)', overflowY: 'auto', paddingRight: '4px' }}>
+            {filteredProspects.length === 0 && (
+              <div style={{ ...cardStyle, textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)' }}>
+                Aucun prospect pour ce filtre
+              </div>
+            )}
+            {filteredProspects.map(p => (
+              <ProspectCard
+                key={p.id}
+                prospect={p}
+                isSelected={selectedProspect?.id === p.id}
+                isAuditing={auditingId === p.id}
+                isEditingNotes={editingNotes === p.id}
+                notesText={notesText}
+                onSelect={() => setSelectedProspect(p)}
+                onAudit={() => handleAuditProspect(p)}
+                onAddCRM={() => handleAddCRM(p)}
+                onDelete={() => handleDeleteProspect(p)}
+                onStartNotes={() => { setEditingNotes(p.id); setNotesText(p.notes || ''); }}
+                onSaveNotes={() => handleSaveNotes(p)}
+                onCancelNotes={() => setEditingNotes(null)}
+                onNotesChange={setNotesText}
+              />
+            ))}
+          </div>
+
+          {/* Detail panel */}
+          {selectedProspect && (
+            <DetailPanel
+              prospect={selectedProspect}
+              onClose={() => setSelectedProspect(null)}
+              onAudit={() => handleAuditProspect(selectedProspect)}
+              onAddCRM={() => handleAddCRM(selectedProspect)}
+              isAuditing={auditingId === selectedProspect.id}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Action bar */}
+      {activeSession && prospects.length > 0 && (
+        <div style={{
+          display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px', padding: '16px',
+          ...cardStyle,
+        }}>
+          <button
+            onClick={handleAuditAll}
+            disabled={!!auditingId || !prospects.some(p => p.website && !p.auditedAt)}
+            style={{
+              ...btnPrimary,
+              opacity: !!auditingId || !prospects.some(p => p.website && !p.auditedAt) ? 0.5 : 1,
+            }}
+          >
+            Auditer tous les sites
+          </button>
+          <button
+            onClick={handleAllToCRM}
+            disabled={!prospects.some(p => !p.addedToCRM)}
+            style={{
+              ...btnSecondary,
+              opacity: !prospects.some(p => !p.addedToCRM) ? 0.5 : 1,
+            }}
+          >
+            <UserPlus size={14} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
+            Tout ajouter au CRM
+          </button>
+        </div>
+      )}
+
+      {/* Empty state */}
+      {!activeSession && !loadingSessions && sessions.length === 0 && (
+        <div style={{ ...cardStyle, textAlign: 'center', padding: '60px 20px', marginTop: '20px' }}>
+          <Search size={48} color="var(--text-tertiary)" style={{ marginBottom: '16px' }} />
+          <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
+            Commencez votre prospection
+          </div>
+          <div style={{ fontSize: '13px', color: 'var(--text-tertiary)', maxWidth: '400px', margin: '0 auto' }}>
+            Recherchez des entreprises par metier et ville, ou auditez directement un site web pour generer un rapport complet.
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Prospect Card ───
+
+function ProspectCard({
+  prospect: p, isSelected, isAuditing, isEditingNotes, notesText,
+  onSelect, onAudit, onAddCRM, onDelete, onStartNotes, onSaveNotes, onCancelNotes, onNotesChange,
+}: {
+  prospect: Prospect;
+  isSelected: boolean;
+  isAuditing: boolean;
+  isEditingNotes: boolean;
+  notesText: string;
+  onSelect: () => void;
+  onAudit: () => void;
+  onAddCRM: () => void;
+  onDelete: () => void;
+  onStartNotes: () => void;
+  onSaveNotes: () => void;
+  onCancelNotes: () => void;
+  onNotesChange: (v: string) => void;
+}) {
+  const audit = p.auditData;
+
+  // Top 3 problems from audit
+  const topProblems: string[] = [];
+  if (audit) {
+    const allAudits = [
+      ...(audit.mobilePerformanceAudits || []),
+      ...(audit.mobileAccessibilityAudits || []),
+      ...(audit.mobileSEOAudits || []),
+      ...(audit.mobileBestPracticesAudits || []),
+    ].filter(a => a.score !== null && a.score < 0.5).slice(0, 3);
+    topProblems.push(...allAudits.map(a => a.title));
+  }
+
+  return (
+    <div
+      onClick={onSelect}
+      style={{
+        ...cardStyle,
+        cursor: 'pointer',
+        border: isSelected ? '1px solid var(--accent)' : '1px solid var(--border)',
+        position: 'relative',
+        transition: 'border-color 0.15s',
+      }}
+    >
+      {/* Audit spinner overlay */}
+      {isAuditing && (
+        <div style={{
+          position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.3)', borderRadius: '12px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--bg-card)', padding: '12px 20px', borderRadius: '8px' }}>
+            <Loader2 size={16} color="var(--accent)" style={{ animation: 'spin 1s linear infinite' }} />
+            <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>Audit en cours...</span>
+          </div>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        </div>
+      )}
+
+      {/* Row 1: Name + score/category badge */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>{p.name}</span>
+          {p.auditScore !== null ? (
+            <span style={{
+              width: '24px', height: '24px', borderRadius: '50%',
+              background: scoreBg(p.auditScore), border: `2px solid ${scoreColor(p.auditScore)}`,
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '10px', fontWeight: 700, color: scoreColor(p.auditScore),
+            }}>{p.auditScore}</span>
+          ) : p.category === 'creation' ? (
+            <span style={{
+              padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: 600,
+              background: 'rgba(245,158,11,0.1)', color: '#f59e0b',
+            }}>CREATION</span>
+          ) : null}
+          {p.addedToCRM && (
+            <span style={{
+              padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: 600,
+              background: 'rgba(34,197,94,0.1)', color: '#22c55e',
+            }}>Dans le CRM</span>
+          )}
+        </div>
+        <button onClick={(e) => { e.stopPropagation(); onDelete(); }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--text-tertiary)' }}>
+          <Trash2 size={14} />
+        </button>
+      </div>
+
+      {/* Row 2: Info */}
+      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+        {p.city && <span>{p.city}{p.postalCode ? ` (${p.postalCode})` : ''}</span>}
+        {p.siret && <span>SIRET: {p.siret}</span>}
+        {p.dateCreation && <span>Cree: {p.dateCreation}</span>}
+        {p.nafLabel && <span>{p.nafLabel}</span>}
+      </div>
+
+      {/* Row 3: Website + email */}
+      <div style={{ display: 'flex', gap: '12px', fontSize: '12px', marginBottom: '6px' }}>
+        {p.website ? (
+          <a href={p.website} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ color: 'var(--accent)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <ExternalLink size={12} /> {new URL(p.website).hostname}
+          </a>
+        ) : (
+          <span style={{ color: 'var(--text-tertiary)' }}>Pas de site</span>
+        )}
+        {p.email && (
+          <a href={`mailto:${p.email}`} onClick={(e) => e.stopPropagation()} style={{ color: 'var(--accent)', textDecoration: 'none' }}>{p.email}</a>
+        )}
+      </div>
+
+      {/* Row 4: Mini scores (if audited) */}
+      {p.auditedAt && audit && (
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '6px' }}>
+          {[
+            { label: 'Perf', score: audit.mobileScore },
+            { label: 'A11y', score: audit.mobileAccessibility },
+            { label: 'SEO', score: audit.mobileSEO },
+            { label: 'BP', score: audit.mobileBestPractices },
+          ].map(s => (
+            <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: scoreColor(s.score) }} />
+              <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{s.label}: {s.score ?? '—'}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Row 5: Top problems */}
+      {topProblems.length > 0 && (
+        <div style={{ marginBottom: '6px' }}>
+          {topProblems.map((prob, i) => (
+            <div key={i} style={{ fontSize: '11px', color: '#ef4444', padding: '1px 0' }}>
+              <AlertTriangle size={10} style={{ verticalAlign: 'middle', marginRight: '4px' }} />{prob}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Notes display */}
+      {p.notes && !isEditingNotes && (
+        <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontStyle: 'italic', marginBottom: '6px', padding: '4px 8px', background: 'var(--bg-secondary)', borderRadius: '4px' }}>
+          {p.notes}
+        </div>
+      )}
+
+      {/* Notes editor */}
+      {isEditingNotes && (
+        <div style={{ marginBottom: '6px' }} onClick={(e) => e.stopPropagation()}>
+          <textarea
+            value={notesText}
+            onChange={(e) => onNotesChange(e.target.value)}
+            placeholder="Notes..."
+            style={{ ...inputStyle, width: '100%', minHeight: '60px', resize: 'vertical', fontSize: '12px' }}
+          />
+          <div style={{ display: 'flex', gap: '6px', marginTop: '4px' }}>
+            <button onClick={onSaveNotes} style={{ ...btnPrimary, padding: '4px 12px', fontSize: '11px' }}>Sauvegarder</button>
+            <button onClick={onCancelNotes} style={{ ...btnSecondary, padding: '4px 12px', fontSize: '11px' }}>Annuler</button>
+          </div>
+        </div>
+      )}
+
+      {/* Buttons row */}
+      <div style={{ display: 'flex', gap: '6px', marginTop: '4px' }} onClick={(e) => e.stopPropagation()}>
+        {p.website && !p.auditedAt && (
+          <button onClick={onAudit} disabled={isAuditing} style={{ ...btnSecondary, fontSize: '11px', padding: '4px 10px' }}>
+            <Zap size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Auditer
+          </button>
+        )}
+        {!p.addedToCRM && (
+          <button onClick={onAddCRM} style={{ ...btnSecondary, fontSize: '11px', padding: '4px 10px' }}>
+            <UserPlus size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} />CRM
+          </button>
+        )}
+        <button onClick={onStartNotes} style={{ ...btnSecondary, fontSize: '11px', padding: '4px 10px' }}>
+          <StickyNote size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Notes
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Detail Panel ───
+
+function DetailPanel({
+  prospect, onClose, onAudit, onAddCRM, isAuditing,
+}: {
+  prospect: Prospect;
+  onClose: () => void;
+  onAudit: () => void;
+  onAddCRM: () => void;
+  isAuditing: boolean;
+}) {
+  const audit = prospect.auditData;
+
+  const panelCardStyle: React.CSSProperties = {
+    background: 'var(--bg-card)', borderRadius: '10px', border: '1px solid var(--border)',
+    padding: '14px', marginBottom: '12px',
+  };
+
+  return (
+    <div style={{
+      ...cardStyle,
+      maxHeight: 'calc(100vh - 380px)', overflowY: 'auto', position: 'sticky', top: '80px',
+    }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+        <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{prospect.name}</h2>
+        <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)' }}>
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* Actions */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+        {prospect.website && !prospect.auditedAt && (
+          <button onClick={onAudit} disabled={isAuditing} style={{ ...btnPrimary, fontSize: '12px', padding: '8px 14px' }}>
+            {isAuditing ? 'Audit en cours...' : 'Lancer l\'audit'}
+          </button>
+        )}
+        {!prospect.addedToCRM && (
+          <button onClick={onAddCRM} style={{ ...btnSecondary, fontSize: '12px' }}>
+            <UserPlus size={14} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
+            Ajouter au CRM
+          </button>
+        )}
+        {prospect.addedToCRM && (
+          <span style={{ padding: '6px 14px', borderRadius: '8px', background: 'rgba(34,197,94,0.1)', color: '#22c55e', fontSize: '12px', fontWeight: 600 }}>
+            <CheckCircle size={14} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Dans le CRM
+          </span>
+        )}
+      </div>
+
+      {/* Basic info */}
+      <div style={panelCardStyle}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px' }}>
+          {prospect.city && <div><strong>Ville:</strong> {prospect.city} {prospect.postalCode ? `(${prospect.postalCode})` : ''}</div>}
+          {prospect.siret && <div><strong>SIRET:</strong> {prospect.siret}</div>}
+          {prospect.dateCreation && <div><strong>Creation:</strong> {prospect.dateCreation}</div>}
+          {prospect.nafLabel && <div><strong>NAF:</strong> {prospect.nafLabel}</div>}
+          {prospect.website && <div><strong>Site:</strong> <a href={prospect.website} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>{prospect.website}</a></div>}
+          {prospect.email && <div><strong>Email:</strong> <a href={`mailto:${prospect.email}`} style={{ color: 'var(--accent)' }}>{prospect.email}</a></div>}
+          <div><strong>Categorie:</strong> {prospect.category === 'creation' ? 'Creation de site' : 'Refonte'}</div>
+        </div>
+      </div>
+
+      {/* Full audit display */}
+      {audit && (
+        <>
+          {/* Score circles */}
+          <div style={panelCardStyle}>
+            <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '12px' }}>
+              <ScoreCircle score={audit.mobileScore} label="Performance" />
+              <ScoreCircle score={audit.mobileAccessibility} label="Accessibilite" />
+              <ScoreCircle score={audit.mobileSEO} label="SEO" />
+              <ScoreCircle score={audit.mobileBestPractices} label="Bonnes pratiques" />
+            </div>
+            {audit.desktopScore !== null && (
+              <div style={{ textAlign: 'center', marginTop: '8px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                Desktop: <strong style={{ color: scoreColor(audit.desktopScore) }}>{audit.desktopScore}</strong>
+              </div>
+            )}
+          </div>
+
+          {/* Core Web Vitals */}
+          <div style={panelCardStyle}>
+            <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px' }}>
+              <Zap size={13} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Core Web Vitals (Mobile)
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '8px' }}>
+              {[
+                { label: 'FCP', value: formatMs(audit.mobileFCP), good: (audit.mobileFCP ?? 9999) < 1800 },
+                { label: 'LCP', value: formatMs(audit.mobileLCP), good: (audit.mobileLCP ?? 9999) < 2500 },
+                { label: 'TBT', value: formatMs(audit.mobileTBT), good: (audit.mobileTBT ?? 9999) < 200 },
+                { label: 'CLS', value: audit.mobileCLS?.toFixed(3) ?? '—', good: (audit.mobileCLS ?? 1) < 0.1 },
+                { label: 'SI', value: formatMs(audit.mobileSI), good: (audit.mobileSI ?? 9999) < 3400 },
+              ].map(v => (
+                <div key={v.label} style={{ textAlign: 'center', padding: '8px', borderRadius: '6px', background: v.good ? 'rgba(34,197,94,0.06)' : 'rgba(239,68,68,0.06)' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 700, color: v.good ? '#22c55e' : '#ef4444' }}>{v.value}</div>
+                  <div style={{ fontSize: '9px', color: 'var(--text-tertiary)' }}>{v.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Screenshot */}
+          {audit.mobileScreenshot && (
+            <div style={panelCardStyle}>
+              <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
+                <Eye size={13} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Apercu mobile
+              </h3>
+              <img src={audit.mobileScreenshot} alt="Screenshot" style={{ width: '100%', maxWidth: '200px', borderRadius: '6px', border: '1px solid var(--border)', display: 'block', margin: '0 auto' }} />
+            </div>
+          )}
+
+          {/* Technical checks */}
+          <div style={panelCardStyle}>
+            <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>Technique</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px 12px' }}>
+              <Check ok={audit.isHttps} label="HTTPS" />
+              <Check ok={audit.isResponsive} label="Responsive" />
+              <Check ok={audit.hasAnalytics} label="Analytics" />
+              <Check ok={audit.hasFavicon} label="Favicon" />
+              <Check ok={audit.hasMetaDescription} label="Meta description" />
+              <Check ok={audit.hasOpenGraph} label="Open Graph" />
+              <Check ok={audit.hasSitemap} label="Sitemap.xml" />
+              <Check ok={audit.hasRobotsTxt} label="Robots.txt" />
+              <Check ok={audit.usesModernImages} label="Images modernes" />
+              <Check ok={!audit.usesJquery} label="Pas de jQuery" />
+              <Check ok={!audit.hasObsoleteTags} label="Pas de HTML obsolete" />
+              <Check ok={!audit.usesFlash} label="Pas de Flash" />
+            </div>
+            {audit.cmsDetected && <div style={{ marginTop: '6px', fontSize: '11px', color: 'var(--text-secondary)' }}>CMS: {audit.cmsDetected}</div>}
+            {audit.loadTimeMs && <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Temps de chargement: {formatMs(audit.loadTimeMs)}</div>}
+            {audit.totalByteWeight && <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Poids: {formatBytes(audit.totalByteWeight)} ({audit.totalRequestCount ?? '?'} requetes)</div>}
+          </div>
+
+          {/* Security */}
+          <div style={panelCardStyle}>
+            <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
+              <Shield size={13} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Securite
+            </h3>
+            {audit.ssl && (
+              <div style={{ marginBottom: '6px' }}>
+                <Check ok={audit.ssl.isValid} label={`SSL ${audit.ssl.protocol || ''}`} />
+                {audit.ssl.daysUntilExpiry !== null && (
+                  <div style={{ color: audit.ssl.isExpiringSoon ? '#ef4444' : 'var(--text-secondary)', fontSize: '10px', marginLeft: '20px' }}>
+                    Expire dans {audit.ssl.daysUntilExpiry} jours
+                  </div>
+                )}
+              </div>
+            )}
+            {audit.securityHeaders && (
+              <>
+                <div style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-primary)', margin: '6px 0 4px' }}>
+                  Headers: {audit.securityHeaders.score}/{audit.securityHeaders.total}
+                </div>
+                <Check ok={audit.securityHeaders.strictTransportSecurity} label="HSTS" />
+                <Check ok={audit.securityHeaders.contentSecurityPolicy} label="CSP" />
+                <Check ok={audit.securityHeaders.xFrameOptions} label="X-Frame-Options" />
+                <Check ok={audit.securityHeaders.xContentTypeOptions} label="X-Content-Type" />
+                <Check ok={audit.securityHeaders.referrerPolicy} label="Referrer-Policy" />
+              </>
+            )}
+            {audit.observatoryGrade && (
+              <div style={{ marginTop: '6px', fontSize: '11px', color: 'var(--text-secondary)' }}>
+                Observatory: <strong style={{ color: ['A', 'A+', 'B'].includes(audit.observatoryGrade) ? '#22c55e' : '#ef4444' }}>{audit.observatoryGrade}</strong>
+              </div>
+            )}
+          </div>
+
+          {/* Environment */}
+          <div style={panelCardStyle}>
+            <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
+              <Leaf size={13} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Environnement & Qualite
+            </h3>
+            {audit.carbon && (
+              <div style={{ marginBottom: '8px' }}>
+                <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+                  Carbone: <strong style={{ color: ['A', 'B'].includes(audit.carbon.rating || '') ? '#22c55e' : '#ef4444' }}>{audit.carbon.rating || '—'}</strong>
+                  {audit.carbon.co2PerView !== null && ` (${audit.carbon.co2PerView.toFixed(2)}g CO2/vue)`}
+                </div>
+                {audit.carbon.cleanerThan !== null && (
+                  <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>Plus propre que {audit.carbon.cleanerThan}% des sites</div>
+                )}
+                <Check ok={audit.carbon.isGreen} label="Hebergement vert" />
+              </div>
+            )}
+            <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+              W3C: <strong style={{ color: audit.w3cErrors > 20 ? '#ef4444' : 'var(--text-primary)' }}>{audit.w3cErrors} erreurs</strong>, {audit.w3cWarnings} warnings
+            </div>
+            {audit.yellowLabScore !== null && (
+              <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+                Yellow Lab: <strong style={{ color: audit.yellowLabScore >= 60 ? '#22c55e' : '#ef4444' }}>{audit.yellowLabScore}/100</strong>
+              </div>
+            )}
+            {audit.yellowLabTopIssues.length > 0 && (
+              <div style={{ marginTop: '4px' }}>
+                {audit.yellowLabTopIssues.slice(0, 3).map((issue, i) => (
+                  <div key={i} style={{ fontSize: '10px', color: 'var(--text-tertiary)', padding: '1px 0' }}>- {issue}</div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Heaviest resources */}
+          {audit.heaviestResources && audit.heaviestResources.length > 0 && (
+            <div style={panelCardStyle}>
+              <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
+                <AlertTriangle size={13} style={{ verticalAlign: 'middle', marginRight: '4px', color: '#f59e0b' }} />
+                Ressources les plus lourdes
+              </h3>
+              {audit.heaviestResources.slice(0, 5).map((r, i) => {
+                const sizeStr = formatBytes(r.size);
+                const barWidth = Math.min(100, (r.size / (audit.heaviestResources[0]?.size || 1)) * 100);
+                const filename = r.url.split('/').pop()?.split('?')[0] || r.url;
                 return (
-                  <div
-                    key={campaign.id}
-                    onClick={() => handleSelectCampaign(campaign)}
-                    style={{
-                      background: 'var(--bg-card)', borderRadius: '12px',
-                      border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)',
-                      padding: '16px', cursor: 'pointer', transition: 'all 0.15s',
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; }}
-                  >
-                    {/* Title row */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '8px', gap: '8px' }}>
-                      <div style={{ flex: 1 }}>
-                        <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 2px 0' }}>
-                          {campaign.metier}
-                        </h3>
-                        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: 0 }}>{campaign.ville}</p>
-                      </div>
-                      <span style={{
-                        display: 'inline-flex', alignItems: 'center', gap: '4px',
-                        padding: '3px 8px', borderRadius: '6px', fontSize: '10px', fontWeight: 500,
-                        color: conf.color, background: conf.bg, whiteSpace: 'nowrap',
-                        animation: campaign.status === 'RUNNING' ? 'pulse 2s ease-in-out infinite' : 'none',
-                      }}>
-                        {campaign.status === 'RUNNING' && (
-                          <span style={{
-                            width: '6px', height: '6px', borderRadius: '50%',
-                            background: conf.color, display: 'inline-block',
-                            animation: 'pulse 1.5s ease-in-out infinite',
-                          }} />
-                        )}
-                        {conf.label}
-                      </span>
+                  <div key={i} style={{ padding: '4px 0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', marginBottom: '2px' }}>
+                      <span style={{ color: 'var(--text-primary)', maxWidth: '65%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={r.url}>{filename}</span>
+                      <span style={{ fontWeight: 600, color: r.size > 500000 ? '#ef4444' : r.size > 100000 ? '#f59e0b' : 'var(--text-secondary)' }}>{sizeStr}</span>
                     </div>
-
-                    {/* Progress bar for running */}
-                    {campaign.status === 'RUNNING' && (
-                      <div style={{ marginBottom: '8px' }}>
-                        <div style={{ width: '100%', height: '4px', borderRadius: '2px', background: 'var(--bg-secondary)' }}>
-                          <div style={{
-                            width: `${campaign.progress}%`, height: '100%', borderRadius: '2px',
-                            background: 'var(--info, #3b82f6)', transition: 'width 0.3s',
-                          }} />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Meta row */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                        <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
-                          {new Date(campaign.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
-                        </span>
-                        <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>
-                          {campaign._count.results} resultat{campaign._count.results !== 1 ? 's' : ''}
-                        </span>
-                      </div>
-                      <button
-                        onClick={async (e) => {
-                          e.stopPropagation();
-                          if (!confirm('Supprimer cette campagne ?')) return;
-                          await fetch(`/api/portal/prospection/campaigns/${campaign.id}`, { method: 'DELETE' });
-                          fetchCampaigns();
-                        }}
-                        title="Supprimer"
-                        style={{
-                          background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
-                          color: 'var(--text-tertiary)', borderRadius: '4px', display: 'flex', alignItems: 'center',
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--danger)'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-tertiary)'; }}
-                      >
-                        <Trash2 size={14} />
-                      </button>
+                    <div style={{ width: '100%', height: '3px', borderRadius: '2px', background: 'var(--bg-secondary)' }}>
+                      <div style={{ width: `${barWidth}%`, height: '100%', borderRadius: '2px', background: r.size > 500000 ? '#ef4444' : r.size > 100000 ? '#f59e0b' : 'var(--accent)' }} />
                     </div>
                   </div>
                 );
               })}
             </div>
           )}
+
+          {/* Detailed audits by category */}
+          {[
+            { title: 'Performance', audits: audit.mobilePerformanceAudits, color: '#ef4444' },
+            { title: 'Accessibilite', audits: audit.mobileAccessibilityAudits, color: '#8b5cf6' },
+            { title: 'SEO', audits: audit.mobileSEOAudits, color: '#3b82f6' },
+            { title: 'Bonnes pratiques', audits: audit.mobileBestPracticesAudits, color: '#f59e0b' },
+          ].filter(s => s.audits.length > 0).map(section => (
+            <div key={section.title} style={panelCardStyle}>
+              <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
+                <AlertTriangle size={13} style={{ verticalAlign: 'middle', marginRight: '4px', color: section.color }} />
+                {section.title}
+                <span style={{ fontSize: '10px', fontWeight: 400, color: 'var(--text-tertiary)', marginLeft: '6px' }}>
+                  {section.audits.length} probleme{section.audits.length > 1 ? 's' : ''}
+                </span>
+              </h3>
+              {section.audits.map((a, i) => {
+                const sc = a.score === null ? 'var(--text-tertiary)' : a.score === 0 ? '#ef4444' : '#f59e0b';
+                return (
+                  <div key={a.id} style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    padding: '5px 8px', marginBottom: '2px', borderRadius: '4px',
+                    background: i % 2 === 0 ? 'var(--bg-secondary)' : 'transparent', fontSize: '11px',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: 1 }}>
+                      <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: sc, flexShrink: 0 }} />
+                      <span style={{ color: 'var(--text-primary)' }}>{a.title}</span>
+                    </div>
+                    {a.displayValue && (
+                      <span style={{
+                        fontSize: '10px', fontWeight: 600, color: sc,
+                        padding: '1px 6px', borderRadius: '3px',
+                        background: a.score === 0 ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)',
+                        whiteSpace: 'nowrap', marginLeft: '6px',
+                      }}>
+                        {a.displayValue}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+
+          {/* Social + Email */}
+          <div style={panelCardStyle}>
+            <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>Presence en ligne</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '11px' }}>
+              <div>
+                <div style={{ fontWeight: 500, color: 'var(--text-primary)', marginBottom: '4px' }}>Reseaux sociaux ({audit.socialPresence.count})</div>
+                {Object.entries(audit.socialPresence.links).filter(([, v]) => v).map(([k, v]) => (
+                  <div key={k}><a href={v!} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none' }}>{k}</a></div>
+                ))}
+                {audit.socialPresence.count === 0 && <div style={{ color: 'var(--text-tertiary)' }}>Aucun detecte</div>}
+              </div>
+              <div>
+                <div style={{ fontWeight: 500, color: 'var(--text-primary)', marginBottom: '4px' }}>Emails</div>
+                {audit.primaryEmail ? (
+                  <div>
+                    <a href={`mailto:${audit.primaryEmail}`} style={{ color: 'var(--accent)', textDecoration: 'none' }}>{audit.primaryEmail}</a>
+                    {audit.emailConfidence && (
+                      <span style={{ fontSize: '9px', color: 'var(--text-tertiary)', marginLeft: '4px' }}>({audit.emailConfidence})</span>
+                    )}
+                  </div>
+                ) : (
+                  <div style={{ color: 'var(--text-tertiary)' }}>Non trouve</div>
+                )}
+                {audit.emails.filter(e => e !== audit.primaryEmail).slice(0, 3).map((e, i) => (
+                  <div key={i} style={{ color: 'var(--text-secondary)' }}>{e}</div>
+                ))}
+              </div>
+            </div>
+          </div>
         </>
       )}
 
-      {/* ═══════════════════ CAMPAIGN DETAIL ═══════════════════ */}
-      {selectedCampaign && (
-        <>
-          {/* Campaign info header */}
-          <div style={{
-            background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow-card)', padding: '16px', marginBottom: '16px',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
-              <div>
-                <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 4px 0' }}>
-                  {selectedCampaign.metier} - {selectedCampaign.ville}
-                </h2>
-                <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: 0 }}>
-                  {new Date(selectedCampaign.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                </p>
-              </div>
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: '4px',
-                padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 500,
-                color: (STATUS_CONFIG[currentStatus] ?? STATUS_CONFIG.PENDING).color,
-                background: (STATUS_CONFIG[currentStatus] ?? STATUS_CONFIG.PENDING).bg,
-              }}>
-                {(STATUS_CONFIG[currentStatus] ?? STATUS_CONFIG.PENDING).label}
-              </span>
-            </div>
-
-            {/* Progress bar for running campaigns */}
-            {(currentStatus === 'RUNNING' || currentStatus === 'PENDING') && (
-              <div style={{ marginTop: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-                    {currentStatus === 'PENDING' ? 'En attente de l\'agent local...' : 'Analyse en cours...'}
-                  </span>
-                  <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--info, #3b82f6)' }}>
-                    {currentProgress}%
-                  </span>
-                </div>
-                <div style={{ width: '100%', height: '6px', borderRadius: '3px', background: 'var(--bg-secondary)', overflow: 'hidden' }}>
-                  <div style={{
-                    width: `${currentProgress}%`, height: '100%', borderRadius: '3px',
-                    background: 'linear-gradient(90deg, var(--info, #3b82f6), var(--accent))',
-                    transition: 'width 0.5s ease',
-                    animation: currentStatus === 'RUNNING' ? 'shimmer 2s ease-in-out infinite' : 'none',
-                  }} />
-                </div>
-              </div>
-            )}
-
-            {/* Agent hint for pending campaigns */}
-            {currentStatus === 'PENDING' && currentProgress === 0 && (
-              <div style={{
-                marginTop: '10px', padding: '10px 14px', borderRadius: '8px',
-                background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)',
-                fontSize: '11px', color: 'var(--info, #3b82f6)', lineHeight: '1.5',
-              }}>
-                En attente de l'agent de prospection... L'analyse demarrera automatiquement.
-              </div>
-            )}
-
-            {/* Error message */}
-            {selectedCampaign.error && (
-              <div style={{
-                marginTop: '12px', padding: '10px 12px', borderRadius: '8px',
-                background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
-              }}>
-                <p style={{ fontSize: '12px', color: 'var(--danger)', margin: 0 }}>{selectedCampaign.error}</p>
-              </div>
-            )}
-          </div>
-
-          {loadingDetail ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)', fontSize: '13px' }}>Chargement des resultats...</div>
+      {/* No audit yet */}
+      {!audit && (
+        <div style={{ textAlign: 'center', padding: '30px', color: 'var(--text-tertiary)', fontSize: '13px' }}>
+          {prospect.website ? (
+            <>
+              <Zap size={32} color="var(--text-tertiary)" style={{ marginBottom: '8px' }} />
+              <div>Aucun audit realise. Lancez un audit pour voir le rapport complet.</div>
+            </>
           ) : (
             <>
-              {/* Stats row */}
-              {results.length > 0 && (
-                <div style={{
-                  display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap',
-                }}>
-                  {[
-                    { emoji: '\uD83D\uDD25', label: 'Chaud', value: stats.chaud, color: 'var(--danger, #ef4444)' },
-                    { emoji: '\uD83D\uDFE1', label: 'Tiede', value: stats.tiede, color: 'var(--warning, #f59e0b)' },
-                    { emoji: '\u2744\uFE0F', label: 'Froid', value: stats.froid, color: 'var(--info, #3b82f6)' },
-                    { emoji: '\uD83C\uDD95', label: 'Creation', value: stats.creation, color: 'var(--success, #22c55e)' },
-                    { emoji: '\uD83D\uDD04', label: 'Refonte', value: stats.refonte, color: 'var(--accent)' },
-                  ].map((s) => (
-                    <div key={s.label} style={{
-                      display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px',
-                      borderRadius: '8px', background: 'var(--bg-card)', border: '1px solid var(--border)',
-                    }}>
-                      <span style={{ fontSize: '14px' }}>{s.emoji}</span>
-                      <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>{s.label}</span>
-                      <span style={{ fontSize: '13px', fontWeight: 600, color: s.color }}>{s.value}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Filter pills */}
-              {results.length > 0 && (
-                <div style={{ display: 'flex', gap: '6px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-                  <Filter size={14} style={{ color: 'var(--text-tertiary)' }} />
-                  {/* Status filters */}
-                  {['', 'Chaud', 'Tiede', 'Froid'].map((s) => (
-                    <button
-                      key={s || 'all-status'}
-                      onClick={() => setFilterStatus(filterStatus === s ? '' : s)}
-                      style={{
-                        padding: '5px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 500, cursor: 'pointer',
-                        border: '1px solid var(--border)',
-                        background: filterStatus === s ? 'var(--accent)' : 'var(--bg-card)',
-                        color: filterStatus === s ? 'white' : 'var(--text-secondary)',
-                        transition: 'all 0.15s',
-                      }}
-                    >
-                      {s || 'Tous'}
-                    </button>
-                  ))}
-                  <span style={{ width: '1px', height: '16px', background: 'var(--border)', margin: '0 4px' }} />
-                  {/* Category filters */}
-                  {['', 'creation', 'refonte'].map((c) => (
-                    <button
-                      key={c || 'all-cat'}
-                      onClick={() => setFilterCategory(filterCategory === c ? '' : c)}
-                      style={{
-                        padding: '5px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 500, cursor: 'pointer',
-                        border: '1px solid var(--border)',
-                        background: filterCategory === c ? 'var(--accent)' : 'var(--bg-card)',
-                        color: filterCategory === c ? 'white' : 'var(--text-secondary)',
-                        transition: 'all 0.15s',
-                      }}
-                    >
-                      {c === 'creation' ? 'Creation' : c === 'refonte' ? 'Refonte' : 'Tous'}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {/* Results table */}
-              {filteredResults.length > 0 ? (
-                <div style={{
-                  background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)',
-                  boxShadow: 'var(--shadow-card)', overflow: 'hidden', marginBottom: '16px',
-                }}>
-                  {/* Table header */}
-                  {!isMobile && (
-                    <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '60px 1fr 90px 160px 120px 110px 1fr',
-                      padding: '10px 14px', background: 'var(--bg-secondary)',
-                      borderBottom: '1px solid var(--border)', gap: '8px',
-                    }}>
-                      {['Score', 'Nom', 'Type', 'Email', 'Telephone', 'SIRET', 'Raisons'].map((h) => (
-                        <span key={h} style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{h}</span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Table rows */}
-                  {filteredResults.map((result, idx) => {
-                    const scoreColor = result.priorityScore >= 60 ? 'var(--danger, #ef4444)'
-                      : result.priorityScore >= 30 ? 'var(--warning, #f59e0b)'
-                      : 'var(--info, #3b82f6)';
-                    const scoreBg = result.priorityScore >= 60 ? 'rgba(239,68,68,0.1)'
-                      : result.priorityScore >= 30 ? 'rgba(245,158,11,0.1)'
-                      : 'rgba(59,130,246,0.1)';
-                    const breakdownItems = Array.isArray(result.breakdown) ? result.breakdown.slice(0, 3) : [];
-                    const siret = result.sireneData?.siret ?? null;
-
-                    if (isMobile) {
-                      // Mobile card layout
-                      return (
-                        <div key={result.id} style={{
-                          padding: '12px 14px',
-                          borderBottom: idx < filteredResults.length - 1 ? '1px solid var(--border-light, var(--border))' : 'none',
-                        }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                            <span style={{
-                              padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600,
-                              color: scoreColor, background: scoreBg,
-                            }}>
-                              {result.priorityScore}
-                            </span>
-                            <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)', flex: 1 }}>
-                              {result.name}
-                            </span>
-                            <span style={{
-                              fontSize: '10px', padding: '2px 6px', borderRadius: '4px',
-                              background: result.category === 'creation' ? 'rgba(34,197,94,0.1)' : 'rgba(99,139,255,0.1)',
-                              color: result.category === 'creation' ? 'var(--success, #22c55e)' : 'var(--accent)',
-                            }}>
-                              {result.category === 'creation' ? 'Creation' : 'Refonte'}
-                            </span>
-                          </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                            {result.email && (
-                              <a href={`mailto:${result.email}`} style={{ fontSize: '11px', color: 'var(--accent)', textDecoration: 'none' }}>
-                                {result.email}
-                              </a>
-                            )}
-                            {result.phone && (
-                              <a href={`tel:${result.phone}`} style={{ fontSize: '11px', color: 'var(--text-secondary)', textDecoration: 'none' }}>
-                                {result.phone}
-                              </a>
-                            )}
-                            {breakdownItems.length > 0 && (
-                              <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '2px' }}>
-                                {breakdownItems.map((b) => b.label).join(' | ')}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    }
-
-                    // Desktop row
-                    return (
-                      <div key={result.id} style={{
-                        display: 'grid',
-                        gridTemplateColumns: '60px 1fr 90px 160px 120px 110px 1fr',
-                        padding: '10px 14px', gap: '8px', alignItems: 'center',
-                        borderBottom: idx < filteredResults.length - 1 ? '1px solid var(--border-light, var(--border))' : 'none',
-                        transition: 'background 0.1s',
-                      }}
-                        onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-hover)'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
-                      >
-                        {/* Score */}
-                        <span style={{
-                          padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600,
-                          color: scoreColor, background: scoreBg, textAlign: 'center', display: 'inline-block',
-                        }}>
-                          {result.priorityScore}
-                        </span>
-
-                        {/* Nom */}
-                        <div style={{ minWidth: 0 }}>
-                          <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {result.name}
-                          </div>
-                          {result.url && (
-                            <a href={result.url} target="_blank" rel="noopener noreferrer" style={{
-                              fontSize: '10px', color: 'var(--text-tertiary)', textDecoration: 'none',
-                              overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block',
-                            }}>
-                              {result.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-                            </a>
-                          )}
-                        </div>
-
-                        {/* Category */}
-                        <span style={{
-                          fontSize: '10px', padding: '2px 6px', borderRadius: '4px',
-                          background: result.category === 'creation' ? 'rgba(34,197,94,0.1)' : 'rgba(99,139,255,0.1)',
-                          color: result.category === 'creation' ? 'var(--success, #22c55e)' : 'var(--accent)',
-                          fontWeight: 500, textAlign: 'center',
-                        }}>
-                          {result.category === 'creation' ? 'Creation' : 'Refonte'}
-                        </span>
-
-                        {/* Email */}
-                        <div style={{ minWidth: 0 }}>
-                          {result.email ? (
-                            <a href={`mailto:${result.email}`} style={{
-                              fontSize: '11px', color: 'var(--accent)', textDecoration: 'none',
-                              overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block',
-                            }}>
-                              {result.email}
-                            </a>
-                          ) : (
-                            <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>-</span>
-                          )}
-                        </div>
-
-                        {/* Phone */}
-                        <div>
-                          {result.phone ? (
-                            <a href={`tel:${result.phone}`} style={{ fontSize: '11px', color: 'var(--text-secondary)', textDecoration: 'none' }}>
-                              {result.phone}
-                            </a>
-                          ) : (
-                            <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>-</span>
-                          )}
-                        </div>
-
-                        {/* SIRET */}
-                        <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontFamily: 'monospace' }}>
-                          {siret || '-'}
-                        </span>
-
-                        {/* Breakdown */}
-                        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', minWidth: 0 }}>
-                          {breakdownItems.map((b, i) => (
-                            <span key={i} style={{
-                              fontSize: '9px', padding: '1px 5px', borderRadius: '3px',
-                              background: 'var(--bg-secondary)', color: 'var(--text-tertiary)',
-                              whiteSpace: 'nowrap',
-                            }}>
-                              {b.label}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : currentStatus === 'COMPLETED' ? (
-                <div style={{
-                  textAlign: 'center', padding: '40px 20px', background: 'var(--bg-card)',
-                  borderRadius: '12px', border: '1px solid var(--border)', marginBottom: '16px',
-                }}>
-                  <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
-                    {filterStatus || filterCategory ? 'Aucun resultat avec ces filtres' : 'Aucun resultat pour cette campagne'}
-                  </p>
-                </div>
-              ) : null}
-
-              {/* Action buttons */}
-              {currentStatus === 'COMPLETED' && results.length > 0 && (
-                <div style={{
-                  display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center',
-                  background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)',
-                  boxShadow: 'var(--shadow-card)', padding: '14px 16px', marginBottom: '16px',
-                }}>
-                  <button
-                    onClick={handleInject}
-                    disabled={injecting}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-                      background: 'var(--success, #22c55e)', color: 'white', border: 'none', cursor: 'pointer',
-                      fontSize: '12px', fontWeight: 500, opacity: injecting ? 0.5 : 1,
-                    }}
-                  >
-                    <Download size={14} /> {injecting ? 'Injection...' : 'Injecter dans le CRM'}
-                  </button>
-
-                  {injectResult && (
-                    <span style={{ fontSize: '12px', color: 'var(--success, #22c55e)', fontWeight: 500 }}>
-                      {injectResult.injected} contact{injectResult.injected !== 1 ? 's' : ''} injecte{injectResult.injected !== 1 ? 's' : ''}
-                    </span>
-                  )}
-
-                  <div style={{ flex: 1 }} />
-
-                  {!confirmDelete ? (
-                    <button
-                      onClick={() => setConfirmDelete(true)}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-                        background: 'var(--bg-secondary)', color: 'var(--danger)', border: 'none', cursor: 'pointer',
-                        fontSize: '12px', fontWeight: 500,
-                      }}
-                    >
-                      <Trash2 size={14} /> Supprimer
-                    </button>
-                  ) : (
-                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                      <span style={{ fontSize: '11px', color: 'var(--danger)', fontWeight: 500 }}>Confirmer ?</span>
-                      <button
-                        onClick={handleDelete}
-                        disabled={deleting}
-                        style={{
-                          padding: '6px 12px', borderRadius: '6px', background: 'var(--danger)', color: 'white',
-                          border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
-                          opacity: deleting ? 0.5 : 1,
-                        }}
-                      >
-                        {deleting ? '...' : 'Oui'}
-                      </button>
-                      <button
-                        onClick={() => setConfirmDelete(false)}
-                        style={{
-                          padding: '6px 12px', borderRadius: '6px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)',
-                          border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
-                        }}
-                      >
-                        Non
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Delete only for failed/pending */}
-              {(currentStatus === 'FAILED' || (currentStatus === 'PENDING' && results.length === 0)) && (
-                <div style={{
-                  display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center',
-                  background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)',
-                  boxShadow: 'var(--shadow-card)', padding: '14px 16px', marginBottom: '16px',
-                }}>
-                  {(currentStatus === 'RUNNING' || currentStatus === 'PENDING') && (
-                    <button
-                      onClick={async () => {
-                        await fetch(`/api/portal/prospection/campaigns/${selectedCampaign.id}`, {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ status: 'FAILED', error: 'Arrêtée manuellement' }),
-                        });
-                        setSelectedCampaign({ ...selectedCampaign, status: 'FAILED' });
-                      }}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-                        background: 'rgba(239,68,68,0.1)', color: 'var(--danger)', border: '1px solid var(--danger)',
-                        cursor: 'pointer', fontSize: '12px', fontWeight: 600, marginBottom: '8px',
-                      }}
-                    >
-                      ■ Arrêter la campagne
-                    </button>
-                  )}
-                  {!confirmDelete ? (
-                    <button
-                      onClick={() => setConfirmDelete(true)}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-                        background: 'var(--bg-secondary)', color: 'var(--danger)', border: 'none', cursor: 'pointer',
-                        fontSize: '12px', fontWeight: 500,
-                      }}
-                    >
-                      <Trash2 size={14} /> Supprimer la campagne
-                    </button>
-                  ) : (
-                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                      <span style={{ fontSize: '11px', color: 'var(--danger)', fontWeight: 500 }}>Confirmer la suppression ?</span>
-                      <button
-                        onClick={handleDelete}
-                        disabled={deleting}
-                        style={{
-                          padding: '6px 12px', borderRadius: '6px', background: 'var(--danger)', color: 'white',
-                          border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
-                          opacity: deleting ? 0.5 : 1,
-                        }}
-                      >
-                        {deleting ? '...' : 'Oui, supprimer'}
-                      </button>
-                      <button
-                        onClick={() => setConfirmDelete(false)}
-                        style={{
-                          padding: '6px 12px', borderRadius: '6px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)',
-                          border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
-                        }}
-                      >
-                        Annuler
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
+              <Globe size={32} color="var(--text-tertiary)" style={{ marginBottom: '8px' }} />
+              <div>Ce prospect n'a pas de site web detecte.</div>
             </>
           )}
-        </>
+        </div>
       )}
-
-      {/* ─── CSS animations ─── */}
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-        @keyframes shimmer {
-          0% { opacity: 0.8; }
-          50% { opacity: 1; }
-          100% { opacity: 0.8; }
-        }
-      `}</style>
     </div>
   );
 }

@@ -64,6 +64,7 @@ model Site {
   portalProjects          PortalProject[]
   portalCompanySettings   PortalCompanySettings?
   prospectionCampaigns    ProspectionCampaign[]
+  prospectionSessions     ProspectionSession[]
   activities              Activity[]
   deploys                 Deploy[]
 
@@ -200,7 +201,8 @@ model Contact {
   portalAppointments PortalAppointment[]
   portalProjects     PortalProject[]
   portalUsers        PortalUser[]
-  prospectionResults ProspectionResult[]
+  prospectionResults   ProspectionResult[]
+  prospectionProspects ProspectionProspect[]
 
   // Relations Web standalone (sign flow, reminders, email logging)
   interactions Interaction[]
@@ -1122,5 +1124,50 @@ model ProspectionResult {
   contact  Contact?            @relation(fields: [contactId], references: [id])
 
   @@index([campaignId, priorityScore])
+}
+
+model ProspectionSession {
+  id        String   @id @default(cuid())
+  siteId    String
+  type      String   // "search" | "audit"
+  query     String?  // "coiffeur bordeaux" or URL
+  createdAt DateTime @default(now())
+
+  site      Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  prospects ProspectionProspect[]
+
+  @@index([siteId, createdAt])
+}
+
+model ProspectionProspect {
+  id          String  @id @default(cuid())
+  sessionId   String
+  contactId   String?
+
+  name         String
+  siret        String?
+  address      String?
+  city         String?
+  postalCode   String?
+  dateCreation String?
+  nafLabel     String?
+  website      String?
+  email        String?
+  phone        String?
+  category     String   // "creation" | "refonte"
+
+  auditData    Json?
+  auditScore   Int?
+  auditedAt    DateTime?
+
+  addedToCRM   Boolean  @default(false)
+  notes        String?
+
+  createdAt    DateTime @default(now())
+
+  session  ProspectionSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  contact  Contact?           @relation(fields: [contactId], references: [id])
+
+  @@index([sessionId])
 }
 
