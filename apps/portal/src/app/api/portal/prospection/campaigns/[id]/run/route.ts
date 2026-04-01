@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { extractSiteId } from '@/lib/auth';
-import { runProspectionCampaign } from '@/lib/prospection/worker';
 
 export async function POST(
   req: NextRequest,
@@ -21,10 +20,11 @@ export async function POST(
     return NextResponse.json({ error: 'Campagne deja en cours' }, { status: 409 });
   }
 
-  // Fire and forget — don't block the response
-  runProspectionCampaign(campaign.id).catch(err =>
-    console.error('Prospection worker error:', err)
-  );
+  // Mark as PENDING — the local agent (npm run agent) will pick it up
+  await prisma.prospectionCampaign.update({
+    where: { id },
+    data: { status: 'PENDING', progress: 0, error: null },
+  });
 
-  return NextResponse.json({ started: true });
+  return NextResponse.json({ started: true, message: 'Campagne en attente — l\'agent local va la détecter' });
 }

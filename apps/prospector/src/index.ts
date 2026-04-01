@@ -17,6 +17,7 @@ import { checkCarbon } from './analyzer/carbonChecker.js'
 import { scoreProspect } from './scorer/scorer.js'
 import { exportCSV } from './output/csv.js'
 import { injectIntoCRM } from './output/crm.js'
+import { generateAllAuditPdfs } from './output/auditPdf.js'
 import { delay } from './utils/rateLimiter.js'
 import { log } from './utils/logger.js'
 import { config } from './config.js'
@@ -36,6 +37,7 @@ program
   .option('--no-csv', 'Ne pas générer de CSV')
   .option('--site-only', 'Ne garder que les prospects avec site web')
   .option('--no-site-only', 'Ne garder que les prospects sans site web')
+  .option('--pdf', 'Générer un PDF d\'audit par prospect avec site')
   .option('--verbose', 'Logs détaillés')
   .action(async (opts) => {
     const metier: string = opts.metier
@@ -46,6 +48,7 @@ program
     const verbose: boolean = opts.verbose || false
     const siteOnly: boolean = opts.siteOnly || false
     const noSiteOnly: boolean = opts.noSiteOnly || false
+    const generatePdf: boolean = opts.pdf || false
 
     console.log()
     log.info(`Prospection : "${metier}" à ${ville} (max ${limit} résultats)`)
@@ -304,7 +307,19 @@ program
       }
     }
 
-    // ─── 5. CRM ───
+    // ─── 5. PDF Audits ───
+    if (generatePdf) {
+      const pdfSpinner = ora('Génération des PDFs d\'audit...').start()
+      try {
+        const paths = await generateAllAuditPdfs(scored)
+        pdfSpinner.succeed(`${paths.length} PDFs générés → output/audits/`)
+      } catch (err) {
+        pdfSpinner.fail('Erreur génération PDF')
+        log.error(err instanceof Error ? err.message : String(err))
+      }
+    }
+
+    // ─── 6. CRM ───
     if (useCRM) {
       const crmSpinner = ora('Injection dans le CRM...').start()
       try {
