@@ -18,6 +18,8 @@ import {
   analyzePageSpeedFull,
 } from '@/lib/prospection/auditExtras'
 
+export const maxDuration = 60 // Allow up to 60s for this route
+
 export async function POST(req: NextRequest) {
   const siteId = extractSiteId(req.headers)
   if (!siteId) return NextResponse.json({ error: 'Non autorise' }, { status: 401 })
@@ -35,6 +37,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const pageSpeedApiKey = process.env.PAGESPEED_API_KEY || ''
+    console.log(`[Audit] URL: ${url} | PageSpeed key: ${pageSpeedApiKey ? 'present (' + pageSpeedApiKey.slice(0, 8) + '...)' : 'MISSING'}`)
 
     // Phase 1: Tech + SEO (fast)
     const [tech, seo] = await Promise.all([
@@ -52,7 +55,7 @@ export async function POST(req: NextRequest) {
       checkCarbon(url).catch(() => null),
       validateHtml(url).catch(() => ({ errorCount: 0, warningCount: 0, topErrors: [] as string[] })),
       analyzeYellowLab(url).catch(() => ({ globalScore: null, topIssues: [] as string[] })),
-      pageSpeedApiKey ? analyzePageSpeedFull(url, pageSpeedApiKey).catch(() => null) : Promise.resolve(null),
+      pageSpeedApiKey ? analyzePageSpeedFull(url, pageSpeedApiKey).catch((err) => { console.error('PageSpeed error:', err); return null }) : Promise.resolve(null),
       analyzeObservatory(url).catch(() => ({ grade: null })),
     ])
 
