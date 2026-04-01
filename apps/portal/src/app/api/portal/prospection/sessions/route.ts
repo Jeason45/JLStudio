@@ -20,7 +20,7 @@ import {
   analyzePageSpeedFull,
 } from '@/lib/prospection/auditExtras'
 
-export const maxDuration = 60
+export const maxDuration = 120
 
 // GET — List sessions for site
 export async function GET(req: NextRequest) {
@@ -61,7 +61,7 @@ async function handleSearch(siteId: string, body: { metier?: string; ville?: str
   }
 
   try {
-    const results = await searchBusinesses(metier, ville, limit ?? 20)
+    const results = await searchBusinesses(metier, ville, Math.min(limit ?? 50, 50))
 
     const session = await prisma.prospectionSession.create({
       data: {

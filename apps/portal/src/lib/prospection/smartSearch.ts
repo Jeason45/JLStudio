@@ -167,8 +167,8 @@ export async function searchBusinesses(
     return false
   })
 
-  // Find websites via DuckDuckGo (only for first 15 to avoid rate limiting)
-  const toCheck = filtered.slice(0, Math.min(filtered.length, 15))
+  // Find websites via DuckDuckGo (limited to avoid rate limiting — ~600ms each)
+  const toCheck = filtered.slice(0, Math.min(filtered.length, 25))
   for (let i = 0; i < toCheck.length; i++) {
     try {
       toCheck[i].website = await findWebsite(toCheck[i].name, toCheck[i].city)
