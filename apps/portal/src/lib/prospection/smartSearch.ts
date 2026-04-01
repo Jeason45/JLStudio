@@ -86,8 +86,11 @@ export async function searchBusinesses(
   metier: string,
   ville: string,
   limit: number = 20,
+  excludeSirens: string[] = [],
+  pageOffset: number = 1,
 ): Promise<BusinessResult[]> {
   const results: BusinessResult[] = []
+  const excludeSet = new Set(excludeSirens)
 
   // Get postal codes for the city
   const postalCodes = await getPostalCodes(ville)
@@ -112,13 +115,16 @@ export async function searchBusinesses(
             code_postal: cp,
             etat_administratif: 'A',
             per_page: String(remaining),
+            page: String(pageOffset),
           })}`, { signal: AbortSignal.timeout(10000) })
 
           if (res.ok) {
             const data = await res.json() as any
             for (const r of (data.results || [])) {
               if (results.length >= limit) break
-              if (!results.some(e => e.siren === r.siren)) {
+              const siren = r.siren || ''
+              if (excludeSet.has(siren)) continue
+              if (!results.some(e => e.siren === siren)) {
                 results.push(mapSireneResult(r))
               }
             }
@@ -138,13 +144,16 @@ export async function searchBusinesses(
           code_postal: cp,
           etat_administratif: 'A',
           per_page: String(remaining),
+          page: String(pageOffset),
         })}`, { signal: AbortSignal.timeout(10000) })
 
         if (res.ok) {
           const data = await res.json() as any
           for (const r of (data.results || [])) {
             if (results.length >= limit) break
-            if (!results.some(e => e.siren === r.siren)) {
+            const siren = r.siren || ''
+            if (excludeSet.has(siren)) continue
+            if (!results.some(e => e.siren === siren)) {
               results.push(mapSireneResult(r))
             }
           }

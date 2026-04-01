@@ -19,6 +19,7 @@ import {
   checkCarbon,
   analyzePageSpeedFull,
 } from '@/lib/prospection/auditExtras'
+import { analyzeDesign } from '@/lib/prospection/designAnalyzer'
 
 export const maxDuration = 120
 
@@ -54,33 +55,50 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ error: 'Type invalide (search ou audit)' }, { status: 400 })
 }
 
-async function handleSearch(siteId: string, body: { metier?: string; ville?: string; limit?: number }) {
-  const { metier, ville, limit } = body
+async function handleSearch(siteId: string, body: { metier?: string; ville?: string; limit?: number; excludeSirens?: string[]; page?: number; sessionId?: string }) {
+  const { metier, ville, limit, excludeSirens, page, sessionId } = body
   if (!metier || !ville) {
     return NextResponse.json({ error: 'metier et ville requis' }, { status: 400 })
   }
 
   try {
-    const results = await searchBusinesses(metier, ville, Math.min(limit ?? 50, 50))
+    const results = await searchBusinesses(metier, ville, Math.min(limit ?? 50, 50), excludeSirens || [], page || 1)
 
+    const prospectData = results.map((r) => ({
+      name: r.name,
+      siret: r.siret || null,
+      address: r.address || null,
+      city: r.city || null,
+      postalCode: r.postalCode || null,
+      dateCreation: r.dateCreation || null,
+      nafLabel: r.nafLabel || null,
+      website: r.website || null,
+      category: r.website ? 'refonte' : 'creation',
+    }))
+
+    // If sessionId provided, add to existing session (for "Load more")
+    if (sessionId) {
+      const existing = await prisma.prospectionSession.findFirst({ where: { id: sessionId, siteId } })
+      if (!existing) return NextResponse.json({ error: 'Session introuvable' }, { status: 404 })
+
+      for (const p of prospectData) {
+        await prisma.prospectionProspect.create({ data: { sessionId, ...p } })
+      }
+
+      const session = await prisma.prospectionSession.findUnique({
+        where: { id: sessionId },
+        include: { prospects: { orderBy: { createdAt: 'asc' } } },
+      })
+      return NextResponse.json({ ...session, newCount: prospectData.length })
+    }
+
+    // Otherwise create new session
     const session = await prisma.prospectionSession.create({
       data: {
         siteId,
         type: 'search',
         query: `${metier} ${ville}`,
-        prospects: {
-          create: results.map((r) => ({
-            name: r.name,
-            siret: r.siret || null,
-            address: r.address || null,
-            city: r.city || null,
-            postalCode: r.postalCode || null,
-            dateCreation: r.dateCreation || null,
-            nafLabel: r.nafLabel || null,
-            website: r.website || null,
-            category: r.website ? 'refonte' : 'creation',
-          })),
-        },
+        prospects: { create: prospectData },
       },
       include: { prospects: true },
     })
@@ -225,5 +243,7 @@ export async function runFullAudit(url: string, pageSpeedApiKey: string) {
     primaryEmail: bestEmail.email || emailResult.primaryEmail,
     emailConfidence: bestEmail.confidence,
     emails: emailResult.emails,
+    // Design & UX analysis
+    design: analyzeDesign(tech.html),
   }
 }

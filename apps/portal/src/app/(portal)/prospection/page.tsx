@@ -178,6 +178,8 @@ export default function ProspectionPage() {
   const [searchMetier, setSearchMetier] = useState('');
   const [searchVille, setSearchVille] = useState('');
   const [searching, setSearching] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [searchPage, setSearchPage] = useState(1);
 
   // Audit URL form
   const [auditUrl, setAuditUrl] = useState('');
@@ -628,6 +630,44 @@ export default function ProspectionPage() {
             <UserPlus size={14} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
             Tout ajouter au CRM
           </button>
+          {activeSession?.type === 'search' && (
+            <button
+              onClick={async () => {
+                if (!activeSession) return;
+                setLoadingMore(true);
+                const nextPage = searchPage + 1;
+                const existingSirens = prospects.map(p => p.siret).filter(Boolean) as string[];
+                const query = activeSession.query || '';
+                const [metier, ...villeParts] = query.split(' ');
+                const ville = villeParts.join(' ');
+                try {
+                  const res = await fetch('/api/portal/prospection/sessions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      type: 'search', metier, ville,
+                      excludeSirens: existingSirens,
+                      page: nextPage,
+                      sessionId: activeSession.id,
+                    }),
+                  });
+                  if (res.ok) {
+                    const data = await res.json();
+                    setProspects(data.prospects || []);
+                    setSearchPage(nextPage);
+                  }
+                } catch {}
+                setLoadingMore(false);
+              }}
+              disabled={loadingMore}
+              style={{
+                ...btnSecondary,
+                opacity: loadingMore ? 0.5 : 1,
+              }}
+            >
+              {loadingMore ? 'Chargement...' : `Charger plus (+50)`}
+            </button>
+          )}
         </div>
       )}
 
@@ -1099,6 +1139,60 @@ function DetailPanel({
               })}
             </div>
           ))}
+
+          {/* Design & UX */}
+          {audit.design && (
+            <div style={panelCardStyle}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>Design & UX</h3>
+                <span style={{
+                  fontSize: '13px', fontWeight: 700,
+                  color: audit.design.score >= 70 ? '#22c55e' : audit.design.score >= 40 ? '#f59e0b' : '#ef4444',
+                }}>{audit.design.score}/100</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px', fontSize: '11px', marginBottom: '8px' }}>
+                <div style={{ color: audit.design.imageCount >= 3 ? 'var(--text-secondary)' : '#ef4444' }}>
+                  {audit.design.imageCount >= 3 ? '✓' : '✗'} {audit.design.imageCount} image{audit.design.imageCount !== 1 ? 's' : ''}
+                </div>
+                <div style={{ color: audit.design.hasHeroImage ? 'var(--text-secondary)' : '#ef4444' }}>
+                  {audit.design.hasHeroImage ? '✓' : '✗'} Hero/Banner
+                </div>
+                <div style={{ color: audit.design.hasCustomFonts ? 'var(--text-secondary)' : '#ef4444' }}>
+                  {audit.design.hasCustomFonts ? '✓' : '✗'} Polices custom
+                </div>
+                <div style={{ color: audit.design.hasNavigation ? 'var(--text-secondary)' : '#ef4444' }}>
+                  {audit.design.hasNavigation ? '✓' : '✗'} Navigation
+                </div>
+                <div style={{ color: audit.design.hasLogo ? 'var(--text-secondary)' : '#ef4444' }}>
+                  {audit.design.hasLogo ? '✓' : '✗'} Logo
+                </div>
+                <div style={{ color: audit.design.hasFooterContent ? 'var(--text-secondary)' : '#ef4444' }}>
+                  {audit.design.hasFooterContent ? '✓' : '✗'} Footer
+                </div>
+                <div style={{ color: audit.design.usesFlexboxOrGrid ? 'var(--text-secondary)' : '#f59e0b' }}>
+                  {audit.design.usesFlexboxOrGrid ? '✓' : '!'} Flexbox/Grid
+                </div>
+                <div style={{ color: audit.design.hasAnimations ? 'var(--text-secondary)' : 'var(--text-tertiary)' }}>
+                  {audit.design.hasAnimations ? '✓' : '—'} Animations
+                </div>
+              </div>
+              <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginBottom: '6px' }}>
+                {audit.design.wordCount} mots · {audit.design.headingCount} headings · {audit.design.fontFamilyCount} police{audit.design.fontFamilyCount !== 1 ? 's' : ''} · Ratio texte {audit.design.textToHtmlRatio}%
+              </div>
+              {audit.design.issues.length > 0 && (
+                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '6px' }}>
+                  {audit.design.issues.slice(0, 5).map((issue: any, i: number) => (
+                    <div key={i} style={{
+                      fontSize: '10px', padding: '2px 0',
+                      color: issue.severity === 'critical' ? '#ef4444' : issue.severity === 'warning' ? '#f59e0b' : 'var(--text-tertiary)',
+                    }}>
+                      {issue.severity === 'critical' ? '✗' : issue.severity === 'warning' ? '!' : '·'} {issue.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Social + Email */}
           <div style={panelCardStyle}>
