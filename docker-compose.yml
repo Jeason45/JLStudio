@@ -79,6 +79,20 @@ services:
     ports:
       - "3002:3002"
 
+  # ── Prospector Agent (scraping + analysis worker) ──
+  prospector:
+    build:
+      context: .
+      dockerfile: apps/prospector/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-jlstudio}:${POSTGRES_PASSWORD:-jlstudio_secret}@postgres:5432/${POSTGRES_DB:-jlstudio}
+      PAGESPEED_API_KEY: ${PAGESPEED_API_KEY:-}
+      SITE_ID: ${SITE_ID:-}
+
   # ── Nginx — Static sites server ──
   nginx-sites:
     image: nginx:alpine

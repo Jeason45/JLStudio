@@ -531,10 +531,7 @@ export default function ProspectionPage() {
                 background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)',
                 fontSize: '11px', color: 'var(--info, #3b82f6)', lineHeight: '1.5',
               }}>
-                Lancez l'agent local pour executer cette campagne :<br />
-                <code style={{ background: 'rgba(0,0,0,0.1)', padding: '2px 6px', borderRadius: '4px', fontSize: '11px' }}>
-                  cd apps/prospector && npm run agent
-                </code>
+                En attente de l'agent de prospection... L'analyse demarrera automatiquement.
               </div>
             )}
 
