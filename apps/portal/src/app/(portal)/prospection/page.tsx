@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSidebar } from '@/components/portal/SidebarContext';
-import { Radar, Plus, ArrowLeft, Trash2, X, Download, Filter } from 'lucide-react';
+import { Radar, Plus, ArrowLeft, Trash2, X, Download, Filter, Search } from 'lucide-react';
 
 // ─── Types ───
 
@@ -312,12 +312,21 @@ export default function ProspectionPage() {
           </h1>
         </div>
         {!selectedCampaign && (
-          <button onClick={() => setShowCreate(true)} style={{
-            display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-            background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500,
-          }}>
-            <Plus size={16} /> Nouvelle campagne
-          </button>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <a href="/prospection/audit" style={{
+              display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
+              background: 'var(--bg-secondary)', color: 'var(--accent)', border: '1px solid var(--accent)',
+              cursor: 'pointer', fontSize: '13px', fontWeight: 500, textDecoration: 'none',
+            }}>
+              <Search size={16} /> Audit site web
+            </a>
+            <button onClick={() => setShowCreate(true)} style={{
+              display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
+              background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500,
+            }}>
+              <Plus size={16} /> Nouvelle campagne
+            </button>
+          </div>
         )}
       </div>
 
