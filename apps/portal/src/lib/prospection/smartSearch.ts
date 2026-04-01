@@ -155,8 +155,17 @@ export async function searchBusinesses(
     console.error('SIRENE search error:', err)
   }
 
+  // Filter: only keep businesses actually in the target city/area
+  const villeUpper = ville.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  const filtered = results.filter(r => {
+    const businessCity = (r.city || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    const businessCP = r.postalCode || ''
+    // Match by city name or by postal code prefix
+    return businessCity.includes(villeUpper) || villeUpper.includes(businessCity) || postalCodes.includes(businessCP)
+  })
+
   // Find websites via DuckDuckGo (only for first 15 to avoid rate limiting)
-  const toCheck = results.slice(0, Math.min(results.length, 15))
+  const toCheck = filtered.slice(0, Math.min(filtered.length, 15))
   for (let i = 0; i < toCheck.length; i++) {
     try {
       toCheck[i].website = await findWebsite(toCheck[i].name, toCheck[i].city)
@@ -164,7 +173,7 @@ export async function searchBusinesses(
     if (i < toCheck.length - 1) await new Promise(r => setTimeout(r, 600))
   }
 
-  return results
+  return filtered
 }
 
 // Fallback: search by text when city can't be resolved

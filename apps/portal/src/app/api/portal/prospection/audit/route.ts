@@ -39,6 +39,22 @@ export async function POST(req: NextRequest) {
     const pageSpeedApiKey = process.env.PAGESPEED_API_KEY || ''
     console.log(`[Audit] URL: ${url} | PageSpeed key: ${pageSpeedApiKey ? 'present (' + pageSpeedApiKey.slice(0, 8) + '...)' : 'MISSING'}`)
 
+    // Quick PageSpeed test to diagnose issues
+    if (pageSpeedApiKey) {
+      try {
+        const testRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${pageSpeedApiKey}&strategy=mobile&category=performance`, { signal: AbortSignal.timeout(45000) })
+        const testData = await testRes.json() as any
+        if (testData.error) {
+          console.error('[Audit] PageSpeed API error:', JSON.stringify(testData.error))
+        } else {
+          const score = testData?.lighthouseResult?.categories?.performance?.score
+          console.log(`[Audit] PageSpeed test OK — mobile perf score: ${score !== undefined ? Math.round(score * 100) : 'null'}`)
+        }
+      } catch (err) {
+        console.error('[Audit] PageSpeed test fetch failed:', err instanceof Error ? err.message : err)
+      }
+    }
+
     // Phase 1: Tech + SEO (fast)
     const [tech, seo] = await Promise.all([
       analyzeTech(url),
