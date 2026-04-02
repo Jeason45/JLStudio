@@ -974,39 +974,158 @@ function DetailPanel({
           {/* Screenshots */}
           {prospect.website && (
             <div style={panelCardStyle}>
-              <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
-                <Eye size={13} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Apercu du site
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: audit.mobileScreenshot ? '1fr 1fr' : '1fr', gap: '8px', marginBottom: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
+                  <Eye size={13} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Captures du site
+                </h3>
+                <button
+                  onClick={() => {
+                    const urls = [
+                      { name: 'desktop-full', url: `https://image.thum.io/get/width/1280/fullpage/${prospect.website}` },
+                      { name: 'desktop-fold', url: `https://image.thum.io/get/width/1280/${prospect.website}` },
+                      { name: 'mobile-full', url: `https://image.thum.io/get/width/375/fullpage/${prospect.website}` },
+                      { name: 'mobile-fold', url: `https://image.thum.io/get/width/375/${prospect.website}` },
+                    ];
+                    urls.forEach(({ name, url }) => {
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.target = '_blank';
+                      a.download = `${prospect.name.replace(/[^a-zA-Z0-9]/g, '-')}_${name}.png`;
+                      a.click();
+                    });
+                  }}
+                  style={{
+                    padding: '4px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: 500,
+                    background: 'var(--bg-secondary)', color: 'var(--accent)', border: '1px solid var(--border)',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Telecharger les 4 screenshots
+                </button>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '10px' }}>
                 {audit.mobileScreenshot && (
                   <div>
-                    <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginBottom: '4px', textAlign: 'center' }}>Mobile (PageSpeed)</div>
-                    <img src={audit.mobileScreenshot} alt="Mobile" style={{ width: '100%', borderRadius: '6px', border: '1px solid var(--border)' }} />
+                    <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', marginBottom: '3px', textAlign: 'center' }}>Mobile (PageSpeed)</div>
+                    <img src={audit.mobileScreenshot} alt="Mobile fold" style={{ width: '100%', borderRadius: '4px', border: '1px solid var(--border)' }} />
                   </div>
                 )}
                 <div>
-                  <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginBottom: '4px', textAlign: 'center' }}>Page complete</div>
-                  <img
-                    src={`https://image.thum.io/get/width/400/fullpage/${prospect.website}`}
-                    alt="Full page"
-                    style={{ width: '100%', borderRadius: '6px', border: '1px solid var(--border)', maxHeight: '300px', objectFit: 'cover', objectPosition: 'top' }}
-                    loading="lazy"
-                  />
+                  <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', marginBottom: '3px', textAlign: 'center' }}>Desktop (haut)</div>
+                  <img src={`https://image.thum.io/get/width/800/${prospect.website}`} alt="Desktop fold" style={{ width: '100%', borderRadius: '4px', border: '1px solid var(--border)' }} loading="lazy" />
+                </div>
+                <div>
+                  <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', marginBottom: '3px', textAlign: 'center' }}>Mobile (complet)</div>
+                  <img src={`https://image.thum.io/get/width/375/fullpage/${prospect.website}`} alt="Mobile full" style={{ width: '100%', borderRadius: '4px', border: '1px solid var(--border)', maxHeight: '200px', objectFit: 'cover', objectPosition: 'top' }} loading="lazy" />
+                </div>
+                <div>
+                  <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', marginBottom: '3px', textAlign: 'center' }}>Desktop (complet)</div>
+                  <img src={`https://image.thum.io/get/width/800/fullpage/${prospect.website}`} alt="Desktop full" style={{ width: '100%', borderRadius: '4px', border: '1px solid var(--border)', maxHeight: '200px', objectFit: 'cover', objectPosition: 'top' }} loading="lazy" />
                 </div>
               </div>
-              <a
-                href={`https://claude.ai/new?q=${encodeURIComponent(`Analyse le design et l'UX de ce site web : ${prospect.website}\n\nDonne-moi :\n1. Un score de design sur 100\n2. Les problèmes visuels principaux\n3. Ce qui pourrait être amélioré\n4. Si le site fait professionnel ou amateur`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
+
+              {/* Claude analysis button */}
+              <button
+                onClick={() => {
+                  // Show reminder popup then open Claude
+                  if (confirm('Avant d\'ouvrir Claude :\n\n1. Cliquez "Telecharger les 4 screenshots" ci-dessus\n2. Dans Claude, joignez les screenshots telecharges\n3. Le prompt d\'analyse sera deja pre-rempli\n\nOuvrir Claude maintenant ?')) {
+                    const prompt = `Tu es un expert en design web, UX et strategie digitale. Analyse ce site web : ${prospect.website}
+
+J'ai joint les screenshots du site (mobile + desktop, haut de page + page complete). Analyse-les attentivement.
+
+Fournis une analyse COMPLETE et DETAILLEE au format suivant :
+
+## 1. SCORE GLOBAL DESIGN (/100)
+Note avec justification en une phrase.
+
+## 2. PREMIERE IMPRESSION (test des 3 secondes)
+- Le site inspire-t-il confiance immediatement ?
+- Comprend-on l'activite en 3 secondes ?
+- Y a-t-il un appel a l'action clair et visible ?
+- Le site fait-il professionnel ou amateur ? Pourquoi ?
+- Le design est-il moderne (2024-2026) ou date ? Quelle epoque evoque-t-il ?
+
+## 3. IDENTITE VISUELLE & BRANDING
+- Logo : qualite, placement, taille, lisibilite
+- Palette de couleurs : harmonie, coherence, nombre de couleurs
+- Typographie : choix des polices, lisibilite, hierarchie visuelle
+- Images/Photos : qualite, pertinence, resolution, style
+- Coherence globale : meme style sur toute la page ?
+
+## 4. NAVIGATION & ARCHITECTURE
+- Menu : clarte, accessibilite, nombre d'elements
+- Hierarchie de l'information : est-ce logique ?
+- Footer : contenu utile ou vide ?
+- Liens internes : peut-on naviguer facilement ?
+
+## 5. EXPERIENCE MOBILE
+- Le site est-il vraiment responsive ou juste "pas casse" ?
+- Taille des boutons et zones cliquables
+- Lisibilite du texte sur petit ecran
+- Menus et navigation sur mobile
+- Vitesse percue
+
+## 6. CONTENU & COPYWRITING
+- Qualite des textes : convaincants ou generiques ?
+- Appels a l'action : presents, visibles, convaincants ?
+- Preuves sociales : avis clients, temoignages, notes Google ?
+- Informations de contact : telephone, adresse, horaires visibles ?
+- Mise en valeur des services/produits
+
+## 7. ELEMENTS DE REASSURANCE & CONFIANCE
+- Mentions legales, CGV, politique de confidentialite
+- Avis clients / temoignages
+- Certifications, labels, partenaires
+- Bouton d'appel visible (click-to-call)
+- Formulaire de contact fonctionnel
+
+## 8. PARCOURS UTILISATEUR
+- Un nouveau visiteur peut-il facilement :
+  * Comprendre les services proposes ?
+  * Trouver les tarifs ?
+  * Prendre rendez-vous / contacter ?
+  * Trouver l'adresse et les horaires ?
+- Y a-t-il des frictions ou des points de blocage ?
+
+## 9. CONFORMITE & BONNES PRATIQUES
+- RGPD : bandeau cookies, politique de confidentialite
+- Mentions legales presentes et completes
+- Accessibilite : contrastes, textes alternatifs
+- SEO visible : titres clairs, URLs propres
+
+## 10. TOP 10 DES PROBLEMES CRITIQUES
+Liste numerotee du plus urgent au moins urgent.
+Pour chaque probleme :
+- Description precise du probleme
+- Impact concret sur le business (perte de clients, confiance, etc.)
+- Solution recommandee
+- Niveau de priorite : CRITIQUE / IMPORTANT / MINEUR
+
+## 11. VERDICT FINAL
+- Score design : /100
+- Score UX : /100
+- Score confiance : /100
+- Score mobile : /100
+- Ce site convertit-il les visiteurs en clients ? Pourquoi ?
+- En une phrase : quel est LE probleme principal de ce site ?
+
+## 12. RECOMMANDATIONS STRATEGIQUES
+Que faudrait-il faire en priorite pour transformer ce site en outil de conversion ?
+Liste de 5 actions concretes classees par impact.
+
+Sois precis, direct et oriente business. Chaque probleme doit etre explique en termes d'impact sur le chiffre d'affaires du client, pas en termes techniques.`;
+                    window.open(`https://claude.ai/new?q=${encodeURIComponent(prompt)}`, '_blank');
+                  }
+                }}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                  padding: '8px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 600,
+                  width: '100%', padding: '10px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 600,
                   background: 'linear-gradient(135deg, #d4a574, #c084fc)', color: 'white',
-                  textDecoration: 'none', cursor: 'pointer',
+                  border: 'none', cursor: 'pointer',
                 }}
               >
                 ✨ Analyser le design avec Claude (gratuit)
-              </a>
+              </button>
             </div>
           )}
 
