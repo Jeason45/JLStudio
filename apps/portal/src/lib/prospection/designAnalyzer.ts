@@ -189,44 +189,72 @@ export function analyzeDesign(html: string): DesignAnalysis {
   const hasDarkMode = /prefers-color-scheme\s*:\s*dark|dark-mode|theme-dark/i.test(html)
 
   // ── Calculate Score ──
+  // Start at 50, bonuses up to +50, penalties down to -50
+  // A good site should score 70-90. A bad site 20-40.
 
-  let score = 50 // base
+  let score = 50
 
-  // Content (+25 max)
-  if (imageCount >= 5) score += 8
-  else if (imageCount >= 2) score += 4
+  // Content bonuses (+20 max)
+  if (imageCount >= 5) score += 6
+  else if (imageCount >= 2) score += 3
   if (hasHeroImage) score += 5
-  if (headingCount >= 5) score += 5
+  if (headingCount >= 5) score += 4
   else if (headingCount >= 2) score += 2
-  if (wordCount >= 200) score += 4
-  else if (wordCount >= 50) score += 2
-  if (hasSections) score += 3
+  if (wordCount >= 200) score += 3
+  if (hasSections) score += 2
 
-  // Typography (+10 max)
-  if (hasCustomFonts) score += 7
-  if (fontFamilyCount >= 1 && fontFamilyCount <= 3) score += 3
+  // Typography bonuses (+6 max)
+  if (hasCustomFonts && fontFamilyCount <= 3) score += 6
+  else if (hasCustomFonts) score += 2
 
-  // CSS Quality (+10 max)
-  if (hasMediaQueries) score += 3
-  if (usesFlexboxOrGrid) score += 4
-  if (importantCount < 5) score += 3
+  // CSS Quality bonuses (+6 max)
+  if (hasMediaQueries) score += 2
+  if (usesFlexboxOrGrid) score += 2
+  if (importantCount < 3) score += 2
 
-  // Layout (+10 max)
-  if (hasMaxWidth) score += 3
-  if (hasNavigation) score += 3
-  if (hasFooterContent) score += 2
-  if (footerLinkCount >= 3) score += 2
+  // Layout bonuses (+6 max)
+  if (hasMaxWidth) score += 2
+  if (hasNavigation) score += 2
+  if (hasFooterContent && footerLinkCount >= 3) score += 2
 
-  // Branding (+5 max)
-  if (hasLogo) score += 3
+  // Branding bonuses (+4 max)
+  if (hasLogo) score += 2
   if (hasAnimations) score += 2
 
-  // Penalties
-  if (imageCount === 0) score -= 15
-  if (headingCount === 0) score -= 10
-  if (!hasCustomFonts) score -= 5
-  if (!hasNavigation) score -= 5
-  if (importantCount > 20) score -= 5
+  // ── PENALTIES (aggressive) ──
+
+  // Content penalties
+  if (imageCount === 0) score -= 20
+  else if (imageCount < 3) score -= 8
+  if (headingCount === 0) score -= 15
+  if (!hasHeroImage) score -= 10
+  if (wordCount < 50) score -= 10
+  else if (wordCount < 100) score -= 5
+  if (textToHtmlRatio < 5) score -= 12
+  else if (textToHtmlRatio < 10) score -= 5
+
+  // Typography penalties
+  if (!hasCustomFonts) score -= 8
+  if (fontFamilyCount > 6) score -= 15
+  else if (fontFamilyCount > 4) score -= 8
+
+  // CSS Quality penalties
+  if (!usesFlexboxOrGrid) score -= 5
+  if (importantCount > 15) score -= 12
+  else if (importantCount > 8) score -= 6
+  if (inlineStyles.length > 30) score -= 5
+
+  // Layout penalties
+  if (!hasNavigation) score -= 10
+  if (!hasFooterContent) score -= 8
+  if (!hasMaxWidth) score -= 3
+
+  // Branding penalties
+  if (!hasLogo) score -= 10
+  if (colorCount > 20) score -= 5 // too many random colors = no design system
+
+  // Social signals (no social = not maintained)
+  // (detected elsewhere but we can check for social meta tags)
 
   score = Math.max(0, Math.min(100, score))
 

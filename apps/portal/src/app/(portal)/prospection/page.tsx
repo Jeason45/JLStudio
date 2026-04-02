@@ -971,13 +971,42 @@ function DetailPanel({
             </div>
           </div>
 
-          {/* Screenshot */}
-          {audit.mobileScreenshot && (
+          {/* Screenshots */}
+          {prospect.website && (
             <div style={panelCardStyle}>
               <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
-                <Eye size={13} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Apercu mobile
+                <Eye size={13} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Apercu du site
               </h3>
-              <img src={audit.mobileScreenshot} alt="Screenshot" style={{ width: '100%', maxWidth: '200px', borderRadius: '6px', border: '1px solid var(--border)', display: 'block', margin: '0 auto' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: audit.mobileScreenshot ? '1fr 1fr' : '1fr', gap: '8px', marginBottom: '10px' }}>
+                {audit.mobileScreenshot && (
+                  <div>
+                    <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginBottom: '4px', textAlign: 'center' }}>Mobile (PageSpeed)</div>
+                    <img src={audit.mobileScreenshot} alt="Mobile" style={{ width: '100%', borderRadius: '6px', border: '1px solid var(--border)' }} />
+                  </div>
+                )}
+                <div>
+                  <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginBottom: '4px', textAlign: 'center' }}>Page complete</div>
+                  <img
+                    src={`https://image.thum.io/get/width/400/fullpage/${prospect.website}`}
+                    alt="Full page"
+                    style={{ width: '100%', borderRadius: '6px', border: '1px solid var(--border)', maxHeight: '300px', objectFit: 'cover', objectPosition: 'top' }}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <a
+                href={`https://claude.ai/new?q=${encodeURIComponent(`Analyse le design et l'UX de ce site web : ${prospect.website}\n\nDonne-moi :\n1. Un score de design sur 100\n2. Les problèmes visuels principaux\n3. Ce qui pourrait être amélioré\n4. Si le site fait professionnel ou amateur`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                  padding: '8px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 600,
+                  background: 'linear-gradient(135deg, #d4a574, #c084fc)', color: 'white',
+                  textDecoration: 'none', cursor: 'pointer',
+                }}
+              >
+                ✨ Analyser le design avec Claude (gratuit)
+              </a>
             </div>
           )}
 
