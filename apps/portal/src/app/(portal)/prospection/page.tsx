@@ -1534,6 +1534,154 @@ Sois percutant, oriente business, pas technique. Le client doit comprendre pourq
               Sauvegarder l'analyse
             </button>
           </div>
+
+          {/* Presentation Generator */}
+          {prospect.claudeAnalysis && (
+            <div style={panelCardStyle}>
+              <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
+                📊 Generer la presentation
+              </h3>
+              {prospect.presentationData ? (
+                <>
+                  <div style={{
+                    fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.5',
+                    maxHeight: '150px', overflowY: 'auto', whiteSpace: 'pre-wrap',
+                    background: 'var(--bg-secondary)', borderRadius: '8px', padding: '10px',
+                    marginBottom: '8px',
+                  }}>
+                    {prospect.presentationData.slice(0, 500)}...
+                  </div>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button
+                      onClick={() => {
+                        const el = document.getElementById('presentation-data-input') as HTMLTextAreaElement;
+                        if (el) { el.style.display = 'block'; el.value = prospect.presentationData || ''; el.focus(); }
+                      }}
+                      style={{ padding: '4px 10px', borderRadius: '6px', fontSize: '10px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: '1px solid var(--border)', cursor: 'pointer' }}
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (!prospect.presentationData) return;
+                        const pptx = (await import('pptxgenjs')).default;
+                        const pres = new pptx();
+                        pres.layout = 'LAYOUT_16x9';
+
+                        // Parse slides from text
+                        const slideBlocks = prospect.presentationData.split(/SLIDE \d+/i).filter(s => s.trim());
+                        const BRAND_COLOR = '638BFF';
+                        const DARK = '1a1a2e';
+
+                        // Cover slide
+                        const cover = pres.addSlide();
+                        cover.background = { color: DARK };
+                        cover.addText(`Audit Web`, { x: 0.8, y: 1.5, w: 8.4, h: 1, fontSize: 36, fontFace: 'Arial', color: BRAND_COLOR, bold: true });
+                        cover.addText(prospect.name, { x: 0.8, y: 2.5, w: 8.4, h: 0.8, fontSize: 28, fontFace: 'Arial', color: 'FFFFFF' });
+                        cover.addText(`JL Studio — jlstudio.dev`, { x: 0.8, y: 4.5, w: 8.4, h: 0.4, fontSize: 14, fontFace: 'Arial', color: '888888' });
+                        cover.addText(new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }), { x: 0.8, y: 4.9, w: 8.4, h: 0.4, fontSize: 12, fontFace: 'Arial', color: '666666' });
+
+                        // Content slides
+                        for (let i = 0; i < slideBlocks.length && i < 10; i++) {
+                          const block = slideBlocks[i].trim();
+                          const lines = block.split('\n').filter(l => l.trim());
+
+                          // First line = title (after "- TITRE" or similar)
+                          let title = lines[0] || `Slide ${i + 2}`;
+                          title = title.replace(/^[-—:*#]+\s*/, '').replace(/COUVERTURE|CONSTAT|PREMIERE|PROBLEMES|IMPACT|CONCURRENTS|SOLUTION|AVANT|PROCESSUS|INVESTISSEMENT/i, '').trim();
+                          if (!title || title.length < 3) title = `Slide ${i + 2}`;
+
+                          const slide = pres.addSlide();
+                          slide.background = { color: 'FFFFFF' };
+
+                          // Header bar
+                          slide.addShape(pres.ShapeType.rect, { x: 0, y: 0, w: 10, h: 0.8, fill: { color: DARK } });
+                          slide.addText(title.slice(0, 60), { x: 0.5, y: 0.15, w: 9, h: 0.5, fontSize: 18, fontFace: 'Arial', color: 'FFFFFF', bold: true });
+
+                          // Content
+                          const contentLines = lines.slice(1).filter(l => !l.toLowerCase().includes('notes du presentateur'));
+                          const notesStart = lines.findIndex(l => l.toLowerCase().includes('notes du presentateur'));
+                          const content = contentLines.join('\n').replace(/^\s*[-•]\s*/gm, '• ').trim();
+
+                          slide.addText(content.slice(0, 800) || '', {
+                            x: 0.5, y: 1.2, w: 9, h: 4,
+                            fontSize: 13, fontFace: 'Arial', color: '333333',
+                            lineSpacingMultiple: 1.3,
+                            valign: 'top',
+                          });
+
+                          // Presenter notes
+                          if (notesStart > -1) {
+                            const notes = lines.slice(notesStart + 1).join('\n').trim();
+                            slide.addNotes(notes);
+                          }
+
+                          // Footer
+                          slide.addText('JL Studio — jlstudio.dev', { x: 0.5, y: 5.0, w: 9, h: 0.3, fontSize: 9, fontFace: 'Arial', color: '999999' });
+                        }
+
+                        // Final slide
+                        const final = pres.addSlide();
+                        final.background = { color: DARK };
+                        final.addText('Merci', { x: 0.8, y: 1.5, w: 8.4, h: 1, fontSize: 40, fontFace: 'Arial', color: BRAND_COLOR, bold: true });
+                        final.addText('JL Studio\nCreation de sites web premium', { x: 0.8, y: 2.8, w: 8.4, h: 0.8, fontSize: 18, fontFace: 'Arial', color: 'FFFFFF' });
+                        final.addText('jlstudio.dev\ncontact@jlstudio.dev\n07 67 58 10 61', { x: 0.8, y: 3.8, w: 8.4, h: 1, fontSize: 14, fontFace: 'Arial', color: '888888', lineSpacingMultiple: 1.5 });
+
+                        const slug = prospect.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+                        await pres.writeFile({ fileName: `audit_${slug}_${new Date().toISOString().slice(0, 10)}.pptx` });
+                      }}
+                      style={{
+                        padding: '6px 14px', borderRadius: '6px', fontSize: '11px', fontWeight: 600,
+                        background: 'linear-gradient(135deg, #22c55e, #16a34a)', color: 'white',
+                        border: 'none', cursor: 'pointer',
+                      }}
+                    >
+                      📥 Generer le PowerPoint
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '8px' }}>
+                  Apres avoir utilise "Preparer la presentation (Claude)", collez ici le contenu des slides genere par Claude.
+                </div>
+              )}
+              <textarea
+                id="presentation-data-input"
+                placeholder="Collez ici le contenu des slides genere par Claude..."
+                defaultValue={prospect.presentationData || ''}
+                style={{
+                  display: prospect.presentationData ? 'none' : 'block',
+                  width: '100%', minHeight: '120px', padding: '8px', borderRadius: '8px',
+                  background: 'var(--bg-input)', border: '1px solid var(--border-input)',
+                  color: 'var(--text-primary)', fontSize: '11px', resize: 'vertical',
+                  fontFamily: 'inherit', lineHeight: '1.5',
+                }}
+              />
+              <button
+                onClick={async () => {
+                  const el = document.getElementById('presentation-data-input') as HTMLTextAreaElement;
+                  if (!el || !el.value.trim()) return;
+                  const res = await fetch(`/api/portal/prospection/sessions/${prospect.sessionId}/prospects/${prospect.id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ presentationData: el.value.trim() }),
+                  });
+                  if (res.ok) {
+                    const updated = await res.json();
+                    setProspects(prev => prev.map(p => p.id === updated.id ? { ...p, presentationData: updated.presentationData } : p));
+                    setSelectedProspect(prev => prev ? { ...prev, presentationData: updated.presentationData } : prev);
+                    el.style.display = 'none';
+                  }
+                }}
+                style={{
+                  marginTop: '6px', padding: '6px 14px', borderRadius: '6px', fontSize: '11px', fontWeight: 500,
+                  background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer',
+                }}
+              >
+                Sauvegarder le contenu
+              </button>
+            </div>
+          )}
         </>
       )}
 
