@@ -124,7 +124,7 @@ export async function searchBusinesses(
               if (results.length >= limit) break
               const siren = r.siren || ''
               if (excludeSet.has(siren)) continue
-              if (!results.some(e => e.siren === siren)) {
+              if (!results.some(e => e.siren === siren) && isRelevantBusiness(r)) {
                 results.push(mapSireneResult(r))
               }
             }
@@ -231,6 +231,35 @@ function mapSireneResult(r: any): BusinessResult {
     website: null,
     isActive: r.etat_administratif === 'A',
   }
+}
+
+// Filter out irrelevant businesses (associations, holdings, distributors, etc.)
+function isRelevantBusiness(r: any): boolean {
+  const name = (r.nom_complet || r.nom_raison_sociale || '').toUpperCase()
+  const natureJuridique = r.nature_juridique || ''
+
+  // Exclude associations (nature juridique 9xxx = associations, 7xxx = collectivités)
+  if (natureJuridique.startsWith('9') || natureJuridique.startsWith('7') || natureJuridique.startsWith('8')) {
+    return false
+  }
+
+  // Exclude by name patterns (grossistes, formation, holdings, syndicats, fédérations)
+  const excludePatterns = [
+    'FORMATION', 'GROSSISTE', 'DISTRIBUTION', 'HOLDING', 'SYNDICAT',
+    'FEDERATION', 'ASSOCIATION', 'FONDATION', 'COMITE', 'UNION',
+    'MUTUELLE', 'CAISSE', 'INSTITUT', 'ECOLE', 'LYCEE', 'COLLEGE',
+    'UNIVERSITE', 'CENTRE DE', 'GROUPEMENT', 'COOPERATIVE',
+    'MATERIEL', 'FOURNITURE', 'EQUIPEMENT', 'SUPPLY', 'WHOLESALE',
+    'CONSULTING', 'CONSEIL EN', 'AUDIT', 'EXPERTISE',
+    'IMMOBILIER', 'FONCIER', 'SCI ', 'GESTION DE',
+    'IMPORT', 'EXPORT', 'NEGOCE', 'COMMERCE DE GROS',
+  ]
+
+  for (const pattern of excludePatterns) {
+    if (name.includes(pattern)) return false
+  }
+
+  return true
 }
 
 // Find a company's website via DuckDuckGo
