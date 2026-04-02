@@ -979,20 +979,29 @@ function DetailPanel({
                   <Eye size={13} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Captures du site
                 </h3>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
+                    const slug = prospect.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
                     const urls = [
-                      { name: 'desktop-full', url: `https://image.thum.io/get/width/1280/fullpage/${prospect.website}` },
-                      { name: 'desktop-fold', url: `https://image.thum.io/get/width/1280/${prospect.website}` },
-                      { name: 'mobile-full', url: `https://image.thum.io/get/width/375/fullpage/${prospect.website}` },
-                      { name: 'mobile-fold', url: `https://image.thum.io/get/width/375/${prospect.website}` },
+                      { name: `${slug}_desktop-complet`, url: `https://image.thum.io/get/width/1280/fullpage/${prospect.website}` },
+                      { name: `${slug}_desktop-haut`, url: `https://image.thum.io/get/width/1280/${prospect.website}` },
+                      { name: `${slug}_mobile-complet`, url: `https://image.thum.io/get/width/375/fullpage/${prospect.website}` },
+                      { name: `${slug}_mobile-haut`, url: `https://image.thum.io/get/width/375/${prospect.website}` },
                     ];
-                    urls.forEach(({ name, url }) => {
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.target = '_blank';
-                      a.download = `${prospect.name.replace(/[^a-zA-Z0-9]/g, '-')}_${name}.png`;
-                      a.click();
-                    });
+                    for (const { name, url } of urls) {
+                      try {
+                        const res = await fetch(url);
+                        const blob = await res.blob();
+                        const blobUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.download = `${name}.png`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(blobUrl);
+                        await new Promise(r => setTimeout(r, 500));
+                      } catch { /* skip failed downloads */ }
+                    }
                   }}
                   style={{
                     padding: '4px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: 500,
