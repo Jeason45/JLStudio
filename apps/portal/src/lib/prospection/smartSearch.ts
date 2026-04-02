@@ -1,55 +1,8 @@
-// Smart business search: SIRENE (official registry) + DuckDuckGo (website finder)
+// Smart business search: SIRENE text search + DuckDuckGo website finder
 // No API key needed, no Playwright, works from server-side
 
 const SIRENE_URL = 'https://recherche-entreprises.api.gouv.fr/search'
 const GEO_URL = 'https://geo.api.gouv.fr/communes'
-
-// ── NAF codes by trade ──
-const TRADE_NAF_CODES: Record<string, string[]> = {
-  'plombier': ['43.22A', '43.22B'],
-  'electricien': ['43.21A', '43.21B'],
-  'coiffeur': ['96.02A', '96.02B'],
-  'coiffeuse': ['96.02A', '96.02B'],
-  'restaurant': ['56.10A'],
-  'boulangerie': ['10.71A', '10.71B', '10.71C', '10.71D'],
-  'boulanger': ['10.71A', '10.71B', '10.71C', '10.71D'],
-  'patissier': ['10.71B', '10.71C'],
-  'fleuriste': ['47.76Z'],
-  'pharmacie': ['47.73Z'],
-  'dentiste': ['86.23Z'],
-  'avocat': ['69.10Z'],
-  'architecte': ['71.11Z'],
-  'garagiste': ['45.20A', '45.20B'],
-  'menuisier': ['43.32A'],
-  'peintre': ['43.34Z'],
-  'macon': ['43.99A', '43.99B'],
-  'couvreur': ['43.91A'],
-  'serrurier': ['43.21B'],
-  'photographe': ['74.20Z'],
-  'agence immobiliere': ['68.31Z'],
-  'immobilier': ['68.31Z'],
-  'comptable': ['69.20Z'],
-  'expert-comptable': ['69.20Z'],
-  'pressing': ['96.01A'],
-  'opticien': ['47.78A'],
-  'bijoutier': ['47.77Z'],
-  'boucher': ['47.22Z'],
-  'traiteur': ['56.21Z'],
-  'pizzeria': ['56.10A'],
-  'bar': ['56.30Z'],
-  'cafe': ['56.30Z'],
-  'hotel': ['55.10Z'],
-  'auto-ecole': ['85.53Z'],
-  'infirmier': ['86.90C'],
-  'kinesitherapeute': ['86.90A'],
-  'veterinaire': ['75.00Z'],
-  'estheticienne': ['96.02B'],
-  'beaute': ['96.02B'],
-  'tatoueur': ['96.09Z'],
-  'yoga': ['93.13Z'],
-  'salle de sport': ['93.13Z'],
-  'fitness': ['93.13Z'],
-}
 
 export interface BusinessResult {
   name: string
@@ -81,37 +34,91 @@ async function getPostalCodes(ville: string): Promise<string[]> {
   }
 }
 
-// Search businesses via SIRENE
+// Generate search variations for a trade
+// "coiffeur" → ["coiffeur", "coiffure", "salon coiffure", "coiffeuse"]
+function getSearchVariations(metier: string): string[] {
+  const base = metier.toLowerCase().trim()
+  const variations = [base]
+
+  // Common French trade name variations
+  const suffixMap: Record<string, string[]> = {
+    'coiffeur': ['coiffure', 'salon coiffure', 'coiffeuse', 'barbier', 'barber'],
+    'coiffure': ['coiffeur', 'salon coiffure', 'coiffeuse'],
+    'restaurant': ['restauration', 'brasserie', 'bistrot'],
+    'boulanger': ['boulangerie', 'patisserie'],
+    'boulangerie': ['boulanger', 'patisserie'],
+    'plombier': ['plomberie', 'chauffagiste'],
+    'plomberie': ['plombier', 'chauffagiste'],
+    'electricien': ['electricite', 'electrique'],
+    'peintre': ['peinture'],
+    'menuisier': ['menuiserie'],
+    'fleuriste': ['fleurs'],
+    'photographe': ['photographie', 'photo'],
+    'dentiste': ['dentaire', 'chirurgien dentiste'],
+    'avocat': ['cabinet avocat', 'juridique'],
+    'comptable': ['expert comptable', 'comptabilite'],
+    'architecte': ['architecture'],
+    'garagiste': ['garage', 'mecanique auto', 'reparation auto'],
+    'estheticienne': ['esthetique', 'institut beaute', 'beaute'],
+    'opticien': ['optique', 'lunettes'],
+    'veterinaire': ['clinique veterinaire'],
+    'pizzeria': ['pizza'],
+    'infirmier': ['infirmiere', 'soins infirmiers'],
+    'kinesitherapeute': ['kine', 'kinesitherapie'],
+    'osteopathe': ['osteopathie'],
+    'tatoueur': ['tatouage', 'tattoo'],
+    'bijoutier': ['bijouterie', 'joaillerie'],
+    'boucher': ['boucherie'],
+    'traiteur': ['traiteur evenementiel'],
+    'pressing': ['nettoyage', 'blanchisserie'],
+    'serrurier': ['serrurerie', 'depannage serrure'],
+    'couvreur': ['couverture', 'toiture'],
+    'maçon': ['maconnerie'],
+    'carreleur': ['carrelage'],
+    'paysagiste': ['jardinier', 'jardinage', 'espace vert'],
+    'auto-ecole': ['auto ecole', 'ecole conduite'],
+    'agence immobiliere': ['immobilier', 'agent immobilier'],
+  }
+
+  const normalized = base.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  const extra = suffixMap[normalized] || suffixMap[base] || []
+  for (const v of extra) {
+    if (!variations.includes(v)) variations.push(v)
+  }
+
+  return variations.slice(0, 4) // max 4 variations to avoid too many API calls
+}
+
+// Main search function
 export async function searchBusinesses(
   metier: string,
   ville: string,
-  limit: number = 20,
+  limit: number = 50,
   excludeSirens: string[] = [],
   pageOffset: number = 1,
 ): Promise<BusinessResult[]> {
   const results: BusinessResult[] = []
   const excludeSet = new Set(excludeSirens)
+  const seenSirens = new Set<string>()
 
   // Get postal codes for the city
   const postalCodes = await getPostalCodes(ville)
-  if (postalCodes.length === 0) {
-    // Fallback: use city name in free text search
-    return searchByText(metier, ville, limit)
-  }
 
-  // Normalize trade name
-  const metierLower = metier.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-  const nafCodes = TRADE_NAF_CODES[metierLower] || TRADE_NAF_CODES[metier.toLowerCase()] || []
+  // Generate search variations
+  const variations = getSearchVariations(metier)
 
   try {
-    // Strategy 1: NAF code + postal code (most precise)
-    if (nafCodes.length > 0) {
-      for (const naf of nafCodes) {
+    // Search each variation across all postal codes
+    for (const query of variations) {
+      if (results.length >= limit) break
+
+      if (postalCodes.length > 0) {
         for (const cp of postalCodes) {
           if (results.length >= limit) break
           const remaining = Math.min(limit - results.length, 25)
+
           const res = await fetch(`${SIRENE_URL}?${new URLSearchParams({
-            activite_principale: naf,
+            q: query,
             code_postal: cp,
             etat_administratif: 'A',
             per_page: String(remaining),
@@ -123,25 +130,18 @@ export async function searchBusinesses(
             for (const r of (data.results || [])) {
               if (results.length >= limit) break
               const siren = r.siren || ''
-              if (excludeSet.has(siren)) continue
-              if (!results.some(e => e.siren === siren) && isRelevantBusiness(r)) {
-                results.push(mapSireneResult(r))
-              }
+              if (excludeSet.has(siren) || seenSirens.has(siren)) continue
+              if (!isRelevantBusiness(r)) continue
+              seenSirens.add(siren)
+              results.push(mapSireneResult(r))
             }
           }
         }
-        if (results.length >= limit) break
-      }
-    }
-
-    // Strategy 2: free text search if not enough results
-    if (results.length < limit) {
-      for (const cp of postalCodes) {
-        if (results.length >= limit) break
+      } else {
+        // No postal codes found — search with city name in query
         const remaining = Math.min(limit - results.length, 25)
         const res = await fetch(`${SIRENE_URL}?${new URLSearchParams({
-          q: metier,
-          code_postal: cp,
+          q: `${query} ${ville}`,
           etat_administratif: 'A',
           per_page: String(remaining),
           page: String(pageOffset),
@@ -152,10 +152,10 @@ export async function searchBusinesses(
           for (const r of (data.results || [])) {
             if (results.length >= limit) break
             const siren = r.siren || ''
-            if (excludeSet.has(siren)) continue
-            if (!results.some(e => e.siren === siren)) {
-              results.push(mapSireneResult(r))
-            }
+            if (excludeSet.has(siren) || seenSirens.has(siren)) continue
+            if (!isRelevantBusiness(r)) continue
+            seenSirens.add(siren)
+            results.push(mapSireneResult(r))
           }
         }
       }
@@ -164,55 +164,29 @@ export async function searchBusinesses(
     console.error('SIRENE search error:', err)
   }
 
-  // Filter: only keep businesses in the target city/postal codes area
-  const villeNorm = ville.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z ]/g, '')
-  const filtered = results.filter(r => {
-    const businessCity = (r.city || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z ]/g, '')
-    const businessCP = r.postalCode || ''
-    // Match by postal code (most reliable)
-    if (postalCodes.includes(businessCP)) return true
-    // Match by city name (fuzzy — handles "BORDEAUX", "BORDEAUX CEDEX", etc.)
-    if (businessCity.startsWith(villeNorm) || villeNorm.startsWith(businessCity)) return true
-    return false
-  })
+  // Filter by city (postal code match)
+  let filtered = results
+  if (postalCodes.length > 0) {
+    const villeNorm = ville.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z ]/g, '')
+    filtered = results.filter(r => {
+      const businessCity = (r.city || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z ]/g, '')
+      const businessCP = r.postalCode || ''
+      if (postalCodes.includes(businessCP)) return true
+      if (businessCity.startsWith(villeNorm) || villeNorm.startsWith(businessCity)) return true
+      return false
+    })
+  }
 
-  // Find websites via DuckDuckGo (limited to avoid rate limiting — ~600ms each)
+  // Find websites via DuckDuckGo (limited to 25 to avoid rate limiting)
   const toCheck = filtered.slice(0, Math.min(filtered.length, 25))
   for (let i = 0; i < toCheck.length; i++) {
     try {
-      toCheck[i].website = await findWebsite(toCheck[i].name, toCheck[i].city)
+      toCheck[i].website = await findWebsite(toCheck[i].name, toCheck[i].city || ville)
     } catch { /* best effort */ }
     if (i < toCheck.length - 1) await new Promise(r => setTimeout(r, 600))
   }
 
   return filtered
-}
-
-// Fallback: search by text when city can't be resolved
-async function searchByText(metier: string, ville: string, limit: number): Promise<BusinessResult[]> {
-  const results: BusinessResult[] = []
-  try {
-    const res = await fetch(`${SIRENE_URL}?${new URLSearchParams({
-      q: `${metier} ${ville}`,
-      etat_administratif: 'A',
-      per_page: String(Math.min(limit, 25)),
-    })}`, { signal: AbortSignal.timeout(10000) })
-
-    if (res.ok) {
-      const data = await res.json() as any
-      for (const r of (data.results || [])) {
-        if (results.length >= limit) break
-        results.push(mapSireneResult(r))
-      }
-    }
-  } catch {}
-
-  for (let i = 0; i < Math.min(results.length, 15); i++) {
-    try { results[i].website = await findWebsite(results[i].name, ville) } catch {}
-    if (i < results.length - 1) await new Promise(r => setTimeout(r, 600))
-  }
-
-  return results
 }
 
 function mapSireneResult(r: any): BusinessResult {
@@ -233,25 +207,23 @@ function mapSireneResult(r: any): BusinessResult {
   }
 }
 
-// Filter out irrelevant businesses (associations, holdings, distributors, etc.)
+// Filter out irrelevant businesses
 function isRelevantBusiness(r: any): boolean {
   const name = (r.nom_complet || r.nom_raison_sociale || '').toUpperCase()
   const natureJuridique = r.nature_juridique || ''
 
-  // Exclude associations (nature juridique 9xxx = associations, 7xxx = collectivités)
+  // Exclude associations, collectivités, organismes publics
   if (natureJuridique.startsWith('9') || natureJuridique.startsWith('7') || natureJuridique.startsWith('8')) {
     return false
   }
 
-  // Exclude by name patterns (grossistes, formation, holdings, syndicats, fédérations)
+  // Exclude by name patterns
   const excludePatterns = [
     'FORMATION', 'GROSSISTE', 'DISTRIBUTION', 'HOLDING', 'SYNDICAT',
     'FEDERATION', 'ASSOCIATION', 'FONDATION', 'COMITE', 'UNION',
     'MUTUELLE', 'CAISSE', 'INSTITUT', 'ECOLE', 'LYCEE', 'COLLEGE',
-    'UNIVERSITE', 'CENTRE DE', 'GROUPEMENT', 'COOPERATIVE',
+    'UNIVERSITE', 'CENTRE DE FORMATION', 'GROUPEMENT', 'COOPERATIVE',
     'MATERIEL', 'FOURNITURE', 'EQUIPEMENT', 'SUPPLY', 'WHOLESALE',
-    'CONSULTING', 'CONSEIL EN', 'AUDIT', 'EXPERTISE',
-    'IMMOBILIER', 'FONCIER', 'SCI ', 'GESTION DE',
     'IMPORT', 'EXPORT', 'NEGOCE', 'COMMERCE DE GROS',
   ]
 
@@ -283,17 +255,17 @@ async function findWebsite(companyName: string, city: string): Promise<string | 
       'google.com', 'wikipedia.org', 'tiktok.com', 'kompass.com', 'cylex.fr',
       'infobel.com', 'horairesdouverture24.fr', 'fr.mappy.com', 'justacote.com',
       'telephone.city', 'local.fr', 'gralon.net', 'starofservice.com',
-      'appointmenttrading.com', 'europages.fr', 'manageo.fr', 'verif.com',
+      'europages.fr', 'manageo.fr', 'verif.com',
       'pappers.fr', 'infogreffe.fr', 'bodacc.fr', 'sirene.fr',
-      'linternaute.com', 'lefigaro.fr', 'lemonde.fr', 'bfrancia.com',
+      'linternaute.com', 'lefigaro.fr', 'lemonde.fr',
       'quelresto.fr', 'lafourchette.com', 'thefork.com', 'booking.com',
       'groupon.fr', 'amazon.', 'ebay.',
+      'teamesthetique.fr', 'net1901.org',
     ]
 
-    // Also filter generic directories/aggregators
     const directoryPatterns = [
       /annuaire/i, /directory/i, /listing/i, /avis/i, /review/i,
-      /comparateur/i, /devis/i, /trouver/i, /recherche/i,
+      /comparateur/i, /devis/i, /trouver/i,
     ]
 
     for (const match of matches) {
@@ -301,11 +273,9 @@ async function findWebsite(companyName: string, city: string): Promise<string | 
       if (blacklist.some(b => decoded.toLowerCase().includes(b))) continue
       if (directoryPatterns.some(p => p.test(decoded))) continue
 
-      // Basic check: the URL should look like a real company site (not too many path segments)
       try {
         const urlObj = new URL(decoded)
         const pathParts = urlObj.pathname.split('/').filter(Boolean)
-        // Skip deep links into directory sites (e.g. /bordeaux/plombier/12345)
         if (pathParts.length > 3) continue
       } catch { continue }
 
