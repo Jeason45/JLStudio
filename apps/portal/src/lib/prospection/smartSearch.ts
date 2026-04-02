@@ -248,19 +248,34 @@ async function findWebsite(companyName: string, city: string): Promise<string | 
     const matches = [...html.matchAll(urlRegex)]
 
     const blacklist = [
-      'duckduckgo.com', 'bing.com', 'pagesjaunes.fr', 'facebook.com',
-      'instagram.com', 'linkedin.com', 'twitter.com', 'youtube.com',
-      'mesdepanneurs.fr', 'habitatpresto.com', 'lesbonsartisans.fr',
-      'societe.com', 'annuaire', '118712', '118000', '118218', 'yelp', 'tripadvisor',
-      'google.com', 'wikipedia.org', 'tiktok.com', 'kompass.com', 'cylex.fr',
-      'infobel.com', 'horairesdouverture24.fr', 'fr.mappy.com', 'justacote.com',
-      'telephone.city', 'local.fr', 'gralon.net', 'starofservice.com',
-      'europages.fr', 'manageo.fr', 'verif.com',
-      'pappers.fr', 'infogreffe.fr', 'bodacc.fr', 'sirene.fr',
-      'linternaute.com', 'lefigaro.fr', 'lemonde.fr',
-      'quelresto.fr', 'lafourchette.com', 'thefork.com', 'booking.com',
-      'groupon.fr', 'amazon.', 'ebay.',
-      'teamesthetique.fr', 'net1901.org',
+      // Search engines
+      'duckduckgo.com', 'bing.com', 'google.com', 'yahoo.com',
+      // Social media
+      'facebook.com', 'instagram.com', 'linkedin.com', 'twitter.com', 'youtube.com', 'tiktok.com',
+      // Directories & listings
+      'pagesjaunes.fr', 'societe.com', 'annuaire', '118712', '118000', '118218',
+      'kompass.com', 'cylex.fr', 'infobel.com', 'horairesdouverture24.fr',
+      'fr.mappy.com', 'justacote.com', 'telephone.city', 'local.fr', 'gralon.net',
+      'europages.fr', 'manageo.fr', 'verif.com', 'pappers.fr', 'infogreffe.fr',
+      'bodacc.fr', 'sirene.fr', 'net1901.org',
+      // Business info aggregators
+      'entreprises.lagazettefrance.fr', 'infonet.fr', 'autour-de-moi.pro',
+      'education.e-pro.fr', 'e-pro.fr', 'lagazettefrance.fr',
+      'societe.ninja', 'score3.fr', 'entreprise-et-droit.com',
+      'data-b.com', 'dirigeant.societe.com', 'annuaire-entreprises.fr',
+      'french-business.fr', 'b-reputation.com', 'ellisphere.com',
+      'score.be', 'toutlocal.fr', 'hoodspot.fr', 'industrie.gouv.fr',
+      // Booking/platform (not the business's own site)
+      'planity.com', 'treatwell.fr', 'kiute.com', 'balinea.com',
+      'doctolib.fr', 'mondocteur.fr', 'rdvmedicaux.com',
+      'lafourchette.com', 'thefork.com', 'booking.com', 'quelresto.fr',
+      // Service marketplaces
+      'starofservice.com', 'mesdepanneurs.fr', 'habitatpresto.com',
+      'lesbonsartisans.fr', 'groupon.fr', 'amazon.', 'ebay.',
+      // Team/beauty aggregators
+      'teamesthetique.fr',
+      // Media
+      'wikipedia.org', 'linternaute.com', 'lefigaro.fr', 'lemonde.fr',
     ]
 
     const directoryPatterns = [
