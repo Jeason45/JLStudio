@@ -86,6 +86,8 @@ interface Prospect {
   auditedAt: string | null;
   addedToCRM: boolean;
   notes: string | null;
+  claudeAnalysis: string | null;
+  presentationData: string | null;
   createdAt: string;
 }
 
@@ -1379,6 +1381,158 @@ Sois precis, direct et oriente business. Chaque probleme doit etre explique en t
                 ))}
               </div>
             </div>
+          </div>
+          {/* Claude Analysis */}
+          <div style={panelCardStyle}>
+            <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
+              ✨ Analyse visuelle (Claude)
+            </h3>
+            {prospect.claudeAnalysis ? (
+              <>
+                <div style={{
+                  fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.6',
+                  maxHeight: '200px', overflowY: 'auto', whiteSpace: 'pre-wrap',
+                  background: 'var(--bg-secondary)', borderRadius: '8px', padding: '10px',
+                  marginBottom: '8px',
+                }}>
+                  {prospect.claudeAnalysis.slice(0, 1000)}{prospect.claudeAnalysis.length > 1000 ? '...' : ''}
+                </div>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <button
+                    onClick={() => {
+                      const el = document.getElementById('claude-analysis-input') as HTMLTextAreaElement;
+                      if (el) { el.style.display = 'block'; el.value = prospect.claudeAnalysis || ''; el.focus(); }
+                    }}
+                    style={{ padding: '4px 10px', borderRadius: '6px', fontSize: '10px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: '1px solid var(--border)', cursor: 'pointer' }}
+                  >
+                    Modifier
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (!prospect.claudeAnalysis || !audit) return;
+                      // Generate fusion prompt for presentation
+                      const fusionPrompt = `Tu es un expert en creation de presentations commerciales pour une agence web premium.
+
+A partir des donnees ci-dessous, cree le CONTENU TEXTUEL de chaque slide d'une presentation PowerPoint de closing.
+
+## DONNEES DU PROSPECT
+- Entreprise : ${prospect.name}
+- Ville : ${prospect.city || ''}
+- Site actuel : ${prospect.website || 'Aucun'}
+- Secteur : ${prospect.nafLabel || ''}
+- SIRET : ${prospect.siret || ''}
+- Cree en : ${prospect.dateCreation || ''}
+
+## AUDIT TECHNIQUE (automatique)
+- Performance mobile : ${audit.mobileScore ?? 'N/A'}/100
+- Accessibilite : ${audit.mobileAccessibility ?? 'N/A'}/100
+- SEO : ${audit.mobileSEO ?? 'N/A'}/100
+- Bonnes pratiques : ${audit.mobileBestPractices ?? 'N/A'}/100
+- Desktop : ${audit.desktopScore ?? 'N/A'}/100
+- CMS : ${audit.cmsDetected || 'Non detecte'}
+- HTTPS : ${audit.isHttps ? 'Oui' : 'Non'}
+- Responsive : ${audit.isResponsive ? 'Oui' : 'Non'}
+- Analytics : ${audit.hasAnalytics ? 'Oui' : 'Non'}
+- W3C : ${audit.w3cErrors} erreurs
+- Headers securite : ${audit.securityHeaders?.score ?? '?'}/${audit.securityHeaders?.total ?? '?'}
+- Poids page : ${audit.totalByteWeight ? Math.round(audit.totalByteWeight / 1024) + 'KB' : 'N/A'}
+- Requetes : ${audit.totalRequestCount ?? 'N/A'}
+${audit.design ? `- Score design : ${audit.design.score}/100` : ''}
+
+## ANALYSE VISUELLE (Claude)
+${prospect.claudeAnalysis}
+
+## INSTRUCTIONS
+Cree le contenu de 10 slides :
+
+SLIDE 1 - COUVERTURE
+Titre + sous-titre + nom du prospect
+
+SLIDE 2 - CONSTAT
+Resume en 3 bullets de l'etat actuel du site (scores + problemes majeurs)
+
+SLIDE 3 - PREMIERE IMPRESSION
+Ce que voit un client qui arrive sur le site (basé sur l'analyse visuelle)
+
+SLIDE 4 - PROBLEMES CRITIQUES
+Top 5 problemes classes par impact business (pas technique)
+
+SLIDE 5 - IMPACT BUSINESS
+Chiffres concrets : "X% des visiteurs partent", "Invisible sur mobile", etc.
+
+SLIDE 6 - CE QUE FONT LES CONCURRENTS
+Comparaison avec les standards du secteur (${prospect.nafLabel || 'commerce local'})
+
+SLIDE 7 - NOTRE SOLUTION
+Ce que JL Studio propose concretement (site moderne, responsive, rapide, SEO)
+
+SLIDE 8 - AVANT / APRES
+Description textuelle de la transformation (actuel vs ce qu'on propose)
+
+SLIDE 9 - PROCESSUS & DELAI
+Les etapes du projet (decouverte, maquette, dev, livraison) + delai estime
+
+SLIDE 10 - INVESTISSEMENT & CONTACT
+Fourchette de prix adaptee au projet + coordonnees JL Studio
+
+Pour chaque slide, donne :
+- Le TITRE de la slide
+- Le CONTENU (bullets ou paragraphes courts)
+- Les NOTES DU PRESENTATEUR (ce que tu dirais a l'oral)
+
+Sois percutant, oriente business, pas technique. Le client doit comprendre pourquoi il perd de l'argent et comment on peut l'aider.`;
+                      window.open(`https://claude.ai/new?q=${encodeURIComponent(fusionPrompt)}`, '_blank');
+                    }}
+                    style={{
+                      padding: '4px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: 600,
+                      background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', color: 'white',
+                      border: 'none', cursor: 'pointer',
+                    }}
+                  >
+                    Preparer la presentation (Claude)
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '8px' }}>
+                Collez ici le resultat de l'analyse Claude pour enrichir l'audit.
+              </div>
+            )}
+            <textarea
+              id="claude-analysis-input"
+              placeholder="Collez ici l'analyse de Claude..."
+              defaultValue={prospect.claudeAnalysis || ''}
+              style={{
+                display: prospect.claudeAnalysis ? 'none' : 'block',
+                width: '100%', minHeight: '120px', padding: '8px', borderRadius: '8px',
+                background: 'var(--bg-input)', border: '1px solid var(--border-input)',
+                color: 'var(--text-primary)', fontSize: '11px', resize: 'vertical',
+                fontFamily: 'inherit', lineHeight: '1.5',
+              }}
+            />
+            <button
+              onClick={async () => {
+                const el = document.getElementById('claude-analysis-input') as HTMLTextAreaElement;
+                if (!el || !el.value.trim()) return;
+                const res = await fetch(`/api/portal/prospection/sessions/${prospect.sessionId}/prospects/${prospect.id}`, {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ claudeAnalysis: el.value.trim() }),
+                });
+                if (res.ok) {
+                  const updated = await res.json();
+                  setProspects(prev => prev.map(p => p.id === updated.id ? { ...p, claudeAnalysis: updated.claudeAnalysis } : p));
+                  setSelectedProspect(prev => prev ? { ...prev, claudeAnalysis: updated.claudeAnalysis } : prev);
+                  el.style.display = 'none';
+                }
+              }}
+              style={{
+                marginTop: '6px', padding: '6px 14px', borderRadius: '6px', fontSize: '11px', fontWeight: 500,
+                background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer',
+              }}
+            >
+              Sauvegarder l'analyse
+            </button>
           </div>
         </>
       )}

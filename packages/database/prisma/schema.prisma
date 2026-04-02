@@ -1160,8 +1160,10 @@ model ProspectionProspect {
   auditScore   Int?
   auditedAt    DateTime?
 
-  addedToCRM   Boolean  @default(false)
-  notes        String?
+  addedToCRM      Boolean  @default(false)
+  notes           String?
+  claudeAnalysis  String?  // Full Claude visual analysis pasted by user
+  presentationData String? // Structured slide content for PowerPoint generation
 
   createdAt    DateTime @default(now())
 

@@ -21,6 +21,8 @@ export async function PATCH(
   const body = await req.json()
   const data: Record<string, unknown> = {}
   if (typeof body.notes === 'string') data.notes = body.notes
+  if (typeof body.claudeAnalysis === 'string') data.claudeAnalysis = body.claudeAnalysis
+  if (typeof body.presentationData === 'string') data.presentationData = body.presentationData
 
   const prospect = await prisma.prospectionProspect.update({
     where: { id: pid },
