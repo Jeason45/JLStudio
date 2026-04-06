@@ -1043,97 +1043,138 @@ function DetailPanel({
               {/* Claude analysis button */}
               <button
                 onClick={() => {
-                  // Show reminder popup then open Claude
-                  if (confirm('Avant d\'ouvrir Claude :\n\n1. Cliquez "Telecharger les 4 screenshots" ci-dessus\n2. Dans Claude, joignez les screenshots telecharges\n3. Le prompt d\'analyse sera deja pre-rempli\n\nOuvrir Claude maintenant ?')) {
-                    const prompt = `Tu es un expert en design web, UX et strategie digitale. Analyse ce site web : ${prospect.website}
+                  const prompt = `Tu es un expert senior en design web, UX, strategie digitale et conversion. Tu regardes en ce moment le site web d'un prospect que je souhaite demarcher pour lui proposer une refonte.
 
-J'ai joint les screenshots du site (mobile + desktop, haut de page + page complete). Analyse-les attentivement.
+CONSIGNES IMPORTANTES :
+- Tu VOIS cette page web en direct. Scroll la page ENTIEREMENT de haut en bas avant de repondre.
+- Regarde chaque section, chaque image, chaque bouton, chaque texte.
+- Reduis la taille de la fenetre pour simuler un affichage mobile et analyse le responsive.
+- Clique sur les liens du menu pour verifier si les autres pages sont coherentes.
+- Verifie si le formulaire de contact fonctionne.
+- Cherche les mentions legales et la politique de confidentialite.
 
-Fournis une analyse COMPLETE et DETAILLEE au format suivant :
+INFORMATIONS SUR LE PROSPECT :
+- Entreprise : ${prospect.name}
+- Ville : ${prospect.city || ''}
+- Secteur : ${prospect.nafLabel || 'commerce local'}
+- SIRET : ${prospect.siret || 'inconnu'}
+- Site analyse : ${prospect.website}
 
-## 1. SCORE GLOBAL DESIGN (/100)
-Note avec justification en une phrase.
+Fournis une analyse EXHAUSTIVE et IMPITOYABLE au format suivant. Chaque probleme doit etre explique en termes d'IMPACT BUSINESS (perte de clients, perte de chiffre d'affaires), pas en jargon technique.
+
+## 1. SCORE GLOBAL (/100)
+Note globale avec justification en une phrase percutante.
 
 ## 2. PREMIERE IMPRESSION (test des 3 secondes)
-- Le site inspire-t-il confiance immediatement ?
-- Comprend-on l'activite en 3 secondes ?
-- Y a-t-il un appel a l'action clair et visible ?
-- Le site fait-il professionnel ou amateur ? Pourquoi ?
-- Le design est-il moderne (2024-2026) ou date ? Quelle epoque evoque-t-il ?
+Mets-toi a la place d'un client qui arrive pour la premiere fois :
+- Que voit-il en premier ? Est-ce engageant ?
+- Comprend-il immediatement ce que propose cette entreprise ?
+- Y a-t-il un appel a l'action clair (reserver, appeler, acheter) ?
+- Le site inspire-t-il confiance ou donne-t-il envie de partir ?
+- Le design fait-il 2026, 2020 ou 2015 ? Quelle impression d'epoque ?
+- Compare avec ce qu'un client attendrait d'un(e) ${prospect.nafLabel || 'commerce'} en 2026.
 
 ## 3. IDENTITE VISUELLE & BRANDING
-- Logo : qualite, placement, taille, lisibilite
-- Palette de couleurs : harmonie, coherence, nombre de couleurs
-- Typographie : choix des polices, lisibilite, hierarchie visuelle
-- Images/Photos : qualite, pertinence, resolution, style
-- Coherence globale : meme style sur toute la page ?
+Analyse CHAQUE element visuel que tu vois :
+- Logo : qualite, taille, placement. Est-il professionnel ou fait maison ?
+- Couleurs : combien de couleurs differentes ? Sont-elles harmonieuses ? Y a-t-il une charte graphique ?
+- Typographie : les polices sont-elles lisibles ? Coherentes ? Combien de polices differentes ?
+- Photos/Images : sont-elles de qualite pro ou amateur ? Libres de droits generiques ou originales ?
+- Icones et elements graphiques : coherents entre eux ?
+- Y a-t-il une identite de marque reconnaissable ou c'est un site generique ?
 
-## 4. NAVIGATION & ARCHITECTURE
-- Menu : clarte, accessibilite, nombre d'elements
-- Hierarchie de l'information : est-ce logique ?
-- Footer : contenu utile ou vide ?
-- Liens internes : peut-on naviguer facilement ?
+## 4. NAVIGATION & STRUCTURE
+Navigue sur le site et analyse :
+- Le menu est-il clair ? Combien d'elements ? Sont-ils bien nommes ?
+- La hierarchie des informations est-elle logique ?
+- Le footer contient-il des informations utiles (contact, horaires, liens) ?
+- Les pages internes sont-elles coherentes avec la page d'accueil ?
+- Y a-t-il des liens casses ou des pages vides ?
+- Le fil d'Ariane est-il present ?
 
-## 5. EXPERIENCE MOBILE
-- Le site est-il vraiment responsive ou juste "pas casse" ?
-- Taille des boutons et zones cliquables
-- Lisibilite du texte sur petit ecran
-- Menus et navigation sur mobile
-- Vitesse percue
+## 5. EXPERIENCE MOBILE (CRITIQUE)
+Reduis la fenetre pour simuler un mobile et analyse :
+- Le site est-il VRAIMENT responsive ou juste "pas completement casse" ?
+- Les boutons et liens sont-ils assez grands pour etre cliques au doigt ?
+- Le texte est-il lisible sans zoomer ?
+- Le menu fonctionne-t-il correctement sur mobile ?
+- Les images s'adaptent-elles ?
+- Le numero de telephone est-il cliquable (click-to-call) ?
+- Pour un ${prospect.nafLabel || 'commerce local'}, 70%+ des clients cherchent sur mobile.
 
 ## 6. CONTENU & COPYWRITING
-- Qualite des textes : convaincants ou generiques ?
-- Appels a l'action : presents, visibles, convaincants ?
-- Preuves sociales : avis clients, temoignages, notes Google ?
-- Informations de contact : telephone, adresse, horaires visibles ?
-- Mise en valeur des services/produits
+- Les textes sont-ils ecrits pour CONVAINCRE ou juste pour remplir ?
+- Y a-t-il des fautes d'orthographe ou de grammaire ?
+- Les services/produits sont-ils clairement presentes avec des prix ?
+- Y a-t-il des appels a l'action ("Reservez maintenant", "Appelez-nous") ?
+- Le contenu est-il unique ou generique (copie de template) ?
+- Y a-t-il assez de contenu ou la page est-elle vide ?
 
-## 7. ELEMENTS DE REASSURANCE & CONFIANCE
-- Mentions legales, CGV, politique de confidentialite
-- Avis clients / temoignages
-- Certifications, labels, partenaires
-- Bouton d'appel visible (click-to-call)
-- Formulaire de contact fonctionnel
+## 7. PREUVES SOCIALES & CONFIANCE
+- Avis clients visibles ? Combien ? Note moyenne ?
+- Temoignages avec photos et noms reels ?
+- Logos de partenaires, certifications, labels ?
+- Photos de l'equipe, du local, des realisations ?
+- Lien vers Google Maps avec la fiche etablissement ?
+- Nombre d'abonnes/avis sur les reseaux sociaux lies ?
 
-## 8. PARCOURS UTILISATEUR
-- Un nouveau visiteur peut-il facilement :
-  * Comprendre les services proposes ?
-  * Trouver les tarifs ?
-  * Prendre rendez-vous / contacter ?
-  * Trouver l'adresse et les horaires ?
-- Y a-t-il des frictions ou des points de blocage ?
+## 8. PARCOURS DE CONVERSION
+Simule le parcours d'un client qui veut :
+a) Prendre rendez-vous / reserver → combien de clics ? Possible ou non ?
+b) Appeler le commerce → le numero est-il visible et cliquable ?
+c) Trouver l'adresse et les horaires → accessible en combien de clics ?
+d) Voir les tarifs → sont-ils affiches ?
+e) Envoyer un message → formulaire present et fonctionnel ?
+Pour chaque parcours, note le nombre de clics necessaires et les frictions rencontrees.
 
-## 9. CONFORMITE & BONNES PRATIQUES
-- RGPD : bandeau cookies, politique de confidentialite
-- Mentions legales presentes et completes
-- Accessibilite : contrastes, textes alternatifs
-- SEO visible : titres clairs, URLs propres
+## 9. RESEAUX SOCIAUX & PRESENCE DIGITALE
+- Le site renvoie-t-il vers des reseaux sociaux ? Lesquels ?
+- Les liens fonctionnent-ils ?
+- Les comptes sont-ils actifs et coherents avec le site ?
+- Y a-t-il une integration Google Maps / fiche Google Business ?
 
-## 10. TOP 10 DES PROBLEMES CRITIQUES
-Liste numerotee du plus urgent au moins urgent.
-Pour chaque probleme :
-- Description precise du probleme
-- Impact concret sur le business (perte de clients, confiance, etc.)
-- Solution recommandee
-- Niveau de priorite : CRITIQUE / IMPORTANT / MINEUR
+## 10. CONFORMITE LEGALE
+- Mentions legales presentes et completes ?
+- Politique de confidentialite / RGPD ?
+- Bandeau de consentement cookies conforme ?
+- CGV si e-commerce ?
+- Numero de SIRET affiche ?
 
-## 11. VERDICT FINAL
-- Score design : /100
-- Score UX : /100
-- Score confiance : /100
-- Score mobile : /100
-- Ce site convertit-il les visiteurs en clients ? Pourquoi ?
-- En une phrase : quel est LE probleme principal de ce site ?
+## 11. TOP 10 DES PROBLEMES CRITIQUES
+Liste NUMEROTEE du plus grave au moins grave.
+Pour CHAQUE probleme :
+- 🔴/🟠/🟡 Niveau (CRITIQUE / IMPORTANT / MINEUR)
+- Description precise de ce que tu as vu
+- Impact business concret (ex: "un client sur mobile ne peut pas appeler → vous perdez X% de clients potentiels")
+- Solution recommandee (en termes simples, pas techniques)
 
-## 12. RECOMMANDATIONS STRATEGIQUES
-Que faudrait-il faire en priorite pour transformer ce site en outil de conversion ?
-Liste de 5 actions concretes classees par impact.
+## 12. VERDICT FINAL
+| Critere | Score /100 |
+|---------|-----------|
+| Design & Modernite | |
+| UX & Ergonomie | |
+| Confiance & Credibilite | |
+| Mobile & Responsive | |
+| Contenu & Copywriting | |
+| Conversion & Business | |
+| **SCORE GLOBAL** | |
 
-Sois precis, direct et oriente business. Chaque probleme doit etre explique en termes d'impact sur le chiffre d'affaires du client, pas en termes techniques.`;
-                    navigator.clipboard.writeText(prompt).then(() => {
-                      alert('Prompt copie !\n\n1. Ouvrez le site du prospect dans Chrome\n2. Ouvrez l\'extension Claude (sidebar)\n3. Collez le prompt (Ctrl+V)\n4. Claude analysera directement le site');
-                    });
-                  }
+- Ce site convertit-il les visiteurs en clients ? Reponse franche.
+- En UNE phrase : quel est LE probleme #1 de ce site ?
+- Ce site est-il au niveau des standards 2026 pour un(e) ${prospect.nafLabel || 'commerce local'} ?
+
+## 13. PLAN D'ACTION STRATEGIQUE
+5 actions concretes classees par IMPACT sur le chiffre d'affaires :
+1. [Action] — Impact estime — Difficulte — Delai
+2. ...
+
+## 14. ARGUMENTS DE VENTE
+Ecris 3 phrases percutantes que je pourrais utiliser pour convaincre ce prospect de refaire son site. Chaque phrase doit pointer un probleme concret vu sur SON site et l'impact sur SON business.
+
+Sois IMPITOYABLE dans ton analyse. Je prefere un diagnostic dur mais honnete qui me permettra de closer ce prospect. Chaque probleme est une opportunite de vente pour moi.`;
+                  navigator.clipboard.writeText(prompt).then(() => {
+                    alert('Prompt copie !\n\n1. Cliquez sur "Ouvrir le site du prospect" ci-dessous\n2. Sur le site, ouvrez l\'extension Claude (sidebar Chrome)\n3. Collez le prompt (Ctrl+V)\n4. Claude verra et analysera le site en direct');
+                  });
                 }}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
