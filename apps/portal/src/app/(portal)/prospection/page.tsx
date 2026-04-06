@@ -921,6 +921,25 @@ function DetailPanel({
             <CheckCircle size={14} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Dans le CRM
           </span>
         )}
+        {prospect.auditedAt && (
+          <button
+            onClick={async () => {
+              const res = await fetch(`/api/portal/prospection/sessions/${prospect.sessionId}/prospects/${prospect.id}/json`);
+              if (!res.ok) { alert('Erreur'); return; }
+              const data = await res.json();
+              const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `audit_${prospect.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}_${new Date().toISOString().slice(0, 10)}.json`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            style={{ ...btnSecondary, fontSize: '12px' }}
+          >
+            Telecharger JSON
+          </button>
+        )}
       </div>
 
       {/* Basic info */}
