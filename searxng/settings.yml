@@ -1,0 +1,30 @@
+use_default_settings: true
+
+search:
+  formats:
+    - html
+    - json
+  default_lang: "fr"
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"
+  secret_key: "jlstudio-searxng-secret-key-2026"
+
+engines:
+  - name: google
+    engine: google
+    shortcut: g
+    disabled: false
+  - name: bing
+    engine: bing
+    shortcut: b
+    disabled: false
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: ddg
+    disabled: false
+  - name: qwant
+    engine: qwant
+    shortcut: qw
+    disabled: false

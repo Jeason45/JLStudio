@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { extractSiteId } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { searchBusinesses } from '@/lib/prospection/smartSearch'
+import { searchBusinessesWeb } from '@/lib/prospection/webSearch'
 import {
   analyzeTech,
   checkSeoFiles,
@@ -62,19 +63,65 @@ async function handleSearch(siteId: string, body: { metier?: string; ville?: str
   }
 
   try {
-    const results = await searchBusinesses(metier, ville, Math.min(limit ?? 50, 50), excludeSirens || [], page || 1)
+    // Run SIRENE search + Web search (Serper/SearXNG) in parallel
+    const [sireneResults, webResults] = await Promise.all([
+      searchBusinesses(metier, ville, Math.min(limit ?? 50, 50), excludeSirens || [], page || 1),
+      searchBusinessesWeb(metier, ville),
+    ])
 
-    const prospectData = results.map((r) => ({
-      name: r.name,
-      siret: r.siret || null,
-      address: r.address || null,
-      city: r.city || null,
-      postalCode: r.postalCode || null,
-      dateCreation: r.dateCreation || null,
-      nafLabel: r.nafLabel || null,
-      website: r.website || null,
-      category: r.website ? 'refonte' : 'creation',
-    }))
+    // Merge: start with SIRENE results
+    const prospectData = sireneResults.map((r) => {
+      // Try to find matching website from web search (places or organic)
+      let website = r.website || null
+
+      if (!website) {
+        // Check Google Maps places results
+        const nameNorm = r.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        const matchingPlace = webResults.places.find(p => {
+          const placeNorm = p.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          return placeNorm.includes(nameNorm) || nameNorm.includes(placeNorm)
+        })
+        if (matchingPlace?.website) {
+          website = matchingPlace.website
+        }
+      }
+
+      return {
+        name: r.name,
+        siret: r.siret || null,
+        address: r.address || null,
+        city: r.city || null,
+        postalCode: r.postalCode || null,
+        dateCreation: r.dateCreation || null,
+        nafLabel: r.nafLabel || null,
+        website,
+        phone: null as string | null,
+        category: website ? 'refonte' : 'creation',
+      }
+    })
+
+    // Add Google Maps places that aren't already in SIRENE results
+    for (const place of webResults.places) {
+      const nameNorm = place.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      const alreadyExists = prospectData.some(p => {
+        const pNorm = p.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        return pNorm.includes(nameNorm) || nameNorm.includes(pNorm)
+      })
+      if (!alreadyExists && place.title) {
+        prospectData.push({
+          name: place.title,
+          siret: null,
+          address: place.address || null,
+          city: ville.toUpperCase(),
+          postalCode: null,
+          dateCreation: null,
+          nafLabel: null,
+          website: place.website || null,
+          phone: place.phone || null,
+          category: place.website ? 'refonte' : 'creation',
+        })
+      }
+    }
 
     // If sessionId provided, add to existing session (for "Load more")
     if (sessionId) {

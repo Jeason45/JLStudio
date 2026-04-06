@@ -93,6 +93,15 @@ services:
       PAGESPEED_API_KEY: ${PAGESPEED_API_KEY:-}
       SITE_ID: ${SITE_ID:-}
 
+  # ── SearXNG (meta-search engine for prospection) ──
+  searxng:
+    image: searxng/searxng:latest
+    restart: unless-stopped
+    volumes:
+      - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
+    ports:
+      - "8888:8080"
+
   # ── Nginx — Static sites server ──
   nginx-sites:
     image: nginx:alpine
