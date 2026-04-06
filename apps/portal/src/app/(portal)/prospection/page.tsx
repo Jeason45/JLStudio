@@ -759,11 +759,11 @@ function ProspectCard({
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '10px', fontWeight: 700, color: scoreColor(p.auditScore),
             }}>{p.auditScore}</span>
-          ) : p.category === 'creation' ? (
+          ) : p.category === 'creation' || p.category === 'platform' || p.category === 'directory' ? (
             <span style={{
               padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: 600,
               background: 'rgba(245,158,11,0.1)', color: '#f59e0b',
-            }}>CREATION</span>
+            }}>{p.category === 'platform' ? 'PLATEFORME' : p.category === 'directory' ? 'ANNUAIRE' : 'CREATION'}</span>
           ) : null}
           {p.addedToCRM && (
             <span style={{
@@ -930,7 +930,12 @@ function DetailPanel({
           {prospect.nafLabel && <div><strong>NAF:</strong> {prospect.nafLabel}</div>}
           {prospect.website && <div><strong>Site:</strong> <a href={prospect.website} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>{prospect.website}</a></div>}
           {prospect.email && <div><strong>Email:</strong> <a href={`mailto:${prospect.email}`} style={{ color: 'var(--accent)' }}>{prospect.email}</a></div>}
-          <div><strong>Categorie:</strong> {prospect.category === 'creation' ? 'Creation de site' : 'Refonte'}</div>
+          <div><strong>Categorie:</strong> {
+            prospect.category === 'creation' ? 'Creation de site' :
+            prospect.category === 'platform' ? 'Sur plateforme (Planity, Fresha...)' :
+            prospect.category === 'directory' ? 'Presente sur annuaire uniquement' :
+            'Refonte de site'
+          }</div>
         </div>
       </div>
 
@@ -1125,18 +1130,33 @@ Que faudrait-il faire en priorite pour transformer ce site en outil de conversio
 Liste de 5 actions concretes classees par impact.
 
 Sois precis, direct et oriente business. Chaque probleme doit etre explique en termes d'impact sur le chiffre d'affaires du client, pas en termes techniques.`;
-                    window.open(`https://claude.ai/new?q=${encodeURIComponent(prompt)}`, '_blank');
+                    navigator.clipboard.writeText(prompt).then(() => {
+                      alert('Prompt copie !\n\n1. Ouvrez le site du prospect dans Chrome\n2. Ouvrez l\'extension Claude (sidebar)\n3. Collez le prompt (Ctrl+V)\n4. Claude analysera directement le site');
+                    });
                   }
                 }}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
                   width: '100%', padding: '10px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 600,
                   background: 'linear-gradient(135deg, #d4a574, #c084fc)', color: 'white',
-                  border: 'none', cursor: 'pointer',
+                  border: 'none', cursor: 'pointer', marginBottom: '6px',
                 }}
               >
-                ✨ Analyser le design avec Claude (gratuit)
+                📋 Copier le prompt d'analyse (pour Claude extension Chrome)
               </button>
+              <a
+                href={prospect.website || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                  width: '100%', padding: '8px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 500,
+                  background: 'var(--bg-secondary)', color: 'var(--accent)',
+                  textDecoration: 'none', border: '1px solid var(--border)',
+                }}
+              >
+                Ouvrir le site du prospect ↗
+              </a>
             </div>
           )}
 

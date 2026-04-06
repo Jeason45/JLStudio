@@ -3,6 +3,7 @@ import { extractSiteId } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { searchBusinesses } from '@/lib/prospection/smartSearch'
 import { searchBusinessesWeb } from '@/lib/prospection/webSearch'
+import { getProspectCategory } from '@/lib/prospection/categorize'
 import {
   analyzeTech,
   checkSeoFiles,
@@ -96,7 +97,7 @@ async function handleSearch(siteId: string, body: { metier?: string; ville?: str
         nafLabel: r.nafLabel || null,
         website,
         phone: null as string | null,
-        category: website ? 'refonte' : 'creation',
+        category: getProspectCategory(website),
       }
     })
 
@@ -118,7 +119,7 @@ async function handleSearch(siteId: string, body: { metier?: string; ville?: str
           nafLabel: null,
           website: place.website || null,
           phone: place.phone || null,
-          category: place.website ? 'refonte' : 'creation',
+          category: getProspectCategory(place.website),
         })
       }
     }

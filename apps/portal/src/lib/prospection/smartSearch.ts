@@ -1,5 +1,5 @@
-// Smart business search: SIRENE text search + DuckDuckGo website finder
-// No API key needed, no Playwright, works from server-side
+// Smart business search: SIRENE text search only (no website guessing)
+// Website discovery is now handled by Serper/SearXNG in the session route
 
 const SIRENE_URL = 'https://recherche-entreprises.api.gouv.fr/search'
 const GEO_URL = 'https://geo.api.gouv.fr/communes'
@@ -19,7 +19,7 @@ export interface BusinessResult {
   isActive: boolean
 }
 
-// Convert city name to postal codes via geo.api.gouv.fr
+// Convert city name to postal codes
 async function getPostalCodes(ville: string): Promise<string[]> {
   try {
     const res = await fetch(`${GEO_URL}?nom=${encodeURIComponent(ville)}&fields=codesPostaux&limit=1`, {
@@ -29,55 +29,44 @@ async function getPostalCodes(ville: string): Promise<string[]> {
     const data = await res.json() as any[]
     if (data.length === 0) return []
     return data[0].codesPostaux || []
-  } catch {
-    return []
-  }
+  } catch { return [] }
 }
 
-// Generate search variations for a trade
-// "coiffeur" → ["coiffeur", "coiffure", "salon coiffure", "coiffeuse"]
+// Generate search variations
 function getSearchVariations(metier: string): string[] {
   const base = metier.toLowerCase().trim()
   const variations = [base]
 
-  // Common French trade name variations
   const suffixMap: Record<string, string[]> = {
-    'coiffeur': ['coiffure', 'salon coiffure', 'coiffeuse', 'barbier', 'barber'],
-    'coiffure': ['coiffeur', 'salon coiffure', 'coiffeuse'],
+    'coiffeur': ['coiffure', 'salon coiffure', 'barbier', 'barber'],
+    'coiffure': ['coiffeur', 'salon coiffure'],
     'restaurant': ['restauration', 'brasserie', 'bistrot'],
     'boulanger': ['boulangerie', 'patisserie'],
     'boulangerie': ['boulanger', 'patisserie'],
     'plombier': ['plomberie', 'chauffagiste'],
-    'plomberie': ['plombier', 'chauffagiste'],
-    'electricien': ['electricite', 'electrique'],
+    'electricien': ['electricite'],
     'peintre': ['peinture'],
     'menuisier': ['menuiserie'],
     'fleuriste': ['fleurs'],
     'photographe': ['photographie', 'photo'],
-    'dentiste': ['dentaire', 'chirurgien dentiste'],
-    'avocat': ['cabinet avocat', 'juridique'],
-    'comptable': ['expert comptable', 'comptabilite'],
+    'dentiste': ['dentaire'],
+    'avocat': ['cabinet avocat'],
+    'comptable': ['expert comptable'],
     'architecte': ['architecture'],
-    'garagiste': ['garage', 'mecanique auto', 'reparation auto'],
-    'estheticienne': ['esthetique', 'institut beaute', 'beaute'],
-    'opticien': ['optique', 'lunettes'],
+    'garagiste': ['garage', 'mecanique auto'],
+    'estheticienne': ['esthetique', 'institut beaute'],
+    'opticien': ['optique'],
     'veterinaire': ['clinique veterinaire'],
     'pizzeria': ['pizza'],
-    'infirmier': ['infirmiere', 'soins infirmiers'],
-    'kinesitherapeute': ['kine', 'kinesitherapie'],
     'osteopathe': ['osteopathie'],
     'tatoueur': ['tatouage', 'tattoo'],
-    'bijoutier': ['bijouterie', 'joaillerie'],
+    'bijoutier': ['bijouterie'],
     'boucher': ['boucherie'],
-    'traiteur': ['traiteur evenementiel'],
-    'pressing': ['nettoyage', 'blanchisserie'],
-    'serrurier': ['serrurerie', 'depannage serrure'],
+    'pressing': ['nettoyage'],
+    'serrurier': ['serrurerie'],
     'couvreur': ['couverture', 'toiture'],
-    'maçon': ['maconnerie'],
-    'carreleur': ['carrelage'],
-    'paysagiste': ['jardinier', 'jardinage', 'espace vert'],
-    'auto-ecole': ['auto ecole', 'ecole conduite'],
-    'agence immobiliere': ['immobilier', 'agent immobilier'],
+    'paysagiste': ['jardinier', 'espace vert'],
+    'immobilier': ['agence immobiliere'],
   }
 
   const normalized = base.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -86,10 +75,10 @@ function getSearchVariations(metier: string): string[] {
     if (!variations.includes(v)) variations.push(v)
   }
 
-  return variations.slice(0, 4) // max 4 variations to avoid too many API calls
+  return variations.slice(0, 4)
 }
 
-// Main search function
+// Main search — SIRENE only (no DuckDuckGo)
 export async function searchBusinesses(
   metier: string,
   ville: string,
@@ -101,14 +90,10 @@ export async function searchBusinesses(
   const excludeSet = new Set(excludeSirens)
   const seenSirens = new Set<string>()
 
-  // Get postal codes for the city
   const postalCodes = await getPostalCodes(ville)
-
-  // Generate search variations
   const variations = getSearchVariations(metier)
 
   try {
-    // Search each variation across all postal codes
     for (const query of variations) {
       if (results.length >= limit) break
 
@@ -138,7 +123,6 @@ export async function searchBusinesses(
           }
         }
       } else {
-        // No postal codes found — search with city name in query
         const remaining = Math.min(limit - results.length, 25)
         const res = await fetch(`${SIRENE_URL}?${new URLSearchParams({
           q: `${query} ${ville}`,
@@ -164,11 +148,10 @@ export async function searchBusinesses(
     console.error('SIRENE search error:', err)
   }
 
-  // Filter by city (postal code match)
-  let filtered = results
+  // Filter by city
   if (postalCodes.length > 0) {
     const villeNorm = ville.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z ]/g, '')
-    filtered = results.filter(r => {
+    return results.filter(r => {
       const businessCity = (r.city || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z ]/g, '')
       const businessCP = r.postalCode || ''
       if (postalCodes.includes(businessCP)) return true
@@ -177,16 +160,7 @@ export async function searchBusinesses(
     })
   }
 
-  // Find websites via DuckDuckGo (limited to 25 to avoid rate limiting)
-  const toCheck = filtered.slice(0, Math.min(filtered.length, 25))
-  for (let i = 0; i < toCheck.length; i++) {
-    try {
-      toCheck[i].website = await findWebsite(toCheck[i].name, toCheck[i].city || ville)
-    } catch { /* best effort */ }
-    if (i < toCheck.length - 1) await new Promise(r => setTimeout(r, 600))
-  }
-
-  return filtered
+  return results
 }
 
 function mapSireneResult(r: any): BusinessResult {
@@ -202,22 +176,19 @@ function mapSireneResult(r: any): BusinessResult {
     effectif: r.tranche_effectif_salarie || null,
     nafCode: r.activite_principale || null,
     nafLabel: r.libelle_activite_principale || null,
-    website: null,
+    website: null, // Website is now discovered by Serper/SearXNG, not DuckDuckGo
     isActive: r.etat_administratif === 'A',
   }
 }
 
-// Filter out irrelevant businesses
 function isRelevantBusiness(r: any): boolean {
   const name = (r.nom_complet || r.nom_raison_sociale || '').toUpperCase()
   const natureJuridique = r.nature_juridique || ''
 
-  // Exclude associations, collectivités, organismes publics
   if (natureJuridique.startsWith('9') || natureJuridique.startsWith('7') || natureJuridique.startsWith('8')) {
     return false
   }
 
-  // Exclude by name patterns
   const excludePatterns = [
     'FORMATION', 'GROSSISTE', 'DISTRIBUTION', 'HOLDING', 'SYNDICAT',
     'FEDERATION', 'ASSOCIATION', 'FONDATION', 'COMITE', 'UNION',
@@ -232,73 +203,4 @@ function isRelevantBusiness(r: any): boolean {
   }
 
   return true
-}
-
-// Find a company's website via DuckDuckGo
-async function findWebsite(companyName: string, city: string): Promise<string | null> {
-  try {
-    const query = `${companyName} ${city} site officiel`
-    const res = await fetch(`https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' },
-      signal: AbortSignal.timeout(8000),
-    })
-
-    const html = await res.text()
-    const urlRegex = /uddg=(https?%3A%2F%2F[^&"]+)/g
-    const matches = [...html.matchAll(urlRegex)]
-
-    const blacklist = [
-      // Search engines
-      'duckduckgo.com', 'bing.com', 'google.com', 'yahoo.com',
-      // Social media
-      'facebook.com', 'instagram.com', 'linkedin.com', 'twitter.com', 'youtube.com', 'tiktok.com',
-      // Directories & listings
-      'pagesjaunes.fr', 'societe.com', 'annuaire', '118712', '118000', '118218',
-      'kompass.com', 'cylex.fr', 'infobel.com', 'horairesdouverture24.fr',
-      'fr.mappy.com', 'justacote.com', 'telephone.city', 'local.fr', 'gralon.net',
-      'europages.fr', 'manageo.fr', 'verif.com', 'pappers.fr', 'infogreffe.fr',
-      'bodacc.fr', 'sirene.fr', 'net1901.org',
-      // Business info aggregators
-      'entreprises.lagazettefrance.fr', 'infonet.fr', 'autour-de-moi.pro',
-      'education.e-pro.fr', 'e-pro.fr', 'lagazettefrance.fr',
-      'societe.ninja', 'score3.fr', 'entreprise-et-droit.com',
-      'data-b.com', 'dirigeant.societe.com', 'annuaire-entreprises.fr',
-      'french-business.fr', 'b-reputation.com', 'ellisphere.com',
-      'score.be', 'toutlocal.fr', 'hoodspot.fr', 'industrie.gouv.fr',
-      // Booking/platform (not the business's own site)
-      'planity.com', 'treatwell.fr', 'kiute.com', 'balinea.com',
-      'doctolib.fr', 'mondocteur.fr', 'rdvmedicaux.com',
-      'lafourchette.com', 'thefork.com', 'booking.com', 'quelresto.fr',
-      // Service marketplaces
-      'starofservice.com', 'mesdepanneurs.fr', 'habitatpresto.com',
-      'lesbonsartisans.fr', 'groupon.fr', 'amazon.', 'ebay.',
-      // Team/beauty aggregators
-      'teamesthetique.fr',
-      // Media
-      'wikipedia.org', 'linternaute.com', 'lefigaro.fr', 'lemonde.fr',
-    ]
-
-    const directoryPatterns = [
-      /annuaire/i, /directory/i, /listing/i, /avis/i, /review/i,
-      /comparateur/i, /devis/i, /trouver/i,
-    ]
-
-    for (const match of matches) {
-      const decoded = decodeURIComponent(match[1])
-      if (blacklist.some(b => decoded.toLowerCase().includes(b))) continue
-      if (directoryPatterns.some(p => p.test(decoded))) continue
-
-      try {
-        const urlObj = new URL(decoded)
-        const pathParts = urlObj.pathname.split('/').filter(Boolean)
-        if (pathParts.length > 3) continue
-      } catch { continue }
-
-      return decoded
-    }
-
-    return null
-  } catch {
-    return null
-  }
 }
