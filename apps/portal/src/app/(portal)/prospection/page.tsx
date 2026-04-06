@@ -200,6 +200,8 @@ export default function ProspectionPage() {
   // Notes editing
   const [editingNotes, setEditingNotes] = useState<string | null>(null);
   const [notesText, setNotesText] = useState('');
+  const [claudeText, setClaudeText] = useState('');
+  const [presentationText, setPresentationText] = useState('');
 
   // Error
   const [error, setError] = useState('');
@@ -1461,8 +1463,9 @@ Sois IMPITOYABLE dans ton analyse. Je prefere un diagnostic dur mais honnete qui
                 <div style={{ display: 'flex', gap: '6px' }}>
                   <button
                     onClick={() => {
-                      const el = document.getElementById('claude-analysis-input') as HTMLTextAreaElement;
-                      if (el) { el.style.display = 'block'; el.value = prospect.claudeAnalysis || ''; el.focus(); }
+                      setClaudeText(prospect.claudeAnalysis || '');
+                      // Clear the saved analysis to show the textarea
+                      setSelectedProspect(prev => prev ? { ...prev, claudeAnalysis: null } : prev);
                     }}
                     style={{ padding: '4px 10px', borderRadius: '6px', fontSize: '10px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: '1px solid var(--border)', cursor: 'pointer' }}
                   >
@@ -1559,41 +1562,45 @@ Sois percutant, oriente business, pas technique. Le client doit comprendre pourq
                 Collez ici le resultat de l'analyse Claude pour enrichir l'audit.
               </div>
             )}
-            <textarea
-              id="claude-analysis-input"
-              placeholder="Collez ici l'analyse de Claude..."
-              defaultValue={prospect.claudeAnalysis || ''}
-              style={{
-                display: prospect.claudeAnalysis ? 'none' : 'block',
-                width: '100%', minHeight: '120px', padding: '8px', borderRadius: '8px',
-                background: 'var(--bg-input)', border: '1px solid var(--border-input)',
-                color: 'var(--text-primary)', fontSize: '11px', resize: 'vertical',
-                fontFamily: 'inherit', lineHeight: '1.5',
-              }}
-            />
-            <button
-              onClick={async () => {
-                const el = document.getElementById('claude-analysis-input') as HTMLTextAreaElement;
-                if (!el || !el.value.trim()) return;
-                const res = await fetch(`/api/portal/prospection/sessions/${prospect.sessionId}/prospects/${prospect.id}`, {
-                  method: 'PATCH',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ claudeAnalysis: el.value.trim() }),
-                });
-                if (res.ok) {
-                  const updated = await res.json();
-                  setProspects(prev => prev.map(p => p.id === updated.id ? { ...p, claudeAnalysis: updated.claudeAnalysis } : p));
-                  setSelectedProspect(prev => prev ? { ...prev, claudeAnalysis: updated.claudeAnalysis } : prev);
-                  el.style.display = 'none';
-                }
-              }}
-              style={{
-                marginTop: '6px', padding: '6px 14px', borderRadius: '6px', fontSize: '11px', fontWeight: 500,
-                background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer',
-              }}
-            >
-              Sauvegarder l'analyse
-            </button>
+            {!prospect.claudeAnalysis && (
+              <>
+                <textarea
+                  placeholder="Collez ici l'analyse de Claude..."
+                  value={claudeText}
+                  onChange={(e) => setClaudeText(e.target.value)}
+                  style={{
+                    width: '100%', minHeight: '120px', padding: '8px', borderRadius: '8px',
+                    background: 'var(--bg-input)', border: '1px solid var(--border-input)',
+                    color: 'var(--text-primary)', fontSize: '11px', resize: 'vertical',
+                    fontFamily: 'inherit', lineHeight: '1.5',
+                  }}
+                />
+                <button
+                  onClick={async () => {
+                    if (!claudeText.trim()) { alert('Collez d\'abord l\'analyse de Claude dans le champ ci-dessus.'); return; }
+                    const res = await fetch(`/api/portal/prospection/sessions/${prospect.sessionId}/prospects/${prospect.id}`, {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ claudeAnalysis: claudeText.trim() }),
+                    });
+                    if (res.ok) {
+                      const updated = await res.json();
+                      setProspects(prev => prev.map(p => p.id === updated.id ? { ...p, claudeAnalysis: updated.claudeAnalysis } : p));
+                      setSelectedProspect(prev => prev ? { ...prev, claudeAnalysis: updated.claudeAnalysis } : prev);
+                      setClaudeText('');
+                    } else {
+                      alert('Erreur lors de la sauvegarde');
+                    }
+                  }}
+                  style={{
+                    marginTop: '6px', padding: '6px 14px', borderRadius: '6px', fontSize: '11px', fontWeight: 500,
+                    background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer',
+                  }}
+                >
+                  Sauvegarder l'analyse
+                </button>
+              </>
+            )}
           </div>
 
           {/* Presentation Generator */}
@@ -1615,8 +1622,8 @@ Sois percutant, oriente business, pas technique. Le client doit comprendre pourq
                   <div style={{ display: 'flex', gap: '6px' }}>
                     <button
                       onClick={() => {
-                        const el = document.getElementById('presentation-data-input') as HTMLTextAreaElement;
-                        if (el) { el.style.display = 'block'; el.value = prospect.presentationData || ''; el.focus(); }
+                        setPresentationText(prospect.presentationData || '');
+                        setSelectedProspect(prev => prev ? { ...prev, presentationData: null } : prev);
                       }}
                       style={{ padding: '4px 10px', borderRadius: '6px', fontSize: '10px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: '1px solid var(--border)', cursor: 'pointer' }}
                     >
@@ -1706,41 +1713,45 @@ Sois percutant, oriente business, pas technique. Le client doit comprendre pourq
                   Apres avoir utilise "Preparer la presentation (Claude)", collez ici le contenu des slides genere par Claude.
                 </div>
               )}
-              <textarea
-                id="presentation-data-input"
-                placeholder="Collez ici le contenu des slides genere par Claude..."
-                defaultValue={prospect.presentationData || ''}
-                style={{
-                  display: prospect.presentationData ? 'none' : 'block',
-                  width: '100%', minHeight: '120px', padding: '8px', borderRadius: '8px',
-                  background: 'var(--bg-input)', border: '1px solid var(--border-input)',
-                  color: 'var(--text-primary)', fontSize: '11px', resize: 'vertical',
-                  fontFamily: 'inherit', lineHeight: '1.5',
-                }}
-              />
-              <button
-                onClick={async () => {
-                  const el = document.getElementById('presentation-data-input') as HTMLTextAreaElement;
-                  if (!el || !el.value.trim()) return;
-                  const res = await fetch(`/api/portal/prospection/sessions/${prospect.sessionId}/prospects/${prospect.id}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ presentationData: el.value.trim() }),
-                  });
-                  if (res.ok) {
-                    const updated = await res.json();
-                    setProspects(prev => prev.map(p => p.id === updated.id ? { ...p, presentationData: updated.presentationData } : p));
-                    setSelectedProspect(prev => prev ? { ...prev, presentationData: updated.presentationData } : prev);
-                    el.style.display = 'none';
-                  }
-                }}
-                style={{
-                  marginTop: '6px', padding: '6px 14px', borderRadius: '6px', fontSize: '11px', fontWeight: 500,
-                  background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer',
-                }}
-              >
-                Sauvegarder le contenu
-              </button>
+              {!prospect.presentationData && (
+                <>
+                  <textarea
+                    placeholder="Collez ici le contenu des slides genere par Claude..."
+                    value={presentationText}
+                    onChange={(e) => setPresentationText(e.target.value)}
+                    style={{
+                      width: '100%', minHeight: '120px', padding: '8px', borderRadius: '8px',
+                      background: 'var(--bg-input)', border: '1px solid var(--border-input)',
+                      color: 'var(--text-primary)', fontSize: '11px', resize: 'vertical',
+                      fontFamily: 'inherit', lineHeight: '1.5',
+                    }}
+                  />
+                  <button
+                    onClick={async () => {
+                      if (!presentationText.trim()) { alert('Collez d\'abord le contenu des slides.'); return; }
+                      const res = await fetch(`/api/portal/prospection/sessions/${prospect.sessionId}/prospects/${prospect.id}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ presentationData: presentationText.trim() }),
+                      });
+                      if (res.ok) {
+                        const updated = await res.json();
+                        setProspects(prev => prev.map(p => p.id === updated.id ? { ...p, presentationData: updated.presentationData } : p));
+                        setSelectedProspect(prev => prev ? { ...prev, presentationData: updated.presentationData } : prev);
+                        setPresentationText('');
+                      } else {
+                        alert('Erreur lors de la sauvegarde');
+                      }
+                    }}
+                    style={{
+                      marginTop: '6px', padding: '6px 14px', borderRadius: '6px', fontSize: '11px', fontWeight: 500,
+                      background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer',
+                    }}
+                  >
+                    Sauvegarder le contenu
+                  </button>
+                </>
+              )}
             </div>
           )}
         </>
