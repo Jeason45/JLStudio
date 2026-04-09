@@ -64,6 +64,23 @@ interface AuditData {
   primaryEmail: string | null;
   emailConfidence: string;
   emails: string[];
+  design?: {
+    score: number;
+    imageCount: number;
+    hasHeroImage: boolean;
+    headingCount: number;
+    wordCount: number;
+    textToHtmlRatio: number;
+    hasCustomFonts: boolean;
+    fontFamilyCount: number;
+    hasNavigation: boolean;
+    hasLogo: boolean;
+    hasFooterContent: boolean;
+    usesFlexboxOrGrid: boolean;
+    hasAnimations: boolean;
+    importantCount: number;
+    issues: Array<{ label: string; severity: string }>;
+  };
 }
 
 interface Prospect {
@@ -602,6 +619,12 @@ export default function ProspectionPage() {
               onAudit={() => handleAuditProspect(selectedProspect)}
               onAddCRM={() => handleAddCRM(selectedProspect)}
               isAuditing={auditingId === selectedProspect.id}
+              claudeText={claudeText}
+              setClaudeText={setClaudeText}
+              presentationText={presentationText}
+              setPresentationText={setPresentationText}
+              setProspects={setProspects}
+              setSelectedProspect={setSelectedProspect}
             />
           )}
         </div>
@@ -876,12 +899,20 @@ function ProspectCard({
 
 function DetailPanel({
   prospect, onClose, onAudit, onAddCRM, isAuditing,
+  claudeText, setClaudeText, presentationText, setPresentationText,
+  setProspects, setSelectedProspect,
 }: {
   prospect: Prospect;
   onClose: () => void;
   onAudit: () => void;
   onAddCRM: () => void;
   isAuditing: boolean;
+  claudeText: string;
+  setClaudeText: React.Dispatch<React.SetStateAction<string>>;
+  presentationText: string;
+  setPresentationText: React.Dispatch<React.SetStateAction<string>>;
+  setProspects: React.Dispatch<React.SetStateAction<Prospect[]>>;
+  setSelectedProspect: React.Dispatch<React.SetStateAction<Prospect | null>>;
 }) {
   const audit = prospect.auditData;
 
