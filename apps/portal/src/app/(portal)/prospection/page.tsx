@@ -940,6 +940,24 @@ function DetailPanel({
             Telecharger JSON
           </button>
         )}
+        {prospect.auditedAt && (
+          <button
+            onClick={async () => {
+              const res = await fetch(`/api/portal/prospection/sessions/${prospect.sessionId}/prospects/${prospect.id}/pptx`);
+              if (!res.ok) { alert('Erreur generation PPTX'); return; }
+              const blob = await res.blob();
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `audit_${prospect.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}_${new Date().toISOString().slice(0, 10)}.pptx`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            style={{ ...btnSecondary, fontSize: '12px' }}
+          >
+            Telecharger PPTX
+          </button>
+        )}
       </div>
 
       {/* Basic info */}
