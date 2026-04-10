@@ -22,6 +22,7 @@ import {
   analyzePageSpeedFull,
 } from '@/lib/prospection/auditExtras'
 import { analyzeDesign } from '@/lib/prospection/designAnalyzer'
+import { checkGoogleVisibility } from '@/lib/prospection/webSearch'
 
 export const maxDuration = 120
 
@@ -191,8 +192,9 @@ async function handleAudit(siteId: string, body: { url?: string; name?: string }
 
     const prospect = session.prospects[0]
 
-    // Run full audit
-    const auditData = await runFullAudit(url, pageSpeedApiKey)
+    // Run full audit (pass name as keyword for Google visibility check)
+    const keyword = name ? `${name} ${new URL(url).hostname.replace('www.', '')}` : undefined
+    const auditData = await runFullAudit(url, pageSpeedApiKey, keyword)
 
     // Update prospect with audit data
     const updated = await prisma.prospectionProspect.update({
@@ -216,7 +218,7 @@ async function handleAudit(siteId: string, body: { url?: string; name?: string }
 }
 
 // Shared audit runner — used here and in the individual prospect audit route
-export async function runFullAudit(url: string, pageSpeedApiKey: string) {
+export async function runFullAudit(url: string, pageSpeedApiKey: string, keyword?: string) {
   // Phase 1: Tech + SEO (fast)
   const [tech, seo] = await Promise.all([
     analyzeTech(url),
@@ -224,7 +226,7 @@ export async function runFullAudit(url: string, pageSpeedApiKey: string) {
   ])
 
   // Phase 2: All external APIs in parallel
-  const [emailResult, socialResult, ssl, secHeaders, carbon, w3c, yellowLab, pageSpeed, observatory] = await Promise.all([
+  const [emailResult, socialResult, ssl, secHeaders, carbon, w3c, yellowLab, pageSpeed, observatory, googleVisibility] = await Promise.all([
     extractEmails(url, tech.html).catch(() => ({ emails: [] as string[], primaryEmail: null })),
     Promise.resolve(detectSocial(tech.html)),
     checkSSL(url).catch(() => null),
@@ -234,6 +236,7 @@ export async function runFullAudit(url: string, pageSpeedApiKey: string) {
     analyzeYellowLab(url).catch(() => ({ globalScore: null, topIssues: [] as string[] })),
     pageSpeedApiKey ? analyzePageSpeedFull(url, pageSpeedApiKey).catch(() => null) : Promise.resolve(null),
     analyzeObservatory(url).catch(() => ({ grade: null })),
+    keyword ? checkGoogleVisibility(url, keyword).catch(() => null) : Promise.resolve(null),
   ])
 
   // Best email
@@ -278,6 +281,36 @@ export async function runFullAudit(url: string, pageSpeedApiKey: string) {
     hasObsoleteTags: tech.hasObsoleteTags,
     usesModernImages: tech.usesModernImages,
     internalLinkCount: tech.internalLinkCount,
+    // V2: new HTML-based checks
+    metaTitle: tech.metaTitle,
+    metaTitleLength: tech.metaTitleLength,
+    metaDescriptionLength: tech.metaDescriptionLength,
+    h1Text: tech.h1Text,
+    h1Count: tech.h1Count,
+    headingHierarchyValid: tech.headingHierarchyValid,
+    hasCanonical: tech.hasCanonical,
+    hasLangAttribute: tech.hasLangAttribute,
+    langValue: tech.langValue,
+    hasPhoneLink: tech.hasPhoneLink,
+    phoneNumber: tech.phoneNumber,
+    hasContactForm: tech.hasContactForm,
+    hasGoogleMaps: tech.hasGoogleMaps,
+    hasStructuredData: tech.hasStructuredData,
+    structuredDataTypes: tech.structuredDataTypes,
+    hasMentionsLegales: tech.hasMentionsLegales,
+    hasPrivacyPolicy: tech.hasPrivacyPolicy,
+    hasCookieBanner: tech.hasCookieBanner,
+    hasReviews: tech.hasReviews,
+    hasCTA: tech.hasCTA,
+    ctaTexts: tech.ctaTexts,
+    altTextCoverage: tech.altTextCoverage,
+    totalImages: tech.totalImages,
+    imagesWithAlt: tech.imagesWithAlt,
+    hasSearchBar: tech.hasSearchBar,
+    hasBreadcrumbs: tech.hasBreadcrumbs,
+    hasCompression: tech.hasCompression,
+    contentFreshness: tech.contentFreshness,
+    // External
     ssl,
     securityHeaders: secHeaders,
     observatoryGrade: observatory?.grade ?? null,
@@ -293,5 +326,7 @@ export async function runFullAudit(url: string, pageSpeedApiKey: string) {
     emails: emailResult.emails,
     // Design & UX analysis
     design: analyzeDesign(tech.html),
+    // Google visibility
+    googleVisibility,
   }
 }

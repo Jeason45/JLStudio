@@ -34,7 +34,9 @@ export async function POST(
     let url = prospect.website
     if (!url.startsWith('http')) url = `https://${url}`
 
-    const auditData = await runFullAudit(url, pageSpeedApiKey)
+    // Build keyword for Google visibility check from session query
+    const keyword = session.query && session.type === 'search' ? session.query : undefined
+    const auditData = await runFullAudit(url, pageSpeedApiKey, keyword)
 
     const updated = await prisma.prospectionProspect.update({
       where: { id: pid },

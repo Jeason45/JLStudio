@@ -76,6 +76,36 @@ export interface TechResult {
   hasObsoleteTags: boolean
   usesModernImages: boolean
   internalLinkCount: number
+  // ── New fields (v2) ──
+  metaTitle: string | null
+  metaTitleLength: number
+  metaDescriptionLength: number
+  h1Text: string | null
+  h1Count: number
+  headingHierarchyValid: boolean
+  hasCanonical: boolean
+  hasLangAttribute: boolean
+  langValue: string | null
+  hasViewportMeta: boolean
+  hasPhoneLink: boolean         // <a href="tel:...">
+  phoneNumber: string | null
+  hasContactForm: boolean
+  hasGoogleMaps: boolean
+  hasStructuredData: boolean
+  structuredDataTypes: string[]  // e.g. ["LocalBusiness", "Product"]
+  hasMentionsLegales: boolean
+  hasPrivacyPolicy: boolean
+  hasCookieBanner: boolean
+  hasReviews: boolean           // testimonials/reviews section detected
+  hasCTA: boolean               // clear call-to-action button
+  ctaTexts: string[]            // detected CTA texts
+  altTextCoverage: number       // 0-100 percentage of images with alt
+  totalImages: number
+  imagesWithAlt: number
+  hasSearchBar: boolean
+  hasBreadcrumbs: boolean
+  hasCompression: boolean       // gzip/brotli from response headers
+  contentFreshness: string | null // last detected date on page
 }
 
 export async function analyzeTech(url: string): Promise<TechResult> {
@@ -96,6 +126,35 @@ export async function analyzeTech(url: string): Promise<TechResult> {
     hasObsoleteTags: false,
     usesModernImages: false,
     internalLinkCount: 0,
+    metaTitle: null,
+    metaTitleLength: 0,
+    metaDescriptionLength: 0,
+    h1Text: null,
+    h1Count: 0,
+    headingHierarchyValid: true,
+    hasCanonical: false,
+    hasLangAttribute: false,
+    langValue: null,
+    hasViewportMeta: false,
+    hasPhoneLink: false,
+    phoneNumber: null,
+    hasContactForm: false,
+    hasGoogleMaps: false,
+    hasStructuredData: false,
+    structuredDataTypes: [],
+    hasMentionsLegales: false,
+    hasPrivacyPolicy: false,
+    hasCookieBanner: false,
+    hasReviews: false,
+    hasCTA: false,
+    ctaTexts: [],
+    altTextCoverage: 0,
+    totalImages: 0,
+    imagesWithAlt: 0,
+    hasSearchBar: false,
+    hasBreadcrumbs: false,
+    hasCompression: false,
+    contentFreshness: null,
   }
 
   const start = Date.now()
@@ -167,6 +226,110 @@ export async function analyzeTech(url: string): Promise<TechResult> {
     // Copyright year
     const estimatedAge = extractCopyrightYear(html)
 
+    // ── V2: New HTML-based checks ──
+
+    // Meta title
+    const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i)
+    const metaTitle = titleMatch ? titleMatch[1].trim() : null
+    const metaTitleLength = metaTitle?.length || 0
+
+    // Meta description length
+    const descMatch = html.match(/meta\s[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i)
+    const metaDescriptionLength = descMatch ? descMatch[1].length : 0
+
+    // H1 analysis
+    const h1Matches = html.match(/<h1[^>]*>[\s\S]*?<\/h1>/gi) || []
+    const h1Count = h1Matches.length
+    const h1Text = h1Count > 0 ? (h1Matches[0] || '').replace(/<[^>]+>/g, '').trim().slice(0, 200) : null
+
+    // Heading hierarchy (check for skipped levels)
+    const headingLevels = (html.match(/<h[1-6][^>]*>/gi) || [])
+      .map(h => parseInt(h.match(/h([1-6])/i)?.[1] || '0'))
+      .filter(l => l > 0)
+    let headingHierarchyValid = true
+    for (let i = 1; i < headingLevels.length; i++) {
+      if (headingLevels[i] > headingLevels[i - 1] + 1) {
+        headingHierarchyValid = false
+        break
+      }
+    }
+
+    // Canonical URL
+    const hasCanonical = /rel=["']canonical["']/i.test(html)
+
+    // Lang attribute
+    const langMatch = html.match(/<html[^>]*\slang=["']([^"']+)["']/i)
+    const hasLangAttribute = !!langMatch
+    const langValue = langMatch ? langMatch[1] : null
+
+    // Viewport meta (more specific than isResponsive)
+    const hasViewportMeta = isResponsive
+
+    // Phone link (tel:)
+    const phoneLink = html.match(/<a[^>]*href=["']tel:([^"']+)["']/i)
+    const hasPhoneLink = !!phoneLink
+    const phoneNumber = phoneLink ? phoneLink[1].replace(/\s+/g, '') : null
+
+    // Contact form
+    const hasContactForm = /<form[\s\S]*?<\/form>/i.test(html) &&
+      (/type=["']email["']|type=["']tel["']|name=["'](?:email|message|name|nom|prenom|telephone|phone)["']/i.test(html))
+
+    // Google Maps
+    const hasGoogleMaps = /maps\.google|google\.com\/maps|maps\.googleapis/i.test(html) ||
+      /<iframe[^>]*(?:maps\.google|google\.com\/maps)/i.test(html)
+
+    // Structured data (JSON-LD)
+    const jsonLdBlocks = html.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi) || []
+    const structuredDataTypes: string[] = []
+    for (const block of jsonLdBlocks) {
+      const typeMatches = block.match(/"@type"\s*:\s*"([^"]+)"/g) || []
+      for (const m of typeMatches) {
+        const t = m.match(/"@type"\s*:\s*"([^"]+)"/)?.[1]
+        if (t && !structuredDataTypes.includes(t)) structuredDataTypes.push(t)
+      }
+    }
+    const hasStructuredData = structuredDataTypes.length > 0
+
+    // Mentions légales
+    const hasMentionsLegales = /mentions[\s-]*l[eé]gales|legal[\s-]*notice/i.test(html)
+
+    // Privacy policy
+    const hasPrivacyPolicy = /politique[\s-]*de[\s-]*confidentialit[eé]|privacy[\s-]*policy|donn[eé]es[\s-]*personnelles|rgpd|gdpr/i.test(html)
+
+    // Cookie banner
+    const hasCookieBanner = /cookie[\s-]*consent|cookie[\s-]*banner|tarteaucitron|cookiebot|axeptio|onetrust|didomi|cookie[\s-]*notice/i.test(html)
+
+    // Reviews/testimonials
+    const hasReviews = /t[eé]moignage|avis[\s-]*client|review|testimonial|google[\s-]*review|elfsight.*review|widget.*avis/i.test(html)
+
+    // CTA buttons
+    const ctaPatterns = /(?:prendre|r[eé]server|demander|obtenir|t[eé]l[eé]charger|appeler|contacter|devis|rdv|rendez[\s-]*vous|commander|acheter|s['\u2019]inscrire|essayer|d[eé]couvrir)/i
+    const buttonTexts = (html.match(/<(?:a|button)[^>]*>[\s\S]*?<\/(?:a|button)>/gi) || [])
+      .map(b => b.replace(/<[^>]+>/g, '').trim())
+      .filter(t => t.length > 2 && t.length < 60 && ctaPatterns.test(t))
+    const hasCTA = buttonTexts.length > 0
+    const ctaTexts = buttonTexts.slice(0, 5)
+
+    // Alt text coverage
+    const allImages = html.match(/<img[^>]*>/gi) || []
+    const totalImages = allImages.length
+    const imagesWithAlt = allImages.filter(img => /alt=["'][^"']+["']/i.test(img)).length
+    const altTextCoverage = totalImages > 0 ? Math.round((imagesWithAlt / totalImages) * 100) : 100
+
+    // Search bar
+    const hasSearchBar = /type=["']search["']|role=["']search["']|class=["'][^"']*search/i.test(html)
+
+    // Breadcrumbs
+    const hasBreadcrumbs = /breadcrumb|fil[\s-]*d[\s'\u2019]ariane|BreadcrumbList/i.test(html)
+
+    // Compression (from response headers)
+    const hasCompression = /content-encoding:\s*(gzip|br|deflate)/i.test(headersStr)
+
+    // Content freshness (detect most recent date on page)
+    const datePatterns = html.match(/\b(20[2-3]\d[\s/-](?:0[1-9]|1[0-2])[\s/-](?:[0-2]\d|3[01]))\b/g) ||
+      html.match(/\b(?:0[1-9]|[12]\d|3[01])[\/\-.](?:0[1-9]|1[0-2])[\/\-.]20[2-3]\d\b/g) || []
+    const contentFreshness = datePatterns.length > 0 ? datePatterns[datePatterns.length - 1] : null
+
     return {
       html,
       finalUrl,
@@ -184,6 +347,35 @@ export async function analyzeTech(url: string): Promise<TechResult> {
       hasObsoleteTags,
       usesModernImages,
       internalLinkCount,
+      metaTitle,
+      metaTitleLength,
+      metaDescriptionLength,
+      h1Text,
+      h1Count,
+      headingHierarchyValid,
+      hasCanonical,
+      hasLangAttribute,
+      langValue,
+      hasViewportMeta,
+      hasPhoneLink,
+      phoneNumber,
+      hasContactForm,
+      hasGoogleMaps,
+      hasStructuredData,
+      structuredDataTypes,
+      hasMentionsLegales,
+      hasPrivacyPolicy,
+      hasCookieBanner,
+      hasReviews,
+      hasCTA,
+      ctaTexts,
+      altTextCoverage,
+      totalImages,
+      imagesWithAlt,
+      hasSearchBar,
+      hasBreadcrumbs,
+      hasCompression,
+      contentFreshness,
     }
   } catch {
     return { ...defaults, loadTimeMs: Date.now() - start }
