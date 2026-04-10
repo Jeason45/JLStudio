@@ -591,7 +591,51 @@ function slideRecommendations(pptx: PptxGenJS, r: AuditReport) {
 }
 
 // ============================================================================
-// SLIDE 10 — PROCESSUS & CONTACT (CTA)
+// SLIDE 10 (optional) — ANALYSE VISUELLE (Claude)
+// Only included if claudeAnalysis is present
+// ============================================================================
+
+function slideClaudeAnalysis(pptx: PptxGenJS, r: AuditReport) {
+  if (!r.claudeAnalysis) return
+
+  const slide = pptx.addSlide()
+  bg(slide, 'G')
+
+  sectionLabel(slide, 'ANALYSE VISUELLE / EXPÉRIENCE UTILISATEUR')
+
+  slide.addText(
+    [
+      { text: 'Ce que voit réellement ', options: { bold: false } },
+      { text: 'votre client.', options: { bold: true } },
+    ],
+    {
+      x: MX, y: MY + 0.4, w: CW, h: 0.7,
+      fontFace: FONT, fontSize: 28, color: C.text,
+    },
+  )
+
+  // Claude analysis text — truncated to fit slide
+  const maxChars = 1200
+  let analysisText = r.claudeAnalysis.trim()
+  if (analysisText.length > maxChars) {
+    analysisText = analysisText.slice(0, maxChars).trim() + '...'
+  }
+
+  slide.addText(analysisText, {
+    x: MX, y: 2.0, w: CW, h: 4.8,
+    fontFace: FONT, fontSize: 10, color: C.muted,
+    valign: 'top', lineSpacingMultiple: 1.5,
+    paraSpaceAfter: 6,
+  })
+
+  slide.addText('Analyse réalisée par intelligence artificielle (Claude) sur capture d\'écran du site.', {
+    x: MX, y: 6.8, w: CW, h: 0.2,
+    fontFace: FONT, fontSize: 7, color: C.dim, italic: true,
+  })
+}
+
+// ============================================================================
+// SLIDE 11 — PROCESSUS & CONTACT (CTA)
 // ============================================================================
 
 function slideCTA(pptx: PptxGenJS, r: AuditReport) {
@@ -689,7 +733,8 @@ export async function buildPresentation(report: AuditReport): Promise<Buffer> {
   slideBeforeAfter(pptx, report)        // 7. Before/After
   slideDemoLink(pptx, report)           // 8. Demo QR code
   slideRecommendations(pptx, report)    // 9. Recommendations
-  slideCTA(pptx, report)               // 10. CTA
+  slideClaudeAnalysis(pptx, report)    // 10. Visual analysis (only if present)
+  slideCTA(pptx, report)               // 11. CTA
 
   const data = await pptx.write({ outputType: 'nodebuffer' })
   return data as Buffer
