@@ -81,6 +81,41 @@ interface AuditData {
     importantCount: number;
     issues: Array<{ label: string; severity: string }>;
   };
+  // V2 fields
+  metaTitle?: string | null;
+  metaTitleLength?: number;
+  metaDescriptionLength?: number;
+  h1Text?: string | null;
+  h1Count?: number;
+  headingHierarchyValid?: boolean;
+  hasCanonical?: boolean;
+  hasLangAttribute?: boolean;
+  hasPhoneLink?: boolean;
+  phoneNumber?: string | null;
+  hasContactForm?: boolean;
+  hasGoogleMaps?: boolean;
+  hasStructuredData?: boolean;
+  structuredDataTypes?: string[];
+  hasMentionsLegales?: boolean;
+  hasPrivacyPolicy?: boolean;
+  hasCookieBanner?: boolean;
+  hasReviews?: boolean;
+  hasCTA?: boolean;
+  ctaTexts?: string[];
+  altTextCoverage?: number;
+  totalImages?: number;
+  imagesWithAlt?: number;
+  hasSearchBar?: boolean;
+  hasBreadcrumbs?: boolean;
+  hasCompression?: boolean;
+  googleVisibility?: {
+    keyword: string;
+    organicPosition: number | null;
+    isInLocalPack: boolean;
+    localPackRating: number | null;
+    localPackReviewCount: number | null;
+    competitorSites: string[];
+  } | null;
 }
 
 interface Prospect {
@@ -1115,137 +1150,114 @@ function DetailPanel({
               {/* Claude analysis button */}
               <button
                 onClick={() => {
-                  const prompt = `Tu es un expert senior en design web, UX, strategie digitale et conversion. Tu regardes en ce moment le site web d'un prospect que je souhaite demarcher pour lui proposer une refonte.
+                  const sectorName = prospect.nafLabel || 'commerce local';
+                  // Sector-specific expectations
+                  const sectorExpectations: Record<string, string> = {
+                    coiffeur: 'Photos du salon et de l\'equipe (pas de stock photos), tarifs clairs et visibles, bouton reservation (Planity/Treatwell) en haut de page, avis Google integres, ambiance premium qui reflete le standing du salon, galerie avant/apres des realisations.',
+                    restaurant: 'Carte/menu visible immediatement (pas en PDF), photos de plats REELS prises au restaurant, bouton reservation (TheFork/LaFourchette) visible sans scroller, horaires clairs, ambiance du lieu en photo, avis Google integres.',
+                    artisan: 'Numero de telephone ENORME et cliquable en haut de page, zone d\'intervention claire, photos de chantiers/realisations reelles, avis clients visibles, bouton "Demander un devis" visible sans scroller, certifications/labels affiches.',
+                    commerce: 'Photos de la boutique reelle et des produits, horaires et adresse visibles, bouton de contact/achat visible, avis clients, promotions en cours, ambiance accueillante.',
+                    sante: 'Specialites et actes pratiques clairs, bouton de prise de RDV (Doctolib ou direct) visible sans scroller, informations pratiques (acces, parking, horaires), photo du praticien et du cabinet, diplomes/certifications.',
+                    immobilier: 'Annonces en avant, moteur de recherche par criteres, photos de qualite des biens, estimation en ligne, equipe avec photos, avis clients vendeurs et acheteurs.',
+                  };
+                  // Detect sector for expectations
+                  const sectorKey = /coiff|beaut|esth|barbier/i.test(sectorName) ? 'coiffeur'
+                    : /restaurant|brasserie|bistro|traiteur|pizz|sushi|boulang/i.test(sectorName) ? 'restaurant'
+                    : /plomb|electri|chauffag|serru|peintr|macon|couvreur|menuisi|jardin/i.test(sectorName) ? 'artisan'
+                    : /medecin|dentist|kine|osteopath|infirm|pharmacie|psycholog/i.test(sectorName) ? 'sante'
+                    : /immobili|agence|location/i.test(sectorName) ? 'immobilier'
+                    : 'commerce';
+                  const expectations = sectorExpectations[sectorKey] || sectorExpectations.commerce;
 
-CONSIGNES IMPORTANTES :
-- Tu VOIS cette page web en direct. Scroll la page ENTIEREMENT de haut en bas avant de repondre.
-- Regarde chaque section, chaque image, chaque bouton, chaque texte.
-- Reduis la taille de la fenetre pour simuler un affichage mobile et analyse le responsive.
-- Clique sur les liens du menu pour verifier si les autres pages sont coherentes.
-- Verifie si le formulaire de contact fonctionne.
-- Cherche les mentions legales et la politique de confidentialite.
+                  // Build audit context from available data
+                  const auditContext = audit ? [
+                    `Performance mobile : ${audit.mobileScore ?? 'N/A'}/100`,
+                    `Accessibilite : ${audit.mobileAccessibility ?? 'N/A'}/100`,
+                    `SEO technique : ${audit.mobileSEO ?? 'N/A'}/100`,
+                    `HTTPS : ${audit.isHttps ? 'Oui' : 'Non'} | Responsive : ${audit.isResponsive ? 'Oui' : 'Non'} | CMS : ${audit.cmsDetected || 'Non detecte'}`,
+                    `Mentions legales : ${audit.hasMentionsLegales ? 'Oui' : 'Non'} | Cookies : ${audit.hasCookieBanner ? 'Oui' : 'Non'}`,
+                    `Formulaire contact : ${audit.hasContactForm ? 'Oui' : 'Non'} | Tel cliquable : ${audit.hasPhoneLink ? 'Oui' : 'Non'}`,
+                    `Avis clients detectes : ${audit.hasReviews ? 'Oui' : 'Non'} | Reseaux sociaux : ${audit.socialPresence?.count ?? 0}`,
+                    `Google Maps integre : ${audit.hasGoogleMaps ? 'Oui' : 'Non'} | Schema.org : ${audit.hasStructuredData ? 'Oui' : 'Non'}`,
+                    audit.googleVisibility?.organicPosition ? `Position Google : ${audit.googleVisibility.organicPosition}` : 'Position Google : non verifiee',
+                  ].join('\n- ') : 'Audit technique non disponible';
 
-INFORMATIONS SUR LE PROSPECT :
-- Entreprise : ${prospect.name}
-- Ville : ${prospect.city || ''}
-- Secteur : ${prospect.nafLabel || 'commerce local'}
-- SIRET : ${prospect.siret || 'inconnu'}
-- Site analyse : ${prospect.website}
+                  const prompt = `Tu es un expert senior en design web, UX et conversion pour les commerces locaux.
+Je te montre 4 screenshots de ce site web (desktop complet, desktop haut de page, mobile complet, mobile haut de page).
 
-Fournis une analyse EXHAUSTIVE et IMPITOYABLE au format suivant. Chaque probleme doit etre explique en termes d'IMPACT BUSINESS (perte de clients, perte de chiffre d'affaires), pas en jargon technique.
+PROSPECT : ${prospect.name} — ${sectorName} a ${prospect.city || 'ville inconnue'}
+SITE : ${prospect.website}
 
-## 1. SCORE GLOBAL (/100)
-Note globale avec justification en une phrase percutante.
+CE QU'ON SAIT DEJA (mesure automatiquement, NE REPETE PAS ces donnees) :
+- ${auditContext}
 
-## 2. PREMIERE IMPRESSION (test des 3 secondes)
-Mets-toi a la place d'un client qui arrive pour la premiere fois :
-- Que voit-il en premier ? Est-ce engageant ?
-- Comprend-il immediatement ce que propose cette entreprise ?
-- Y a-t-il un appel a l'action clair (reserver, appeler, acheter) ?
-- Le site inspire-t-il confiance ou donne-t-il envie de partir ?
-- Le design fait-il 2026, 2020 ou 2015 ? Quelle impression d'epoque ?
-- Compare avec ce qu'un client attendrait d'un(e) ${prospect.nafLabel || 'commerce'} en 2026.
+CONTEXTE SECTORIEL — Ce qu'un client attend d'un site de ${sectorName} en 2026 :
+${expectations}
 
-## 3. IDENTITE VISUELLE & BRANDING
-Analyse CHAQUE element visuel que tu vois :
-- Logo : qualite, taille, placement. Est-il professionnel ou fait maison ?
-- Couleurs : combien de couleurs differentes ? Sont-elles harmonieuses ? Y a-t-il une charte graphique ?
-- Typographie : les polices sont-elles lisibles ? Coherentes ? Combien de polices differentes ?
-- Photos/Images : sont-elles de qualite pro ou amateur ? Libres de droits generiques ou originales ?
-- Icones et elements graphiques : coherents entre eux ?
-- Y a-t-il une identite de marque reconnaissable ou c'est un site generique ?
+CONSIGNE : Tu analyses UNIQUEMENT ce que tu VOIS sur les screenshots. Pas de simulation de clic ni de navigation. Sois CONCIS et PERCUTANT — chaque point doit tenir en 1-2 phrases max. Tes reponses alimenteront directement une presentation client.
 
-## 4. NAVIGATION & STRUCTURE
-Navigue sur le site et analyse :
-- Le menu est-il clair ? Combien d'elements ? Sont-ils bien nommes ?
-- La hierarchie des informations est-elle logique ?
-- Le footer contient-il des informations utiles (contact, horaires, liens) ?
-- Les pages internes sont-elles coherentes avec la page d'accueil ?
-- Y a-t-il des liens casses ou des pages vides ?
-- Le fil d'Ariane est-il present ?
+---
 
-## 5. EXPERIENCE MOBILE (CRITIQUE)
-Reduis la fenetre pour simuler un mobile et analyse :
-- Le site est-il VRAIMENT responsive ou juste "pas completement casse" ?
-- Les boutons et liens sont-ils assez grands pour etre cliques au doigt ?
-- Le texte est-il lisible sans zoomer ?
-- Le menu fonctionne-t-il correctement sur mobile ?
-- Les images s'adaptent-elles ?
-- Le numero de telephone est-il cliquable (click-to-call) ?
-- Pour un ${prospect.nafLabel || 'commerce local'}, 70%+ des clients cherchent sur mobile.
+## PREMIERE IMPRESSION
+En regardant UNIQUEMENT le haut de page desktop :
+- En 3 secondes, que comprend le visiteur ? (1 phrase)
+- Emotion immediate : confiance / doute / confusion / envie de partir ? (1 mot + justification)
+- Ce design date de quelle annee ? (annee + pourquoi)
+- Le site est-il au niveau de ce qu'un client de ${sectorName} attend en 2026 ? (oui/non + 1 phrase)
 
-## 6. CONTENU & COPYWRITING
-- Les textes sont-ils ecrits pour CONVAINCRE ou juste pour remplir ?
-- Y a-t-il des fautes d'orthographe ou de grammaire ?
-- Les services/produits sont-ils clairement presentes avec des prix ?
-- Y a-t-il des appels a l'action ("Reservez maintenant", "Appelez-nous") ?
-- Le contenu est-il unique ou generique (copie de template) ?
-- Y a-t-il assez de contenu ou la page est-elle vide ?
+## IDENTITE VISUELLE
+Pour chaque element, un verdict en 1 phrase :
+- Logo : [Pro / Amateur / Absent] — pourquoi
+- Photos : [Originales du commerce / Stock generiques / Melange] — decris ce que tu vois
+- Montrent-elles le lieu reel, l'equipe, les realisations, les produits ?
+- Couleurs : [Charte coherente / Incoherent / Plat] — ce qui cloche
+- Typographie : [Moderne / Datee / Illisible] — ce qui cloche
+- Verdict : site sur-mesure, template personnalise, ou template brut ?
 
-## 7. PREUVES SOCIALES & CONFIANCE
-- Avis clients visibles ? Combien ? Note moyenne ?
-- Temoignages avec photos et noms reels ?
-- Logos de partenaires, certifications, labels ?
-- Photos de l'equipe, du local, des realisations ?
-- Lien vers Google Maps avec la fiche etablissement ?
-- Nombre d'abonnes/avis sur les reseaux sociaux lies ?
+## CE QUI CONVAINC (ou pas)
+- Les arguments differenciants sont-ils visibles en 5 secondes ? Lesquels ?
+- Les tarifs/prix sont-ils affiches ? Si non, le client doit faire quoi ?
+- Y a-t-il des preuves de qualite VISIBLES (avis, photos avant/apres, certifications, labels) ?
+- Le ton des textes : professionnel / amateur / generique / adapte a la cible ?
+- Cite 1 phrase du site qui est FAIBLE et reecris-la en version percutante.
 
-## 8. PARCOURS DE CONVERSION
-Simule le parcours d'un client qui veut :
-a) Prendre rendez-vous / reserver → combien de clics ? Possible ou non ?
-b) Appeler le commerce → le numero est-il visible et cliquable ?
-c) Trouver l'adresse et les horaires → accessible en combien de clics ?
-d) Voir les tarifs → sont-ils affiches ?
-e) Envoyer un message → formulaire present et fonctionnel ?
-Pour chaque parcours, note le nombre de clics necessaires et les frictions rencontrees.
+## PARCOURS CLIENT (screenshots uniquement)
+- Un nouveau client sait-il quoi faire en arrivant ? (oui/non + pourquoi)
+- Le bouton d'action principal est-il visible SANS scroller ? (oui/non + lequel)
+- Le numero de telephone est-il visuellement proéminent ? (oui/non)
+- L'adresse/horaires sont-ils visibles ? (oui/non)
 
-## 9. RESEAUX SOCIAUX & PRESENCE DIGITALE
-- Le site renvoie-t-il vers des reseaux sociaux ? Lesquels ?
-- Les liens fonctionnent-ils ?
-- Les comptes sont-ils actifs et coherents avec le site ?
-- Y a-t-il une integration Google Maps / fiche Google Business ?
+## MOBILE (screenshots mobile)
+- Le haut de page mobile est-il efficace ? (que voit-on en premier ?)
+- Le contenu est-il lisible sans effort ?
+- Le design mobile est-il soigne ou juste "redimensionne" ?
+- Un client presse sur mobile peut-il agir en 5 secondes ?
 
-## 10. CONFORMITE LEGALE
-- Mentions legales presentes et completes ?
-- Politique de confidentialite / RGPD ?
-- Bandeau de consentement cookies conforme ?
-- CGV si e-commerce ?
-- Numero de SIRET affiche ?
+## 5 PROBLEMES VISUELS — du pire au moins grave
+Pour chaque probleme, EXACTEMENT ce format :
+**[CRITIQUE/IMPORTANT/MINEUR] Titre court**
+> Ce que je vois : (1 phrase factuelle)
+> Impact client : (1 phrase, en termes de perte de business)
+> Solution : (1 phrase)
 
-## 11. TOP 10 DES PROBLEMES CRITIQUES
-Liste NUMEROTEE du plus grave au moins grave.
-Pour CHAQUE probleme :
-- 🔴/🟠/🟡 Niveau (CRITIQUE / IMPORTANT / MINEUR)
-- Description precise de ce que tu as vu
-- Impact business concret (ex: "un client sur mobile ne peut pas appeler → vous perdez X% de clients potentiels")
-- Solution recommandee (en termes simples, pas techniques)
+## VERDICT FINAL
+| Critere | /10 | 1 mot |
+|---------|-----|-------|
+| Design & modernite | | |
+| Confiance au premier regard | | |
+| Qualite des visuels (photos) | | |
+| Copywriting & persuasion | | |
+| Parcours de conversion | | |
+| Experience mobile | | |
 
-## 12. VERDICT FINAL
-| Critere | Score /100 |
-|---------|-----------|
-| Design & Modernite | |
-| UX & Ergonomie | |
-| Confiance & Credibilite | |
-| Mobile & Responsive | |
-| Contenu & Copywriting | |
-| Conversion & Business | |
-| **SCORE GLOBAL** | |
+**LE probleme n°1** (1 phrase percutante que je peux dire au client en face-a-face) :
 
-- Ce site convertit-il les visiteurs en clients ? Reponse franche.
-- En UNE phrase : quel est LE probleme #1 de ce site ?
-- Ce site est-il au niveau des standards 2026 pour un(e) ${prospect.nafLabel || 'commerce local'} ?
-
-## 13. PLAN D'ACTION STRATEGIQUE
-5 actions concretes classees par IMPACT sur le chiffre d'affaires :
-1. [Action] — Impact estime — Difficulte — Delai
-2. ...
-
-## 14. ARGUMENTS DE VENTE
-Ecris 3 phrases percutantes que je pourrais utiliser pour convaincre ce prospect de refaire son site. Chaque phrase doit pointer un probleme concret vu sur SON site et l'impact sur SON business.
-
-Sois IMPITOYABLE dans ton analyse. Je prefere un diagnostic dur mais honnete qui me permettra de closer ce prospect. Chaque probleme est une opportunite de vente pour moi.`;
+**3 ARGUMENTS DE VENTE** (phrases que je peux utiliser pour convaincre CE prospect) :
+1.
+2.
+3.`;
                   navigator.clipboard.writeText(prompt).then(() => {
-                    alert('Prompt copie !\n\n1. Cliquez sur "Ouvrir le site du prospect" ci-dessous\n2. Sur le site, ouvrez l\'extension Claude (sidebar Chrome)\n3. Collez le prompt (Ctrl+V)\n4. Claude verra et analysera le site en direct');
+                    alert('Prompt copie !\n\n1. Ouvrez le site du prospect dans un nouvel onglet\n2. Ouvrez l\'extension Claude (sidebar Chrome)\n3. Joignez les 4 screenshots telecharges\n4. Collez le prompt (Ctrl+V) et envoyez');
                   });
                 }}
                 style={{
@@ -1255,7 +1267,7 @@ Sois IMPITOYABLE dans ton analyse. Je prefere un diagnostic dur mais honnete qui
                   border: 'none', cursor: 'pointer', marginBottom: '6px',
                 }}
               >
-                📋 Copier le prompt d'analyse (pour Claude extension Chrome)
+                Copier le prompt d'analyse visuelle (Claude)
               </button>
               <a
                 href={prospect.website || '#'}
