@@ -1024,6 +1024,24 @@ function DetailPanel({
             Telecharger PPTX
           </button>
         )}
+        {prospect.auditedAt && (
+          <button
+            onClick={async () => {
+              const res = await fetch(`/api/portal/prospection/sessions/${prospect.sessionId}/prospects/${prospect.id}/pdf`);
+              if (!res.ok) { alert('Erreur generation PDF'); return; }
+              const blob = await res.blob();
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `audit_${prospect.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}_${new Date().toISOString().slice(0, 10)}.pdf`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            style={{ ...btnPrimary, fontSize: '12px', padding: '6px 14px' }}
+          >
+            Telecharger PDF
+          </button>
+        )}
       </div>
 
       {/* Basic info */}

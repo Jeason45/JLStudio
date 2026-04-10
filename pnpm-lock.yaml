@@ -298,6 +298,9 @@ importers:
       pdf-lib:
         specifier: ^1.17.1
         version: 1.17.1
+      playwright:
+        specifier: ^1.50.0
+        version: 1.58.2
       pptxgenjs:
         specifier: ^4.0.1
         version: 4.0.1
