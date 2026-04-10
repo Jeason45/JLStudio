@@ -175,7 +175,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     scoreSeverity(mobileScore, 90, 50),
     mobileScore !== null ? `${mobileScore}/100` : 'N/A',
     SOURCES.google_vitals,
-    mobileScore !== null && mobileScore < 70 ? 'Optimiser les images, réduire le JavaScript, activer le cache navigateur' : 'Score correct',
+    mobileScore !== null && mobileScore < 70 ? 'Améliorer la vitesse de votre site mobile pour ne pas perdre de visiteurs' : 'Score correct',
   )
 
   const lcp = audit.mobileLCP ?? null
@@ -184,7 +184,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     lcp === null ? 'acceptable' : lcp < 2500 ? 'ok' : lcp < 4000 ? 'warning' : 'critical',
     fmtMs(lcp),
     SOURCES.google_vitals,
-    lcp && lcp > 2500 ? 'Optimiser l\'image principale, utiliser le lazy loading, réduire le TTFB' : 'Correct',
+    lcp && lcp > 2500 ? 'Accélérer le chargement de votre site pour ne plus perdre de visiteurs impatients' : 'Correct',
   )
 
   const fcp = audit.mobileFCP ?? null
@@ -193,7 +193,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     fcp === null ? 'acceptable' : fcp < 1800 ? 'ok' : fcp < 3000 ? 'warning' : 'critical',
     fmtMs(fcp),
     SOURCES.google_vitals,
-    fcp && fcp > 1800 ? 'Réduire les ressources bloquant le rendu, optimiser le CSS critique' : 'Correct',
+    fcp && fcp > 1800 ? 'Faire apparaître votre contenu plus rapidement à l\'écran' : 'Correct',
   )
 
   const tbt = audit.mobileTBT ?? null
@@ -202,7 +202,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     tbt === null ? 'acceptable' : tbt < 200 ? 'ok' : tbt < 600 ? 'warning' : 'critical',
     fmtMs(tbt),
     SOURCES.google_vitals,
-    tbt && tbt > 200 ? 'Réduire le JavaScript tiers, différer les scripts non essentiels' : 'Correct',
+    tbt && tbt > 200 ? 'Rendre votre site réactif pour que les visiteurs puissent naviguer sans attendre' : 'Correct',
   )
 
   const cls = audit.mobileCLS ?? null
@@ -211,7 +211,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     cls === null ? 'acceptable' : cls < 0.1 ? 'ok' : cls < 0.25 ? 'warning' : 'critical',
     cls !== null ? cls.toFixed(3) : 'N/A',
     SOURCES.google_vitals,
-    cls && cls > 0.1 ? 'Définir les dimensions des images/vidéos, éviter l\'insertion dynamique de contenu' : 'Correct',
+    cls && cls > 0.1 ? 'Stabiliser l\'affichage de votre page pour éviter que les éléments bougent au chargement' : 'Correct',
   )
 
   const totalWeight = audit.totalByteWeight ?? null
@@ -222,7 +222,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     weightKB === null ? 'acceptable' : weightKB < 1500 ? 'ok' : weightKB < 3000 ? 'warning' : 'critical',
     fmtKB(totalWeight),
     SOURCES.akamai,
-    weightKB && weightKB > 1500 ? 'Compresser les images (WebP), minifier CSS/JS, activer la compression serveur' : 'Correct',
+    weightKB && weightKB > 1500 ? 'Alléger votre site pour qu\'il se charge rapidement, même sur une connexion mobile' : 'Correct',
     { analogy: weightAnalogy || '', loadEstimate: weightKB ? `${Math.round(weightKB / 500)}s sur 4G` : '' },
   )
 
@@ -233,7 +233,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.isResponsive ? 'ok' : 'critical',
     audit.isResponsive ? 'Oui' : 'Non',
     SOURCES.google_mobile,
-    !audit.isResponsive ? 'Refonte mobile-first impérative — plus de 60% du trafic est mobile' : 'Correct',
+    !audit.isResponsive ? 'Rendre votre site lisible et agréable sur téléphone — c\'est là que sont vos clients' : 'Correct',
   )
 
   const a11yScore = audit.mobileAccessibility ?? null
@@ -242,7 +242,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     scoreSeverity(a11yScore, 90, 50),
     a11yScore !== null ? `${a11yScore}/100` : 'N/A',
     SOURCES.lighthouse,
-    a11yScore !== null && a11yScore < 70 ? 'Améliorer les contrastes, ajouter les attributs alt, vérifier la navigation clavier' : 'Correct',
+    a11yScore !== null && a11yScore < 70 ? 'Rendre votre site accessible à tous les visiteurs, y compris ceux en situation de handicap' : 'Correct',
   )
 
   const altCoverage = audit.altTextCoverage ?? 100
@@ -251,7 +251,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     altCoverage >= 90 ? 'ok' : altCoverage >= 50 ? 'warning' : 'critical',
     `${altCoverage}% (${audit.imagesWithAlt ?? 0}/${audit.totalImages ?? 0})`,
     SOURCES.lighthouse,
-    altCoverage < 90 ? 'Ajouter un attribut alt descriptif à chaque image — essentiel pour l\'accessibilité et le SEO' : 'Correct',
+    altCoverage < 90 ? 'Décrire chaque image pour que Google les comprenne et les référence correctement' : 'Correct',
   )
 
   add('phone_clickable', 'mobile', 'Numéro de téléphone cliquable',
@@ -259,7 +259,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.hasPhoneLink ? 'ok' : 'warning',
     audit.hasPhoneLink ? `Oui (${audit.phoneNumber || ''})` : 'Non détecté',
     SOURCES.google_mobile,
-    !audit.hasPhoneLink ? 'Ajouter un lien tel: cliquable — essentiel sur mobile' : 'Correct',
+    !audit.hasPhoneLink ? 'Permettre aux clients de vous appeler en un seul tap sur mobile' : 'Correct',
   )
 
   add('has_cta', 'mobile', 'Bouton d\'action visible (CTA)',
@@ -267,7 +267,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.hasCTA ? 'ok' : 'warning',
     audit.hasCTA ? `Oui (${(audit.ctaTexts || []).slice(0, 2).join(', ')})` : 'Non détecté',
     SOURCES.google_mobile,
-    !audit.hasCTA ? 'Ajouter un bouton d\'action clair et visible : Appeler, Réserver, Demander un devis' : 'Correct',
+    !audit.hasCTA ? 'Ajouter un bouton d\'action visible pour guider vos visiteurs vers la prise de contact' : 'Correct',
   )
 
   // ═══════ VISIBILITY (20%) ═══════
@@ -278,16 +278,16 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
       : (audit.metaTitleLength ?? 0) > 0 ? 'warning' : 'critical',
     audit.metaTitle ? `${audit.metaTitleLength} car. — "${(audit.metaTitle || '').slice(0, 50)}${(audit.metaTitle || '').length > 50 ? '...' : ''}"` : 'Absente',
     SOURCES.google_search,
-    !(audit.metaTitleLength >= 30 && audit.metaTitleLength <= 60) ? 'Rédiger un title de 30-60 caractères incluant votre activité et votre ville' : 'Correct',
+    !(audit.metaTitleLength >= 30 && audit.metaTitleLength <= 60) ? 'Optimiser votre titre Google pour attirer plus de clics' : 'Correct',
   )
 
   add('meta_description', 'visibility', 'Meta description',
     audit.metaDescriptionLength ?? 0,
     (audit.metaDescriptionLength ?? 0) >= 120 && (audit.metaDescriptionLength ?? 0) <= 160 ? 'ok'
       : audit.hasMetaDescription ? 'warning' : 'critical',
-    audit.hasMetaDescription ? `${audit.metaDescriptionLength} car.` : 'Absente',
+    audit.hasMetaDescription ? `${audit.metaDescriptionLength ?? '?'} car.` : 'Absente',
     SOURCES.google_search,
-    !audit.hasMetaDescription ? 'Rédiger une description de 120-160 caractères qui donne envie de cliquer' : 'Correct',
+    !audit.hasMetaDescription ? 'Rédiger une description Google attractive pour donner envie aux clients de cliquer' : 'Correct',
   )
 
   add('h1_tag', 'visibility', 'Balise H1 (titre principal)',
@@ -295,7 +295,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     (audit.h1Count ?? 0) === 1 ? 'ok' : (audit.h1Count ?? 0) === 0 ? 'critical' : 'warning',
     (audit.h1Count ?? 0) === 0 ? 'Absente' : (audit.h1Count ?? 0) === 1 ? `1 H1 — "${(audit.h1Text || '').slice(0, 50)}"` : `${audit.h1Count} H1 (devrait être unique)`,
     SOURCES.google_search,
-    (audit.h1Count ?? 0) !== 1 ? 'Avoir exactement 1 balise H1 par page, contenant votre activité + localisation' : 'Correct',
+    (audit.h1Count ?? 0) !== 1 ? 'Ajouter un titre principal clair pour que Google comprenne votre activité' : 'Correct',
   )
 
   add('sitemap', 'visibility', 'Sitemap XML',
@@ -303,7 +303,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.hasSitemap ? 'ok' : 'warning',
     audit.hasSitemap ? 'Présent' : 'Absent',
     SOURCES.google_search,
-    !audit.hasSitemap ? 'Créer un sitemap.xml et le soumettre dans Google Search Console' : 'Correct',
+    !audit.hasSitemap ? 'Aider Google à trouver toutes les pages de votre site pour mieux vous référencer' : 'Correct',
   )
 
   add('structured_data', 'visibility', 'Données structurées (Schema.org)',
@@ -311,7 +311,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.hasStructuredData ? 'ok' : 'warning',
     audit.hasStructuredData ? `Oui (${(audit.structuredDataTypes || []).join(', ')})` : 'Absentes',
     SOURCES.schema,
-    !audit.hasStructuredData ? 'Ajouter le balisage Schema.org LocalBusiness avec horaires, adresse, téléphone' : 'Correct',
+    !audit.hasStructuredData ? 'Enrichir votre fiche Google avec vos horaires, adresse et avis pour attirer plus de clics' : 'Correct',
   )
 
   // Google visibility (from Serper)
@@ -322,7 +322,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
       gv.organicPosition !== null ? (gv.organicPosition <= 3 ? 'ok' : gv.organicPosition <= 10 ? 'acceptable' : 'warning') : 'critical',
       gv.organicPosition !== null ? `Position ${gv.organicPosition}` : 'Non trouvé dans les 30 premiers résultats',
       SOURCES.google_search,
-      gv.organicPosition === null ? 'Améliorer le référencement naturel : contenu optimisé, backlinks, fiche Google My Business' : 'Bon positionnement',
+      gv.organicPosition === null ? 'Améliorer votre visibilité Google pour que vos clients vous trouvent en premier' : 'Bon positionnement',
       { keyword: gv.keyword },
     )
   }
@@ -334,7 +334,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.isHttps ? 'ok' : 'critical',
     audit.isHttps ? 'Oui' : 'Non — affiche "Non sécurisé"',
     SOURCES.owasp,
-    !audit.isHttps ? 'Migrer immédiatement vers HTTPS — certificat Let\'s Encrypt gratuit' : 'Correct',
+    !audit.isHttps ? 'Sécuriser votre site pour rassurer vos visiteurs et éviter l\'avertissement "Non sécurisé"' : 'Correct',
   )
 
   const sslDays = audit.ssl?.daysUntilExpiry ?? null
@@ -344,7 +344,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
       audit.ssl.isValid ? (sslDays !== null && sslDays < 14 ? 'warning' : 'ok') : 'critical',
       audit.ssl.isValid ? `Valide (expire dans ${sslDays}j)` : 'Invalide ou expiré',
       SOURCES.owasp,
-      !audit.ssl.isValid ? 'Renouveler immédiatement le certificat SSL' : sslDays !== null && sslDays < 30 ? 'Renouveler le certificat avant expiration' : 'Correct',
+      !audit.ssl.isValid ? 'Renouveler votre certificat de sécurité pour éviter que votre site devienne inaccessible' : sslDays !== null && sslDays < 30 ? 'Renouveler votre certificat de sécurité avant qu\'il expire' : 'Correct',
       { value: String(sslDays ?? '') },
     )
   }
@@ -356,7 +356,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     secScore >= 5 ? 'ok' : secScore >= 3 ? 'acceptable' : secScore >= 1 ? 'warning' : 'critical',
     `${secScore}/${secTotal}`,
     SOURCES.owasp,
-    secScore < 4 ? 'Configurer les headers HSTS, CSP, X-Frame-Options — protection standard contre les attaques web' : 'Correct',
+    secScore < 4 ? 'Renforcer la protection de votre site contre les attaques pour protéger vos visiteurs' : 'Correct',
   )
 
   add('mentions_legales', 'trust', 'Mentions légales',
@@ -364,7 +364,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.hasMentionsLegales ? 'ok' : 'critical',
     audit.hasMentionsLegales ? 'Détectées' : 'Non détectées',
     SOURCES.lcen,
-    !audit.hasMentionsLegales ? 'Obligatoire en France — ajouter une page mentions légales avec SIRET, hébergeur, directeur de publication' : 'Correct',
+    !audit.hasMentionsLegales ? 'Ajouter les mentions légales obligatoires pour être en conformité avec la loi française' : 'Correct',
   )
 
   add('privacy_policy', 'trust', 'Politique de confidentialité (RGPD)',
@@ -372,7 +372,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.hasPrivacyPolicy ? 'ok' : 'warning',
     audit.hasPrivacyPolicy ? 'Détectée' : 'Non détectée',
     SOURCES.lcen,
-    !audit.hasPrivacyPolicy ? 'Obligatoire si le site collecte des données personnelles (formulaire, analytics, cookies)' : 'Correct',
+    !audit.hasPrivacyPolicy ? 'Ajouter une politique de confidentialité pour respecter le RGPD et rassurer vos visiteurs' : 'Correct',
   )
 
   add('reviews', 'trust', 'Avis clients / témoignages',
@@ -380,7 +380,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.hasReviews ? 'ok' : 'warning',
     audit.hasReviews ? 'Détectés' : 'Non détectés',
     SOURCES.reviews,
-    !audit.hasReviews ? 'Intégrer un widget Google Reviews ou une section témoignages — facteur de confiance n°1' : 'Correct',
+    !audit.hasReviews ? 'Afficher les avis de vos clients satisfaits pour convaincre les nouveaux visiteurs' : 'Correct',
   )
 
   // ═══════ CONVERSION (10%) ═══════
@@ -390,7 +390,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.hasContactForm ? 'ok' : 'warning',
     audit.hasContactForm ? 'Détecté' : 'Non détecté',
     SOURCES.google_mobile,
-    !audit.hasContactForm ? 'Ajouter un formulaire de contact simple (nom, email, message) — capture les prospects hors horaires' : 'Correct',
+    !audit.hasContactForm ? 'Ajouter un formulaire de contact pour capturer les demandes, même en dehors de vos horaires' : 'Correct',
   )
 
   add('google_maps', 'conversion', 'Google Maps intégré',
@@ -398,7 +398,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.hasGoogleMaps ? 'ok' : 'acceptable',
     audit.hasGoogleMaps ? 'Oui' : 'Non',
     SOURCES.google_mobile,
-    !audit.hasGoogleMaps ? 'Intégrer Google Maps pour que les clients vous trouvent facilement' : 'Correct',
+    !audit.hasGoogleMaps ? 'Ajouter une carte Google Maps pour que vos clients vous trouvent facilement' : 'Correct',
   )
 
   add('analytics', 'conversion', 'Analytics installé',
@@ -406,7 +406,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     audit.hasAnalytics ? 'ok' : 'warning',
     audit.hasAnalytics ? 'Oui' : 'Non',
     SOURCES.lighthouse,
-    !audit.hasAnalytics ? 'Installer Google Analytics ou Matomo — mesurer pour améliorer' : 'Correct',
+    !audit.hasAnalytics ? 'Installer un outil de mesure pour savoir combien de clients visitent votre site' : 'Correct',
   )
 
   add('social_presence', 'conversion', 'Réseaux sociaux liés',
@@ -414,7 +414,7 @@ function evaluateCriteria(audit: any, sector: Sector, prospect: any): CriterionR
     (audit.socialPresence?.count ?? 0) >= 2 ? 'ok' : (audit.socialPresence?.count ?? 0) >= 1 ? 'acceptable' : 'warning',
     `${audit.socialPresence?.count ?? 0} réseau(x) détecté(s)`,
     SOURCES.reviews,
-    (audit.socialPresence?.count ?? 0) < 2 ? 'Ajouter des liens vers vos réseaux sociaux — renforce la confiance et la visibilité' : 'Correct',
+    (audit.socialPresence?.count ?? 0) < 2 ? 'Lier vos réseaux sociaux à votre site pour renforcer votre crédibilité en ligne' : 'Correct',
   )
 
   return results
@@ -470,7 +470,7 @@ export function generateAuditReport(prospect: any, auditData: any, sessionQuery?
     .map((c, i) => ({
       rank: i + 1,
       title: c.label,
-      impact: c.impact || `${c.label} : ${c.value}`,
+      impact: c.impact || 'Ce problème peut vous faire perdre des clients et dégrader votre image en ligne.',
       source: c.source,
       severity: c.severity,
     }))

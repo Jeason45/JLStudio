@@ -159,7 +159,6 @@ function slideFirstImpression(pptx: PptxGenJS, r: AuditReport) {
     slide.addImage({
       path: r.screenshots.desktopFold,
       x: MX, y: 3.6, w: 5.5, h: 3.3,
-      rounding: true,
     })
 
     // Mobile screenshot
@@ -170,7 +169,6 @@ function slideFirstImpression(pptx: PptxGenJS, r: AuditReport) {
     slide.addImage({
       path: r.screenshots.mobileFold,
       x: 7.2, y: 3.6, w: 2.2, h: 3.3,
-      rounding: true,
     })
   }
 }
@@ -467,7 +465,6 @@ function slideBeforeAfter(pptx: PptxGenJS, r: AuditReport) {
     slide.addImage({
       path: r.screenshots.mobileFold,
       x: MX + 0.5, y: 3.3, w: 2.0, h: 3.3,
-      rounding: true,
     })
   }
 
@@ -614,9 +611,15 @@ function slideClaudeAnalysis(pptx: PptxGenJS, r: AuditReport) {
     },
   )
 
-  // Claude analysis text — truncated to fit slide
+  // Claude analysis text — strip markdown and truncate to fit slide
   const maxChars = 1200
   let analysisText = r.claudeAnalysis.trim()
+    .replace(/^#{1,6}\s+/gm, '')       // ## headers
+    .replace(/\*\*(.+?)\*\*/g, '$1')   // **bold**
+    .replace(/^---+$/gm, '')           // --- horizontal rules
+    .replace(/^>\s?/gm, '')            // > blockquotes
+    .replace(/\n{3,}/g, '\n\n')        // collapse extra blank lines
+    .trim()
   if (analysisText.length > maxChars) {
     analysisText = analysisText.slice(0, maxChars).trim() + '...'
   }
@@ -728,7 +731,9 @@ export async function buildPresentation(report: AuditReport): Promise<Buffer> {
   slideFirstImpression(pptx, report)    // 2. Screenshots
   slideVerdict(pptx, report)            // 3. Scores
   slideProblems(pptx, report)           // 4. Top problems
-  slideGoogleVisibility(pptx, report)   // 5. Google visibility
+  if (report.googleVisibility && report.googleVisibility.keyword) {
+    slideGoogleVisibility(pptx, report)  // 5. Google visibility
+  }
   slideChecklist(pptx, report)          // 6. Full checklist
   slideBeforeAfter(pptx, report)        // 7. Before/After
   slideDemoLink(pptx, report)           // 8. Demo QR code

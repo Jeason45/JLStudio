@@ -228,6 +228,108 @@ const SECTOR_PHRASES: Record<string, Record<Sector, string>> = {
   },
 }
 
+// ── Aliases: map criterion IDs used in evaluateCriteria to existing phrases ──
+
+SECTOR_PHRASES['pagespeed_mobile'] = SECTOR_PHRASES['slow_mobile']
+SECTOR_PHRASES['lcp'] = {
+  coiffeur: "L'élément principal de votre page met trop longtemps à apparaître. Le client ne voit rien pendant plusieurs secondes et quitte votre site.",
+  restaurant: "Votre page met trop longtemps à afficher son contenu principal. Un client affamé ne va pas attendre.",
+  artisan: "L'élément principal de votre site met trop longtemps à s'afficher. En situation d'urgence, chaque seconde compte.",
+  commerce: "Votre page produit met trop longtemps à afficher l'image principale. Le client ferme l'onglet.",
+  sante: "Votre page met trop longtemps à afficher son contenu principal. Le patient passe au praticien suivant.",
+  immobilier: "Les photos de vos biens mettent trop longtemps à s'afficher. L'acquéreur retourne sur les portails.",
+  default: "L'élément principal de votre page met plus de 2,5 secondes à apparaître. Google considère cela comme une mauvaise expérience utilisateur.",
+}
+SECTOR_PHRASES['fcp'] = {
+  coiffeur: "Votre site reste blanc trop longtemps avant d'afficher quoi que ce soit. Le client pense qu'il ne fonctionne pas.",
+  restaurant: "Votre site met trop longtemps à afficher le premier contenu. Le client pense que la page est cassée.",
+  artisan: "Votre site n'affiche rien pendant trop longtemps. Le client en urgence passe au résultat suivant.",
+  commerce: "Votre boutique en ligne reste vide trop longtemps à l'ouverture. Le client croit que le site est en panne.",
+  sante: "Votre site n'affiche rien pendant trop longtemps. Le patient doute et ferme la page.",
+  immobilier: "Votre site reste blanc trop longtemps au chargement. L'acquéreur retourne sur SeLoger.",
+  default: "Votre site met trop longtemps à afficher le premier contenu visible. Les visiteurs pensent que la page ne fonctionne pas.",
+}
+SECTOR_PHRASES['tbt'] = {
+  coiffeur: "Votre site se fige quand le client essaie de naviguer. Impossible de cliquer sur 'Prendre RDV' pendant plusieurs secondes.",
+  restaurant: "Votre site est figé pendant plusieurs secondes — impossible de consulter la carte ou de réserver.",
+  artisan: "Votre site ne répond pas aux clics pendant plusieurs secondes. Le client en urgence abandonne.",
+  commerce: "Votre site se bloque quand le client essaie de naviguer. Impossible d'ajouter au panier ou de payer.",
+  sante: "Votre site se fige quand le patient essaie de prendre rendez-vous. Il va sur Doctolib.",
+  immobilier: "Votre site ne répond pas aux interactions pendant plusieurs secondes. L'acquéreur va chez un concurrent.",
+  default: "Votre site se fige pendant plusieurs secondes, empêchant toute interaction. Les visiteurs abandonnent face à une page qui ne répond pas.",
+}
+SECTOR_PHRASES['cls'] = {
+  coiffeur: "Les éléments de votre page bougent pendant le chargement — le client clique au mauvais endroit et se retrouve perdu.",
+  restaurant: "Votre page bouge toute seule pendant le chargement. Le client essaie de cliquer sur la carte et atterrit ailleurs.",
+  artisan: "Les boutons et textes de votre site sautent pendant le chargement. Le client ne peut pas cliquer où il veut.",
+  commerce: "Les éléments de votre page se déplacent pendant le chargement. Le client clique sur le mauvais produit ou quitte.",
+  sante: "Votre page bouge pendant le chargement — le patient clique au mauvais endroit et se retrouve frustré.",
+  immobilier: "Les éléments de votre page se repositionnent pendant le chargement, rendant la navigation confuse.",
+  default: "Les éléments de votre page se déplacent pendant le chargement. Cette instabilité visuelle frustre les visiteurs et cause des clics involontaires.",
+}
+SECTOR_PHRASES['page_weight'] = SECTOR_PHRASES['heavy_page']
+SECTOR_PHRASES['responsive'] = SECTOR_PHRASES['not_responsive']
+SECTOR_PHRASES['accessibility'] = {
+  coiffeur: "Votre site présente des problèmes d'accessibilité — certains clients ne peuvent pas naviguer correctement, notamment sur mobile.",
+  restaurant: "Des problèmes d'accessibilité empêchent certains clients de consulter votre carte ou de réserver.",
+  artisan: "Votre site n'est pas accessible à tous — des problèmes de contrastes ou de navigation excluent certains visiteurs.",
+  commerce: "Des problèmes d'accessibilité empêchent certains clients de parcourir vos produits ou de passer commande.",
+  sante: "Un site médical doit être accessible à tous, y compris les personnes en situation de handicap. Ce n'est pas le cas.",
+  immobilier: "Des problèmes d'accessibilité rendent la navigation difficile pour une partie de vos visiteurs.",
+  default: "Votre site présente des problèmes d'accessibilité qui empêchent certains visiteurs de naviguer correctement.",
+}
+SECTOR_PHRASES['alt_text'] = {
+  coiffeur: "Les images de votre site n'ont pas de description textuelle. Google ne peut pas les comprendre et les malvoyants ne peuvent pas savoir ce qu'elles montrent.",
+  restaurant: "Les photos de vos plats n'ont pas de description — Google ne les comprend pas et elles sont invisibles pour les malvoyants.",
+  artisan: "Vos images de réalisations n'ont pas de description textuelle. Google ne peut pas les référencer.",
+  commerce: "Les photos de vos produits n'ont pas de description. Google ne peut pas les indexer et les malvoyants ne savent pas ce qu'ils voient.",
+  sante: "Les images de votre site n'ont pas de texte alternatif — problème d'accessibilité pour un site de santé.",
+  immobilier: "Les photos de vos biens n'ont pas de description. Google ne peut pas les référencer dans la recherche d'images.",
+  default: "Des images de votre site n'ont pas de texte alternatif. C'est un problème pour le référencement et l'accessibilité.",
+}
+SECTOR_PHRASES['phone_clickable'] = SECTOR_PHRASES['no_phone_clickable']
+SECTOR_PHRASES['has_cta'] = SECTOR_PHRASES['no_cta']
+SECTOR_PHRASES['meta_title'] = {
+  coiffeur: "Votre titre Google est absent ou mal optimisé. Les clients qui cherchent un coiffeur ne voient pas clairement ce que vous proposez.",
+  restaurant: "Votre titre Google n'est pas optimisé — les clients ne comprennent pas immédiatement que vous êtes un restaurant.",
+  artisan: "Votre titre Google est absent ou mal rédigé. Les clients en recherche d'un artisan passent au résultat suivant.",
+  commerce: "Votre titre Google ne met pas en avant vos produits. Les clients cliquent sur des résultats mieux présentés.",
+  sante: "Votre titre Google n'indique pas clairement votre spécialité. Les patients choisissent un praticien mieux identifié.",
+  immobilier: "Votre titre Google ne mentionne pas votre secteur géographique. Les acquéreurs cliquent sur les portails.",
+  default: "Votre titre Google est absent ou mal optimisé. C'est le premier élément que les internautes voient — il détermine s'ils cliquent ou non.",
+}
+SECTOR_PHRASES['meta_description'] = SECTOR_PHRASES['no_meta_description']
+SECTOR_PHRASES['h1_tag'] = SECTOR_PHRASES['no_h1']
+SECTOR_PHRASES['sitemap'] = SECTOR_PHRASES['no_sitemap']
+SECTOR_PHRASES['structured_data'] = SECTOR_PHRASES['no_structured_data']
+SECTOR_PHRASES['google_position'] = SECTOR_PHRASES['not_google_visible']
+SECTOR_PHRASES['https'] = SECTOR_PHRASES['no_https']
+SECTOR_PHRASES['ssl_expiry'] = SECTOR_PHRASES['ssl_expiring']
+SECTOR_PHRASES['security_headers'] = SECTOR_PHRASES['poor_security_headers']
+SECTOR_PHRASES['mentions_legales'] = SECTOR_PHRASES['no_mentions_legales']
+SECTOR_PHRASES['privacy_policy'] = {
+  coiffeur: "Pas de politique de confidentialité détectée. Si vous collectez des données (rendez-vous en ligne, formulaire), c'est une obligation RGPD.",
+  restaurant: "Pas de politique de confidentialité. Si vous collectez des réservations en ligne, c'est une obligation légale.",
+  artisan: "Votre site ne mentionne pas de politique de confidentialité. Si vous collectez des demandes de devis, c'est obligatoire.",
+  commerce: "Pas de politique de confidentialité sur un site qui collecte des données clients — c'est un manquement RGPD.",
+  sante: "Un site de santé qui collecte des données patients sans politique de confidentialité est en infraction RGPD.",
+  immobilier: "Pas de politique de confidentialité alors que vous collectez des données personnelles de prospects — risque RGPD.",
+  default: "Aucune politique de confidentialité détectée. Si votre site collecte des données personnelles, c'est une obligation RGPD.",
+}
+SECTOR_PHRASES['reviews'] = SECTOR_PHRASES['no_reviews']
+SECTOR_PHRASES['contact_form'] = SECTOR_PHRASES['no_contact_form']
+SECTOR_PHRASES['google_maps'] = SECTOR_PHRASES['no_google_maps']
+SECTOR_PHRASES['analytics'] = SECTOR_PHRASES['no_analytics']
+SECTOR_PHRASES['social_presence'] = {
+  coiffeur: "Aucun lien vers vos réseaux sociaux. Instagram et Facebook sont essentiels pour un salon — vos clients veulent voir vos réalisations.",
+  restaurant: "Pas de lien vers vos réseaux sociaux. Instagram est incontournable pour un restaurant — les clients veulent voir vos plats.",
+  artisan: "Aucun réseau social lié à votre site. Facebook et Instagram montrent vos réalisations et rassurent les clients.",
+  commerce: "Pas de présence sur les réseaux sociaux liée à votre site. Les clients vérifient votre activité sur les réseaux avant d'acheter.",
+  sante: "Aucun réseau social détecté. Une présence en ligne active renforce la confiance des patients.",
+  immobilier: "Pas de liens vers vos réseaux sociaux. LinkedIn et Facebook sont importants pour une agence immobilière.",
+  default: "Aucun lien vers des réseaux sociaux détecté. Les réseaux sociaux renforcent votre crédibilité et permettent aux clients de vous retrouver.",
+}
+
 // ── Sources officielles ──
 
 export const SOURCES: Record<string, string> = {
