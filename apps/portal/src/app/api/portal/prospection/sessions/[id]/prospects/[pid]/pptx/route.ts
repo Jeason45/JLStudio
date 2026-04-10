@@ -19,7 +19,7 @@ export async function GET(
   const prospect = await prisma.prospectionProspect.findUnique({ where: { id: pid } })
   if (!prospect) return NextResponse.json({ error: 'Prospect non trouve' }, { status: 404 })
 
-  const report = generateAuditReport(prospect, prospect.auditData)
+  const report = generateAuditReport(prospect, prospect.auditData, session.query || undefined)
   const buffer = await buildPresentation(report)
 
   const safeName = (prospect.name || 'audit').replace(/[^a-z0-9]+/gi, '_').toLowerCase()
