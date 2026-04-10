@@ -1066,7 +1066,9 @@ function DetailPanel({
                     ];
                     for (const { name, url } of urls) {
                       try {
-                        const res = await fetch(url);
+                        const proxyUrl = `/api/portal/prospection/proxy-image?url=${encodeURIComponent(url)}`;
+                        const res = await fetch(proxyUrl);
+                        if (!res.ok) continue;
                         const blob = await res.blob();
                         const blobUrl = URL.createObjectURL(blob);
                         const a = document.createElement('a');
