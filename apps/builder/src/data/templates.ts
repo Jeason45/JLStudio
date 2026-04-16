@@ -996,8 +996,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           logo: 'ZMR',
           links: [
             { id: '1', label: 'All Models', href: '/explore' },
-            { id: '2', label: 'Events', href: '/events' },
-            { id: '3', label: 'Contact', href: '/contact' },
+            { id: '2', label: 'Paris Private', href: '/paris-private' },
+            { id: '3', label: 'Events', href: '/events' },
+            { id: '4', label: 'Contact', href: '/contact' },
           ],
           ctaLabel: 'Models Agency',
         },
@@ -1054,8 +1055,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               logo: 'ZMR',
               links: [
                 { id: '1', label: 'All Models', href: '/explore' },
-                { id: '2', label: 'Events', href: '/events' },
-                { id: '3', label: 'Contact', href: '/contact' },
+                { id: '2', label: 'Paris Private', href: '/paris-private' },
+                { id: '3', label: 'Events', href: '/events' },
+                { id: '4', label: 'Contact', href: '/contact' },
               ],
               ctaLabel: 'Models Agency',
             },
@@ -1121,8 +1123,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               logo: 'ZMR',
               links: [
                 { id: '1', label: 'All Models', href: '/explore' },
-                { id: '2', label: 'Events', href: '/events' },
-                { id: '3', label: 'Contact', href: '/contact' },
+                { id: '2', label: 'Paris Private', href: '/paris-private' },
+                { id: '3', label: 'Events', href: '/events' },
+                { id: '4', label: 'Contact', href: '/contact' },
               ],
               ctaLabel: 'Models Agency',
             },
@@ -1170,8 +1173,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               logo: 'ZMR',
               links: [
                 { id: '1', label: 'All Models', href: '/explore' },
-                { id: '2', label: 'Events', href: '/events' },
-                { id: '3', label: 'Contact', href: '/contact' },
+                { id: '2', label: 'Paris Private', href: '/paris-private' },
+                { id: '3', label: 'Events', href: '/events' },
+                { id: '4', label: 'Contact', href: '/contact' },
               ],
               ctaLabel: 'Models Agency',
             },
@@ -1206,6 +1210,194 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           },
         ],
       },
+      // ── PARIS PRIVATE (Conciergerie de luxe) ──
+      {
+        slug: 'paris-private',
+        title: 'Paris Private',
+        sections: [
+          {
+            type: 'site-header',
+            variant: 'zmr-agency',
+            content: {
+              logo: 'ZMR',
+              links: [
+                { id: '1', label: 'All Models', href: '/explore' },
+                { id: '2', label: 'Paris Private', href: '/paris-private' },
+                { id: '3', label: 'Events', href: '/events' },
+                { id: '4', label: 'Contact', href: '/contact' },
+              ],
+              ctaLabel: 'Paris Private',
+            },
+            style: { background: 'transparent' as any, paddingY: 'none' },
+            visible: true,
+          },
+          {
+            // Hero éditorial — photo Paris contemplative + tagline poétique
+            type: 'hero',
+            variant: 'luxe',
+            content: {
+              eyebrow: 'PARIS PRIVATE',
+              title: 'Le Paris que personne\nne vous montrera.',
+              subtitle: 'Une conciergerie discrète pour celles et ceux qui cherchent l\'introuvable. Sur invitation uniquement.',
+              backgroundImage: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&q=85',
+              primaryButton: { label: 'Demander une invitation', href: '#paris-private-form', variant: 'outline' as any },
+            },
+            style: { background: 'dark' as any, paddingY: 'none' },
+            visible: true,
+          },
+          {
+            // Manifeste — un paragraphe éditorial dense + chiffre signature
+            type: 'features',
+            variant: 'luxe-list',
+            content: {
+              eyebrow: 'NOTRE PROMESSE',
+              title: 'Votre temps, préservé.\nVotre expérience, sur-mesure.\nVotre confort, absolu.',
+              subtitle: 'Paris Private est une conciergerie privée parisienne. Nous ouvrons les portes de ce que vous ne trouverez ni dans les guides, ni sur les plateformes : tables introuvables, lieux fermés au public, expériences qui n\'existent pas encore. Notre service est limité à un cercle restreint de membres. Chaque demande reçoit une réponse personnalisée sous 48 heures.',
+              items: [
+                { id: '1', icon: '48h', title: 'Toute demande répondue', description: 'sous 48 heures, par votre lifestyle manager personnel.' },
+                { id: '2', icon: '100', title: 'Membres seulement', description: 'Nous limitons volontairement notre cercle pour préserver la qualité du service.' },
+                { id: '3', icon: '24/7', title: 'Disponibilité absolue', description: 'Une équipe dédiée à votre service, à toute heure, partout dans le monde.' },
+              ],
+            },
+            style: { background: 'dark' as any, paddingY: 'xl' },
+            visible: true,
+          },
+          {
+            // Les 4 univers — grille éditoriale avec image, nom poétique, paragraphe
+            type: 'features',
+            variant: 'luxe-grid',
+            content: {
+              eyebrow: 'LES UNIVERS',
+              title: 'Quatre territoires d\'exception.',
+              subtitle: 'Chaque univers est confié à un curateur qui en maîtrise les codes, les acteurs et les secrets. Nous ne révélons pas les noms de nos partenaires — c\'est précisément ce qui garantit votre accès.',
+              items: [
+                {
+                  id: 'nightlife',
+                  icon: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=85',
+                  title: 'Nightlife',
+                  description: 'Tables sans liste publique. Loges privées dans les clubs les plus fermés de la capitale. Soirées sur invitation.',
+                },
+                {
+                  id: 'gastronomy',
+                  icon: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=85',
+                  title: 'Gastronomy',
+                  description: 'Réservations dans les tables où l\'on n\'entre pas sans un nom. Dîners privés chez les chefs étoilés. Caves rares.',
+                },
+                {
+                  id: 'private-stays',
+                  icon: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=85',
+                  title: 'Private Stays',
+                  description: 'Suites jamais commercialisées. Hôtels particuliers à Paris pour un soir ou une saison. Châteaux discrets en région.',
+                },
+                {
+                  id: 'bespoke',
+                  icon: 'https://images.unsplash.com/photo-1542401886-65d6c61db217?w=800&q=85',
+                  title: 'Bespoke Experiences',
+                  description: 'Une demande hors normes ? Un anniversaire mémorable, un cadeau impossible, une rencontre rare. Tout devient possible.',
+                },
+              ],
+            },
+            style: { background: 'dark' as any, paddingY: 'xl' },
+            visible: true,
+          },
+          {
+            // Témoignages éditoriaux — anonymes, style Quintessentially
+            type: 'testimonials',
+            variant: 'luxe-slider',
+            content: {
+              eyebrow: 'NOS MEMBRES',
+              title: 'Ce qu\'ils en disent.',
+              testimonials: [
+                {
+                  id: '1',
+                  quote: 'Une demande à 22h un samedi. Une réservation impossible. Réglé à minuit. Je ne sais pas comment ils font, et je ne veux pas savoir.',
+                  author: 'M., entrepreneur',
+                  role: 'Membre depuis 2 ans',
+                },
+                {
+                  id: '2',
+                  quote: 'Paris Private m\'a fait redécouvrir ma propre ville. Des lieux dont je n\'avais jamais entendu parler. Des soirées dont on parle encore.',
+                  author: 'C., dirigeante',
+                  role: 'Membre fondatrice',
+                },
+                {
+                  id: '3',
+                  quote: 'Le luxe, ce n\'est plus de payer cher. C\'est d\'avoir quelqu\'un qui anticipe. Mon lifestyle manager fait partie de ma vie.',
+                  author: 'A., investisseur',
+                  role: 'Membre depuis 18 mois',
+                },
+                {
+                  id: '4',
+                  quote: 'J\'ai adhéré pour les voyages. J\'y reste pour le service au quotidien. C\'est devenu indispensable.',
+                  author: 'L., avocate',
+                  role: 'Membre depuis 1 an',
+                },
+              ],
+            },
+            style: { background: 'dark' as any, paddingY: 'xl' },
+            visible: true,
+          },
+          {
+            // Comment ça marche — 3 étapes minimalistes
+            type: 'features',
+            variant: 'luxe-list',
+            content: {
+              eyebrow: 'LE PROCESSUS',
+              title: 'Trois étapes. Aucune friction.',
+              subtitle: '',
+              items: [
+                {
+                  id: '1',
+                  icon: '01',
+                  title: 'Votre demande',
+                  description: 'Vous formulez votre souhait — précis ou vague, urgent ou planifié. Aucune demande n\'est trop ambitieuse, aucun détail n\'est trop petit.',
+                },
+                {
+                  id: '2',
+                  icon: '02',
+                  title: 'Notre proposition',
+                  description: 'Sous 48 heures, votre lifestyle manager personnel revient vers vous avec une solution sur-mesure, plusieurs options, et toutes les informations utiles.',
+                },
+                {
+                  id: '3',
+                  icon: '03',
+                  title: 'Votre expérience',
+                  description: 'Nous orchestrons l\'ensemble. Vous n\'avez plus qu\'à vivre le moment. Nous restons disponibles à chaque instant.',
+                },
+              ],
+            },
+            style: { background: 'dark' as any, paddingY: 'xl' },
+            visible: true,
+          },
+          {
+            // Formulaire de demande
+            type: 'contact',
+            variant: 'zmr-with-info',
+            content: {
+              title: 'Demander une invitation',
+              subtitle: 'Paris Private fonctionne sur cooptation et candidature. Notre équipe étudie chaque demande personnellement et revient vers vous sous 48 heures.',
+              email: 'private@zmrmodels.com',
+              phone: '+33 1 42 00 00 00',
+              address: 'Sur invitation uniquement',
+              formTitle: 'Votre candidature',
+              formButtonLabel: 'Envoyer ma demande',
+            },
+            style: { background: 'dark' as any, paddingY: 'xl' },
+            visible: true,
+          },
+          {
+            type: 'site-footer',
+            variant: 'zmr-agency',
+            content: {
+              logo: 'ZMR',
+              copyright: `© ${year} ZMR Models Agency. All rights reserved.`,
+              columns: [{ id: '1', title: 'Legal', links: [{ id: '1', label: 'Mentions légales', href: '/mentions-legales' }, { id: '2', label: 'Politique de confidentialité', href: '/privacy' }, { id: '3', label: 'Conditions générales', href: '/terms' }] }],
+            },
+            style: { background: 'dark' as any, paddingY: 'none' },
+            visible: true,
+          },
+        ],
+      },
       // ── BLOG ──
       {
         slug: 'blog',
@@ -1218,8 +1410,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               logo: 'ZMR',
               links: [
                 { id: '1', label: 'All Models', href: '/explore' },
-                { id: '2', label: 'Events', href: '/events' },
-                { id: '3', label: 'Contact', href: '/contact' },
+                { id: '2', label: 'Paris Private', href: '/paris-private' },
+                { id: '3', label: 'Events', href: '/events' },
+                { id: '4', label: 'Contact', href: '/contact' },
               ],
               ctaLabel: 'Models Agency',
             },
@@ -1265,8 +1458,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               logo: 'ZMR',
               links: [
                 { id: '1', label: 'All Models', href: '/explore' },
-                { id: '2', label: 'Events', href: '/events' },
-                { id: '3', label: 'Contact', href: '/contact' },
+                { id: '2', label: 'Paris Private', href: '/paris-private' },
+                { id: '3', label: 'Events', href: '/events' },
+                { id: '4', label: 'Contact', href: '/contact' },
               ],
               ctaLabel: 'Models Agency',
             },
