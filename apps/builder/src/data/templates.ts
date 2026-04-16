@@ -1237,7 +1237,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             variant: 'luxe',
             content: {
               eyebrow: 'PARIS PRIVATE',
-              title: 'Le Paris que personne\nne vous montrera.',
+              title: 'Ce que personne\nne vous montrera.',
               subtitle: 'Une conciergerie discrète pour celles et ceux qui cherchent l\'introuvable. Sur invitation uniquement.',
               backgroundImage: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&q=85',
               primaryButton: { label: 'Demander une invitation', href: '#paris-private-form', variant: 'outline' as any },
@@ -1246,26 +1246,26 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             visible: true,
           },
           {
-            // Manifeste — un paragraphe éditorial dense + chiffre signature
+            // Manifeste — glassmorphism cards avec glow
             type: 'features',
-            variant: 'luxe-list',
+            variant: 'glass-grid',
             content: {
               eyebrow: 'NOTRE PROMESSE',
               title: 'Votre temps, préservé.\nVotre expérience, sur-mesure.\nVotre confort, absolu.',
-              subtitle: 'Paris Private est une conciergerie privée parisienne. Nous ouvrons les portes de ce que vous ne trouverez ni dans les guides, ni sur les plateformes : tables introuvables, lieux fermés au public, expériences qui n\'existent pas encore. Notre service est limité à un cercle restreint de membres. Chaque demande reçoit une réponse personnalisée sous 48 heures.',
+              subtitle: 'Paris Private est une conciergerie privée parisienne. Nous ouvrons les portes de ce que vous ne trouverez ni dans les guides, ni sur les plateformes : tables introuvables, lieux fermés au public, expériences qui n\'existent pas encore.',
               items: [
-                { id: '1', icon: '48h', title: 'Toute demande répondue', description: 'sous 48 heures, par votre lifestyle manager personnel.' },
-                { id: '2', icon: '100', title: 'Membres seulement', description: 'Nous limitons volontairement notre cercle pour préserver la qualité du service.' },
-                { id: '3', icon: '24/7', title: 'Disponibilité absolue', description: 'Une équipe dédiée à votre service, à toute heure, partout dans le monde.' },
+                { id: '1', icon: '48h', title: 'Réponse garantie sous 48h', description: 'Chaque demande est traitée personnellement par votre lifestyle manager dédié.' },
+                { id: '2', icon: '100', title: 'Cercle restreint de membres', description: 'Nous limitons volontairement notre adhésion pour préserver la qualité absolue du service.' },
+                { id: '3', icon: '24/7', title: 'Disponibilité absolue', description: 'Une équipe à votre service, à toute heure, partout dans le monde.' },
               ],
             },
             style: { background: 'dark' as any, paddingY: 'xl' },
             visible: true,
           },
           {
-            // Les 4 univers — grille éditoriale avec image, nom poétique, paragraphe
+            // Les 4 univers — accordéon horizontal qui s'agrandit au hover (effet wow)
             type: 'features',
-            variant: 'luxe-grid',
+            variant: 'braise-accordion',
             content: {
               eyebrow: 'LES UNIVERS',
               title: 'Quatre territoires d\'exception.',
@@ -1273,27 +1273,27 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
               items: [
                 {
                   id: 'nightlife',
-                  icon: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=85',
                   title: 'Nightlife',
                   description: 'Tables sans liste publique. Loges privées dans les clubs les plus fermés de la capitale. Soirées sur invitation.',
+                  image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&q=85',
                 },
                 {
                   id: 'gastronomy',
-                  icon: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=85',
                   title: 'Gastronomy',
                   description: 'Réservations dans les tables où l\'on n\'entre pas sans un nom. Dîners privés chez les chefs étoilés. Caves rares.',
+                  image: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1600&q=85',
                 },
                 {
                   id: 'private-stays',
-                  icon: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=85',
                   title: 'Private Stays',
                   description: 'Suites jamais commercialisées. Hôtels particuliers à Paris pour un soir ou une saison. Châteaux discrets en région.',
+                  image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1600&q=85',
                 },
                 {
                   id: 'bespoke',
-                  icon: 'https://images.unsplash.com/photo-1542401886-65d6c61db217?w=800&q=85',
                   title: 'Bespoke Experiences',
                   description: 'Une demande hors normes ? Un anniversaire mémorable, un cadeau impossible, une rencontre rare. Tout devient possible.',
+                  image: 'https://images.unsplash.com/photo-1542401886-65d6c61db217?w=1600&q=85',
                 },
               ],
             },
@@ -1301,9 +1301,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             visible: true,
           },
           {
-            // Témoignages éditoriaux — anonymes, style Quintessentially
+            // Témoignages — glassmorphism 3 colonnes (style JL Studio Parallax)
             type: 'testimonials',
-            variant: 'luxe-slider',
+            variant: 'jlstudio-parallax',
             content: {
               eyebrow: 'NOS MEMBRES',
               title: 'Ce qu\'ils en disent.',
