@@ -1538,6 +1538,34 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
           WebkitBackdropFilter: 'blur(20px)',
         }}
       >
+        {/* Close button (cross) — top right */}
+        <div
+          role="button"
+          onClick={toggleMenu}
+          style={{
+            position: 'absolute',
+            top: 'clamp(20px, 4vw, 40px)',
+            right: 'clamp(20px, 5vw, 60px)',
+            cursor: 'pointer',
+            zIndex: 10,
+            padding: '10px',
+          }}
+        >
+          <span style={{ width: '28px', height: '18px', position: 'relative', display: 'block' }}>
+            <span style={{
+              width: '28px', height: '2px', display: 'block', position: 'absolute',
+              backgroundColor: 'white',
+              top: '8px',
+              transform: 'rotate(45deg)',
+            }} />
+            <span style={{
+              width: '28px', height: '2px', display: 'block', position: 'absolute',
+              backgroundColor: 'white',
+              top: '8px',
+              transform: 'rotate(-45deg)',
+            }} />
+          </span>
+        </div>
 
         {/* Centered navigation links */}
         <nav style={{
@@ -1561,22 +1589,23 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
               style={{
                 fontSize: 'clamp(28px, 5vw, 48px)',
                 fontWeight: 300,
-                color: 'rgba(255,255,255,0.6)',
+                color: 'rgba(255,255,255,0.85)',
                 textDecoration: 'none',
                 padding: '10px 24px',
                 transition: 'color 0.3s, letter-spacing 0.3s',
                 display: 'block',
                 fontFamily: 'var(--font-heading, inherit)',
-                letterSpacing: '0.02em',
+                letterSpacing: '0.08em',
                 lineHeight: 1.3,
                 textAlign: 'center',
                 textTransform: 'uppercase',
+                fontStyle: 'italic',
                 transform: menuOpen ? 'translateY(0)' : 'translateY(30px)',
                 opacity: menuOpen ? 1 : 0,
                 transitionDelay: `${i * 0.06}s`,
               }}
-              onMouseEnter={(e) => { const t = e.currentTarget; t.style.color = 'var(--color-accent, #D4AF37)'; t.style.letterSpacing = '0.08em' }}
-              onMouseLeave={(e) => { const t = e.currentTarget; t.style.color = 'rgba(255,255,255,0.6)'; t.style.letterSpacing = '0.02em' }}
+              onMouseEnter={(e) => { const t = e.currentTarget; t.style.color = 'var(--color-accent, #D4AF37)'; t.style.letterSpacing = '0.15em' }}
+              onMouseLeave={(e) => { const t = e.currentTarget; t.style.color = 'rgba(255,255,255,0.85)'; t.style.letterSpacing = '0.08em' }}
             >
               {link.label}
             </a>
