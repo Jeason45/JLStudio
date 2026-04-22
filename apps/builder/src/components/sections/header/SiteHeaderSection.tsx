@@ -1456,17 +1456,17 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
 
   const toggleMenu = useCallback(() => setMenuOpen(prev => !prev), [])
 
-  // All menu links (include FAQ + Privacy Policy beyond the section links)
-  const menuLinks: { label: string; href: string }[] = [
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
-    { label: 'Property', href: '/property' },
-    { label: 'Agents', href: '/agents' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Contact', href: '/contact' },
-    { label: 'FAQ', href: '/faq' },
-    { label: 'Privacy Policy', href: '/privacy-policy' },
-  ]
+  // Use actual site links for the menu
+  const menuLinks: { label: string; href: string }[] = links.length > 0
+    ? links.map(l => ({ label: l.label, href: l.href }))
+    : [
+        { label: 'Home', href: '/' },
+        { label: 'About', href: '/about' },
+        { label: 'Property', href: '/property' },
+        { label: 'Agents', href: '/agents' },
+        { label: 'Blog', href: '/blog' },
+        { label: 'Contact', href: '/contact' },
+      ]
 
   const socials = [
     { label: 'Instagram', href: '#', icon: (
@@ -1671,11 +1671,11 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
                   style={{
-                    fontSize: i < 6 ? 'clamp(24px, 5vw, 40px)' : '18px',
-                    fontWeight: i < 6 ? 500 : 400,
-                    color: i < 6 ? 'white' : 'rgba(255,255,255,0.5)',
+                    fontSize: 'clamp(24px, 5vw, 40px)',
+                    fontWeight: 500,
+                    color: 'white',
                     textDecoration: 'none',
-                    padding: i < 6 ? '8px 0' : '4px 0',
+                    padding: '8px 0',
                     transition: 'color 0.3s, transform 0.3s',
                     display: 'block',
                     fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
@@ -1685,7 +1685,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
                     transitionDelay: `${i * 0.05}s`,
                   }}
                   onMouseEnter={(e) => { (e.target as HTMLElement).style.color = 'var(--color-accent, #c8a97e)' }}
-                  onMouseLeave={(e) => { (e.target as HTMLElement).style.color = i < 6 ? 'white' : 'rgba(255,255,255,0.5)' }}
+                  onMouseLeave={(e) => { (e.target as HTMLElement).style.color = 'white' }}
                 >
                   {link.label}
                 </a>
@@ -1734,8 +1734,8 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
 
               {/* CTA */}
               <a
-                {...elementProps(config.id, 'offCanvasCta', 'button', 'Get in Touch')}
-                href="#contact"
+                {...elementProps(config.id, 'offCanvasCta', 'button', ctaLabel || 'Contact')}
+                href={(config.content as Record<string, unknown>)?.ctaHref as string || '#contact'}
                 onClick={() => setMenuOpen(false)}
                 style={{
                   display: 'inline-flex',
@@ -1755,7 +1755,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#d4b88e' }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-accent, #c8a97e)' }}
               >
-                Get in touch
+                {ctaLabel || 'Contact'}
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </a>
             </div>
@@ -1772,8 +1772,8 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
             }}
           >
             <img
-              src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80"
-              alt="Luxury property"
+              src={((config.content as Record<string, unknown>)?.menuImage as string) || ((config.content as Record<string, unknown>)?.logoImage as string) || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80"}
+              alt=""
               style={{
                 width: '100%',
                 height: '100%',
