@@ -642,7 +642,7 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
                 </h2>
                 <p
                   {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
-                  style={{ fontSize: 16, lineHeight: '150%', color: 'var(--color-background, #e1e1e1)' }}
+                  style={{ fontSize: 16, lineHeight: '150%', color: 'var(--color-foreground, #e1e1e1)' }}
                 >
                   {slide.subtitle}
                 </p>

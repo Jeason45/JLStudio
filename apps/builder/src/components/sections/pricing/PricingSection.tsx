@@ -170,7 +170,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
           {/* Cards */}
           <div className={cn(
             'grid gap-6 items-start',
-            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : 'sm:grid-cols-3'
+            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : plans.length === 4 ? 'grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3'
           )}>
             {plans.map((plan, planIdx) => (
               <div
@@ -354,7 +354,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
 
           <div className={cn(
             'grid gap-6 items-start',
-            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : 'sm:grid-cols-3'
+            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : plans.length === 4 ? 'grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3'
           )}>
             {plans.map((plan, planIdx) => (
               <div
@@ -532,7 +532,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
 
           <div className={cn(
             'grid gap-8 items-start',
-            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : 'sm:grid-cols-3'
+            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : plans.length === 4 ? 'grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3'
           )}>
             {plans.map((plan, planIdx) => (
               <div
@@ -702,7 +702,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
 
           <div className={cn(
             'grid gap-6 items-start',
-            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : 'sm:grid-cols-3'
+            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : plans.length === 4 ? 'grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3'
           )}>
             {plans.map((plan, planIdx) => (
               <div
@@ -891,7 +891,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
 
           <div className={cn(
             'grid gap-6 items-start',
-            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : 'sm:grid-cols-3'
+            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : plans.length === 4 ? 'grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3'
           )}>
             {plans.map((plan, planIdx) => (
               <div
@@ -1097,7 +1097,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
 
           <div className={cn(
             'grid gap-6 items-start',
-            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : 'sm:grid-cols-3'
+            plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : plans.length === 4 ? 'grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3'
           )}>
             {plans.map((plan, planIdx) => (
               <div
