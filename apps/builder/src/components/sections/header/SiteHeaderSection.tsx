@@ -1484,7 +1484,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
         >
           {isLogoUrl(logo)
             // eslint-disable-next-line @next/next/no-img-element
-            ? <img src={logo} alt="Logo" style={{ height: '50px', width: 'auto', objectFit: 'contain' }} />
+            ? <img src={logo} alt="Logo" style={{ height: '64px', width: 'auto', objectFit: 'contain' }} />
             : <span>{logo}</span>
           }
         </div>
@@ -1503,20 +1503,24 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
             cursor: 'pointer',
           }}
         >
-          <span style={{ width: '28px', height: '18px', position: 'relative', display: 'block' }}>
+          <span style={{ width: '28px', height: '20px', position: 'relative', display: 'block' }}>
             <span style={{
               width: '28px', height: '2px', display: 'block', position: 'absolute',
               backgroundColor: 'white',
-              top: menuOpen ? '8px' : '2px',
+              left: 0,
+              top: menuOpen ? '9px' : '4px',
               transform: menuOpen ? 'rotate(45deg)' : 'rotate(0)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              transformOrigin: 'center',
+              transition: 'top 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             }} />
             <span style={{
               width: '28px', height: '2px', display: 'block', position: 'absolute',
               backgroundColor: 'white',
-              top: menuOpen ? '8px' : '14px',
+              left: 0,
+              top: menuOpen ? '9px' : '14px',
               transform: menuOpen ? 'rotate(-45deg)' : 'rotate(0)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              transformOrigin: 'center',
+              transition: 'top 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             }} />
           </span>
         </div>
@@ -1551,18 +1555,20 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
             padding: '10px',
           }}
         >
-          <span style={{ width: '28px', height: '18px', position: 'relative', display: 'block' }}>
+          <span style={{ width: '28px', height: '20px', position: 'relative', display: 'block' }}>
             <span style={{
               width: '28px', height: '2px', display: 'block', position: 'absolute',
               backgroundColor: 'white',
-              top: '8px',
+              left: 0, top: '9px',
               transform: 'rotate(45deg)',
+              transformOrigin: 'center',
             }} />
             <span style={{
               width: '28px', height: '2px', display: 'block', position: 'absolute',
               backgroundColor: 'white',
-              top: '8px',
+              left: 0, top: '9px',
               transform: 'rotate(-45deg)',
+              transformOrigin: 'center',
             }} />
           </span>
         </div>
@@ -1599,7 +1605,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
                 lineHeight: 1.3,
                 textAlign: 'center',
                 textTransform: 'uppercase',
-                fontStyle: 'italic',
+                fontStyle: 'normal',
                 transform: menuOpen ? 'translateY(0)' : 'translateY(30px)',
                 opacity: menuOpen ? 1 : 0,
                 transitionDelay: `${i * 0.06}s`,
