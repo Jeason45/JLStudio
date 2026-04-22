@@ -10,6 +10,7 @@ export async function middleware(req: NextRequest) {
     pathname === '/api/auth/login' ||
     pathname === '/api/auth/logout' ||
     pathname === '/api/auth/verify-2fa' ||
+    pathname === '/api/auth/reset-password' ||
     pathname.startsWith('/editor/')
   ) {
     return NextResponse.next();
