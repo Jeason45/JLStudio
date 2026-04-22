@@ -229,18 +229,16 @@ export function JlstudioProcessTimeline({
     return () => { ctx.revert() }
   }, [isMobile, isPreview, accent])
 
-  // Grid background nodes
-  const gridNodes = [
-    { top: '12%', left: '20%', delay: '0s', size: '3px' },
-    { top: '28%', left: '50%', delay: '1.5s', size: '4px' },
-    { top: '45%', left: '80%', delay: '0.8s', size: '3px' },
-    { top: '65%', left: '15%', delay: '2.2s', size: '4px' },
-    { top: '78%', left: '60%', delay: '0.4s', size: '3px' },
-    { top: '35%', left: '35%', delay: '3s', size: '2px' },
-    { top: '55%', left: '70%', delay: '1.8s', size: '3px' },
-    { top: '88%', left: '40%', delay: '2.8s', size: '2px' },
-    { top: '18%', left: '75%', delay: '1.2s', size: '3px' },
-    { top: '72%', left: '90%', delay: '0.6s', size: '2px' },
+  // Floating particles for ambient luxury feel
+  const particles = [
+    { top: '8%', left: '15%', delay: '0s', size: '2px', dur: '6s' },
+    { top: '22%', left: '78%', delay: '2s', size: '1.5px', dur: '8s' },
+    { top: '40%', left: '8%', delay: '1s', size: '1px', dur: '7s' },
+    { top: '55%', left: '85%', delay: '3s', size: '2px', dur: '9s' },
+    { top: '70%', left: '25%', delay: '1.5s', size: '1.5px', dur: '6.5s' },
+    { top: '85%', left: '65%', delay: '0.5s', size: '1px', dur: '8s' },
+    { top: '15%', left: '55%', delay: '4s', size: '1.5px', dur: '7s' },
+    { top: '60%', left: '45%', delay: '2.5s', size: '1px', dur: '10s' },
   ]
 
   return (
@@ -253,49 +251,38 @@ export function JlstudioProcessTimeline({
         clipPath: 'inset(0)',
       }}
     >
-      {/* Fixed grid background — stays immobile while content scrolls over it */}
+      {/* Elegant ambient background — subtle radial glows + floating particles */}
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-        {/* Grid pattern */}
+        {/* Central radial glow */}
         <div className="absolute inset-0" style={{
-          backgroundImage: `
-            linear-gradient(${accent}10 1px, transparent 1px),
-            linear-gradient(90deg, ${accent}10 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px',
+          background: `radial-gradient(ellipse 60% 50% at 50% 40%, ${accent}08 0%, transparent 70%)`,
         }} />
-        {/* Glowing nodes */}
+        {/* Secondary offset glow */}
+        <div className="absolute inset-0" style={{
+          background: `radial-gradient(ellipse 40% 35% at 30% 60%, ${accent}06 0%, transparent 60%)`,
+        }} />
+        {/* Floating particles — subtle, slow, organic */}
         <div className="absolute inset-0 overflow-hidden">
-          {gridNodes.map((node, i) => (
+          {particles.map((p, i) => (
             <div key={i} className="absolute rounded-full" style={{
-              top: node.top, left: node.left,
-              width: node.size, height: node.size,
+              top: p.top, left: p.left,
+              width: p.size, height: p.size,
               background: accent,
-              boxShadow: `0 0 8px 2px ${accent}99, 0 0 20px 6px ${accent}33`,
-              animation: `pulse-node 3s ease-in-out ${node.delay} infinite`,
+              opacity: 0.15,
+              animation: `float-particle ${p.dur} ease-in-out ${p.delay} infinite`,
             }} />
           ))}
         </div>
-        {/* Scan line */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute left-0 right-0 h-[1px]" style={{
-            background: `linear-gradient(90deg, transparent, ${accent}26, transparent)`,
-            animation: 'scan-line 8s ease-in-out infinite',
-          }} />
-        </div>
         {/* Top/bottom fade */}
         <div className="absolute inset-0" style={{
-          background: 'linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.9) 100%)',
+          background: 'linear-gradient(180deg, rgba(0,0,0,0.85) 0%, transparent 12%, transparent 88%, rgba(0,0,0,0.85) 100%)',
         }} />
       </div>
 
       <style>{`
-        @keyframes pulse-node {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.8); }
-        }
-        @keyframes scan-line {
-          0% { top: -2%; }
-          100% { top: 102%; }
+        @keyframes float-particle {
+          0%, 100% { opacity: 0.1; transform: translateY(0) scale(1); }
+          50% { opacity: 0.3; transform: translateY(-20px) scale(1.5); }
         }
       `}</style>
 

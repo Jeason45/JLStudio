@@ -1159,7 +1159,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
         {...elementProps(config.id, 'wrapper', 'container', 'CTA Section')}
         style={{
           position: 'relative',
-          color: 'var(--color-background, #e1e1e1)',
+          color: textColor ?? 'var(--color-foreground, #e1e1e1)',
           zIndex: 2,
           // Tall section: the extra height is the "travel distance" for the sticky text
           minHeight: isPreview ? '180vh' : '100vh',
@@ -1218,7 +1218,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
                   lineHeight: '150%',
                   flex: '0 40%',
                   maxWidth: 130,
-                  color: 'var(--color-background, #e1e1e1)',
+                  color: textColor ?? 'var(--color-foreground, #e1e1e1)',
                   whiteSpace: 'pre-line',
                 }}
               >
@@ -1252,7 +1252,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
                     backgroundColor: 'rgba(158,158,158,0.6)',
                     backdropFilter: 'blur(15px)',
                     WebkitBackdropFilter: 'blur(15px)',
-                    color: 'var(--color-background, #e1e1e1)',
+                    color: textColor ?? 'var(--color-foreground, #e1e1e1)',
                     borderRadius: 4,
                     paddingLeft: 30,
                     paddingRight: 30,
