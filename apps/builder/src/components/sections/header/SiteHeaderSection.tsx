@@ -6,7 +6,7 @@ import { Menu, Search, ShoppingBag, User, X } from 'lucide-react'
 import { elementProps } from '@/lib/elementHelpers'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { renderLogo } from '@/components/sections/_utils'
+import { renderLogo, isLogoUrl } from '@/components/sections/_utils'
 
 export function SiteHeaderSection({ config }: { config: SectionConfig }) {
   const content = (config.content ?? {}) as Partial<SiteHeaderContent>
@@ -1480,9 +1480,13 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
         <div
           {...elementProps(config.id, 'logo', 'image')}
           className="text-white tracking-wide"
-          style={{ maxWidth: '160px', fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)' }}
+          style={{ fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)' }}
         >
-          {renderLogo(logo, undefined, '!h-11 md:!h-14 w-auto')}
+          {isLogoUrl(logo)
+            // eslint-disable-next-line @next/next/no-img-element
+            ? <img src={logo} alt="Logo" style={{ height: '50px', width: 'auto', objectFit: 'contain' }} />
+            : <span>{logo}</span>
+          }
         </div>
 
         {/* RIGHT — Menu button */}
