@@ -1462,11 +1462,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: `
-        @media (max-width: 768px) {
-          .brixsa-menu-label { display: none !important; }
-        }
-      ` }} />
+      <style dangerouslySetInnerHTML={{ __html: `` }} />
       {/* ─── NAVBAR ─── */}
       <header
         {...elementProps(config.id, 'wrapper', 'container', 'Header')}
@@ -1510,10 +1506,19 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
             whiteSpace: 'nowrap',
           }}
         >
-          <span className="brixsa-menu-label" {...elementProps(config.id, 'menuLabel', 'text', 'Menu Label')}>Menu</span>
-          <span className={cn('flex flex-col items-center')} style={{ gap: '3px' }}>
-            <span className="bg-white" style={{ width: '18px', height: '2px', display: 'block' }} />
-            <span className="bg-white" style={{ width: '18px', height: '2px', display: 'block' }} />
+          <span className={cn('flex flex-col items-center')} style={{ width: '20px', height: '14px', position: 'relative' }}>
+            <span className="bg-white" style={{
+              width: '20px', height: '2px', display: 'block', position: 'absolute',
+              top: menuOpen ? '6px' : '2px',
+              transform: menuOpen ? 'rotate(45deg)' : 'rotate(0)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }} />
+            <span className="bg-white" style={{
+              width: '20px', height: '2px', display: 'block', position: 'absolute',
+              top: menuOpen ? '6px' : '10px',
+              transform: menuOpen ? 'rotate(-45deg)' : 'rotate(0)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }} />
           </span>
         </div>
       </header>
@@ -1534,39 +1539,6 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
           WebkitBackdropFilter: 'blur(20px)',
         }}
       >
-        {/* Top bar — Logo + Close */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: 'clamp(20px, 5vw, 60px)',
-          paddingTop: '24px',
-          paddingBottom: '24px',
-        }}>
-          <div style={{ fontSize: '20px', fontWeight: 600, color: 'white', fontFamily: 'var(--font-heading, inherit)' }}>
-            {renderLogo(logo)}
-          </div>
-          <div
-            {...elementProps(config.id, 'closeButton', 'button', 'Close Button')}
-            role="button"
-            onClick={toggleMenu}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              color: 'white',
-              fontSize: '16px',
-              fontWeight: 500,
-              cursor: 'pointer',
-              padding: '8px 16px',
-              borderRadius: '4px',
-              border: '1px solid rgba(255,255,255,0.15)',
-            }}
-          >
-            <span>Fermer</span>
-            <X size={18} strokeWidth={2} />
-          </div>
-        </div>
 
         {/* Centered navigation links */}
         <nav style={{
