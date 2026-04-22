@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Styles Corporate — Audit JL Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+  body { background: #f0f0f0; color: #1a1a1a; padding: 40px 20px; }
+  h1.main { text-align: center; font-size: 28px; font-weight: 800; margin-bottom: 6px; color: #1a1a1a; }
+  p.sub { text-align: center; color: #888; margin-bottom: 50px; font-size: 14px; }
+  .style-block { max-width: 1280px; margin: 0 auto 80px; }
+  .style-label { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .style-label .num { background: #1a1a1a; color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+  .style-label h2 { font-size: 20px; font-weight: 700; color: #1a1a1a; }
+  .style-label .tag { font-size: 12px; color: #888; padding: 4px 10px; border: 1px solid #ddd; border-radius: 99px; }
+  .slide { aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; position: relative; box-shadow: 0 8px 40px rgba(0,0,0,0.12); }
+
+  /* ============ STYLE A — BLANC PREMIUM (McKinsey / Deloitte) ============ */
+  .sA {
+    background: #ffffff;
+    padding: 70px 80px;
+  }
+  .sA .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #1a56db, #7c3aed); }
+  .sA .section { font-size: 11px; color: #6b7280; letter-spacing: 3px; font-weight: 600; text-transform: uppercase; margin-bottom: 16px; }
+  .sA h3 { font-size: 42px; font-weight: 800; color: #111827; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 50px; }
+  .sA h3 span { color: #1a56db; }
+  .sA .gauges { display: flex; gap: 24px; }
+  .sA .gauge { flex: 1; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 28px; text-align: center; }
+  .sA .gauge .value { font-size: 48px; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+  .sA .gauge .value.bad { color: #dc2626; }
+  .sA .gauge .value.ok { color: #f59e0b; }
+  .sA .gauge .value.good { color: #16a34a; }
+  .sA .gauge .bar { height: 4px; border-radius: 2px; background: #e5e7eb; margin: 12px 0; }
+  .sA .gauge .bar-fill { height: 100%; border-radius: 2px; }
+  .sA .gauge .label { font-size: 11px; color: #6b7280; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+  .sA .footer { position: absolute; bottom: 30px; left: 80px; right: 80px; display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 14px; }
+
+  /* ============ STYLE B — BLEU MARINE CORPORATE (Accenture / IBM) ============ */
+  .sB {
+    background: #0f172a;
+    padding: 70px 80px;
+    color: #fff;
+  }
+  .sB .accent-bar { position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: linear-gradient(180deg, #3b82f6, #06b6d4); }
+  .sB .section { font-size: 11px; color: #64748b; letter-spacing: 3px; font-weight: 600; text-transform: uppercase; margin-bottom: 16px; }
+  .sB h3 { font-size: 40px; font-weight: 700; color: #f1f5f9; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 50px; }
+  .sB h3 span { color: #3b82f6; }
+  .sB .gauges { display: flex; gap: 20px; }
+  .sB .gauge { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 28px; }
+  .sB .gauge .value { font-size: 44px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+  .sB .gauge .value.bad { color: #f87171; }
+  .sB .gauge .value.ok { color: #fbbf24; }
+  .sB .gauge .value.good { color: #34d399; }
+  .sB .gauge .bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.1); margin: 12px 0; }
+  .sB .gauge .bar-fill { height: 100%; border-radius: 2px; }
+  .sB .gauge .label { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+  .sB .footer { position: absolute; bottom: 30px; left: 80px; right: 80px; display: flex; justify-content: space-between; font-size: 10px; color: #475569; border-top: 1px solid #1e293b; padding-top: 14px; }
+
+  /* ============ STYLE C — GRIS CLAIR ELEGANT (Apple / Stripe reports) ============ */
+  .sC {
+    background: #fafafa;
+    padding: 80px 90px;
+  }
+  .sC .section { font-size: 12px; color: #a3a3a3; letter-spacing: 2px; font-weight: 500; text-transform: uppercase; margin-bottom: 20px; }
+  .sC h3 { font-size: 44px; font-weight: 300; color: #171717; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 50px; }
+  .sC h3 b { font-weight: 700; }
+  .sC .gauges { display: flex; gap: 32px; }
+  .sC .gauge { flex: 1; border-left: 3px solid #e5e5e5; padding-left: 24px; }
+  .sC .gauge .value { font-size: 56px; font-weight: 200; letter-spacing: -0.04em; line-height: 1; margin-bottom: 4px; }
+  .sC .gauge .value.bad { color: #dc2626; }
+  .sC .gauge .value.ok { color: #d97706; }
+  .sC .gauge .value.good { color: #16a34a; }
+  .sC .gauge .sub { font-size: 12px; color: #a3a3a3; margin-bottom: 10px; }
+  .sC .gauge .label { font-size: 12px; color: #525252; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+  .sC .footer { position: absolute; bottom: 40px; left: 90px; font-size: 11px; color: #a3a3a3; }
+
+  /* ============ STYLE D — SPLIT DARK/WHITE (PwC / EY style) ============ */
+  .sD {
+    background: #ffffff;
+    padding: 0;
+    display: flex;
+  }
+  .sD .left {
+    width: 38%;
+    background: #111827;
+    color: #fff;
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .sD .left .section { font-size: 10px; color: #6b7280; letter-spacing: 3px; font-weight: 600; text-transform: uppercase; }
+  .sD .left h3 { font-size: 32px; font-weight: 700; line-height: 1.2; margin-top: 20px; }
+  .sD .left h3 span { color: #3b82f6; }
+  .sD .left .logo { font-size: 12px; color: #4b5563; }
+  .sD .right {
+    flex: 1;
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .sD .right .gauges { display: flex; flex-direction: column; gap: 20px; }
+  .sD .right .gauge { display: flex; align-items: center; gap: 20px; padding: 18px 24px; background: #f9fafb; border-radius: 10px; border: 1px solid #f3f4f6; }
+  .sD .right .gauge .value { font-size: 36px; font-weight: 800; min-width: 80px; }
+  .sD .right .gauge .value.bad { color: #dc2626; }
+  .sD .right .gauge .value.ok { color: #d97706; }
+  .sD .right .gauge .value.good { color: #16a34a; }
+  .sD .right .gauge .info { flex: 1; }
+  .sD .right .gauge .label { font-size: 13px; font-weight: 600; color: #111827; }
+  .sD .right .gauge .desc { font-size: 11px; color: #6b7280; margin-top: 2px; }
+  .sD .right .gauge .bar { flex: none; width: 120px; height: 6px; background: #e5e7eb; border-radius: 3px; }
+  .sD .right .gauge .bar-fill { height: 100%; border-radius: 3px; }
+
+  /* ============ STYLE E — NOIR/OR LUXE (Cartier / premium agency) ============ */
+  .sE {
+    background: #0a0a0a;
+    padding: 70px 80px;
+    color: #fff;
+  }
+  .sE .gold-line { position: absolute; top: 0; left: 80px; right: 80px; height: 1px; background: linear-gradient(90deg, transparent, #c9a96e, transparent); }
+  .sE .section { font-size: 11px; color: #706850; letter-spacing: 4px; font-weight: 600; text-transform: uppercase; margin-bottom: 16px; }
+  .sE h3 { font-size: 42px; font-weight: 300; color: #f5f0e8; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 50px; }
+  .sE h3 b { font-weight: 700; color: #c9a96e; }
+  .sE .gauges { display: flex; gap: 24px; }
+  .sE .gauge { flex: 1; border: 1px solid #2a2520; border-radius: 8px; padding: 28px; text-align: center; background: rgba(201,169,110,0.03); }
+  .sE .gauge .value { font-size: 48px; font-weight: 300; line-height: 1; margin-bottom: 6px; letter-spacing: -0.03em; }
+  .sE .gauge .value.bad { color: #e57373; }
+  .sE .gauge .value.ok { color: #c9a96e; }
+  .sE .gauge .value.good { color: #81c784; }
+  .sE .gauge .label { font-size: 10px; color: #706850; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; margin-top: 12px; }
+  .sE .footer { position: absolute; bottom: 30px; left: 80px; right: 80px; display: flex; justify-content: space-between; font-size: 10px; color: #4a4235; border-top: 1px solid #1f1c17; padding-top: 14px; }
+
+  /* ============ STYLE F — BLANC GÉOMÉTRIQUE (Notion / Linear reports) ============ */
+  .sF {
+    background: #ffffff;
+    padding: 70px 80px;
+    position: relative;
+  }
+  .sF::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(59,130,246,0.06), transparent 70%);
+    pointer-events: none;
+  }
+  .sF .section { font-size: 11px; color: #9ca3af; letter-spacing: 3px; font-weight: 600; text-transform: uppercase; margin-bottom: 16px; }
+  .sF h3 { font-size: 38px; font-weight: 700; color: #111827; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 50px; }
+  .sF h3 span { background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .sF .gauges { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .sF .gauge { padding: 24px; border-radius: 12px; border: 1px solid #f3f4f6; background: #fafafa; }
+  .sF .gauge .value { font-size: 40px; font-weight: 800; line-height: 1; margin-bottom: 8px; }
+  .sF .gauge .value.bad { color: #ef4444; }
+  .sF .gauge .value.ok { color: #f59e0b; }
+  .sF .gauge .value.good { color: #22c55e; }
+  .sF .gauge .progress { height: 4px; background: #f3f4f6; border-radius: 2px; margin-bottom: 12px; overflow: hidden; }
+  .sF .gauge .progress-fill { height: 100%; border-radius: 2px; }
+  .sF .gauge .label { font-size: 11px; color: #6b7280; font-weight: 600; }
+  .sF .footer { position: absolute; bottom: 30px; left: 80px; right: 80px; display: flex; justify-content: space-between; font-size: 10px; color: #d1d5db; }
+</style>
+</head>
+<body>
+  <h1 class="main">Styles Corporate — choisis ta direction</h1>
+  <p class="sub">Slide "Verdict / Scores" — même contenu, 6 directions visuelles différentes</p>
+
+  <!-- ============ STYLE A ============ -->
+  <div class="style-block">
+    <div class="style-label">
+      <div class="num">A</div>
+      <h2>Blanc Premium</h2>
+      <span class="tag">McKinsey · Deloitte · Bain — Le standard Big 4 consulting</span>
+    </div>
+    <div class="slide sA">
+      <div class="top-bar"></div>
+      <div class="section">SECTION 02 / LE VERDICT</div>
+      <h3>Votre site obtient un score de <span>43/100</span>.</h3>
+      <div class="gauges">
+        <div class="gauge"><div class="value bad">23</div><div class="bar"><div class="bar-fill" style="width:23%;background:#dc2626;"></div></div><div class="label">Rapidité</div></div>
+        <div class="gauge"><div class="value ok">68</div><div class="bar"><div class="bar-fill" style="width:68%;background:#f59e0b;"></div></div><div class="label">Mobile</div></div>
+        <div class="gauge"><div class="value bad">34</div><div class="bar"><div class="bar-fill" style="width:34%;background:#dc2626;"></div></div><div class="label">Visibilité</div></div>
+        <div class="gauge"><div class="value ok">45</div><div class="bar"><div class="bar-fill" style="width:45%;background:#f59e0b;"></div></div><div class="label">Confiance</div></div>
+        <div class="gauge"><div class="value ok">69</div><div class="bar"><div class="bar-fill" style="width:69%;background:#f59e0b;"></div></div><div class="label">Conversion</div></div>
+      </div>
+      <div class="footer"><span>JL Studio — jlstudio.dev</span><span>Audit Web · Le Coiffeur de la Cour · Bordeaux</span><span>Avril 2026</span></div>
+    </div>
+  </div>
+
+  <!-- ============ STYLE B ============ -->
+  <div class="style-block">
+    <div class="style-label">
+      <div class="num">B</div>
+      <h2>Bleu Marine Corporate</h2>
+      <span class="tag">Accenture · IBM · Capgemini — Autorité et sérieux tech</span>
+    </div>
+    <div class="slide sB">
+      <div class="accent-bar"></div>
+      <div class="section">SECTION 02 / LE VERDICT</div>
+      <h3>Votre site obtient un score de <span>43/100</span>.</h3>
+      <div class="gauges">
+        <div class="gauge"><div class="value bad">23</div><div class="bar"><div class="bar-fill" style="width:23%;background:#f87171;"></div></div><div class="label">Rapidité</div></div>
+        <div class="gauge"><div class="value ok">68</div><div class="bar"><div class="bar-fill" style="width:68%;background:#fbbf24;"></div></div><div class="label">Mobile</div></div>
+        <div class="gauge"><div class="value bad">34</div><div class="bar"><div class="bar-fill" style="width:34%;background:#f87171;"></div></div><div class="label">Visibilité</div></div>
+        <div class="gauge"><div class="value ok">45</div><div class="bar"><div class="bar-fill" style="width:45%;background:#fbbf24;"></div></div><div class="label">Confiance</div></div>
+        <div class="gauge"><div class="value ok">69</div><div class="bar"><div class="bar-fill" style="width:69%;background:#fbbf24;"></div></div><div class="label">Conversion</div></div>
+      </div>
+      <div class="footer"><span>JL Studio — jlstudio.dev</span><span>Audit Web · Le Coiffeur de la Cour · Bordeaux</span><span>Avril 2026</span></div>
+    </div>
+  </div>
+
+  <!-- ============ STYLE C ============ -->
+  <div class="style-block">
+    <div class="style-label">
+      <div class="num">C</div>
+      <h2>Gris Clair Élégant</h2>
+      <span class="tag">Apple · Stripe · Aéré · Editorial · Minimal chic</span>
+    </div>
+    <div class="slide sC">
+      <div class="section">Section 02 · Le verdict</div>
+      <h3>Votre site obtient un score de <b>43/100</b>.</h3>
+      <div class="gauges">
+        <div class="gauge"><div class="value bad">23</div><div class="sub">/100</div><div class="label">Rapidité</div></div>
+        <div class="gauge"><div class="value ok">68</div><div class="sub">/100</div><div class="label">Mobile</div></div>
+        <div class="gauge"><div class="value bad">34</div><div class="sub">/100</div><div class="label">Visibilité</div></div>
+        <div class="gauge"><div class="value ok">45</div><div class="sub">/100</div><div class="label">Confiance</div></div>
+        <div class="gauge"><div class="value ok">69</div><div class="sub">/100</div><div class="label">Conversion</div></div>
+      </div>
+      <div class="footer">JL Studio — jlstudio.dev · Avril 2026</div>
+    </div>
+  </div>
+
+  <!-- ============ STYLE D ============ -->
+  <div class="style-block">
+    <div class="style-label">
+      <div class="num">D</div>
+      <h2>Split Dark / White</h2>
+      <span class="tag">PwC · EY · Cabinet d'audit — Bi-zone, structuré, sérieux</span>
+    </div>
+    <div class="slide sD">
+      <div class="left">
+        <div>
+          <div class="section">SECTION 02</div>
+          <h3>Le <span>verdict</span> de votre audit.</h3>
+          <p style="font-size:13px; color:#9ca3af; line-height:1.6; margin-top:20px;">Score global basé sur 30 critères analysés automatiquement. Chaque catégorie est pondérée selon son impact sur votre business.</p>
+        </div>
+        <div class="logo">JL Studio · jlstudio.dev</div>
+      </div>
+      <div class="right">
+        <div class="gauges">
+          <div class="gauge"><div class="value bad">23</div><div class="info"><div class="label">Rapidité</div><div class="desc">Temps de chargement et performance</div></div><div class="bar"><div class="bar-fill" style="width:23%;background:#dc2626;"></div></div></div>
+          <div class="gauge"><div class="value ok">68</div><div class="info"><div class="label">Mobile</div><div class="desc">Expérience sur smartphone</div></div><div class="bar"><div class="bar-fill" style="width:68%;background:#d97706;"></div></div></div>
+          <div class="gauge"><div class="value bad">34</div><div class="info"><div class="label">Visibilité Google</div><div class="desc">Référencement et positionnement</div></div><div class="bar"><div class="bar-fill" style="width:34%;background:#dc2626;"></div></div></div>
+          <div class="gauge"><div class="value ok">45</div><div class="info"><div class="label">Confiance</div><div class="desc">Sécurité et crédibilité</div></div><div class="bar"><div class="bar-fill" style="width:45%;background:#d97706;"></div></div></div>
+          <div class="gauge"><div class="value ok">69</div><div class="info"><div class="label">Conversion</div><div class="desc">Transformation visiteurs → clients</div></div><div class="bar"><div class="bar-fill" style="width:69%;background:#d97706;"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STYLE E ============ -->
+  <div class="style-block">
+    <div class="style-label">
+      <div class="num">E</div>
+      <h2>Noir & Or Luxe</h2>
+      <span class="tag">Cartier · LVMH · Agence premium — Ultra luxe, exclusif</span>
+    </div>
+    <div class="slide sE">
+      <div class="gold-line"></div>
+      <div class="section">SECTION 02 / LE VERDICT</div>
+      <h3>Votre site obtient un score de <b>43/100</b>.</h3>
+      <div class="gauges">
+        <div class="gauge"><div class="value bad">23</div><div class="label">Rapidité</div></div>
+        <div class="gauge"><div class="value ok">68</div><div class="label">Mobile</div></div>
+        <div class="gauge"><div class="value bad">34</div><div class="label">Visibilité</div></div>
+        <div class="gauge"><div class="value ok">45</div><div class="label">Confiance</div></div>
+        <div class="gauge"><div class="value ok">69</div><div class="label">Conversion</div></div>
+      </div>
+      <div class="footer"><span>JL Studio — jlstudio.dev</span><span>Avril 2026</span></div>
+    </div>
+  </div>
+
+  <!-- ============ STYLE F ============ -->
+  <div class="style-block">
+    <div class="style-label">
+      <div class="num">F</div>
+      <h2>Blanc Géométrique</h2>
+      <span class="tag">Notion · Linear · Vercel reports — Tech moderne, clean, data</span>
+    </div>
+    <div class="slide sF">
+      <div class="section">SECTION 02 / LE VERDICT</div>
+      <h3>Votre site obtient un score de <span>43/100</span>.</h3>
+      <div class="gauges">
+        <div class="gauge"><div class="value bad">23</div><div class="progress"><div class="progress-fill" style="width:23%;background:linear-gradient(90deg,#ef4444,#f87171);"></div></div><div class="label">Rapidité</div></div>
+        <div class="gauge"><div class="value ok">68</div><div class="progress"><div class="progress-fill" style="width:68%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div><div class="label">Mobile</div></div>
+        <div class="gauge"><div class="value bad">34</div><div class="progress"><div class="progress-fill" style="width:34%;background:linear-gradient(90deg,#ef4444,#f87171);"></div></div><div class="label">Visibilité</div></div>
+        <div class="gauge"><div class="value ok">45</div><div class="progress"><div class="progress-fill" style="width:45%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div><div class="label">Confiance</div></div>
+        <div class="gauge"><div class="value ok">69</div><div class="progress"><div class="progress-fill" style="width:69%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div><div class="label">Conversion</div></div>
+      </div>
+      <div class="footer"><span>JL Studio — jlstudio.dev</span><span>Audit Web · Le Coiffeur de la Cour · Bordeaux · Avril 2026</span></div>
+    </div>
+  </div>
+
+</body>
+</html>

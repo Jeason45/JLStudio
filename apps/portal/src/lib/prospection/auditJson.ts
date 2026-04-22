@@ -74,11 +74,21 @@ export interface AuditReport {
     severity: Severity
   }>
 
-  // Estimated customer loss
+  // Estimated customer loss + financial impact
   estimatedLoss: {
-    count: string     // "~15-20"
-    unit: string      // "clients potentiels/mois"
-    phrase: string    // "~15-20 clients potentiels/mois"
+    count: string           // "~15-20"
+    unit: string            // "clients potentiels/mois"
+    phrase: string          // "~15-20 clients potentiels/mois"
+    avgTicket: number       // ticket moyen estimé (€)
+    monthlyLoss: string     // "~675-900€"
+    annualLoss: string      // "~8 100-10 800€"
+  }
+
+  // Unsplash images adapted to sector
+  sectorImages: {
+    phone: string           // person on phone searching
+    modernBusiness: string  // modern version of this business type
+    happyClient: string     // satisfied client
   }
 
   // Google visibility
@@ -555,11 +565,62 @@ export function generateAuditReport(prospect: any, auditData: any, sessionQuery?
     criteria,
     topProblems,
 
-    estimatedLoss: {
-      count: lossCount,
-      unit: lossUnit,
-      phrase: `${lossCount} ${lossUnit}`,
-    },
+    estimatedLoss: (() => {
+      // Ticket moyen par secteur (estimation conservatrice)
+      const avgTickets: Record<string, number> = {
+        coiffeur: 45, restaurant: 28, artisan: 180, commerce: 35, sante: 50, immobilier: 3000, default: 50,
+      }
+      const ticket = avgTickets[sector] || avgTickets.default
+      // Parse loss count range
+      const nums = lossCount.replace('~', '').split('-').map(Number)
+      const lowLoss = (nums[0] || 10) * ticket
+      const highLoss = (nums[1] || nums[0] || 20) * ticket
+      return {
+        count: lossCount,
+        unit: lossUnit,
+        phrase: `${lossCount} ${lossUnit}`,
+        avgTicket: ticket,
+        monthlyLoss: `~${Math.round(lowLoss).toLocaleString('fr-FR')}-${Math.round(highLoss).toLocaleString('fr-FR')}€`,
+        annualLoss: `~${Math.round(lowLoss * 12).toLocaleString('fr-FR')}-${Math.round(highLoss * 12).toLocaleString('fr-FR')}€`,
+      }
+    })(),
+
+    // Unsplash images adapted to sector
+    sectorImages: (() => {
+      const images: Record<string, { phone: string; modernBusiness: string; happyClient: string }> = {
+        coiffeur: {
+          phone: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+          modernBusiness: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
+          happyClient: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80',
+        },
+        restaurant: {
+          phone: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+          modernBusiness: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80',
+          happyClient: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+        },
+        artisan: {
+          phone: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+          modernBusiness: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80',
+          happyClient: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&q=80',
+        },
+        sante: {
+          phone: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+          modernBusiness: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&q=80',
+          happyClient: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80',
+        },
+        immobilier: {
+          phone: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+          modernBusiness: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80',
+          happyClient: 'https://images.unsplash.com/photo-1560520031-3a4dc4e9de0c?w=800&q=80',
+        },
+        commerce: {
+          phone: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+          modernBusiness: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80',
+          happyClient: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80',
+        },
+      }
+      return images[sector] || images.commerce
+    })(),
 
     googleVisibility,
 
