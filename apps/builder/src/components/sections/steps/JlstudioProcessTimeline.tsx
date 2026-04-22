@@ -341,7 +341,7 @@ export function JlstudioProcessTimeline({
         {/* Steps */}
         {items.map((item, i) => {
           const isLeft = i % 2 === 0
-          const stepNumber = String(i + 1).padStart(2, '0')
+          const stepNumber = item.badge || String(i + 1).padStart(2, '0')
 
           return (
             <div key={item.id} data-step className="relative py-16 md:py-24 lg:py-28 xl:py-32">
