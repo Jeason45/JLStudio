@@ -1466,11 +1466,11 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
       {/* ─── NAVBAR ─── */}
       <header
         {...elementProps(config.id, 'wrapper', 'container', 'Header')}
-        className={cn('fixed top-0 left-0 w-full flex items-center justify-between')}
+        className={cn('absolute top-0 left-0 w-full flex items-center justify-between')}
         style={{
-          zIndex: 10000,
+          zIndex: 888,
           backgroundColor: 'transparent',
-          minHeight: '72px',
+          minHeight: '80px',
           paddingLeft: 'clamp(20px, 5vw, 60px)',
           paddingRight: 'clamp(20px, 5vw, 60px)',
           fontFamily: 'var(--font-body, inherit)',
@@ -1480,20 +1480,16 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
         <div
           {...elementProps(config.id, 'logo', 'image')}
           className="text-white tracking-wide"
-          style={{
-            fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)',
-            opacity: menuOpen ? 0 : 1,
-            transition: 'opacity 0.3s ease',
-          }}
+          style={{ fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)' }}
         >
           {isLogoUrl(logo)
             // eslint-disable-next-line @next/next/no-img-element
-            ? <img src={logo} alt="Logo" style={{ height: '70px', width: 'auto', objectFit: 'contain' }} />
+            ? <img src={logo} alt="Logo" style={{ height: '70px', width: 'auto', objectFit: 'contain', display: 'block' }} />
             : <span>{logo}</span>
           }
         </div>
 
-        {/* RIGHT — Menu button */}
+        {/* RIGHT — Burger button */}
         <div
           {...elementProps(config.id, 'ctaLabel', 'button')}
           role="button"
@@ -1511,19 +1507,13 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
             <span style={{
               width: '28px', height: '2px', display: 'block', position: 'absolute',
               backgroundColor: 'white',
-              left: 0,
-              top: menuOpen ? '9px' : '4px',
-              transform: menuOpen ? 'rotate(45deg)' : 'rotate(0)',
-              transformOrigin: 'center',
+              left: 0, top: '4px',
               transition: 'top 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             }} />
             <span style={{
               width: '28px', height: '2px', display: 'block', position: 'absolute',
               backgroundColor: 'white',
-              left: 0,
-              top: menuOpen ? '9px' : '14px',
-              transform: menuOpen ? 'rotate(-45deg)' : 'rotate(0)',
-              transformOrigin: 'center',
+              left: 0, top: '14px',
               transition: 'top 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             }} />
           </span>
@@ -1536,7 +1526,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
         style={{
           position: 'fixed',
           inset: 0,
-          zIndex: 9990,
+          zIndex: 9999,
           visibility: menuOpen ? 'visible' : 'hidden',
           opacity: menuOpen ? 1 : 0,
           transition: 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s',
@@ -1546,7 +1536,40 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
           WebkitBackdropFilter: 'blur(20px)',
         }}
       >
-        {/* Close is handled by the header burger button (fixed, z-index above overlay) */}
+        {/* Top bar — mirrors header layout for exact cross alignment */}
+        <div style={{
+          position: 'absolute',
+          top: 0, left: 0, right: 0,
+          minHeight: '80px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          paddingLeft: 'clamp(20px, 5vw, 60px)',
+          paddingRight: 'clamp(20px, 5vw, 60px)',
+        }}>
+          <div
+            role="button"
+            onClick={toggleMenu}
+            style={{ padding: '10px', cursor: 'pointer' }}
+          >
+            <span style={{ width: '28px', height: '20px', position: 'relative', display: 'block' }}>
+              <span style={{
+                width: '28px', height: '2px', display: 'block', position: 'absolute',
+                backgroundColor: 'white',
+                left: 0, top: '9px',
+                transform: 'rotate(45deg)',
+                transformOrigin: 'center',
+              }} />
+              <span style={{
+                width: '28px', height: '2px', display: 'block', position: 'absolute',
+                backgroundColor: 'white',
+                left: 0, top: '9px',
+                transform: 'rotate(-45deg)',
+                transformOrigin: 'center',
+              }} />
+            </span>
+          </div>
+        </div>
 
         {/* Centered navigation links */}
         <nav style={{
