@@ -654,7 +654,6 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
                 >
                   {slide.badge}
                 </h5>
-                <span style={{ fontSize: 16, color: 'var(--color-background, #e1e1e1)' }}>/Monthly</span>
               </div>
             </div>
           </div>
