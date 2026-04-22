@@ -1698,7 +1698,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       // ══════════════════════════════════════════════════════════════
 
       // 1. Header — Navigation minimale
-      { type: 'site-header', variant: 'brixsa', content: { logo: "L'Art du Cercle", logoImage: '/ldc/logo-ldc-dore.png', links: [{ id: '1', label: 'Le Cercle', href: '#manifeste' }, { id: '2', label: 'Événement', href: '#evenement' }, { id: '3', label: 'Programme', href: '#programme' }, { id: '4', label: 'Le Lieu', href: '#lieu' }, { id: '5', label: 'Formules', href: '#formules' }], ctaLabel: 'Réserver', ctaHref: '#formules' }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+      { type: 'site-header', variant: 'brixsa', content: { logo: "L'Art du Cercle", logoImage: '/ldc/logo-ldc-sceau.png', links: [{ id: '1', label: 'Le Cercle', href: '#manifeste' }, { id: '2', label: 'Événement', href: '#evenement' }, { id: '3', label: 'Programme', href: '#programme' }, { id: '4', label: 'Le Lieu', href: '#lieu' }, { id: '5', label: 'Formules', href: '#formules' }], ctaLabel: 'Réserver', ctaHref: '#formules' }, style: { background: 'dark', paddingY: 'none' }, visible: true },
 
       // 2. Hero — LA MARQUE (pas l'événement)
       //    Galerie dorée du Cercle en fond HD, logo centré, tagline sobre

@@ -13,7 +13,7 @@ export function SiteHeaderSection({ config }: { config: SectionConfig }) {
   const variant = config.variant ?? 'startup'
   const { accentColor } = config.style
   const links: NavLink[] = content.links ?? []
-  const logo = content.logo ?? 'Logo'
+  const logo = ((content as Record<string, unknown>).logoImage as string) || content.logo || 'Logo'
   const ctaLabel = content.ctaLabel
   const ctaHref = content.ctaHref ?? '#'
   const cartLabel = content.cartLabel
@@ -1482,7 +1482,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
           className="text-white tracking-wide"
           style={{ maxWidth: '140px', fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)' }}
         >
-          {renderLogo(logo)}
+          {renderLogo(logo, undefined, 'h-10 md:h-12 w-auto')}
         </div>
 
         {/* RIGHT — Menu button */}
