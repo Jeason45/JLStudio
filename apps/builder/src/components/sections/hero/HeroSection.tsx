@@ -273,7 +273,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
             />
           )}
           {content.eyebrow && (
-            <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-xs tracking-[0.25em] uppercase font-light" style={{ color: gold, letterSpacing: '0.25em' }}>
+            <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-sm md:text-base tracking-[0.3em] uppercase" style={{ color: gold, letterSpacing: '0.3em', fontWeight: 400, fontFamily: 'var(--font-body, inherit)', textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>
               {content.eyebrow}
             </span>
           )}

@@ -636,21 +636,22 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
               <div style={{ maxWidth: '680px' }}>
                 <h2
                   {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
-                  style={{ fontFamily: 'var(--font-heading, inherit)', fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#fff', textTransform: 'capitalize', marginBottom: 20 }}
+                  style={{ fontFamily: 'var(--font-heading, inherit)', fontSize: 'clamp(2.5rem, 1.5rem + 4.5vw, 5rem)', fontWeight: 300, fontStyle: 'italic', lineHeight: '105%', color: '#fff', marginBottom: 16 }}
                 >
                   {slide.title}
                 </h2>
                 <p
                   {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
-                  style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 16, lineHeight: '150%', color: 'var(--color-foreground, #e1e1e1)' }}
+                  style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 14, lineHeight: '170%', color: 'rgba(255,255,255,0.6)', fontWeight: 300, maxWidth: '480px' }}
                 >
                   {slide.subtitle}
                 </p>
               </div>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', whiteSpace: 'nowrap' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, whiteSpace: 'nowrap' }}>
+                <div style={{ width: '40px', height: '1px', backgroundColor: 'rgba(255,255,255,0.3)', marginBottom: 4 }} />
                 <h5
                   {...elementProps(sectionId, `slides.${idx}.badge`, 'text')}
-                  style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 'clamp(1.25rem, .9286rem + 1.4286vw, 2rem)', fontWeight: 500, color: '#fff', letterSpacing: '0.15em' }}
+                  style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 11, fontWeight: 400, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.2em', textTransform: 'uppercase' }}
                 >
                   {slide.badge}
                 </h5>
@@ -688,25 +689,25 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
           <div style={{ maxWidth: '680px' }}>
             <h2
               {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
-              style={{ fontFamily: 'var(--font-heading, inherit)', fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#fff', textTransform: 'capitalize', marginBottom: 20 }}
+              style={{ fontFamily: 'var(--font-heading, inherit)', fontSize: 'clamp(2.5rem, 1.5rem + 4.5vw, 5rem)', fontWeight: 300, fontStyle: 'italic', lineHeight: '105%', color: '#fff', marginBottom: 16 }}
             >
               {slide.title}
             </h2>
             <p
               {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
-              style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 16, lineHeight: '150%', color: 'var(--color-background, #e1e1e1)' }}
+              style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 14, lineHeight: '170%', color: 'rgba(255,255,255,0.6)', fontWeight: 300, maxWidth: '480px' }}
             >
               {slide.subtitle}
             </p>
           </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', whiteSpace: 'nowrap' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, whiteSpace: 'nowrap' }}>
+            <div style={{ width: '40px', height: '1px', backgroundColor: 'rgba(255,255,255,0.3)', marginBottom: 4 }} />
             <h5
               {...elementProps(sectionId, `slides.${idx}.badge`, 'text')}
-              style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 'clamp(1.25rem, .9286rem + 1.4286vw, 2rem)', fontWeight: 500, color: '#fff', letterSpacing: '0.15em' }}
+              style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 11, fontWeight: 400, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.2em', textTransform: 'uppercase' }}
             >
               {slide.badge}
             </h5>
-            <span style={{ fontSize: 16, color: 'var(--color-background, #e1e1e1)' }}>/Monthly</span>
           </div>
         </div>
       </div>

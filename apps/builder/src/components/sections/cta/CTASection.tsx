@@ -1213,13 +1213,16 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
               <p
                 {...elementProps(config.id, 'subtitle', 'text')}
                 style={{
-                  fontSize: 20,
-                  fontWeight: 500,
-                  lineHeight: '150%',
+                  fontSize: 13,
+                  fontWeight: 300,
+                  lineHeight: '180%',
                   flex: '0 40%',
-                  maxWidth: 130,
-                  color: textColor ?? 'var(--color-foreground, #e1e1e1)',
+                  maxWidth: 160,
+                  color: textColor ? `${textColor}99` : 'rgba(255,255,255,0.55)',
                   whiteSpace: 'pre-line',
+                  fontFamily: 'var(--font-body, inherit)',
+                  letterSpacing: '0.03em',
+                  fontStyle: 'italic',
                 }}
               >
                 {subtitle || 'Interested?\nGet in touch'}
@@ -1233,11 +1236,10 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
                     className={cn(titleSize && getTitleSizeClass(titleSize))}
                     style={{
                       fontFamily: 'var(--font-heading, inherit)',
-                      fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
-                      fontWeight: 500,
+                      fontSize: 'clamp(2.5rem, 1.5rem + 4.5vw, 5rem)',
+                      fontWeight: 300,
                       lineHeight: '110%',
-                      textTransform: 'capitalize',
-                      color: textColor ?? 'var(--color-background, #e1e1e1)',
+                      color: textColor ?? 'var(--color-foreground, #e1e1e1)',
                       marginBottom: 40,
                     }}
                   >
@@ -1249,21 +1251,22 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
                   href={content.primaryButton?.href}
                   style={{
                     display: 'inline-block',
-                    backgroundColor: 'rgba(158,158,158,0.6)',
+                    border: '1px solid rgba(255,255,255,0.25)',
+                    backgroundColor: 'transparent',
                     backdropFilter: 'blur(15px)',
                     WebkitBackdropFilter: 'blur(15px)',
                     color: textColor ?? 'var(--color-foreground, #e1e1e1)',
-                    borderRadius: 4,
-                    paddingLeft: 30,
-                    paddingRight: 30,
-                    paddingTop: 12,
-                    paddingBottom: 12,
-                    fontSize: 18,
-                    fontWeight: 500,
+                    paddingLeft: 36,
+                    paddingRight: 36,
+                    paddingTop: 14,
+                    paddingBottom: 14,
+                    fontSize: 13,
+                    fontWeight: 400,
                     fontFamily: 'var(--font-body, inherit)',
-                    border: 'none',
+                    letterSpacing: '0.15em',
+                    textTransform: 'uppercase' as const,
                     cursor: 'pointer',
-                    transition: 'opacity 0.3s, transform 0.3s',
+                    transition: 'all 0.3s',
                   }}
                 >
                   {content.primaryButton?.label || 'Get in touch'}

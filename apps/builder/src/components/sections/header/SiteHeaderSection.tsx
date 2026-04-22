@@ -1492,18 +1492,11 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
           onClick={toggleMenu}
           className={cn('flex items-center cursor-pointer')}
           style={{
-            borderRadius: '4px',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            backgroundColor: 'rgba(128,117,117,0.5)',
+            backgroundColor: 'transparent',
             color: 'white',
-            padding: '8px 16px',
-            fontSize: '16px',
-            fontWeight: 500,
-            fontFamily: 'var(--font-body, inherit)',
+            padding: '8px',
             border: 'none',
-            gap: '10px',
-            whiteSpace: 'nowrap',
+            cursor: 'pointer',
           }}
         >
           <span className={cn('flex flex-col items-center')} style={{ width: '20px', height: '14px', position: 'relative' }}>
