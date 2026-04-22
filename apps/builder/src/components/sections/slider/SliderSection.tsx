@@ -628,9 +628,9 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
           }}
         >
           <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(20, 12, 8, 0.8) 14%, rgba(255, 255, 255, 0) 39%)' }} />
-          <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)', background: 'rgba(158,158,158,0.3)', color: '#fff', fontSize: 16, fontWeight: 400, zIndex: 2, fontFamily: 'var(--font-body, inherit)', letterSpacing: '0.15em' }}>
+          {!!(slide as unknown as Record<string, unknown>).featured && <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)', background: 'rgba(158,158,158,0.3)', color: '#fff', fontSize: 16, fontWeight: 400, zIndex: 2, fontFamily: 'var(--font-body, inherit)', letterSpacing: '0.15em' }}>
             Featured
-          </div>
+          </div>}
           <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', width: '100%', gap: 'clamp(16px, 4vw, 32px)' }}>
               <div style={{ maxWidth: '680px' }}>
@@ -681,9 +681,9 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
         />
       )}
       <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(20, 12, 8, 0.8) 14%, rgba(255, 255, 255, 0) 39%)' }} />
-      <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)', background: 'rgba(158,158,158,0.3)', color: '#fff', fontSize: 16, fontWeight: 400, zIndex: 2, fontFamily: 'var(--font-body, inherit)', letterSpacing: '0.15em' }}>
+      {!!(slide as unknown as Record<string, unknown>).featured && <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)', background: 'rgba(158,158,158,0.3)', color: '#fff', fontSize: 16, fontWeight: 400, zIndex: 2, fontFamily: 'var(--font-body, inherit)', letterSpacing: '0.15em' }}>
         Featured
-      </div>
+      </div>}
       <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', width: '100%', gap: 'clamp(16px, 4vw, 32px)' }}>
           <div style={{ maxWidth: '680px' }}>

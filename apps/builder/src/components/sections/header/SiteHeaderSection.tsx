@@ -1480,9 +1480,9 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
         <div
           {...elementProps(config.id, 'logo', 'image')}
           className="text-white tracking-wide"
-          style={{ maxWidth: '140px', fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)' }}
+          style={{ maxWidth: '160px', fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)' }}
         >
-          {renderLogo(logo, undefined, 'h-10 md:h-12 w-auto')}
+          {renderLogo(logo, undefined, '!h-11 md:!h-14 w-auto')}
         </div>
 
         {/* RIGHT — Menu button */}
@@ -1494,21 +1494,23 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
           style={{
             backgroundColor: 'transparent',
             color: 'white',
-            padding: '8px',
+            padding: '10px',
             border: 'none',
             cursor: 'pointer',
           }}
         >
-          <span className={cn('flex flex-col items-center')} style={{ width: '20px', height: '14px', position: 'relative' }}>
-            <span className="bg-white" style={{
-              width: '20px', height: '2px', display: 'block', position: 'absolute',
-              top: menuOpen ? '6px' : '2px',
+          <span style={{ width: '28px', height: '18px', position: 'relative', display: 'block' }}>
+            <span style={{
+              width: '28px', height: '2px', display: 'block', position: 'absolute',
+              backgroundColor: 'white',
+              top: menuOpen ? '8px' : '2px',
               transform: menuOpen ? 'rotate(45deg)' : 'rotate(0)',
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             }} />
-            <span className="bg-white" style={{
-              width: '20px', height: '2px', display: 'block', position: 'absolute',
-              top: menuOpen ? '6px' : '10px',
+            <span style={{
+              width: '28px', height: '2px', display: 'block', position: 'absolute',
+              backgroundColor: 'white',
+              top: menuOpen ? '8px' : '14px',
               transform: menuOpen ? 'rotate(-45deg)' : 'rotate(0)',
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             }} />
