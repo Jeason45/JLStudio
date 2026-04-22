@@ -13,6 +13,13 @@ interface PricingSectionProps {
 
 // ─── Helpers ───────────────────────────────────────────────
 
+/** Return period string only if it doesn't contain subscription-style text like "/Monthly". */
+function displayPeriod(period?: string): string | null {
+  if (!period) return null
+  if (/month/i.test(period)) return null
+  return period
+}
+
 /** Collect every unique feature text across all plans (preserving order). */
 function allFeatureTexts(plans: PricingPlan[]): string[] {
   const seen = new Set<string>()
@@ -98,7 +105,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                           <div {...elementProps(config.id, `plans.${planIdx}.name`, 'heading')} className="font-bold text-lg text-zinc-900">{plan.name}</div>
                           <div className="flex items-end justify-center gap-1 mt-1">
                             <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-3xl font-bold text-zinc-900">{plan.price}</span>
-                            <span className="text-sm text-zinc-400 mb-1">{plan.period}</span>
+                            <span className="text-sm text-zinc-400 mb-1">{displayPeriod(plan.period)}</span>
                           </div>
                         </div>
                       </th>
@@ -199,7 +206,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                   <p {...elementProps(config.id, `plans.${planIdx}.description`, 'text')} className={cn('text-xs mb-4', plan.highlighted ? 'text-white/70' : 'text-zinc-500')}>{plan.description}</p>
                   <div className="flex items-end gap-1">
                     <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className={cn('text-4xl font-bold', plan.highlighted ? 'text-white' : 'text-zinc-900')}>{plan.price}</span>
-                    <span className={cn('text-sm mb-1', plan.highlighted ? 'text-white/70' : 'text-zinc-400')}>{plan.period}</span>
+                    <span className={cn('text-sm mb-1', plan.highlighted ? 'text-white/70' : 'text-zinc-400')}>{displayPeriod(plan.period)}</span>
                   </div>
                 </div>
                 <ul className="space-y-2.5 mb-6">
@@ -285,7 +292,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                           <div {...elementProps(config.id, `plans.${planIdx}.name`, 'heading')} className="font-bold text-lg text-white">{plan.name}</div>
                           <div className="flex items-end justify-center gap-1 mt-1">
                             <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-3xl font-bold text-white">{plan.price}</span>
-                            <span className="text-sm text-slate-400 mb-1">{plan.period}</span>
+                            <span className="text-sm text-slate-400 mb-1">{displayPeriod(plan.period)}</span>
                           </div>
                         </div>
                       </th>
@@ -386,7 +393,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                   <p {...elementProps(config.id, `plans.${planIdx}.description`, 'text')} className="text-xs mb-4 text-slate-400">{plan.description}</p>
                   <div className="flex items-end gap-1">
                     <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-4xl font-bold text-white">{plan.price}</span>
-                    <span className="text-sm mb-1 text-slate-400">{plan.period}</span>
+                    <span className="text-sm mb-1 text-slate-400">{displayPeriod(plan.period)}</span>
                   </div>
                 </div>
                 <ul className="space-y-2.5 mb-6">
@@ -465,7 +472,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                           <div {...elementProps(config.id, `plans.${planIdx}.name`, 'heading')} className="font-light text-lg tracking-wide text-zinc-900">{plan.name}</div>
                           <div className="flex items-end justify-center gap-1 mt-2">
                             <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-3xl font-light text-zinc-900">{plan.price}</span>
-                            <span className="text-sm font-light text-zinc-400 mb-1">{plan.period}</span>
+                            <span className="text-sm font-light text-zinc-400 mb-1">{displayPeriod(plan.period)}</span>
                           </div>
                         </div>
                       </th>
@@ -556,7 +563,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                   <p {...elementProps(config.id, `plans.${planIdx}.description`, 'text')} className="text-xs font-light text-zinc-400 mb-5 tracking-wide">{plan.description}</p>
                   <div className="flex items-end justify-center gap-1">
                     <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-4xl font-light text-zinc-900">{plan.price}</span>
-                    <span className="text-sm font-light text-zinc-400 mb-1">{plan.period}</span>
+                    <span className="text-sm font-light text-zinc-400 mb-1">{displayPeriod(plan.period)}</span>
                   </div>
                 </div>
                 <div className="w-12 h-px mx-auto mb-6" style={{ backgroundColor: gold, opacity: 0.3 }} />
@@ -635,7 +642,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                             <div {...elementProps(config.id, `plans.${planIdx}.name`, 'heading')} className="font-black text-lg">{plan.name}</div>
                             <div className="flex items-end justify-center gap-1 mt-1">
                               <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-3xl font-black">{plan.price}</span>
-                              <span className="text-sm mb-1 opacity-60">{plan.period}</span>
+                              <span className="text-sm mb-1 opacity-60">{displayPeriod(plan.period)}</span>
                             </div>
                           </div>
                         </th>
@@ -727,7 +734,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                   <p {...elementProps(config.id, `plans.${planIdx}.description`, 'text')} className={cn('text-xs mb-4', plan.highlighted ? 'text-white/60' : 'text-zinc-500')}>{plan.description}</p>
                   <div className="flex items-end gap-1">
                     <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-4xl font-black">{plan.price}</span>
-                    <span className={cn('text-sm mb-1', plan.highlighted ? 'text-white/60' : 'text-zinc-400')}>{plan.period}</span>
+                    <span className={cn('text-sm mb-1', plan.highlighted ? 'text-white/60' : 'text-zinc-400')}>{displayPeriod(plan.period)}</span>
                   </div>
                 </div>
                 <div className={cn('w-full h-0.5 mb-6', plan.highlighted ? 'bg-white/20' : 'bg-zinc-900')} />
@@ -808,7 +815,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                           <div {...elementProps(config.id, `plans.${planIdx}.name`, 'heading')} className="font-bold text-lg text-zinc-900">{plan.name}</div>
                           <div className="flex items-end justify-center gap-1 mt-1">
                             <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-3xl font-bold text-zinc-900">{plan.price}</span>
-                            <span className="text-sm text-zinc-400 mb-1">{plan.period}</span>
+                            <span className="text-sm text-zinc-400 mb-1">{displayPeriod(plan.period)}</span>
                           </div>
                           {plan.highlighted && (
                             <p className="text-[11px] mt-1 font-semibold" style={{ color: green }}>Économisez jusqu&apos;à 30%</p>
@@ -917,7 +924,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                   <p {...elementProps(config.id, `plans.${planIdx}.description`, 'text')} className="text-xs mb-4 text-zinc-500">{plan.description}</p>
                   <div className="flex items-end gap-1">
                     <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-4xl font-bold text-zinc-900">{plan.price}</span>
-                    <span className="text-sm mb-1 text-zinc-400">{plan.period}</span>
+                    <span className="text-sm mb-1 text-zinc-400">{displayPeriod(plan.period)}</span>
                   </div>
                   {plan.highlighted && (
                     <p className="text-xs mt-1 font-semibold" style={{ color: green }}>Économisez jusqu&apos;à 30%</p>
@@ -1022,7 +1029,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                             <div {...elementProps(config.id, `plans.${planIdx}.name`, 'heading')} className="font-bold text-lg text-white">{plan.name}</div>
                             <div className="flex items-end justify-center gap-1 mt-1">
                               <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-3xl font-bold text-white">{plan.price}</span>
-                              <span className="text-sm text-white/30 mb-1">{plan.period}</span>
+                              <span className="text-sm text-white/30 mb-1">{displayPeriod(plan.period)}</span>
                             </div>
                           </div>
                         </th>
@@ -1127,7 +1134,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                   <p {...elementProps(config.id, `plans.${planIdx}.description`, 'text')} className="text-xs mb-4 text-white/40">{plan.description}</p>
                   <div className="flex items-end gap-1">
                     <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-4xl font-bold text-white">{plan.price}</span>
-                    <span className="text-sm mb-1 text-white/30">{plan.period}</span>
+                    <span className="text-sm mb-1 text-white/30">{displayPeriod(plan.period)}</span>
                   </div>
                 </div>
                 <div className="w-full h-px bg-white/10 mb-6" />
@@ -1212,7 +1219,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                 <p {...elementProps(config.id, `plans.${planIdx}.description`, 'text')} className={cn('text-xs mb-4', plan.highlighted ? 'text-white/70' : 'text-zinc-500')}>{plan.description}</p>
                 <div className="flex items-end gap-1">
                   <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className={cn('text-4xl font-bold', plan.highlighted ? 'text-white' : 'text-zinc-900')}>{plan.price}</span>
-                  <span className={cn('text-sm mb-1', plan.highlighted ? 'text-white/70' : 'text-zinc-400')}>{plan.period}</span>
+                  <span className={cn('text-sm mb-1', plan.highlighted ? 'text-white/70' : 'text-zinc-400')}>{displayPeriod(plan.period)}</span>
                 </div>
               </div>
               <ul className="space-y-2.5 mb-6">
