@@ -1466,9 +1466,9 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
       {/* ─── NAVBAR ─── */}
       <header
         {...elementProps(config.id, 'wrapper', 'container', 'Header')}
-        className={cn('absolute top-0 left-0 w-full flex items-center justify-between')}
+        className={cn('fixed top-0 left-0 w-full flex items-center justify-between')}
         style={{
-          zIndex: 888,
+          zIndex: 10000,
           backgroundColor: 'transparent',
           minHeight: '72px',
           paddingLeft: 'clamp(20px, 5vw, 60px)',
@@ -1480,11 +1480,15 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
         <div
           {...elementProps(config.id, 'logo', 'image')}
           className="text-white tracking-wide"
-          style={{ fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)' }}
+          style={{
+            fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)',
+            opacity: menuOpen ? 0 : 1,
+            transition: 'opacity 0.3s ease',
+          }}
         >
           {isLogoUrl(logo)
             // eslint-disable-next-line @next/next/no-img-element
-            ? <img src={logo} alt="Logo" style={{ height: '64px', width: 'auto', objectFit: 'contain' }} />
+            ? <img src={logo} alt="Logo" style={{ height: '70px', width: 'auto', objectFit: 'contain' }} />
             : <span>{logo}</span>
           }
         </div>
@@ -1532,7 +1536,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
         style={{
           position: 'fixed',
           inset: 0,
-          zIndex: 9999,
+          zIndex: 9990,
           visibility: menuOpen ? 'visible' : 'hidden',
           opacity: menuOpen ? 1 : 0,
           transition: 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s',
@@ -1542,36 +1546,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
           WebkitBackdropFilter: 'blur(20px)',
         }}
       >
-        {/* Close button (cross) — top right */}
-        <div
-          role="button"
-          onClick={toggleMenu}
-          style={{
-            position: 'absolute',
-            top: 'clamp(20px, 4vw, 40px)',
-            right: 'clamp(20px, 5vw, 60px)',
-            cursor: 'pointer',
-            zIndex: 10,
-            padding: '10px',
-          }}
-        >
-          <span style={{ width: '28px', height: '20px', position: 'relative', display: 'block' }}>
-            <span style={{
-              width: '28px', height: '2px', display: 'block', position: 'absolute',
-              backgroundColor: 'white',
-              left: 0, top: '9px',
-              transform: 'rotate(45deg)',
-              transformOrigin: 'center',
-            }} />
-            <span style={{
-              width: '28px', height: '2px', display: 'block', position: 'absolute',
-              backgroundColor: 'white',
-              left: 0, top: '9px',
-              transform: 'rotate(-45deg)',
-              transformOrigin: 'center',
-            }} />
-          </span>
-        </div>
+        {/* Close is handled by the header burger button (fixed, z-index above overlay) */}
 
         {/* Centered navigation links */}
         <nav style={{
