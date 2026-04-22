@@ -1103,19 +1103,22 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
           </div>
 
           <div className={cn(
-            'grid gap-6 items-start',
+            'grid gap-6 items-stretch',
             plans.length <= 2 ? 'sm:grid-cols-2 max-w-3xl mx-auto' : plans.length === 4 ? 'grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3'
           )}>
             {plans.map((plan, planIdx) => (
               <div
                 key={plan.id}
                 className={cn(
-                  'rounded-2xl p-6 relative backdrop-blur-md transition-all',
+                  'rounded-2xl p-6 relative backdrop-blur-md transition-all duration-300 hover:scale-[1.03] flex flex-col',
                   plan.highlighted
-                    ? 'bg-white/[0.08] border border-white/20 shadow-2xl'
-                    : 'bg-white/[0.04] border border-white/10'
+                    ? 'border shadow-2xl'
+                    : 'bg-white/[0.04] border border-white/10 hover:bg-white/[0.06]'
                 )}
-                style={plan.highlighted ? { boxShadow: `0 0 40px ${accent}20, 0 20px 50px -12px rgba(0,0,0,0.5)` } : undefined}
+                style={plan.highlighted
+                  ? { borderColor: `${accent}60`, backgroundColor: `${accent}0a`, boxShadow: `0 0 40px ${accent}20, 0 20px 50px -12px rgba(0,0,0,0.5)` }
+                  : undefined
+                }
               >
                 {/* Gradient border effect for highlighted */}
                 {plan.highlighted && (
@@ -1125,7 +1128,13 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                   />
                 )}
                 {plan.badge && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-medium px-3 py-1 rounded-full border border-white/20 text-white/80 bg-white/10 backdrop-blur-sm">
+                  <span
+                    className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-medium px-3 py-1 rounded-full"
+                    style={plan.highlighted
+                      ? { backgroundColor: accent, color: '#0a0a0a', border: 'none', fontWeight: 700 }
+                      : { border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.8)', backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)' }
+                    }
+                  >
                     {plan.badge}
                   </span>
                 )}
@@ -1138,7 +1147,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                   </div>
                 </div>
                 <div className="w-full h-px bg-white/10 mb-6" />
-                <ul className="space-y-2.5 mb-6">
+                <ul className="space-y-2.5 mb-6 flex-1">
                   {plan.features.map((feature, i) => (
                     <li key={i} className={cn('flex items-center gap-2 text-sm',
                       feature.included ? 'text-white/80' : 'text-white/20'
@@ -1155,7 +1164,7 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                   {...elementProps(config.id, `plans.${planIdx}.cta`, 'button')}
                           href={plan.ctaHref}
                   className={cn(
-                    'block w-full text-center py-2.5 rounded-xl text-sm font-semibold transition-all',
+                    'block w-full text-center py-2.5 rounded-xl text-sm font-semibold transition-all mt-auto',
                     plan.highlighted
                       ? 'text-white hover:opacity-90 shadow-lg'
                       : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'

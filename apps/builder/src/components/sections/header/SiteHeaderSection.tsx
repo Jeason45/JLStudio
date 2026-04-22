@@ -1437,8 +1437,9 @@ function CanopyHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
 
 function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig; logo: string; ctaLabel?: string; links: NavLink[] }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const content = config.content as Record<string, unknown>
+  const ctaHref = (content?.ctaHref as string) || '#contact'
 
-  // Lock body scroll when menu is open
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = 'hidden'
@@ -1446,7 +1447,6 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
     }
   }, [menuOpen])
 
-  // Close on Escape
   useEffect(() => {
     if (!menuOpen) return
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
@@ -1456,46 +1456,21 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
 
   const toggleMenu = useCallback(() => setMenuOpen(prev => !prev), [])
 
-  // Use actual site links for the menu
-  const menuLinks: { label: string; href: string }[] = links.length > 0
+  const menuLinks = links.length > 0
     ? links.map(l => ({ label: l.label, href: l.href }))
-    : [
-        { label: 'Home', href: '/' },
-        { label: 'About', href: '/about' },
-        { label: 'Property', href: '/property' },
-        { label: 'Agents', href: '/agents' },
-        { label: 'Blog', href: '/blog' },
-        { label: 'Contact', href: '/contact' },
-      ]
-
-  const socials = [
-    { label: 'Instagram', href: '#', icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-    )},
-    { label: 'Facebook', href: '#', icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-    )},
-    { label: 'X', href: '#', icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-    )},
-    { label: 'LinkedIn', href: '#', icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-    )},
-  ]
+    : [{ label: 'Home', href: '/' }, { label: 'About', href: '/about' }, { label: 'Contact', href: '/contact' }]
 
   return (
     <>
-      {/* Brixsa responsive styles */}
       <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 768px) {
-          .brixsa-resp-menu-grid { grid-template-columns: 1fr !important; }
-          .brixsa-resp-menu-right { display: none !important; }
+          .brixsa-menu-label { display: none !important; }
         }
       ` }} />
       {/* ─── NAVBAR ─── */}
       <header
         {...elementProps(config.id, 'wrapper', 'container', 'Header')}
-        className={cn('absolute top-0 left-0 w-full flex items-center')}
+        className={cn('absolute top-0 left-0 w-full flex items-center justify-between')}
         style={{
           zIndex: 888,
           backgroundColor: 'transparent',
@@ -1505,68 +1480,45 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
           fontFamily: 'var(--font-body, inherit)',
         }}
       >
+        {/* LEFT — Logo */}
         <div
-          {...elementProps(config.id, 'navGrid', 'container', 'Nav Grid')}
-          className={cn('grid items-center w-full')}
+          {...elementProps(config.id, 'logo', 'image')}
+          className="text-white tracking-wide"
+          style={{ maxWidth: '140px', fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)' }}
+        >
+          {renderLogo(logo)}
+        </div>
+
+        {/* RIGHT — Menu button */}
+        <div
+          {...elementProps(config.id, 'ctaLabel', 'button')}
+          role="button"
+          onClick={toggleMenu}
+          className={cn('flex items-center cursor-pointer')}
           style={{
-            gridTemplateColumns: '.375fr minmax(min-content, max-content)',
-            justifyContent: 'space-between',
-            gap: '16px',
+            borderRadius: '4px',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            backgroundColor: 'rgba(128,117,117,0.5)',
+            color: 'white',
+            padding: '8px 16px',
+            fontSize: '16px',
+            fontWeight: 500,
+            fontFamily: 'var(--font-body, inherit)',
+            border: 'none',
+            gap: '10px',
+            whiteSpace: 'nowrap',
           }}
         >
-          {/* LEFT — Logo */}
-          <div
-            {...elementProps(config.id, 'logo', 'image')}
-            className="text-white tracking-wide"
-            style={{
-              maxWidth: '140px',
-              fontSize: '20px',
-              fontWeight: 600,
-              fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
-            }}
-          >
-            {renderLogo(logo)}<sup>®</sup>
-          </div>
-
-          {/* RIGHT — Menu button (glassmorphism) */}
-          <div
-            {...elementProps(config.id, 'ctaLabel', 'button')}
-            role="button"
-            onClick={toggleMenu}
-            className={cn('flex items-center cursor-pointer')}
-            style={{
-              borderRadius: '4px',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              backgroundColor: 'rgba(128,117,117,0.5)',
-              color: 'white',
-              paddingLeft: '20px',
-              paddingRight: '20px',
-              paddingTop: '8px',
-              paddingBottom: '8px',
-              fontSize: '16px',
-              fontWeight: 500,
-              fontFamily: "'Inter Variable', var(--font-body, sans-serif)",
-              border: 'none',
-              gap: '10px',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            <span {...elementProps(config.id, 'menuLabel', 'text', 'Menu Label')}>{ctaLabel || 'Menu'}</span>
-            {/* Toggle icon */}
-            <span
-              {...elementProps(config.id, 'menuIcon', 'icon', 'Menu Icon')}
-              className={cn('flex flex-col items-center')}
-              style={{ gap: '3px' }}
-            >
-              <span className="bg-white" style={{ width: '18px', height: '2px', display: 'block' }} />
-              <span className="bg-white" style={{ width: '18px', height: '2px', display: 'block' }} />
-            </span>
-          </div>
+          <span className="brixsa-menu-label" {...elementProps(config.id, 'menuLabel', 'text', 'Menu Label')}>Menu</span>
+          <span className={cn('flex flex-col items-center')} style={{ gap: '3px' }}>
+            <span className="bg-white" style={{ width: '18px', height: '2px', display: 'block' }} />
+            <span className="bg-white" style={{ width: '18px', height: '2px', display: 'block' }} />
+          </span>
         </div>
       </header>
 
-      {/* ─── OFF-CANVAS MENU OVERLAY ─── */}
+      {/* ─── FULLSCREEN MENU OVERLAY ─── */}
       <div
         {...elementProps(config.id, 'offCanvas', 'container', 'Off-Canvas Menu')}
         style={{
@@ -1577,222 +1529,126 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
           opacity: menuOpen ? 1 : 0,
           transition: 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s',
           pointerEvents: menuOpen ? 'auto' : 'none',
+          backgroundColor: 'rgba(10, 10, 10, 0.97)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
         }}
       >
-        {/* Dark background overlay */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundColor: '#1a1a1a',
-          }}
-        />
-
-        {/* Menu content grid */}
-        <div
-          {...elementProps(config.id, 'offCanvasGrid', 'container', 'Menu Grid')}
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            fontFamily: "'Inter Variable', var(--font-body, sans-serif)",
-          }}
-          className="brixsa-resp-menu-grid"
-        >
-          {/* LEFT COLUMN — Navigation */}
+        {/* Top bar — Logo + Close */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: 'clamp(20px, 5vw, 60px)',
+          paddingTop: '24px',
+          paddingBottom: '24px',
+        }}>
+          <div style={{ fontSize: '20px', fontWeight: 600, color: 'white', fontFamily: 'var(--font-heading, inherit)' }}>
+            {renderLogo(logo)}
+          </div>
           <div
-            {...elementProps(config.id, 'offCanvasNav', 'container', 'Menu Navigation')}
+            {...elementProps(config.id, 'closeButton', 'button', 'Close Button')}
+            role="button"
+            onClick={toggleMenu}
             style={{
               display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              padding: 'clamp(20px, 5vw, 60px)',
-              paddingTop: 'clamp(40px, 8vw, 80px)',
+              alignItems: 'center',
+              gap: '10px',
+              color: 'white',
+              fontSize: '16px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              padding: '8px 16px',
+              borderRadius: '4px',
+              border: '1px solid rgba(255,255,255,0.15)',
             }}
           >
-            {/* Top — Logo + Close */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '48px' }}>
-              <div
-                {...elementProps(config.id, 'offCanvasLogo', 'text', 'Menu Logo')}
-                style={{
-                  fontSize: '20px',
-                  fontWeight: 600,
-                  color: 'white',
-                  fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
-                }}
-              >
-                {renderLogo(logo)}<sup>®</sup>
-              </div>
-              <div
-                {...elementProps(config.id, 'closeButton', 'button', 'Close Button')}
-                role="button"
-                onClick={toggleMenu}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  borderRadius: '4px',
-                  backdropFilter: 'blur(10px)',
-                  WebkitBackdropFilter: 'blur(10px)',
-                  backgroundColor: 'rgba(128,117,117,0.5)',
-                  color: 'white',
-                  paddingLeft: '20px',
-                  paddingRight: '20px',
-                  paddingTop: '8px',
-                  paddingBottom: '8px',
-                  fontSize: '16px',
-                  fontWeight: 500,
-                  border: 'none',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                <span>Close</span>
-                <X size={18} strokeWidth={2} />
-              </div>
-            </div>
-
-            {/* Navigation links */}
-            <nav
-              {...elementProps(config.id, 'offCanvasLinks', 'container', 'Menu Links')}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                flex: 1,
-              }}
-            >
-              {menuLinks.map((link, i) => (
-                <a
-                  key={link.label}
-                  {...elementProps(config.id, `menuLinks.${i}`, 'link', link.label)}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  style={{
-                    fontSize: 'clamp(24px, 5vw, 40px)',
-                    fontWeight: 500,
-                    color: 'white',
-                    textDecoration: 'none',
-                    padding: '8px 0',
-                    transition: 'color 0.3s, transform 0.3s',
-                    display: 'block',
-                    fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
-                    letterSpacing: '-0.02em',
-                    lineHeight: 1.2,
-                    transform: menuOpen ? 'translateY(0)' : 'translateY(20px)',
-                    transitionDelay: `${i * 0.05}s`,
-                  }}
-                  onMouseEnter={(e) => { (e.target as HTMLElement).style.color = 'var(--color-accent, #c8a97e)' }}
-                  onMouseLeave={(e) => { (e.target as HTMLElement).style.color = 'white' }}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
-
-            {/* Bottom — Social Icons + CTA */}
-            <div
-              {...elementProps(config.id, 'offCanvasBottom', 'container', 'Menu Bottom')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingTop: '32px',
-                borderTop: '1px solid rgba(255,255,255,0.1)',
-              }}
-            >
-              {/* Social icons */}
-              <div
-                {...elementProps(config.id, 'offCanvasSocials', 'container', 'Social Icons')}
-                style={{ display: 'flex', gap: '16px' }}
-              >
-                {socials.map((s, i) => (
-                  <a
-                    key={s.label}
-                    {...elementProps(config.id, `social.${i}`, 'link', s.label)}
-                    href={s.href}
-                    style={{
-                      color: 'rgba(255,255,255,0.5)',
-                      transition: 'color 0.3s',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '50%',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                    }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'white'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.4)' }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.5)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.15)' }}
-                  >
-                    {s.icon}
-                  </a>
-                ))}
-              </div>
-
-              {/* CTA */}
-              <a
-                {...elementProps(config.id, 'offCanvasCta', 'button', ctaLabel || 'Contact')}
-                href={(config.content as Record<string, unknown>)?.ctaHref as string || '#contact'}
-                onClick={() => setMenuOpen(false)}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '12px 28px',
-                  backgroundColor: 'var(--color-accent, #c8a97e)',
-                  color: '#1a1a1a',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  borderRadius: '4px',
-                  letterSpacing: '0.02em',
-                  textTransform: 'uppercase',
-                  transition: 'background-color 0.3s',
-                }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = '#d4b88e' }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-accent, #c8a97e)' }}
-              >
-                {ctaLabel || 'Contact'}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-              </a>
-            </div>
-          </div>
-
-          {/* RIGHT COLUMN — Image overlay */}
-          <div
-            {...elementProps(config.id, 'offCanvasImage', 'image', 'Menu Image')}
-            className="brixsa-resp-menu-right"
-            style={{
-              position: 'relative',
-              overflow: 'hidden',
-              backgroundColor: '#2a2a2a',
-            }}
-          >
-            <img
-              src={((config.content as Record<string, unknown>)?.menuImage as string) || ((config.content as Record<string, unknown>)?.logoImage as string) || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80"}
-              alt=""
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                opacity: 0.7,
-                transform: menuOpen ? 'scale(1)' : 'scale(1.1)',
-                transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
-            />
-            {/* Image overlay gradient */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(135deg, rgba(26,26,26,0.4) 0%, transparent 60%)',
-              }}
-            />
+            <span>Fermer</span>
+            <X size={18} strokeWidth={2} />
           </div>
         </div>
+
+        {/* Centered navigation links */}
+        <nav style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: 1,
+          gap: '4px',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }}>
+          {menuLinks.map((link, i) => (
+            <a
+              key={link.label}
+              {...elementProps(config.id, `menuLinks.${i}`, 'link', link.label)}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              style={{
+                fontSize: 'clamp(28px, 5vw, 48px)',
+                fontWeight: 300,
+                color: 'rgba(255,255,255,0.6)',
+                textDecoration: 'none',
+                padding: '10px 24px',
+                transition: 'color 0.3s, letter-spacing 0.3s',
+                display: 'block',
+                fontFamily: 'var(--font-heading, inherit)',
+                letterSpacing: '0.02em',
+                lineHeight: 1.3,
+                textAlign: 'center',
+                textTransform: 'uppercase',
+                transform: menuOpen ? 'translateY(0)' : 'translateY(30px)',
+                opacity: menuOpen ? 1 : 0,
+                transitionDelay: `${i * 0.06}s`,
+              }}
+              onMouseEnter={(e) => { const t = e.currentTarget; t.style.color = 'var(--color-accent, #D4AF37)'; t.style.letterSpacing = '0.08em' }}
+              onMouseLeave={(e) => { const t = e.currentTarget; t.style.color = 'rgba(255,255,255,0.6)'; t.style.letterSpacing = '0.02em' }}
+            >
+              {link.label}
+            </a>
+          ))}
+
+          {/* CTA button */}
+          <a
+            {...elementProps(config.id, 'offCanvasCta', 'button', ctaLabel || 'Contact')}
+            href={ctaHref}
+            onClick={() => setMenuOpen(false)}
+            style={{
+              marginTop: '32px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '14px 40px',
+              border: '1px solid var(--color-accent, #D4AF37)',
+              color: 'var(--color-accent, #D4AF37)',
+              fontSize: '14px',
+              fontWeight: 500,
+              textDecoration: 'none',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              transition: 'background-color 0.3s, color 0.3s',
+              fontFamily: 'var(--font-body, inherit)',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-accent, #D4AF37)'; e.currentTarget.style.color = '#0a0a0a' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--color-accent, #D4AF37)' }}
+          >
+            {ctaLabel || 'Contact'}
+          </a>
+        </nav>
+
+        {/* Subtle decorative line */}
+        <div style={{
+          position: 'absolute',
+          bottom: 'clamp(20px, 5vw, 60px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '40px',
+          height: '1px',
+          backgroundColor: 'rgba(255,255,255,0.15)',
+        }} />
       </div>
     </>
   )
