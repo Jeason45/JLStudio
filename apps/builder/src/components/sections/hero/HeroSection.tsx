@@ -273,7 +273,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
             />
           )}
           {content.eyebrow && (
-            <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-xs tracking-[0.25em] uppercase font-light" style={{ color: gold }}>
+            <span {...elementProps(config.id, 'eyebrow', 'badge')} className="inline-block text-xs tracking-[0.25em] uppercase font-light" style={{ color: gold, letterSpacing: '0.25em' }}>
               {content.eyebrow}
             </span>
           )}
@@ -282,11 +282,11 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
           <h1
             {...elementProps(config.id, 'title', 'heading')}
             className={cn("text-4xl md:text-5xl lg:text-7xl font-light leading-[1.1] tracking-tight text-white", titleSize && getTitleSizeClass(titleSize))}
-            style={{ ...(customTextColor ? { color: customTextColor } : {}), ...(fontStyle === 'italic' ? { fontStyle: 'italic' } : {}) }}
+            style={{ fontFamily: 'var(--font-heading, inherit)', fontWeight: 300, ...(customTextColor ? { color: customTextColor } : {}), ...(fontStyle === 'italic' ? { fontStyle: 'italic' } : {}) }}
           >
             {title}
           </h1>
-          <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed font-light tracking-wide">
+          <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed font-light tracking-wide" style={{ fontFamily: 'var(--font-body, inherit)', fontWeight: 300 }}>
             {subtitle}
           </p>
           <div className="flex flex-wrap gap-4 justify-center pt-4">

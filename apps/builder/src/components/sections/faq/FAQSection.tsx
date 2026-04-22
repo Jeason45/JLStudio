@@ -188,7 +188,7 @@ function BrixsaAccordionItem({ item, sectionId, itemIndex }: { item: FAQItem; se
         <span
           {...elementProps(sectionId, `items.${itemIndex}.question`, 'heading')}
           style={{
-            fontFamily: "'GeneralSans Variable', sans-serif",
+            fontFamily: "var(--font-heading, inherit)",
             fontSize: 'clamp(16px, 3vw, 20px)',
             fontWeight: 500,
             color: hovered ? 'var(--color-accent, #c8a97e)' : 'var(--color-background, #e1e1e1)',
@@ -226,7 +226,7 @@ function BrixsaAccordionItem({ item, sectionId, itemIndex }: { item: FAQItem; se
           <p
             {...elementProps(sectionId, `items.${itemIndex}.answer`, 'text')}
             style={{
-              fontFamily: "'Inter Variable', sans-serif",
+              fontFamily: "var(--font-body, inherit)",
               fontSize: '15px',
               lineHeight: 1.7,
               color: 'color-mix(in srgb, var(--color-background, #e1e1e1) 60%, transparent)',
@@ -659,7 +659,7 @@ export function FAQSection({ config }: FAQSectionProps) {
           backgroundColor: 'var(--color-foreground, #140c08)',
           padding: '96px 0',
           overflow: 'hidden',
-          fontFamily: "'Inter Variable', sans-serif",
+          fontFamily: "var(--font-body, inherit)",
         }}
       >
         <div style={{ maxWidth: '720px', margin: '0 auto', padding: '0 24px' }}>
@@ -668,7 +668,7 @@ export function FAQSection({ config }: FAQSectionProps) {
               <h2
                 {...elementProps(config.id, 'title', 'heading')}
                 style={{
-                  fontFamily: "'GeneralSans Variable', sans-serif",
+                  fontFamily: "var(--font-heading, inherit)",
                   fontSize: '40px',
                   fontWeight: 600,
                   color: customTextColor ?? 'var(--color-background, #e1e1e1)',

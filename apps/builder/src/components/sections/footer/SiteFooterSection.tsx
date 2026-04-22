@@ -876,8 +876,8 @@ export function SiteFooterSection({ config, isEditing }: { config: SectionConfig
   // ─── VARIANT: brixsa ───
   // Univers premium real estate : fond crème #f6efe5, GeneralSans + Inter, grands liens hover-slide, text mask hover
   if (variant === 'brixsa') {
-    const headingFont = "'GeneralSans Variable', sans-serif"
-    const bodyFont = "'Inter Variable', sans-serif"
+    const headingFont = "var(--font-heading, inherit)"
+    const bodyFont = "var(--font-body, inherit)"
     // Split columns: first column = main links (large), rest = secondary groups
     const mainCol = columns[0]
     const secondaryCols = columns.slice(1)

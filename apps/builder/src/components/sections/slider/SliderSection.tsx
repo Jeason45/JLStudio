@@ -628,7 +628,7 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
           }}
         >
           <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(20, 12, 8, 0.8) 14%, rgba(255, 255, 255, 0) 39%)' }} />
-          <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)', background: 'rgba(158,158,158,0.3)', color: '#fff', fontSize: 16, fontWeight: 400, zIndex: 2 }}>
+          <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)', background: 'rgba(158,158,158,0.3)', color: '#fff', fontSize: 16, fontWeight: 400, zIndex: 2, fontFamily: 'var(--font-body, inherit)', letterSpacing: '0.15em' }}>
             Featured
           </div>
           <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
@@ -636,13 +636,13 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
               <div style={{ maxWidth: '680px' }}>
                 <h2
                   {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
-                  style={{ fontFamily: '"GeneralSans Variable", sans-serif', fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#fff', textTransform: 'capitalize', marginBottom: 20 }}
+                  style={{ fontFamily: 'var(--font-heading, inherit)', fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#fff', textTransform: 'capitalize', marginBottom: 20 }}
                 >
                   {slide.title}
                 </h2>
                 <p
                   {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
-                  style={{ fontSize: 16, lineHeight: '150%', color: 'var(--color-foreground, #e1e1e1)' }}
+                  style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 16, lineHeight: '150%', color: 'var(--color-foreground, #e1e1e1)' }}
                 >
                   {slide.subtitle}
                 </p>
@@ -650,7 +650,7 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
               <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', whiteSpace: 'nowrap' }}>
                 <h5
                   {...elementProps(sectionId, `slides.${idx}.badge`, 'text')}
-                  style={{ fontFamily: '"GeneralSans Variable", sans-serif', fontSize: 'clamp(1.25rem, .9286rem + 1.4286vw, 2rem)', fontWeight: 500, color: '#fff' }}
+                  style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 'clamp(1.25rem, .9286rem + 1.4286vw, 2rem)', fontWeight: 500, color: '#fff', letterSpacing: '0.15em' }}
                 >
                   {slide.badge}
                 </h5>
@@ -680,7 +680,7 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
         />
       )}
       <div {...elementProps(sectionId, `slides.${idx}.overlay`, 'container', 'Gradient Overlay')} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(360deg, rgba(20, 12, 8, 0.8) 14%, rgba(255, 255, 255, 0) 39%)' }} />
-      <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)', background: 'rgba(158,158,158,0.3)', color: '#fff', fontSize: 16, fontWeight: 400, zIndex: 2 }}>
+      <div {...elementProps(sectionId, `slides.${idx}.featuredBadge`, 'badge', 'Badge')} style={{ position: 'absolute', left: 'clamp(20px, 5vw, 60px)', top: 'clamp(50px, 8vw, 100px)', padding: '8px 20px', borderRadius: 4, backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)', background: 'rgba(158,158,158,0.3)', color: '#fff', fontSize: 16, fontWeight: 400, zIndex: 2, fontFamily: 'var(--font-body, inherit)', letterSpacing: '0.15em' }}>
         Featured
       </div>
       <div {...elementProps(sectionId, `slides.${idx}.content`, 'container', 'Slide Content')} style={{ position: 'absolute', inset: 0, paddingLeft: 'clamp(20px, 5vw, 60px)', paddingRight: 'clamp(20px, 5vw, 60px)', paddingBottom: 'clamp(40px, 8vw, 100px)', display: 'flex', alignItems: 'flex-end', zIndex: 2 }}>
@@ -688,13 +688,13 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
           <div style={{ maxWidth: '680px' }}>
             <h2
               {...elementProps(sectionId, `slides.${idx}.title`, 'heading')}
-              style={{ fontFamily: '"GeneralSans Variable", sans-serif', fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#fff', textTransform: 'capitalize', marginBottom: 20 }}
+              style={{ fontFamily: 'var(--font-heading, inherit)', fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)', fontWeight: 500, lineHeight: '110%', color: '#fff', textTransform: 'capitalize', marginBottom: 20 }}
             >
               {slide.title}
             </h2>
             <p
               {...elementProps(sectionId, `slides.${idx}.subtitle`, 'text')}
-              style={{ fontSize: 16, lineHeight: '150%', color: 'var(--color-background, #e1e1e1)' }}
+              style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 16, lineHeight: '150%', color: 'var(--color-background, #e1e1e1)' }}
             >
               {slide.subtitle}
             </p>
@@ -702,7 +702,7 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
           <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', whiteSpace: 'nowrap' }}>
             <h5
               {...elementProps(sectionId, `slides.${idx}.badge`, 'text')}
-              style={{ fontFamily: '"GeneralSans Variable", sans-serif', fontSize: 'clamp(1.25rem, .9286rem + 1.4286vw, 2rem)', fontWeight: 500, color: '#fff' }}
+              style={{ fontFamily: 'var(--font-body, inherit)', fontSize: 'clamp(1.25rem, .9286rem + 1.4286vw, 2rem)', fontWeight: 500, color: '#fff', letterSpacing: '0.15em' }}
             >
               {slide.badge}
             </h5>

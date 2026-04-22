@@ -936,7 +936,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
               {...elementProps(config.id, 'title', 'heading')}
               className={cn(titleSize && getTitleSizeClass(titleSize))}
               style={{
-                fontFamily: '"GeneralSans Variable", sans-serif',
+                fontFamily: 'var(--font-heading, inherit)',
                 fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
                 fontWeight: 500,
                 lineHeight: '115%',
@@ -974,7 +974,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
                 padding: '14px 36px',
                 fontSize: '14px',
                 fontWeight: 500,
-                fontFamily: '"Inter Variable", var(--font-body, sans-serif)',
+                fontFamily: 'var(--font-body, inherit)',
                 cursor: 'pointer',
                 transition: 'background-color 0.3s, color 0.3s',
                 textDecoration: 'none',
@@ -1069,7 +1069,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
               {...elementProps(config.id, 'title', 'heading')}
               className={cn(titleSize && getTitleSizeClass(titleSize))}
               style={{
-                fontFamily: '"GeneralSans Variable", sans-serif',
+                fontFamily: 'var(--font-heading, inherit)',
                 fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
                 fontWeight: 500,
                 lineHeight: '115%',
@@ -1106,7 +1106,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
                 padding: '14px 36px',
                 fontSize: '16px',
                 fontWeight: 600,
-                fontFamily: '"Inter Variable", var(--font-body, sans-serif)',
+                fontFamily: 'var(--font-body, inherit)',
                 border: 'none',
                 cursor: 'pointer',
                 transition: 'background-color 0.3s, transform 0.3s',
@@ -1232,7 +1232,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
                     {...elementProps(config.id, 'title', 'heading')}
                     className={cn(titleSize && getTitleSizeClass(titleSize))}
                     style={{
-                      fontFamily: "'GeneralSans Variable', var(--font-body, sans-serif)",
+                      fontFamily: 'var(--font-heading, inherit)',
                       fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
                       fontWeight: 500,
                       lineHeight: '110%',
@@ -1260,7 +1260,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
                     paddingBottom: 12,
                     fontSize: 18,
                     fontWeight: 500,
-                    fontFamily: "'Inter Variable', var(--font-body, sans-serif)",
+                    fontFamily: 'var(--font-body, inherit)',
                     border: 'none',
                     cursor: 'pointer',
                     transition: 'opacity 0.3s, transform 0.3s',
@@ -1474,7 +1474,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
               {...elementProps(config.id, 'title', 'heading')}
               className={cn(titleSize && getTitleSizeClass(titleSize))}
               style={{
-                fontFamily: '"GeneralSans Variable", sans-serif',
+                fontFamily: 'var(--font-heading, inherit)',
                 fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
                 fontWeight: 500,
                 lineHeight: '115%',
@@ -1513,7 +1513,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
                 padding: '14px 36px',
                 fontSize: '14px',
                 fontWeight: 500,
-                fontFamily: '"Inter Variable", var(--font-body, sans-serif)',
+                fontFamily: 'var(--font-body, inherit)',
                 cursor: 'pointer',
                 textDecoration: 'none',
                 textTransform: 'uppercase',
@@ -1656,7 +1656,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
               {...elementProps(config.id, 'title', 'heading')}
               className={cn(titleSize && getTitleSizeClass(titleSize))}
               style={{
-                fontFamily: '"GeneralSans Variable", sans-serif',
+                fontFamily: 'var(--font-heading, inherit)',
                 fontSize: 'clamp(2.25rem, 1.3929rem + 3.8095vw, 4.25rem)',
                 fontWeight: 500,
                 lineHeight: '115%',
@@ -1693,7 +1693,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
                 padding: '14px 36px',
                 fontSize: '16px',
                 fontWeight: 600,
-                fontFamily: '"Inter Variable", var(--font-body, sans-serif)',
+                fontFamily: 'var(--font-body, inherit)',
                 border: '1px solid rgba(212, 165, 116, 0.4)',
                 cursor: 'pointer',
                 transition: 'box-shadow 0.4s ease, color 0.4s ease, border-color 0.4s ease',
