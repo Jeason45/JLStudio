@@ -5107,8 +5107,8 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       // 1. Header standard
       { type: 'site-header', variant: 'startup', content: { logo: "L'Art du Cercle", links: [{ id: '1', label: 'Événement', href: '#evenement' }, { id: '2', label: 'Programme', href: '#programme' }, { id: '3', label: 'Le Lieu', href: '#lieu' }, { id: '4', label: 'Formules', href: '#formules' }, { id: '5', label: 'FAQ', href: '#faq' }], ctaLabel: 'Réserver', ctaHref: '#formules' }, style: { background: 'white', paddingY: 'none' }, visible: true },
 
-      // 2. Hero — fond sombre simple, texte lisible, basique
-      { type: 'hero', variant: 'glass', content: { eyebrow: 'ÉVÉNEMENT · 29 MAI 2026', title: "Bal C'est L'Est", subtitle: "Nuit d'Europe & d'Asie\nCercle National des Armées, Paris 8ème", primaryButton: { label: 'Réserver ma place', href: '#formules', variant: 'primary' as any } }, style: { background: 'dark' as any, paddingY: 'xl' }, visible: true },
+      // 2. Hero — image de fond + overlay très sombre pour lisibilité
+      { type: 'hero', variant: 'glass', content: { eyebrow: 'ÉVÉNEMENT · 29 MAI 2026', title: "Bal C'est L'Est", subtitle: "Nuit d'Europe & d'Asie — Cercle National des Armées, Paris 8ème", primaryButton: { label: 'Réserver ma place', href: '#formules', variant: 'primary' as any } }, style: { background: 'dark' as any, paddingY: 'xl', backgroundImage: { url: '/ldc/event-palais.jpg', overlayColor: '#000000', overlayOpacity: 0.85, position: 'center', size: 'cover' } }, visible: true },
 
       // 3. À propos — texte simple
       { type: 'cta', variant: 'startup-centered', content: { title: "Un cercle privé dédié à l'art de vivre", subtitle: "L'Art du Cercle réunit en des lieux d'exception ceux qui partagent le goût de l'élégance, de la culture et de la fête. Chaque événement est une invitation à vivre une nuit hors du temps.", primaryButton: { label: 'En savoir plus', href: '#programme', variant: 'outline' as any } }, style: { background: 'white', paddingY: 'lg' }, visible: true },
@@ -5128,7 +5128,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       // 8. CTA final
       { type: 'cta', variant: 'glass-centered', content: { title: "29 mai 2026 — Réservez votre place", subtitle: "Places limitées. Ne manquez pas cet événement.", primaryButton: { label: 'Réserver maintenant', href: '#formules', variant: 'primary' as any } }, style: { background: 'dark', paddingY: 'xl' }, visible: true },
 
-      // 9. Footer — corporate (texte blanc sur fond sombre)
-      { type: 'site-footer', variant: 'corporate', content: { logo: "L'Art du Cercle", tagline: 'Événement parisien', copyright: `© ${year} L'Art du Cercle. Tous droits réservés.`, columns: [{ id: '1', title: 'Navigation', links: [{ id: '1', label: 'Événement', href: '#evenement' }, { id: '2', label: 'Programme', href: '#programme' }, { id: '3', label: 'Formules', href: '#formules' }] }, { id: '2', title: 'Contact', links: [{ id: '1', label: '07 82 83 71 37', href: 'tel:+33782837137' }, { id: '2', label: 'contact@lartducercle.com', href: 'mailto:contact@lartducercle.com' }] }], socials: { instagram: 'https://instagram.com/lartducercle' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+      // 9. Footer — glass (texte blanc natif sur fond sombre)
+      { type: 'site-footer', variant: 'glass', content: { logo: "L'Art du Cercle", tagline: 'Événement parisien', copyright: `© ${year} L'Art du Cercle. Tous droits réservés.`, columns: [{ id: '1', title: 'Navigation', links: [{ id: '1', label: 'Événement', href: '#evenement' }, { id: '2', label: 'Programme', href: '#programme' }, { id: '3', label: 'Formules', href: '#formules' }] }, { id: '2', title: 'Contact', links: [{ id: '1', label: '07 82 83 71 37', href: 'tel:+33782837137' }, { id: '2', label: 'contact@lartducercle.com', href: 'mailto:contact@lartducercle.com' }] }], socials: { instagram: 'https://instagram.com/lartducercle' } }, style: { background: 'dark', paddingY: 'none', textColor: '#ffffff' }, visible: true },
     ],
   },]
