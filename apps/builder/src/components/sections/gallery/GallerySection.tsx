@@ -53,11 +53,6 @@ export function GallerySection({ config, isEditing }: { config: SectionConfig; i
             <Image className="w-8 h-8 text-zinc-300" />
           </div>
         )}
-        {img.caption && (
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-            <p {...elementProps(config.id, `images.${i}.caption`, 'text')} className="text-white text-sm font-medium">{img.caption}</p>
-          </div>
-        )}
       </div>
     )
 
