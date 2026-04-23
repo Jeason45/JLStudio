@@ -1462,13 +1462,26 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
 
   return (
     <>
-      {/* Force logo size — !important overrides any builder/global CSS */}
+      {/* Force logo size — #site-canvas prefix matches ClassStyleInjector specificity */}
       <style dangerouslySetInnerHTML={{ __html: `
-        [data-element-id="${config.id}::logo"] img {
+        #site-canvas [data-element-id="${config.id}::logo"],
+        [data-element-id="${config.id}::logo"] {
+          height: auto !important;
+          width: auto !important;
+          min-height: 0 !important;
+          max-height: none !important;
+          max-width: none !important;
+          overflow: visible !important;
+          display: flex !important;
+          align-items: center !important;
+        }
+        #site-canvas [data-element-id="${config.id}::logo"] .brixsa-logo-img,
+        [data-element-id="${config.id}::logo"] .brixsa-logo-img {
           height: 70px !important;
           width: auto !important;
           min-height: 70px !important;
           max-height: 70px !important;
+          max-width: none !important;
           object-fit: contain !important;
           display: block !important;
         }
@@ -1493,7 +1506,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
         >
           {isLogoUrl(logo)
             // eslint-disable-next-line @next/next/no-img-element
-            ? <img src={logo} alt="Logo" />
+            ? <img src={logo} alt="Logo" className="brixsa-logo-img" />
             : <span style={{ fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)', color: 'white' }}>{logo}</span>
           }
         </div>
