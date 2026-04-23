@@ -549,11 +549,174 @@ function CanopyFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
   )
 }
 
+/* ═══ Brixsa Parallax with Lightbox ═══ */
+function BrixsaParallaxWithLightbox({ items, sectionId, isEditing }: { items: SlideItem[]; sectionId: string; isEditing?: boolean }) {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+
+  return (
+    <section {...elementProps(sectionId, 'wrapper', 'container', 'Parallax Section')} style={{ width: '100%' }}>
+      {items.map((slide, i) => (
+        <BrixsaFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={sectionId} isEditing={isEditing} onViewClick={() => setLightboxIndex(i)} />
+      ))}
+      {lightboxIndex !== null && (
+        <BrixsaLightbox items={items} activeIndex={lightboxIndex} onClose={() => setLightboxIndex(null)} />
+      )}
+    </section>
+  )
+}
+
+/* ═══ Brixsa Lightbox — Luxury fullscreen gallery modal ═══ */
+function BrixsaLightbox({ items, activeIndex, onClose }: { items: SlideItem[]; activeIndex: number; onClose: () => void }) {
+  const [current, setCurrent] = useState(activeIndex)
+  const [fade, setFade] = useState(true)
+
+  useEffect(() => { setCurrent(activeIndex) }, [activeIndex])
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowRight') goNext()
+      if (e.key === 'ArrowLeft') goPrev()
+    }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  })
+
+  const goTo = (i: number) => {
+    setFade(false)
+    setTimeout(() => { setCurrent(i); setFade(true) }, 200)
+  }
+  const goNext = () => goTo((current + 1) % items.length)
+  const goPrev = () => goTo((current - 1 + items.length) % items.length)
+
+  const slide = items[current]
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 99999,
+      backgroundColor: 'rgba(5, 5, 5, 0.96)',
+      backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)',
+      display: 'flex', flexDirection: 'column',
+      animation: 'brixsaLightboxIn 0.4s ease-out',
+    }}>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes brixsaLightboxIn { from { opacity: 0; } to { opacity: 1; } }
+      ` }} />
+
+      {/* Top bar — close + counter */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: 'clamp(16px, 3vw, 32px) clamp(20px, 5vw, 60px)',
+        flexShrink: 0,
+      }}>
+        <span style={{
+          fontFamily: 'var(--font-body, inherit)', fontSize: '13px', fontWeight: 300,
+          color: 'rgba(255,255,255,0.5)', letterSpacing: '0.2em',
+        }}>
+          {String(current + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
+        </span>
+        <div role="button" onClick={onClose} style={{ cursor: 'pointer', padding: '8px' }}>
+          <span style={{ width: '28px', height: '20px', position: 'relative', display: 'block' }}>
+            <span style={{ width: '28px', height: '2px', display: 'block', position: 'absolute', backgroundColor: 'white', left: 0, top: '9px', transform: 'rotate(45deg)', transformOrigin: 'center' }} />
+            <span style={{ width: '28px', height: '2px', display: 'block', position: 'absolute', backgroundColor: 'white', left: 0, top: '9px', transform: 'rotate(-45deg)', transformOrigin: 'center' }} />
+          </span>
+        </div>
+      </div>
+
+      {/* Image area */}
+      <div style={{
+        flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        position: 'relative', overflow: 'hidden',
+        padding: '0 clamp(60px, 8vw, 120px)',
+      }}>
+        {/* Left arrow */}
+        <div role="button" onClick={goPrev} style={{
+          position: 'absolute', left: 'clamp(12px, 2vw, 32px)', top: '50%', transform: 'translateY(-50%)',
+          cursor: 'pointer', padding: '16px', zIndex: 2,
+          opacity: 0.5, transition: 'opacity 0.3s',
+        }} onMouseEnter={e => e.currentTarget.style.opacity = '1'} onMouseLeave={e => e.currentTarget.style.opacity = '0.5'}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </div>
+
+        {/* Image */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={slide?.image}
+          alt={slide?.title || ''}
+          style={{
+            maxWidth: '100%', maxHeight: '70vh', objectFit: 'contain',
+            borderRadius: '2px',
+            opacity: fade ? 1 : 0,
+            transition: 'opacity 0.2s ease',
+            boxShadow: '0 20px 80px rgba(0,0,0,0.6)',
+          }}
+        />
+
+        {/* Right arrow */}
+        <div role="button" onClick={goNext} style={{
+          position: 'absolute', right: 'clamp(12px, 2vw, 32px)', top: '50%', transform: 'translateY(-50%)',
+          cursor: 'pointer', padding: '16px', zIndex: 2,
+          opacity: 0.5, transition: 'opacity 0.3s',
+        }} onMouseEnter={e => e.currentTarget.style.opacity = '1'} onMouseLeave={e => e.currentTarget.style.opacity = '0.5'}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </div>
+
+      {/* Bottom — title + subtitle */}
+      <div style={{
+        padding: 'clamp(16px, 3vw, 32px) clamp(20px, 5vw, 60px)',
+        textAlign: 'center', flexShrink: 0,
+        opacity: fade ? 1 : 0, transition: 'opacity 0.2s ease',
+      }}>
+        <h3 style={{
+          fontFamily: 'var(--font-heading, inherit)', fontSize: 'clamp(1.5rem, 1rem + 2vw, 2.5rem)',
+          fontWeight: 300, fontStyle: 'italic', color: 'white', marginBottom: '8px',
+        }}>
+          {slide?.title}
+        </h3>
+        <p style={{
+          fontFamily: 'var(--font-body, inherit)', fontSize: '14px', fontWeight: 300,
+          color: 'rgba(255,255,255,0.5)', maxWidth: '500px', margin: '0 auto',
+        }}>
+          {slide?.subtitle}
+        </p>
+
+        {/* Thumbnails */}
+        <div style={{
+          display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '24px',
+        }}>
+          {items.map((item, i) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={item.id}
+              src={item.image}
+              alt=""
+              onClick={() => goTo(i)}
+              style={{
+                width: '48px', height: '48px', objectFit: 'cover', borderRadius: '2px',
+                cursor: 'pointer',
+                opacity: i === current ? 1 : 0.35,
+                border: i === current ? '1px solid var(--color-accent, #D4AF37)' : '1px solid transparent',
+                transition: 'opacity 0.3s, border-color 0.3s',
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* Brixsa parallax slide.
    - Preview mode (!isEditing): native CSS background-attachment:fixed — zero jank, pixel-perfect.
      Requires Canvas.tsx to skip transform in preview (already done).
    - Editor mode (isEditing): JS scroll-based fallback because transform parent breaks fixed. */
-function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: SlideItem; idx: number; sectionId: string; isEditing?: boolean }) {
+function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing, onViewClick }: { slide: SlideItem; idx: number; sectionId: string; isEditing?: boolean; onViewClick?: () => void }) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
 
@@ -603,13 +766,12 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
 
   if (!isEditing) {
     return (
-      <a
-        href={`/property/${slideSlug}`}
-        {...elementProps(sectionId, `slides.${idx}`, 'link', 'Slide')}
+      <div
+        {...elementProps(sectionId, `slides.${idx}`, 'container', 'Slide')}
+        onClick={onViewClick}
         style={{
           display: 'block',
-          textDecoration: 'none',
-          color: 'inherit',
+          cursor: onViewClick ? 'pointer' : 'default',
         }}
       >
         <BrixsaViewCursor
@@ -659,7 +821,7 @@ function BrixsaFixedBgSlide({ slide, idx, sectionId, isEditing }: { slide: Slide
             </div>
           </div>
         </BrixsaViewCursor>
-      </a>
+      </div>
     )
   }
 
@@ -3360,13 +3522,7 @@ export function SliderSection({ config, isEditing }: { config: SectionConfig; is
     ] as SlideItem[]
     const items = slides.length > 0 ? slides : defaultSlides
 
-    return (
-      <section {...elementProps(config.id, 'wrapper', 'container', 'Parallax Section')} style={{ width: '100%' }}>
-        {items.map((slide, i) => (
-          <BrixsaFixedBgSlide key={slide.id} slide={slide} idx={i} sectionId={config.id} isEditing={isEditing} />
-        ))}
-      </section>
-    )
+    return <BrixsaParallaxWithLightbox items={items} sectionId={config.id} isEditing={isEditing} />
   }
 
   // ── braise-parallax: Fullscreen parallax restaurant gallery ──
