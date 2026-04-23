@@ -1447,10 +1447,10 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
     const forceLogoSize = () => {
       if (logoImgRef.current) {
         const el = logoImgRef.current
-        el.style.setProperty('height', '90px', 'important')
+        el.style.setProperty('height', '120px', 'important')
         el.style.setProperty('width', 'auto', 'important')
-        el.style.setProperty('min-height', '90px', 'important')
-        el.style.setProperty('max-height', '90px', 'important')
+        el.style.setProperty('min-height', '120px', 'important')
+        el.style.setProperty('max-height', '120px', 'important')
         el.style.setProperty('max-width', 'none', 'important')
         el.style.setProperty('display', 'block', 'important')
         el.style.setProperty('object-fit', 'contain', 'important')
@@ -1502,7 +1502,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
         style={{
           zIndex: 10000,
           backgroundColor: 'transparent',
-          minHeight: '100px',
+          minHeight: '130px',
           paddingLeft: 'clamp(20px, 5vw, 60px)',
           paddingRight: 'clamp(20px, 5vw, 60px)',
           fontFamily: 'var(--font-body, inherit)',
