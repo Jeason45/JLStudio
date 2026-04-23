@@ -204,8 +204,11 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                 <div className="mb-6">
                   <h3 {...elementProps(config.id, `plans.${planIdx}.name`, 'heading')} className={cn('font-bold text-lg mb-1', plan.highlighted ? 'text-white' : 'text-zinc-900')}>{plan.name}</h3>
                   <p {...elementProps(config.id, `plans.${planIdx}.description`, 'text')} className={cn('text-xs mb-4', plan.highlighted ? 'text-white/70' : 'text-zinc-500')}>{plan.description}</p>
-                  <div className="flex items-end gap-1">
+                  <div className="flex items-end gap-2">
                     <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className={cn('text-4xl font-bold', plan.highlighted ? 'text-white' : 'text-zinc-900')}>{plan.price}</span>
+                    {(plan as any).originalPrice && (
+                      <span className={cn('text-lg line-through mb-1', plan.highlighted ? 'text-white/40' : 'text-zinc-400')}>{(plan as any).originalPrice}</span>
+                    )}
                     <span className={cn('text-sm mb-1', plan.highlighted ? 'text-white/70' : 'text-zinc-400')}>{displayPeriod(plan.period)}</span>
                   </div>
                 </div>
@@ -1141,8 +1144,11 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                 <div className="mb-6">
                   <h3 {...elementProps(config.id, `plans.${planIdx}.name`, 'heading')} className="font-bold text-lg mb-1 text-white">{plan.name}</h3>
                   <p {...elementProps(config.id, `plans.${planIdx}.description`, 'text')} className="text-xs mb-4 text-white/40">{plan.description}</p>
-                  <div className="flex items-end gap-1">
+                  <div className="flex items-end gap-2">
                     <span {...elementProps(config.id, `plans.${planIdx}.price`, 'text')} className="text-4xl font-bold text-white">{plan.price}</span>
+                    {(plan as any).originalPrice && (
+                      <span className="text-lg line-through mb-1 text-white/30">{(plan as any).originalPrice}</span>
+                    )}
                     <span className="text-sm mb-1 text-white/30">{displayPeriod(plan.period)}</span>
                   </div>
                 </div>
