@@ -1439,6 +1439,38 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
   const [menuOpen, setMenuOpen] = useState(false)
   const content = config.content as Record<string, unknown>
   const ctaHref = (content?.ctaHref as string) || '#contact'
+  const logoImgRef = useRef<HTMLImageElement>(null)
+  const logoContainerRef = useRef<HTMLDivElement>(null)
+
+  // Force logo size via JS — overrides ANY CSS including ClassStyleInjector !important
+  useEffect(() => {
+    const forceLogoSize = () => {
+      if (logoImgRef.current) {
+        const el = logoImgRef.current
+        el.style.setProperty('height', '90px', 'important')
+        el.style.setProperty('width', 'auto', 'important')
+        el.style.setProperty('min-height', '90px', 'important')
+        el.style.setProperty('max-height', '90px', 'important')
+        el.style.setProperty('max-width', 'none', 'important')
+        el.style.setProperty('display', 'block', 'important')
+        el.style.setProperty('object-fit', 'contain', 'important')
+      }
+      if (logoContainerRef.current) {
+        const el = logoContainerRef.current
+        el.style.setProperty('height', 'auto', 'important')
+        el.style.setProperty('max-height', 'none', 'important')
+        el.style.setProperty('max-width', 'none', 'important')
+        el.style.setProperty('overflow', 'visible', 'important')
+        el.style.setProperty('display', 'flex', 'important')
+        el.style.setProperty('align-items', 'center', 'important')
+      }
+    }
+    forceLogoSize()
+    // Re-apply after ClassStyleInjector may have overridden
+    const timer = setTimeout(forceLogoSize, 100)
+    const timer2 = setTimeout(forceLogoSize, 500)
+    return () => { clearTimeout(timer); clearTimeout(timer2) }
+  })
 
   useEffect(() => {
     if (menuOpen) {
@@ -1462,30 +1494,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
 
   return (
     <>
-      {/* Force logo size — #site-canvas prefix matches ClassStyleInjector specificity */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        #site-canvas [data-element-id="${config.id}::logo"],
-        [data-element-id="${config.id}::logo"] {
-          height: auto !important;
-          width: auto !important;
-          min-height: 0 !important;
-          max-height: none !important;
-          max-width: none !important;
-          overflow: visible !important;
-          display: flex !important;
-          align-items: center !important;
-        }
-        #site-canvas [data-element-id="${config.id}::logo"] .brixsa-logo-img,
-        [data-element-id="${config.id}::logo"] .brixsa-logo-img {
-          height: 70px !important;
-          width: auto !important;
-          min-height: 70px !important;
-          max-height: 70px !important;
-          max-width: none !important;
-          object-fit: contain !important;
-          display: block !important;
-        }
-      ` }} />
+      <style dangerouslySetInnerHTML={{ __html: `` }} />
       {/* ─── NAVBAR ─── */}
       <header
         {...elementProps(config.id, 'wrapper', 'container', 'Header')}
@@ -1493,7 +1502,7 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
         style={{
           zIndex: 10000,
           backgroundColor: 'transparent',
-          minHeight: '80px',
+          minHeight: '100px',
           paddingLeft: 'clamp(20px, 5vw, 60px)',
           paddingRight: 'clamp(20px, 5vw, 60px)',
           fontFamily: 'var(--font-body, inherit)',
@@ -1501,12 +1510,12 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
       >
         {/* LEFT — Logo */}
         <div
+          ref={logoContainerRef}
           {...elementProps(config.id, 'logo', 'image')}
-          style={{ display: 'flex', alignItems: 'center', lineHeight: 0 }}
         >
           {isLogoUrl(logo)
             // eslint-disable-next-line @next/next/no-img-element
-            ? <img src={logo} alt="Logo" className="brixsa-logo-img" />
+            ? <img ref={logoImgRef} src={logo} alt="Logo" />
             : <span style={{ fontSize: '20px', fontWeight: 600, fontFamily: 'var(--font-heading, inherit)', color: 'white' }}>{logo}</span>
           }
         </div>
