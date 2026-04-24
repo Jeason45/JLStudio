@@ -261,7 +261,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
         {/* Dark overlay */}
         <div className="absolute inset-0" style={{ backgroundColor: `rgba(0,0,0,${config.style.backgroundImage?.overlayOpacity ?? 0.5})` }} />
         {/* Content */}
-        <div className={cn("relative z-10 max-w-4xl mx-auto px-6 text-center py-24 space-y-8", textAlign && getTextAlignClass(textAlign))}>
+        <div className={cn("relative z-10 max-w-4xl mx-auto px-6 text-center py-28 lg:py-36 space-y-10", textAlign && getTextAlignClass(textAlign))}>
           {/* Decorative image (logo/emblem) */}
           {content.decorativeImage && (
             // eslint-disable-next-line @next/next/no-img-element
@@ -278,15 +278,17 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
               {content.eyebrow}
             </span>
           )}
-          {/* Gold divider */}
-          <div className="w-12 h-px mx-auto" style={{ background: gold }} />
-          <h1
-            {...elementProps(config.id, 'title', 'heading')}
-            className={cn("text-4xl md:text-5xl lg:text-7xl font-semibold leading-[1.1] tracking-tight text-white", titleSize && getTitleSizeClass(titleSize))}
-            style={{ fontFamily: 'var(--font-heading, inherit)', textShadow: '0 2px 20px rgba(0,0,0,0.5)', ...(customTextColor ? { color: customTextColor } : {}), ...(fontStyle === 'italic' ? { fontStyle: 'italic' } : {}) }}
-          >
-            {title}
-          </h1>
+          {/* Gold divider — only if no decorative image or title exists */}
+          {!content.decorativeImage && <div className="w-12 h-px mx-auto" style={{ background: gold }} />}
+          {title && (
+            <h1
+              {...elementProps(config.id, 'title', 'heading')}
+              className={cn("text-4xl md:text-5xl lg:text-7xl font-semibold leading-[1.1] tracking-tight text-white", titleSize && getTitleSizeClass(titleSize))}
+              style={{ fontFamily: 'var(--font-heading, inherit)', textShadow: '0 2px 20px rgba(0,0,0,0.5)', ...(customTextColor ? { color: customTextColor } : {}), ...(fontStyle === 'italic' ? { fontStyle: 'italic' } : {}) }}
+            >
+              {title}
+            </h1>
+          )}
           <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed tracking-wide" style={{ fontFamily: 'var(--font-body, inherit)', textShadow: '0 1px 10px rgba(0,0,0,0.5)' }}>
             {subtitle}
           </p>
