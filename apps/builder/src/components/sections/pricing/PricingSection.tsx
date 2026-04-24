@@ -1,3 +1,5 @@
+'use client'
+import { useState, useEffect, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import type { SectionConfig } from '@/types/site'
 import type { PricingContent, PricingPlan } from '@/types/sections'
@@ -5,6 +7,62 @@ import { Check, X } from 'lucide-react'
 import { getTitleSizeClass, getTextAlignClass } from '../_utils'
 import { elementProps } from '@/lib/elementHelpers'
 import { EditablePlaceholder } from '../_EditablePlaceholder'
+
+// ─── Billetweb Modal ──────────────────────────────────────
+function BilletwebModal({ embedUrl, accentColor, variant, onClose }: { embedUrl: string; accentColor: string; variant: 'dark' | 'light'; onClose: () => void }) {
+  const isDark = variant === 'dark'
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', handleEsc)
+    document.body.style.overflow = 'hidden'
+    return () => { document.removeEventListener('keydown', handleEsc); document.body.style.overflow = '' }
+  }, [onClose])
+
+  return (
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center" onClick={onClose}>
+      {/* Backdrop */}
+      <div className="absolute inset-0" style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.6)', backdropFilter: 'blur(12px)' }} />
+      {/* Modal */}
+      <div
+        className="relative w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col rounded-2xl overflow-hidden"
+        style={{
+          backgroundColor: isDark ? '#0a0a0a' : '#ffffff',
+          border: `1px solid ${isDark ? accentColor + '40' : '#e5e7eb'}`,
+          boxShadow: isDark ? `0 0 60px ${accentColor}15, 0 25px 50px rgba(0,0,0,0.5)` : '0 25px 50px rgba(0,0,0,0.15)',
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : '#f3f4f6'}` }}>
+          <div>
+            <p className="text-xs font-medium tracking-[0.2em] uppercase" style={{ color: accentColor }}>Réservation</p>
+            <h3 className={cn('text-lg font-semibold mt-0.5', isDark ? 'text-white' : 'text-zinc-900')}>Choisissez votre formule</h3>
+          </div>
+          <button
+            onClick={onClose}
+            className={cn('w-8 h-8 rounded-full flex items-center justify-center transition-colors', isDark ? 'hover:bg-white/10 text-white/60' : 'hover:bg-zinc-100 text-zinc-400')}
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        {/* Iframe */}
+        <div className="flex-1 overflow-auto">
+          <iframe
+            src={embedUrl}
+            className="w-full"
+            style={{ minHeight: '600px', height: '70vh', background: 'white', border: 'none' }}
+            allow="payment"
+          />
+        </div>
+        {/* Gold line at bottom */}
+        {isDark && (
+          <div className="h-px" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}60, transparent)` }} />
+        )}
+      </div>
+    </div>
+  )
+}
 
 interface PricingSectionProps {
   config: SectionConfig
@@ -47,6 +105,9 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
   const plans: PricingPlan[] = content.plans ?? []
   const variant = config.variant ?? 'startup-columns'
   const { accentColor, titleSize, textAlign, textColor } = config.style
+  const embedUrl = (content as any).embedUrl as string | undefined
+  const [modalOpen, setModalOpen] = useState(false)
+  const closeModal = useCallback(() => setModalOpen(false), [])
 
   // Parse variant
   const [universe, layout] = variant.includes('-')
@@ -225,33 +286,41 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                     </li>
                   ))}
                 </ul>
-                <a
-                  {...elementProps(config.id, `plans.${planIdx}.cta`, 'button')}
-                          href={plan.ctaHref}
-                  className={cn(
-                    'block w-full text-center py-2.5 rounded-xl text-sm font-semibold transition-colors',
-                    plan.highlighted
-                      ? 'bg-white hover:bg-white/90'
-                      : 'bg-zinc-50 text-zinc-700 hover:bg-zinc-100 border border-zinc-200'
-                  )}
-                  style={plan.highlighted ? { color: accent } : undefined}
-                >
-                  {plan.cta}
-                </a>
+                {embedUrl ? (
+                  <button
+                    {...elementProps(config.id, `plans.${planIdx}.cta`, 'button')}
+                    onClick={() => setModalOpen(true)}
+                    className={cn(
+                      'block w-full text-center py-2.5 rounded-xl text-sm font-semibold transition-colors cursor-pointer',
+                      plan.highlighted
+                        ? 'bg-white hover:bg-white/90'
+                        : 'bg-zinc-50 text-zinc-700 hover:bg-zinc-100 border border-zinc-200'
+                    )}
+                    style={plan.highlighted ? { color: accent } : undefined}
+                  >
+                    {plan.cta}
+                  </button>
+                ) : (
+                  <a
+                    {...elementProps(config.id, `plans.${planIdx}.cta`, 'button')}
+                    href={plan.ctaHref}
+                    className={cn(
+                      'block w-full text-center py-2.5 rounded-xl text-sm font-semibold transition-colors',
+                      plan.highlighted
+                        ? 'bg-white hover:bg-white/90'
+                        : 'bg-zinc-50 text-zinc-700 hover:bg-zinc-100 border border-zinc-200'
+                    )}
+                    style={plan.highlighted ? { color: accent } : undefined}
+                  >
+                    {plan.cta}
+                  </a>
+                )}
               </div>
             ))}
           </div>
-          {/* Billetweb embed */}
-          {(content as any).embedUrl && (
-            <div className="mt-14 max-w-3xl mx-auto">
-              <h3 className="text-2xl font-bold text-zinc-900 text-center mb-6" style={textColor ? { color: textColor } : undefined}>Réservez directement</h3>
-              <iframe
-                src={(content as any).embedUrl}
-                className="w-full rounded-2xl border border-zinc-200 shadow-sm"
-                style={{ minHeight: '700px', background: 'white' }}
-                allow="payment"
-              />
-            </div>
+          {/* Billetweb modal */}
+          {modalOpen && embedUrl && (
+            <BilletwebModal embedUrl={embedUrl} accentColor={accent} variant="light" onClose={closeModal} />
           )}
         </div>
       </section>
@@ -1178,35 +1247,41 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
                     </li>
                   ))}
                 </ul>
-                <a
-                  {...elementProps(config.id, `plans.${planIdx}.cta`, 'button')}
-                          href={plan.ctaHref}
-                  className={cn(
-                    'block w-full text-center py-2.5 rounded-xl text-sm font-semibold transition-all mt-auto',
-                    plan.highlighted
-                      ? 'text-white hover:opacity-90 shadow-lg'
-                      : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'
-                  )}
-                  style={plan.highlighted ? { background: `linear-gradient(135deg, ${accent}, ${accent}99)`, boxShadow: `0 0 20px ${accent}30` } : undefined}
-                >
-                  {plan.cta}
-                </a>
+                {embedUrl ? (
+                  <button
+                    {...elementProps(config.id, `plans.${planIdx}.cta`, 'button')}
+                    onClick={() => setModalOpen(true)}
+                    className={cn(
+                      'block w-full text-center py-2.5 rounded-xl text-sm font-semibold transition-all mt-auto cursor-pointer',
+                      plan.highlighted
+                        ? 'text-white hover:opacity-90 shadow-lg'
+                        : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'
+                    )}
+                    style={plan.highlighted ? { background: `linear-gradient(135deg, ${accent}, ${accent}99)`, boxShadow: `0 0 20px ${accent}30` } : undefined}
+                  >
+                    {plan.cta}
+                  </button>
+                ) : (
+                  <a
+                    {...elementProps(config.id, `plans.${planIdx}.cta`, 'button')}
+                    href={plan.ctaHref}
+                    className={cn(
+                      'block w-full text-center py-2.5 rounded-xl text-sm font-semibold transition-all mt-auto',
+                      plan.highlighted
+                        ? 'text-white hover:opacity-90 shadow-lg'
+                        : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'
+                    )}
+                    style={plan.highlighted ? { background: `linear-gradient(135deg, ${accent}, ${accent}99)`, boxShadow: `0 0 20px ${accent}30` } : undefined}
+                  >
+                    {plan.cta}
+                  </a>
+                )}
               </div>
             ))}
           </div>
-          {/* Billetweb embed */}
-          {(content as any).embedUrl && (
-            <div className="mt-14 max-w-3xl mx-auto">
-              <h3 className="text-2xl font-bold text-white text-center mb-6">Réservez directement</h3>
-              <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl" style={{ boxShadow: `0 0 40px ${accent}15` }}>
-                <iframe
-                  src={(content as any).embedUrl}
-                  className="w-full"
-                  style={{ minHeight: '700px', background: '#0a0a0a' }}
-                  allow="payment"
-                />
-              </div>
-            </div>
+          {/* Billetweb modal */}
+          {modalOpen && embedUrl && (
+            <BilletwebModal embedUrl={embedUrl} accentColor={accent} variant="dark" onClose={closeModal} />
           )}
         </div>
       </section>
