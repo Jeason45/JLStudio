@@ -194,11 +194,18 @@ export function FormSection({ config, isEditing }: FormSectionProps) {
       formData.forEach((v, k) => {
         if (k !== '_hp_field') data[k] = v.toString()
       })
-      const res = await fetch('/api/forms/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ siteId: config.id.split('_')[0], formName: content.formName || 'form', data }),
-      })
+      const submitUrl = content.submitUrl
+      const res = submitUrl
+        ? await fetch(submitUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+        : await fetch('/api/forms/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ siteId: config.id.split('_')[0], formName: content.formName || 'form', data }),
+          })
       if (!res.ok) throw new Error()
       // Redirect if configured, otherwise show success message
       if (content.redirectUrl) {
@@ -209,7 +216,7 @@ export function FormSection({ config, isEditing }: FormSectionProps) {
     } catch {
       setStatus('error')
     }
-  }, [isEditing, honeypot, config.id, content.formName])
+  }, [isEditing, honeypot, config.id, content.formName, content.submitUrl, content.redirectUrl])
 
   // ─── Build fields grid ───
   const renderFields = (inputClass: string, accent: string, labelClass: string) => (

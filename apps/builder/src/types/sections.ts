@@ -347,6 +347,11 @@ export interface FormContent {
   }
   createContact?: boolean
   webhookUrl?: string
+  /**
+   * Post direct vers une URL externe (ex. https://admin.lartducercle.fr/api/members/apply).
+   * Si défini, le body envoyé est le JSON brut des champs (pas d'enveloppe { siteId, formName, data }).
+   */
+  submitUrl?: string
 }
 
 export interface FormConfig extends SectionConfig {

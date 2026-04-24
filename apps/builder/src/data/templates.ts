@@ -1704,8 +1704,8 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       //    Galerie dorée du Cercle en fond HD, logo centré, tagline sobre
       { type: 'hero', variant: 'luxe', content: { eyebrow: '', title: '', subtitle: "La force née de rencontres choisies", backgroundImage: '/ldc/hero-salon-ldc.jpg', primaryButton: { label: 'Découvrir le prochain événement', href: '#evenement', variant: 'outline' as any } }, style: { background: 'dark' as any, paddingY: 'none', backgroundImage: { url: '/ldc/hero-salon-ldc.jpg', overlayOpacity: 0.1, position: 'center', size: 'cover' } }, visible: true },
 
-      // 3. Le Cercle — Présentation
-      { type: 'cta', variant: 'obscura-centered', content: { title: "Un cercle privé parisien dédié aux rencontres\nentre culture, création et décision", subtitle: "L'ART DU CERCLE réunit des personnalités issues de différents univers autour d'expériences conçues pour favoriser des échanges durables. À travers ses événements, ses bals et ses formats immersifs, il propose un cadre contemporain où se rencontrent artistes, entrepreneurs et acteurs institutionnels.\n\nInspiré par la tradition des cercles européens, L'ART DU CERCLE fait revivre un art de la rencontre où les idées circulent librement et où les échanges façonnent l'avenir.", badge: 'LE CERCLE', primaryButton: { label: 'En savoir plus', href: '/le-cercle' } }, style: { background: 'dark', paddingY: 'xl' }, visible: true },
+      // 3. Le Cercle — Présentation (fond texturé FOND.png, baseline + CTA)
+      { type: 'cta', variant: 'obscura-centered', content: { title: "L'ART DU CERCLE est un cercle privé parisien dédié aux rencontres entre culture, création et décision.", subtitle: "À travers ses événements, ses bals et ses formats immersifs, il réunit des personnalités issues de différents univers autour d'expériences conçues pour favoriser des échanges durables.\n\nInspiré par la tradition des cercles européens, L'ART DU CERCLE propose un cadre contemporain où se rencontrent artistes, entrepreneurs et acteurs institutionnels.", baseline: 'La force née de rencontres choisies.', backgroundImage: '/ldc/fond-texture.png', overlayOpacity: 0.15, primaryButton: { label: 'En savoir plus', href: '/le-cercle' } }, style: { background: 'dark', paddingY: 'xl' }, visible: true },
 
       // 4. Événement en cours — Bal C'est L'Est (image avec texte intégré)
       { type: 'hero', variant: 'luxe', content: { eyebrow: '', title: '', subtitle: '', backgroundImage: '/ldc/bal-hero.jpg', primaryButton: { label: 'Réserver ma place', href: '/reservation', variant: 'outline' as any }, secondaryButton: { label: 'Voir le programme', href: '#programme', variant: 'ghost' as any } }, style: { background: 'dark' as any, paddingY: 'none', backgroundImage: { url: '/ldc/bal-hero.jpg', overlayOpacity: 0.1, position: 'center', size: 'cover' } }, visible: true },
@@ -1727,6 +1727,28 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       // 9. CTA final — parallax (texte fixe + fond qui scroll)
       //    Grande salle vide en fond = "cette salle vous attend"
       { type: 'cta', variant: 'brixsa-centered', content: { title: "29 mai 2026.\nVotre place vous attend.", subtitle: "Places limitées — ne manquez pas cette nuit d'exception.", primaryButton: { label: 'Réserver maintenant', href: '/reservation', variant: 'secondary' }, backgroundImage: '/ldc/cercle-grande-salle.jpg' }, style: { background: 'dark', paddingY: 'xl', textColor: '#F5F0E8' }, visible: true },
+
+      // 9bis. Newsletter — inscription aux futures expériences du Cercle
+      {
+        type: 'form',
+        variant: 'obscura-centered',
+        content: {
+          title: 'Restez informé',
+          subtitle: "Inscrivez-vous pour recevoir en avant-première nos événements, bals et ouvertures de billetterie.",
+          formName: 'newsletter-footer',
+          submitUrl: 'https://admin.lartducercle.fr/api/newsletter/subscribe',
+          submitLabel: "M'inscrire",
+          successMessage: "Un email de confirmation vous a été envoyé. Vérifiez votre boîte de réception.",
+          errorMessage: "Une erreur est survenue. Merci de réessayer.",
+          honeypot: true,
+          fields: [
+            { id: 'firstName', name: 'firstName', label: 'Prénom (optionnel)', type: 'text', required: false },
+            { id: 'email', name: 'email', label: 'Email', type: 'email', required: true, placeholder: 'vous@email.com' },
+          ],
+        },
+        style: { background: 'dark', paddingY: 'xl', accentColor: '#D4AF37' },
+        visible: true,
+      },
 
       // 10. Footer
       { type: 'site-footer', variant: 'brixsa', content: { logo: "L'Art du Cercle", tagline: 'Cercle privé parisien', copyright: `© ${year} L'Art du Cercle. Tous droits réservés.`, columns: [{ id: '1', title: 'Le Cercle', links: [{ id: '1', label: 'Le Bal', href: '#evenement' }, { id: '2', label: 'Programme', href: '#programme' }, { id: '3', label: 'Formules', href: '#formules' }, { id: '4', label: 'Le Lieu', href: '#lieu' }, { id: '5', label: 'FAQ', href: '#faq' }] }, { id: '2', title: 'Contact', links: [{ id: '1', label: '07 82 83 71 37', href: 'tel:+33782837137' }, { id: '2', label: 'contact@lartducercle.com', href: 'mailto:contact@lartducercle.com' }, { id: '3', label: 'Instagram @lartducercle', href: 'https://instagram.com/lartducercle' }] }, { id: '3', title: 'Légal', links: [{ id: '1', label: 'Mentions légales', href: '/mentions-legales' }, { id: '2', label: 'Confidentialité', href: '/confidentialite' }, { id: '3', label: 'CGV', href: '/cgv' }] }], socials: { instagram: 'https://instagram.com/lartducercle' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
@@ -1778,6 +1800,48 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           { type: 'cta', variant: 'obscura-centered', content: { title: "Paris", subtitle: "L'ART DU CERCLE s'inscrit dans la tradition des cercles parisiens. Paris est depuis des siècles un lieu de rencontre entre cultures européennes, diplomaties informelles et mouvements artistiques.\n\nLe Cercle prolonge cet héritage en proposant une scène contemporaine où dialoguent l'histoire, la création et les réseaux d'aujourd'hui.", badge: 'ANCRAGE' }, style: { background: 'dark', paddingY: 'xl' }, visible: true },
           { type: 'cta', variant: 'obscura-centered', content: { title: "La force née de rencontres choisies", primaryButton: { label: 'Devenir Membre', href: '/devenir-membre' } }, style: { background: 'dark', paddingY: 'xl' }, visible: true },
           { type: 'site-footer', variant: 'brixsa', content: { logo: "L'Art du Cercle", tagline: 'Private Members Experience — Paris', copyright: `© ${year} L'Art du Cercle. Tous droits réservés.`, columns: [{ id: '1', title: 'Le Cercle', links: [{ id: '1', label: 'Accueil', href: '/' }, { id: '2', label: 'Le Bal', href: '/#evenement' }, { id: '3', label: 'Devenir Membre', href: '/devenir-membre' }] }, { id: '2', title: 'Contact', links: [{ id: '1', label: 'contact@lartducercle.com', href: 'mailto:contact@lartducercle.com' }, { id: '2', label: 'Instagram', href: 'https://instagram.com/lartducercle' }] }], socials: { instagram: 'https://instagram.com/lartducercle' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+        ],
+      },
+      // ── DEVENIR MEMBRE ──
+      {
+        slug: 'devenir-membre',
+        title: 'Devenir Membre — L\'Art du Cercle',
+        sections: [
+          { type: 'site-header', variant: 'brixsa', content: { logo: "L'Art du Cercle", logoImage: '/ldc/logo-ldc-sceau.png', links: [{ id: '1', label: 'Accueil', href: '/' }, { id: '2', label: 'Le Cercle', href: '/le-cercle' }, { id: '3', label: 'Le Bal', href: '/#evenement' }], ctaLabel: 'Réserver', ctaHref: '/reservation' }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'hero', variant: 'brixsa-page', content: { title: 'Devenir Membre', subtitle: "Rejoindre L'Art du Cercle", backgroundImage: '/ldc/hero-salon-ldc.jpg' }, style: { background: 'dark', paddingY: 'xl' }, visible: true },
+          { type: 'cta', variant: 'obscura-centered', content: { title: "Rejoindre L'ART DU CERCLE,\nc'est intégrer un cercle privé où les rencontres\ndeviennent opportunités, inspirations et collaborations.", subtitle: "L'ART DU CERCLE réunit des personnalités issues des mondes artistique, entrepreneurial, culturel et institutionnel autour d'expériences choisies à Paris.\n\nChaque membre est invité à prendre part à une communauté sélective, pensée pour favoriser les échanges authentiques, les rencontres business et les moments culturels d'exception.\n\nL'accès au Cercle se fait sur candidature, recommandation ou invitation.", badge: 'ENTRER DANS LE CERCLE' }, style: { background: 'dark', paddingY: 'xl' }, visible: true },
+          { type: 'features', variant: 'obscura-accordion', content: { title: 'Les avantages membres', items: [{ id: '1', icon: '🎭', title: 'Accès prioritaire aux événements privés', description: "Bals, dîners, rencontres culturelles, performances et soirées signature." }, { id: '2', icon: '🤝', title: 'Réseau business & culturel', description: "Rencontres avec entrepreneurs, dirigeants, créateurs, artistes, investisseurs et partenaires." }, { id: '3', icon: '✉️', title: 'Invitations privilégiées', description: "Accès anticipé aux inscriptions, places réservées et formats confidentiels." }, { id: '4', icon: '✨', title: 'Expériences exclusives', description: "Moments pensés autour de l'élégance, de la culture et de la qualité des échanges." }] }, style: { background: 'dark', paddingY: 'xl' }, visible: true },
+          {
+            type: 'form',
+            variant: 'obscura-centered',
+            content: {
+              title: "Demande d'adhésion",
+              subtitle: "Merci de compléter ce formulaire afin que notre équipe puisse étudier votre demande.",
+              formName: 'candidature-membre',
+              submitUrl: 'https://admin.lartducercle.fr/api/members/apply',
+              submitLabel: 'Soumettre ma candidature',
+              successMessage: "Votre demande a bien été reçue. L'équipe de L'Art du Cercle reviendra vers vous après étude de votre candidature.",
+              errorMessage: "Une erreur est survenue. Merci de réessayer ou de nous contacter à contact@lartducercle.fr.",
+              honeypot: true,
+              fields: [
+                { id: 'firstName', name: 'firstName', label: 'Prénom', type: 'text', required: true },
+                { id: 'lastName', name: 'lastName', label: 'Nom', type: 'text', required: true },
+                { id: 'email', name: 'email', label: 'Email', type: 'email', required: true },
+                { id: 'phone', name: 'phone', label: 'Téléphone', type: 'tel', required: false },
+                { id: 'profession', name: 'profession', label: 'Profession / fonction', type: 'text', required: false },
+                { id: 'company', name: 'company', label: 'Société / organisation', type: 'text', required: false },
+                { id: 'city', name: 'city', label: 'Ville', type: 'text', required: false },
+                { id: 'motivation', name: 'motivation', label: "Pourquoi souhaitez-vous rejoindre L'Art du Cercle ?", type: 'textarea', required: true, placeholder: 'Quelques lignes sur votre parcours et votre motivation…' },
+                { id: 'recommendedBy', name: 'recommendedBy', label: "Avez-vous été recommandé par un membre ? Si oui, par qui ?", type: 'text', required: false },
+                { id: 'instagramUrl', name: 'instagramUrl', label: 'Profil Instagram (URL)', type: 'url', required: false, placeholder: 'https://instagram.com/votrecompte' },
+                { id: 'linkedinUrl', name: 'linkedinUrl', label: 'Profil LinkedIn (URL)', type: 'url', required: false, placeholder: 'https://linkedin.com/in/votrecompte' },
+              ],
+            },
+            style: { background: 'dark', paddingY: 'xl', accentColor: '#D4AF37' },
+            visible: true,
+          },
+          { type: 'cta', variant: 'obscura-centered', content: { title: "La force née de rencontres choisies" }, style: { background: 'dark', paddingY: 'xl' }, visible: true },
+          { type: 'site-footer', variant: 'brixsa', content: { logo: "L'Art du Cercle", tagline: 'Private Members Experience — Paris', copyright: `© ${year} L'Art du Cercle. Tous droits réservés.`, columns: [{ id: '1', title: 'Le Cercle', links: [{ id: '1', label: 'Accueil', href: '/' }, { id: '2', label: 'Le Bal', href: '/#evenement' }, { id: '3', label: 'Le Cercle', href: '/le-cercle' }] }, { id: '2', title: 'Contact', links: [{ id: '1', label: 'contact@lartducercle.fr', href: 'mailto:contact@lartducercle.fr' }, { id: '2', label: 'Instagram', href: 'https://instagram.com/lartducercle' }] }], socials: { instagram: 'https://instagram.com/lartducercle' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
         ],
       },
       // ── RÉSERVATION ──
