@@ -1537,8 +1537,8 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
         className={cn('fixed top-0 left-0 w-full flex items-center justify-between')}
         style={{
           zIndex: 10000,
-          backgroundColor: headerVisible && lastScrollY.current > 100 ? 'rgba(0,0,0,0.85)' : 'transparent',
-          backdropFilter: headerVisible && lastScrollY.current > 100 ? 'blur(12px)' : 'none',
+          backgroundColor: 'transparent',
+          backdropFilter: 'none',
           minHeight: '100px',
           paddingTop: '15px',
           paddingBottom: '15px',
