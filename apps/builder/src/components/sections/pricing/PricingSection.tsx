@@ -8,27 +8,14 @@ import { getTitleSizeClass, getTextAlignClass } from '../_utils'
 import { elementProps } from '@/lib/elementHelpers'
 import { EditablePlaceholder } from '../_EditablePlaceholder'
 
-// ─── Billetweb Modal ──────────────────────────────────────
+// ─── Billetweb Fullscreen Checkout ──────────────────────────
 function BilletwebModal({ embedUrl, accentColor, variant, onClose }: { embedUrl: string; accentColor: string; variant: 'dark' | 'light'; onClose: () => void }) {
   const isDark = variant === 'dark'
-  const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
-    if (!node) return
-    // Auto-resize iframe to content height (no internal scroll)
-    const handleMessage = (e: MessageEvent) => {
-      if (typeof e.data === 'string' && e.data.startsWith('billetweb:')) {
-        const height = parseInt(e.data.split(':')[1], 10)
-        if (height > 0) node.style.height = `${height}px`
-      }
-      // Billetweb also sends resize via postMessage with {height: N}
-      if (e.data && typeof e.data === 'object' && e.data.height) {
-        node.style.height = `${e.data.height}px`
-      }
-    }
-    window.addEventListener('message', handleMessage)
-    return () => window.removeEventListener('message', handleMessage)
-  }, [])
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
+    // Slide-in animation
+    requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)))
     const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     document.addEventListener('keydown', handleEsc)
     document.body.style.overflow = 'hidden'
@@ -36,46 +23,87 @@ function BilletwebModal({ embedUrl, accentColor, variant, onClose }: { embedUrl:
   }, [onClose])
 
   return (
-    <div className="fixed inset-0 z-[99999] overflow-y-auto" onClick={onClose}>
-      {/* Backdrop */}
-      <div className="fixed inset-0" style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.6)', backdropFilter: 'blur(12px)' }} />
-      {/* Modal — scrolls with page, not internal */}
-      <div className="relative min-h-full flex items-start justify-center py-8 px-4">
-        <div
-          className="relative w-full max-w-2xl rounded-2xl overflow-hidden"
-          style={{
-            backgroundColor: isDark ? '#0a0a0a' : '#ffffff',
-            border: `1px solid ${isDark ? accentColor + '40' : '#e5e7eb'}`,
-            boxShadow: isDark ? `0 0 60px ${accentColor}15, 0 25px 50px rgba(0,0,0,0.5)` : '0 25px 50px rgba(0,0,0,0.15)',
-          }}
-          onClick={e => e.stopPropagation()}
-        >
-          {/* Header */}
-          <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4" style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : '#f3f4f6'}`, backgroundColor: isDark ? '#0a0a0a' : '#ffffff' }}>
-            <div>
-              <p className="text-xs font-medium tracking-[0.2em] uppercase" style={{ color: accentColor }}>Réservation</p>
-              <h3 className={cn('text-lg font-semibold mt-0.5', isDark ? 'text-white' : 'text-zinc-900')}>Choisissez votre formule</h3>
-            </div>
-            <button
-              onClick={onClose}
-              className={cn('w-8 h-8 rounded-full flex items-center justify-center transition-colors', isDark ? 'hover:bg-white/10 text-white/60' : 'hover:bg-zinc-100 text-zinc-400')}
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-          {/* Iframe — full height, no internal scroll */}
-          <iframe
-            ref={iframeRef}
-            src={embedUrl}
-            className="w-full"
-            style={{ minHeight: '800px', background: 'white', border: 'none', display: 'block' }}
-            allow="payment"
-            scrolling="no"
-          />
-          {/* Gold line at bottom */}
-          {isDark && (
-            <div className="h-px" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}60, transparent)` }} />
+    <div
+      className="fixed inset-0 z-[99999] transition-transform duration-500 ease-out"
+      style={{
+        transform: visible ? 'translateY(0)' : 'translateY(100%)',
+        backgroundColor: isDark ? '#060606' : '#f9fafb',
+      }}
+    >
+      {/* Top bar */}
+      <div
+        className="sticky top-0 z-10 flex items-center justify-between px-6 md:px-10 py-4"
+        style={{
+          backgroundColor: isDark ? 'rgba(6,6,6,0.95)' : 'rgba(255,255,255,0.95)',
+          backdropFilter: 'blur(12px)',
+          borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : '#e5e7eb'}`,
+        }}
+      >
+        {/* Back button */}
+        <button
+          onClick={onClose}
+          className={cn(
+            'flex items-center gap-2 text-sm font-medium transition-colors',
+            isDark ? 'text-white/60 hover:text-white' : 'text-zinc-500 hover:text-zinc-900'
           )}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5" /><path d="m12 19-7-7 7-7" />
+          </svg>
+          Retour
+        </button>
+
+        {/* Center title */}
+        <div className="absolute left-1/2 -translate-x-1/2 text-center">
+          <p className="text-[10px] font-medium tracking-[0.25em] uppercase" style={{ color: accentColor }}>Réservation</p>
+          <h3 className={cn('text-sm font-semibold', isDark ? 'text-white' : 'text-zinc-900')}>Bal C&apos;est L&apos;Est — 29 mai 2026</h3>
+        </div>
+
+        {/* Accent dot */}
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: accentColor, boxShadow: `0 0 8px ${accentColor}60` }} />
+      </div>
+
+      {/* Gold decorative line */}
+      {isDark && (
+        <div className="h-px" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}40, transparent)` }} />
+      )}
+
+      {/* Content area */}
+      <div className="h-[calc(100vh-60px)] overflow-y-auto">
+        <div className="max-w-2xl mx-auto px-4 md:px-6 py-8">
+          {/* Elegant header */}
+          <div className="text-center mb-8">
+            <h2 className={cn('text-2xl md:text-3xl font-semibold tracking-tight', isDark ? 'text-white' : 'text-zinc-900')}>
+              Choisissez votre formule
+            </h2>
+            <p className={cn('text-sm mt-2', isDark ? 'text-white/40' : 'text-zinc-500')}>
+              Paiement sécurisé via Billetweb — Places limitées
+            </p>
+            {isDark && (
+              <div className="w-16 h-px mx-auto mt-4" style={{ background: accentColor }} />
+            )}
+          </div>
+
+          {/* Billetweb iframe */}
+          <div
+            className="rounded-xl overflow-hidden"
+            style={{
+              border: isDark ? `1px solid ${accentColor}20` : '1px solid #e5e7eb',
+              boxShadow: isDark ? `0 0 40px ${accentColor}08` : '0 4px 24px rgba(0,0,0,0.06)',
+            }}
+          >
+            <iframe
+              src={embedUrl}
+              className="w-full"
+              style={{ minHeight: '700px', background: 'white', border: 'none', display: 'block' }}
+              allow="payment"
+            />
+          </div>
+
+          {/* Footer info */}
+          <div className={cn('text-center mt-6 text-xs', isDark ? 'text-white/25' : 'text-zinc-400')}>
+            Cercle National des Armées — 8 Place Saint-Augustin, 75008 Paris
+          </div>
         </div>
       </div>
     </div>
