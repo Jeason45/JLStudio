@@ -1448,17 +1448,28 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
   // Hide on scroll down, show on scroll up
   useEffect(() => {
     const handleScroll = () => {
-      const currentY = window.scrollY
+      // Try multiple scroll sources: window, document, #site-canvas
+      const currentY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0
       if (menuOpen) { lastScrollY.current = currentY; return }
-      if (currentY > lastScrollY.current && currentY > 150) {
+      const delta = currentY - lastScrollY.current
+      if (delta > 5 && currentY > 150) {
         setHeaderVisible(false)
-      } else {
+      } else if (delta < -5) {
         setHeaderVisible(true)
       }
       lastScrollY.current = currentY
     }
+    // Listen on window + document for max compatibility
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    document.addEventListener('scroll', handleScroll, { passive: true })
+    // Also try to listen on the site canvas container
+    const canvas = document.querySelector('#site-canvas') || document.querySelector('[data-site-canvas]')
+    if (canvas) canvas.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      document.removeEventListener('scroll', handleScroll)
+      if (canvas) canvas.removeEventListener('scroll', handleScroll)
+    }
   }, [menuOpen])
 
   // Force logo size via JS — overrides ANY CSS including ClassStyleInjector !important
@@ -1523,7 +1534,9 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
           zIndex: 10000,
           backgroundColor: headerVisible && lastScrollY.current > 100 ? 'rgba(0,0,0,0.85)' : 'transparent',
           backdropFilter: headerVisible && lastScrollY.current > 100 ? 'blur(12px)' : 'none',
-          minHeight: '130px',
+          minHeight: '100px',
+          paddingTop: '15px',
+          paddingBottom: '15px',
           paddingLeft: 'clamp(20px, 5vw, 60px)',
           paddingRight: 'clamp(20px, 5vw, 60px)',
           fontFamily: 'var(--font-body, inherit)',

@@ -270,7 +270,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
               src={content.decorativeImage}
               alt=""
               className="mx-auto w-auto object-contain"
-              style={{ maxHeight: 'clamp(200px, 30vw, 380px)' }}
+              style={{ maxHeight: 'clamp(280px, 40vw, 500px)' }}
             />
           )}
           {content.eyebrow && (
