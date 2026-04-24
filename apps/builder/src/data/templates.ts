@@ -1771,10 +1771,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         slug: 'reservation',
         title: 'Réservation — Bal C\'est L\'Est',
         sections: [
-          { type: 'site-header', variant: 'brixsa', content: { logo: "L'Art du Cercle", links: [{ id: '1', label: 'Le Bal', href: '/#concept' }, { id: '2', label: 'Programme', href: '/#programme' }, { id: '3', label: 'Formules', href: '/#formules' }], ctaLabel: 'Retour', ctaHref: '/' }, style: { background: 'dark', paddingY: 'none' }, visible: true },
-          { type: 'hero', variant: 'brixsa-page', content: { title: 'Réservation', subtitle: 'Accueil • Réservation', backgroundImage: '/ldc/cercle-galerie.jpg' }, style: { background: 'dark', paddingY: 'xl' }, visible: true },
-          { type: 'embed', variant: 'billetweb', content: { title: 'Choisissez votre formule', subtitle: 'Paiement sécurisé via Billetweb — Places limitées', embedUrl: 'https://www.billetweb.fr/shop.php?event=le-bal-cest-lest-nuit-d-europe-d-asie&color=D4AF37', footerText: 'Cercle National des Armées — 8 Place Saint-Augustin, 75008 Paris' }, style: { background: 'dark', paddingY: 'xl', accentColor: '#D4AF37' }, visible: true },
-          { type: 'site-footer', variant: 'brixsa', content: { logo: "L'Art du Cercle", tagline: 'Cercle privé parisien', copyright: `© ${year} L'Art du Cercle. Tous droits réservés.`, columns: [{ id: '1', title: 'Contact', links: [{ id: '1', label: 'contact@lartducercle.com', href: 'mailto:contact@lartducercle.com' }, { id: '2', label: 'Instagram', href: 'https://instagram.com/lartducercle' }] }], socials: { instagram: 'https://instagram.com/lartducercle' } }, style: { background: 'dark', paddingY: 'none' }, visible: true },
+          { type: 'embed', variant: 'billetweb', content: { title: 'Choisissez votre formule', subtitle: 'Paiement sécurisé via Billetweb — Places limitées', eventName: "Bal C'est L'Est — 29 mai 2026", embedUrl: 'https://www.billetweb.fr/shop.php?event=le-bal-cest-lest-nuit-d-europe-d-asie&color=D4AF37', footerText: 'Cercle National des Armées — 8 Place Saint-Augustin, 75008 Paris' }, style: { background: 'dark', paddingY: 'none', accentColor: '#D4AF37' }, visible: true },
         ],
       },
     ],
@@ -5147,9 +5144,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         slug: 'reservation',
         title: 'Réservation — Bal C\'est L\'Est',
         sections: [
-          { type: 'site-header', variant: 'startup', content: { logo: "L'Art du Cercle", links: [{ id: '1', label: 'Événement', href: '/#evenement' }, { id: '2', label: 'Programme', href: '/#programme' }, { id: '3', label: 'Formules', href: '/#formules' }], ctaLabel: 'Retour', ctaHref: '/' }, style: { background: 'white', paddingY: 'none' }, visible: true },
-          { type: 'embed', variant: 'billetweb', content: { title: 'Réservation', subtitle: 'Paiement sécurisé via Billetweb — Places limitées', embedUrl: 'https://www.billetweb.fr/shop.php?event=le-bal-cest-lest-nuit-d-europe-d-asie&color=2563eb', footerText: 'Cercle National des Armées — 8 Place Saint-Augustin, 75008 Paris' }, style: { background: 'white', paddingY: 'xl', accentColor: '#2563eb' }, visible: true },
-          { type: 'site-footer', variant: 'glass', content: { logo: "L'Art du Cercle", tagline: 'Événement parisien', copyright: `© ${year} L'Art du Cercle. Tous droits réservés.`, columns: [{ id: '1', title: 'Contact', links: [{ id: '1', label: 'contact@lartducercle.com', href: 'mailto:contact@lartducercle.com' }] }], socials: { instagram: 'https://instagram.com/lartducercle' } }, style: { background: 'dark', paddingY: 'none', textColor: '#ffffff' }, visible: true },
+          { type: 'embed', variant: 'billetweb', content: { title: 'Choisissez votre formule', subtitle: 'Paiement sécurisé via Billetweb — Places limitées', eventName: "Bal C'est L'Est — 29 mai 2026", embedUrl: 'https://www.billetweb.fr/shop.php?event=le-bal-cest-lest-nuit-d-europe-d-asie&color=2563eb', footerText: 'Cercle National des Armées — 8 Place Saint-Augustin, 75008 Paris' }, style: { background: 'dark', paddingY: 'none', accentColor: '#2563eb' }, visible: true },
         ],
       },
     ],
