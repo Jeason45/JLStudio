@@ -1437,10 +1437,29 @@ function CanopyHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
 
 function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig; logo: string; ctaLabel?: string; links: NavLink[] }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [headerVisible, setHeaderVisible] = useState(true)
+  const lastScrollY = useRef(0)
+  const headerRef = useRef<HTMLElement>(null)
   const content = config.content as Record<string, unknown>
   const ctaHref = (content?.ctaHref as string) || '#contact'
   const logoImgRef = useRef<HTMLImageElement>(null)
   const logoContainerRef = useRef<HTMLDivElement>(null)
+
+  // Hide on scroll down, show on scroll up
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY
+      if (menuOpen) { lastScrollY.current = currentY; return }
+      if (currentY > lastScrollY.current && currentY > 150) {
+        setHeaderVisible(false)
+      } else {
+        setHeaderVisible(true)
+      }
+      lastScrollY.current = currentY
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [menuOpen])
 
   // Force logo size via JS — overrides ANY CSS including ClassStyleInjector !important
   useEffect(() => {
@@ -1497,15 +1516,19 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
       <style dangerouslySetInnerHTML={{ __html: `` }} />
       {/* ─── NAVBAR ─── */}
       <header
+        ref={headerRef}
         {...elementProps(config.id, 'wrapper', 'container', 'Header')}
-        className={cn('absolute top-0 left-0 w-full flex items-center justify-between')}
+        className={cn('fixed top-0 left-0 w-full flex items-center justify-between')}
         style={{
           zIndex: 10000,
-          backgroundColor: 'transparent',
+          backgroundColor: headerVisible && lastScrollY.current > 100 ? 'rgba(0,0,0,0.85)' : 'transparent',
+          backdropFilter: headerVisible && lastScrollY.current > 100 ? 'blur(12px)' : 'none',
           minHeight: '130px',
           paddingLeft: 'clamp(20px, 5vw, 60px)',
           paddingRight: 'clamp(20px, 5vw, 60px)',
           fontFamily: 'var(--font-body, inherit)',
+          transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
+          transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease, backdrop-filter 0.3s ease',
         }}
       >
         {/* LEFT — Logo */}

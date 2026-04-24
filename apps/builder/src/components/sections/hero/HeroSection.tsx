@@ -269,7 +269,8 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
               {...elementProps(config.id, 'decorativeImage', 'image')}
               src={content.decorativeImage}
               alt=""
-              className="mx-auto max-h-56 w-auto object-contain"
+              className="mx-auto w-auto object-contain"
+              style={{ maxHeight: 'clamp(200px, 30vw, 380px)' }}
             />
           )}
           {content.eyebrow && (
