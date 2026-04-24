@@ -55,6 +55,7 @@ import { CollectionListSection, collectionListMeta } from './collection-list/Col
 import { ProductDetailSection, productDetailMeta } from './product-detail/ProductDetailSection'
 import { CartSection, cartMeta } from './cart/CartSection'
 import { CheckoutSection, checkoutMeta } from './checkout/CheckoutSection'
+import { EmbedSection, embedMeta } from './embed/EmbedSection'
 
 // ─────────────────────────────────────────────
 // REGISTRY
@@ -97,6 +98,7 @@ const componentRegistry: Record<string, ComponentType<SectionComponentProps>> = 
   'product-detail': ProductDetailSection,
   cart: CartSection,
   checkout: CheckoutSection,
+  embed: EmbedSection,
 }
 
 const metaRegistry: Record<string, SectionMeta> = {
@@ -136,6 +138,7 @@ const metaRegistry: Record<string, SectionMeta> = {
   'product-detail': productDetailMeta,
   cart: cartMeta,
   checkout: checkoutMeta,
+  embed: embedMeta,
 }
 
 export function getSectionComponent(type: string): ComponentType<SectionComponentProps> | null {
