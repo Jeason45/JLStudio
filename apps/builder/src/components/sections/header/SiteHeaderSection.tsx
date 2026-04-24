@@ -1447,9 +1447,22 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
 
   // Hide on scroll down, show on scroll up
   useEffect(() => {
+    // Find the actual scrollable element: walk up from #site-canvas to find overflow-y: auto/scroll parent
+    let scrollTarget: HTMLElement | Window = window
+    const canvasEl = document.getElementById('site-canvas')
+    if (canvasEl) {
+      let parent: HTMLElement | null = canvasEl.parentElement
+      while (parent) {
+        const ov = getComputedStyle(parent).overflowY
+        if (ov === 'auto' || ov === 'scroll') { scrollTarget = parent; break }
+        parent = parent.parentElement
+      }
+    }
+
     const handleScroll = () => {
-      // Try multiple scroll sources: window, document, #site-canvas
-      const currentY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0
+      const currentY = scrollTarget === window
+        ? window.scrollY
+        : (scrollTarget as HTMLElement).scrollTop
       if (menuOpen) { lastScrollY.current = currentY; return }
       const delta = currentY - lastScrollY.current
       if (delta > 5 && currentY > 150) {
@@ -1459,17 +1472,9 @@ function BrixsaHeader({ config, logo, ctaLabel, links }: { config: SectionConfig
       }
       lastScrollY.current = currentY
     }
-    // Listen on window + document for max compatibility
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    document.addEventListener('scroll', handleScroll, { passive: true })
-    // Also try to listen on the site canvas container
-    const canvas = document.querySelector('#site-canvas') || document.querySelector('[data-site-canvas]')
-    if (canvas) canvas.addEventListener('scroll', handleScroll, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      document.removeEventListener('scroll', handleScroll)
-      if (canvas) canvas.removeEventListener('scroll', handleScroll)
-    }
+
+    scrollTarget.addEventListener('scroll', handleScroll, { passive: true })
+    return () => scrollTarget.removeEventListener('scroll', handleScroll)
   }, [menuOpen])
 
   // Force logo size via JS — overrides ANY CSS including ClassStyleInjector !important
