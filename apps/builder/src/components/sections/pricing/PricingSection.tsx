@@ -241,6 +241,18 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
               </div>
             ))}
           </div>
+          {/* Billetweb embed */}
+          {(content as any).embedUrl && (
+            <div className="mt-14 max-w-3xl mx-auto">
+              <h3 className="text-2xl font-bold text-zinc-900 text-center mb-6" style={textColor ? { color: textColor } : undefined}>Réservez directement</h3>
+              <iframe
+                src={(content as any).embedUrl}
+                className="w-full rounded-2xl border border-zinc-200 shadow-sm"
+                style={{ minHeight: '700px', background: 'white' }}
+                allow="payment"
+              />
+            </div>
+          )}
         </div>
       </section>
     )
@@ -1182,6 +1194,20 @@ export function PricingSection({ config, isEditing }: PricingSectionProps) {
               </div>
             ))}
           </div>
+          {/* Billetweb embed */}
+          {(content as any).embedUrl && (
+            <div className="mt-14 max-w-3xl mx-auto">
+              <h3 className="text-2xl font-bold text-white text-center mb-6">Réservez directement</h3>
+              <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl" style={{ boxShadow: `0 0 40px ${accent}15` }}>
+                <iframe
+                  src={(content as any).embedUrl}
+                  className="w-full"
+                  style={{ minHeight: '700px', background: '#0a0a0a' }}
+                  allow="payment"
+                />
+              </div>
+            </div>
+          )}
         </div>
       </section>
     )
