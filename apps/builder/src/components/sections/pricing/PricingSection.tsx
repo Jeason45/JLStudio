@@ -11,6 +11,22 @@ import { EditablePlaceholder } from '../_EditablePlaceholder'
 // ─── Billetweb Modal ──────────────────────────────────────
 function BilletwebModal({ embedUrl, accentColor, variant, onClose }: { embedUrl: string; accentColor: string; variant: 'dark' | 'light'; onClose: () => void }) {
   const isDark = variant === 'dark'
+  const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
+    if (!node) return
+    // Auto-resize iframe to content height (no internal scroll)
+    const handleMessage = (e: MessageEvent) => {
+      if (typeof e.data === 'string' && e.data.startsWith('billetweb:')) {
+        const height = parseInt(e.data.split(':')[1], 10)
+        if (height > 0) node.style.height = `${height}px`
+      }
+      // Billetweb also sends resize via postMessage with {height: N}
+      if (e.data && typeof e.data === 'object' && e.data.height) {
+        node.style.height = `${e.data.height}px`
+      }
+    }
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [])
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -20,45 +36,47 @@ function BilletwebModal({ embedUrl, accentColor, variant, onClose }: { embedUrl:
   }, [onClose])
 
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center" onClick={onClose}>
+    <div className="fixed inset-0 z-[99999] overflow-y-auto" onClick={onClose}>
       {/* Backdrop */}
-      <div className="absolute inset-0" style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.6)', backdropFilter: 'blur(12px)' }} />
-      {/* Modal */}
-      <div
-        className="relative w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col rounded-2xl overflow-hidden"
-        style={{
-          backgroundColor: isDark ? '#0a0a0a' : '#ffffff',
-          border: `1px solid ${isDark ? accentColor + '40' : '#e5e7eb'}`,
-          boxShadow: isDark ? `0 0 60px ${accentColor}15, 0 25px 50px rgba(0,0,0,0.5)` : '0 25px 50px rgba(0,0,0,0.15)',
-        }}
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : '#f3f4f6'}` }}>
-          <div>
-            <p className="text-xs font-medium tracking-[0.2em] uppercase" style={{ color: accentColor }}>Réservation</p>
-            <h3 className={cn('text-lg font-semibold mt-0.5', isDark ? 'text-white' : 'text-zinc-900')}>Choisissez votre formule</h3>
+      <div className="fixed inset-0" style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.6)', backdropFilter: 'blur(12px)' }} />
+      {/* Modal — scrolls with page, not internal */}
+      <div className="relative min-h-full flex items-start justify-center py-8 px-4">
+        <div
+          className="relative w-full max-w-2xl rounded-2xl overflow-hidden"
+          style={{
+            backgroundColor: isDark ? '#0a0a0a' : '#ffffff',
+            border: `1px solid ${isDark ? accentColor + '40' : '#e5e7eb'}`,
+            boxShadow: isDark ? `0 0 60px ${accentColor}15, 0 25px 50px rgba(0,0,0,0.5)` : '0 25px 50px rgba(0,0,0,0.15)',
+          }}
+          onClick={e => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4" style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : '#f3f4f6'}`, backgroundColor: isDark ? '#0a0a0a' : '#ffffff' }}>
+            <div>
+              <p className="text-xs font-medium tracking-[0.2em] uppercase" style={{ color: accentColor }}>Réservation</p>
+              <h3 className={cn('text-lg font-semibold mt-0.5', isDark ? 'text-white' : 'text-zinc-900')}>Choisissez votre formule</h3>
+            </div>
+            <button
+              onClick={onClose}
+              className={cn('w-8 h-8 rounded-full flex items-center justify-center transition-colors', isDark ? 'hover:bg-white/10 text-white/60' : 'hover:bg-zinc-100 text-zinc-400')}
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className={cn('w-8 h-8 rounded-full flex items-center justify-center transition-colors', isDark ? 'hover:bg-white/10 text-white/60' : 'hover:bg-zinc-100 text-zinc-400')}
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-        {/* Iframe */}
-        <div className="flex-1 overflow-auto">
+          {/* Iframe — full height, no internal scroll */}
           <iframe
+            ref={iframeRef}
             src={embedUrl}
             className="w-full"
-            style={{ minHeight: '600px', height: '70vh', background: 'white', border: 'none' }}
+            style={{ minHeight: '800px', background: 'white', border: 'none', display: 'block' }}
             allow="payment"
+            scrolling="no"
           />
+          {/* Gold line at bottom */}
+          {isDark && (
+            <div className="h-px" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}60, transparent)` }} />
+          )}
         </div>
-        {/* Gold line at bottom */}
-        {isDark && (
-          <div className="h-px" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}60, transparent)` }} />
-        )}
       </div>
     </div>
   )
