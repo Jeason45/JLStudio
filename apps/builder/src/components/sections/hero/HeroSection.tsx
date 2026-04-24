@@ -261,7 +261,14 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
         {/* Dark overlay */}
         <div className="absolute inset-0" style={{ backgroundColor: `rgba(0,0,0,${config.style.backgroundImage?.overlayOpacity ?? 0.5})` }} />
         {/* Content */}
-        <div className={cn("relative z-10 max-w-4xl mx-auto px-6 text-center py-28 lg:py-36 space-y-10", textAlign && getTextAlignClass(textAlign))}>
+        {(() => {
+          const hasTopContent = !!(content.decorativeImage || content.eyebrow || title)
+          return (
+        <div className={cn(
+          "relative z-10 max-w-4xl mx-auto px-6 text-center",
+          hasTopContent ? "py-28 lg:py-36 space-y-10" : "min-h-[85vh] flex flex-col justify-end pb-16 lg:pb-20 space-y-5",
+          textAlign && getTextAlignClass(textAlign)
+        )}>
           {/* Decorative image (logo/emblem) */}
           {content.decorativeImage && (
             // eslint-disable-next-line @next/next/no-img-element
@@ -278,8 +285,8 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
               {content.eyebrow}
             </span>
           )}
-          {/* Gold divider — only if no decorative image or title exists */}
-          {!content.decorativeImage && <div className="w-12 h-px mx-auto" style={{ background: gold }} />}
+          {/* Gold divider — only if no decorative image */}
+          {!content.decorativeImage && title && <div className="w-12 h-px mx-auto" style={{ background: gold }} />}
           {title && (
             <h1
               {...elementProps(config.id, 'title', 'heading')}
@@ -289,10 +296,11 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
               {title}
             </h1>
           )}
-          <p {...elementProps(config.id, 'subtitle', 'text')} className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed tracking-wide" style={{ fontFamily: 'var(--font-body, inherit)', textShadow: '0 1px 10px rgba(0,0,0,0.5)' }}>
+          {!hasTopContent && <div className="w-12 h-px mx-auto" style={{ background: gold }} />}
+          <p {...elementProps(config.id, 'subtitle', 'text')} className={cn("max-w-2xl mx-auto leading-relaxed tracking-wide", hasTopContent ? "text-lg md:text-xl text-white/80" : "text-base md:text-lg text-white/70")} style={{ fontFamily: 'var(--font-body, inherit)', textShadow: '0 2px 12px rgba(0,0,0,0.7)', letterSpacing: '0.05em' }}>
             {subtitle}
           </p>
-          <div className="flex flex-wrap gap-4 justify-center pt-4">
+          <div className="flex flex-wrap gap-4 justify-center pt-2">
             {content.primaryButton && (
               <a
                 {...elementProps(config.id, 'primaryButton', 'button')}
@@ -314,6 +322,8 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
             )}
           </div>
         </div>
+          )
+        })()}
       </section>
     )
   }
