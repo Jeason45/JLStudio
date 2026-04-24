@@ -269,7 +269,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
               {...elementProps(config.id, 'decorativeImage', 'image')}
               src={content.decorativeImage}
               alt=""
-              className="mx-auto max-h-32 w-auto object-contain"
+              className="mx-auto max-h-56 w-auto object-contain"
             />
           )}
           {content.eyebrow && (
