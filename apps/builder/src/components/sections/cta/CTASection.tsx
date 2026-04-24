@@ -891,6 +891,9 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
     }
 
     const bgImage = (content as Record<string, unknown>).backgroundImage as string | undefined
+    const overlayOpacityRaw = (content as Record<string, unknown>).overlayOpacity as number | undefined
+    const overlayOpacity = overlayOpacityRaw ?? (bgImage ? 0.2 : 0.7)
+    const baseline = (content as Record<string, unknown>).baseline as string | undefined
 
     return (
       <section
@@ -918,7 +921,7 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1a1a18, #0A0A0A, #0d0d0a)' }} />
           )}
           {/* Overlay */}
-          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(10, 10, 10, 0.7)' }} />
+          <div style={{ position: 'absolute', inset: 0, backgroundColor: `rgba(10, 10, 10, ${overlayOpacity})` }} />
         </div>
 
         {/* Content */}
@@ -954,13 +957,31 @@ export function CTASection({ config, isEditing }: CTASectionProps) {
                 fontSize: '18px',
                 fontWeight: 400,
                 lineHeight: '160%',
-                color: 'rgba(232, 228, 223, 0.6)',
-                marginBottom: '40px',
+                color: 'rgba(232, 228, 223, 0.75)',
+                marginBottom: baseline ? '40px' : '40px',
+                whiteSpace: 'pre-line',
               }}
             >
               {subtitle || 'Chaque image mérite d\'être exceptionnelle'}
             </p>
           </div>
+          {baseline && (
+            <div ref={scrollRevealDelayRef(0.25)}>
+              <p
+                {...elementProps(config.id, 'baseline', 'text')}
+                style={{
+                  fontFamily: 'var(--font-heading, inherit)',
+                  fontSize: 'clamp(1.5rem, 1rem + 2vw, 2.25rem)',
+                  fontWeight: 600,
+                  lineHeight: '130%',
+                  color: textColor ?? '#E8E4DF',
+                  marginBottom: '44px',
+                }}
+              >
+                {baseline}
+              </p>
+            </div>
+          )}
           <div ref={scrollRevealDelayRef(0.3)}>
             <a
               {...elementProps(config.id, 'primaryButton', 'button')}
