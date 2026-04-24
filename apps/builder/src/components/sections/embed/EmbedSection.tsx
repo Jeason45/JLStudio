@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import type { SectionConfig } from '@/types/site'
 import { elementProps } from '@/lib/elementHelpers'
 
@@ -17,25 +17,15 @@ export function EmbedSection({ config }: EmbedSectionProps) {
   const embedUrl = (content.embedUrl as string) || ''
   const footerText = (content.footerText as string) || ''
   const eventName = (content.eventName as string) || "Bal C'est L'Est — 29 mai 2026"
-  const iframeRef = useRef<HTMLIFrameElement>(null)
-
-  // Auto-resize iframe to match content height
+  // Load Billetweb export.js for auto-resize
   useEffect(() => {
-    const handleMessage = (e: MessageEvent) => {
-      if (!iframeRef.current) return
-      // Billetweb sends resize messages
-      if (e.data && typeof e.data === 'object' && e.data.height) {
-        iframeRef.current.style.height = `${e.data.height + 20}px`
-      }
-      if (typeof e.data === 'string') {
-        try {
-          const parsed = JSON.parse(e.data)
-          if (parsed.height) iframeRef.current.style.height = `${parsed.height + 20}px`
-        } catch { /* not JSON */ }
-      }
-    }
-    window.addEventListener('message', handleMessage)
-    return () => window.removeEventListener('message', handleMessage)
+    // Check if script already loaded
+    if (document.querySelector('script[src="https://www.billetweb.fr/js/export.js"]')) return
+    const script = document.createElement('script')
+    script.src = 'https://www.billetweb.fr/js/export.js'
+    script.async = true
+    document.body.appendChild(script)
+    return () => { script.remove() }
   }, [])
 
   if (!embedUrl) return null
@@ -128,21 +118,25 @@ export function EmbedSection({ config }: EmbedSectionProps) {
           <div style={{ width: '50px', height: '1px', margin: '0 auto', background: accent }} />
         </div>
 
-        {/* Billetweb iframe — no container border, full width, auto height */}
-        <iframe
-          ref={iframeRef}
-          src={embedUrl}
-          style={{
-            width: '100%',
-            minHeight: '900px',
-            background: 'white',
-            border: 'none',
-            display: 'block',
-            borderRadius: '12px',
-          }}
-          allow="payment"
-          title="Billetterie"
-        />
+        {/* Billetweb widget — auto-resizing via export.js */}
+        <div style={{ borderRadius: '12px', overflow: 'hidden' }}>
+          <a
+            title="Vente de billets en ligne"
+            href={embedUrl.replace('/shop.php?event=', '/')}
+            className="shop_frame"
+            target="_blank"
+            data-src={embedUrl}
+            data-max-width="100%"
+            data-initial-height="800"
+            data-scrolling="no"
+            data-id={embedUrl.split('event=')[1]?.split('&')[0] || ''}
+            data-resize="1"
+            style={{ display: 'block', width: '100%', minHeight: '800px' }}
+            rel="noreferrer"
+          >
+            Vente de billets en ligne
+          </a>
+        </div>
 
         {/* Footer text */}
         {footerText && (
