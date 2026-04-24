@@ -1707,9 +1707,8 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       // 3. Le Cercle — Présentation
       { type: 'cta', variant: 'obscura-centered', content: { title: "Un cercle privé parisien dédié aux rencontres\nentre culture, création et décision", subtitle: "L'ART DU CERCLE réunit des personnalités issues de différents univers autour d'expériences conçues pour favoriser des échanges durables. À travers ses événements, ses bals et ses formats immersifs, il propose un cadre contemporain où se rencontrent artistes, entrepreneurs et acteurs institutionnels.\n\nInspiré par la tradition des cercles européens, L'ART DU CERCLE fait revivre un art de la rencontre où les idées circulent librement et où les échanges façonnent l'avenir.", badge: 'LE CERCLE', primaryButton: { label: 'En savoir plus', href: '/le-cercle' } }, style: { background: 'dark', paddingY: 'xl' }, visible: true },
 
-      // 4. Événement en cours — Bal C'est L'Est (son propre hero)
-      //    Photo galerie dorée du Cercle (lustres, dorures, ambiance de bal)
-      { type: 'hero', variant: 'luxe', content: { eyebrow: "L'ART DU CERCLE PRÉSENTE", title: "Bal C'est L'Est", subtitle: "Nuit d'Europe & d'Asie — 29 mai 2026\nCercle National des Armées, Paris", backgroundImage: '/ldc/cercle-galerie.jpg', primaryButton: { label: 'Réserver ma place', href: '/reservation', variant: 'outline' as any }, secondaryButton: { label: 'Voir le programme', href: '#programme', variant: 'ghost' as any } }, style: { background: 'dark' as any, paddingY: 'none', backgroundImage: { url: '/ldc/cercle-galerie.jpg', position: 'center' } }, visible: true },
+      // 4. Événement en cours — Bal C'est L'Est (image avec texte intégré)
+      { type: 'hero', variant: 'luxe', content: { eyebrow: '', title: '', subtitle: '', backgroundImage: '/ldc/bal-hero.jpg', primaryButton: { label: 'Réserver ma place', href: '/reservation', variant: 'outline' as any }, secondaryButton: { label: 'Voir le programme', href: '#programme', variant: 'ghost' as any } }, style: { background: 'dark' as any, paddingY: 'none', backgroundImage: { url: '/ldc/bal-hero.jpg', overlayOpacity: 0.1, position: 'center', size: 'cover' } }, visible: true },
 
       // 5. Programme — Timeline JL Studio style (GSAP scroll + grid background doré)
       //    Un seul programme, pas de doublon slider + liste
