@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description:
       "Studio de création web sur mesure. Sites vitrine, e-commerce et applications haut de gamme.",
     start_url: "/",
-    display: "standalone",
+    display: "browser",
     background_color: "#000000",
     theme_color: "#0a1628",
     icons: [
