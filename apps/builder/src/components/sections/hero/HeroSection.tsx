@@ -266,7 +266,7 @@ export function HeroSection({ config, isEditing }: HeroSectionProps) {
           return (
         <div className={cn(
           "relative z-10 max-w-4xl mx-auto px-6 text-center",
-          hasTopContent ? "py-28 lg:py-36 space-y-10" : "min-h-[85vh] flex flex-col justify-end pb-10 lg:pb-14 space-y-4",
+          hasTopContent ? "py-28 lg:py-36 space-y-10" : "min-h-[100vh] flex flex-col justify-end pb-12 lg:pb-16 space-y-5",
           textAlign && getTextAlignClass(textAlign)
         )}>
           {/* Decorative image (logo/emblem) */}
