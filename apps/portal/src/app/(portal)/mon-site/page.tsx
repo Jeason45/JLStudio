@@ -6,6 +6,7 @@ import {
   Save, ChevronDown, ChevronRight, FileText, Image as ImageIcon,
   Type, Link2, List, Check, Globe,
 } from 'lucide-react';
+import { Card, EmptyState, Skeleton } from '@/components/ui';
 
 // ── Types ──
 interface SectionData {
@@ -219,7 +220,14 @@ export default function MonSitePage() {
   };
 
   if (loading) {
-    return <p style={{ color: 'var(--text-tertiary)', padding: '40px 0', textAlign: 'center' }}>Chargement...</p>;
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <Skeleton height={28} width={220} />
+        <Skeleton height={120} rounded={12} />
+        <Skeleton height={120} rounded={12} />
+        <Skeleton height={120} rounded={12} />
+      </div>
+    );
   }
 
   return (
@@ -233,19 +241,13 @@ export default function MonSitePage() {
       </div>
 
       {pages.length === 0 || pages.every((p) => p.sections.length === 0) ? (
-        <div style={{
-          background: 'var(--bg-card)', borderRadius: '12px', padding: '40px',
-          border: '1px solid var(--border)', textAlign: 'center',
-        }}>
-          <Globe size={32} style={{ color: 'var(--text-tertiary)', margin: '0 auto 12px', opacity: 0.5 }} />
-          <p style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '15px', marginBottom: '8px' }}>
-            Aucune section a editer
-          </p>
-          <p style={{ color: 'var(--text-tertiary)', fontSize: '13px', lineHeight: '1.5', maxWidth: '400px', margin: '0 auto' }}>
-            Le contenu de votre site apparaitra ici une fois que des sections auront ete ajoutees dans le configurateur.
-            Contactez votre developpeur pour ajouter ou modifier la structure du site.
-          </p>
-        </div>
+        <Card padding={0}>
+          <EmptyState
+            icon={<Globe size={24} />}
+            title="Aucune section à éditer"
+            description="Le contenu de votre site apparaîtra ici une fois que des sections auront été ajoutées dans le configurateur. Contactez votre développeur pour ajouter ou modifier la structure du site."
+          />
+        </Card>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {pages.map((page) => (

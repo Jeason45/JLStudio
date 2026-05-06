@@ -6,6 +6,7 @@ import {
   Users, FileText, Receipt, FileSignature, FolderKanban, Globe, Calendar, Radar,
   Save,
 } from 'lucide-react';
+import { Card, Button } from '@/components/ui';
 
 const MODULE_INFO: { key: string; label: string; description: string; icon: React.ReactNode }[] = [
   { key: 'moduleCRM', label: 'CRM', description: 'Contacts et interactions', icon: <Users size={16} /> },
@@ -65,25 +66,18 @@ export default function ModuleSettings() {
   };
 
   return (
-    <div style={{
-      background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)',
-      boxShadow: 'var(--shadow-card)', padding: '20px',
-    }}>
+    <Card padding="20px">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
         <h2 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>Modules actifs</h2>
-        <button
+        <Button
           onClick={handleSave}
-          disabled={saving}
-          style={{
-            display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 14px', borderRadius: '8px',
-            background: saved ? 'var(--success, #22c55e)' : 'var(--accent)',
-            color: 'white', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 500,
-            opacity: saving ? 0.6 : 1, transition: 'all 0.15s',
-          }}
+          loading={saving}
+          size="sm"
+          iconLeft={<Save size={13} />}
+          style={saved ? { background: 'var(--success)' } : undefined}
         >
-          <Save size={13} />
-          {saving ? 'Sauvegarde...' : saved ? 'Sauvegarde !' : 'Sauvegarder'}
-        </button>
+          {saving ? 'Sauvegarde...' : saved ? 'Sauvegardé !' : 'Sauvegarder'}
+        </Button>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '8px' }}>
@@ -119,6 +113,6 @@ export default function ModuleSettings() {
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 }

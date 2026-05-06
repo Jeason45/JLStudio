@@ -6,6 +6,7 @@ import { Plus, X, FolderKanban, CheckCircle2, Clock, Pause, Ban, User, Calendar,
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import type { ProjectData, ProjectTaskData } from '@/types/portal';
+import { Button, Card, Tabs, Skeleton, EmptyState } from '@/components/ui';
 
 interface ContactOption {
   id: string;
@@ -14,10 +15,11 @@ interface ContactOption {
   email: string;
 }
 
-type ProjectStatus = 'IN_PROGRESS' | 'COMPLETED' | 'ON_HOLD' | 'CANCELLED';
+type ProjectStatus = 'IN_PROGRESS' | 'COMPLETED' | 'ON_HOLD' | 'CANCELLED' | 'PLANNING';
 type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
 
 const STATUS_CONFIG: Record<ProjectStatus, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
+  PLANNING: { label: 'Planification', color: 'var(--text-tertiary)', bg: 'var(--bg-badge)', icon: <Clock size={12} /> },
   IN_PROGRESS: { label: 'En cours', color: 'var(--accent)', bg: 'var(--accent-light)', icon: <Clock size={12} /> },
   COMPLETED: { label: 'Termine', color: 'var(--success)', bg: 'var(--success-light, rgba(34,197,94,0.1))', icon: <CheckCircle2 size={12} /> },
   ON_HOLD: { label: 'En pause', color: 'var(--warning, #f59e0b)', bg: 'var(--warning-light, rgba(245,158,11,0.1))', icon: <Pause size={12} /> },
@@ -161,12 +163,9 @@ export default function ProjetsPage() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
         <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>Projets</h1>
         {!isClient && (
-          <button onClick={() => setShowCreate(true)} style={{
-            display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-            background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500,
-          }}>
-            <Plus size={16} /> Nouveau projet
-          </button>
+          <Button onClick={() => setShowCreate(true)} iconLeft={<Plus size={16} />}>
+            Nouveau projet
+          </Button>
         )}
       </div>
 
@@ -177,10 +176,7 @@ export default function ProjetsPage() {
           { label: 'En cours', value: inProgressCount, icon: <Clock size={16} />, color: 'var(--accent)' },
           { label: 'Termines', value: completedCount, icon: <CheckCircle2 size={16} />, color: 'var(--success)' },
         ].map((stat) => (
-          <div key={stat.label} style={{
-            background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow-card)', padding: '16px', display: 'flex', alignItems: 'center', gap: '12px',
-          }}>
+          <Card key={stat.label} padding="16px" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{
               width: '36px', height: '36px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center',
               background: `color-mix(in srgb, ${stat.color} 10%, transparent)`, color: stat.color,
@@ -191,27 +187,18 @@ export default function ProjetsPage() {
               <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{stat.label}</div>
               <div style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>{stat.value}</div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
 
       {/* Status filter */}
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '20px', flexWrap: 'wrap' }}>
-        {FILTER_OPTIONS.map((opt) => (
-          <button
-            key={opt.value}
-            onClick={() => setStatusFilter(opt.value)}
-            style={{
-              padding: '6px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 500, cursor: 'pointer',
-              border: '1px solid var(--border)',
-              background: statusFilter === opt.value ? 'var(--accent)' : 'var(--bg-card)',
-              color: statusFilter === opt.value ? 'white' : 'var(--text-secondary)',
-              transition: 'all 0.15s',
-            }}
-          >
-            {opt.label}
-          </button>
-        ))}
+      <div style={{ marginBottom: '20px' }}>
+        <Tabs
+          size="sm"
+          value={statusFilter}
+          onChange={setStatusFilter}
+          items={FILTER_OPTIONS.map((opt) => ({ value: opt.value, label: opt.label }))}
+        />
       </div>
 
       {/* Content area */}
@@ -219,18 +206,24 @@ export default function ProjetsPage() {
         {/* Projects grid */}
         <div>
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)', fontSize: '13px' }}>Chargement...</div>
-          ) : projects.length === 0 ? (
-            <div style={{
-              textAlign: 'center', padding: '60px 20px', background: 'var(--bg-card)',
-              borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)',
-            }}>
-              <FolderKanban size={40} style={{ color: 'var(--text-tertiary)', marginBottom: '12px' }} />
-              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Aucun projet</p>
-              <p style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>
-                {statusFilter ? 'Aucun projet avec ce statut' : 'Creez votre premier projet'}
-              </p>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(320px, 1fr))', gap: '12px' }}>
+              <Skeleton height={140} rounded={12} />
+              <Skeleton height={140} rounded={12} />
+              <Skeleton height={140} rounded={12} />
             </div>
+          ) : projects.length === 0 ? (
+            <Card padding={0}>
+              <EmptyState
+                icon={<FolderKanban size={24} />}
+                title="Aucun projet"
+                description={statusFilter ? 'Aucun projet avec ce statut' : 'Créez votre premier projet pour commencer.'}
+                action={!isClient && !statusFilter && (
+                  <Button onClick={() => setShowCreate(true)} iconLeft={<Plus size={14} />} size="sm">
+                    Nouveau projet
+                  </Button>
+                )}
+              />
+            </Card>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : selectedProject ? '1fr' : 'repeat(auto-fill, minmax(320px, 1fr))', gap: '12px' }}>
               {projects.map((project) => {
@@ -241,18 +234,12 @@ export default function ProjetsPage() {
                 const isSelected = selectedProject?.id === project.id;
 
                 return (
-                  <div
+                  <Card
                     key={project.id}
+                    interactive
+                    active={isSelected}
                     onClick={() => fetchProjectDetail(project.id)}
-                    style={{
-                      background: isSelected ? 'var(--accent-light)' : 'var(--bg-card)',
-                      borderRadius: '12px',
-                      border: `1px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}`,
-                      boxShadow: 'var(--shadow-card)',
-                      padding: '16px',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s',
-                    }}
+                    padding="16px"
                   >
                     {/* Title + Status */}
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '8px', gap: '8px' }}>
@@ -311,7 +298,7 @@ export default function ProjetsPage() {
                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '8px' }}>
                       <ChevronRight size={14} style={{ color: 'var(--text-tertiary)' }} />
                     </div>
-                  </div>
+                  </Card>
                 );
               })}
             </div>
@@ -320,10 +307,7 @@ export default function ProjetsPage() {
 
         {/* Detail panel (desktop) */}
         {selectedProject && !isMobile && (
-          <div style={{
-            background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow-card)', padding: '16px', alignSelf: 'start', position: 'sticky', top: '20px',
-          }}>
+          <Card padding="16px" style={{ alignSelf: 'start', position: 'sticky', top: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
               <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>{selectedProject.name}</h3>
               <button onClick={() => setSelectedProject(null)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)' }}>
@@ -465,7 +449,7 @@ export default function ProjetsPage() {
                 </button>
               </>
             )}
-          </div>
+          </Card>
         )}
       </div>
 

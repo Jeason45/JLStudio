@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Shield, User, Edit3 } from 'lucide-react';
 import type { PortalUserData } from '@/types/portal';
+import { Card, Button, Badge, Skeleton, EmptyState, Tooltip } from '@/components/ui';
 
 export default function UserManagement() {
   const [users, setUsers] = useState<PortalUserData[]>([]);
@@ -73,24 +74,12 @@ export default function UserManagement() {
   };
 
   return (
-    <div style={{
-      background: 'var(--bg-card)', borderRadius: '12px',
-      border: '1px solid var(--border)', padding: '24px',
-      boxShadow: 'var(--shadow-card)',
-    }}>
+    <Card padding="24px">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
         <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>Utilisateurs</h3>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          style={{
-            display: 'flex', alignItems: 'center', gap: '6px',
-            padding: '8px 16px', borderRadius: '8px',
-            background: 'var(--accent)', color: 'white', border: 'none',
-            cursor: 'pointer', fontSize: '13px', fontWeight: 500,
-          }}
-        >
-          <Plus size={16} /> Ajouter
-        </button>
+        <Button onClick={() => setShowForm(!showForm)} iconLeft={<Plus size={16} />} size="sm">
+          Ajouter
+        </Button>
       </div>
 
       {showForm && (
@@ -115,20 +104,20 @@ export default function UserManagement() {
           </select>
           {error && <p style={{ color: 'var(--danger)', fontSize: '12px', marginBottom: '10px' }}>{error}</p>}
           <div style={{ display: 'flex', gap: '8px' }}>
-            <button onClick={handleCreate} disabled={saving} style={{ padding: '8px 16px', borderRadius: '8px', background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 500, fontSize: '13px', opacity: saving ? 0.5 : 1 }}>
-              {saving ? 'Creation...' : 'Creer'}
-            </button>
-            <button onClick={() => setShowForm(false)} style={{ padding: '8px 16px', borderRadius: '8px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: 'none', cursor: 'pointer', fontWeight: 500, fontSize: '13px' }}>
+            <Button onClick={handleCreate} loading={saving} size="md">
+              {saving ? 'Création...' : 'Créer'}
+            </Button>
+            <Button onClick={() => setShowForm(false)} variant="secondary" size="md">
               Annuler
-            </button>
+            </Button>
           </div>
         </div>
       )}
 
       {loading ? (
-        <p style={{ color: 'var(--text-tertiary)', fontSize: '13px' }}>Chargement...</p>
+        <Skeleton height={120} rounded={8} />
       ) : users.length === 0 ? (
-        <p style={{ color: 'var(--text-tertiary)', fontSize: '13px' }}>Aucun utilisateur</p>
+        <EmptyState icon={<User size={24} />} title="Aucun utilisateur" description="Ajoutez le premier utilisateur de ce site." />
       ) : (
         <div style={{ overflow: 'hidden', borderRadius: '8px', border: '1px solid var(--border)' }}>
           {/* Table header */}
@@ -167,14 +156,9 @@ export default function UserManagement() {
                   <div style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>{user.email}</div>
                 </div>
               </div>
-              <span style={{
-                fontSize: '11px', fontWeight: 500, padding: '2px 8px', borderRadius: '4px',
-                background: user.role === 'ADMIN' ? 'var(--danger-light)' : user.role === 'EDITOR' ? 'rgba(217,119,6,0.1)' : 'var(--accent-light)',
-                color: user.role === 'ADMIN' ? 'var(--danger)' : user.role === 'EDITOR' ? 'var(--warning)' : 'var(--accent)',
-                display: 'inline-block', width: 'fit-content',
-              }}>
+              <Badge tone={user.role === 'ADMIN' ? 'danger' : user.role === 'EDITOR' ? 'warning' : 'accent'}>
                 {user.role}
-              </span>
+              </Badge>
               <button
                 onClick={() => handleToggleActive(user)}
                 style={{
@@ -187,22 +171,21 @@ export default function UserManagement() {
                 {user.active ? 'Actif' : 'Inactif'}
               </button>
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <button onClick={() => handleDelete(user.id)} style={{
-                  width: '28px', height: '28px', borderRadius: '6px',
-                  background: 'transparent', border: 'none',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  cursor: 'pointer', color: 'var(--text-tertiary)', transition: 'all 0.15s',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--danger-light)'; e.currentTarget.style.color = 'var(--danger)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
-                >
-                  <Trash2 size={14} />
-                </button>
+                <Tooltip content="Supprimer">
+                  <button onClick={() => handleDelete(user.id)} style={{
+                    width: '28px', height: '28px', borderRadius: '6px',
+                    background: 'transparent', border: 'none',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer', color: 'var(--text-tertiary)', transition: 'all 0.15s',
+                  }}>
+                    <Trash2 size={14} />
+                  </button>
+                </Tooltip>
               </div>
             </div>
           ))}
         </div>
       )}
-    </div>
+    </Card>
   );
 }

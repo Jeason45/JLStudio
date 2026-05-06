@@ -14,6 +14,7 @@ import {
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import type { DashboardStats } from '@/types/portal';
+import { Card, Badge, EmptyState, Skeleton } from '@/components/ui';
 
 interface ChartData {
   contactsPerMonth: { month: string; value: number }[];
@@ -113,10 +114,7 @@ function KpiCard({ label, value, sub, icon, loading: isLoading }: {
   label: string; value: string | number; sub: string; icon: React.ReactNode; loading?: boolean;
 }) {
   return (
-    <div style={{
-      background: 'var(--bg-card)', padding: '20px', borderRadius: '12px',
-      border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)',
-    }}>
+    <Card padding="20px">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
         <span style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>{label}</span>
         <div style={{
@@ -127,11 +125,11 @@ function KpiCard({ label, value, sub, icon, loading: isLoading }: {
           {icon}
         </div>
       </div>
-      <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1, marginBottom: '4px' }}>
-        {isLoading ? '...' : value}
+      <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1, marginBottom: '4px', minHeight: '24px' }}>
+        {isLoading ? <Skeleton width={80} height={22} /> : value}
       </div>
       <div style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>{sub}</div>
-    </div>
+    </Card>
   );
 }
 
@@ -184,10 +182,7 @@ function SuperAdminOverview({ isMobile }: { isMobile: boolean }) {
           gap: '16px', marginBottom: '24px',
         }}>
           {/* Sites list */}
-          <div style={{
-            background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow-card)', padding: '20px', overflow: 'auto',
-          }}>
+          <Card padding="20px" style={{ overflow: 'auto' }}>
             <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Globe size={15} /> Mes sites ({overview.sites.length})
             </h3>
@@ -259,13 +254,10 @@ function SuperAdminOverview({ isMobile }: { isMobile: boolean }) {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
 
           {/* Cross-site activity */}
-          <div style={{
-            background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow-card)', padding: '20px', maxHeight: '500px', overflowY: 'auto',
-          }}>
+          <Card padding="20px" style={{ maxHeight: '500px', overflowY: 'auto' }}>
             <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Activity size={15} /> Activite globale
             </h3>
@@ -301,13 +293,14 @@ function SuperAdminOverview({ isMobile }: { isMobile: boolean }) {
                 ))}
               </div>
             )}
-          </div>
+          </Card>
         </div>
       )}
 
       {loading && (
-        <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)' }}>
-          Chargement...
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', gap: '16px' }}>
+          <Skeleton height={400} rounded={12} />
+          <Skeleton height={400} rounded={12} />
         </div>
       )}
     </div>
@@ -396,7 +389,7 @@ function SiteDashboard({ isMobile, config }: { isMobile: boolean; config: Dashbo
           gap: '16px', marginBottom: '24px',
         }}>
           {config?.moduleFactures && hasRevenue && (
-            <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)', padding: '20px' }}>
+            <Card padding="20px">
               <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px' }}>Chiffre d&apos;affaires (6 mois)</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={charts.revenuePerMonth}>
@@ -407,10 +400,10 @@ function SiteDashboard({ isMobile, config }: { isMobile: boolean; config: Dashbo
                   <Bar dataKey="value" fill="var(--accent)" radius={[4, 4, 0, 0]} maxBarSize={40} />
                 </BarChart>
               </ResponsiveContainer>
-            </div>
+            </Card>
           )}
           {hasContacts && (
-            <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)', padding: '20px' }}>
+            <Card padding="20px">
               <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px' }}>Nouveaux contacts (6 mois)</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <AreaChart data={charts.contactsPerMonth}>
@@ -427,7 +420,7 @@ function SiteDashboard({ isMobile, config }: { isMobile: boolean; config: Dashbo
                   <Area type="monotone" dataKey="value" stroke="var(--accent)" fill="url(#contactGradient)" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
-            </div>
+            </Card>
           )}
         </div>
       )}
@@ -438,7 +431,7 @@ function SiteDashboard({ isMobile, config }: { isMobile: boolean; config: Dashbo
           gap: '16px',
         }}>
           {(config?.moduleDevis || config?.moduleFactures) && hasDocuments && (
-            <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)', padding: '20px' }}>
+            <Card padding="20px">
               <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px' }}>Documents crees (6 mois)</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <LineChart data={charts.documentsPerMonth}>
@@ -451,11 +444,11 @@ function SiteDashboard({ isMobile, config }: { isMobile: boolean; config: Dashbo
                   {config?.moduleFactures && <Line type="monotone" dataKey="factures" name="Factures" stroke="var(--success)" strokeWidth={2} dot={{ r: 3, fill: 'var(--success)' }} />}
                 </LineChart>
               </ResponsiveContainer>
-            </div>
+            </Card>
           )}
 
           {charts.recentActivity && charts.recentActivity.length > 0 && (
-            <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)', padding: '20px', maxHeight: '340px', overflowY: 'auto' }}>
+            <Card padding="20px" style={{ maxHeight: '340px', overflowY: 'auto' }}>
               <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Activity size={15} /> Activite recente
               </h3>
@@ -480,16 +473,25 @@ function SiteDashboard({ isMobile, config }: { isMobile: boolean; config: Dashbo
                   </div>
                 ))}
               </div>
-            </div>
+            </Card>
           )}
         </div>
       )}
 
       {!loading && (!hasRevenue && !hasContacts && !hasDocuments && (!charts?.recentActivity || charts.recentActivity.length === 0)) && (
-        <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)', padding: '40px 20px', textAlign: 'center' }}>
-          <Activity size={28} style={{ color: 'var(--text-tertiary)', marginBottom: '8px' }} />
-          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Pas encore de donnees</p>
-          <p style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>Les graphiques apparaitront des que vous ajouterez des contacts et documents.</p>
+        <Card padding={0}>
+          <EmptyState
+            icon={<Activity size={24} />}
+            title="Pas encore de données"
+            description="Les graphiques apparaîtront dès que vous ajouterez des contacts et documents."
+          />
+        </Card>
+      )}
+
+      {loading && (
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px' }}>
+          <Skeleton height={280} rounded={12} />
+          <Skeleton height={280} rounded={12} />
         </div>
       )}
     </div>

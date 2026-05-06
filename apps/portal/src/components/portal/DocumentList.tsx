@@ -5,29 +5,54 @@ import { useRouter } from 'next/navigation';
 import { Plus, FileText, Download, Send, X, PenTool } from 'lucide-react';
 import { useSidebar } from './SidebarContext';
 import type { DocumentData } from '@/types/portal';
+import {
+  STATUS_LABELS,
+  TYPE_LABELS,
+  STATUSES_BY_TYPE,
+  formatCurrency,
+  formatDate,
+} from './documents/constants';
+import { SendDocumentModal } from './documents/SendDocumentModal';
+import { SignRequestModal } from './documents/SignRequestModal';
+import { Button, Card, Badge, StatCard, SkeletonRows, EmptyState, Tabs, Tooltip } from '@/components/ui';
 
-const STATUS_LABELS: Record<string, string> = {
-  DRAFT: 'Brouillon', SENT: 'Envoye', SIGNED: 'Signe', ACCEPTED: 'Accepte',
-  REJECTED: 'Refuse', PAID: 'Paye', CANCELLED: 'Annule',
+type Tone = 'neutral' | 'accent' | 'success' | 'danger';
+
+function iconBtnStyle(hoverTone: 'accent' | 'success' | 'danger'): React.CSSProperties {
+  const hoverBg = hoverTone === 'success' ? 'var(--success-light)' : hoverTone === 'danger' ? 'var(--danger-light)' : 'var(--accent-light)';
+  const hoverColor = hoverTone === 'success' ? 'var(--success)' : hoverTone === 'danger' ? 'var(--danger)' : 'var(--accent)';
+  return {
+    padding: '4px 6px',
+    borderRadius: '6px',
+    fontSize: '11px',
+    background: 'transparent',
+    color: 'var(--text-tertiary)',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'all 0.15s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '2px',
+    // Hover handled via inline event handlers since we can't use :hover with style prop
+    // We accept the slight DRY trade-off here
+    ['--hover-bg' as string]: hoverBg,
+    ['--hover-color' as string]: hoverColor,
+  };
+}
+
+const STATUS_TONE: Record<string, Tone> = {
+  DRAFT: 'neutral',
+  SENT: 'accent',
+  SIGNED: 'success',
+  ACCEPTED: 'success',
+  PAID: 'success',
+  REJECTED: 'danger',
+  CANCELLED: 'neutral',
 };
 
-const STATUS_COLORS: Record<string, string> = {
-  DRAFT: 'var(--text-tertiary)', SENT: 'var(--accent)', SIGNED: 'var(--success)', ACCEPTED: 'var(--success)',
-  REJECTED: 'var(--danger)', PAID: 'var(--success)', CANCELLED: 'var(--text-tertiary)',
-};
+type DocType = 'DEVIS' | 'FACTURE' | 'CONTRAT';
 
-const STATUS_BG: Record<string, string> = {
-  DRAFT: 'var(--bg-badge)', SENT: 'var(--accent-light)', SIGNED: 'var(--success-light)', ACCEPTED: 'var(--success-light)',
-  REJECTED: 'var(--danger-light)', PAID: 'var(--success-light)', CANCELLED: 'var(--bg-badge)',
-};
-
-const TYPE_LABELS: Record<string, { singular: string; plural: string }> = {
-  DEVIS: { singular: 'Devis', plural: 'Devis' },
-  FACTURE: { singular: 'Facture', plural: 'Factures' },
-  CONTRAT: { singular: 'Contrat', plural: 'Contrats' },
-};
-
-export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FACTURE' | 'CONTRAT'; createHref: string }) {
+export default function DocumentList({ type, createHref }: { type: DocType; createHref: string }) {
   const router = useRouter();
   const { userRole } = useSidebar();
   const isClient = userRole === 'CLIENT';
@@ -86,15 +111,7 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
     setDocuments(documents.filter((d) => d.id !== id));
   };
 
-  const formatCurrency = (n: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
-  const formatDate = (iso: string) => new Date(iso).toLocaleDateString('fr-FR');
-
-  const statuses = type === 'FACTURE'
-    ? ['DRAFT', 'SENT', 'PAID', 'CANCELLED']
-    : type === 'CONTRAT'
-    ? ['DRAFT', 'SENT', 'SIGNED', 'CANCELLED']
-    : ['DRAFT', 'SENT', 'ACCEPTED', 'REJECTED', 'CANCELLED'];
-
+  const statuses = STATUSES_BY_TYPE[type];
   const totalAmount = documents.reduce((sum, d) => sum + (d.totalAmount || 0), 0);
   const pendingCount = documents.filter((d) => ['DRAFT', 'SENT'].includes(d.status)).length;
 
@@ -103,57 +120,56 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
         <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>{TYPE_LABELS[type].plural}</h1>
         {!isClient && (
-          <button onClick={() => router.push(createHref)} style={{
-            display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-            background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500,
-          }}>
-            <Plus size={16} /> Nouveau {TYPE_LABELS[type].singular.toLowerCase()}
-          </button>
+          <Button onClick={() => router.push(createHref)} iconLeft={<Plus size={16} />}>
+            Nouveau {TYPE_LABELS[type].singular.toLowerCase()}
+          </Button>
         )}
       </div>
 
       {/* Stats */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
-        {[
-          { label: 'Total', value: documents.length },
-          { label: 'En attente', value: pendingCount },
-          { label: 'Montant total', value: formatCurrency(totalAmount) },
-        ].map((s) => (
-          <div key={s.label} style={{ padding: '12px 16px', borderRadius: '12px', background: 'var(--bg-card)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)' }}>
-            <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '2px' }}>{s.label}</div>
-            <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)' }}>{s.value}</div>
-          </div>
-        ))}
+        <StatCard label="Total" value={documents.length} />
+        <StatCard label="En attente" value={pendingCount} />
+        <StatCard label="Montant total" value={formatCurrency(totalAmount)} />
       </div>
 
       {/* Filters */}
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '16px', flexWrap: 'wrap' }}>
-        <button onClick={() => setStatusFilter('')} style={{
-          padding: '5px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 500,
-          background: !statusFilter ? 'var(--text-primary)' : 'var(--bg-secondary)',
-          color: !statusFilter ? 'var(--bg-card)' : 'var(--text-secondary)',
-          border: 'none', cursor: 'pointer', transition: 'all 0.15s',
-        }}>Tous</button>
-        {statuses.map((s) => (
-          <button key={s} onClick={() => setStatusFilter(statusFilter === s ? '' : s)} style={{
-            padding: '5px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 500,
-            background: statusFilter === s ? 'var(--text-primary)' : 'var(--bg-secondary)',
-            color: statusFilter === s ? 'var(--bg-card)' : 'var(--text-secondary)',
-            border: 'none', cursor: 'pointer', transition: 'all 0.15s',
-          }}>{STATUS_LABELS[s]}</button>
-        ))}
+      <div style={{ marginBottom: '16px' }}>
+        <Tabs
+          size="sm"
+          value={statusFilter}
+          onChange={setStatusFilter}
+          items={[
+            { value: '', label: 'Tous', count: documents.length },
+            ...statuses.map((s) => ({
+              value: s,
+              label: STATUS_LABELS[s],
+              count: documents.filter((d) => d.status === s).length,
+            })),
+          ]}
+        />
       </div>
 
       {/* List */}
       {loading ? (
-        <p style={{ color: 'var(--text-tertiary)' }}>Chargement...</p>
+        <Card padding={0} style={{ overflow: 'hidden' }}>
+          <SkeletonRows rows={5} columns={5} />
+        </Card>
       ) : documents.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--text-tertiary)' }}>
-          <FileText size={32} style={{ marginBottom: '10px', opacity: 0.4 }} />
-          <p style={{ fontSize: '13px' }}>Aucun {TYPE_LABELS[type].singular.toLowerCase()}</p>
-        </div>
+        <Card padding={0}>
+          <EmptyState
+            icon={<FileText size={24} />}
+            title={`Aucun ${TYPE_LABELS[type].singular.toLowerCase()}`}
+            description={!isClient ? `Créez votre premier ${TYPE_LABELS[type].singular.toLowerCase()} pour commencer.` : undefined}
+            action={!isClient && (
+              <Button onClick={() => router.push(createHref)} iconLeft={<Plus size={14} />} size="sm">
+                Nouveau {TYPE_LABELS[type].singular.toLowerCase()}
+              </Button>
+            )}
+          />
+        </Card>
       ) : (
-        <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)', overflow: 'hidden' }}>
+        <Card padding={0} style={{ overflow: 'hidden' }}>
           {/* Table header */}
           <div style={{
             display: 'grid', gridTemplateColumns: '1fr 140px 100px 100px 140px',
@@ -185,11 +201,7 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
                 )}
               </div>
               <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{formatDate(doc.createdAt)}</span>
-              <span style={{
-                padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 500,
-                background: STATUS_BG[doc.status], color: STATUS_COLORS[doc.status],
-                display: 'inline-block', width: 'fit-content',
-              }}>{STATUS_LABELS[doc.status]}</span>
+              <Badge tone={STATUS_TONE[doc.status] || 'neutral'}>{STATUS_LABELS[doc.status]}</Badge>
               <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', textAlign: 'right' }}>
                 {doc.totalAmount != null ? formatCurrency(doc.totalAmount) : '—'}
               </span>
@@ -208,50 +220,37 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
                   </select>
                 )}
                 {!isClient && doc.type !== 'FACTURE' && doc.status !== 'SIGNED' && (
-                  <button onClick={() => setSignModal(doc)} title="Demander signature" style={{
-                    padding: '4px 6px', borderRadius: '6px', fontSize: '11px',
-                    background: 'transparent', color: 'var(--text-tertiary)', border: 'none', cursor: 'pointer',
-                    transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: '2px',
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--success-light)'; e.currentTarget.style.color = 'var(--success)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
-                  ><PenTool size={12} /></button>
+                  <Tooltip content="Demander signature">
+                    <button onClick={() => setSignModal(doc)} style={iconBtnStyle('success')}>
+                      <PenTool size={12} />
+                    </button>
+                  </Tooltip>
                 )}
                 {!isClient && (
-                  <button onClick={() => setSendModal(doc)} title="Envoyer par email" style={{
-                    padding: '4px 6px', borderRadius: '6px', fontSize: '11px',
-                    background: 'transparent', color: 'var(--text-tertiary)', border: 'none', cursor: 'pointer',
-                    transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: '2px',
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent-light)'; e.currentTarget.style.color = 'var(--accent)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
-                  ><Send size={12} /></button>
+                  <Tooltip content="Envoyer par email">
+                    <button onClick={() => setSendModal(doc)} style={iconBtnStyle('accent')}>
+                      <Send size={12} />
+                    </button>
+                  </Tooltip>
                 )}
-                <button onClick={() => handleDownloadPDF(doc)} title="Telecharger PDF" style={{
-                  padding: '4px 6px', borderRadius: '6px', fontSize: '11px',
-                  background: 'transparent', color: 'var(--text-tertiary)', border: 'none', cursor: 'pointer',
-                  transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: '2px',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent-light)'; e.currentTarget.style.color = 'var(--accent)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
-                ><Download size={12} /></button>
+                <Tooltip content="Télécharger le PDF">
+                  <button onClick={() => handleDownloadPDF(doc)} style={iconBtnStyle('accent')}>
+                    <Download size={12} />
+                  </button>
+                </Tooltip>
                 {!isClient && (
-                  <button onClick={() => handleDelete(doc.id)} title="Supprimer" style={{
-                    padding: '4px 6px', borderRadius: '6px', fontSize: '11px',
-                    background: 'transparent', color: 'var(--text-tertiary)', border: 'none', cursor: 'pointer',
-                    transition: 'all 0.15s',
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--danger-light)'; e.currentTarget.style.color = 'var(--danger)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
-                  ><X size={12} /></button>
+                  <Tooltip content="Supprimer">
+                    <button onClick={() => handleDelete(doc.id)} style={iconBtnStyle('danger')}>
+                      <X size={12} />
+                    </button>
+                  </Tooltip>
                 )}
               </div>
             </div>
           ))}
-        </div>
+        </Card>
       )}
 
-      {/* Send Modal */}
       {sendModal && (
         <SendDocumentModal
           document={sendModal}
@@ -260,7 +259,6 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
         />
       )}
 
-      {/* Sign Request Modal */}
       {signModal && (
         <SignRequestModal
           document={signModal}
@@ -268,228 +266,6 @@ export default function DocumentList({ type, createHref }: { type: 'DEVIS' | 'FA
           onSent={() => { setSignModal(null); refreshDocuments(); }}
         />
       )}
-    </div>
-  );
-}
-
-// ─── Send Modal ──────────────────────────────
-function SendDocumentModal({ document, onClose, onSent }: { document: DocumentData; onClose: () => void; onSent: () => void }) {
-  const [to, setTo] = useState(document.contact?.email || '');
-  const [recipientName, setRecipientName] = useState(
-    [document.contact?.firstName, document.contact?.lastName].filter(Boolean).join(' ') || ''
-  );
-  const [message, setMessage] = useState('');
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
-
-  const handleSend = async () => {
-    if (!to || !recipientName) {
-      setError('Email et nom du destinataire requis');
-      return;
-    }
-    setSending(true);
-    setError('');
-    try {
-      const res = await fetch(`/api/portal/documents/${document.id}/send`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ to, recipientName, message: message || undefined }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || 'Erreur lors de l\'envoi');
-        return;
-      }
-      setSuccess(true);
-      setTimeout(onSent, 1500);
-    } catch {
-      setError('Erreur reseau');
-    } finally {
-      setSending(false);
-    }
-  };
-
-  const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '8px 12px', borderRadius: '8px', fontSize: '13px',
-    background: 'var(--bg-input)', border: '1px solid var(--border-input)',
-    color: 'var(--text-primary)', outline: 'none',
-  };
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: '12px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '4px', display: 'block',
-  };
-
-  return (
-    <div style={{
-      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
-    }} onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div style={{
-        background: 'var(--bg-card)', borderRadius: '16px', padding: '24px', width: '100%', maxWidth: '440px',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.2)', border: '1px solid var(--border)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-          <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
-            Envoyer {document.documentNumber || document.title}
-          </h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', padding: '4px' }}>
-            <X size={18} />
-          </button>
-        </div>
-
-        {success ? (
-          <div style={{ textAlign: 'center', padding: '24px 0' }}>
-            <div style={{ fontSize: '32px', marginBottom: '8px' }}>&#10003;</div>
-            <p style={{ fontSize: '14px', color: 'var(--success)', fontWeight: 500 }}>Document envoye avec succes</p>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div>
-              <label style={labelStyle}>Email du destinataire</label>
-              <input type="email" value={to} onChange={(e) => setTo(e.target.value)} placeholder="client@email.com" style={inputStyle} />
-            </div>
-            <div>
-              <label style={labelStyle}>Nom du destinataire</label>
-              <input type="text" value={recipientName} onChange={(e) => setRecipientName(e.target.value)} placeholder="Jean Dupont" style={inputStyle} />
-            </div>
-            <div>
-              <label style={labelStyle}>Message personnalise (optionnel)</label>
-              <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Veuillez trouver ci-joint..." rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
-            </div>
-
-            {error && (
-              <p style={{ fontSize: '12px', color: 'var(--danger)', margin: 0 }}>{error}</p>
-            )}
-
-            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '4px' }}>
-              <button onClick={onClose} style={{
-                padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: 500,
-                background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: 'none', cursor: 'pointer',
-              }}>Annuler</button>
-              <button onClick={handleSend} disabled={sending} style={{
-                padding: '8px 20px', borderRadius: '8px', fontSize: '13px', fontWeight: 500,
-                background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer',
-                opacity: sending ? 0.6 : 1, display: 'flex', alignItems: 'center', gap: '6px',
-              }}>
-                <Send size={14} /> {sending ? 'Envoi...' : 'Envoyer'}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// ─── Sign Request Modal ─────────────────────
-function SignRequestModal({ document, onClose, onSent }: { document: DocumentData; onClose: () => void; onSent: () => void }) {
-  const [email, setEmail] = useState(document.contact?.email || '');
-  const [recipientName, setRecipientName] = useState(
-    [document.contact?.firstName, document.contact?.lastName].filter(Boolean).join(' ') || ''
-  );
-  const [message, setMessage] = useState('');
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
-
-  const handleSend = async () => {
-    if (!email || !recipientName) {
-      setError('Email et nom du signataire requis');
-      return;
-    }
-    setSending(true);
-    setError('');
-    try {
-      const res = await fetch(`/api/portal/documents/${document.id}/sign-request`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, recipientName, message: message || undefined }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || 'Erreur lors de l\'envoi');
-        return;
-      }
-      setSuccess(true);
-      setTimeout(onSent, 1500);
-    } catch {
-      setError('Erreur reseau');
-    } finally {
-      setSending(false);
-    }
-  };
-
-  const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '8px 12px', borderRadius: '8px', fontSize: '13px',
-    background: 'var(--bg-input)', border: '1px solid var(--border-input)',
-    color: 'var(--text-primary)', outline: 'none',
-  };
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: '12px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '4px', display: 'block',
-  };
-
-  return (
-    <div style={{
-      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
-    }} onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div style={{
-        background: 'var(--bg-card)', borderRadius: '16px', padding: '24px', width: '100%', maxWidth: '440px',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.2)', border: '1px solid var(--border)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-          <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
-            Demander une signature
-          </h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', padding: '4px' }}>
-            <X size={18} />
-          </button>
-        </div>
-
-        <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '16px' }}>
-          {document.documentNumber || document.title} — Un lien de signature sera envoye par email
-        </p>
-
-        {success ? (
-          <div style={{ textAlign: 'center', padding: '24px 0' }}>
-            <div style={{ fontSize: '32px', marginBottom: '8px' }}>&#9997;</div>
-            <p style={{ fontSize: '14px', color: 'var(--success)', fontWeight: 500 }}>Demande de signature envoyee</p>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div>
-              <label style={labelStyle}>Email du signataire</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="client@email.com" style={inputStyle} />
-            </div>
-            <div>
-              <label style={labelStyle}>Nom du signataire</label>
-              <input type="text" value={recipientName} onChange={(e) => setRecipientName(e.target.value)} placeholder="Jean Dupont" style={inputStyle} />
-            </div>
-            <div>
-              <label style={labelStyle}>Message personnalise (optionnel)</label>
-              <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Merci de bien vouloir signer..." rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
-            </div>
-
-            {error && (
-              <p style={{ fontSize: '12px', color: 'var(--danger)', margin: 0 }}>{error}</p>
-            )}
-
-            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '4px' }}>
-              <button onClick={onClose} style={{
-                padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: 500,
-                background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: 'none', cursor: 'pointer',
-              }}>Annuler</button>
-              <button onClick={handleSend} disabled={sending} style={{
-                padding: '8px 20px', borderRadius: '8px', fontSize: '13px', fontWeight: 500,
-                background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer',
-                opacity: sending ? 0.6 : 1, display: 'flex', alignItems: 'center', gap: '6px',
-              }}>
-                <PenTool size={14} /> {sending ? 'Envoi...' : 'Envoyer la demande'}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 }

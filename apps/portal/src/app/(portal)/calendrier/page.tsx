@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, Plus, X, Clock, MapPin, User } from 'lucide-
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths, format, isSameMonth, isSameDay, isToday } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import type { AppointmentData } from '@/types/portal';
+import { Button, Card } from '@/components/ui';
 
 interface ContactOption {
   id: string;
@@ -107,17 +108,14 @@ export default function CalendrierPage() {
             </button>
           </div>
         </div>
-        <button onClick={() => { setShowCreate(true); if (selectedDate) { const dateStr = format(selectedDate, "yyyy-MM-dd'T'09:00"); setForm({ ...form, startTime: dateStr, endTime: format(selectedDate, "yyyy-MM-dd'T'10:00") }); } }} style={{
-          display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-          background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500,
-        }}>
-          <Plus size={16} /> Nouveau RDV
-        </button>
+        <Button onClick={() => { setShowCreate(true); if (selectedDate) { const dateStr = format(selectedDate, "yyyy-MM-dd'T'09:00"); setForm({ ...form, startTime: dateStr, endTime: format(selectedDate, "yyyy-MM-dd'T'10:00") }); } }} iconLeft={<Plus size={16} />}>
+          Nouveau RDV
+        </Button>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: selectedDate && !isMobile ? '1fr 320px' : '1fr', gap: '20px' }}>
         {/* Calendar grid */}
-        <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)', overflow: 'hidden' }}>
+        <Card padding={0} style={{ overflow: 'hidden' }}>
           {/* Day names */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '1px solid var(--border)' }}>
             {dayNames.map((name) => (
@@ -171,11 +169,11 @@ export default function CalendrierPage() {
               );
             })}
           </div>
-        </div>
+        </Card>
 
         {/* Day detail panel */}
         {selectedDate && !isMobile && (
-          <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)', padding: '16px' }}>
+          <Card padding="16px">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <h3 style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)', textTransform: 'capitalize' }}>
                 {format(selectedDate, 'EEEE d MMMM', { locale: fr })}
@@ -209,7 +207,7 @@ export default function CalendrierPage() {
                 ))}
               </div>
             )}
-          </div>
+          </Card>
         )}
       </div>
 

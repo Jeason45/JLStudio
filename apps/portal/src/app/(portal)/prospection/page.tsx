@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Search, Globe, Shield, Zap, Eye, CheckCircle, XCircle, AlertTriangle, Leaf, X, FileText, UserPlus, Trash2, Clock, Building2, ExternalLink, Loader2, StickyNote } from 'lucide-react';
+import { Button, Card, Tooltip, EmptyState } from '@/components/ui';
 
 // ─── Types ───
 
@@ -486,9 +487,11 @@ export default function ProspectionPage() {
               ))}
             </select>
             {activeSession && (
-              <button onClick={() => handleDeleteSession(activeSession.id)} style={{ ...btnSecondary, padding: '6px 8px', color: 'var(--danger)' }} title="Supprimer la session">
-                <Trash2 size={14} />
-              </button>
+              <Tooltip content="Supprimer la session">
+                <button onClick={() => handleDeleteSession(activeSession.id)} style={{ ...btnSecondary, padding: '6px 8px', color: 'var(--danger)' }}>
+                  <Trash2 size={14} />
+                </button>
+              </Tooltip>
             )}
           </div>
         )}
@@ -517,13 +520,14 @@ export default function ProspectionPage() {
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 style={{ ...inputStyle, flex: 1 }}
               />
-              <button
+              <Button
                 onClick={handleSearch}
-                disabled={searching || !searchMetier || !searchVille}
-                style={{ ...btnPrimary, opacity: searching || !searchMetier || !searchVille ? 0.5 : 1, whiteSpace: 'nowrap' }}
+                disabled={!searchMetier || !searchVille}
+                loading={searching}
+                style={{ whiteSpace: 'nowrap' }}
               >
                 {searching ? 'Recherche...' : 'Rechercher'}
-              </button>
+              </Button>
             </div>
             {searching && <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '6px' }}>Recherche SIRENE + detection de sites web (30-60s)...</div>}
           </div>
@@ -541,13 +545,14 @@ export default function ProspectionPage() {
                 onKeyDown={(e) => e.key === 'Enter' && handleAuditUrl()}
                 style={{ ...inputStyle, flex: 1 }}
               />
-              <button
+              <Button
                 onClick={handleAuditUrl}
-                disabled={auditing || !auditUrl}
-                style={{ ...btnPrimary, opacity: auditing || !auditUrl ? 0.5 : 1, whiteSpace: 'nowrap' }}
+                disabled={!auditUrl}
+                loading={auditing}
+                style={{ whiteSpace: 'nowrap' }}
               >
                 {auditing ? 'Analyse...' : 'Auditer'}
-              </button>
+              </Button>
             </div>
             {auditing && <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '6px' }}>Audit complet en cours (30-60s)...</div>}
           </div>
@@ -735,14 +740,14 @@ export default function ProspectionPage() {
 
       {/* Empty state */}
       {!activeSession && !loadingSessions && sessions.length === 0 && (
-        <div style={{ ...cardStyle, textAlign: 'center', padding: '60px 20px', marginTop: '20px' }}>
-          <Search size={48} color="var(--text-tertiary)" style={{ marginBottom: '16px' }} />
-          <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
-            Commencez votre prospection
-          </div>
-          <div style={{ fontSize: '13px', color: 'var(--text-tertiary)', maxWidth: '400px', margin: '0 auto' }}>
-            Recherchez des entreprises par metier et ville, ou auditez directement un site web pour generer un rapport complet.
-          </div>
+        <div style={{ marginTop: '20px' }}>
+          <Card padding={0}>
+            <EmptyState
+              icon={<Search size={24} />}
+              title="Commencez votre prospection"
+              description="Recherchez des entreprises par métier et ville, ou auditez directement un site web pour générer un rapport complet."
+            />
+          </Card>
         </div>
       )}
     </div>

@@ -5,6 +5,7 @@ import { useSidebar } from '@/components/portal/SidebarContext';
 import ContactDetailPanel from '@/components/portal/ContactDetailPanel';
 import { Plus, Search, Users, GitBranch, ChevronRight, MoreHorizontal, Trash2, X } from 'lucide-react';
 import type { ContactData, LeadData, LeadStatus } from '@/types/portal';
+import { Button, Card, Badge, Tabs, Skeleton, EmptyState } from '@/components/ui';
 
 const LEAD_COLUMNS: { status: LeadStatus; label: string; color: string }[] = [
   { status: 'NEW', label: 'Nouveau', color: 'var(--accent)' },
@@ -169,43 +170,26 @@ export default function CRMPage() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
         <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>CRM</h1>
         {tab === 'contacts' ? (
-          <button onClick={() => setShowCreate(!showCreate)} style={{
-            display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-            background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500,
-          }}>
-            <Plus size={16} /> Nouveau contact
-          </button>
+          <Button onClick={() => setShowCreate(!showCreate)} iconLeft={<Plus size={16} />}>
+            Nouveau contact
+          </Button>
         ) : (
-          <button onClick={() => setShowCreateLead(!showCreateLead)} style={{
-            display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px',
-            background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500,
-          }}>
-            <Plus size={16} /> Nouveau lead
-          </button>
+          <Button onClick={() => setShowCreateLead(!showCreateLead)} iconLeft={<Plus size={16} />}>
+            Nouveau lead
+          </Button>
         )}
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', background: 'var(--bg-secondary)', borderRadius: '10px', padding: '3px' }}>
-        {[
-          { key: 'contacts' as const, label: 'Contacts', icon: <Users size={14} /> },
-          { key: 'pipeline' as const, label: 'Pipeline', icon: <GitBranch size={14} /> },
-        ].map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            style={{
-              flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-              padding: '8px 16px', borderRadius: '8px', border: 'none', cursor: 'pointer',
-              fontSize: '13px', fontWeight: 500, transition: 'all 0.15s',
-              background: tab === t.key ? 'var(--bg-card)' : 'transparent',
-              color: tab === t.key ? 'var(--text-primary)' : 'var(--text-tertiary)',
-              boxShadow: tab === t.key ? 'var(--shadow-card)' : 'none',
-            }}
-          >
-            {t.icon} {t.label}
-          </button>
-        ))}
+      <div style={{ marginBottom: '20px' }}>
+        <Tabs
+          value={tab}
+          onChange={(v) => setTab(v as 'contacts' | 'pipeline')}
+          items={[
+            { value: 'contacts', label: <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Users size={14} /> Contacts</span> },
+            { value: 'pipeline', label: <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><GitBranch size={14} /> Pipeline</span> },
+          ]}
+        />
       </div>
 
       {/* ═══════════════════ CONTACTS TAB ═══════════════════ */}
@@ -265,11 +249,28 @@ export default function CRMPage() {
 
           {/* Contact list */}
           {loadingContacts ? (
-            <p style={{ color: 'var(--text-tertiary)' }}>Chargement...</p>
+            <Card padding={0}>
+              <div style={{ padding: '12px 14px' }}>
+                <Skeleton height={14} width="40%" style={{ marginBottom: 12 }} />
+                <Skeleton height={14} width="55%" style={{ marginBottom: 12 }} />
+                <Skeleton height={14} width="50%" />
+              </div>
+            </Card>
           ) : contacts.length === 0 ? (
-            <p style={{ color: 'var(--text-tertiary)' }}>Aucun contact</p>
+            <Card padding={0}>
+              <EmptyState
+                icon={<Users size={24} />}
+                title="Aucun contact"
+                description={search || statusFilter ? 'Aucun contact ne correspond à votre recherche.' : 'Ajoutez votre premier contact pour commencer.'}
+                action={!search && !statusFilter && (
+                  <Button onClick={() => setShowCreate(true)} iconLeft={<Plus size={14} />} size="sm">
+                    Nouveau contact
+                  </Button>
+                )}
+              />
+            </Card>
           ) : (
-            <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)', overflow: 'hidden' }}>
+            <Card padding={0} style={{ overflow: 'hidden' }}>
               <div style={{
                 display: 'grid', gridTemplateColumns: '1fr 140px 100px',
                 padding: '10px 14px', background: 'var(--bg-secondary)',
@@ -307,13 +308,9 @@ export default function CRMPage() {
                   </div>
                   <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{c.company || '—'}</span>
                   <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px' }}>
-                    <div style={{
-                      padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 500,
-                      background: c.status === 'ACTIVE' ? 'var(--success-light)' : c.status === 'NEW' ? 'var(--accent-light)' : 'var(--bg-badge)',
-                      color: c.status === 'ACTIVE' ? 'var(--success)' : c.status === 'NEW' ? 'var(--accent)' : 'var(--text-tertiary)',
-                    }}>
+                    <Badge tone={c.status === 'ACTIVE' ? 'success' : c.status === 'NEW' ? 'accent' : 'neutral'}>
                       {c.status === 'NEW' ? 'Nouveau' : c.status === 'ACTIVE' ? 'Actif' : 'Inactif'}
-                    </div>
+                    </Badge>
                     <button
                       onClick={(e) => deleteContact(c.id, e)}
                       title="Supprimer"
@@ -330,7 +327,7 @@ export default function CRMPage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </Card>
           )}
         </>
       )}

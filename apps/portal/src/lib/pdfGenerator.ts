@@ -289,6 +289,26 @@ export async function generateDocumentPDF(
   }
 
   // ═══════════════════════════════════════════
+  // MENTIONS LÉGALES (Factures uniquement — obligation légale FR)
+  // ═══════════════════════════════════════════
+  if (document.type === 'FACTURE') {
+    y -= 18;
+    page.drawText('Conditions de paiement', { x: margin, y, size: 9, font: fonts.bold, color: COLORS.lightGray });
+    y -= 12;
+    const legalLines = [
+      "Paiement à 30 jours date de facture, sauf accord particulier.",
+      "Pénalités de retard : taux d'intérêt légal majoré de 10 points (Art. L441-10 du Code de commerce).",
+      "Indemnité forfaitaire pour frais de recouvrement : 40 €.",
+      "Pas d'escompte pour paiement anticipé.",
+      "TVA acquittée sur les débits.",
+    ];
+    for (const line of legalLines) {
+      page.drawText(line, { x: margin, y, size: 7, font: fonts.regular, color: COLORS.gray });
+      y -= 10;
+    }
+  }
+
+  // ═══════════════════════════════════════════
   // SIGNATURE ZONE (Devis / Contrats)
   // ═══════════════════════════════════════════
   if (document.type !== 'FACTURE') {

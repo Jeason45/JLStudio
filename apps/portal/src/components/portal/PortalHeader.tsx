@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useSidebar } from './SidebarContext';
 import { Sun, Moon, LogOut, ChevronDown } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+import { Tooltip } from '@/components/ui';
 
 interface SiteOption {
   id: string;
@@ -218,30 +219,32 @@ export default function PortalHeader({ siteName }: { siteName?: string }) {
 
       {/* Right: Actions */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: '180px', justifyContent: 'flex-end' }}>
-        <button
-          onClick={toggleTheme}
-          title={theme === 'light' ? 'Mode sombre' : 'Mode clair'}
-          style={{
-            width: '34px', height: '34px', borderRadius: '50%',
-            background: 'transparent', border: 'none',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', color: 'var(--text-tertiary)',
-          }}
-        >
-          {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-        </button>
-        <button
-          onClick={handleLogout}
-          title="Deconnexion"
-          style={{
-            width: '34px', height: '34px', borderRadius: '50%',
-            background: 'transparent', border: 'none',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', color: 'var(--text-tertiary)',
-          }}
-        >
-          <LogOut size={18} />
-        </button>
+        <Tooltip content={theme === 'light' ? 'Mode sombre' : 'Mode clair'} side="bottom">
+          <button
+            onClick={toggleTheme}
+            style={{
+              width: '34px', height: '34px', borderRadius: '50%',
+              background: 'transparent', border: 'none',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: 'var(--text-tertiary)',
+            }}
+          >
+            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+        </Tooltip>
+        <Tooltip content="Déconnexion" side="bottom">
+          <button
+            onClick={handleLogout}
+            style={{
+              width: '34px', height: '34px', borderRadius: '50%',
+              background: 'transparent', border: 'none',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: 'var(--text-tertiary)',
+            }}
+          >
+            <LogOut size={18} />
+          </button>
+        </Tooltip>
         <div style={{
           width: '38px', height: '38px', borderRadius: '50%',
           overflow: 'hidden', border: '2px solid var(--border)',

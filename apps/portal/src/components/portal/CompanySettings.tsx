@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import type { CompanySettingsData } from '@/types/portal';
+import { Card, Skeleton, Button } from '@/components/ui';
 
 export default function CompanySettings() {
   const [settings, setSettings] = useState<CompanySettingsData | null>(null);
@@ -55,14 +56,10 @@ export default function CompanySettings() {
 
   const labelStyle: React.CSSProperties = { fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500, marginBottom: '4px', display: 'block' };
 
-  if (loading) return <p style={{ color: 'var(--text-tertiary)' }}>Chargement...</p>;
+  if (loading) return <Skeleton height={200} rounded={12} />;
 
   return (
-    <div style={{
-      background: 'var(--bg-card)', borderRadius: '12px',
-      border: '1px solid var(--border)', padding: '24px',
-      boxShadow: 'var(--shadow-card)',
-    }}>
+    <Card padding="24px">
       <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px' }}>Entreprise</h3>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -116,13 +113,11 @@ export default function CompanySettings() {
         </div>
       </div>
 
-      <button onClick={handleSave} disabled={saving} style={{
-        marginTop: '16px', padding: '8px 20px', borderRadius: '8px',
-        background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer',
-        fontWeight: 500, fontSize: '13px', opacity: saving ? 0.5 : 1,
-      }}>
-        {saving ? 'Enregistrement...' : 'Enregistrer'}
-      </button>
-    </div>
+      <div style={{ marginTop: '16px' }}>
+        <Button onClick={handleSave} loading={saving} size="md">
+          {saving ? 'Enregistrement...' : 'Enregistrer'}
+        </Button>
+      </div>
+    </Card>
   );
 }
