@@ -1,39 +1,90 @@
-/* JL Studio agency CRM — dark luxueux + accent bleu vibrant */
+/* JL Studio agency CRM — force dark luxe regardless of user theme.
+ *
+ * The admin section is ALWAYS dark (it's a pro tool, not a client-facing UI).
+ * This file:
+ *  1. Declares dark vars on [data-agency="true"] (overrides whatever the user
+ *     has on the html element via data-theme).
+ *  2. Provides --agency-* aliases for backward compat with existing admin code.
+ *
+ * Future cleanup: rename --agency-* to --* in admin code and remove aliases.
+ */
 
 [data-agency="true"] {
+  /* ─── DARK PALETTE (forced) ────────────────────────── */
   /* Surfaces */
-  --agency-bg-page: #0a0a0a;
-  --agency-surface-1: #121212;
-  --agency-surface-2: #1a1a1a;
-  --agency-surface-3: #222222;
+  --bg-page: #0a0a0a;
+  --bg-card: #121212;
+  --bg-input: #1a1a1a;
+  --bg-hover: #1a1a1a;
+  --bg-secondary: #1a1a1a;
+  --bg-badge: #222222;
+
+  /* Accent — vibrant blue */
+  --accent: #3B82F6;
+  --accent-hover: #2563EB;
+  --accent-light: rgba(59,130,246,0.12);
+  --accent-glow: rgba(59,130,246,0.30);
 
   /* Borders */
-  --agency-border-soft: rgba(255, 255, 255, 0.05);
-  --agency-border: rgba(255, 255, 255, 0.08);
-  --agency-border-strong: rgba(255, 255, 255, 0.14);
+  --border: rgba(255,255,255,0.08);
+  --border-input: rgba(255,255,255,0.12);
+  --border-light: rgba(255,255,255,0.05);
 
-  /* Ink (texte) */
-  --agency-ink-1: #f5f5f5;
-  --agency-ink-2: rgba(245, 245, 245, 0.75);
-  --agency-ink-3: rgba(245, 245, 245, 0.5);
-  --agency-ink-4: rgba(245, 245, 245, 0.32);
+  /* Ink — 4-level hierarchy */
+  --text-primary: #f5f5f5;
+  --text-secondary: rgba(245,245,245,0.75);
+  --text-tertiary: rgba(245,245,245,0.5);
+  --text-quaternary: rgba(245,245,245,0.32);
 
-  /* Accent — dark blue vibrant */
-  --agency-accent: #3B82F6;
-  --agency-accent-light: #60A5FA;
-  --agency-accent-dark: #2563EB;
-  --agency-accent-soft: rgba(59, 130, 246, 0.12);
-  --agency-accent-glow: rgba(59, 130, 246, 0.30);
+  --active-pill-bg: rgba(59,130,246,0.12);
+  --active-pill-text: #3B82F6;
 
-  /* States */
-  --agency-success: #22c55e;
-  --agency-success-soft: rgba(34, 197, 94, 0.12);
-  --agency-warning: #f59e0b;
-  --agency-danger: #f87171;
-  --agency-danger-soft: rgba(248, 113, 113, 0.12);
+  /* Status colors */
+  --success: #22c55e;
+  --success-light: rgba(34,197,94,0.12);
+  --danger: #f87171;
+  --danger-light: rgba(248,113,113,0.12);
+  --warning: #f59e0b;
 
-  background: var(--agency-bg-page);
-  color: var(--agency-ink-1);
+  /* Effects */
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+  --overlay: rgba(0,0,0,0.65);
+  --text-on-overlay: #f5f5f5;
+  --scrollbar-thumb: rgba(255,255,255,0.12);
+  --scrollbar-hover: rgba(255,255,255,0.2);
+
+  /* ─── BACKWARD-COMPAT ALIASES ──────────────────────── */
+  /* All admin code that uses --agency-* keeps working. */
+  --agency-bg-page: var(--bg-page);
+  --agency-surface-1: var(--bg-card);
+  --agency-surface-2: var(--bg-hover);
+  --agency-surface-3: var(--bg-badge);
+
+  --agency-border-soft: var(--border-light);
+  --agency-border: var(--border);
+  --agency-border-strong: var(--border-input);
+
+  --agency-ink-1: var(--text-primary);
+  --agency-ink-2: var(--text-secondary);
+  --agency-ink-3: var(--text-tertiary);
+  --agency-ink-4: var(--text-quaternary);
+
+  --agency-accent: var(--accent);
+  --agency-accent-light: var(--accent);
+  --agency-accent-dark: var(--accent-hover);
+  --agency-accent-soft: var(--accent-light);
+  --agency-accent-glow: var(--accent-glow);
+
+  --agency-success: var(--success);
+  --agency-success-soft: var(--success-light);
+  --agency-warning: var(--warning);
+  --agency-danger: var(--danger);
+  --agency-danger-soft: var(--danger-light);
+
+  /* Apply to scope */
+  background: var(--bg-page);
+  color: var(--text-primary);
   min-height: 100vh;
 }
 

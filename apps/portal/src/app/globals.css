@@ -32,35 +32,53 @@
     --scrollbar-hover: rgba(0,0,0,0.25);
   }
 
+  /* Dark luxe theme — aligned with /admin agency design (LDC-inspired).
+     Single source of truth: portal-dark = admin look. */
   [data-theme="dark"] {
-    --bg-page: #0c1017;
-    --bg-card: #141820;
-    --bg-input: #1a1f2b;
-    --bg-hover: #1e2430;
-    --bg-secondary: #181d27;
-    --bg-badge: #1e2430;
-    --accent: #638BFF;
-    --accent-hover: #5278e6;
-    --accent-light: rgba(99,139,255,0.15);
-    --border: rgba(255,255,255,0.1);
+    /* Surfaces — pure black hierarchy */
+    --bg-page: #0a0a0a;
+    --bg-card: #121212;
+    --bg-input: #1a1a1a;
+    --bg-hover: #1a1a1a;
+    --bg-secondary: #1a1a1a;
+    --bg-badge: #222222;
+
+    /* Accent — vibrant blue */
+    --accent: #3B82F6;
+    --accent-hover: #2563EB;
+    --accent-light: rgba(59,130,246,0.12);
+
+    /* Borders — subtle whites */
+    --border: rgba(255,255,255,0.08);
     --border-input: rgba(255,255,255,0.12);
-    --border-light: rgba(255,255,255,0.06);
-    --text-primary: rgba(255,255,255,0.92);
-    --text-secondary: rgba(255,255,255,0.6);
-    --text-tertiary: rgba(255,255,255,0.38);
-    --active-pill-bg: rgba(255,255,255,0.12);
-    --active-pill-text: rgba(255,255,255,0.92);
-    --success: #34d399;
+    --border-light: rgba(255,255,255,0.05);
+
+    /* Ink — 4-level hierarchy for better contrast */
+    --text-primary: #f5f5f5;
+    --text-secondary: rgba(245,245,245,0.75);
+    --text-tertiary: rgba(245,245,245,0.5);
+    --text-quaternary: rgba(245,245,245,0.32);
+
+    --active-pill-bg: rgba(59,130,246,0.12);
+    --active-pill-text: #3B82F6;
+
+    /* Status colors — aligned with admin */
+    --success: #22c55e;
     --success-light: rgba(34,197,94,0.12);
     --danger: #f87171;
-    --danger-light: rgba(239,68,68,0.12);
-    --warning: #fbbf24;
-    --shadow-card: 0 1px 4px rgba(0,0,0,0.3);
-    --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+    --danger-light: rgba(248,113,113,0.12);
+    --warning: #f59e0b;
+
+    /* Effects */
+    --shadow-card: 0 1px 4px rgba(0,0,0,0.4);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
     --overlay: rgba(0,0,0,0.65);
-    --text-on-overlay: rgba(255,255,255,0.92);
+    --text-on-overlay: #f5f5f5;
     --scrollbar-thumb: rgba(255,255,255,0.12);
     --scrollbar-hover: rgba(255,255,255,0.2);
+
+    /* Glow for accent halos */
+    --accent-glow: rgba(59,130,246,0.30);
   }
 
   body {

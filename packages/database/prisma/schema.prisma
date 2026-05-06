@@ -13,13 +13,14 @@ datasource db {
 // ─────────────────────────────────────────────
 
 model BuilderUser {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  password    String
-  name        String?
-  totpSecret  String?
-  totpEnabled Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  id              String   @id @default(cuid())
+  email           String   @unique
+  password        String
+  name            String?
+  totpSecret      String?
+  totpEnabled     Boolean  @default(false)
+  themePreference String   @default("auto") // "auto" | "light" | "dark"
+  createdAt       DateTime @default(now())
 }
 
 // ─────────────────────────────────────────────
@@ -563,6 +564,7 @@ model PortalUser {
   active          Boolean        @default(true)
   inviteToken     String?        @unique
   inviteExpiresAt DateTime?
+  themePreference String         @default("auto") // "auto" | "light" | "dark"
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 

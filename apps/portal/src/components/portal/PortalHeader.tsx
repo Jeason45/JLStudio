@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSidebar } from './SidebarContext';
-import { Sun, Moon, LogOut, ChevronDown } from 'lucide-react';
+import { Sun, Moon, LogOut, ChevronDown, Sparkles } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { Tooltip } from '@/components/ui';
 
@@ -147,46 +147,103 @@ export default function PortalHeader({ siteName }: { siteName?: string }) {
           <div style={{
             position: 'absolute', top: '100%', left: 0,
             marginTop: '6px',
-            minWidth: '240px',
+            minWidth: '260px',
             background: 'var(--bg-card)',
             border: '1px solid var(--border)',
             borderRadius: '10px',
             boxShadow: 'var(--shadow-md)',
             padding: '6px',
             zIndex: 1000,
-            maxHeight: '320px',
+            maxHeight: '380px',
             overflowY: 'auto',
           }}>
-            {sites.map((site) => (
-              <button
-                key={site.id}
-                onClick={() => handleSwitchSite(site.id, site.name)}
-                disabled={switching}
-                style={{
-                  width: '100%',
-                  padding: '10px 12px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: site.name === currentSiteName ? 'var(--accent-light)' : 'transparent',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'background 0.1s',
-                  opacity: switching ? 0.5 : 1,
-                }}
-                onMouseEnter={(e) => {
-                  if (site.name !== currentSiteName) e.currentTarget.style.background = 'var(--bg-hover)';
-                }}
-                onMouseLeave={(e) => {
-                  if (site.name !== currentSiteName) e.currentTarget.style.background = 'transparent';
-                }}
-              >
-                <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }}>{site.name}</div>
-                <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '1px' }}>{site.slug}</div>
-              </button>
-            ))}
-            {sites.length === 0 && (
-              <div style={{ padding: '12px', fontSize: '13px', color: 'var(--text-tertiary)', textAlign: 'center' }}>
-                Aucun site
+            {/* JL Studio agency CRM — special entry */}
+            <button
+              onClick={() => {
+                setShowSiteDropdown(false);
+                router.push('/admin');
+              }}
+              style={{
+                width: '100%',
+                padding: '10px 12px',
+                borderRadius: '8px',
+                border: 'none',
+                background: pathname.startsWith('/admin') ? 'var(--accent-light)' : 'transparent',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'background 0.1s',
+                display: 'flex', alignItems: 'center', gap: '10px',
+              }}
+              onMouseEnter={(e) => {
+                if (!pathname.startsWith('/admin')) e.currentTarget.style.background = 'var(--bg-hover)';
+              }}
+              onMouseLeave={(e) => {
+                if (!pathname.startsWith('/admin')) e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <div style={{
+                width: 28, height: 28, borderRadius: 8,
+                background: 'var(--accent-light)', color: 'var(--accent)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                <Sparkles size={14} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>JL Studio</div>
+                <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '1px' }}>CRM Agence</div>
+              </div>
+            </button>
+
+            {/* Separator */}
+            {sites.filter((s) => s.slug !== 'jlstudio').length > 0 && (
+              <div style={{
+                fontSize: '10px', fontWeight: 600,
+                color: 'var(--text-tertiary)',
+                textTransform: 'uppercase', letterSpacing: '0.08em',
+                padding: '10px 12px 4px',
+              }}>
+                Sites clients
+              </div>
+            )}
+
+            {/* Client sites */}
+            {sites
+              .filter((s) => s.slug !== 'jlstudio')
+              .map((site) => {
+                const isActive = !pathname.startsWith('/admin') && site.name === currentSiteName;
+                return (
+                  <button
+                    key={site.id}
+                    onClick={() => handleSwitchSite(site.id, site.name)}
+                    disabled={switching}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      background: isActive ? 'var(--accent-light)' : 'transparent',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      transition: 'background 0.1s',
+                      opacity: switching ? 0.5 : 1,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) e.currentTarget.style.background = 'var(--bg-hover)';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) e.currentTarget.style.background = 'transparent';
+                    }}
+                  >
+                    <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }}>{site.name}</div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '1px' }}>{site.slug}</div>
+                  </button>
+                );
+              })}
+
+            {sites.filter((s) => s.slug !== 'jlstudio').length === 0 && (
+              <div style={{ padding: '12px', fontSize: '12px', color: 'var(--text-tertiary)', textAlign: 'center' }}>
+                Aucun site client encore
               </div>
             )}
           </div>
@@ -204,8 +261,8 @@ export default function PortalHeader({ siteName }: { siteName?: string }) {
                 borderRadius: '20px',
                 fontSize: '14px',
                 fontWeight: active ? 500 : 400,
-                color: active ? '#ffffff' : 'var(--text-secondary)',
-                backgroundColor: active ? '#1e293b' : 'transparent',
+                color: active ? 'var(--active-pill-text)' : 'var(--text-secondary)',
+                backgroundColor: active ? 'var(--active-pill-bg)' : 'transparent',
                 cursor: 'pointer',
                 transition: 'all 0.15s',
                 whiteSpace: 'nowrap',
