@@ -2,14 +2,15 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useSidebar } from './SidebarContext';
-import { Settings, LogOut, Menu, X, ChevronLeft, Share2, Upload, Star, Plus, Copy, FileText, Calendar, Send, Bell, Phone, LayoutDashboard, Users, Receipt, FileSignature, FolderKanban, Globe, Radar } from 'lucide-react';
+import { Settings, LogOut, Menu, X, ChevronLeft, Share2, Upload, Star, Plus, Copy, FileText, Calendar, Send, Bell, Phone, LayoutDashboard, Users, Receipt, FileSignature, FolderKanban, Globe, Radar, Sparkles } from 'lucide-react';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { Tooltip } from '@/components/ui';
 
 export default function PortalSidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { isMobile, isMobileMenuOpen, setIsMobileMenuOpen, config, userRole, theme, toggleTheme } = useSidebar();
+  const { isMobile, isMobileMenuOpen, setIsMobileMenuOpen, config, userRole, theme, toggleTheme, superAdmin } = useSidebar();
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -64,6 +65,7 @@ export default function PortalSidebar() {
   // Left sidebar tool icons (like SugarCRM)
   const toolIcons = [
     { icon: <ChevronLeft size={18} />, label: 'Retour', action: () => router.back() },
+    ...(superAdmin ? [{ icon: <Sparkles size={18} />, label: 'CRM Agence (JL Studio)', action: () => router.push('/admin') }] : []),
     { icon: <Share2 size={18} />, label: 'Partager' },
     { icon: <Upload size={18} />, label: 'Exporter' },
     { icon: <Star size={18} />, label: 'Favoris' },
@@ -178,10 +180,9 @@ export default function PortalSidebar() {
         paddingTop: '16px', gap: '2px',
       }}>
         {toolIcons.map((tool, i) => (
+          <Tooltip key={i} content={tool.label} side="right">
           <button
-            key={i}
             onClick={tool.action}
-            title={tool.label}
             style={{
               width: '36px', height: '36px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -203,6 +204,7 @@ export default function PortalSidebar() {
           >
             {tool.icon}
           </button>
+          </Tooltip>
         ))}
       </div>
 
