@@ -64,14 +64,14 @@ export function SidebarProvider({ children, initialConfig, userRole, superAdmin 
   userRole: string | null;
   superAdmin?: boolean;
 }) {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [config, setConfig] = useState<PortalConfigData | null>(initialConfig);
   const [themePref, setThemePrefState] = useState<ThemePref>('auto');
   const [theme, setTheme] = useState<ResolvedTheme>(superAdmin ? 'dark' : 'light');
 
-  const sidebarWidth = 48;
+  const sidebarWidth = isCollapsed ? 64 : 224;
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);

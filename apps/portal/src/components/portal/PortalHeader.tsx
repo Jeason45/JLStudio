@@ -1,11 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSidebar } from './SidebarContext';
-import { Sun, Moon, LogOut, ChevronDown, Sparkles } from 'lucide-react';
+import { ChevronDown, Sparkles } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import { Tooltip } from '@/components/ui';
 
 interface SiteOption {
   id: string;
@@ -16,7 +14,7 @@ interface SiteOption {
 export default function PortalHeader({ siteName }: { siteName?: string }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { config, isMobile, theme, toggleTheme, userRole, superAdmin } = useSidebar();
+  const { config, isMobile, sidebarWidth, superAdmin } = useSidebar();
 
   const [sites, setSites] = useState<SiteOption[]>([]);
   const [showSiteDropdown, setShowSiteDropdown] = useState(false);
@@ -26,18 +24,14 @@ export default function PortalHeader({ siteName }: { siteName?: string }) {
 
   const initial = currentSiteName ? currentSiteName.charAt(0).toUpperCase() : 'P';
 
-  // Fetch sites list for superAdmin
   useEffect(() => {
     if (!superAdmin) return;
     fetch('/api/portal/sites')
       .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) setSites(data);
-      })
+      .then(data => { if (Array.isArray(data)) setSites(data); })
       .catch(() => {});
   }, [superAdmin]);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -47,11 +41,6 @@ export default function PortalHeader({ siteName }: { siteName?: string }) {
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
-
-  const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    router.push('/login');
-  };
 
   const handleSwitchSite = async (siteId: string, name: string) => {
     setSwitching(true);
@@ -66,45 +55,20 @@ export default function PortalHeader({ siteName }: { siteName?: string }) {
         setShowSiteDropdown(false);
         window.location.reload();
       }
-    } catch {
-      // ignore
-    } finally {
+    } catch { /* ignore */ } finally {
       setSwitching(false);
     }
   };
 
-  const allNavItems = [
-    { href: '/dashboard', label: 'Dashboard', exact: true, always: true },
-    { href: '/crm', label: 'CRM', module: 'moduleCRM' as const },
-    { href: '/devis', label: 'Devis', module: 'moduleDevis' as const },
-    { href: '/factures', label: 'Factures', module: 'moduleFactures' as const },
-    { href: '/contrats', label: 'Contrats', module: 'moduleContrats' as const },
-    { href: '/projets', label: 'Projets', module: 'moduleProjets' as const },
-    { href: '/mon-site', label: 'Mon Site', module: 'moduleCMS' as const },
-    { href: '/calendrier', label: 'Calendrier', module: 'moduleCalendrier' as const },
-    { href: '/prospection', label: 'Prospection', module: 'moduleProspection' as const },
-  ];
-
-  const navItems = allNavItems.filter((item) => {
-    if (item.always) return true;
-    if (!item.module || !config) return false;
-    return config[item.module];
-  });
-
-  if (userRole === 'ADMIN' || superAdmin) {
-    navItems.push({ href: '/settings', label: 'Settings', exact: false, always: true });
-  }
-
-  const isActive = (href: string, exact?: boolean) => {
-    if (exact) return pathname === href;
-    return pathname.startsWith(href);
-  };
+  // Mark unused vars to silence linter (config available for future breadcrumb)
+  void config;
+  void pathname;
 
   if (isMobile) return null;
 
   return (
     <div style={{
-      position: 'fixed', top: 0, left: '48px', right: 0,
+      position: 'fixed', top: 0, left: `${sidebarWidth}px`, right: 0,
       height: '56px',
       background: 'var(--bg-card)',
       borderBottom: '1px solid var(--border)',
@@ -250,64 +214,14 @@ export default function PortalHeader({ siteName }: { siteName?: string }) {
         )}
       </div>
 
-      {/* Center: Navigation tabs */}
-      <nav style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-        {navItems.map((item) => {
-          const active = isActive(item.href, item.exact);
-          return (
-            <Link key={item.href} href={item.href} style={{ textDecoration: 'none' }}>
-              <div style={{
-                padding: '6px 18px',
-                borderRadius: '20px',
-                fontSize: '14px',
-                fontWeight: active ? 500 : 400,
-                color: active ? 'var(--active-pill-text)' : 'var(--text-secondary)',
-                backgroundColor: active ? 'var(--active-pill-bg)' : 'transparent',
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-                whiteSpace: 'nowrap',
-              }}>
-                {item.label}
-              </div>
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Right: Actions */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: '180px', justifyContent: 'flex-end' }}>
-        <Tooltip content={theme === 'light' ? 'Mode sombre' : 'Mode clair'} side="bottom">
-          <button
-            onClick={toggleTheme}
-            style={{
-              width: '34px', height: '34px', borderRadius: '50%',
-              background: 'transparent', border: 'none',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', color: 'var(--text-tertiary)',
-            }}
-          >
-            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-          </button>
-        </Tooltip>
-        <Tooltip content="Déconnexion" side="bottom">
-          <button
-            onClick={handleLogout}
-            style={{
-              width: '34px', height: '34px', borderRadius: '50%',
-              background: 'transparent', border: 'none',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', color: 'var(--text-tertiary)',
-            }}
-          >
-            <LogOut size={18} />
-          </button>
-        </Tooltip>
+      {/* Right: User avatar (theme toggle + logout are in sidebar footer) */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         <div style={{
-          width: '38px', height: '38px', borderRadius: '50%',
-          overflow: 'hidden', border: '2px solid var(--border)',
+          width: '36px', height: '36px', borderRadius: '50%',
+          overflow: 'hidden', border: '1px solid var(--border)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: 'var(--accent-light)', color: 'var(--accent)',
-          fontSize: '14px', fontWeight: 600,
+          fontSize: '13px', fontWeight: 600,
         }}>
           {initial}
         </div>
