@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     const response = NextResponse.json({ success: true, siteName: site.name });
     response.cookies.set('portal-token', newToken, {
       httpOnly: true,
-      secure: process.env.NEXT_PUBLIC_APP_URL?.startsWith('https://') ?? false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
       maxAge: 60 * 60 * 24 * 7,

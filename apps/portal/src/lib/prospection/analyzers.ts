@@ -1,6 +1,7 @@
 import dns from 'dns/promises'
 import net from 'net'
 import type { SiteAnalysis, SireneData } from './types'
+import { YellowLabRunResponseSchema, safeParseJson } from './schemas'
 
 const USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
 const HTTP_TIMEOUT = 15000
@@ -779,14 +780,14 @@ export async function analyzeYellowLab(url: string): Promise<{ globalScore: numb
       await new Promise(r => setTimeout(r, 4000))
       try {
         const res = await fetch(`${YELLOWLAB_URL}/runs/${startData.runId}`, { signal: AbortSignal.timeout(10000) })
-        const data = await res.json() as any
+        const data = safeParseJson(YellowLabRunResponseSchema, await res.json())
         if (data?.status?.statusCode === 'running') continue
         if (data?.status?.statusCode === 'failed') return { globalScore: null, topIssues: [] }
         const scores = data?.scoreProfiles?.generic
         if (!scores) return { globalScore: null, topIssues: [] }
         const topIssues: string[] = []
-        for (const cat of Object.values(scores.categories || {}) as any[]) {
-          for (const rule of Object.values(cat.rules || {}) as any[]) {
+        for (const cat of Object.values(scores.categories || {})) {
+          for (const rule of Object.values(cat.rules || {})) {
             if (rule.bad && rule.policy?.label) topIssues.push(rule.policy.label)
           }
         }

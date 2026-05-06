@@ -53,6 +53,14 @@ export async function middleware(req: NextRequest) {
       return response;
     }
 
+    // /admin/* is super-admin only
+    if (pathname.startsWith('/admin')) {
+      if (pathname.startsWith('/api')) {
+        return NextResponse.json({ error: 'Acces refuse' }, { status: 403 });
+      }
+      return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+
     // Admin-only routes
     if (pathname.startsWith('/settings') && role !== 'ADMIN') {
       if (pathname.startsWith('/api')) {
@@ -95,7 +103,13 @@ export async function middleware(req: NextRequest) {
       return NextResponse.json({ error: 'Non autorise' }, { status: 401 });
     }
     const response = NextResponse.redirect(new URL('/login', req.url));
-    response.cookies.set('portal-token', '', { path: '/', maxAge: 0 });
+    response.cookies.set('portal-token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 0,
+    });
     return response;
   }
 }

@@ -4,9 +4,15 @@ import { prisma } from '@/lib/prisma';
 import { signToken } from '@/lib/auth';
 import { loginSchema, adminLoginSchema } from '@/lib/validations';
 import { rateLimit } from '@/lib/rateLimit';
+import { verifyOrigin } from '@/lib/csrf';
+import { logger } from '@/lib/logger';
 
 export async function POST(req: NextRequest) {
   try {
+    if (!verifyOrigin(req)) {
+      return NextResponse.json({ error: 'Origin invalide' }, { status: 403 });
+    }
+
     const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
     const { allowed } = rateLimit(`portal-login:${ip}`, 5, 60_000);
     if (!allowed) {
@@ -68,7 +74,7 @@ export async function POST(req: NextRequest) {
       const response = NextResponse.json({ success: true, role: 'ADMIN', siteName: site.name });
       response.cookies.set('portal-token', token, {
         httpOnly: true,
-        secure: process.env.NEXT_PUBLIC_APP_URL?.startsWith('https://') ?? false,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',
         maxAge: 60 * 60 * 24 * 7,
@@ -115,7 +121,7 @@ export async function POST(req: NextRequest) {
     const response = NextResponse.json({ success: true, role: user.role });
     response.cookies.set('portal-token', token, {
       httpOnly: true,
-      secure: process.env.NEXT_PUBLIC_APP_URL?.startsWith('https://') ?? false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
       maxAge: 60 * 60 * 24 * 7,
@@ -123,7 +129,7 @@ export async function POST(req: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('Portal login error:', err);
+    logger.error({ err }, 'Portal login error');
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }

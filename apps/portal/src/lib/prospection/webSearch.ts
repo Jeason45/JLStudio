@@ -1,5 +1,13 @@
 // Web search module — Serper.dev (Google results) with SearXNG fallback
 
+import {
+  SerperOrganicResponseSchema,
+  SerperPlacesResponseSchema,
+  SerperAccountResponseSchema,
+  SearXNGResponseSchema,
+  safeParseJson,
+} from './schemas';
+
 export interface WebSearchResult {
   title: string
   link: string
@@ -47,28 +55,28 @@ async function searchSerper(query: string, apiKey: string): Promise<SearchRespon
 
     if (!organicRes.ok && !placesRes.ok) return null
 
-    const organicData = organicRes.ok ? await organicRes.json() as any : { organic: [] }
-    const placesData = placesRes.ok ? await placesRes.json() as any : { places: [] }
+    const organicData = organicRes.ok ? safeParseJson(SerperOrganicResponseSchema, await organicRes.json()) : null;
+    const placesData = placesRes.ok ? safeParseJson(SerperPlacesResponseSchema, await placesRes.json()) : null;
 
-    const organic: WebSearchResult[] = (organicData.organic || []).map((r: any) => ({
+    const organic: WebSearchResult[] = (organicData?.organic ?? []).map(r => ({
       title: r.title || '',
       link: r.link || '',
       snippet: r.snippet || '',
-    }))
+    }));
 
-    const places: PlaceResult[] = (placesData.places || []).map((r: any) => ({
+    const places: PlaceResult[] = (placesData?.places ?? []).map(r => ({
       title: r.title || '',
       address: r.address || '',
       phone: r.phoneNumber || null,
       website: r.website || null,
-      rating: r.rating || null,
-      reviewCount: r.reviewsCount || r.reviews || null,
-    }))
+      rating: r.rating ?? null,
+      reviewCount: r.reviewsCount ?? r.reviews ?? null,
+    }));
 
     return {
       organic,
       places,
-      creditsRemaining: organicData.credits ?? null,
+      creditsRemaining: organicData?.credits ?? null,
       source: 'serper',
     }
   } catch {
@@ -86,8 +94,8 @@ export async function checkSerperCredits(apiKey: string): Promise<number | null>
       signal: AbortSignal.timeout(5000),
     })
     if (!res.ok) return null
-    const data = await res.json() as any
-    return data.credits ?? null
+    const data = safeParseJson(SerperAccountResponseSchema, await res.json());
+    return data?.credits ?? null
   } catch {
     return null
   }
@@ -109,14 +117,14 @@ async function searchSearXNG(query: string): Promise<SearchResponse | null> {
 
     if (!res.ok) return null
 
-    const data = await res.json() as any
-    const results = data.results || []
+    const data = safeParseJson(SearXNGResponseSchema, await res.json());
+    const results = data?.results ?? [];
 
-    const organic: WebSearchResult[] = results.map((r: any) => ({
+    const organic: WebSearchResult[] = results.map(r => ({
       title: r.title || '',
       link: r.url || '',
       snippet: r.content || '',
-    }))
+    }));
 
     return {
       organic,
@@ -222,8 +230,8 @@ export async function checkGoogleVisibility(
 
     // Check organic results
     if (organicRes.ok) {
-      const data = await organicRes.json() as any
-      const organic = data.organic || []
+      const data = safeParseJson(SerperOrganicResponseSchema, await organicRes.json());
+      const organic = data?.organic ?? [];
       result.totalOrganicResults = organic.length
 
       for (let i = 0; i < organic.length; i++) {
@@ -241,8 +249,8 @@ export async function checkGoogleVisibility(
 
     // Check local pack (Google Maps results)
     if (placesRes.ok) {
-      const data = await placesRes.json() as any
-      const places = data.places || []
+      const data = safeParseJson(SerperPlacesResponseSchema, await placesRes.json());
+      const places = data?.places ?? [];
 
       for (let i = 0; i < places.length; i++) {
         const placeWebsite = (places[i].website || '').toLowerCase()
@@ -252,8 +260,9 @@ export async function checkGoogleVisibility(
         if (placeDomain === prospectDomain) {
           result.isInLocalPack = true
           result.localPackPosition = i + 1
-          result.localPackRating = places[i].rating || null
-          result.localPackReviewCount = places[i].reviewCount || null
+          result.localPackRating = places[i].rating ?? null
+          // SerperPlacesResponseSchema uses reviewsCount (the API name)
+          result.localPackReviewCount = places[i].reviewsCount ?? places[i].reviews ?? null
           break
         }
       }

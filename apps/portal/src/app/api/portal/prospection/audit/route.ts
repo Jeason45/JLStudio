@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { extractSiteId } from '@/lib/auth'
+import { logger } from '@/lib/logger'
 import {
   analyzeTech,
   checkSeoFiles,
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const pageSpeedApiKey = process.env.PAGESPEED_API_KEY || ''
-    console.log(`[Audit] URL: ${url} | PageSpeed key: ${pageSpeedApiKey ? 'present (' + pageSpeedApiKey.slice(0, 8) + '...)' : 'MISSING'}`)
+    logger.info({ url, pageSpeedKeyPresent: Boolean(pageSpeedApiKey) }, 'Audit start')
 
     // Quick PageSpeed test to diagnose issues
     if (pageSpeedApiKey) {
@@ -45,13 +46,13 @@ export async function POST(req: NextRequest) {
         const testRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${pageSpeedApiKey}&strategy=mobile&category=performance`, { signal: AbortSignal.timeout(45000) })
         const testData = await testRes.json() as any
         if (testData.error) {
-          console.error('[Audit] PageSpeed API error:', JSON.stringify(testData.error))
+          logger.error({ err: testData.error }, 'PageSpeed API error')
         } else {
           const score = testData?.lighthouseResult?.categories?.performance?.score
-          console.log(`[Audit] PageSpeed test OK — mobile perf score: ${score !== undefined ? Math.round(score * 100) : 'null'}`)
+          logger.info({ score: score !== undefined ? Math.round(score * 100) : null }, 'PageSpeed test OK')
         }
       } catch (err) {
-        console.error('[Audit] PageSpeed test fetch failed:', err instanceof Error ? err.message : err)
+        logger.error({ err: err instanceof Error ? err.message : err }, 'PageSpeed test fetch failed')
       }
     }
 
@@ -71,7 +72,7 @@ export async function POST(req: NextRequest) {
       checkCarbon(url).catch(() => null),
       validateHtml(url).catch(() => ({ errorCount: 0, warningCount: 0, topErrors: [] as string[] })),
       analyzeYellowLab(url).catch(() => ({ globalScore: null, topIssues: [] as string[] })),
-      pageSpeedApiKey ? analyzePageSpeedFull(url, pageSpeedApiKey).catch((err) => { console.error('PageSpeed error:', err); return null }) : Promise.resolve(null),
+      pageSpeedApiKey ? analyzePageSpeedFull(url, pageSpeedApiKey).catch((err) => { logger.error({ err }, 'PageSpeed error'); return null }) : Promise.resolve(null),
       analyzeObservatory(url).catch(() => ({ grade: null })),
     ])
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { extractSiteId, extractUserId } from '@/lib/auth';
+import { requirePortalAccess } from '@/lib/auth';
 import { logActivity } from '@/lib/activity';
 import { generateDocumentPDF } from '@/lib/pdfGenerator';
 import { sendDocumentEmail } from '@/lib/email';
@@ -17,10 +17,11 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const siteId = extractSiteId(req.headers);
-  const userId = extractUserId(req.headers);
+  const auth = requirePortalAccess(req.headers);
+  if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  if (auth.role === 'CLIENT') return NextResponse.json({ error: 'Acces refuse' }, { status: 403 });
+  const { siteId, userId } = auth;
   const { id } = await params;
-  if (!siteId) return NextResponse.json({ error: 'Non autorise' }, { status: 401 });
 
   // Validate body
   const body = await req.json();

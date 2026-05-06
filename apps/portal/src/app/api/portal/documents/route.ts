@@ -65,9 +65,10 @@ export async function POST(req: NextRequest) {
 
   const { type, title, contactId, content, amount, taxRate, validUntil, notes } = parsed.data;
 
-  // Compute tax and total
-  const taxAmount = amount ? amount * (taxRate / 100) : null;
-  const totalAmount = amount ? amount + (taxAmount || 0) : null;
+  // Compute tax and total — round to 2 decimals to avoid float drift
+  const round2 = (n: number) => Math.round(n * 100) / 100;
+  const taxAmount = amount ? round2(amount * (taxRate / 100)) : null;
+  const totalAmount = amount ? round2(amount + (taxAmount ?? 0)) : null;
 
   // Get next document number
   const prefixMap = { DEVIS: 'DEV', FACTURE: 'FAC', CONTRAT: 'CON' } as const;

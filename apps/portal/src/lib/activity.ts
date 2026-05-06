@@ -1,4 +1,5 @@
 import { prisma } from './prisma';
+import { logger } from './logger';
 import type { Prisma } from '@jlstudio/database';
 
 export async function logActivity(
@@ -29,6 +30,6 @@ export async function logActivity(
       },
     });
   } catch (err) {
-    console.error('Failed to log activity:', err);
+    logger.error({ err }, 'Failed to log activity');
   }
 }

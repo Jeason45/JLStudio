@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+import { verifyOrigin } from '@/lib/csrf';
+import { rateLimit } from '@/lib/rateLimit';
+import { logger } from '@/lib/logger';
 
 const acceptInviteSchema = z.object({
   token: z.string().min(1),
@@ -10,6 +13,16 @@ const acceptInviteSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    if (!verifyOrigin(req)) {
+      return NextResponse.json({ error: 'Origin invalide' }, { status: 403 });
+    }
+
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    const { allowed } = rateLimit(`portal-accept-invite:${ip}`, 5, 60_000);
+    if (!allowed) {
+      return NextResponse.json({ error: 'Trop de requetes, reessayez plus tard' }, { status: 429 });
+    }
+
     const body = await req.json();
     const parsed = acceptInviteSchema.safeParse(body);
     if (!parsed.success) {
@@ -51,7 +64,7 @@ export async function POST(req: NextRequest) {
       email: user.email,
     });
   } catch (error) {
-    console.error('[POST /api/auth/accept-invite]', error);
+    logger.error({ err: error, route: 'POST /api/auth/accept-invite' }, 'Accept invite failed');
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }

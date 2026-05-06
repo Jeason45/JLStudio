@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { extractSiteId } from '@/lib/auth';
+import { requirePortalAccess } from '@/lib/auth';
 import { generateDocumentPDF } from '@/lib/pdfGenerator';
 import type { DocumentData, CompanySettingsData } from '@/types/portal';
 
@@ -8,12 +8,16 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const siteId = extractSiteId(req.headers);
+  const auth = requirePortalAccess(req.headers);
+  if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const { siteId, role, contactId } = auth;
   const { id } = await params;
-  if (!siteId) return NextResponse.json({ error: 'Non autorise' }, { status: 401 });
+
+  const where: Record<string, unknown> = { id, siteId };
+  if (role === 'CLIENT') where.contactId = contactId;
 
   const document = await prisma.portalDocument.findFirst({
-    where: { id, siteId },
+    where,
     include: {
       contact: { select: { id: true, firstName: true, lastName: true, email: true, company: true } },
     },

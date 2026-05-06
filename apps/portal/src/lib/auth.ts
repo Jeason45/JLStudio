@@ -62,3 +62,22 @@ export function requireEditor(headers: Headers): { siteId: string; role: string 
 export function isClient(headers: Headers): boolean {
   return extractUserRole(headers) === 'CLIENT';
 }
+
+export type PortalAccess = {
+  siteId: string;
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'CLIENT' | 'EDITOR';
+  contactId: string | null;
+  userId: string | null;
+};
+
+export function requirePortalAccess(
+  headers: Headers
+): PortalAccess | { error: string; status: number } {
+  const siteId = extractSiteId(headers);
+  const role = extractUserRole(headers) as PortalAccess['role'] | null;
+  const contactId = extractContactId(headers);
+  const userId = extractUserId(headers);
+  if (!siteId || !role) return { error: 'Non autorise', status: 401 };
+  if (role === 'CLIENT' && !contactId) return { error: 'Non autorise', status: 401 };
+  return { siteId, role, contactId, userId };
+}

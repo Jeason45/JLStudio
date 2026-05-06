@@ -1,6 +1,17 @@
 // Smart business search: SIRENE text search only (no website guessing)
 // Website discovery is now handled by Serper/SearXNG in the session route
 
+import { logger } from '@/lib/logger'
+import {
+  GeoCommunesResponseSchema,
+  SireneResponseSchema,
+  SireneResultSchema,
+  safeParseJson,
+} from './schemas'
+import type { z } from 'zod'
+
+type SireneResult = z.infer<typeof SireneResultSchema>
+
 const SIRENE_URL = 'https://recherche-entreprises.api.gouv.fr/search'
 const GEO_URL = 'https://geo.api.gouv.fr/communes'
 
@@ -26,8 +37,8 @@ async function getPostalCodes(ville: string): Promise<string[]> {
       signal: AbortSignal.timeout(5000),
     })
     if (!res.ok) return []
-    const data = await res.json() as any[]
-    if (data.length === 0) return []
+    const data = safeParseJson(GeoCommunesResponseSchema, await res.json())
+    if (!data || data.length === 0) return []
     return data[0].codesPostaux || []
   } catch { return [] }
 }
@@ -111,8 +122,8 @@ export async function searchBusinesses(
           })}`, { signal: AbortSignal.timeout(10000) })
 
           if (res.ok) {
-            const data = await res.json() as any
-            for (const r of (data.results || [])) {
+            const data = safeParseJson(SireneResponseSchema, await res.json())
+            for (const r of (data?.results ?? [])) {
               if (results.length >= limit) break
               const siren = r.siren || ''
               if (excludeSet.has(siren) || seenSirens.has(siren)) continue
@@ -132,8 +143,8 @@ export async function searchBusinesses(
         })}`, { signal: AbortSignal.timeout(10000) })
 
         if (res.ok) {
-          const data = await res.json() as any
-          for (const r of (data.results || [])) {
+          const data = safeParseJson(SireneResponseSchema, await res.json())
+          for (const r of (data?.results ?? [])) {
             if (results.length >= limit) break
             const siren = r.siren || ''
             if (excludeSet.has(siren) || seenSirens.has(siren)) continue
@@ -145,7 +156,7 @@ export async function searchBusinesses(
       }
     }
   } catch (err) {
-    console.error('SIRENE search error:', err)
+    logger.error({ err }, 'SIRENE search error')
   }
 
   // Filter by city
@@ -163,27 +174,28 @@ export async function searchBusinesses(
   return results
 }
 
-function mapSireneResult(r: any): BusinessResult {
+function mapSireneResult(r: SireneResult): BusinessResult {
   const siege = r.siege || {}
+  const siegeAny = siege as Record<string, unknown>
   return {
     name: r.nom_complet || r.nom_raison_sociale || '?',
-    siret: siege.siret || '',
+    siret: (typeof siegeAny.siret === 'string' ? siegeAny.siret : '') || '',
     siren: r.siren || '',
-    address: [siege.numero_voie, siege.type_voie, siege.libelle_voie].filter(Boolean).join(' '),
-    city: siege.libelle_commune || '',
-    postalCode: siege.code_postal || '',
+    address: [siegeAny.numero_voie, siegeAny.type_voie, siegeAny.libelle_voie].filter(Boolean).join(' '),
+    city: (typeof siegeAny.libelle_commune === 'string' ? siegeAny.libelle_commune : '') || '',
+    postalCode: (typeof siegeAny.code_postal === 'string' ? siegeAny.code_postal : '') || '',
     dateCreation: r.date_creation || null,
     effectif: r.tranche_effectif_salarie || null,
     nafCode: r.activite_principale || null,
-    nafLabel: r.libelle_activite_principale || null,
+    nafLabel: (r as Record<string, unknown>).libelle_activite_principale as string | null ?? null,
     website: null, // Website is now discovered by Serper/SearXNG, not DuckDuckGo
-    isActive: r.etat_administratif === 'A',
+    isActive: (r as Record<string, unknown>).etat_administratif === 'A',
   }
 }
 
-function isRelevantBusiness(r: any): boolean {
+function isRelevantBusiness(r: SireneResult): boolean {
   const name = (r.nom_complet || r.nom_raison_sociale || '').toUpperCase()
-  const natureJuridique = r.nature_juridique || ''
+  const natureJuridique = (r as Record<string, unknown>).nature_juridique as string | undefined ?? ''
 
   if (natureJuridique.startsWith('9') || natureJuridique.startsWith('7') || natureJuridique.startsWith('8')) {
     return false

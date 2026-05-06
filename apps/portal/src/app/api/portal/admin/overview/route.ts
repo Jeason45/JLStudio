@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { logger } from '@/lib/logger';
 
 export async function GET(req: NextRequest) {
   const isSuperAdmin = req.headers.get('x-portal-super-admin') === 'true';
@@ -129,7 +130,7 @@ export async function GET(req: NextRequest) {
       })),
     });
   } catch (err) {
-    console.error('Admin overview error:', err);
+    logger.error({ err }, 'Admin overview error');
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }

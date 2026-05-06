@@ -6,16 +6,28 @@ import { createSignatureProof, getClientIP, getUserAgent, generateStringHash } f
 import { sendDocumentEmail } from '@/lib/email';
 import type { DocumentData, CompanySettingsData } from '@/types/portal';
 import { z } from 'zod';
+import { verifyOrigin } from '@/lib/csrf';
+import { rateLimit } from '@/lib/rateLimit';
 
 const submitSchema = z.object({
   token: z.string().min(1),
   signerName: z.string().min(1, 'Nom requis'),
   signerEmail: z.string().email('Email invalide'),
-  signatureImage: z.string().min(1, 'Signature requise'), // base64 PNG
+  signatureImage: z.string().min(1, 'Signature requise').max(500_000, 'Signature trop volumineuse'), // base64 PNG, ~500KB max
 });
 
 // POST /api/sign/submit — Public, no auth
 export async function POST(request: NextRequest) {
+  if (!verifyOrigin(request)) {
+    return NextResponse.json({ error: 'Origin invalide' }, { status: 403 });
+  }
+
+  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+  const { allowed } = rateLimit(`portal-sign-submit:${ip}`, 5, 60_000);
+  if (!allowed) {
+    return NextResponse.json({ error: 'Trop de requetes, reessayez plus tard' }, { status: 429 });
+  }
+
   const body = await request.json();
   const parsed = submitSchema.safeParse(body);
   if (!parsed.success) {

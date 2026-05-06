@@ -11,6 +11,7 @@ import {
   findBestEmail,
 } from './analyzers'
 import { scoreProspect } from './scorer'
+import { logger } from '@/lib/logger'
 import type { SiteAnalysis, SireneData } from './types'
 
 export async function runProspectionCampaign(campaignId: string) {
@@ -153,7 +154,7 @@ export async function runProspectionCampaign(campaignId: string) {
         })
       } catch (err) {
         // Individual prospect error — log but continue
-        console.error(`Prospection: error processing "${prospect.name}":`, err)
+        logger.error({ err, prospectName: prospect.name }, 'Prospection error processing')
 
         // Save with minimal data
         await prisma.prospectionResult.create({
@@ -195,7 +196,7 @@ export async function runProspectionCampaign(campaignId: string) {
   } catch (err) {
     // Fatal error — mark campaign as FAILED
     const errorMessage = err instanceof Error ? err.message : String(err)
-    console.error(`Prospection campaign ${campaignId} failed:`, errorMessage)
+    logger.error({ campaignId, errorMessage }, 'Prospection campaign failed')
 
     await prisma.prospectionCampaign.update({
       where: { id: campaignId },

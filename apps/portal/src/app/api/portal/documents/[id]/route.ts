@@ -1,23 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { extractSiteId, extractUserId, extractUserRole, extractContactId } from '@/lib/auth';
+import { extractSiteId, extractUserId, extractUserRole, requirePortalAccess } from '@/lib/auth';
 import { logActivity } from '@/lib/activity';
+import { isValidTransition, type DocumentStatus } from '@/lib/documentStatus';
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const siteId = extractSiteId(req.headers);
-  const role = extractUserRole(req.headers);
-  const userContactId = extractContactId(req.headers);
+  const auth = requirePortalAccess(req.headers);
+  if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const { siteId, role, contactId } = auth;
   const { id } = await params;
-  if (!siteId) return NextResponse.json({ error: 'Non autorise' }, { status: 401 });
 
   const where: Record<string, unknown> = { id, siteId };
-  // CLIENT can only access their own documents
-  if (role === 'CLIENT' && userContactId) {
-    where.contactId = userContactId;
-  }
+  if (role === 'CLIENT') where.contactId = contactId;
 
   const document = await prisma.portalDocument.findFirst({
     where,
@@ -48,17 +45,29 @@ export async function PATCH(
 
   const body = await req.json();
 
-  // Recompute amounts if changed
+  // Recompute amounts if changed + validate state transition if status changes
   const data: Record<string, unknown> = { ...body };
-  if (data.amount !== undefined || data.taxRate !== undefined) {
+  if (data.amount !== undefined || data.taxRate !== undefined || data.status !== undefined) {
     const current = await prisma.portalDocument.findFirst({ where: { id, siteId } });
     if (!current) return NextResponse.json({ error: 'Document introuvable' }, { status: 404 });
 
-    const amount = (data.amount as number) ?? current.amount;
-    const taxRate = (data.taxRate as number) ?? current.taxRate;
-    if (amount != null) {
-      data.taxAmount = amount * (taxRate / 100);
-      data.totalAmount = amount + (data.taxAmount as number);
+    if (data.status !== undefined && data.status !== current.status) {
+      if (!isValidTransition(current.status as DocumentStatus, data.status as DocumentStatus)) {
+        return NextResponse.json(
+          { error: `Transition invalide : ${current.status} → ${data.status}` },
+          { status: 422 },
+        );
+      }
+    }
+
+    if (data.amount !== undefined || data.taxRate !== undefined) {
+      const amount = (data.amount as number) ?? current.amount;
+      const taxRate = (data.taxRate as number) ?? current.taxRate;
+      if (amount != null) {
+        const round2 = (n: number) => Math.round(n * 100) / 100;
+        data.taxAmount = round2(amount * (taxRate / 100));
+        data.totalAmount = round2(amount + (data.taxAmount as number));
+      }
     }
   }
 

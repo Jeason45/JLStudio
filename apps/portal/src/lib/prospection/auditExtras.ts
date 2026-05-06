@@ -1,4 +1,9 @@
 import tls from 'tls'
+import {
+  PageSpeedResponseSchema,
+  CarbonResponseSchema,
+  safeParseJson,
+} from './schemas'
 
 // ── PageSpeed Full Audit (4 categories) ──
 
@@ -25,8 +30,8 @@ export async function analyzePageSpeedFull(url: string, apiKey: string): Promise
       fetch(`${PAGESPEED_URL}?url=${encodeURIComponent(url)}&key=${apiKey}&strategy=mobile&category=performance&category=accessibility&category=seo&category=best-practices`, { signal: AbortSignal.timeout(45000) }),
       fetch(`${PAGESPEED_URL}?url=${encodeURIComponent(url)}&key=${apiKey}&strategy=desktop&category=performance`, { signal: AbortSignal.timeout(45000) }),
     ])
-    const mobile = (await mobileRes.json()) as any
-    const desktop = (await desktopRes.json()) as any
+    const mobile = safeParseJson(PageSpeedResponseSchema, await mobileRes.json())
+    const desktop = safeParseJson(PageSpeedResponseSchema, await desktopRes.json())
 
     const ml = mobile?.lighthouseResult
     const dl = desktop?.lighthouseResult
@@ -35,9 +40,11 @@ export async function analyzePageSpeedFull(url: string, apiKey: string): Promise
     const ma = ml.audits || {}
     const mc = ml.categories || {}
 
-    function extractFailed(audits: any, ids: string[]): PageSpeedAudit[] {
-      return ids.map(id => audits[id]).filter(a => a && a.score !== null && a.score < 1).map(a => ({
-        id: a.id, title: a.title || a.id, score: a.score, displayValue: a.displayValue || null,
+    type AuditEntry = { id?: string; title?: string; score?: number | null; displayValue?: string | null; numericValue?: number | null; details?: unknown }
+
+    function extractFailed(audits: Record<string, AuditEntry>, ids: string[]): PageSpeedAudit[] {
+      return ids.map(id => audits[id]).filter((a): a is AuditEntry => a != null && a.score != null && a.score < 1).map(a => ({
+        id: a.id ?? '', title: a.title || a.id || '', score: a.score ?? null, displayValue: a.displayValue || null,
       }))
     }
 
@@ -62,9 +69,19 @@ export async function analyzePageSpeedFull(url: string, apiKey: string): Promise
       mobileSEOAudits: extractFailed(ma, seoIds),
       mobileBestPracticesAudits: extractFailed(ma, bpIds),
       totalByteWeight: ma['total-byte-weight']?.numericValue ?? null,
-      totalRequestCount: ma['resource-summary']?.details?.items?.reduce((s: number, r: any) => s + (r.requestCount || 0), 0) ?? null,
-      heaviestResources: (ma['network-requests']?.details?.items || []).filter((r: any) => r.transferSize > 0).sort((a: any, b: any) => b.transferSize - a.transferSize).slice(0, 10).map((r: any) => ({ url: (r.url || '').slice(0, 120), size: r.transferSize })),
-      mobileScreenshot: ma['final-screenshot']?.details?.data || null,
+      totalRequestCount: (() => {
+        const items = (ma['resource-summary']?.details as { items?: Array<{ requestCount?: number }> } | undefined)?.items
+        return items ? items.reduce((s, r) => s + (r.requestCount || 0), 0) : null
+      })(),
+      heaviestResources: (() => {
+        const items = ((ma['network-requests']?.details as { items?: Array<{ url?: string; transferSize?: number }> } | undefined)?.items) || []
+        return items
+          .filter((r): r is { url?: string; transferSize: number } => typeof r.transferSize === 'number' && r.transferSize > 0)
+          .sort((a, b) => b.transferSize - a.transferSize)
+          .slice(0, 10)
+          .map(r => ({ url: (r.url || '').slice(0, 120), size: r.transferSize }))
+      })(),
+      mobileScreenshot: (ma['final-screenshot']?.details as { data?: string } | undefined)?.data || null,
     }
   } catch { return null }
 }
@@ -160,7 +177,7 @@ export async function checkCarbon(url: string): Promise<CarbonResult> {
   const result: CarbonResult = { isGreen: false, co2PerView: null, cleanerThan: null, rating: null }
   try {
     const res = await fetch(`https://api.websitecarbon.com/site?url=${encodeURIComponent(url)}`, { signal: AbortSignal.timeout(15000) })
-    const data = await res.json() as any
+    const data = safeParseJson(CarbonResponseSchema, await res.json())
     if (!data) return result
     result.isGreen = data.green === true || data.green === 'true'
     result.co2PerView = data.statistics?.co2?.grid?.grams ?? null

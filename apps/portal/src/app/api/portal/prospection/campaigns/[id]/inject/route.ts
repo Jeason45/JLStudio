@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { extractSiteId, extractUserId } from '@/lib/auth';
 import { logActivity } from '@/lib/activity';
+import { logger } from '@/lib/logger';
 
 const injectSchema = z.object({
   resultIds: z.array(z.string()).optional(),
@@ -95,7 +96,7 @@ export async function POST(
 
       injected++;
     } catch (err) {
-      console.error(`Inject: error for result "${result.name}":`, err);
+      logger.error({ err, prospectName: result.name }, 'Inject failed for result');
     }
   }
 
