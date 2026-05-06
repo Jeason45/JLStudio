@@ -36,7 +36,10 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.portalUser.findUnique({
       where: { inviteToken: token },
-      include: { site: { select: { slug: true } } },
+      select: {
+        id: true, email: true, inviteExpiresAt: true,
+        site: { select: { slug: true } },
+      },
     });
 
     if (!user) {

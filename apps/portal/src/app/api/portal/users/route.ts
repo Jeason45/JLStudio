@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
   // Check if user already exists for this site
   const existing = await prisma.portalUser.findUnique({
     where: { siteId_email: { siteId, email: email.toLowerCase() } },
+    select: { id: true },
   });
 
   if (existing) {

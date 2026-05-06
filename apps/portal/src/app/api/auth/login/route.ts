@@ -35,8 +35,10 @@ export async function POST(req: NextRequest) {
       const { email, password, siteId } = parsed.data;
 
       // Check BuilderUser table (the admin's builder account)
+      // Explicit select to be resilient to schema migrations (e.g. themePreference)
       const builderUser = await prisma.builderUser.findUnique({
         where: { email: email.toLowerCase() },
+        select: { id: true, email: true, password: true, name: true, totpEnabled: true, totpSecret: true },
       });
 
       if (!builderUser || !(await bcrypt.compare(password, builderUser.password))) {
@@ -104,6 +106,7 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.portalUser.findUnique({
       where: { siteId_email: { siteId: site.id, email: email.toLowerCase() } },
+      select: { id: true, email: true, password: true, role: true, contactId: true, active: true },
     });
 
     if (!user || !user.active || !(await bcrypt.compare(password, user.password))) {
