@@ -52,3 +52,36 @@ export async function getSiteId(): Promise<string> {
   cachedSiteId = created.id;
   return created.id;
 }
+
+/**
+ * Returns the singleton "Site contact" Form id for inbound web leads.
+ * Lazily creates the Form row if missing. Used so Lead.formId is satisfied.
+ */
+const SITE_FORM_NAME = 'Site contact (web)';
+let cachedFormId: string | null = null;
+
+export async function getSiteContactFormId(): Promise<string> {
+  if (cachedFormId) return cachedFormId;
+  const siteId = await getSiteId();
+
+  const existing = await prisma.form.findFirst({
+    where: { siteId, name: SITE_FORM_NAME },
+    select: { id: true },
+  });
+  if (existing) {
+    cachedFormId = existing.id;
+    return existing.id;
+  }
+
+  const created = await prisma.form.create({
+    data: {
+      siteId,
+      name: SITE_FORM_NAME,
+      fields: [],
+      settings: { manual: false, source: 'web' },
+    },
+    select: { id: true },
+  });
+  cachedFormId = created.id;
+  return created.id;
+}

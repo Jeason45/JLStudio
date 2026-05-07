@@ -43,6 +43,7 @@ export default function AdminClientsPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [showCreate, setShowCreate] = useState(false);
+  const [editTarget, setEditTarget] = useState<Contact | null>(null);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({
@@ -50,6 +51,69 @@ export default function AdminClientsPage() {
     companyName: '', city: '', projectType: '', budget: '', notes: '',
     status: 'ACTIVE' as ContactStatus,
   });
+
+  const openEdit = (contact: Contact) => {
+    setEditTarget(contact);
+    setForm({
+      name: contact.name || '',
+      firstName: contact.firstName || '',
+      lastName: contact.lastName || '',
+      email: contact.email || '',
+      phone: contact.phone || '',
+      companyName: contact.companyName || contact.company || '',
+      city: contact.city || '',
+      projectType: contact.projectType || '',
+      budget: contact.budget || '',
+      notes: contact.notes || '',
+      status: contact.status,
+    });
+    setError('');
+  };
+
+  const closeEdit = () => {
+    setEditTarget(null);
+    setError('');
+  };
+
+  const handleUpdate = async () => {
+    if (!editTarget) return;
+    if (!form.name.trim() || !form.email.trim()) {
+      setError('Nom et email requis');
+      return;
+    }
+    setCreating(true);
+    setError('');
+    try {
+      const res = await fetch('/api/admin/contacts', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editTarget.id,
+          name: form.name.trim(),
+          firstName: form.firstName || null,
+          lastName: form.lastName || null,
+          email: form.email.trim(),
+          phone: form.phone || null,
+          companyName: form.companyName || null,
+          city: form.city || null,
+          projectType: form.projectType || null,
+          budget: form.budget || null,
+          notes: form.notes || null,
+          status: form.status,
+        }),
+      });
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || `Erreur ${res.status}`);
+      }
+      closeEdit();
+      fetchContacts();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erreur');
+    } finally {
+      setCreating(false);
+    }
+  };
 
   const fetchContacts = useCallback(async () => {
     try {
@@ -205,7 +269,11 @@ export default function AdminClientsPage() {
       ) : isMobile ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {contacts.map((c) => (
-            <div key={c.id} style={{ ...cardStyle(), padding: 14 }}>
+            <div
+              key={c.id}
+              onClick={() => openEdit(c)}
+              style={{ ...cardStyle(), padding: 14, cursor: 'pointer' }}
+            >
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 6 }}>
                 <div style={{ flex: 1, overflow: 'hidden' }}>
                   <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--agency-ink-1)' }}>
@@ -223,7 +291,7 @@ export default function AdminClientsPage() {
                 </div>
               )}
               <button
-                onClick={() => handleDelete(c.id, c.name)}
+                onClick={(e) => { e.stopPropagation(); handleDelete(c.id, c.name); }}
                 style={{
                   marginTop: 8, padding: '5px 10px', borderRadius: 6,
                   background: 'transparent', border: '1px solid var(--agency-border)',
@@ -258,7 +326,8 @@ export default function AdminClientsPage() {
               {contacts.map((c) => {
                 const displayName = `${c.firstName || ''} ${c.lastName || ''}`.trim() || c.name;
                 return (
-                  <tr key={c.id} style={{ borderTop: '1px solid var(--agency-border-soft)' }}
+                  <tr key={c.id} style={{ borderTop: '1px solid var(--agency-border-soft)', cursor: 'pointer' }}
+                    onClick={() => openEdit(c)}
                     onMouseOver={(e) => { e.currentTarget.style.background = 'var(--agency-surface-2)'; }}
                     onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; }}
                   >
@@ -297,7 +366,7 @@ export default function AdminClientsPage() {
                     </td>
                     <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                       <button
-                        onClick={() => handleDelete(c.id, displayName)}
+                        onClick={(e) => { e.stopPropagation(); handleDelete(c.id, displayName); }}
                         title="Supprimer"
                         style={{
                           background: 'transparent', border: 'none', cursor: 'pointer',
@@ -376,6 +445,81 @@ export default function AdminClientsPage() {
             >
               {creating ? 'Création…' : 'Créer'}
             </button>
+          </div>
+        </Modal>
+      )}
+
+      {/* Edit modal */}
+      {editTarget && (
+        <Modal title={`Éditer ${editTarget.name}`} onClose={closeEdit}>
+          <Field label="Nom complet *">
+            <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={inputStyle()} />
+          </Field>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <Field label="Prénom">
+              <input type="text" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} style={inputStyle()} />
+            </Field>
+            <Field label="Nom">
+              <input type="text" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} style={inputStyle()} />
+            </Field>
+          </div>
+          <Field label="Email *">
+            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={inputStyle()} />
+          </Field>
+          <Field label="Téléphone">
+            <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} style={inputStyle()} />
+          </Field>
+          <Field label="Entreprise">
+            <input type="text" value={form.companyName} onChange={(e) => setForm({ ...form, companyName: e.target.value })} style={inputStyle()} />
+          </Field>
+          <Field label="Ville">
+            <input type="text" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} style={inputStyle()} />
+          </Field>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <Field label="Type de projet">
+              <input type="text" value={form.projectType} onChange={(e) => setForm({ ...form, projectType: e.target.value })} style={inputStyle()} />
+            </Field>
+            <Field label="Budget">
+              <input type="text" value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} style={inputStyle()} />
+            </Field>
+          </div>
+          <Field label="Notes">
+            <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={4} style={{ ...inputStyle(), resize: 'vertical', minHeight: 90 }} />
+          </Field>
+          <Field label="Statut">
+            <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as ContactStatus })} style={{ ...inputStyle(), cursor: 'pointer' }}>
+              <option value="NEW">Nouveau</option>
+              <option value="ACTIVE">Actif</option>
+              <option value="INACTIVE">Inactif</option>
+            </select>
+          </Field>
+          {error && (
+            <p style={{ fontSize: 12, color: 'var(--agency-danger)', margin: 0, marginBottom: 12 }}>
+              {error}
+            </p>
+          )}
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between', marginTop: 12, alignItems: 'center' }}>
+            <button
+              onClick={() => { closeEdit(); handleDelete(editTarget.id, editTarget.name); }}
+              style={{
+                padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                background: 'transparent', color: 'var(--agency-danger)',
+                border: '1px solid var(--agency-danger)',
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+              }}
+            >
+              <Trash2 size={12} /> Supprimer
+            </button>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button onClick={closeEdit} style={secondaryBtn()}>Annuler</button>
+              <button
+                onClick={handleUpdate}
+                disabled={creating || !form.name.trim() || !form.email.trim()}
+                style={{ ...primaryBtn(), opacity: creating || !form.name.trim() || !form.email.trim() ? 0.5 : 1 }}
+              >
+                {creating ? 'Enregistrement…' : 'Enregistrer'}
+              </button>
+            </div>
           </div>
         </Modal>
       )}

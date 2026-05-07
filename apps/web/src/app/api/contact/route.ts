@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/emailUtils';
-import { prisma, getSiteId } from '@/lib/prisma';
+import { prisma, getSiteId, getSiteContactFormId } from '@/lib/prisma';
 import { publicContactSchema } from '@/lib/validations';
 import { calculateLeadScore } from '@/lib/scoring/lead-scorer';
 import { rateLimit } from '@/lib/rateLimit';
@@ -42,18 +42,48 @@ export async function POST(request: NextRequest) {
     });
 
     const siteId = await getSiteId();
+
+    // Build contact notes — surface "rappel souhaité" prominently if checked
+    const noteParts: string[] = [];
+    if (wantCallback) noteParts.push('🔔 SOUHAITE ÊTRE RECONTACTÉ');
+    if (selectedType) noteParts.push(`Type de projet : ${selectedType}`);
+    if (message) noteParts.push(`Message :\n${message}`);
+    const contactNotes = noteParts.length > 0 ? noteParts.join('\n\n') : null;
+
     const contact = await prisma.contact.create({
       data: {
         siteId,
         name,
         email,
         phone: phone || null,
-        notes: message || null,
+        notes: contactNotes,
         projectType: selectedType || null,
         status: 'NEW',
         source: 'site_contact',
         type: 'particulier',
         score,
+      },
+    });
+
+    // Create a Lead in the agency CRM pipeline (status NEW)
+    const formId = await getSiteContactFormId();
+    await prisma.lead.create({
+      data: {
+        siteId,
+        contactId: contact.id,
+        formId,
+        status: 'NEW',
+        source: 'site_contact',
+        notes: wantCallback ? '🔔 Souhaite être recontacté' : null,
+        data: {
+          name,
+          email,
+          phone: phone || null,
+          projectType: selectedType || null,
+          wantCallback,
+          message: message || null,
+          score,
+        },
       },
     });
 
@@ -68,11 +98,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const adminEmail = process.env.ADMIN_EMAIL;
-    if (!adminEmail) {
-      console.error('ADMIN_EMAIL not configured');
-      return NextResponse.json({ success: true, contact }, { status: 201 });
-    }
+    // Default to contact@jlstudio.dev if ADMIN_EMAIL not set
+    const adminEmail = process.env.ADMIN_EMAIL || 'contact@jlstudio.dev';
 
     // Send notification to admin
     const safeName = escapeHtml(name);
@@ -81,21 +108,25 @@ export async function POST(request: NextRequest) {
     const safeType = selectedType ? escapeHtml(selectedType) : '';
     const safeMessage = message ? escapeHtml(message) : '';
 
+    const callbackPrefix = wantCallback ? '🔔 [RAPPEL DEMANDÉ] ' : '';
     await sendEmail({
       to: adminEmail,
-      subject: `Nouveau lead: ${safeName} (score: ${score})`,
+      subject: `${callbackPrefix}Nouveau lead : ${safeName} (score: ${score})`,
       type: 'contact_notification',
       contactId: contact.id,
       htmlContent: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #638BFF;">Nouveau lead depuis le site</h2>
-          <p style="color: #333; font-size: 14px; margin-bottom: 16px;">Un nouveau contact a ete cree automatiquement dans le CRM avec un score de <strong>${score}/100</strong>.</p>
+          ${wantCallback ? `<div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px 16px; margin-bottom: 16px; border-radius: 4px;">
+            <strong style="color: #92400e;">🔔 Le client souhaite être recontacté</strong>
+          </div>` : ''}
+          <h2 style="color: #3B82F6;">Nouveau lead depuis le site</h2>
+          <p style="color: #333; font-size: 14px; margin-bottom: 16px;">Un nouveau contact a été créé automatiquement dans le CRM avec un score de <strong>${score}/100</strong>.</p>
           <table style="width: 100%; border-collapse: collapse;">
             <tr><td style="padding: 8px 0; color: #666;">Nom</td><td style="padding: 8px 0; font-weight: bold;">${safeName}</td></tr>
-            <tr><td style="padding: 8px 0; color: #666;">Email</td><td style="padding: 8px 0;">${safeEmail}</td></tr>
-            ${safePhone ? `<tr><td style="padding: 8px 0; color: #666;">Telephone</td><td style="padding: 8px 0;">${safePhone}</td></tr>` : ''}
+            <tr><td style="padding: 8px 0; color: #666;">Email</td><td style="padding: 8px 0;"><a href="mailto:${safeEmail}" style="color: #3B82F6;">${safeEmail}</a></td></tr>
+            ${safePhone ? `<tr><td style="padding: 8px 0; color: #666;">Téléphone</td><td style="padding: 8px 0;"><a href="tel:${safePhone}" style="color: #3B82F6;">${safePhone}</a></td></tr>` : ''}
             ${safeType ? `<tr><td style="padding: 8px 0; color: #666;">Type de projet</td><td style="padding: 8px 0;">${safeType}</td></tr>` : ''}
-            <tr><td style="padding: 8px 0; color: #666;">Rappel souhaite</td><td style="padding: 8px 0;">${wantCallback ? 'Oui' : 'Non'}</td></tr>
+            <tr><td style="padding: 8px 0; color: #666;">Rappel souhaité</td><td style="padding: 8px 0; ${wantCallback ? 'color: #f59e0b; font-weight: bold;' : ''}">${wantCallback ? 'Oui' : 'Non'}</td></tr>
           </table>
           ${safeMessage ? `<div style="margin-top: 16px; padding: 16px; background: #f5f5f5; border-radius: 8px;"><p style="margin: 0; color: #333;">${safeMessage}</p></div>` : ''}
         </div>

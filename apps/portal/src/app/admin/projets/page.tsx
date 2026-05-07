@@ -52,13 +52,73 @@ export default function AdminProjetsPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [showCreate, setShowCreate] = useState(false);
+  const [editTarget, setEditTarget] = useState<Project | null>(null);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({
     name: '', description: '', contactId: '', projectType: '',
-    startDate: '', endDate: '', estimatedBudget: '',
+    startDate: '', endDate: '', estimatedBudget: '', progress: '0',
     status: 'PLANNING' as ProjectStatus,
   });
+
+  const openEdit = (project: Project) => {
+    setEditTarget(project);
+    setForm({
+      name: project.name || '',
+      description: project.description || '',
+      contactId: project.contactId || '',
+      projectType: project.projectType || '',
+      startDate: project.startDate ? project.startDate.split('T')[0] : '',
+      endDate: project.endDate ? project.endDate.split('T')[0] : '',
+      estimatedBudget: project.estimatedBudget != null ? String(project.estimatedBudget) : '',
+      progress: String(project.progress ?? 0),
+      status: project.status,
+    });
+    setError('');
+  };
+
+  const closeEdit = () => {
+    setEditTarget(null);
+    setError('');
+  };
+
+  const handleUpdate = async () => {
+    if (!editTarget) return;
+    if (!form.name.trim()) {
+      setError('Nom requis');
+      return;
+    }
+    setCreating(true);
+    setError('');
+    try {
+      const res = await fetch('/api/admin/projects', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editTarget.id,
+          name: form.name.trim(),
+          description: form.description || null,
+          contactId: form.contactId || null,
+          projectType: form.projectType || null,
+          startDate: form.startDate || null,
+          endDate: form.endDate || null,
+          estimatedBudget: form.estimatedBudget ? parseFloat(form.estimatedBudget) : null,
+          progress: parseInt(form.progress, 10) || 0,
+          status: form.status,
+        }),
+      });
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || `Erreur ${res.status}`);
+      }
+      closeEdit();
+      fetchProjects();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erreur');
+    } finally {
+      setCreating(false);
+    }
+  };
 
   const fetchProjects = useCallback(async () => {
     try {
@@ -126,7 +186,7 @@ export default function AdminProjetsPage() {
         throw new Error(j.error || `Erreur ${res.status}`);
       }
       setShowCreate(false);
-      setForm({ name: '', description: '', contactId: '', projectType: '', startDate: '', endDate: '', estimatedBudget: '', status: 'PLANNING' });
+      setForm({ name: '', description: '', contactId: '', projectType: '', startDate: '', endDate: '', estimatedBudget: '', progress: '0', status: 'PLANNING' });
       fetchProjects();
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erreur');
@@ -231,7 +291,7 @@ export default function AdminProjetsPage() {
           }}
         >
           {filtered.map((p) => (
-            <ProjectCard key={p.id} project={p} onDelete={() => handleDelete(p.id, p.name)} />
+            <ProjectCard key={p.id} project={p} onClick={() => openEdit(p)} onDelete={() => handleDelete(p.id, p.name)} />
           ))}
         </div>
       )}
@@ -292,24 +352,100 @@ export default function AdminProjetsPage() {
           </div>
         </Modal>
       )}
+
+      {/* Edit modal */}
+      {editTarget && (
+        <Modal title={`Éditer : ${editTarget.name}`} onClose={closeEdit}>
+          <Field label="Nom du projet *">
+            <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={inputStyle()} />
+          </Field>
+          <Field label="Description">
+            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} style={{ ...inputStyle(), resize: 'vertical', minHeight: 80 }} />
+          </Field>
+          <Field label="Client">
+            <select value={form.contactId} onChange={(e) => setForm({ ...form, contactId: e.target.value })} style={{ ...inputStyle(), cursor: 'pointer' }}>
+              <option value="">— Aucun —</option>
+              {contacts.map((c) => {
+                const display = c.companyName || `${c.firstName || ''} ${c.lastName || ''}`.trim() || c.name;
+                return <option key={c.id} value={c.id}>{display}{c.email ? ` — ${c.email}` : ''}</option>;
+              })}
+            </select>
+          </Field>
+          <Field label="Type de projet">
+            <input type="text" value={form.projectType} onChange={(e) => setForm({ ...form, projectType: e.target.value })} placeholder="Site vitrine, e-commerce…" style={inputStyle()} />
+          </Field>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <Field label="Début">
+              <input type="date" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} style={{ ...inputStyle(), colorScheme: 'dark' }} />
+            </Field>
+            <Field label="Fin prévue">
+              <input type="date" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} style={{ ...inputStyle(), colorScheme: 'dark' }} />
+            </Field>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <Field label="Budget estimé (€)">
+              <input type="number" value={form.estimatedBudget} onChange={(e) => setForm({ ...form, estimatedBudget: e.target.value })} placeholder="3500" style={inputStyle()} />
+            </Field>
+            <Field label="Avancement (%)">
+              <input type="number" min="0" max="100" value={form.progress} onChange={(e) => setForm({ ...form, progress: e.target.value })} style={inputStyle()} />
+            </Field>
+          </div>
+          <Field label="Statut">
+            <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as ProjectStatus })} style={{ ...inputStyle(), cursor: 'pointer' }}>
+              {(Object.entries(STATUS_CONFIG) as [ProjectStatus, typeof STATUS_CONFIG[ProjectStatus]][]).map(([key, cfg]) => (
+                <option key={key} value={key}>{cfg.label}</option>
+              ))}
+            </select>
+          </Field>
+          {error && (
+            <p style={{ fontSize: 12, color: 'var(--agency-danger)', margin: 0, marginBottom: 12 }}>{error}</p>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
+            <button
+              onClick={() => { const id = editTarget.id; const name = editTarget.name; closeEdit(); handleDelete(id, name); }}
+              style={{
+                padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                background: 'transparent', color: 'var(--agency-danger)',
+                border: '1px solid var(--agency-danger)',
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+              }}
+            >
+              <Trash2 size={12} /> Supprimer
+            </button>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button onClick={closeEdit} style={secondaryBtn()}>Annuler</button>
+              <button
+                onClick={handleUpdate}
+                disabled={creating || !form.name.trim()}
+                style={{ ...primaryBtn(), opacity: creating || !form.name.trim() ? 0.5 : 1 }}
+              >
+                {creating ? 'Enregistrement…' : 'Enregistrer'}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
 
 // ─── ProjectCard ─────────────────────────────────────────────────────
 
-function ProjectCard({ project, onDelete }: { project: Project; onDelete: () => void }) {
+function ProjectCard({ project, onClick, onDelete }: { project: Project; onClick: () => void; onDelete: () => void }) {
   const cfg = STATUS_CONFIG[project.status];
   const clientName = project.contact?.companyName || project.contact?.name;
   return (
-    <div style={{
-      background: 'var(--agency-surface-1)',
-      border: '1px solid var(--agency-border)',
-      borderRadius: 12,
-      padding: 18,
-      transition: 'all 0.15s',
-      position: 'relative',
-    }}
+    <div
+      onClick={onClick}
+      style={{
+        background: 'var(--agency-surface-1)',
+        border: '1px solid var(--agency-border)',
+        borderRadius: 12,
+        padding: 18,
+        transition: 'all 0.15s',
+        position: 'relative',
+        cursor: 'pointer',
+      }}
       onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--agency-border-strong)'; }}
       onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--agency-border)'; }}
     >
@@ -388,14 +524,16 @@ function ProjectCard({ project, onDelete }: { project: Project; onDelete: () => 
       </div>
 
       <button
-        onClick={onDelete}
+        onClick={(e) => { e.stopPropagation(); onDelete(); }}
         title="Supprimer"
         style={{
           position: 'absolute', top: 12, right: 12,
           background: 'transparent', border: 'none', cursor: 'pointer',
           color: 'var(--agency-ink-4)', padding: 4, borderRadius: 4,
-          display: 'none',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
+        onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--agency-danger)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--agency-ink-4)'; }}
       >
         <Trash2 size={12} />
       </button>
