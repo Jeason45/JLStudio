@@ -27,10 +27,10 @@ interface Document {
   signature: { id: string; signerName: string; signedAt: string } | null;
 }
 
-const TABS: { type: DocType; label: string; icon: React.ReactNode }[] = [
-  { type: 'DEVIS', label: 'Devis', icon: <FileText size={14} /> },
-  { type: 'FACTURE', label: 'Factures', icon: <Receipt size={14} /> },
-  { type: 'CONTRAT', label: 'Contrats', icon: <FileSignature size={14} /> },
+const TABS: { type: DocType; label: string; singular: string; article: 'un' | 'une'; icon: React.ReactNode }[] = [
+  { type: 'DEVIS',   label: 'Devis',     singular: 'devis',    article: 'un',  icon: <FileText size={14} /> },
+  { type: 'FACTURE', label: 'Factures',  singular: 'facture',  article: 'une', icon: <Receipt size={14} /> },
+  { type: 'CONTRAT', label: 'Contrats',  singular: 'contrat',  article: 'un',  icon: <FileSignature size={14} /> },
 ];
 
 const STATUS_CONFIG: Record<DocStatus, { label: string; color: string }> = {
@@ -125,7 +125,10 @@ export default function AdminDocumentsPage() {
     } catch { /* silent */ }
   };
 
-  const tabLabel = TABS.find((t) => t.type === tab)?.label || tab;
+  const currentTab = TABS.find((t) => t.type === tab) || TABS[0];
+  const tabLabel = currentTab.label;
+  const tabSingular = currentTab.singular;
+  const tabArticle = currentTab.article;
   const createHref =
     tab === 'DEVIS' ? '/admin/documents/create-devis'
     : tab === 'FACTURE' ? '/admin/documents/create-facture'
@@ -150,7 +153,7 @@ export default function AdminDocumentsPage() {
               display: 'inline-flex', alignItems: 'center', gap: 6,
             }}
           >
-            <ExternalLink size={13} /> Créer un{tab === 'FACTURE' ? 'e' : ''} {tabLabel.toLowerCase().replace(/s$/, '')}
+            <ExternalLink size={13} /> Créer {tabArticle} {tabSingular}
           </a>
         </div>
       </header>
@@ -224,12 +227,12 @@ export default function AdminDocumentsPage() {
           <div style={{ padding: 60, textAlign: 'center' }}>
             <FileText size={28} style={{ color: 'var(--agency-ink-4)', marginBottom: 12 }} />
             <p style={{ color: 'var(--agency-ink-2)', fontSize: 14, fontWeight: 500, margin: 0, marginBottom: 4 }}>
-              {search || statusFilter ? 'Aucun résultat' : `Aucun ${tabLabel.toLowerCase().replace(/s$/, '')}`}
+              {search || statusFilter ? 'Aucun résultat' : `${tabArticle === 'une' ? 'Aucune' : 'Aucun'} ${tabSingular}`}
             </p>
             <p style={{ color: 'var(--agency-ink-3)', fontSize: 12, margin: 0 }}>
               {search || statusFilter
                 ? 'Modifie ta recherche ou tes filtres.'
-                : `Crée ton premier ${tabLabel.toLowerCase().replace(/s$/, '')} via le portail.`}
+                : `Crée ${tabArticle === 'une' ? 'ta première' : 'ton premier'} ${tabSingular} via le portail.`}
             </p>
           </div>
         ) : isMobile ? (
