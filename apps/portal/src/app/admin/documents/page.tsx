@@ -116,7 +116,10 @@ export default function AdminDocumentsPage() {
   };
 
   const tabLabel = TABS.find((t) => t.type === tab)?.label || tab;
-  const createHref = tab === 'DEVIS' ? '/devis/create' : tab === 'FACTURE' ? '/factures/create' : '/contrats/create';
+  const createHref =
+    tab === 'DEVIS' ? '/admin/documents/create-devis'
+    : tab === 'FACTURE' ? '/admin/documents/create-facture'
+    : null; // CONTRAT : pas encore d'éditeur (Phase F4)
 
   return (
     <div>
@@ -130,16 +133,21 @@ export default function AdminDocumentsPage() {
               {stats.total} {tabLabel.toLowerCase()} · {stats.pending} en attente · {stats.paid} payé{stats.paid > 1 ? 's' : ''} · {stats.totalAmount.toLocaleString('fr-FR')} €
             </p>
           </div>
-          <a
-            href={createHref}
-            style={{
-              ...primaryBtn(), textDecoration: 'none',
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-            }}
-            title="La création utilise l'éditeur du portail (vérifie que tu es bien sur le site JL Studio)"
-          >
-            <ExternalLink size={13} /> Créer un{tab === 'FACTURE' ? 'e' : ''} {tabLabel.toLowerCase().replace(/s$/, '')}
-          </a>
+          {createHref ? (
+            <a
+              href={createHref}
+              style={{
+                ...primaryBtn(), textDecoration: 'none',
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+              }}
+            >
+              <ExternalLink size={13} /> Créer un{tab === 'FACTURE' ? 'e' : ''} {tabLabel.toLowerCase().replace(/s$/, '')}
+            </a>
+          ) : (
+            <span style={{ fontSize: 11, color: 'var(--agency-ink-4, var(--agency-ink-3))' }} title="Phase F4 — bientôt">
+              Éditeur de contrats à venir
+            </span>
+          )}
         </div>
       </header>
 
