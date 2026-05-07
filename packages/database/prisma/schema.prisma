@@ -589,26 +589,30 @@ enum PortalUserRole {
 // ─────────────────────────────────────────────
 
 model PortalDocument {
-  id             String               @id @default(cuid())
-  siteId         String
-  contactId      String?
-  projectId      String?
-  type           PortalDocumentType
-  status         PortalDocumentStatus @default(DRAFT)
-  documentNumber String?
-  title          String
-  content        Json                 @default("{}")
-  amount         Float?
-  taxRate        Float                @default(20)
-  taxAmount      Float?
-  totalAmount    Float?
-  validUntil     DateTime?
-  sentAt         DateTime?
-  signedAt       DateTime?
-  paidAt         DateTime?
-  notes          String?
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
+  id               String               @id @default(cuid())
+  siteId           String
+  contactId        String?
+  projectId        String?
+  type             PortalDocumentType
+  status           PortalDocumentStatus @default(DRAFT)
+  documentNumber   String?
+  title            String
+  content          Json                 @default("{}")
+  amount           Float?
+  taxRate          Float                @default(20)
+  taxAmount        Float?
+  totalAmount      Float?
+  validUntil       DateTime?
+  sentAt           DateTime?
+  signedAt         DateTime?
+  paidAt           DateTime?
+  notes            String?
+  templateSlug     String?              // e.g. "devis-moderne", "facture-moderne"
+  linkedDocumentId String?              // devis -> facture link (id of source devis)
+  pdfData          Bytes?               // generated PDF cached inline
+  signedPdfData    Bytes?               // signed PDF cached inline
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
 
   site      Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
   contact   Contact?             @relation(fields: [contactId], references: [id], onDelete: SetNull)
