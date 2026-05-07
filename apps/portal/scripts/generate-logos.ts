@@ -40,8 +40,8 @@ async function main() {
   });
 
   const page = await browser.newPage();
-  // 3x DPR pour rétina + zoom
-  await page.setViewport({ width: 1024, height: 768, deviceScaleFactor: 3 });
+  // 4x DPR — donne une marge confortable pour les downscales en PDF
+  await page.setViewport({ width: 1024, height: 768, deviceScaleFactor: 4 });
 
   await page.goto(`file://${RENDER_HTML}`, { waitUntil: 'networkidle0' });
 
