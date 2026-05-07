@@ -4,6 +4,9 @@ import { withSentryConfig } from '@sentry/nextjs';
 const nextConfig: NextConfig = {
   output: "standalone",
   transpilePackages: ["@jlstudio/database", "@jlstudio/shared"],
+  // Force puppeteer à rester external (pas bundlé) → path resolution vers
+  // ~/.cache/puppeteer/ et le binaire chromium reste correct au runtime.
+  serverExternalPackages: ["puppeteer", "puppeteer-core"],
   turbopack: {
     root: "../..",
   },

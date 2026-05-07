@@ -66,10 +66,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/portal/templates ./apps/port
 COPY --from=builder /app/packages/database/generated ./packages/database/generated
 COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
 
-# Puppeteer: les modules NE sont PAS dans le tree-shake standalone — copie explicite
-COPY --from=builder /app/node_modules/puppeteer ./node_modules/puppeteer
-COPY --from=builder /app/node_modules/puppeteer-core ./node_modules/puppeteer-core
-
+# Puppeteer : les modules JS sont déjà dans le standalone (Next.js trace les
+# imports et les copie dans .next/standalone/node_modules/). On copie juste
+# le cache chromium qui vit en dehors de node_modules.
+#
 # ★ La ligne magique : cache chromium téléchargé au stage deps, copié dans le home du user nextjs
 COPY --from=deps /root/.cache/puppeteer /home/nextjs/.cache/puppeteer
 RUN chown -R nextjs:nodejs /home/nextjs
