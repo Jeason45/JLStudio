@@ -24,10 +24,11 @@ interface LogoSpec {
 }
 
 const LOGOS: LogoSpec[] = [
-  { selector: '#d13', filename: 'logo-pdf.png',   description: 'D13 — wordmark + crochets dorés (PDFs)' },
-  { selector: '#e07', filename: 'logo-light.png', description: 'E07 — mono navy (sidebar light)' },
-  { selector: '#e08', filename: 'logo-dark.png',  description: 'E08 — mono blanc (sidebar dark)' },
-  { selector: '#a01', filename: 'logo-mark.png',  description: 'A01 — mark + wordmark (favicon/alt)' },
+  { selector: '#d13',       filename: 'logo-pdf.png',          description: 'D13 — wordmark navy (fond clair, futur usage)' },
+  { selector: '#d13-white', filename: 'logo-pdf-on-dark.png',  description: 'D13 blanc — bandeau navy des PDFs' },
+  { selector: '#e07',       filename: 'logo-light.png',        description: 'E07 — mono navy (sidebar light)' },
+  { selector: '#e08',       filename: 'logo-dark.png',         description: 'E08 — mono blanc (sidebar dark)' },
+  { selector: '#a01',       filename: 'logo-mark.png',         description: 'A01 — mark + wordmark (favicon/alt)' },
 ];
 
 async function main() {

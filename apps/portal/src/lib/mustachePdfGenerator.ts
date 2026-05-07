@@ -56,8 +56,10 @@ let _defaultLogoDataUrlCache: string | null = null;
 
 function getDefaultLogoDataUrl(): string | null {
   if (_defaultLogoDataUrlCache !== null) return _defaultLogoDataUrlCache;
+  // Le template a un bandeau header navy (#0B1E3F) → on a besoin du logo blanc.
+  // logo-pdf-on-dark.png = D13 variante blanche, à n'utiliser que sur fond sombre.
   for (const dir of BRAND_DIR_CANDIDATES) {
-    const fullPath = path.join(dir, 'logo-pdf.png');
+    const fullPath = path.join(dir, 'logo-pdf-on-dark.png');
     if (fs.existsSync(fullPath)) {
       try {
         const bytes = fs.readFileSync(fullPath);

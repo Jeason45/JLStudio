@@ -15,7 +15,7 @@
       background: transparent;
     }
 
-    /* ─── D13 — Wordmark + crochets dorés ─── */
+    /* ─── D13 — Wordmark + crochets dorés (navy, fond clair) ─── */
     #d13 {
       position: relative;
       padding: 18px 32px;
@@ -34,16 +34,30 @@
       height: 16px;
       border: 2px solid #b89868;
     }
-    #d13::before {
-      top: 0; left: 0;
-      border-right: none;
-      border-bottom: none;
+    #d13::before { top: 0; left: 0; border-right: none; border-bottom: none; }
+    #d13::after { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+    /* ─── D13 — variante blanche (pour bandeau navy des PDFs) ─── */
+    #d13-white {
+      position: relative;
+      padding: 18px 32px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 32px;
+      color: #ffffff;
+      letter-spacing: -0.03em;
+      display: inline-block;
     }
-    #d13::after {
-      bottom: 0; right: 0;
-      border-left: none;
-      border-top: none;
+    #d13-white .light { font-weight: 300; }
+    #d13-white::before, #d13-white::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #b89868;
     }
+    #d13-white::before { top: 0; left: 0; border-right: none; border-bottom: none; }
+    #d13-white::after { bottom: 0; right: 0; border-left: none; border-top: none; }
 
     /* ─── E07 — Mono navy (light theme) ─── */
     #e07 {
@@ -103,6 +117,7 @@
 </head>
 <body>
   <div class="stage"><div id="d13"><span>JL</span><span class="light">Studio</span></div></div>
+  <div class="stage" style="background:#0B1E3F;"><div id="d13-white"><span>JL</span><span class="light">Studio</span></div></div>
   <div class="stage"><div id="e07">jl<span class="dot">.</span><span class="dim">studio</span></div></div>
   <div class="stage"><div id="e08">jl<span class="dot">.</span><span class="dim">studio</span></div></div>
   <div class="stage"><div id="a01"><div class="mark">JL</div><div class="text"><span>JL</span><span class="light">Studio</span></div></div></div>
