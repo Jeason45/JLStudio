@@ -40,16 +40,26 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+# Force Playwright à utiliser un chemin connu (sinon il cherche dans $HOME/.cache
+# qui pour le user "nextjs" se résout en /nonexistent → chromium introuvable)
+ENV PLAYWRIGHT_BROWSERS_PATH=/app/.playwright
 
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
+    adduser --system --uid 1001 --home /home/nextjs --shell /bin/bash nextjs
 
 COPY --from=builder /app/apps/portal/.next/standalone ./
 COPY --from=builder /app/apps/portal/public ./apps/portal/public
 COPY --from=builder /app/apps/portal/.next/static ./apps/portal/.next/static
+# Templates Mustache pour la génération PDF (devis-moderne, facture-moderne, contrat-prestation)
+COPY --from=builder /app/apps/portal/templates ./apps/portal/templates
 
 COPY --from=builder /app/packages/database/generated ./packages/database/generated
 COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
+
+# Installe chromium + ses dépendances système pour la génération PDF Playwright
+# --with-deps installe les libs (libnss3, libatk, fonts, etc.) en plus du binaire
+RUN npx playwright install chromium --with-deps && \
+    chown -R 1001:1001 /app/.playwright
 
 # Pre-create writable cache dir for Next.js image optimization
 RUN mkdir -p /app/apps/portal/.next/cache && chown -R 1001:1001 /app/apps/portal/.next
