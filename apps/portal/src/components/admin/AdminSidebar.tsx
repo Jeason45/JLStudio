@@ -155,6 +155,27 @@ export default function AdminSidebar() {
 
 // ─── Header ──────────────────────────────────────────────────
 
+function ThemeAwareLogo() {
+  // Les 2 versions sont rendues, le bon thème est affiché via CSS
+  // (data-theme="dark" dans le HTML root, OU data-agency=true qui force dark).
+  return (
+    <span style={{ display: 'inline-block', height: 22 }}>
+      <img
+        src="/brand/logo-light.png"
+        alt="JL Studio"
+        className="brand-logo-light"
+        style={{ height: 22, width: 'auto', display: 'block' }}
+      />
+      <img
+        src="/brand/logo-dark.png"
+        alt="JL Studio"
+        className="brand-logo-dark"
+        style={{ height: 22, width: 'auto', display: 'none' }}
+      />
+    </span>
+  );
+}
+
 function Header({ collapsed = false, onToggle }: { collapsed?: boolean; onToggle?: () => void }) {
   return (
     <div
@@ -165,13 +186,8 @@ function Header({ collapsed = false, onToggle }: { collapsed?: boolean; onToggle
       }}
     >
       {!collapsed && (
-        <div>
-          <div style={{
-            fontSize: 14, fontWeight: 700, color: 'var(--agency-ink-1)',
-            letterSpacing: '-0.01em',
-          }}>
-            JL Studio
-          </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <ThemeAwareLogo />
           <div style={{
             fontSize: 10, color: 'var(--agency-ink-3)',
             letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500, marginTop: 2,

@@ -33,6 +33,11 @@ const TEMPLATE_DIR_CANDIDATES = [
   path.join(process.cwd(), 'apps', 'portal', 'templates', 'documents'),
 ];
 
+const BRAND_DIR_CANDIDATES = [
+  path.join(process.cwd(), 'public', 'brand'),
+  path.join(process.cwd(), 'apps', 'portal', 'public', 'brand'),
+];
+
 function resolveTemplate(slug: string): { ok: true; content: string } | { ok: false; error: string } {
   for (const dir of TEMPLATE_DIR_CANDIDATES) {
     const fullPath = path.join(dir, `${slug}.html`);
@@ -47,6 +52,27 @@ function resolveTemplate(slug: string): { ok: true; content: string } | { ok: fa
   return { ok: false, error: `Template introuvable : ${slug}.html (cherché dans ${TEMPLATE_DIR_CANDIDATES.join(', ')})` };
 }
 
+// Cache du logo en base64 — le fichier ne change pas entre 2 requests
+let _defaultLogoDataUrlCache: string | null = null;
+
+function getDefaultLogoDataUrl(): string | null {
+  if (_defaultLogoDataUrlCache !== null) return _defaultLogoDataUrlCache;
+  for (const dir of BRAND_DIR_CANDIDATES) {
+    const fullPath = path.join(dir, 'logo-pdf.png');
+    if (fs.existsSync(fullPath)) {
+      try {
+        const bytes = fs.readFileSync(fullPath);
+        _defaultLogoDataUrlCache = `data:image/png;base64,${bytes.toString('base64')}`;
+        return _defaultLogoDataUrlCache;
+      } catch {
+        // ignore — fall through
+      }
+    }
+  }
+  _defaultLogoDataUrlCache = ''; // évite de re-tenter à chaque appel
+  return null;
+}
+
 export async function generatePDFFromTemplate(
   params: PdfGenerationParams,
 ): Promise<PdfGenerationResult> {
@@ -55,9 +81,17 @@ export async function generatePDFFromTemplate(
   const tpl = resolveTemplate(templateSlug);
   if (!tpl.ok) return { success: false, error: tpl.error };
 
+  // Si aucun logoUrl custom n'est fourni par PortalCompanySettings, on injecte
+  // le logo JL Studio par défaut (D13) en base64 → zéro requête réseau.
+  const dataWithLogo: Record<string, unknown> = { ...data };
+  if (!dataWithLogo.logoUrl) {
+    const fallback = getDefaultLogoDataUrl();
+    if (fallback) dataWithLogo.logoUrl = fallback;
+  }
+
   let renderedHtml: string;
   try {
-    renderedHtml = Mustache.render(tpl.content, data);
+    renderedHtml = Mustache.render(tpl.content, dataWithLogo);
   } catch (err) {
     return {
       success: false,

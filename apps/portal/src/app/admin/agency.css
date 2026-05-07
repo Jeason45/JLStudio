@@ -92,3 +92,7 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+
+/* Brand logo — admin/CRM est toujours sombre (data-agency=true) → afficher logo-dark */
+[data-agency="true"] .brand-logo-light { display: none !important; }
+[data-agency="true"] .brand-logo-dark { display: block !important; }

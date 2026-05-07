@@ -112,3 +112,9 @@ select option {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* Brand logo — switch automatique selon thème actif (light par défaut, dark si data-theme=dark) */
+.brand-logo-light { display: block; }
+.brand-logo-dark  { display: none; }
+[data-theme="dark"] .brand-logo-light { display: none; }
+[data-theme="dark"] .brand-logo-dark  { display: block; }

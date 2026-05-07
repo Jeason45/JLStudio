@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Logo render</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { background: transparent; }
+    body { font-family: 'Inter', sans-serif; padding: 0; }
+
+    .stage {
+      display: inline-block;
+      padding: 24px 32px;
+      background: transparent;
+    }
+
+    /* ─── D13 — Wordmark + crochets dorés ─── */
+    #d13 {
+      position: relative;
+      padding: 18px 32px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 32px;
+      color: #0B1E3F;
+      letter-spacing: -0.03em;
+      display: inline-block;
+    }
+    #d13 .light { font-weight: 300; }
+    #d13::before, #d13::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #b89868;
+    }
+    #d13::before {
+      top: 0; left: 0;
+      border-right: none;
+      border-bottom: none;
+    }
+    #d13::after {
+      bottom: 0; right: 0;
+      border-left: none;
+      border-top: none;
+    }
+
+    /* ─── E07 — Mono navy (light theme) ─── */
+    #e07 {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 26px;
+      color: #0B1E3F;
+      letter-spacing: -0.03em;
+      padding: 12px 16px;
+      display: inline-block;
+    }
+    #e07 .dot { color: #b89868; }
+    #e07 .dim { color: rgba(11,30,63,0.5); }
+
+    /* ─── E08 — Mono blanc (dark theme) ─── */
+    #e08 {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 26px;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      padding: 12px 16px;
+      display: inline-block;
+    }
+    #e08 .dot { color: #b89868; }
+    #e08 .dim { color: rgba(255,255,255,0.5); }
+
+    /* ─── A01 — Mark + wordmark ─── */
+    #a01 {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+    }
+    #a01 .mark {
+      width: 44px; height: 44px;
+      background: #0B1E3F;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 21px;
+      letter-spacing: -0.04em;
+    }
+    #a01 .text {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 26px;
+      color: #0B1E3F;
+      letter-spacing: -0.03em;
+    }
+    #a01 .text .light { font-weight: 300; }
+  </style>
+</head>
+<body>
+  <div class="stage"><div id="d13"><span>JL</span><span class="light">Studio</span></div></div>
+  <div class="stage"><div id="e07">jl<span class="dot">.</span><span class="dim">studio</span></div></div>
+  <div class="stage"><div id="e08">jl<span class="dot">.</span><span class="dim">studio</span></div></div>
+  <div class="stage"><div id="a01"><div class="mark">JL</div><div class="text"><span>JL</span><span class="light">Studio</span></div></div></div>
+</body>
+</html>
