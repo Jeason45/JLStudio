@@ -3,11 +3,10 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 
 # ── Stage 1: Install dependencies ──
+# Le postinstall de puppeteer télécharge automatiquement chromium dans
+# /root/.cache/puppeteer/. Ce cache sera copié tel quel dans le runner.
 FROM base AS deps
 WORKDIR /app
-# On évite que le postinstall de playwright télécharge chromium ici
-# (on le fera dans le builder, à un chemin contrôlé)
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY apps/portal/package.json ./apps/portal/package.json
@@ -16,12 +15,9 @@ COPY packages/shared/package.json ./packages/shared/package.json
 
 RUN pnpm install --frozen-lockfile || pnpm install
 
-# ── Stage 2: Build (compile + télécharge chromium) ──
+# ── Stage 2: Build ──
 FROM base AS builder
 WORKDIR /app
-
-# Chromium sera téléchargé ici puis copié dans le runner stage
-ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/portal/node_modules ./apps/portal/node_modules
@@ -38,67 +34,48 @@ ENV NODE_OPTIONS="--max-old-space-size=2048"
 RUN cd packages/database && npx prisma generate
 RUN cd apps/portal && pnpm build
 
-# Télécharge chromium (version exacte de playwright local) — pas besoin de --with-deps
-# car les libs système seront installées dans le stage runner via apt-get
-RUN cd apps/portal && npx playwright install chromium
-
 # ── Stage 3: Production ──
-FROM node:20-slim AS runner
+FROM base AS runner
 WORKDIR /app
 
-# Libs système requises par chromium (Debian/slim).
-# Liste basée sur `playwright install-deps` pour chromium sur Debian Bookworm.
+# Libs système requises par chromium bundled de Puppeteer (Debian Bookworm slim)
+# Liste éprouvée — identique à Flamme qui tourne en prod sans souci.
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    openssl \
-    ca-certificates \
-    libnss3 \
-    libnspr4 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libcups2 \
-    libdrm2 \
-    libdbus-1-3 \
-    libexpat1 \
-    libxcb1 \
-    libxkbcommon0 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxfixes3 \
-    libxrandr2 \
-    libgbm1 \
-    libpango-1.0-0 \
-    libcairo2 \
-    libasound2 \
-    libatspi2.0-0 \
-    libxshmfence1 \
-    fonts-liberation \
-    fonts-noto-color-emoji \
-    libfontconfig1 \
+    openssl ca-certificates fonts-liberation \
+    libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 \
+    libcups2 libdbus-1-3 libdrm2 libgbm1 libgtk-3-0 libnspr4 libnss3 \
+    libx11-xcb1 libxcomposite1 libxdamage1 libxrandr2 \
+    xdg-utils libxss1 libxtst6 \
     && rm -rf /var/lib/apt/lists/*
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-# Même chemin que dans le builder pour que playwright trouve le binaire copié
-ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 --home /home/nextjs --shell /bin/bash nextjs
+    adduser --system --uid 1001 --home /home/nextjs --ingroup nodejs nextjs
 
-COPY --from=builder /app/apps/portal/.next/standalone ./
-COPY --from=builder /app/apps/portal/public ./apps/portal/public
-COPY --from=builder /app/apps/portal/.next/static ./apps/portal/.next/static
-# Templates Mustache pour la génération PDF (devis-moderne, facture-moderne, contrat-prestation)
-COPY --from=builder /app/apps/portal/templates ./apps/portal/templates
+# Standalone Next.js + assets
+COPY --from=builder --chown=nextjs:nodejs /app/apps/portal/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/portal/public ./apps/portal/public
+COPY --from=builder --chown=nextjs:nodejs /app/apps/portal/.next/static ./apps/portal/.next/static
 
+# Templates Mustache pour la génération PDF (devis, facture, contrat)
+COPY --from=builder --chown=nextjs:nodejs /app/apps/portal/templates ./apps/portal/templates
+
+# Prisma client généré
 COPY --from=builder /app/packages/database/generated ./packages/database/generated
 COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
 
-# Copie le chromium téléchargé par le builder (version garantie identique à playwright runtime)
-COPY --from=builder /ms-playwright /ms-playwright
-RUN chown -R 1001:1001 /ms-playwright
+# Puppeteer: les modules NE sont PAS dans le tree-shake standalone — copie explicite
+COPY --from=builder /app/node_modules/puppeteer ./node_modules/puppeteer
+COPY --from=builder /app/node_modules/puppeteer-core ./node_modules/puppeteer-core
+
+# ★ La ligne magique : cache chromium téléchargé au stage deps, copié dans le home du user nextjs
+COPY --from=deps /root/.cache/puppeteer /home/nextjs/.cache/puppeteer
+RUN chown -R nextjs:nodejs /home/nextjs
 
 # Pre-create writable cache dir for Next.js image optimization
-RUN mkdir -p /app/apps/portal/.next/cache && chown -R 1001:1001 /app/apps/portal/.next
+RUN mkdir -p /app/apps/portal/.next/cache && chown -R nextjs:nodejs /app/apps/portal/.next
 
 USER nextjs
 
@@ -106,5 +83,7 @@ EXPOSE 3002
 
 ENV PORT=3002
 ENV HOSTNAME="0.0.0.0"
+# HOME explicite pour que puppeteer trouve ~/.cache/puppeteer
+ENV HOME=/home/nextjs
 
 CMD ["node", "apps/portal/server.js"]

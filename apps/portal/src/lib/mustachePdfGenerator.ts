@@ -11,7 +11,6 @@
 import Mustache from 'mustache';
 import fs from 'fs';
 import path from 'path';
-import { chromium } from 'playwright';
 
 export interface PdfGenerationParams {
   /** Template slug (filename without .html), e.g. "devis-moderne" */
@@ -99,11 +98,20 @@ export async function generatePDFFromTemplate(
     };
   }
 
-  const browser = await chromium.launch({ headless: true });
+  const puppeteer = (await import('puppeteer')).default;
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+    ],
+  });
+
   try {
-    const context = await browser.newContext({ viewport: { width: 1240, height: 1754 } });
-    const page = await context.newPage();
-    await page.setContent(renderedHtml, { waitUntil: 'networkidle' });
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1240, height: 1754 });
+    await page.setContent(renderedHtml, { waitUntil: 'networkidle0' });
 
     const pdfBuffer = await page.pdf({
       format: 'A4',

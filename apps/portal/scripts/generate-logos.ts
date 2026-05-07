@@ -10,7 +10,7 @@
  *   public/brand/logo-mark.png   → A01 (mark + wordmark, fallback)
  */
 
-import { chromium } from 'playwright';
+import puppeteer from 'puppeteer';
 import path from 'path';
 import fs from 'fs/promises';
 
@@ -33,18 +33,20 @@ const LOGOS: LogoSpec[] = [
 async function main() {
   await fs.mkdir(OUT_DIR, { recursive: true });
 
-  const browser = await chromium.launch();
-  const context = await browser.newContext({
-    deviceScaleFactor: 3, // 3x DPR pour rétina + zoom
-    viewport: { width: 1024, height: 768 },
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
   });
-  const page = await context.newPage();
 
-  await page.goto(`file://${RENDER_HTML}`);
+  const page = await browser.newPage();
+  // 3x DPR pour rétina + zoom
+  await page.setViewport({ width: 1024, height: 768, deviceScaleFactor: 3 });
+
+  await page.goto(`file://${RENDER_HTML}`, { waitUntil: 'networkidle0' });
 
   // Attendre que les Google Fonts soient bien chargées
   await page.evaluate(() => (document as Document & { fonts: { ready: Promise<unknown> } }).fonts.ready);
-  await page.waitForTimeout(300); // marge de sécurité
+  await new Promise((r) => setTimeout(r, 300)); // marge de sécurité
 
   for (const logo of LOGOS) {
     const element = await page.$(logo.selector);
@@ -53,7 +55,7 @@ async function main() {
       continue;
     }
     const out = path.join(OUT_DIR, logo.filename);
-    await element.screenshot({ path: out, omitBackground: true });
+    await element.screenshot({ path: out as `${string}.png`, omitBackground: true });
     console.log(`✓ ${logo.filename}  (${logo.description})`);
   }
 
