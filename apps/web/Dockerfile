@@ -54,6 +54,9 @@ COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder /app/packages/database/generated ./packages/database/generated
 COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
 
+# Pre-create writable cache dir for Next.js image optimization
+RUN mkdir -p /app/apps/web/.next/cache && chown -R 1001:1001 /app/apps/web/.next
+
 USER nextjs
 
 EXPOSE 3004

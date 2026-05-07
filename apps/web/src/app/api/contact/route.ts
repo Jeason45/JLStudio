@@ -41,9 +41,10 @@ export async function POST(request: NextRequest) {
       projectType: selectedType || undefined,
     });
 
+    const siteId = await getSiteId();
     const contact = await prisma.contact.create({
       data: {
-        siteId: getSiteId(),
+        siteId,
         name,
         email,
         phone: phone || null,
