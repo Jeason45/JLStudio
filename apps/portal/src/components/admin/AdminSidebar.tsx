@@ -155,22 +155,22 @@ export default function AdminSidebar() {
 
 // ─── Header ──────────────────────────────────────────────────
 
-function ThemeAwareLogo() {
+function ThemeAwareLogo({ size = 32 }: { size?: number }) {
   // Les 2 versions sont rendues, le bon thème est affiché via CSS
   // (data-theme="dark" dans le HTML root, OU data-agency=true qui force dark).
   return (
-    <span style={{ display: 'inline-block', height: 22 }}>
+    <span style={{ display: 'inline-block', height: size }}>
       <img
         src="/brand/logo-light.png"
         alt="JL Studio"
         className="brand-logo-light"
-        style={{ height: 22, width: 'auto', display: 'block' }}
+        style={{ height: size, width: 'auto', display: 'block' }}
       />
       <img
         src="/brand/logo-dark.png"
         alt="JL Studio"
         className="brand-logo-dark"
-        style={{ height: 22, width: 'auto', display: 'none' }}
+        style={{ height: size, width: 'auto', display: 'none' }}
       />
     </span>
   );
@@ -202,21 +202,31 @@ function Header({ collapsed = false, onToggle }: { collapsed?: boolean; onToggle
           aria-label="Étendre le menu"
           title="Étendre le menu"
           style={{
-            width: 28, height: 28, borderRadius: 8,
+            width: 32, height: 32, borderRadius: 8,
             background: 'var(--agency-accent-soft)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: 'var(--agency-accent)', fontSize: 13, fontWeight: 700,
+            color: 'var(--agency-accent)',
             border: 'none', cursor: 'pointer', fontFamily: 'inherit',
+            transition: 'all 0.15s',
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--agency-accent)'; e.currentTarget.style.color = 'white'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--agency-accent-soft)'; e.currentTarget.style.color = 'var(--agency-accent)'; }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'var(--agency-accent)';
+            e.currentTarget.style.color = 'white';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'var(--agency-accent-soft)';
+            e.currentTarget.style.color = 'var(--agency-accent)';
+          }}
         >
-          JL
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <polyline points="13 17 18 12 13 7" />
+            <polyline points="6 17 11 12 6 7" />
+          </svg>
         </button>
       )}
       {collapsed && !onToggle && (
         <div style={{
-          width: 28, height: 28, borderRadius: 8,
+          width: 32, height: 32, borderRadius: 8,
           background: 'var(--agency-accent-soft)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           color: 'var(--agency-accent)', fontSize: 13, fontWeight: 700,
