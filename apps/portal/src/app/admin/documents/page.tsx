@@ -109,9 +109,10 @@ export default function AdminDocumentsPage() {
 
   const handleDownloadPDF = async (doc: Document) => {
     try {
-      const res = await fetch(`/api/portal/documents/${doc.id}/pdf`);
+      const res = await fetch(`/api/admin/documents/${doc.id}/pdf`);
       if (!res.ok) {
-        alert('Erreur téléchargement');
+        const err = await res.json().catch(() => ({}));
+        alert(err.error || 'Erreur téléchargement');
         return;
       }
       const blob = await res.blob();

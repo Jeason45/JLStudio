@@ -52,8 +52,8 @@ export function SendModal({
     setError('');
     try {
       const url = isSign
-        ? `/api/portal/documents/${documentId}/sign-request`
-        : `/api/portal/documents/${documentId}/send`;
+        ? `/api/admin/documents/${documentId}/sign-request`
+        : `/api/admin/documents/${documentId}/send`;
 
       const body = isSign
         ? { email, recipientName: name, message: message || undefined }
