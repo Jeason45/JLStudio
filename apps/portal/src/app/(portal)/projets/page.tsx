@@ -21,9 +21,9 @@ type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
 const STATUS_CONFIG: Record<ProjectStatus, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
   PLANNING: { label: 'Planification', color: 'var(--text-tertiary)', bg: 'var(--bg-badge)', icon: <Clock size={12} /> },
   IN_PROGRESS: { label: 'En cours', color: 'var(--accent)', bg: 'var(--accent-light)', icon: <Clock size={12} /> },
-  COMPLETED: { label: 'Termine', color: 'var(--success)', bg: 'var(--success-light, rgba(34,197,94,0.1))', icon: <CheckCircle2 size={12} /> },
-  ON_HOLD: { label: 'En pause', color: 'var(--warning, #f59e0b)', bg: 'var(--warning-light, rgba(245,158,11,0.1))', icon: <Pause size={12} /> },
-  CANCELLED: { label: 'Annule', color: 'var(--danger)', bg: 'var(--danger-light, rgba(239,68,68,0.1))', icon: <Ban size={12} /> },
+  COMPLETED: { label: 'Termine', color: 'var(--success)', bg: 'var(--success-light)', icon: <CheckCircle2 size={12} /> },
+  ON_HOLD: { label: 'En pause', color: 'var(--warning)', bg: 'var(--warning-light)', icon: <Pause size={12} /> },
+  CANCELLED: { label: 'Annule', color: 'var(--danger)', bg: 'var(--danger-light)', icon: <Ban size={12} /> },
 };
 
 const FILTER_OPTIONS: { value: string; label: string }[] = [

@@ -100,7 +100,7 @@ const STATUS_LABELS: Record<string, string> = {
 const STATUS_COLORS: Record<string, string> = {
   IN_PROGRESS: 'var(--accent)',
   COMPLETED: 'var(--success)',
-  ON_HOLD: '#f59e0b',
+  ON_HOLD: 'var(--warning)',
   CANCELLED: 'var(--danger)',
   PLANNING: 'var(--text-tertiary)',
 };
@@ -197,8 +197,8 @@ function SuperAdminOverview({ isMobile }: { isMobile: boolean }) {
                       <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>{site.name}</span>
                       <span style={{
                         fontSize: '10px', padding: '2px 8px', borderRadius: '10px',
-                        background: site.status === 'PUBLISHED' ? 'rgba(34,197,94,0.15)' : 'rgba(245,158,11,0.15)',
-                        color: site.status === 'PUBLISHED' ? '#16a34a' : '#d97706',
+                        background: site.status === 'PUBLISHED' ? 'var(--success-light)' : 'rgba(245,158,11,0.15)',
+                        color: site.status === 'PUBLISHED' ? 'var(--success)' : 'var(--warning)',
                         fontWeight: 500,
                       }}>
                         {site.status === 'PUBLISHED' ? 'En ligne' : site.status}

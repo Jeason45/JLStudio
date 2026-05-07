@@ -9,10 +9,10 @@ import { Button, Card, Badge, Tabs, Skeleton, EmptyState } from '@/components/ui
 
 const LEAD_COLUMNS: { status: LeadStatus; label: string; color: string }[] = [
   { status: 'NEW', label: 'Nouveau', color: 'var(--accent)' },
-  { status: 'CONTACTED', label: 'Contacte', color: 'var(--warning, #f59e0b)' },
-  { status: 'QUALIFIED', label: 'Qualifie', color: 'var(--info, #3b82f6)' },
-  { status: 'CONVERTED', label: 'Converti', color: 'var(--success, #22c55e)' },
-  { status: 'LOST', label: 'Perdu', color: 'var(--danger, #ef4444)' },
+  { status: 'CONTACTED', label: 'Contacte', color: 'var(--warning)' },
+  { status: 'QUALIFIED', label: 'Qualifie', color: 'var(--accent)' },
+  { status: 'CONVERTED', label: 'Converti', color: 'var(--success)' },
+  { status: 'LOST', label: 'Perdu', color: 'var(--danger)' },
 ];
 
 const NEXT_STATUS: Record<LeadStatus, LeadStatus | null> = {
