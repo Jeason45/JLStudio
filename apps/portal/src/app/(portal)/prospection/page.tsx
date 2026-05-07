@@ -148,16 +148,16 @@ interface Prospect {
 
 function scoreColor(score: number | null): string {
   if (score === null) return 'var(--text-tertiary)';
-  if (score >= 90) return '#22c55e';
-  if (score >= 50) return '#f59e0b';
-  return '#ef4444';
+  if (score >= 90) return 'var(--success)';
+  if (score >= 50) return 'var(--warning)';
+  return 'var(--danger)';
 }
 
 function scoreBg(score: number | null): string {
   if (score === null) return 'var(--bg-secondary)';
-  if (score >= 90) return 'rgba(34,197,94,0.1)';
-  if (score >= 50) return 'rgba(245,158,11,0.1)';
-  return 'rgba(239,68,68,0.1)';
+  if (score >= 90) return 'var(--success-light)';
+  if (score >= 50) return 'var(--warning-light)';
+  return 'var(--danger-light)';
 }
 
 function formatMs(ms: number | null): string {
@@ -190,7 +190,7 @@ function ScoreCircle({ score, label, size = 70 }: { score: number | null; label:
 function Check({ ok, label }: { ok: boolean; label: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 0', fontSize: '12px' }}>
-      {ok ? <CheckCircle size={14} color="#22c55e" /> : <XCircle size={14} color="#ef4444" />}
+      {ok ? <CheckCircle size={14} color="var(--success)" /> : <XCircle size={14} color="var(--danger)" />}
       <span style={{ color: 'var(--text-primary)' }}>{label}</span>
     </div>
   );
@@ -561,7 +561,7 @@ export default function ProspectionPage() {
 
       {/* Error */}
       {error && (
-        <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'rgba(239,68,68,0.1)', color: '#ef4444', fontSize: '13px', marginBottom: '16px' }}>
+        <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'var(--danger-light)', color: 'var(--danger)', fontSize: '13px', marginBottom: '16px' }}>
           {error}
         </div>
       )}
@@ -571,8 +571,8 @@ export default function ProspectionPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '16px' }}>
           {[
             { label: 'Total', value: stats.total, color: 'var(--accent)' },
-            { label: 'Avec site', value: stats.withSite, color: '#22c55e' },
-            { label: 'Sans site', value: stats.withoutSite, color: '#f59e0b' },
+            { label: 'Avec site', value: stats.withSite, color: 'var(--success)' },
+            { label: 'Sans site', value: stats.withoutSite, color: 'var(--warning)' },
             { label: 'Audites', value: stats.audited, color: '#8b5cf6' },
           ].map(s => (
             <div key={s.label} style={{ ...cardStyle, padding: '12px 16px', textAlign: 'center' }}>
@@ -827,13 +827,13 @@ function ProspectCard({
           ) : p.category === 'creation' || p.category === 'platform' || p.category === 'directory' ? (
             <span style={{
               padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: 600,
-              background: 'rgba(245,158,11,0.1)', color: '#f59e0b',
+              background: 'var(--warning-light)', color: 'var(--warning)',
             }}>{p.category === 'platform' ? 'PLATEFORME' : p.category === 'directory' ? 'ANNUAIRE' : 'CREATION'}</span>
           ) : null}
           {p.addedToCRM && (
             <span style={{
               padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: 600,
-              background: 'rgba(34,197,94,0.1)', color: '#22c55e',
+              background: 'var(--success-light)', color: 'var(--success)',
             }}>Dans le CRM</span>
           )}
         </div>
@@ -885,7 +885,7 @@ function ProspectCard({
       {topProblems.length > 0 && (
         <div style={{ marginBottom: '6px' }}>
           {topProblems.map((prob, i) => (
-            <div key={i} style={{ fontSize: '11px', color: '#ef4444', padding: '1px 0' }}>
+            <div key={i} style={{ fontSize: '11px', color: 'var(--danger)', padding: '1px 0' }}>
               <AlertTriangle size={10} style={{ verticalAlign: 'middle', marginRight: '4px' }} />{prob}
             </div>
           ))}
@@ -988,7 +988,7 @@ function DetailPanel({
           </button>
         )}
         {prospect.addedToCRM && (
-          <span style={{ padding: '6px 14px', borderRadius: '8px', background: 'rgba(34,197,94,0.1)', color: '#22c55e', fontSize: '12px', fontWeight: 600 }}>
+          <span style={{ padding: '6px 14px', borderRadius: '8px', background: 'var(--success-light)', color: 'var(--success)', fontSize: '12px', fontWeight: 600 }}>
             <CheckCircle size={14} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Dans le CRM
           </span>
         )}
@@ -1098,8 +1098,8 @@ function DetailPanel({
                 { label: 'CLS', value: audit.mobileCLS?.toFixed(3) ?? '—', good: (audit.mobileCLS ?? 1) < 0.1 },
                 { label: 'SI', value: formatMs(audit.mobileSI), good: (audit.mobileSI ?? 9999) < 3400 },
               ].map(v => (
-                <div key={v.label} style={{ textAlign: 'center', padding: '8px', borderRadius: '6px', background: v.good ? 'rgba(34,197,94,0.06)' : 'rgba(239,68,68,0.06)' }}>
-                  <div style={{ fontSize: '14px', fontWeight: 700, color: v.good ? '#22c55e' : '#ef4444' }}>{v.value}</div>
+                <div key={v.label} style={{ textAlign: 'center', padding: '8px', borderRadius: '6px', background: v.good ? 'var(--success-light)' : 'var(--danger-light)' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 700, color: v.good ? 'var(--success)' : 'var(--danger)' }}>{v.value}</div>
                   <div style={{ fontSize: '9px', color: 'var(--text-tertiary)' }}>{v.label}</div>
                 </div>
               ))}
@@ -1339,7 +1339,7 @@ Pour chaque probleme, EXACTEMENT ce format :
               <div style={{ marginBottom: '6px' }}>
                 <Check ok={audit.ssl.isValid} label={`SSL ${audit.ssl.protocol || ''}`} />
                 {audit.ssl.daysUntilExpiry !== null && (
-                  <div style={{ color: audit.ssl.isExpiringSoon ? '#ef4444' : 'var(--text-secondary)', fontSize: '10px', marginLeft: '20px' }}>
+                  <div style={{ color: audit.ssl.isExpiringSoon ? 'var(--danger)' : 'var(--text-secondary)', fontSize: '10px', marginLeft: '20px' }}>
                     Expire dans {audit.ssl.daysUntilExpiry} jours
                   </div>
                 )}
@@ -1359,7 +1359,7 @@ Pour chaque probleme, EXACTEMENT ce format :
             )}
             {audit.observatoryGrade && (
               <div style={{ marginTop: '6px', fontSize: '11px', color: 'var(--text-secondary)' }}>
-                Observatory: <strong style={{ color: ['A', 'A+', 'B'].includes(audit.observatoryGrade) ? '#22c55e' : '#ef4444' }}>{audit.observatoryGrade}</strong>
+                Observatory: <strong style={{ color: ['A', 'A+', 'B'].includes(audit.observatoryGrade) ? 'var(--success)' : 'var(--danger)' }}>{audit.observatoryGrade}</strong>
               </div>
             )}
           </div>
@@ -1372,7 +1372,7 @@ Pour chaque probleme, EXACTEMENT ce format :
             {audit.carbon && (
               <div style={{ marginBottom: '8px' }}>
                 <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-                  Carbone: <strong style={{ color: ['A', 'B'].includes(audit.carbon.rating || '') ? '#22c55e' : '#ef4444' }}>{audit.carbon.rating || '—'}</strong>
+                  Carbone: <strong style={{ color: ['A', 'B'].includes(audit.carbon.rating || '') ? 'var(--success)' : 'var(--danger)' }}>{audit.carbon.rating || '—'}</strong>
                   {audit.carbon.co2PerView !== null && ` (${audit.carbon.co2PerView.toFixed(2)}g CO2/vue)`}
                 </div>
                 {audit.carbon.cleanerThan !== null && (
@@ -1382,11 +1382,11 @@ Pour chaque probleme, EXACTEMENT ce format :
               </div>
             )}
             <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-              W3C: <strong style={{ color: audit.w3cErrors > 20 ? '#ef4444' : 'var(--text-primary)' }}>{audit.w3cErrors} erreurs</strong>, {audit.w3cWarnings} warnings
+              W3C: <strong style={{ color: audit.w3cErrors > 20 ? 'var(--danger)' : 'var(--text-primary)' }}>{audit.w3cErrors} erreurs</strong>, {audit.w3cWarnings} warnings
             </div>
             {audit.yellowLabScore !== null && (
               <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-                Yellow Lab: <strong style={{ color: audit.yellowLabScore >= 60 ? '#22c55e' : '#ef4444' }}>{audit.yellowLabScore}/100</strong>
+                Yellow Lab: <strong style={{ color: audit.yellowLabScore >= 60 ? 'var(--success)' : 'var(--danger)' }}>{audit.yellowLabScore}/100</strong>
               </div>
             )}
             {audit.yellowLabTopIssues.length > 0 && (
@@ -1402,7 +1402,7 @@ Pour chaque probleme, EXACTEMENT ce format :
           {audit.heaviestResources && audit.heaviestResources.length > 0 && (
             <div style={panelCardStyle}>
               <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
-                <AlertTriangle size={13} style={{ verticalAlign: 'middle', marginRight: '4px', color: '#f59e0b' }} />
+                <AlertTriangle size={13} style={{ verticalAlign: 'middle', marginRight: '4px', color: 'var(--warning)' }} />
                 Ressources les plus lourdes
               </h3>
               {audit.heaviestResources.slice(0, 5).map((r, i) => {
@@ -1413,10 +1413,10 @@ Pour chaque probleme, EXACTEMENT ce format :
                   <div key={i} style={{ padding: '4px 0' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', marginBottom: '2px' }}>
                       <span style={{ color: 'var(--text-primary)', maxWidth: '65%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={r.url}>{filename}</span>
-                      <span style={{ fontWeight: 600, color: r.size > 500000 ? '#ef4444' : r.size > 100000 ? '#f59e0b' : 'var(--text-secondary)' }}>{sizeStr}</span>
+                      <span style={{ fontWeight: 600, color: r.size > 500000 ? 'var(--danger)' : r.size > 100000 ? 'var(--warning)' : 'var(--text-secondary)' }}>{sizeStr}</span>
                     </div>
                     <div style={{ width: '100%', height: '3px', borderRadius: '2px', background: 'var(--bg-secondary)' }}>
-                      <div style={{ width: `${barWidth}%`, height: '100%', borderRadius: '2px', background: r.size > 500000 ? '#ef4444' : r.size > 100000 ? '#f59e0b' : 'var(--accent)' }} />
+                      <div style={{ width: `${barWidth}%`, height: '100%', borderRadius: '2px', background: r.size > 500000 ? 'var(--danger)' : r.size > 100000 ? 'var(--warning)' : 'var(--accent)' }} />
                     </div>
                   </div>
                 );
@@ -1426,10 +1426,10 @@ Pour chaque probleme, EXACTEMENT ce format :
 
           {/* Detailed audits by category */}
           {[
-            { title: 'Performance', audits: audit.mobilePerformanceAudits, color: '#ef4444' },
+            { title: 'Performance', audits: audit.mobilePerformanceAudits, color: 'var(--danger)' },
             { title: 'Accessibilite', audits: audit.mobileAccessibilityAudits, color: '#8b5cf6' },
-            { title: 'SEO', audits: audit.mobileSEOAudits, color: '#3b82f6' },
-            { title: 'Bonnes pratiques', audits: audit.mobileBestPracticesAudits, color: '#f59e0b' },
+            { title: 'SEO', audits: audit.mobileSEOAudits, color: 'var(--accent)' },
+            { title: 'Bonnes pratiques', audits: audit.mobileBestPracticesAudits, color: 'var(--warning)' },
           ].filter(s => s.audits.length > 0).map(section => (
             <div key={section.title} style={panelCardStyle}>
               <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
@@ -1440,7 +1440,7 @@ Pour chaque probleme, EXACTEMENT ce format :
                 </span>
               </h3>
               {section.audits.map((a, i) => {
-                const sc = a.score === null ? 'var(--text-tertiary)' : a.score === 0 ? '#ef4444' : '#f59e0b';
+                const sc = a.score === null ? 'var(--text-tertiary)' : a.score === 0 ? 'var(--danger)' : 'var(--warning)';
                 return (
                   <div key={a.id} style={{
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -1455,7 +1455,7 @@ Pour chaque probleme, EXACTEMENT ce format :
                       <span style={{
                         fontSize: '10px', fontWeight: 600, color: sc,
                         padding: '1px 6px', borderRadius: '3px',
-                        background: a.score === 0 ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)',
+                        background: a.score === 0 ? 'var(--danger-light)' : 'var(--warning-light)',
                         whiteSpace: 'nowrap', marginLeft: '6px',
                       }}>
                         {a.displayValue}
@@ -1474,29 +1474,29 @@ Pour chaque probleme, EXACTEMENT ce format :
                 <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>Design & UX</h3>
                 <span style={{
                   fontSize: '13px', fontWeight: 700,
-                  color: audit.design.score >= 70 ? '#22c55e' : audit.design.score >= 40 ? '#f59e0b' : '#ef4444',
+                  color: audit.design.score >= 70 ? 'var(--success)' : audit.design.score >= 40 ? 'var(--warning)' : 'var(--danger)',
                 }}>{audit.design.score}/100</span>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px', fontSize: '11px', marginBottom: '8px' }}>
-                <div style={{ color: audit.design.imageCount >= 3 ? 'var(--text-secondary)' : '#ef4444' }}>
+                <div style={{ color: audit.design.imageCount >= 3 ? 'var(--text-secondary)' : 'var(--danger)' }}>
                   {audit.design.imageCount >= 3 ? '✓' : '✗'} {audit.design.imageCount} image{audit.design.imageCount !== 1 ? 's' : ''}
                 </div>
-                <div style={{ color: audit.design.hasHeroImage ? 'var(--text-secondary)' : '#ef4444' }}>
+                <div style={{ color: audit.design.hasHeroImage ? 'var(--text-secondary)' : 'var(--danger)' }}>
                   {audit.design.hasHeroImage ? '✓' : '✗'} Hero/Banner
                 </div>
-                <div style={{ color: audit.design.hasCustomFonts ? 'var(--text-secondary)' : '#ef4444' }}>
+                <div style={{ color: audit.design.hasCustomFonts ? 'var(--text-secondary)' : 'var(--danger)' }}>
                   {audit.design.hasCustomFonts ? '✓' : '✗'} Polices custom
                 </div>
-                <div style={{ color: audit.design.hasNavigation ? 'var(--text-secondary)' : '#ef4444' }}>
+                <div style={{ color: audit.design.hasNavigation ? 'var(--text-secondary)' : 'var(--danger)' }}>
                   {audit.design.hasNavigation ? '✓' : '✗'} Navigation
                 </div>
-                <div style={{ color: audit.design.hasLogo ? 'var(--text-secondary)' : '#ef4444' }}>
+                <div style={{ color: audit.design.hasLogo ? 'var(--text-secondary)' : 'var(--danger)' }}>
                   {audit.design.hasLogo ? '✓' : '✗'} Logo
                 </div>
-                <div style={{ color: audit.design.hasFooterContent ? 'var(--text-secondary)' : '#ef4444' }}>
+                <div style={{ color: audit.design.hasFooterContent ? 'var(--text-secondary)' : 'var(--danger)' }}>
                   {audit.design.hasFooterContent ? '✓' : '✗'} Footer
                 </div>
-                <div style={{ color: audit.design.usesFlexboxOrGrid ? 'var(--text-secondary)' : '#f59e0b' }}>
+                <div style={{ color: audit.design.usesFlexboxOrGrid ? 'var(--text-secondary)' : 'var(--warning)' }}>
                   {audit.design.usesFlexboxOrGrid ? '✓' : '!'} Flexbox/Grid
                 </div>
                 <div style={{ color: audit.design.hasAnimations ? 'var(--text-secondary)' : 'var(--text-tertiary)' }}>
@@ -1511,7 +1511,7 @@ Pour chaque probleme, EXACTEMENT ce format :
                   {audit.design.issues.slice(0, 5).map((issue: any, i: number) => (
                     <div key={i} style={{
                       fontSize: '10px', padding: '2px 0',
-                      color: issue.severity === 'critical' ? '#ef4444' : issue.severity === 'warning' ? '#f59e0b' : 'var(--text-tertiary)',
+                      color: issue.severity === 'critical' ? 'var(--danger)' : issue.severity === 'warning' ? 'var(--warning)' : 'var(--text-tertiary)',
                     }}>
                       {issue.severity === 'critical' ? '✗' : issue.severity === 'warning' ? '!' : '·'} {issue.label}
                     </div>
