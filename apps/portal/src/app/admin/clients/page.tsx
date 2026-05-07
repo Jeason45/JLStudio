@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Plus, Search, Trash2, X, UserCheck, Mail, Phone, Building2 } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
+import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 
 type ContactStatus = 'NEW' | 'ACTIVE' | 'INACTIVE';
 
@@ -191,6 +192,7 @@ export default function AdminClientsPage() {
 
   return (
     <div>
+      <PageHeaderRibbon label="Clients" />
       <header style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>

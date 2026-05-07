@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Mail, Search, AlertCircle } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
+import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 
 interface MailLogEntry {
   id: string;
@@ -64,6 +65,7 @@ export default function EmailsPage() {
 
   return (
     <div>
+      <PageHeaderRibbon label="Emails" />
       <header style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--agency-ink-1)', margin: 0, letterSpacing: '-0.02em' }}>
           Emails

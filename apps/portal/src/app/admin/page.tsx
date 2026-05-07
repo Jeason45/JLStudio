@@ -1,5 +1,6 @@
 import { getAgencySite } from '@/lib/agencySite';
 import { prisma } from '@/lib/prisma';
+import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 
 export default async function AdminDashboardPage() {
   const site = await getAgencySite();
@@ -21,6 +22,7 @@ export default async function AdminDashboardPage() {
 
   return (
     <div>
+      <PageHeaderRibbon label="Dashboard" />
       <header style={{ marginBottom: 32 }}>
         <h1
           style={{

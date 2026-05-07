@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { FileText, Receipt, FileSignature, Search, Trash2, Download, ExternalLink, Mail, Edit3 } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
+import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 import { SendModal, type SendMode } from './_components/SendModal';
 
 type DocType = 'DEVIS' | 'FACTURE' | 'CONTRAT';
@@ -137,6 +138,7 @@ export default function AdminDocumentsPage() {
 
   return (
     <div>
+      <PageHeaderRibbon label="Documents" />
       <header style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>

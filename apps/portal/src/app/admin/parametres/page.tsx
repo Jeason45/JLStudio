@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Building2, CreditCard, Save, Check } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
+import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 
 interface CompanySettings {
   id: string;
@@ -92,6 +93,7 @@ export default function ParametresPage() {
 
   return (
     <div>
+      <PageHeaderRibbon label="Paramètres" />
       <header style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Check, ArrowRight, ArrowLeft, FileText, RotateCcw } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
+import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 import {
   BRIEF_TYPES, COMMON_FEATURES, REFONTE_SCOPES, REFONTE_FIELDS_BY_SCOPE,
   BUDGET_OPTIONS, STEP_LABELS, getInitialBriefData, budgetToNumber,
@@ -181,6 +182,7 @@ export default function BriefPage() {
   // ─── Wizard ───
   return (
     <div>
+      <PageHeaderRibbon label="Brief" />
       <header style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 20, fontWeight: 600, color: 'var(--agency-ink-1)', margin: 0 }}>
           Brief — {selectedType.title}

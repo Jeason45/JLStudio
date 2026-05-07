@@ -8,6 +8,7 @@ import {
 import { fr } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, Plus, X, Trash2, MapPin, User, Clock } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
+import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 
 // ─── Types ───────────────────────────────────────────────────────────
 
@@ -156,6 +157,7 @@ export default function AdminCalendarPage() {
 
   return (
     <div>
+      <PageHeaderRibbon label="Calendrier" />
       <header style={{ marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>

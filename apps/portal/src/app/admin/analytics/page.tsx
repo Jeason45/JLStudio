@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { BarChart3, Users, Eye, Timer, ArrowUpRight, Monitor, Smartphone, Tablet, Globe, RefreshCw } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
+import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 
 interface AnalyticsData {
   active: { x: number };
@@ -126,6 +127,7 @@ export default function AnalyticsPage() {
 
   return (
     <div>
+      <PageHeaderRibbon label="Analytics" />
       <Header
         period={period}
         setPeriod={setPeriod}

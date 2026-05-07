@@ -5,6 +5,7 @@ import { format, addDays, differenceInDays, isWeekend, isToday, parseISO, addMon
 import { fr } from 'date-fns/locale';
 import { Plus, Diamond, X, Trash2 } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
+import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 
 // ─── Types ───────────────────────────────────────────────────────────
 
@@ -201,6 +202,7 @@ export default function GanttPage() {
 
   return (
     <div>
+      <PageHeaderRibbon label="Gantt" />
       {/* Header */}
       <header style={{ marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>

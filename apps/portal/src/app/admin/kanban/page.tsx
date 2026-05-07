@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef, type DragEvent } from 'react';
 import { Plus, Search, RefreshCw, X, Settings, Trash2 } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
+import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 
 // ─── Types ───────────────────────────────────────────────────────────
 
@@ -250,6 +251,7 @@ export default function KanbanPage() {
 
   return (
     <div>
+      <PageHeaderRibbon label="Kanban" />
       {/* Header */}
       <header style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
