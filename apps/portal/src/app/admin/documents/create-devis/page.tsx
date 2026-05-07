@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, FileDown } from 'lucide-react';
 import { ContactSearchBox } from '../_components/ContactSearchBox';
 import { LignesEditor } from '../_components/LignesEditor';
@@ -11,7 +12,19 @@ import {
 import { inputStyle, labelStyle, sectionStyle, sectionTitleStyle, primaryBtnStyle } from '../_components/styles';
 
 export default function CreateDevisPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: 40, textAlign: 'center', color: 'var(--agency-ink-3)' }}>Chargement…</div>}>
+      <CreateDevisContent />
+    </Suspense>
+  );
+}
+
+function CreateDevisContent() {
+  const searchParams = useSearchParams();
+  const editId = searchParams.get('id');
+
   const [loading, setLoading] = useState(false);
+  const [editLoading, setEditLoading] = useState(!!editId);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
@@ -48,6 +61,7 @@ export default function CreateDevisPage() {
   }, []);
 
   const fetchNextNumber = useCallback(async () => {
+    if (editId) return;
     try {
       const res = await fetch('/api/admin/documents/next-number?type=DEVIS');
       if (res.ok) {
@@ -55,13 +69,64 @@ export default function CreateDevisPage() {
         setDevisInfo((p) => ({ ...p, numero_devis: data.number }));
       }
     } catch { /* ignore */ }
-  }, []);
+  }, [editId]);
+
+  const loadExisting = useCallback(async () => {
+    if (!editId) return;
+    try {
+      const res = await fetch(`/api/admin/documents/${editId}`);
+      if (!res.ok) {
+        setError('Devis introuvable');
+        setEditLoading(false);
+        return;
+      }
+      const doc = await res.json();
+      const data = (doc.content || {}) as Record<string, string | unknown>;
+      setDevisInfo({
+        numero_devis: doc.documentNumber || '',
+        date_devis: String(data.date_devis || new Date(doc.createdAt).toLocaleDateString('fr-FR')),
+        objet_devis: String(data.objet_devis || doc.title || ''),
+        validite_jours: String(data.validite_jours || '30'),
+        acompte_pourcentage: String(data.acompte_pourcentage || ''),
+        conditions_reglement: String(data.conditions_reglement || '30 jours net'),
+        mode_reglement: String(data.mode_reglement || 'Virement bancaire'),
+      });
+      setClientInfo({
+        nom_client: String(data.nom_client || ''),
+        adresse_client: String(data.adresse_client || ''),
+        code_postal_client: String(data.code_postal_client || ''),
+        ville_client: String(data.ville_client || ''),
+        telephone_client: String(data.telephone_client || ''),
+        email_client: String(data.email_client || ''),
+      });
+      setDestinataire({
+        nom_destinataire: String(data.nom_destinataire || ''),
+        adresse_destinataire: String(data.adresse_destinataire || ''),
+        telephone_destinataire: String(data.telephone_destinataire || ''),
+        email_destinataire: String(data.email_destinataire || ''),
+      });
+      if (Array.isArray(data.lignes) && data.lignes.length > 0) {
+        setLignes((data.lignes as Array<Record<string, unknown>>).map((l) => ({
+          description: String(l.description || ''),
+          prix_unitaire: String(l.prix_unitaire || ''),
+          quantite: String(l.quantite || '1'),
+          unite: String(l.unite || ''),
+        })));
+      }
+      if (doc.contact?.id) setSelectedContactId(doc.contact.id);
+    } catch {
+      setError('Erreur de chargement du devis');
+    } finally {
+      setEditLoading(false);
+    }
+  }, [editId]);
 
   useEffect(() => {
     fetchContacts();
     fetchCompany();
     fetchNextNumber();
-  }, [fetchContacts, fetchCompany, fetchNextNumber]);
+    loadExisting();
+  }, [fetchContacts, fetchCompany, fetchNextNumber, loadExisting]);
 
   const handleSelectContact = (c: Contact) => {
     setSelectedContactId(c.id);
@@ -120,6 +185,7 @@ export default function CreateDevisPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          documentId: editId || undefined,
           type: 'DEVIS',
           templateSlug: 'devis-moderne',
           title: devisInfo.objet_devis || `Devis ${devisInfo.numero_devis}`,
@@ -169,10 +235,10 @@ export default function CreateDevisPage() {
         </a>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--agency-ink-1)', margin: 0, letterSpacing: '-0.02em' }}>
-            Créer un devis
+            {editId ? 'Modifier le devis' : 'Créer un devis'}
           </h1>
           <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', marginTop: 4, margin: 0 }}>
-            Sélectionne un client, remplis les prestations, génère le PDF.
+            {editId ? 'Édite les informations puis régénère le PDF.' : 'Sélectionne un client, remplis les prestations, génère le PDF.'}
           </p>
         </div>
       </header>
@@ -199,7 +265,13 @@ export default function CreateDevisPage() {
           color: '#22c55e',
           fontSize: 13,
         }}>
-          Devis créé. Redirection…
+          {editId ? 'Devis mis à jour. Redirection…' : 'Devis créé. Redirection…'}
+        </div>
+      )}
+
+      {editLoading && (
+        <div style={{ padding: 60, textAlign: 'center', color: 'var(--agency-ink-3)', fontSize: 13 }}>
+          Chargement du devis…
         </div>
       )}
 
@@ -394,12 +466,12 @@ export default function CreateDevisPage() {
           </div>
           <button
             type="button"
-            disabled={loading || !canGenerate}
+            disabled={loading || !canGenerate || editLoading}
             onClick={handleGenerate}
-            style={primaryBtnStyle(loading || !canGenerate)}
+            style={primaryBtnStyle(loading || !canGenerate || editLoading)}
           >
             <FileDown size={14} />
-            {loading ? 'Génération…' : 'Générer le PDF'}
+            {loading ? 'Génération…' : editId ? 'Régénérer le PDF' : 'Générer le PDF'}
           </button>
         </section>
       </div>

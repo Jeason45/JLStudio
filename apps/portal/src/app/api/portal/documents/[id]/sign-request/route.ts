@@ -97,8 +97,11 @@ export async function POST(
     bic: company.bic, logoUrl: company.logoUrl,
   } : null;
 
-  const pdfBytes = await generateDocumentPDF(docData, companyData);
-  const pdfBuffer = Buffer.from(pdfBytes);
+  // Prefer cached PDF (Phase F1/F2) — regen on the fly only for legacy docs
+  const pdfBuffer: Buffer = document.pdfData
+    ? Buffer.from(document.pdfData)
+    : Buffer.from(await generateDocumentPDF(docData, companyData));
+
   const typePrefix = document.type === 'DEVIS' ? 'Devis' : document.type === 'FACTURE' ? 'Facture' : 'Contrat';
   const pdfFilename = `${typePrefix}_${document.documentNumber || document.id}.pdf`;
 

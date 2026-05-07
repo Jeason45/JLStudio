@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { FileText, Receipt, FileSignature, Search, Trash2, Download, ExternalLink } from 'lucide-react';
+import { FileText, Receipt, FileSignature, Search, Trash2, Download, ExternalLink, Mail, Edit3 } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
+import { SendModal, type SendMode } from './_components/SendModal';
 
 type DocType = 'DEVIS' | 'FACTURE' | 'CONTRAT';
 type DocStatus = 'DRAFT' | 'SENT' | 'SIGNED' | 'ACCEPTED' | 'REJECTED' | 'PAID' | 'CANCELLED';
@@ -55,6 +56,7 @@ export default function AdminDocumentsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
+  const [sendModal, setSendModal] = useState<{ open: boolean; mode: SendMode; doc: Document | null }>({ open: false, mode: 'send', doc: null });
 
   const fetchDocs = useCallback(async () => {
     try {
@@ -97,6 +99,14 @@ export default function AdminDocumentsPage() {
     fetchDocs();
   };
 
+  const handleEdit = (doc: Document) => {
+    const route =
+      doc.type === 'DEVIS' ? '/admin/documents/create-devis'
+      : doc.type === 'FACTURE' ? '/admin/documents/create-facture'
+      : '/admin/documents/create-contrat';
+    window.location.href = `${route}?id=${doc.id}`;
+  };
+
   const handleDownloadPDF = async (doc: Document) => {
     try {
       const res = await fetch(`/api/portal/documents/${doc.id}/pdf`);
@@ -119,7 +129,7 @@ export default function AdminDocumentsPage() {
   const createHref =
     tab === 'DEVIS' ? '/admin/documents/create-devis'
     : tab === 'FACTURE' ? '/admin/documents/create-facture'
-    : null; // CONTRAT : pas encore d'éditeur (Phase F4)
+    : '/admin/documents/create-contrat';
 
   return (
     <div>
@@ -133,21 +143,15 @@ export default function AdminDocumentsPage() {
               {stats.total} {tabLabel.toLowerCase()} · {stats.pending} en attente · {stats.paid} payé{stats.paid > 1 ? 's' : ''} · {stats.totalAmount.toLocaleString('fr-FR')} €
             </p>
           </div>
-          {createHref ? (
-            <a
-              href={createHref}
-              style={{
-                ...primaryBtn(), textDecoration: 'none',
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-              }}
-            >
-              <ExternalLink size={13} /> Créer un{tab === 'FACTURE' ? 'e' : ''} {tabLabel.toLowerCase().replace(/s$/, '')}
-            </a>
-          ) : (
-            <span style={{ fontSize: 11, color: 'var(--agency-ink-4, var(--agency-ink-3))' }} title="Phase F4 — bientôt">
-              Éditeur de contrats à venir
-            </span>
-          )}
+          <a
+            href={createHref}
+            style={{
+              ...primaryBtn(), textDecoration: 'none',
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+            }}
+          >
+            <ExternalLink size={13} /> Créer un{tab === 'FACTURE' ? 'e' : ''} {tabLabel.toLowerCase().replace(/s$/, '')}
+          </a>
         </div>
       </header>
 
@@ -237,6 +241,9 @@ export default function AdminDocumentsPage() {
                 onDownload={() => handleDownloadPDF(d)}
                 onDelete={() => handleDelete(d.id, d.documentNumber || d.title)}
                 onStatusChange={(s) => handleStatusChange(d.id, s)}
+                onSend={() => setSendModal({ open: true, mode: 'send', doc: d })}
+                onSignRequest={() => setSendModal({ open: true, mode: 'sign-request', doc: d })}
+                onEdit={() => handleEdit(d)}
                 allowedStatuses={STATUS_FILTERS_BY_TYPE[tab]}
               />
             ))}
@@ -266,6 +273,9 @@ export default function AdminDocumentsPage() {
                   onDownload={() => handleDownloadPDF(d)}
                   onDelete={() => handleDelete(d.id, d.documentNumber || d.title)}
                   onStatusChange={(s) => handleStatusChange(d.id, s)}
+                  onSend={() => setSendModal({ open: true, mode: 'send', doc: d })}
+                  onSignRequest={() => setSendModal({ open: true, mode: 'sign-request', doc: d })}
+                  onEdit={() => handleEdit(d)}
                   allowedStatuses={STATUS_FILTERS_BY_TYPE[tab]}
                 />
               ))}
@@ -273,6 +283,23 @@ export default function AdminDocumentsPage() {
           </table>
         )}
       </div>
+
+      <SendModal
+        open={sendModal.open}
+        mode={sendModal.mode}
+        documentId={sendModal.doc?.id || ''}
+        documentNumber={sendModal.doc?.documentNumber || null}
+        defaultEmail={sendModal.doc?.contact?.email || ''}
+        defaultName={
+          sendModal.doc?.contact
+            ? sendModal.doc.contact.companyName
+              || `${sendModal.doc.contact.firstName || ''} ${sendModal.doc.contact.lastName || ''}`.trim()
+              || sendModal.doc.contact.name
+            : ''
+        }
+        onClose={() => setSendModal({ open: false, mode: 'send', doc: null })}
+        onSuccess={() => fetchDocs()}
+      />
     </div>
   );
 }
@@ -309,12 +336,15 @@ function StatusSelect({
 }
 
 function DesktopRow({
-  doc, onDownload, onDelete, onStatusChange, allowedStatuses,
+  doc, onDownload, onDelete, onStatusChange, onSend, onSignRequest, onEdit, allowedStatuses,
 }: {
   doc: Document;
   onDownload: () => void;
   onDelete: () => void;
   onStatusChange: (s: DocStatus) => void;
+  onSend: () => void;
+  onSignRequest: () => void;
+  onEdit: () => void;
   allowedStatuses: DocStatus[];
 }) {
   const clientName = doc.contact
@@ -346,10 +376,21 @@ function DesktopRow({
         {new Date(doc.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: '2-digit' })}
       </td>
       <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-        <div style={{ display: 'inline-flex', gap: 4 }}>
+        <div style={{ display: 'inline-flex', gap: 2 }}>
+          <button onClick={onEdit} title="Modifier" style={iconBtn()}>
+            <Edit3 size={13} />
+          </button>
           <button onClick={onDownload} title="Télécharger PDF" style={iconBtn()}>
             <Download size={13} />
           </button>
+          <button onClick={onSend} title="Envoyer par email" style={iconBtn()}>
+            <Mail size={13} />
+          </button>
+          {doc.type === 'DEVIS' && !doc.signature && (
+            <button onClick={onSignRequest} title="Demander la signature" style={iconBtn()}>
+              <FileSignature size={13} />
+            </button>
+          )}
           <button onClick={onDelete} title="Supprimer" style={iconBtn('var(--agency-danger)')}>
             <Trash2 size={13} />
           </button>
@@ -360,12 +401,15 @@ function DesktopRow({
 }
 
 function MobileRow({
-  doc, onDownload, onDelete, onStatusChange, allowedStatuses,
+  doc, onDownload, onDelete, onStatusChange, onSend, onSignRequest, onEdit, allowedStatuses,
 }: {
   doc: Document;
   onDownload: () => void;
   onDelete: () => void;
   onStatusChange: (s: DocStatus) => void;
+  onSend: () => void;
+  onSignRequest: () => void;
+  onEdit: () => void;
   allowedStatuses: DocStatus[];
 }) {
   const clientName = doc.contact
@@ -391,9 +435,14 @@ function MobileRow({
         <span style={{ fontSize: 10, color: 'var(--agency-ink-4)' }}>
           {new Date(doc.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: '2-digit' })}
         </span>
-        <div style={{ display: 'inline-flex', gap: 6 }}>
-          <button onClick={onDownload} style={iconBtn()}><Download size={12} /></button>
-          <button onClick={onDelete} style={iconBtn('var(--agency-danger)')}><Trash2 size={12} /></button>
+        <div style={{ display: 'inline-flex', gap: 4 }}>
+          <button onClick={onEdit} style={iconBtn()} title="Modifier"><Edit3 size={12} /></button>
+          <button onClick={onDownload} style={iconBtn()} title="PDF"><Download size={12} /></button>
+          <button onClick={onSend} style={iconBtn()} title="Envoyer"><Mail size={12} /></button>
+          {doc.type === 'DEVIS' && !doc.signature && (
+            <button onClick={onSignRequest} style={iconBtn()} title="Signature"><FileSignature size={12} /></button>
+          )}
+          <button onClick={onDelete} style={iconBtn('var(--agency-danger)')} title="Supprimer"><Trash2 size={12} /></button>
         </div>
       </div>
     </div>

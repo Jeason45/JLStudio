@@ -34,8 +34,10 @@ export default function CreateFacturePage() {
 function CreateFactureContent() {
   const searchParams = useSearchParams();
   const fromDevisId = searchParams.get('fromDevis');
+  const editId = searchParams.get('id');
 
   const [loading, setLoading] = useState(false);
+  const [editLoading, setEditLoading] = useState(!!editId);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
@@ -76,6 +78,7 @@ function CreateFactureContent() {
   }, []);
 
   const fetchNextNumber = useCallback(async () => {
+    if (editId) return;
     try {
       const res = await fetch('/api/admin/documents/next-number?type=FACTURE');
       if (res.ok) {
@@ -83,12 +86,68 @@ function CreateFactureContent() {
         setFactureInfo((p) => ({ ...p, numero_facture: data.number }));
       }
     } catch { /* ignore */ }
-  }, []);
+  }, [editId]);
+
+  const loadExisting = useCallback(async () => {
+    if (!editId) return;
+    try {
+      const res = await fetch(`/api/admin/documents/${editId}`);
+      if (!res.ok) {
+        setError('Facture introuvable');
+        setEditLoading(false);
+        return;
+      }
+      const doc = await res.json();
+      const data = (doc.content || {}) as Record<string, string | unknown>;
+      setFactureInfo({
+        numero_facture: doc.documentNumber || '',
+        date_facture: String(data.date_facture || new Date(doc.createdAt).toLocaleDateString('fr-FR')),
+        date_echeance: String(data.date_echeance || ''),
+        objet_facture: String(data.objet_facture || doc.title || ''),
+        acompte_verse: String(data.acompte_verse || ''),
+        conditions_reglement: String(data.conditions_reglement || '30 jours net'),
+        mode_reglement: String(data.mode_reglement || 'Virement bancaire'),
+        penalite_retard: String(data.penalite_retard || '3 fois le taux d\'intérêt légal'),
+      });
+      setClientInfo({
+        nom_client: String(data.nom_client || ''),
+        adresse_client: String(data.adresse_client || ''),
+        code_postal_client: String(data.code_postal_client || ''),
+        ville_client: String(data.ville_client || ''),
+        telephone_client: String(data.telephone_client || ''),
+        email_client: String(data.email_client || ''),
+      });
+      setDestinataire({
+        nom_destinataire: String(data.nom_destinataire || ''),
+        adresse_destinataire: String(data.adresse_destinataire || ''),
+        telephone_destinataire: String(data.telephone_destinataire || ''),
+        email_destinataire: String(data.email_destinataire || ''),
+      });
+      if (Array.isArray(data.lignes) && data.lignes.length > 0) {
+        setLignes((data.lignes as Array<Record<string, unknown>>).map((l) => ({
+          description: String(l.description || ''),
+          prix_unitaire: String(l.prix_unitaire || ''),
+          quantite: String(l.quantite || '1'),
+          unite: String(l.unite || ''),
+        })));
+      }
+      if (doc.contact?.id) setSelectedContactId(doc.contact.id);
+      if (doc.linkedDocumentId) {
+        setLinkedDevisId(doc.linkedDocumentId);
+        setLinkedDevisNumber(String(data.numero_devis_ref || ''));
+      }
+    } catch {
+      setError('Erreur de chargement de la facture');
+    } finally {
+      setEditLoading(false);
+    }
+  }, [editId]);
 
   useEffect(() => {
     fetchAll();
     fetchNextNumber();
-  }, [fetchAll, fetchNextNumber]);
+    loadExisting();
+  }, [fetchAll, fetchNextNumber, loadExisting]);
 
   // Auto-prefill from devis if fromDevis param present
   useEffect(() => {
@@ -197,6 +256,7 @@ function CreateFactureContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          documentId: editId || undefined,
           type: 'FACTURE',
           templateSlug: 'facture-moderne',
           title: factureInfo.objet_facture || `Facture ${factureInfo.numero_facture}`,
@@ -234,10 +294,10 @@ function CreateFactureContent() {
         </a>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--agency-ink-1)', margin: 0, letterSpacing: '-0.02em' }}>
-            Créer une facture
+            {editId ? 'Modifier la facture' : 'Créer une facture'}
           </h1>
           <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', marginTop: 4, margin: 0 }}>
-            Pars d&apos;un devis existant ou repars de zéro.
+            {editId ? 'Édite les informations puis régénère le PDF.' : 'Pars d\'un devis existant ou repars de zéro.'}
           </p>
         </div>
       </header>
@@ -249,7 +309,13 @@ function CreateFactureContent() {
       )}
       {success && (
         <div style={{ marginBottom: 16, padding: 12, background: 'rgba(34,197,94,0.12)', border: '1px solid #22c55e', borderRadius: 10, color: '#22c55e', fontSize: 13 }}>
-          Facture créée. Redirection…
+          {editId ? 'Facture mise à jour. Redirection…' : 'Facture créée. Redirection…'}
+        </div>
+      )}
+
+      {editLoading && (
+        <div style={{ padding: 60, textAlign: 'center', color: 'var(--agency-ink-3)', fontSize: 13 }}>
+          Chargement de la facture…
         </div>
       )}
 
@@ -412,12 +478,12 @@ function CreateFactureContent() {
           </div>
           <button
             type="button"
-            disabled={loading || !canGenerate}
+            disabled={loading || !canGenerate || editLoading}
             onClick={handleGenerate}
-            style={primaryBtnStyle(loading || !canGenerate)}
+            style={primaryBtnStyle(loading || !canGenerate || editLoading)}
           >
             <FileDown size={14} />
-            {loading ? 'Génération…' : 'Générer le PDF'}
+            {loading ? 'Génération…' : editId ? 'Régénérer le PDF' : 'Générer le PDF'}
           </button>
         </section>
       </div>

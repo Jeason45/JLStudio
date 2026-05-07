@@ -36,8 +36,15 @@ export async function GET(req: NextRequest) {
 
   const documents = await prisma.portalDocument.findMany({
     where,
-    include: {
-      contact: { select: { id: true, name: true, email: true, companyName: true, firstName: true, lastName: true } },
+    select: {
+      id: true, siteId: true, contactId: true, projectId: true,
+      type: true, status: true, documentNumber: true, title: true,
+      content: true, amount: true, taxRate: true, taxAmount: true, totalAmount: true,
+      validUntil: true, sentAt: true, signedAt: true, paidAt: true,
+      notes: true, templateSlug: true, linkedDocumentId: true,
+      createdAt: true, updatedAt: true,
+      // pdfData / signedPdfData volontairement exclus (binaires lourds)
+      contact: { select: { id: true, name: true, email: true, companyName: true, firstName: true, lastName: true, phone: true } },
       signature: { select: { id: true, signerName: true, signedAt: true } },
     },
     orderBy: { createdAt: 'desc' },
