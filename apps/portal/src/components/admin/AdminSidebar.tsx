@@ -3,11 +3,13 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAgencySidebar } from './SidebarContext';
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useState, useRef, type ReactNode } from 'react';
 import {
   LayoutDashboard, BarChart3, Users, UserCheck, FolderKanban,
-  Trello, GanttChart, FileText, Mail, Calendar, Settings, LogOut, Menu, X,
+  Trello, GanttChart, FileText, Mail, Calendar, Settings, LogOut, Menu, X, ArrowRightLeft,
 } from 'lucide-react';
+
+interface SiteOption { id: string; name: string; slug: string }
 
 interface NavItem {
   href: string;
@@ -123,6 +125,7 @@ export default function AdminSidebar() {
           transition: 'left 0.25s ease', zIndex: 1600, overflowY: 'auto',
         }}>
           <Header />
+          <SiteSwitcher router={router} />
           <Nav onClickItem={closeMobileMenu} pathname={pathname} />
           <Footer onLogout={handleLogout} />
         </aside>
@@ -143,6 +146,7 @@ export default function AdminSidebar() {
       }}
     >
       <Header collapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
+      <SiteSwitcher router={router} collapsed={isCollapsed} />
       <Nav collapsed={isCollapsed} pathname={pathname} />
       <Footer onLogout={handleLogout} collapsed={isCollapsed} />
     </aside>
@@ -176,7 +180,25 @@ function Header({ collapsed = false, onToggle }: { collapsed?: boolean; onToggle
           </div>
         </div>
       )}
-      {collapsed && (
+      {collapsed && onToggle && (
+        <button
+          onClick={onToggle}
+          aria-label="Étendre le menu"
+          title="Étendre le menu"
+          style={{
+            width: 28, height: 28, borderRadius: 8,
+            background: 'var(--agency-accent-soft)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--agency-accent)', fontSize: 13, fontWeight: 700,
+            border: 'none', cursor: 'pointer', fontFamily: 'inherit',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--agency-accent)'; e.currentTarget.style.color = 'white'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--agency-accent-soft)'; e.currentTarget.style.color = 'var(--agency-accent)'; }}
+        >
+          JL
+        </button>
+      )}
+      {collapsed && !onToggle && (
         <div style={{
           width: 28, height: 28, borderRadius: 8,
           background: 'var(--agency-accent-soft)',
@@ -186,19 +208,143 @@ function Header({ collapsed = false, onToggle }: { collapsed?: boolean; onToggle
           JL
         </div>
       )}
-      {onToggle && (
+      {onToggle && !collapsed && (
         <button
           onClick={onToggle}
-          aria-label="Toggle sidebar"
+          aria-label="Réduire le menu"
+          title="Réduire le menu"
           style={{
             background: 'transparent', border: 'none', cursor: 'pointer',
-            color: 'var(--agency-ink-3)', padding: 4, display: collapsed ? 'none' : 'flex',
+            color: 'var(--agency-ink-3)', padding: 4, display: 'flex',
           }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="11 17 6 12 11 7" /><polyline points="18 17 13 12 18 7" />
           </svg>
         </button>
+      )}
+    </div>
+  );
+}
+
+// ─── Site switcher ─────────────────────────────────────────────
+
+function SiteSwitcher({
+  router, collapsed = false,
+}: { router: ReturnType<typeof useRouter>; collapsed?: boolean }) {
+  const [sites, setSites] = useState<SiteOption[]>([]);
+  const [open, setOpen] = useState(false);
+  const [switching, setSwitching] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch('/api/portal/sites')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((d) => setSites(Array.isArray(d) ? d : []))
+      .catch(() => setSites([]));
+  }, []);
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, []);
+
+  const clientSites = sites.filter((s) => s.slug !== 'jlstudio');
+  if (clientSites.length === 0) return null;
+
+  const handleSwitchToClient = async (siteId: string) => {
+    setSwitching(true);
+    try {
+      const res = await fetch('/api/auth/switch-site', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ siteId }),
+      });
+      if (res.ok) {
+        setOpen(false);
+        // Navigate to client portal dashboard
+        window.location.href = '/dashboard';
+      }
+    } catch { /* ignore */ } finally {
+      setSwitching(false);
+    }
+  };
+
+  return (
+    <div ref={ref} style={{ padding: collapsed ? '8px' : '10px 12px', position: 'relative' }}>
+      <button
+        onClick={() => setOpen(!open)}
+        title={collapsed ? 'Basculer vers un site client' : undefined}
+        style={{
+          width: '100%',
+          padding: collapsed ? '8px 0' : '7px 10px',
+          borderRadius: 8,
+          background: open ? 'var(--agency-surface-2)' : 'transparent',
+          border: '1px solid var(--agency-border)',
+          color: 'var(--agency-ink-2)',
+          cursor: 'pointer',
+          display: 'flex', alignItems: 'center',
+          gap: collapsed ? 0 : 8,
+          justifyContent: collapsed ? 'center' : 'space-between',
+          fontSize: 12, fontWeight: 500,
+          transition: 'all 0.12s', fontFamily: 'inherit',
+        }}
+        onMouseEnter={(e) => { if (!open) e.currentTarget.style.background = 'var(--agency-surface-2)'; }}
+        onMouseLeave={(e) => { if (!open) e.currentTarget.style.background = 'transparent'; }}
+      >
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, overflow: 'hidden' }}>
+          <ArrowRightLeft size={13} strokeWidth={1.75} style={{ flexShrink: 0 }} />
+          {!collapsed && <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Site client</span>}
+        </span>
+        {!collapsed && (
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        )}
+      </button>
+
+      {open && (
+        <div style={{
+          position: 'absolute', top: '100%', left: collapsed ? 64 : 12, right: collapsed ? undefined : 12,
+          marginTop: 4,
+          minWidth: collapsed ? 240 : undefined,
+          maxHeight: 320, overflowY: 'auto',
+          background: 'var(--agency-surface-3)',
+          border: '1px solid var(--agency-border-strong)',
+          borderRadius: 8,
+          boxShadow: 'var(--shadow-md)',
+          padding: 4, zIndex: 100,
+        }}>
+          <div style={{
+            fontSize: 10, fontWeight: 600, color: 'var(--agency-ink-3)',
+            textTransform: 'uppercase', letterSpacing: '0.08em',
+            padding: '6px 10px 4px',
+          }}>
+            Sites clients
+          </div>
+          {clientSites.map((site) => (
+            <button
+              key={site.id}
+              onClick={() => handleSwitchToClient(site.id)}
+              disabled={switching}
+              style={{
+                width: '100%', padding: '8px 10px', borderRadius: 6,
+                background: 'transparent', border: 'none', cursor: 'pointer',
+                textAlign: 'left', color: 'var(--agency-ink-1)',
+                fontFamily: 'inherit', opacity: switching ? 0.5 : 1,
+                transition: 'background 0.12s',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--agency-surface-2)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+            >
+              <div style={{ fontSize: 12, fontWeight: 500 }}>{site.name}</div>
+              <div style={{ fontSize: 10, color: 'var(--agency-ink-3)', marginTop: 1 }}>{site.slug}</div>
+            </button>
+          ))}
+        </div>
       )}
     </div>
   );

@@ -231,7 +231,25 @@ function Header({
           </div>
         </div>
       )}
-      {collapsed && (
+      {collapsed && onToggle && (
+        <button
+          onClick={onToggle}
+          aria-label="Étendre le menu"
+          title="Étendre le menu"
+          style={{
+            width: 28, height: 28, borderRadius: 8,
+            background: 'var(--accent-light)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--accent)', fontSize: 13, fontWeight: 700,
+            border: 'none', cursor: 'pointer', fontFamily: 'inherit',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = 'white'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--accent-light)'; e.currentTarget.style.color = 'var(--accent)'; }}
+        >
+          {initial}
+        </button>
+      )}
+      {collapsed && !onToggle && (
         <div style={{
           width: 28, height: 28, borderRadius: 8,
           background: 'var(--accent-light)',
@@ -245,6 +263,7 @@ function Header({
         <button
           onClick={onToggle}
           aria-label="Réduire le menu"
+          title="Réduire le menu"
           style={{
             background: 'transparent', border: 'none', cursor: 'pointer',
             color: 'var(--text-tertiary)', padding: 4, display: 'flex',
