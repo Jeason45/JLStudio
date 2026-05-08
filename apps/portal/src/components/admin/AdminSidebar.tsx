@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAgencySidebar } from './SidebarContext';
+import { SECTION_COLORS } from './sectionColors';
 import { useEffect, useState, useRef, type ReactNode } from 'react';
 import {
   LayoutDashboard, BarChart3, Users, UserCheck, FolderKanban,
@@ -23,11 +24,11 @@ interface NavGroup {
   items: NavItem[];
 }
 
-// Palette E (pop saturé) — chaque section a sa couleur signature
+// Couleurs depuis sectionColors.ts (source de vérité partagée avec PageHeaderRibbon)
 const NAV: NavGroup[] = [
   {
     title: 'Pilotage',
-    color: '#818cf8', // indigo
+    color: SECTION_COLORS.pilotage,
     items: [
       { href: '/admin', label: 'Tableau de bord', icon: <LayoutDashboard size={16} strokeWidth={1.75} /> },
       { href: '/admin/analytics', label: 'Analytics', icon: <BarChart3 size={16} strokeWidth={1.75} /> },
@@ -35,7 +36,7 @@ const NAV: NavGroup[] = [
   },
   {
     title: 'Contacts',
-    color: '#34d399', // emerald
+    color: SECTION_COLORS.contacts,
     items: [
       { href: '/admin/leads', label: 'Leads', icon: <Users size={16} strokeWidth={1.75} /> },
       { href: '/admin/clients', label: 'Clients', icon: <UserCheck size={16} strokeWidth={1.75} /> },
@@ -43,7 +44,7 @@ const NAV: NavGroup[] = [
   },
   {
     title: 'Projets',
-    color: '#fbbf24', // amber
+    color: SECTION_COLORS.projets,
     items: [
       { href: '/admin/projets', label: 'Projets', icon: <FolderKanban size={16} strokeWidth={1.75} /> },
       { href: '/admin/kanban', label: 'Kanban', icon: <Trello size={16} strokeWidth={1.75} /> },
@@ -53,7 +54,7 @@ const NAV: NavGroup[] = [
   },
   {
     title: 'Communication',
-    color: '#f472b6', // rose
+    color: SECTION_COLORS.communication,
     items: [
       { href: '/admin/documents', label: 'Documents', icon: <FileText size={16} strokeWidth={1.75} /> },
       { href: '/admin/emails', label: 'Emails', icon: <Mail size={16} strokeWidth={1.75} /> },
@@ -62,7 +63,7 @@ const NAV: NavGroup[] = [
   },
   {
     title: 'Système',
-    color: '#94a3b8', // slate
+    color: SECTION_COLORS.systeme,
     items: [
       { href: '/admin/parametres', label: 'Paramètres', icon: <Settings size={16} strokeWidth={1.75} /> },
     ],
