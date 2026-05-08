@@ -194,15 +194,7 @@ function Header({ collapsed = false, onToggle }: { collapsed?: boolean; onToggle
       }}
     >
       {!collapsed && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <ThemeAwareLogo />
-          <div style={{
-            fontSize: 10, color: 'var(--agency-ink-3)',
-            letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500, marginTop: 2,
-          }}>
-            CRM Agence
-          </div>
-        </div>
+        <ThemeAwareLogo size={44} />
       )}
       {collapsed && onToggle && (
         <button
