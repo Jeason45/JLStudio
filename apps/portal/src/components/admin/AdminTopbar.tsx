@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Bell, HelpCircle, LogOut, User, X } from 'lucide-react';
+import { Bell, HelpCircle, LogOut, User } from 'lucide-react';
 import { useAgencySidebar } from './SidebarContext';
+import { SearchPalette } from './SearchPalette';
 
 /**
  * Topbar fixe en haut du CRM admin.
@@ -49,76 +50,13 @@ export default function AdminTopbar() {
         transition: 'left 0.2s ease',
       }}
     >
-      <SearchBar mobile={isMobile} />
+      <SearchPalette mobile={isMobile} />
       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
         {!isMobile && <HelpButton />}
         <NotificationsButton />
         <AvatarMenu onLogout={handleLogout} />
       </div>
     </header>
-  );
-}
-
-// ─── Search bar ──────────────────────────────────────────────
-
-function SearchBar({ mobile }: { mobile: boolean }) {
-  return (
-    <div
-      style={{
-        background: 'var(--agency-surface-2)',
-        border: '1px solid var(--agency-border)',
-        borderRadius: 8,
-        padding: mobile ? '6px 10px' : '7px 12px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        color: 'var(--agency-ink-3)',
-        fontSize: 13,
-        maxWidth: mobile ? '100%' : 540,
-        width: '100%',
-        cursor: 'text',
-        transition: 'border-color 0.15s',
-      }}
-      onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--agency-border-strong)'; }}
-      onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--agency-border)'; }}
-    >
-      <Search size={14} style={{ flexShrink: 0, opacity: 0.55 }} />
-      <input
-        type="search"
-        placeholder={mobile ? 'Rechercher…' : 'Rechercher un devis, lead, client, projet…'}
-        disabled
-        title="Bientôt disponible"
-        style={{
-          background: 'transparent',
-          border: 'none',
-          outline: 'none',
-          color: 'var(--agency-ink-1)',
-          flex: 1,
-          fontFamily: 'inherit',
-          fontSize: 13,
-          minWidth: 0,
-          cursor: 'not-allowed',
-        }}
-      />
-      {!mobile && (
-        <span
-          style={{
-            fontSize: 10,
-            fontWeight: 500,
-            padding: '2px 6px',
-            borderRadius: 4,
-            background: 'var(--agency-surface-3, var(--agency-surface-2))',
-            color: 'var(--agency-ink-3)',
-            border: '1px solid var(--agency-border)',
-            lineHeight: 1,
-            flexShrink: 0,
-            fontFamily: 'JetBrains Mono, monospace',
-          }}
-        >
-          ⌘K
-        </span>
-      )}
-    </div>
   );
 }
 
@@ -287,5 +225,3 @@ function menuItemStyle(): React.CSSProperties {
   };
 }
 
-// Suppress unused import warning (X is reserved for future use, e.g. close button)
-void X;
