@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { FileText, Receipt, Users, FolderKanban, Settings } from 'lucide-react';
 import { getAgencySite } from '@/lib/agencySite';
 import { prisma } from '@/lib/prisma';
 import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
@@ -124,11 +125,11 @@ export default async function AdminDashboardPage() {
         </Panel>
 
         <Panel title="Actions rapides">
-          <QuickAction href="/admin/documents/create-devis" label="Nouveau devis" color={SECTION_COLORS.communication} icon="📄" />
-          <QuickAction href="/admin/documents/create-facture" label="Nouvelle facture" color={SECTION_COLORS.communication} icon="🧾" />
-          <QuickAction href="/admin/leads" label="Nouveau lead" color={SECTION_COLORS.contacts} icon="🎯" />
-          <QuickAction href="/admin/projets" label="Nouveau projet" color={SECTION_COLORS.projets} icon="📁" />
-          <QuickAction href="/admin/parametres" label="Paramètres agence" color={SECTION_COLORS.systeme} icon="⚙" />
+          <QuickAction href="/admin/documents/create-devis" label="Nouveau devis" color={SECTION_COLORS.communication} icon={<FileText size={14} strokeWidth={1.75} />} />
+          <QuickAction href="/admin/documents/create-facture" label="Nouvelle facture" color={SECTION_COLORS.communication} icon={<Receipt size={14} strokeWidth={1.75} />} />
+          <QuickAction href="/admin/leads" label="Nouveau lead" color={SECTION_COLORS.contacts} icon={<Users size={14} strokeWidth={1.75} />} />
+          <QuickAction href="/admin/projets" label="Nouveau projet" color={SECTION_COLORS.projets} icon={<FolderKanban size={14} strokeWidth={1.75} />} />
+          <QuickAction href="/admin/parametres" label="Paramètres agence" color={SECTION_COLORS.systeme} icon={<Settings size={14} strokeWidth={1.75} />} />
         </Panel>
       </div>
 
@@ -319,7 +320,7 @@ function ActivityRow({
 function QuickAction({
   href, label, color, icon,
 }: {
-  href: string; label: string; color: string; icon: string;
+  href: string; label: string; color: string; icon: React.ReactNode;
 }) {
   return (
     <Link
@@ -339,7 +340,7 @@ function QuickAction({
           width: 28, height: 28, borderRadius: 8,
           background: `${color}1F`, color,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 14, flexShrink: 0,
+          flexShrink: 0,
         }}
       >
         {icon}
