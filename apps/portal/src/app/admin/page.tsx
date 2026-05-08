@@ -24,18 +24,10 @@ export default async function AdminDashboardPage() {
     <div>
       <PageHeaderRibbon label="Dashboard" />
       <header style={{ marginBottom: 32 }}>
-        <h1
-          style={{
-            fontSize: 24, fontWeight: 600, color: 'var(--agency-ink-1)',
-            margin: 0, letterSpacing: '-0.02em',
-          }}
-        >
-          Tableau de bord
-        </h1>
         <p
           style={{
             fontSize: 13, color: 'var(--agency-ink-3)',
-            marginTop: 4, marginBottom: 0,
+            margin: 0,
           }}
         >
           Bienvenue dans ton CRM agence — vue d&apos;ensemble de ton activité.

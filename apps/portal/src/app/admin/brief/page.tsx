@@ -156,11 +156,9 @@ export default function BriefPage() {
   if (!selectedType) {
     return (
       <div>
+        <PageHeaderRibbon label="Brief" />
         <header style={{ marginBottom: 32 }}>
-          <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--agency-ink-1)', margin: 0, letterSpacing: '-0.02em' }}>
-            Nouveau brief projet
-          </h1>
-          <p style={{ fontSize: 13, color: 'var(--agency-ink-3)', marginTop: 4 }}>
+          <p style={{ fontSize: 13, color: 'var(--agency-ink-3)', margin: 0 }}>
             Sélectionnez le type de projet pour démarrer le recueil des besoins.
           </p>
         </header>
@@ -184,11 +182,8 @@ export default function BriefPage() {
     <div>
       <PageHeaderRibbon label="Brief" />
       <header style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 20, fontWeight: 600, color: 'var(--agency-ink-1)', margin: 0 }}>
-          Brief — {selectedType.title}
-        </h1>
-        <p style={{ fontSize: 13, color: 'var(--agency-ink-3)', marginTop: 4 }}>
-          Étape {currentStep + 1}/{STEP_LABELS.length} · {STEP_LABELS[currentStep]}
+        <p style={{ fontSize: 13, color: 'var(--agency-ink-3)', margin: 0 }}>
+          {selectedType.title} · étape {currentStep + 1}/{STEP_LABELS.length} · {STEP_LABELS[currentStep]}
         </p>
       </header>
 

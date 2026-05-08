@@ -97,10 +97,7 @@ export default function ParametresPage() {
       <header style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--agency-ink-1)', margin: 0, letterSpacing: '-0.02em' }}>
-              Paramètres
-            </h1>
-            <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', marginTop: 4 }}>
+            <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', margin: 0 }}>
               Informations de ton entreprise — utilisées dans les PDFs des devis, factures et contrats.
             </p>
           </div>

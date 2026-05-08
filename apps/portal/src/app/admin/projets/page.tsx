@@ -208,10 +208,7 @@ export default function AdminProjetsPage() {
       <header style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--agency-ink-1)', margin: 0, letterSpacing: '-0.02em' }}>
-              Projets
-            </h1>
-            <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', marginTop: 4 }}>
+            <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', margin: 0 }}>
               {stats.total} projet{stats.total > 1 ? 's' : ''} · {stats.inProgress} en cours · {stats.completed} terminé{stats.completed > 1 ? 's' : ''} · CA estimé : {stats.revenue.toLocaleString('fr-FR')} €
             </p>
           </div>

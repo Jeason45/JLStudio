@@ -196,10 +196,7 @@ export default function AdminClientsPage() {
       <header style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--agency-ink-1)', margin: 0, letterSpacing: '-0.02em' }}>
-              Clients
-            </h1>
-            <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', marginTop: 4 }}>
+            <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', margin: 0 }}>
               {stats.total} contact{stats.total > 1 ? 's' : ''} · {stats.active} actif{stats.active > 1 ? 's' : ''} · {stats.new} nouveau{stats.new > 1 ? 'x' : ''}
             </p>
           </div>

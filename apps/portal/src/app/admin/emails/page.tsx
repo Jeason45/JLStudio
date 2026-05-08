@@ -67,10 +67,7 @@ export default function EmailsPage() {
     <div>
       <PageHeaderRibbon label="Emails" />
       <header style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--agency-ink-1)', margin: 0, letterSpacing: '-0.02em' }}>
-          Emails
-        </h1>
-        <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', marginTop: 4 }}>
+        <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', margin: 0 }}>
           Historique des emails envoyés depuis le CRM agence — {emails.length} entrée{emails.length > 1 ? 's' : ''}
         </p>
       </header>

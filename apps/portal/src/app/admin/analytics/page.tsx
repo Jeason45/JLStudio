@@ -292,10 +292,7 @@ function Header({
     <header style={{ marginBottom: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--agency-ink-1)', margin: 0, letterSpacing: '-0.02em' }}>
-            Analytics
-          </h1>
-          <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', marginTop: 4, margin: 0 }}>
+          <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', margin: 0 }}>
             Trafic du site jlstudio.dev — données Umami self-hosted
           </p>
         </div>
