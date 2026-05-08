@@ -19,12 +19,15 @@ interface NavItem {
 
 interface NavGroup {
   title: string;
+  color: string;       // hex ; teinte du group title + de l'item actif
   items: NavItem[];
 }
 
+// Palette E (pop saturé) — chaque section a sa couleur signature
 const NAV: NavGroup[] = [
   {
     title: 'Pilotage',
+    color: '#818cf8', // indigo
     items: [
       { href: '/admin', label: 'Tableau de bord', icon: <LayoutDashboard size={16} strokeWidth={1.75} /> },
       { href: '/admin/analytics', label: 'Analytics', icon: <BarChart3 size={16} strokeWidth={1.75} /> },
@@ -32,6 +35,7 @@ const NAV: NavGroup[] = [
   },
   {
     title: 'Contacts',
+    color: '#34d399', // emerald
     items: [
       { href: '/admin/leads', label: 'Leads', icon: <Users size={16} strokeWidth={1.75} /> },
       { href: '/admin/clients', label: 'Clients', icon: <UserCheck size={16} strokeWidth={1.75} /> },
@@ -39,6 +43,7 @@ const NAV: NavGroup[] = [
   },
   {
     title: 'Projets',
+    color: '#fbbf24', // amber
     items: [
       { href: '/admin/projets', label: 'Projets', icon: <FolderKanban size={16} strokeWidth={1.75} /> },
       { href: '/admin/kanban', label: 'Kanban', icon: <Trello size={16} strokeWidth={1.75} /> },
@@ -48,6 +53,7 @@ const NAV: NavGroup[] = [
   },
   {
     title: 'Communication',
+    color: '#f472b6', // rose
     items: [
       { href: '/admin/documents', label: 'Documents', icon: <FileText size={16} strokeWidth={1.75} /> },
       { href: '/admin/emails', label: 'Emails', icon: <Mail size={16} strokeWidth={1.75} /> },
@@ -56,6 +62,7 @@ const NAV: NavGroup[] = [
   },
   {
     title: 'Système',
+    color: '#94a3b8', // slate
     items: [
       { href: '/admin/parametres', label: 'Paramètres', icon: <Settings size={16} strokeWidth={1.75} /> },
     ],
@@ -388,9 +395,11 @@ function Nav({
           {!collapsed && (
             <div
               style={{
-                fontSize: 10, fontWeight: 600, color: 'var(--agency-ink-3)',
+                fontSize: 10, fontWeight: 700,
+                color: group.color,
                 letterSpacing: '0.08em', textTransform: 'uppercase',
                 padding: '6px 12px 4px',
+                opacity: 0.9,
               }}
             >
               {group.title}
@@ -398,6 +407,8 @@ function Nav({
           )}
           {group.items.map((item) => {
             const isAct = active(pathname, item.href);
+            // Item actif → couleur du groupe parent. Inactif → tons d'encre standards.
+            const activeBg = `${group.color}1F`; // ≈ 12% opacity (couleur du groupe transparente)
             return (
               <Link
                 key={item.href}
@@ -410,8 +421,8 @@ function Nav({
                   padding: collapsed ? '9px 0' : '7px 12px',
                   justifyContent: collapsed ? 'center' : 'flex-start',
                   fontSize: 13, fontWeight: isAct ? 600 : 500,
-                  color: isAct ? 'var(--agency-accent)' : 'var(--agency-ink-2)',
-                  background: isAct ? 'var(--agency-accent-soft)' : 'transparent',
+                  color: isAct ? group.color : 'var(--agency-ink-2)',
+                  background: isAct ? activeBg : 'transparent',
                   borderRadius: 6, marginBottom: 1, textDecoration: 'none',
                   position: 'relative', transition: 'all 0.12s',
                 }}
@@ -432,7 +443,7 @@ function Nav({
                   <span
                     style={{
                       position: 'absolute', left: 0, top: 6, bottom: 6,
-                      width: 2, background: 'var(--agency-accent)',
+                      width: 2, background: group.color,
                       borderRadius: '0 2px 2px 0',
                     }}
                   />
