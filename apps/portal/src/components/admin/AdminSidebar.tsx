@@ -188,9 +188,11 @@ function Header({ collapsed = false, onToggle }: { collapsed?: boolean; onToggle
   return (
     <div
       style={{
-        padding: collapsed ? '20px 8px' : '20px 16px',
+        height: 56, // aligné avec la topbar
+        padding: collapsed ? '0 8px' : '0 16px',
         borderBottom: '1px solid var(--agency-border)',
         display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'space-between',
+        flexShrink: 0,
       }}
     >
       {!collapsed && (

@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { jwtVerify } from 'jose';
 import { getAgencySite } from '@/lib/agencySite';
 import AdminSidebar from '@/components/admin/AdminSidebar';
+import AdminTopbar from '@/components/admin/AdminTopbar';
 import AgencyContentClient from '@/components/admin/AgencyContentClient';
 import { AgencySidebarProvider } from '@/components/admin/SidebarContext';
 import './agency.css';
@@ -32,6 +33,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <AgencySidebarProvider>
       <div data-agency="true">
         <AdminSidebar />
+        <AdminTopbar />
         <AgencyContentClient>{children}</AgencyContentClient>
       </div>
     </AgencySidebarProvider>

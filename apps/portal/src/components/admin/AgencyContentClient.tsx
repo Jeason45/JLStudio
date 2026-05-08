@@ -1,6 +1,7 @@
 'use client';
 
 import { useAgencySidebar } from './SidebarContext';
+import { TOPBAR_HEIGHT } from './AdminTopbar';
 import type { ReactNode } from 'react';
 
 export default function AgencyContentClient({ children }: { children: ReactNode }) {
@@ -9,8 +10,9 @@ export default function AgencyContentClient({ children }: { children: ReactNode 
     <main
       style={{
         marginLeft: isMobile ? 0 : sidebarWidth,
-        minHeight: '100vh',
-        padding: isMobile ? '64px 16px 24px' : '24px 32px',
+        marginTop: TOPBAR_HEIGHT,
+        minHeight: `calc(100vh - ${TOPBAR_HEIGHT}px)`,
+        padding: isMobile ? '24px 16px' : '24px 32px',
         transition: 'margin-left 0.2s ease',
       }}
     >
