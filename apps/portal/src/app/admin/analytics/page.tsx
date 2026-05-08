@@ -138,7 +138,7 @@ export default function AnalyticsPage() {
 
       {loading && !data ? (
         <div style={{ ...cardStyle, textAlign: 'center', padding: 60 }}>
-          <RefreshCw size={28} style={{ color: 'var(--agency-accent)', animation: 'spin 1s linear infinite', marginBottom: 12 }} />
+          <RefreshCw size={28} style={{ color: 'var(--agency-accent)', animation: 'spin 1s linear infinite', display: 'block', margin: '0 auto 12px' }} />
           <p style={{ color: 'var(--agency-ink-3)', fontSize: 13, margin: 0 }}>Chargement des analytics…</p>
         </div>
       ) : data && (
