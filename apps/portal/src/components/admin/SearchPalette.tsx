@@ -160,11 +160,19 @@ export function SearchPalette({ mobile }: { mobile: boolean }) {
         <input
           ref={inputRef}
           type="search"
+          name="jlstudio-global-search"
           placeholder={mobile ? 'Rechercher…' : 'Rechercher un devis, lead, client, projet…'}
           value={query}
           onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
+          data-1p-ignore="true"
+          data-lpignore="true"
+          data-form-type="other"
           style={{
             background: 'transparent', border: 'none', outline: 'none',
             color: 'var(--agency-ink-1)', flex: 1, fontFamily: 'inherit',
