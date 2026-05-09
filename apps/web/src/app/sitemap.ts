@@ -11,12 +11,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${baseUrl}/qualifier`,
-      lastModified: new Date('2026-03-16'),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/mentions-legales`,
       lastModified: new Date('2026-03-01'),
       changeFrequency: 'yearly',

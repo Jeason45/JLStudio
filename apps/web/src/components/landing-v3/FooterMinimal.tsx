@@ -29,16 +29,12 @@ export default function FooterMinimal() {
             <a href="tel:+33767581061" className="hover:text-white/70 transition-colors">
               07 67 58 10 61
             </a>
-            <span className="hidden sm:block w-px h-3 bg-white/10" />
-            <span className="block text-center sm:text-left text-white/50">
-              35 quai Deschamps, 33100 Bordeaux
-            </span>
           </div>
 
           {/* Social links */}
           <div className="flex items-center gap-4">
             <a
-              href="https://www.instagram.com/jlstudio33"
+              href="https://www.instagram.com/jlstudio.dev/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white/40 hover:text-white/70 transition-colors duration-300"
@@ -73,9 +69,9 @@ export default function FooterMinimal() {
             <a href="/conditions-generales-de-vente" className="hover:text-white/60 transition-colors">CGV</a>
           </div>
 
-          {/* Copyright + SIRET */}
+          {/* Copyright */}
           <p className="text-xs text-white/50">
-            &copy; {new Date().getFullYear()} JL Studio — SIRET 894 838 317 00044
+            &copy; {new Date().getFullYear()} JL Studio
           </p>
         </div>
       </div>
