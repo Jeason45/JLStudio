@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Plus, X, Trash2, MoreHorizontal, GitBranch } from 'lucide-react';
+import { Plus, X, Trash2, MoreHorizontal } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
 import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 
@@ -163,7 +163,6 @@ export default function AdminLeadsPage() {
         </div>
       ) : leads.length === 0 ? (
         <div style={{ ...cardStyle(), padding: 60, textAlign: 'center' }}>
-          <GitBranch size={28} style={{ color: 'var(--agency-ink-4)', display: 'block', margin: '0 auto 12px' }} />
           <p style={{ color: 'var(--agency-ink-2)', fontSize: 14, fontWeight: 500, margin: 0, marginBottom: 4 }}>
             Aucun lead pour l&apos;instant
           </p>
