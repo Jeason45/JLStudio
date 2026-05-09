@@ -9,7 +9,21 @@ import { useIsMobile } from '@/hooks/useMediaQuery';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-const services = [
+interface ServicePricing {
+  amount?: string; // ex. "1 500 €" — undefined si "sur devis"
+  delivery?: string; // ex. "2 semaines" — undefined si "selon prestation"
+  fallbackLabel?: string; // ex. "Tarif et délais selon prestation"
+}
+
+const services: Array<{
+  title: string;
+  subtitle: string;
+  description: string;
+  features: string[];
+  image: string;
+  number: string;
+  pricing: ServicePricing;
+}> = [
   {
     title: 'Site Vitrine',
     subtitle: 'Votre identité en ligne',
@@ -18,6 +32,7 @@ const services = [
     features: ['Design responsive', 'Animations premium', 'SEO optimisé', 'CMS intégré'],
     image: '/images/services-vitrine.jpg',
     number: '01',
+    pricing: { amount: '1 500 €', delivery: '2 semaines' },
   },
   {
     title: 'E-Commerce',
@@ -27,6 +42,7 @@ const services = [
     features: ['Paiement sécurisé', 'Gestion de stock', 'Panier optimisé', 'Analytics avancés'],
     image: '/images/services-ecommerce.jpg',
     number: '02',
+    pricing: { amount: '2 000 €', delivery: '4 semaines' },
   },
   {
     title: 'Application Web',
@@ -36,6 +52,7 @@ const services = [
     features: ['Dashboard temps réel', 'API robuste', 'Architecture scalable', 'UX intuitive'],
     image: '/images/services-webapp.jpg',
     number: '03',
+    pricing: { fallbackLabel: 'Tarif et délais selon prestation' },
   },
   {
     title: 'Autres Services',
@@ -45,6 +62,7 @@ const services = [
     features: ['Landing pages', 'Refonte & migration', 'Maintenance', 'Conseil technique'],
     image: '/images/services-other.jpg',
     number: '04',
+    pricing: { fallbackLabel: 'Tarif et délais selon prestation' },
   },
 ];
 
@@ -63,6 +81,7 @@ export default function ServicesScrollPin() {
     const titles = section.querySelectorAll<HTMLElement>('[data-title]');
     const subtitles = section.querySelectorAll<HTMLElement>('[data-subtitle]');
     const descriptions = section.querySelectorAll<HTMLElement>('[data-desc]');
+    const pricings = section.querySelectorAll<HTMLElement>('[data-pricing]');
     const featureWraps = section.querySelectorAll<HTMLElement>('[data-features]');
     const dots = section.querySelectorAll<HTMLElement>('[data-dot]');
 
@@ -78,6 +97,7 @@ export default function ServicesScrollPin() {
       });
       subtitles.forEach((s) => gsap.set(s, { opacity: 1, y: 0 }));
       descriptions.forEach((d) => gsap.set(d, { opacity: 1, y: 0 }));
+      pricings.forEach((p) => gsap.set(p, { opacity: 1, y: 0 }));
       featureWraps.forEach((fw) => {
         const features = fw?.querySelectorAll('[data-feature]');
         if (features) gsap.set(features, { opacity: 1, y: 0 });
@@ -100,6 +120,7 @@ export default function ServicesScrollPin() {
       gsap.set(splitTitles[0].chars, { opacity: 1, y: 0, rotateX: 0 });
       gsap.set(subtitles[0], { opacity: 1, y: 0 });
       gsap.set(descriptions[0], { opacity: 1, y: 0 });
+      gsap.set(pricings[0], { opacity: 1, y: 0 });
       const firstFeatures = featureWraps[0]?.querySelectorAll('[data-feature]');
       if (firstFeatures) gsap.set(firstFeatures, { opacity: 1, y: 0 });
 
@@ -112,6 +133,7 @@ export default function ServicesScrollPin() {
         gsap.set(splitTitles[i].chars, { opacity: 0, y: isMobile ? 40 : 80, rotateX: isMobile ? -45 : -90 });
         gsap.set(subtitles[i], { opacity: 0, y: 30 });
         gsap.set(descriptions[i], { opacity: 0, y: 30 });
+        gsap.set(pricings[i], { opacity: 0, y: 20 });
         const features = featureWraps[i]?.querySelectorAll('[data-feature]');
         if (features) gsap.set(features, { opacity: 0, y: 20 });
       }
@@ -145,6 +167,9 @@ export default function ServicesScrollPin() {
         tl.to(descriptions[i - 1], {
           opacity: 0, y: -30, duration: 0.5, ease: 'power2.in',
         }, exitStart + 0.1);
+        tl.to(pricings[i - 1], {
+          opacity: 0, y: -15, duration: 0.4, ease: 'power2.in',
+        }, exitStart + 0.15);
         if (prevFeatures) {
           tl.to(prevFeatures, {
             opacity: 0, y: -15, stagger: 0.02, duration: 0.4, ease: 'power2.in',
@@ -196,11 +221,16 @@ export default function ServicesScrollPin() {
           opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
         }, enterStart + 0.5);
 
+        // Pricing badge
+        tl.to(pricings[i], {
+          opacity: 1, y: 0, duration: 0.5, ease: 'power2.out',
+        }, enterStart + 0.65);
+
         // Features stagger in
         if (nextFeatures) {
           tl.to(nextFeatures, {
             opacity: 1, y: 0, stagger: 0.05, duration: 0.5, ease: 'power2.out',
-          }, enterStart + 0.7);
+          }, enterStart + 0.8);
         }
 
         // ── Slow parallax zoom while this slide is active ──
@@ -322,10 +352,31 @@ export default function ServicesScrollPin() {
               {/* Description */}
               <p
                 data-desc
-                className="text-white/75 text-sm sm:text-base lg:text-lg leading-relaxed mb-6 sm:mb-10 max-w-lg mx-auto relative"
+                className="text-white/75 text-sm sm:text-base lg:text-lg leading-relaxed mb-5 sm:mb-7 max-w-lg mx-auto relative"
               >
                 {service.description}
               </p>
+
+              {/* Pricing badge */}
+              <div data-pricing className="flex justify-center mb-5 sm:mb-8 relative">
+                <div className="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full border border-[#638BFF]/25 bg-[#638BFF]/[0.08] text-xs sm:text-sm text-white/85">
+                  {service.pricing.amount && service.pricing.delivery ? (
+                    <>
+                      <span>
+                        À partir de <span className="text-[#638BFF] font-bold">{service.pricing.amount}</span>
+                      </span>
+                      <span aria-hidden="true" className="w-1 h-1 rounded-full bg-white/30 flex-shrink-0" />
+                      <span>
+                        Dès <strong className="font-bold text-white">{service.pricing.delivery}</strong>
+                      </span>
+                    </>
+                  ) : (
+                    <span>
+                      <strong className="font-bold text-white">Tarif et délais</strong> selon prestation
+                    </span>
+                  )}
+                </div>
+              </div>
 
               {/* Feature tags */}
               <div data-features className="flex flex-wrap justify-center gap-2 sm:gap-3 relative">
