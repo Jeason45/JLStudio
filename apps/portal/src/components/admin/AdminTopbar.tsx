@@ -43,15 +43,20 @@ export default function AdminTopbar() {
         WebkitBackdropFilter: 'blur(12px)',
         borderBottom: '1px solid var(--agency-border)',
         display: 'grid',
-        gridTemplateColumns: '1fr auto',
+        // Desktop : 3 colonnes (spacer gauche / search centrée / actions droite)
+        // Mobile  : 2 colonnes (search expand / actions)
+        gridTemplateColumns: isMobile ? '1fr auto' : '1fr minmax(0, 540px) 1fr',
         alignItems: 'center',
         gap: 16,
         padding: isMobile ? '0 16px 0 56px' : '0 24px',
         transition: 'left 0.2s ease',
       }}
     >
-      <SearchPalette mobile={isMobile} />
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      {!isMobile && <div aria-hidden="true" />}
+      <div style={{ display: 'flex', justifyContent: 'center', minWidth: 0 }}>
+        <SearchPalette mobile={isMobile} />
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
         {!isMobile && <HelpButton />}
         <NotificationsButton />
         <AvatarMenu onLogout={handleLogout} />
