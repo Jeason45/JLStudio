@@ -16,7 +16,6 @@ interface FaqItem {
 const faqs: FaqItem[] = [
   {
     q: 'Combien de temps prend un projet ?',
-    defaultOpen: true,
     a: (
       <>
         <p>

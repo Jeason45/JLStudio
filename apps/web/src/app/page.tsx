@@ -20,11 +20,11 @@ export default function Home() {
       <HeaderV3 />
       <main>
         <HeroParallax />
-        <AboutJeason />
         <ServicesScrollPin />
         <ProcessJourney />
         <PortfolioStack />
         <TestimonialsSection />
+        <AboutJeason />
         <FaqAccordion />
         <ContactParallax />
       </main>

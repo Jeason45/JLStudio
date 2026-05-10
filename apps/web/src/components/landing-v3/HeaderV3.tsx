@@ -122,6 +122,8 @@ export default function HeaderV3() {
     { label: 'Méthode', href: '#methode' },
     { label: 'Projets', href: '#projets' },
     { label: 'Témoignages', href: '#temoignages' },
+    { label: 'À propos', href: '#a-propos' },
+    { label: 'FAQ', href: '#faq' },
     { label: 'Contact', href: '#contact' },
   ];
 
