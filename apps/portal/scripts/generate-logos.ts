@@ -29,7 +29,8 @@ const LOGOS: LogoSpec[] = [
   { selector: '#d13-white-transparent', filename: 'logo-d13-white-transparent.png', description: 'D13 blanc transparent — site web dark, LinkedIn, signature email' },
   { selector: '#e07',                   filename: 'logo-light.png',                 description: 'E07 — mono navy (sidebar light)' },
   { selector: '#e08',                   filename: 'logo-dark.png',                  description: 'E08 — mono blanc (sidebar dark)' },
-  { selector: '#a01',                   filename: 'logo-mark.png',                  description: 'A01 — mark + wordmark (favicon/alt)' },
+  { selector: '#a01',                   filename: 'logo-mark.png',                  description: 'A01 — mark + wordmark (alt)' },
+  { selector: '#favicon',               filename: 'favicon-app-icon.png',           description: 'Favicon — carré arrondi navy + JL blanc (180×180)' },
 ];
 
 async function main() {
