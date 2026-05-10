@@ -12,8 +12,8 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
                 src="/images/logo-jlstudio.png"
                 alt="JL Studio"
                 width={120}
-                height={32}
-                className="h-7 sm:h-8 w-auto"
+                height={48}
+                className="h-9 sm:h-11 w-auto"
               />
             </Link>
             <Link

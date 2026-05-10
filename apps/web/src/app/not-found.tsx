@@ -18,9 +18,9 @@ export default function NotFound() {
           <Image
             src="/images/logo-jlstudio.png"
             alt="JL Studio"
-            width={120}
-            height={32}
-            className="h-7 sm:h-8 w-auto mb-12"
+            width={150}
+            height={60}
+            className="h-12 sm:h-14 w-auto mb-12"
           />
         </Link>
 
