@@ -1,7 +1,21 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Plus, X, Trash2, MoreHorizontal } from 'lucide-react';
+import { Plus, X, Trash2, MoreHorizontal, GripVertical } from 'lucide-react';
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  TouchSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  useDraggable,
+  useDroppable,
+} from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
 import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
 
@@ -24,11 +38,14 @@ interface Lead {
   };
 }
 
+// Note: la colonne 'CONVERTED' est affichée comme 'Client' — un drop dans
+// cette colonne bascule le Contact associé en ContactStatus.ACTIVE pour
+// qu'il apparaisse automatiquement dans /admin/clients.
 const COLUMNS: { status: LeadStatus; label: string; color: string }[] = [
   { status: 'NEW', label: 'Nouveau', color: '#3B82F6' },
   { status: 'CONTACTED', label: 'Contacté', color: '#f59e0b' },
   { status: 'QUALIFIED', label: 'Qualifié', color: '#a78bfa' },
-  { status: 'CONVERTED', label: 'Converti', color: '#22c55e' },
+  { status: 'CONVERTED', label: 'Client', color: '#22c55e' },
   { status: 'LOST', label: 'Perdu', color: '#ef4444' },
 ];
 
@@ -120,6 +137,34 @@ export default function AdminLeadsPage() {
     }
   };
 
+  // ─── DnD ──────────────────────────────────────────────────────────
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const sensors = useSensors(
+    // Mouse / pen / unified pointer — drag uniquement après 5px de mouvement
+    // (laisse les clics simples passer pour le bouton "..." des cards).
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    // Touch : hold 250ms + tolerance 5px pour distinguer un drag d'un scroll.
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
+    useSensor(KeyboardSensor),
+  );
+
+  const activeLead = activeId ? leads.find((l) => l.id === activeId) ?? null : null;
+
+  const handleDragStart = (e: DragStartEvent) => {
+    setActiveId(String(e.active.id));
+  };
+
+  const handleDragEnd = (e: DragEndEvent) => {
+    setActiveId(null);
+    const { active, over } = e;
+    if (!over) return;
+    const leadId = String(active.id);
+    const newStatus = String(over.id) as LeadStatus;
+    const lead = leads.find((l) => l.id === leadId);
+    if (!lead || lead.status === newStatus) return;
+    moveLead(leadId, newStatus);
+  };
+
   const deleteLead = async (leadId: string) => {
     setOpenMenuId(null);
     if (!confirm('Supprimer ce lead ?')) return;
@@ -146,7 +191,7 @@ export default function AdminLeadsPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>
             <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', margin: 0 }}>
-              {stats.total} lead{stats.total > 1 ? 's' : ''} · {stats.converted} converti{stats.converted > 1 ? 's' : ''} · {stats.conversion}% conversion
+              {stats.total} lead{stats.total > 1 ? 's' : ''} · {stats.converted} client{stats.converted > 1 ? 's' : ''} · {stats.conversion}% conversion
             </p>
           </div>
           <button onClick={() => setShowCreate(true)} style={primaryBtn()}>
@@ -175,62 +220,39 @@ export default function AdminLeadsPage() {
           </button>
         </div>
       ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : `repeat(${COLUMNS.length}, minmax(220px, 1fr))`,
-          gap: 12,
-          overflowX: 'auto',
-        }}>
-          {COLUMNS.map((col) => {
-            const colLeads = leads.filter((l) => l.status === col.status);
-            return (
-              <div key={col.status} style={{
-                background: 'var(--agency-surface-1)',
-                border: '1px solid var(--agency-border)',
-                borderRadius: 10,
-                display: 'flex', flexDirection: 'column',
-                minHeight: 280,
-              }}>
-                <div style={{
-                  padding: '10px 12px',
-                  borderBottom: '1px solid var(--agency-border)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: col.color }} />
-                    <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--agency-ink-1)' }}>{col.label}</span>
-                  </div>
-                  <span style={{
-                    fontSize: 11, fontWeight: 600,
-                    color: 'var(--agency-ink-3)',
-                    background: 'var(--agency-surface-2)',
-                    padding: '2px 8px', borderRadius: 10,
-                  }}>
-                    {colLeads.length}
-                  </span>
-                </div>
+        <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : `repeat(${COLUMNS.length}, minmax(220px, 1fr))`,
+            gap: 12,
+            overflowX: 'auto',
+          }}>
+            {COLUMNS.map((col) => (
+              <DroppableColumn
+                key={col.status}
+                col={col}
+                leads={leads.filter((l) => l.status === col.status)}
+                openMenuId={openMenuId}
+                onToggleMenu={(id) => setOpenMenuId(openMenuId === id ? null : id)}
+                onMove={moveLead}
+                onDelete={deleteLead}
+              />
+            ))}
+          </div>
 
-                <div style={{ padding: 8, display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
-                  {colLeads.length === 0 && (
-                    <p style={{ fontSize: 11, color: 'var(--agency-ink-4)', textAlign: 'center', padding: '24px 0', margin: 0 }}>
-                      Aucun lead
-                    </p>
-                  )}
-                  {colLeads.map((lead) => (
-                    <LeadCard
-                      key={lead.id}
-                      lead={lead}
-                      isMenuOpen={openMenuId === lead.id}
-                      onToggleMenu={() => setOpenMenuId(openMenuId === lead.id ? null : lead.id)}
-                      onMove={(s) => moveLead(lead.id, s)}
-                      onDelete={() => deleteLead(lead.id)}
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+          <DragOverlay dropAnimation={{ duration: 200, easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)' }}>
+            {activeLead ? (
+              <LeadCardContent
+                lead={activeLead}
+                isDragging
+                isMenuOpen={false}
+                onToggleMenu={() => {}}
+                onMove={() => {}}
+                onDelete={() => {}}
+              />
+            ) : null}
+          </DragOverlay>
+        </DndContext>
       )}
 
       {/* Create modal */}
@@ -283,16 +305,113 @@ export default function AdminLeadsPage() {
   );
 }
 
-// ─── LeadCard ────────────────────────────────────────────────────────
+// ─── DroppableColumn ─────────────────────────────────────────────────
 
-function LeadCard({
-  lead, isMenuOpen, onToggleMenu, onMove, onDelete,
+function DroppableColumn({
+  col, leads, openMenuId, onToggleMenu, onMove, onDelete,
+}: {
+  col: { status: LeadStatus; label: string; color: string };
+  leads: Lead[];
+  openMenuId: string | null;
+  onToggleMenu: (id: string) => void;
+  onMove: (id: string, s: LeadStatus) => void;
+  onDelete: (id: string) => void;
+}) {
+  const { isOver, setNodeRef } = useDroppable({ id: col.status });
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        background: isOver
+          ? `color-mix(in srgb, ${col.color} 8%, var(--agency-surface-1))`
+          : 'var(--agency-surface-1)',
+        border: `1px solid ${isOver ? col.color : 'var(--agency-border)'}`,
+        borderRadius: 10,
+        display: 'flex', flexDirection: 'column',
+        minHeight: 280,
+        transition: 'background 0.15s, border-color 0.15s',
+      }}
+    >
+      <div style={{
+        padding: '10px 12px',
+        borderBottom: '1px solid var(--agency-border)',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: col.color }} />
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--agency-ink-1)' }}>{col.label}</span>
+        </div>
+        <span style={{
+          fontSize: 11, fontWeight: 600,
+          color: 'var(--agency-ink-3)',
+          background: 'var(--agency-surface-2)',
+          padding: '2px 8px', borderRadius: 10,
+        }}>
+          {leads.length}
+        </span>
+      </div>
+
+      <div style={{ padding: 8, display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
+        {leads.length === 0 && (
+          <p style={{ fontSize: 11, color: 'var(--agency-ink-4)', textAlign: 'center', padding: '24px 0', margin: 0 }}>
+            Aucun lead
+          </p>
+        )}
+        {leads.map((lead) => (
+          <LeadCard
+            key={lead.id}
+            lead={lead}
+            isMenuOpen={openMenuId === lead.id}
+            onToggleMenu={() => onToggleMenu(lead.id)}
+            onMove={(s) => onMove(lead.id, s)}
+            onDelete={() => onDelete(lead.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── LeadCard (draggable wrapper) ────────────────────────────────────
+
+function LeadCard(props: {
+  lead: Lead;
+  isMenuOpen: boolean;
+  onToggleMenu: () => void;
+  onMove: (s: LeadStatus) => void;
+  onDelete: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: props.lead.id,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Translate.toString(transform),
+        opacity: isDragging ? 0 : 1, // l'overlay prend le relais visuellement
+        touchAction: 'none', // évite que le scroll mobile bouffe le drag après le hold 250ms
+      }}
+      {...listeners}
+      {...attributes}
+    >
+      <LeadCardContent {...props} isDragging={isDragging} />
+    </div>
+  );
+}
+
+// ─── LeadCardContent (visuel pur, réutilisé par DragOverlay) ─────────
+
+function LeadCardContent({
+  lead, isMenuOpen, onToggleMenu, onMove, onDelete, isDragging = false,
 }: {
   lead: Lead;
   isMenuOpen: boolean;
   onToggleMenu: () => void;
   onMove: (s: LeadStatus) => void;
   onDelete: () => void;
+  isDragging?: boolean;
 }) {
   const next = NEXT_STATUS[lead.status];
   const nextLabel = next ? COLUMNS.find((c) => c.status === next)?.label : null;
@@ -301,6 +420,11 @@ function LeadCard({
     || lead.contact.name
     || lead.contact.email
     || '?';
+
+  // Stoppe la propagation du pointer pour que le clic burger ne déclenche
+  // pas le drag (en plus de l'activation distance: 5 du sensor).
+  const stop = (e: React.MouseEvent | React.PointerEvent) => e.stopPropagation();
+
   return (
     <div style={{
       background: 'var(--agency-surface-2)',
@@ -308,20 +432,27 @@ function LeadCard({
       borderRadius: 8,
       padding: 10,
       position: 'relative',
+      cursor: 'grab',
+      boxShadow: isDragging ? '0 12px 32px rgba(0,0,0,0.45), 0 0 0 1px var(--agency-accent)' : 'none',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 6, marginBottom: 6 }}>
-        <div style={{ flex: 1, overflow: 'hidden' }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--agency-ink-1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {contactName}
-          </div>
-          {lead.contact.email && (
-            <div style={{ fontSize: 10, color: 'var(--agency-ink-3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {lead.contact.email}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1, overflow: 'hidden' }}>
+          <GripVertical size={12} style={{ color: 'var(--agency-ink-4)', flexShrink: 0 }} />
+          <div style={{ flex: 1, overflow: 'hidden' }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--agency-ink-1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {contactName}
             </div>
-          )}
+            {lead.contact.email && (
+              <div style={{ fontSize: 10, color: 'var(--agency-ink-3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {lead.contact.email}
+              </div>
+            )}
+          </div>
         </div>
         <button
-          onClick={onToggleMenu}
+          onPointerDown={stop}
+          onMouseDown={stop}
+          onClick={(e) => { stop(e); onToggleMenu(); }}
           style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--agency-ink-3)', padding: 2, display: 'flex', flexShrink: 0 }}
         >
           <MoreHorizontal size={14} />
@@ -341,15 +472,19 @@ function LeadCard({
       </div>
 
       {isMenuOpen && (
-        <div style={{
-          position: 'absolute', top: 30, right: 8,
-          background: 'var(--agency-surface-3)',
-          border: '1px solid var(--agency-border-strong)',
-          borderRadius: 8,
-          padding: 4,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-          zIndex: 10, minWidth: 160,
-        }}>
+        <div
+          onPointerDown={stop}
+          onMouseDown={stop}
+          style={{
+            position: 'absolute', top: 30, right: 8,
+            background: 'var(--agency-surface-3)',
+            border: '1px solid var(--agency-border-strong)',
+            borderRadius: 8,
+            padding: 4,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+            zIndex: 10, minWidth: 160,
+          }}
+        >
           {next && nextLabel && (
             <button onClick={() => onMove(next)} style={menuItemStyle()}>
               → {nextLabel}

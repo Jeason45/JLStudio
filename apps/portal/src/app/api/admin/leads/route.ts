@@ -158,6 +158,17 @@ export async function PATCH(req: NextRequest) {
         contact: { select: { id: true, name: true, firstName: true, lastName: true, email: true, companyName: true, phone: true } },
       },
     });
+
+    // Lead passé en CONVERTED (= colonne "Client" dans le kanban) →
+    // on bascule le Contact associé en ACTIVE pour qu'il apparaisse
+    // automatiquement dans /admin/clients.
+    if (updates.status === 'CONVERTED' && lead.contactId) {
+      await prisma.contact.update({
+        where: { id: lead.contactId },
+        data: { status: 'ACTIVE' },
+      });
+    }
+
     return NextResponse.json(lead);
   } catch (err) {
     logger.error({ err, id }, 'Lead update failed');
