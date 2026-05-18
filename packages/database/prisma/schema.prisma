@@ -21,6 +21,8 @@ model BuilderUser {
   totpEnabled     Boolean  @default(false)
   themePreference String   @default("auto") // "auto" | "light" | "dark"
   createdAt       DateTime @default(now())
+
+  postCampaigns PostCampaign[]
 }
 
 // ─────────────────────────────────────────────
@@ -28,17 +30,17 @@ model BuilderUser {
 // ─────────────────────────────────────────────
 
 model Site {
-  id              String     @id @default(cuid())
-  name            String
-  slug            String     @unique
-  description     String?
-  config          Json       @default("{}")
-  status          SiteStatus @default(DRAFT)
-  deployUrl       String?
-  coolifyAppUuid  String?
-  thumbnail       String?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  id             String     @id @default(cuid())
+  name           String
+  slug           String     @unique
+  description    String?
+  config         Json       @default("{}")
+  status         SiteStatus @default(DRAFT)
+  deployUrl      String?
+  coolifyAppUuid String?
+  thumbnail      String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
   pages             Page[]
   contacts          Contact[]
@@ -68,6 +70,7 @@ model Site {
   prospectionSessions     ProspectionSession[]
   activities              Activity[]
   deploys                 Deploy[]
+  postCampaigns           PostCampaign[]
 
   @@index([status])
   @@index([createdAt])
@@ -84,17 +87,17 @@ enum SiteStatus {
 // ─────────────────────────────────────────────
 
 model Deploy {
-  id               String       @id @default(cuid())
-  siteId           String
-  status           DeployStatus @default(PENDING)
-  environment      String       @default("production")
-  pagesExported    Int          @default(0)
-  duration         Int          @default(0)
-  outputDir        String?
-  deployUrl        String?
-  coolifyDeployId  String?
-  error            String?      @db.Text
-  createdAt        DateTime     @default(now())
+  id              String       @id @default(cuid())
+  siteId          String
+  status          DeployStatus @default(PENDING)
+  environment     String       @default("production")
+  pagesExported   Int          @default(0)
+  duration        Int          @default(0)
+  outputDir       String?
+  deployUrl       String?
+  coolifyDeployId String?
+  error           String?      @db.Text
+  createdAt       DateTime     @default(now())
 
   site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
 
@@ -161,47 +164,47 @@ model Template {
 // ─────────────────────────────────────────────
 
 model Contact {
-  id        String        @id @default(cuid())
-  siteId    String
-  email     String
-  name      String?
-  firstName String?
-  lastName  String?
-  phone     String?
-  company   String?
+  id          String        @id @default(cuid())
+  siteId      String
+  email       String
+  name        String?
+  firstName   String?
+  lastName    String?
+  phone       String?
+  company     String?
   companyName String?
-  position  String?
-  tags      String[]      @default([])
-  notes     String?
-  status    ContactStatus @default(NEW)
-  metadata  Json?
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  position    String?
+  tags        String[]      @default([])
+  notes       String?
+  status      ContactStatus @default(NEW)
+  metadata    Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   // Champs enrichis (issus du CRM Web JL Studio)
   address        String?
   city           String?
   postalCode     String?
-  type           String?   // "particulier" | "entreprise"
-  source         String?   // "site_qualifier" | "manual" | "referral"
-  score          Int?      // scoring lead 0-100
-  projectType    String?   // "vitrine" | "ecommerce" | "webapp"
-  budget         String?   // "<2000" | "2000-5000" | "5000-10000" | ">10000"
+  type           String? // "particulier" | "entreprise"
+  source         String? // "site_qualifier" | "manual" | "referral"
+  score          Int? // scoring lead 0-100
+  projectType    String? // "vitrine" | "ecommerce" | "webapp"
+  budget         String? // "<2000" | "2000-5000" | "5000-10000" | ">10000"
   estimatedPrice Float?
   lostReason     String?
   quoteAmount    Float?
-  paymentStatus  String?   // "none" | "partial" | "paid"
+  paymentStatus  String? // "none" | "partial" | "paid"
   paidAmount     Float?
   paidAt         DateTime?
   deletedAt      DateTime?
 
-  site               Site                @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  leads              Lead[]
-  portalDocuments    PortalDocument[]
-  portalInteractions PortalInteraction[]
-  portalAppointments PortalAppointment[]
-  portalProjects     PortalProject[]
-  portalUsers        PortalUser[]
+  site                 Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  leads                Lead[]
+  portalDocuments      PortalDocument[]
+  portalInteractions   PortalInteraction[]
+  portalAppointments   PortalAppointment[]
+  portalProjects       PortalProject[]
+  portalUsers          PortalUser[]
   prospectionResults   ProspectionResult[]
   prospectionProspects ProspectionProspect[]
 
@@ -296,7 +299,8 @@ model Media {
   folder       String   @default("")
   createdAt    DateTime @default(now())
 
-  site Site? @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  site            Site?             @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  postTargetMedia PostTargetMedia[]
 
   @@index([siteId, createdAt])
   @@index([folder])
@@ -533,21 +537,21 @@ enum CouponType {
 // ─────────────────────────────────────────────
 
 model PortalConfig {
-  id               String   @id @default(cuid())
-  siteId           String   @unique
-  logoUrl          String?
-  primaryColor     String   @default("#638BFF")
-  onboardingDone   Boolean  @default(false)
-  moduleCRM        Boolean  @default(false)
-  moduleDevis      Boolean  @default(false)
-  moduleFactures   Boolean  @default(false)
-  moduleContrats   Boolean  @default(false)
-  moduleProjets    Boolean  @default(false)
-  moduleCMS        Boolean  @default(false)
-  moduleCalendrier    Boolean  @default(false)
-  moduleProspection   Boolean  @default(false)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                String   @id @default(cuid())
+  siteId            String   @unique
+  logoUrl           String?
+  primaryColor      String   @default("#638BFF")
+  onboardingDone    Boolean  @default(false)
+  moduleCRM         Boolean  @default(false)
+  moduleDevis       Boolean  @default(false)
+  moduleFactures    Boolean  @default(false)
+  moduleContrats    Boolean  @default(false)
+  moduleProjets     Boolean  @default(false)
+  moduleCMS         Boolean  @default(false)
+  moduleCalendrier  Boolean  @default(false)
+  moduleProspection Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
 }
@@ -607,16 +611,16 @@ model PortalDocument {
   signedAt         DateTime?
   paidAt           DateTime?
   notes            String?
-  templateSlug     String?              // e.g. "devis-moderne", "facture-moderne"
-  linkedDocumentId String?              // devis -> facture link (id of source devis)
-  pdfData          Bytes?               // generated PDF cached inline
-  signedPdfData    Bytes?               // signed PDF cached inline
+  templateSlug     String? // e.g. "devis-moderne", "facture-moderne"
+  linkedDocumentId String? // devis -> facture link (id of source devis)
+  pdfData          Bytes? // generated PDF cached inline
+  signedPdfData    Bytes? // signed PDF cached inline
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
 
-  site      Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  contact   Contact?             @relation(fields: [contactId], references: [id], onDelete: SetNull)
-  project   PortalProject?       @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  site      Site             @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  contact   Contact?         @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  project   PortalProject?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
   signature PortalSignature?
 
   @@index([siteId, type])
@@ -643,8 +647,8 @@ model PortalSignature {
   documentId  String   @unique
   signerName  String
   signerEmail String
-  imageData   String   // base64 PNG
-  hash        String   // SHA-256 proof
+  imageData   String // base64 PNG
+  hash        String // SHA-256 proof
   ipAddress   String?
   userAgent   String?
   signedAt    DateTime @default(now())
@@ -739,7 +743,7 @@ enum PortalInteractionType {
 // ─────────────────────────────────────────────
 
 model PortalAppointment {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   siteId      String
   contactId   String?
   title       String
@@ -747,8 +751,8 @@ model PortalAppointment {
   startTime   DateTime
   endTime     DateTime
   location    String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   site    Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
   contact Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
@@ -821,10 +825,10 @@ model PortalProjectTask {
   isCriticalPath Boolean   @default(false)
   deletedAt      DateTime?
 
-  project    PortalProject          @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  section    PortalTaskSection?     @relation(fields: [sectionId], references: [id], onDelete: SetNull)
-  dependsOn  PortalTaskDependency[] @relation("portalDependent")
-  dependedBy PortalTaskDependency[] @relation("portalPredecessor")
+  project     PortalProject          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  section     PortalTaskSection?     @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  dependsOn   PortalTaskDependency[] @relation("portalDependent")
+  dependedBy  PortalTaskDependency[] @relation("portalPredecessor")
   timeEntries PortalTimeEntry[]
 
   @@index([projectId, order])
@@ -841,7 +845,7 @@ model PortalTaskSection {
   isCollapsed Boolean  @default(false)
   createdAt   DateTime @default(now())
 
-  project PortalProject     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project PortalProject       @relation(fields: [projectId], references: [id], onDelete: Cascade)
   tasks   PortalProjectTask[]
 }
 
@@ -875,7 +879,7 @@ model PortalTimeEntry {
   taskId    String
   startedAt DateTime
   stoppedAt DateTime?
-  duration  Int?      // minutes
+  duration  Int? // minutes
   notes     String?
   createdAt DateTime  @default(now())
 
@@ -903,13 +907,13 @@ enum PortalProjectTaskStatus {
 // ─────────────────────────────────────────────
 
 model PortalCompanySettings {
-  id          String  @id @default(cuid())
-  siteId      String  @unique
+  id          String   @id @default(cuid())
+  siteId      String   @unique
   companyName String?
   address     String?
   zipCode     String?
   city        String?
-  country     String  @default("France")
+  country     String   @default("France")
   phone       String?
   email       String?
   website     String?
@@ -1091,7 +1095,7 @@ model ProspectionCampaign {
   createdAt   DateTime                  @default(now())
   updatedAt   DateTime                  @updatedAt
 
-  site    Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  site    Site                @relation(fields: [siteId], references: [id], onDelete: Cascade)
   results ProspectionResult[]
 
   @@index([siteId, createdAt])
@@ -1105,24 +1109,24 @@ enum ProspectionCampaignStatus {
 }
 
 model ProspectionResult {
-  id          String  @id @default(cuid())
-  campaignId  String
-  contactId   String?
+  id         String  @id @default(cuid())
+  campaignId String
+  contactId  String?
 
-  name          String
-  url           String?
-  phone         String?
-  address       String?
-  city          String?
-  email         String?
-  category      String    // "creation" | "refonte"
+  name     String
+  url      String?
+  phone    String?
+  address  String?
+  city     String?
+  email    String?
+  category String // "creation" | "refonte"
 
-  priorityScore Int       @default(0)
-  status        String    // "Chaud" | "Tiède" | "Froid"
-  breakdown     Json      @default("[]")
+  priorityScore Int    @default(0)
+  status        String // "Chaud" | "Tiède" | "Froid"
+  breakdown     Json   @default("[]")
 
-  analysisData  Json?
-  sireneData    Json?
+  analysisData Json?
+  sireneData   Json?
 
   createdAt DateTime @default(now())
 
@@ -1135,8 +1139,8 @@ model ProspectionResult {
 model ProspectionSession {
   id        String   @id @default(cuid())
   siteId    String
-  type      String   // "search" | "audit"
-  query     String?  // "coiffeur bordeaux" or URL
+  type      String // "search" | "audit"
+  query     String? // "coiffeur bordeaux" or URL
   createdAt DateTime @default(now())
 
   site      Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
@@ -1146,9 +1150,9 @@ model ProspectionSession {
 }
 
 model ProspectionProspect {
-  id          String  @id @default(cuid())
-  sessionId   String
-  contactId   String?
+  id        String  @id @default(cuid())
+  sessionId String
+  contactId String?
 
   name         String
   siret        String?
@@ -1160,22 +1164,135 @@ model ProspectionProspect {
   website      String?
   email        String?
   phone        String?
-  category     String   // "creation" | "refonte"
+  category     String // "creation" | "refonte"
 
-  auditData    Json?
-  auditScore   Int?
-  auditedAt    DateTime?
+  auditData  Json?
+  auditScore Int?
+  auditedAt  DateTime?
 
-  addedToCRM      Boolean  @default(false)
-  notes           String?
-  claudeAnalysis  String?  // Full Claude visual analysis pasted by user
+  addedToCRM       Boolean @default(false)
+  notes            String?
+  claudeAnalysis   String? // Full Claude visual analysis pasted by user
   presentationData String? // Structured slide content for PowerPoint generation
 
-  createdAt    DateTime @default(now())
+  createdAt DateTime @default(now())
 
-  session  ProspectionSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  contact  Contact?           @relation(fields: [contactId], references: [id])
+  session ProspectionSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  contact Contact?           @relation(fields: [contactId], references: [id])
 
   @@index([sessionId])
 }
 
+// ─────────────────────────────────────────────
+// PUBLICATIONS RÉSEAUX SOCIAUX (CRM → n8n)
+//
+// Architecture en 3 tables :
+//   - PostCampaign    : concept central, "une publication" (label interne, métadonnées)
+//   - PostTarget      : déclinaison par réseau (LinkedIn / Instagram Feed / Story / Reel)
+//   - PostTargetMedia : table de jointure media ↔ target (ordre + rôle)
+//
+// Le CRM est la source de contenu. n8n poll les targets SCHEDULED et publie.
+// n8n callback ensuite pour marquer PUBLISHED / FAILED + remonter publicUrl / externalId.
+// ─────────────────────────────────────────────
+
+model PostCampaign {
+  id            String             @id @default(cuid())
+  siteId        String
+  title         String // label interne ex. "Annonce launch v3"
+  description   String? // notes internes (non publiées)
+  status        PostCampaignStatus @default(DRAFT)
+  authorId      String? // BuilderUser.id (nullable si user supprimé)
+  isPinnedToCRM Boolean            @default(false) // afficher dans dashboard CRM
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // soft-delete
+
+  site    Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  author  BuilderUser? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  targets PostTarget[]
+
+  @@index([siteId, status])
+  @@index([siteId, createdAt])
+  @@index([deletedAt])
+}
+
+model PostTarget {
+  id         String   @id @default(cuid())
+  campaignId String
+  platform   Platform
+  content    Json     @default("{}") // schéma polymorphe selon platform
+
+  scheduledAt DateTime? // quand publier (UTC en base, UI Paris)
+  publishedAt DateTime? // rempli par n8n après publish réussi
+  status      PostTargetStatus @default(DRAFT)
+
+  publicUrl  String? // URL live (rempli par n8n)
+  externalId String? // ID du post sur le réseau (rempli par n8n)
+
+  attempts            Int       @default(0)
+  lastAttemptAt       DateTime?
+  processingStartedAt DateTime? // timestamp du claim (détection stale lease > 10 min)
+  errorMessage        String?
+  priority            Int       @default(0) // higher = traité en premier par n8n
+
+  // Métriques sociales (remplies par n8n via sync périodique)
+  likesCount    Int       @default(0)
+  commentsCount Int       @default(0)
+  sharesCount   Int       @default(0)
+  viewsCount    Int       @default(0)
+  lastSyncedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  campaign PostCampaign      @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  media    PostTargetMedia[]
+
+  @@index([campaignId])
+  @@index([status, scheduledAt])
+  @@index([platform])
+  @@index([processingStartedAt]) // pour cron stale lease
+}
+
+model PostTargetMedia {
+  id       String @id @default(cuid())
+  targetId String
+  mediaId  String
+  position Int    @default(0)
+  role     String @default("primary") // "primary" | "cover" | "extra"
+
+  createdAt DateTime @default(now())
+
+  target PostTarget @relation(fields: [targetId], references: [id], onDelete: Cascade)
+  media  Media      @relation(fields: [mediaId], references: [id], onDelete: Restrict) // bloque suppression média si encore référencé
+
+  @@unique([targetId, mediaId])
+  @@index([targetId, position])
+  @@index([mediaId])
+}
+
+enum PostCampaignStatus {
+  DRAFT // en cours d'édition
+  SCHEDULED // au moins une target SCHEDULED, aucune PUBLISHED
+  ACTIVE // au moins une target PUBLISHED + au moins une non publiée
+  PUBLISHED // toutes targets PUBLISHED
+  ARCHIVED // exclu des listes par défaut
+}
+
+enum PostTargetStatus {
+  DRAFT // brouillon (sans scheduledAt encore)
+  SCHEDULED // programmé, en attente que n8n poll
+  PUBLISHING // claim par n8n, publication en cours
+  PUBLISHED // publié avec succès
+  FAILED // échec après max attempts
+  CANCELLED // annulé par l'utilisateur
+}
+
+enum Platform {
+  LINKEDIN
+  INSTAGRAM_FEED
+  INSTAGRAM_STORY
+  INSTAGRAM_REEL
+  // V2 : FACEBOOK, TIKTOK, YOUTUBE_SHORT, TWITTER
+}

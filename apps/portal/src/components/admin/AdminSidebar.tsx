@@ -8,6 +8,7 @@ import { useEffect, useState, useRef, type ReactNode } from 'react';
 import {
   LayoutDashboard, BarChart3, Users, UserCheck, FolderKanban,
   Trello, GanttChart, FileText, Mail, Calendar, Settings, LogOut, Menu, X, ArrowRightLeft,
+  Megaphone,
 } from 'lucide-react';
 
 interface SiteOption { id: string; name: string; slug: string }
@@ -58,6 +59,7 @@ const NAV: NavGroup[] = [
     items: [
       { href: '/admin/documents', label: 'Documents', icon: <FileText size={16} strokeWidth={1.75} /> },
       { href: '/admin/emails', label: 'Emails', icon: <Mail size={16} strokeWidth={1.75} /> },
+      { href: '/admin/publications', label: 'Publications', icon: <Megaphone size={16} strokeWidth={1.75} /> },
       { href: '/admin/calendar', label: 'Calendrier', icon: <Calendar size={16} strokeWidth={1.75} /> },
     ],
   },

@@ -234,3 +234,112 @@ export const cmsItemUpdateSchema = z.object({
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED', 'SCHEDULED']).optional(),
   scheduledAt: z.string().nullable().optional(),
 });
+
+// ─── Publications réseaux sociaux ──────────────
+// Enums alignés sur Prisma
+export const platformSchema = z.enum([
+  'LINKEDIN',
+  'INSTAGRAM_FEED',
+  'INSTAGRAM_STORY',
+  'INSTAGRAM_REEL',
+]);
+export type PlatformZ = z.infer<typeof platformSchema>;
+
+export const postCampaignStatusSchema = z.enum([
+  'DRAFT',
+  'SCHEDULED',
+  'ACTIVE',
+  'PUBLISHED',
+  'ARCHIVED',
+]);
+
+export const postTargetStatusSchema = z.enum([
+  'DRAFT',
+  'SCHEDULED',
+  'PUBLISHING',
+  'PUBLISHED',
+  'FAILED',
+  'CANCELLED',
+]);
+
+// Schémas content polymorphes par plateforme.
+// Discriminated union → Zod choisit le schéma selon le champ `platform`.
+const linkedinContentSchema = z.object({
+  platform: z.literal('LINKEDIN'),
+  text: z.string().min(1, 'Texte requis').max(3000, 'Max 3000 caractères'),
+  hashtags: z.array(z.string().regex(/^[A-Za-z0-9_]+$/, 'Hashtag invalide')).max(30).default([]),
+  firstCommentText: z.string().max(1250).optional(),
+});
+
+const instagramFeedContentSchema = z.object({
+  platform: z.literal('INSTAGRAM_FEED'),
+  caption: z.string().max(2200, 'Max 2200 caractères').default(''),
+  hashtags: z.array(z.string().regex(/^[A-Za-z0-9_]+$/)).max(30).default([]),
+  altText: z.string().max(1000).optional(),
+  location: z.string().max(255).optional(),
+});
+
+const instagramStoryContentSchema = z.object({
+  platform: z.literal('INSTAGRAM_STORY'),
+  link: z.string().url().optional(),
+  stickerText: z.string().max(200).optional(),
+});
+
+const instagramReelContentSchema = z.object({
+  platform: z.literal('INSTAGRAM_REEL'),
+  caption: z.string().max(2200).default(''),
+  hashtags: z.array(z.string().regex(/^[A-Za-z0-9_]+$/)).max(30).default([]),
+  audioCredit: z.string().max(200).optional(),
+});
+
+export const postTargetContentSchema = z.discriminatedUnion('platform', [
+  linkedinContentSchema,
+  instagramFeedContentSchema,
+  instagramStoryContentSchema,
+  instagramReelContentSchema,
+]);
+export type PostTargetContent = z.infer<typeof postTargetContentSchema>;
+
+// Campaigns
+export const postCampaignCreateSchema = z.object({
+  title: z.string().min(1, 'Titre requis').max(200),
+  description: z.string().max(2000).optional(),
+  isPinnedToCRM: z.boolean().optional(),
+  status: postCampaignStatusSchema.optional(),
+});
+
+export const postCampaignUpdateSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
+  description: z.string().max(2000).nullable().optional(),
+  isPinnedToCRM: z.boolean().optional(),
+  status: postCampaignStatusSchema.optional(),
+});
+
+// Targets — on accepte string ISO datetime en entrée
+const isoDateString = z.string().datetime({ offset: true }).or(z.string().datetime());
+
+export const postTargetCreateSchema = z
+  .object({
+    platform: platformSchema,
+    content: postTargetContentSchema,
+    scheduledAt: isoDateString.nullable().optional(),
+    status: postTargetStatusSchema.optional(),
+    priority: z.number().int().min(0).max(100).optional(),
+    mediaIds: z.array(z.string().cuid()).max(10).default([]),
+  })
+  .refine(
+    (data) => !(data.platform === 'INSTAGRAM_STORY' && data.mediaIds.length === 0),
+    { message: 'Instagram Story exige au moins 1 média', path: ['mediaIds'] },
+  )
+  .refine(
+    (data) => data.platform === data.content.platform,
+    { message: 'platform et content.platform doivent correspondre', path: ['content'] },
+  );
+
+export const postTargetUpdateSchema = z.object({
+  content: postTargetContentSchema.optional(),
+  scheduledAt: isoDateString.nullable().optional(),
+  status: postTargetStatusSchema.optional(),
+  priority: z.number().int().min(0).max(100).optional(),
+  mediaIds: z.array(z.string().cuid()).max(10).optional(),
+});
