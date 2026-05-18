@@ -54,12 +54,24 @@ const NAV: NavGroup[] = [
     ],
   },
   {
+    title: 'Facturation',
+    color: SECTION_COLORS.facturation,
+    items: [
+      { href: '/admin/documents', label: 'Documents', icon: <FileText size={16} strokeWidth={1.75} /> },
+    ],
+  },
+  {
+    title: 'Marketing',
+    color: SECTION_COLORS.marketing,
+    items: [
+      { href: '/admin/publications', label: 'Publications', icon: <Megaphone size={16} strokeWidth={1.75} /> },
+    ],
+  },
+  {
     title: 'Communication',
     color: SECTION_COLORS.communication,
     items: [
-      { href: '/admin/documents', label: 'Documents', icon: <FileText size={16} strokeWidth={1.75} /> },
       { href: '/admin/emails', label: 'Emails', icon: <Mail size={16} strokeWidth={1.75} /> },
-      { href: '/admin/publications', label: 'Publications', icon: <Megaphone size={16} strokeWidth={1.75} /> },
       { href: '/admin/calendar', label: 'Calendrier', icon: <Calendar size={16} strokeWidth={1.75} /> },
     ],
   },

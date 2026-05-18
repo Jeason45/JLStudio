@@ -10,7 +10,9 @@ export const SECTION_COLORS = {
   pilotage:      '#818cf8', // indigo
   contacts:      '#34d399', // emerald
   projets:       '#fbbf24', // amber
-  communication: '#f472b6', // rose
+  facturation:   '#22c55e', // green — argent / business
+  marketing:     '#E1306C', // pink — rappel Instagram
+  communication: '#f472b6', // rose — transactionnel (emails + calendrier)
   systeme:       '#94a3b8', // slate
 } as const;
 
@@ -35,8 +37,13 @@ export function getSectionColor(pathname: string): string {
   ) {
     return SECTION_COLORS.projets;
   }
+  if (pathname.startsWith('/admin/documents')) {
+    return SECTION_COLORS.facturation;
+  }
+  if (pathname.startsWith('/admin/publications')) {
+    return SECTION_COLORS.marketing;
+  }
   if (
-    pathname.startsWith('/admin/documents') ||
     pathname.startsWith('/admin/emails') ||
     pathname.startsWith('/admin/calendar')
   ) {
