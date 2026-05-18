@@ -80,7 +80,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleSiteSelect = async (siteId: string) => {
+  const handleSiteSelect = async (siteId: string, redirectTo: string = '/dashboard') => {
     setError('');
     setLoading(true);
 
@@ -98,7 +98,7 @@ export default function LoginPage() {
         return;
       }
 
-      window.location.href = '/dashboard';
+      window.location.href = redirectTo;
     } catch {
       setError('Erreur de connexion au serveur');
       setLoading(false);
@@ -156,35 +156,98 @@ export default function LoginPage() {
               gap: '8px',
             }}
           >
-            {sites.map((site) => (
-              <button
-                key={site.id}
-                onClick={() => handleSiteSelect(site.id)}
-                disabled={loading}
-                style={{
-                  width: '100%',
-                  padding: '14px 16px',
-                  borderRadius: '10px',
-                  border: '1px solid var(--border)',
-                  background: 'var(--bg-input)',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 0.15s',
-                  opacity: loading ? 0.5 : 1,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--accent)';
-                  e.currentTarget.style.background = 'var(--accent-light)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--border)';
-                  e.currentTarget.style.background = 'var(--bg-input)';
-                }}
-              >
-                <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>{site.name}</div>
-                <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '2px' }}>{site.slug}</div>
-              </button>
-            ))}
+            {/* JL Studio CRM Agence — entrée spéciale en haut */}
+            {(() => {
+              const agencySite = sites.find((s) => s.slug === 'jlstudio');
+              if (!agencySite) return null;
+              return (
+                <button
+                  key={agencySite.id}
+                  onClick={() => handleSiteSelect(agencySite.id, '/admin')}
+                  disabled={loading}
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    borderRadius: '10px',
+                    border: '1px solid var(--accent)',
+                    background: 'var(--accent-light)',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'all 0.15s',
+                    opacity: loading ? 0.5 : 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(99,139,255,0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 8,
+                    background: 'var(--accent)', color: 'white',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0, fontSize: '14px', fontWeight: 700,
+                  }}>
+                    JL
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>JL Studio</div>
+                    <div style={{ fontSize: '11px', color: 'var(--accent)', marginTop: '2px', fontWeight: 500 }}>CRM Agence</div>
+                  </div>
+                </button>
+              );
+            })()}
+
+            {/* Séparateur + sites clients */}
+            {sites.filter((s) => s.slug !== 'jlstudio').length > 0 && (
+              <>
+                <div style={{
+                  fontSize: '10px', fontWeight: 600,
+                  color: 'var(--text-tertiary)',
+                  textTransform: 'uppercase', letterSpacing: '0.08em',
+                  padding: '8px 4px 0',
+                }}>
+                  Sites clients
+                </div>
+                {sites
+                  .filter((s) => s.slug !== 'jlstudio')
+                  .map((site) => (
+                    <button
+                      key={site.id}
+                      onClick={() => handleSiteSelect(site.id, '/dashboard')}
+                      disabled={loading}
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        borderRadius: '10px',
+                        border: '1px solid var(--border)',
+                        background: 'var(--bg-input)',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'all 0.15s',
+                        opacity: loading ? 0.5 : 1,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--accent)';
+                        e.currentTarget.style.background = 'var(--accent-light)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--border)';
+                        e.currentTarget.style.background = 'var(--bg-input)';
+                      }}
+                    >
+                      <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>{site.name}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '2px' }}>{site.slug}</div>
+                    </button>
+                  ))}
+              </>
+            )}
 
             {error && <p style={{ color: 'var(--danger)', fontSize: '13px', textAlign: 'center', marginTop: '8px' }}>{error}</p>}
 
