@@ -66,10 +66,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/portal/templates ./apps/port
 COPY --from=builder /app/packages/database/generated ./packages/database/generated
 COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
 
-# Prisma CLI (pour `prisma db push` au démarrage du container)
-# Next.js trace ne le copie pas car ce n'est pas un import JS de l'app.
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+# Prisma CLI — installé globalement pour `prisma db push` au démarrage.
+# Plus fiable que de COPY depuis le cache pnpm (les chemins changent selon
+# la version du lockfile / hoisting). Version pinnée pour correspondre au
+# client Prisma généré au build.
+RUN npm install -g prisma@6.8.2
 
 # Puppeteer : les modules JS sont déjà dans le standalone (Next.js trace les
 # imports et les copie dans .next/standalone/node_modules/). On copie juste
@@ -97,8 +98,4 @@ ENV HOME=/home/nextjs
 #     colonne/table) fait échouer le push, le serveur démarre quand même mais
 #     les logs Coolify alertent. Il faut alors faire la migration manuellement.
 #   - Client Prisma déjà généré au build → on saute la régénération.
-CMD sh -c "node ./node_modules/prisma/build/index.js db push \
-    --schema=./packages/database/prisma/schema.prisma \
-    --skip-generate 2>&1 \
-  || echo '[startup] prisma db push échoué — vérifier les logs ci-dessus. Le serveur démarre quand même.'; \
-  exec node apps/portal/server.js"
+CMD ["sh", "-c", "prisma db push --schema=./packages/database/prisma/schema.prisma --skip-generate 2>&1 || echo '[startup] prisma db push échoué — vérifier les logs ci-dessus. Le serveur démarre quand même.'; exec node apps/portal/server.js"]
