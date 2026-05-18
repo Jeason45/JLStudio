@@ -41,8 +41,13 @@ export async function POST(req: NextRequest) {
     });
 
     const siteId = await getSiteId();
-    const contact = await prisma.contact.create({
-      data: {
+
+    // Upsert : si un Contact avec ce (siteId, email) existe déjà, on le
+    // récupère et on le met à jour avec les nouvelles infos non vides.
+    // Sinon on le crée. Le Lead créé ensuite reste lié au même Contact.
+    const contact = await prisma.contact.upsert({
+      where: { siteId_email: { siteId, email: data.email } },
+      create: {
         siteId,
         name: data.name,
         email: data.email,
@@ -56,6 +61,18 @@ export async function POST(req: NextRequest) {
         type: data.company ? 'entreprise' : 'particulier',
         score,
         estimatedPrice,
+      },
+      update: {
+        // On rafraîchit les infos uniquement si la nouvelle requête les fournit
+        name: data.name,
+        ...(data.phone ? { phone: data.phone } : {}),
+        ...(data.company ? { companyName: data.company } : {}),
+        ...(data.message ? { notes: data.message } : {}),
+        ...(data.projectType ? { projectType: data.projectType } : {}),
+        ...(data.budget ? { budget: data.budget } : {}),
+        score,
+        ...(estimatedPrice ? { estimatedPrice } : {}),
+        // On garde le status existant (peut être CONTACTED, QUALIFIED, etc.)
       },
     });
 
