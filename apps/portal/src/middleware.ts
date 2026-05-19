@@ -58,7 +58,7 @@ export async function middleware(req: NextRequest) {
       response.headers.set('x-portal-user-id', userId);
       response.headers.set('x-portal-super-admin', 'true');
       response.headers.set('X-Content-Type-Options', 'nosniff');
-      response.headers.set('X-Frame-Options', 'DENY');
+      response.headers.set('X-Frame-Options', 'SAMEORIGIN');
       response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
       return response;
     }
@@ -103,7 +103,7 @@ export async function middleware(req: NextRequest) {
 
     // Security headers
     response.headers.set('X-Content-Type-Options', 'nosniff');
-    response.headers.set('X-Frame-Options', 'DENY');
+    response.headers.set('X-Frame-Options', 'SAMEORIGIN');
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
     return response;
