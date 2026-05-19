@@ -7,13 +7,13 @@
  */
 
 export const SECTION_COLORS = {
-  pilotage:      '#818cf8', // indigo
-  contacts:      '#34d399', // emerald
-  projets:       '#fbbf24', // amber
-  facturation:   '#22c55e', // green — argent / business
-  marketing:     '#E1306C', // pink — rappel Instagram
-  communication: '#f472b6', // rose — transactionnel (emails + calendrier)
-  systeme:       '#94a3b8', // slate
+  pilotage:      '#818cf8', // indigo — vision/contrôle
+  contacts:      '#34d399', // emerald — relation humaine
+  projets:       '#fbbf24', // amber — production/énergie
+  facturation:   '#0ea5e9', // sky blue — argent/business (évite conflit avec emerald contacts)
+  marketing:     '#E1306C', // pink IG — rappel Instagram
+  communication: '#a78bfa', // lavender — échange transactionnel (évite conflit avec marketing pink)
+  systeme:       '#94a3b8', // slate — neutre
 } as const;
 
 export type SectionKey = keyof typeof SECTION_COLORS;
