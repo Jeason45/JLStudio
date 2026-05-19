@@ -8,7 +8,7 @@ import { useEffect, useState, useRef, type ReactNode } from 'react';
 import {
   LayoutDashboard, BarChart3, Users, UserCheck, FolderKanban,
   Trello, GanttChart, FileText, Mail, Calendar, Settings, LogOut, Menu, X, ArrowRightLeft,
-  Megaphone,
+  Megaphone, Globe,
 } from 'lucide-react';
 
 interface SiteOption { id: string; name: string; slug: string }
@@ -51,6 +51,13 @@ const NAV: NavGroup[] = [
       { href: '/admin/kanban', label: 'Kanban', icon: <Trello size={16} strokeWidth={1.75} /> },
       { href: '/admin/gantt', label: 'Gantt', icon: <GanttChart size={16} strokeWidth={1.75} /> },
       { href: '/admin/brief', label: 'Briefs', icon: <FileText size={16} strokeWidth={1.75} /> },
+    ],
+  },
+  {
+    title: 'Sites web',
+    color: SECTION_COLORS.sites,
+    items: [
+      { href: '/admin/sites', label: 'Sites', icon: <Globe size={16} strokeWidth={1.75} /> },
     ],
   },
   {

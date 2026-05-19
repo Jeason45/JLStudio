@@ -10,6 +10,7 @@ export const SECTION_COLORS = {
   pilotage:      '#818cf8', // indigo — vision/contrôle
   contacts:      '#34d399', // emerald — relation humaine
   projets:       '#fbbf24', // amber — production/énergie
+  sites:         '#06b6d4', // cyan — web/tech (sites web clients)
   facturation:   '#0ea5e9', // sky blue — argent/business (évite conflit avec emerald contacts)
   marketing:     '#E1306C', // pink IG — rappel Instagram
   communication: '#a78bfa', // lavender — échange transactionnel (évite conflit avec marketing pink)
@@ -36,6 +37,9 @@ export function getSectionColor(pathname: string): string {
     pathname.startsWith('/admin/brief')
   ) {
     return SECTION_COLORS.projets;
+  }
+  if (pathname.startsWith('/admin/sites')) {
+    return SECTION_COLORS.sites;
   }
   if (pathname.startsWith('/admin/documents')) {
     return SECTION_COLORS.facturation;
