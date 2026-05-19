@@ -92,8 +92,9 @@ export default function EditPublicationPage() {
       id: t.id,
       platform: t.platform,
       content: t.content,
-      // datetime-local format : YYYY-MM-DDTHH:MM
-      scheduledAt: t.scheduledAt ? new Date(t.scheduledAt).toISOString().slice(0, 16) : null,
+      // datetime-local format : YYYY-MM-DDTHH:MM en HEURE LOCALE du navigateur
+      // (toISOString retournerait UTC, ce qui décalerait l'affichage de 1-2h)
+      scheduledAt: t.scheduledAt ? toLocalDatetimeInput(t.scheduledAt) : null,
       status: t.status,
       mediaIds: t.media.map((m) => m.media.id),
       publicUrl: t.publicUrl,
@@ -130,4 +131,12 @@ export default function EditPublicationPage() {
       <PublicationEditor mode="edit" initial={initial} />
     </div>
   );
+}
+
+// Convertit une date ISO (UTC) en format datetime-local (heure locale du navigateur)
+// pour pré-remplir un <input type="datetime-local">.
+function toLocalDatetimeInput(iso: string): string {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }

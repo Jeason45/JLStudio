@@ -74,6 +74,7 @@ export default function PublicationEditor({ initial, mode }: Props) {
   const [campaign, setCampaign] = useState<CampaignInitial>(initial || DEFAULT_INITIAL);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [mediaLibrary, setMediaLibrary] = useState<MediaItem[]>([]);
   const [mediaPickerTargetIdx, setMediaPickerTargetIdx] = useState<number | null>(null);
 
@@ -135,6 +136,7 @@ export default function PublicationEditor({ initial, mode }: Props) {
   // saveAs('now')        → status SCHEDULED, scheduledAt = now (n8n publiera < 5min)
   const save = useCallback(async (mode: 'draft' | 'scheduled' | 'now') => {
     setError(null);
+    setSuccessMsg(null);
     setLoading(true);
 
     if (!campaign.title.trim()) {
@@ -221,8 +223,22 @@ export default function PublicationEditor({ initial, mode }: Props) {
         }
       }
 
-      router.push(`/admin/publications/${campaignId}`);
-      router.refresh();
+      const successLabel =
+        mode === 'draft'     ? 'Brouillon enregistré ✓'
+        : mode === 'scheduled' ? 'Publication planifiée ✓'
+        : 'Publication envoyée (sera publiée dans < 5 min) ✓';
+      setSuccessMsg(successLabel);
+
+      // En mode create on redirige vers la page d'édition (qui rechargera
+      // les bonnes data + scheduledAt converti en local). En mode edit on reste
+      // sur la page actuelle et on refresh, le toast restera visible 3s.
+      if (!campaign.id) {
+        router.push(`/admin/publications/${campaignId}`);
+        router.refresh();
+      } else {
+        router.refresh();
+        setTimeout(() => setSuccessMsg(null), 3500);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de la sauvegarde');
     } finally {
@@ -386,6 +402,30 @@ export default function PublicationEditor({ initial, mode }: Props) {
       {error && (
         <div style={{ padding: 12, background: '#7f1d1d33', border: '1px solid #ef444466', borderRadius: 8, marginBottom: 12 }}>
           <p style={{ fontSize: 13, color: '#fca5a5', margin: 0 }}>{error}</p>
+        </div>
+      )}
+
+      {/* Succès — toast persistant en haut, non-bloquant */}
+      {successMsg && (
+        <div
+          role="status"
+          style={{
+            position: 'fixed',
+            top: 20,
+            right: 20,
+            zIndex: 1100,
+            padding: '10px 14px',
+            background: 'rgba(34, 197, 94, 0.15)',
+            border: '1px solid rgba(34, 197, 94, 0.5)',
+            borderRadius: 8,
+            color: '#86efac',
+            fontSize: 13,
+            fontWeight: 600,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          {successMsg}
         </div>
       )}
 
