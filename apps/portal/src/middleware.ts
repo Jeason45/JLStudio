@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const PUBLIC_PATHS = ['/login', '/invite', '/api/auth/login', '/api/auth/logout', '/api/auth/accept-invite', '/sign'];
+const PUBLIC_PATHS = [
+  '/login',
+  '/invite',
+  '/api/auth/login',
+  '/api/auth/logout',
+  '/api/auth/accept-invite',
+  '/sign',
+  // Routes machine-to-machine — auth par Bearer token vérifié dans la route elle-même
+  '/api/cron', // CRON_SECRET dans la route
+  '/api/n8n',  // N8N_API_KEY dans la route
+];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
