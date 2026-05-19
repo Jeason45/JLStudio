@@ -54,14 +54,20 @@ export default function SiteDetailPage() {
         fetch(`/api/admin/sites/${params.id}/pages`, { headers: { 'x-portal-super-admin': 'true' } }),
       ]);
       if (!siteRes.ok) throw new Error('Site introuvable');
-      setSite(await siteRes.json());
+      const s = await siteRes.json();
+      // Site jlstudio → éditeur sur-mesure dédié (pas la version générique multi-pages)
+      if (s.slug === 'jlstudio') {
+        router.replace(`/admin/sites/${params.id}/edit-jlstudio`);
+        return;
+      }
+      setSite(s);
       setPages(pagesRes.ok ? await pagesRes.json() : []);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erreur');
     } finally {
       setLoading(false);
     }
-  }, [params.id]);
+  }, [params.id, router]);
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
