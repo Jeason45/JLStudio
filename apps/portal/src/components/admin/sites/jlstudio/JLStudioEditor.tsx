@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
-  ArrowLeft, Save, Send, AlertCircle, Check, Loader2, X, Eye,
+  ArrowLeft, Save, Send, AlertCircle, Check, Loader2, X, Eye, Edit3,
 } from 'lucide-react';
 import {
   JL_SECTIONS, DEFAULT_JLSTUDIO_CONTENT, getSectionCompleteness,
@@ -57,6 +57,8 @@ export default function JLStudioEditor({ site, initialContent, hasDraft: initial
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [toast, setToast] = useState<{ kind: 'success' | 'error'; message: string } | null>(null);
   const [savedAgo, setSavedAgo] = useState<string>('');
+  const [view, setView] = useState<'edit' | 'preview'>('edit');
+  const [previewKey, setPreviewKey] = useState<number>(0);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Tick toutes les 10s pour mettre à jour le "il y a Xs"
@@ -135,6 +137,32 @@ export default function JLStudioEditor({ site, initialContent, hasDraft: initial
     window.location.reload();
   };
 
+  // Bascule vers l'aperçu : flush l'auto-save en cours pour que le brouillon
+  // en DB soit à jour, puis reload l'iframe.
+  const switchToPreview = async () => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+      debounceRef.current = null;
+    }
+    setSaveStatus('saving');
+    try {
+      // Save synchrone du contenu complet jlstudio
+      await fetch(`/api/admin/sites/${site.id}/draft`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-portal-super-admin': 'true' },
+        body: JSON.stringify({ config: { jlstudio: content } }),
+      });
+      setHasDraft(true);
+      setLastSavedAt(new Date());
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 1500);
+    } catch {
+      setSaveStatus('error');
+    }
+    setPreviewKey((k) => k + 1);
+    setView('preview');
+  };
+
   const sectionsCompleteness: Record<JlStudioSection, Completeness> = {
     hero:         getSectionCompleteness('hero', content),
     services:     getSectionCompleteness('services', content),
@@ -169,8 +197,30 @@ export default function JLStudioEditor({ site, initialContent, hasDraft: initial
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {/* Tab toggle Édition / Aperçu */}
+          <div style={{
+            display: 'inline-flex', padding: 3, borderRadius: 8,
+            background: 'var(--agency-surface-2)',
+            border: '1px solid var(--agency-border)',
+          }}>
+            <button
+              onClick={() => setView('edit')}
+              style={tabBtn(view === 'edit')}
+              title="Édition"
+            >
+              <Edit3 size={12} /> Édition
+            </button>
+            <button
+              onClick={switchToPreview}
+              style={tabBtn(view === 'preview')}
+              title="Aperçu (utilise le brouillon en cours)"
+            >
+              <Eye size={12} /> Aperçu
+            </button>
+          </div>
+
           <SaveIndicator status={saveStatus} hasDraft={hasDraft} savedAgo={savedAgo} />
-          {hasDraft && (
+          {hasDraft && view === 'edit' && (
             <button onClick={handleDiscard} style={btn('ghost')}>
               <X size={13} /> Annuler
             </button>
@@ -182,7 +232,7 @@ export default function JLStudioEditor({ site, initialContent, hasDraft: initial
             style={btn('secondary')}
             title="Voir le site en ligne (production)"
           >
-            <Eye size={13} /> Site live
+            🌐 Site live
           </a>
           <button
             onClick={() => setShowPublishModal(true)}
@@ -197,6 +247,19 @@ export default function JLStudioEditor({ site, initialContent, hasDraft: initial
 
       {/* Body */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+
+        {view === 'preview' ? (
+          /* Aperçu : iframe plein largeur avec rechargement à chaque switch */
+          <div style={{ flex: 1, minHeight: 0, background: '#0f172a', padding: 0 }}>
+            <iframe
+              key={previewKey}
+              src={`/admin/sites/${site.id}/jlstudio-preview?ts=${previewKey}`}
+              style={{ width: '100%', height: '100%', border: 'none', background: 'white' }}
+              title="Aperçu site JL Studio"
+            />
+          </div>
+        ) : (
+          <>
 
         {/* Sidebar gauche */}
         <aside style={{
@@ -277,6 +340,8 @@ export default function JLStudioEditor({ site, initialContent, hasDraft: initial
             </div>
           </div>
         </main>
+          </>
+        )}
       </div>
 
       {/* Modal publish */}
@@ -414,6 +479,18 @@ function SaveIndicator({ status, hasDraft, savedAgo }: { status: SaveStatus; has
 
 function iStyle(color: string): React.CSSProperties {
   return { display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 500, color };
+}
+
+function tabBtn(active: boolean): React.CSSProperties {
+  return {
+    padding: '6px 12px', borderRadius: 6,
+    background: active ? '#06b6d4' : 'transparent',
+    color: active ? 'white' : 'var(--agency-ink-2)',
+    border: 'none', cursor: 'pointer',
+    fontSize: 12, fontWeight: 600, fontFamily: 'inherit',
+    display: 'inline-flex', alignItems: 'center', gap: 4,
+    transition: 'all 0.15s',
+  };
 }
 
 function btn(variant: 'primary' | 'secondary' | 'ghost'): React.CSSProperties {
