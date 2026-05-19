@@ -343,3 +343,60 @@ export const postTargetUpdateSchema = z.object({
   priority: z.number().int().min(0).max(100).optional(),
   mediaIds: z.array(z.string().cuid()).max(10).optional(),
 });
+
+// ─── Sites (éditeur de site web client) ─────────────────────────────
+//
+// Convention slug : kebab-case, 3-40 caractères, [a-z0-9-]
+// Le slug est figé à la création (pas modifiable via PATCH).
+const siteSlugSchema = z
+  .string()
+  .min(3, 'Slug : 3 caractères minimum')
+  .max(40, 'Slug : 40 caractères maximum')
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug : kebab-case uniquement (a-z, 0-9, tirets)');
+
+export const siteCreateSchema = z.object({
+  name: z.string().min(1, 'Nom requis').max(120),
+  slug: siteSlugSchema,
+  description: z.string().max(500).optional(),
+  config: z.record(z.string(), z.unknown()).optional(),
+});
+
+export const siteUpdateSchema = z.object({
+  name: z.string().min(1).max(120).optional(),
+  description: z.string().max(500).nullable().optional(),
+  status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional(),
+  deployUrl: z.string().url().nullable().optional(),
+  thumbnail: z.string().url().nullable().optional(),
+});
+
+// Brouillon : payload JSON libre (sera mergé dans draftConfig côté serveur)
+export const siteDraftSchema = z.object({
+  config: z.record(z.string(), z.unknown()),
+});
+
+// ─── Pages (éditeur de site web client) ─────────────────────────────
+const pageSlugSchema = z
+  .string()
+  .min(1, 'Slug requis')
+  .max(60)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug : kebab-case uniquement (a-z, 0-9, tirets)');
+
+export const pageCreateSchema = z.object({
+  slug: pageSlugSchema,
+  title: z.string().min(1, 'Titre requis').max(200),
+  config: z.record(z.string(), z.unknown()).optional(),
+  order: z.number().int().min(0).max(10000).optional(),
+  isHome: z.boolean().optional(),
+});
+
+export const pageUpdateSchema = z.object({
+  // slug NON modifiable : on garde l'URL stable côté site live
+  title: z.string().min(1).max(200).optional(),
+  order: z.number().int().min(0).max(10000).optional(),
+  isHome: z.boolean().optional(),
+});
+
+// Brouillon page : payload JSON libre (sections + contenu)
+export const pageDraftSchema = z.object({
+  config: z.record(z.string(), z.unknown()),
+});

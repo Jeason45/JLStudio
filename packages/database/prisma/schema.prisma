@@ -35,6 +35,8 @@ model Site {
   slug           String     @unique
   description    String?
   config         Json       @default("{}")
+  draftConfig    Json?
+  publishedAt    DateTime?
   status         SiteStatus @default(DRAFT)
   deployUrl      String?
   coolifyAppUuid String?
@@ -116,15 +118,17 @@ enum DeployStatus {
 // ─────────────────────────────────────────────
 
 model Page {
-  id        String   @id @default(cuid())
-  siteId    String
-  slug      String
-  title     String
-  config    Json     @default("{}")
-  order     Int      @default(0)
-  isHome    Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String    @id @default(cuid())
+  siteId      String
+  slug        String
+  title       String
+  config      Json      @default("{}")
+  draftConfig Json?
+  publishedAt DateTime?
+  order       Int       @default(0)
+  isHome      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
 
