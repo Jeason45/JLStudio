@@ -90,19 +90,14 @@ export async function DELETE(req: NextRequest, ctx: { params: Promise<{ id: stri
 
   const existing = await prisma.postCampaign.findFirst({
     where: { id, siteId: site.id, deletedAt: null },
-    select: { id: true, targets: { select: { id: true, status: true } } },
+    select: { id: true },
   });
   if (!existing) return NextResponse.json({ error: 'Publication introuvable' }, { status: 404 });
 
-  // Bloque la suppression si des targets sont en cours de publication
-  const blockedStatuses = ['PUBLISHING'];
-  if (existing.targets.some((t) => blockedStatuses.includes(t.status))) {
-    return NextResponse.json(
-      { error: 'Impossible de supprimer : une publication est en cours de traitement par n8n' },
-      { status: 409 },
-    );
-  }
-
+  // Soft-delete : on ne bloque PAS si des targets sont en PUBLISHING.
+  // Le cron stale-lease libérera les zombies, et les callbacks n8n
+  // (/published, /failed) ne renverront plus les targets dans /pending
+  // car le filtre exclut deletedAt non null.
   await prisma.postCampaign.update({
     where: { id },
     data: { deletedAt: new Date() },

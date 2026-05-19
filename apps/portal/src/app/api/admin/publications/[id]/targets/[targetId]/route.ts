@@ -131,13 +131,9 @@ export async function DELETE(
   const target = await loadTarget(campaignId, targetId, site.id);
   if (!target) return NextResponse.json({ error: 'Target introuvable' }, { status: 404 });
 
-  if (target.status === 'PUBLISHING') {
-    return NextResponse.json(
-      { error: 'Cette publication est en cours de traitement par n8n' },
-      { status: 409 },
-    );
-  }
-
+  // Pas de blocage si PUBLISHING : on supprime quand même.
+  // Si n8n callback ensuite, le target n'existera plus → 404, ce qui est OK
+  // (la callback échouera silencieusement côté n8n).
   await prisma.postTarget.delete({ where: { id: targetId } });
   return NextResponse.json({ ok: true });
 }
