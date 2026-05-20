@@ -166,6 +166,14 @@ export async function POST(request: NextRequest) {
         pdfData: signedPdfKey ? null : signedPdfBuffer,
       },
     });
+
+    // Le client a signé → on le passe en client actif (comme Flamme).
+    if (document.contactId) {
+      await tx.contact.update({
+        where: { id: document.contactId },
+        data: { status: 'ACTIVE' },
+      });
+    }
   });
 
   // Send confirmation email with signed PDF

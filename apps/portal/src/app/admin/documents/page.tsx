@@ -45,8 +45,8 @@ const STATUS_CONFIG: Record<DocStatus, { label: string; color: string }> = {
 };
 
 const STATUS_FILTERS_BY_TYPE: Record<DocType, DocStatus[]> = {
-  DEVIS: ['DRAFT', 'SENT', 'ACCEPTED', 'REJECTED', 'CANCELLED'],
-  FACTURE: ['DRAFT', 'SENT', 'PAID', 'CANCELLED'],
+  DEVIS: ['DRAFT', 'SENT', 'SIGNED', 'ACCEPTED', 'REJECTED', 'CANCELLED'],
+  FACTURE: ['DRAFT', 'SENT', 'SIGNED', 'PAID', 'CANCELLED'],
   CONTRAT: ['DRAFT', 'SENT', 'SIGNED', 'CANCELLED'],
 };
 
