@@ -74,14 +74,31 @@ export async function POST(req: NextRequest) {
     if (!contactId && data.newContact) {
       const c = data.newContact;
       const email = c.email || `lead-${Date.now()}@noreply.local`;
-      // Si un contact avec cet email existe déjà pour ce site, on le réutilise
-      // (la contrainte unique siteId+email interdit le doublon) plutôt que de planter.
+      // Cherche un contact existant (y compris soft-deleted) avec cet email :
+      // la contrainte unique (siteId, email) inclut les lignes soft-deleted.
       const existingContact = await prisma.contact.findFirst({
         where: { siteId: site.id, email },
-        select: { id: true },
+        select: { id: true, deletedAt: true },
       });
-      if (existingContact) {
+
+      if (existingContact && existingContact.deletedAt === null) {
+        // Contact actif → on rattache le lead à ce contact
         contactId = existingContact.id;
+      } else if (existingContact && existingContact.deletedAt !== null) {
+        // Contact soft-deleted → on le réactive avec les nouvelles infos
+        const reactivated = await prisma.contact.update({
+          where: { id: existingContact.id },
+          data: {
+            name: c.name,
+            firstName: c.firstName,
+            lastName: c.lastName,
+            phone: c.phone,
+            companyName: c.companyName,
+            deletedAt: null,
+          },
+          select: { id: true },
+        });
+        contactId = reactivated.id;
       } else {
         const contact = await prisma.contact.create({
           data: {

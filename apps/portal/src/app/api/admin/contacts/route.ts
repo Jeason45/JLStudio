@@ -86,6 +86,27 @@ export async function POST(req: NextRequest) {
   const site = await getAgencySite();
 
   try {
+    // Cherche un contact existant (y compris soft-deleted) avec cet email,
+    // car la contrainte unique (siteId, email) inclut les lignes soft-deleted.
+    const existing = await prisma.contact.findFirst({
+      where: { siteId: site.id, email: parsed.data.email },
+      select: { id: true, deletedAt: true },
+    });
+
+    if (existing && existing.deletedAt === null) {
+      // Contact actif → vrai doublon
+      return NextResponse.json({ error: 'Un contact avec cet email existe déjà' }, { status: 409 });
+    }
+
+    if (existing && existing.deletedAt !== null) {
+      // Contact soft-deleted → on le réactive avec les nouvelles infos
+      const reactivated = await prisma.contact.update({
+        where: { id: existing.id },
+        data: { ...parsed.data, deletedAt: null },
+      });
+      return NextResponse.json(reactivated, { status: 200 });
+    }
+
     const contact = await prisma.contact.create({
       data: {
         ...parsed.data,
@@ -94,9 +115,6 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json(contact, { status: 201 });
   } catch (err) {
-    if (err instanceof Error && err.message.includes('Unique constraint')) {
-      return NextResponse.json({ error: 'Un contact avec cet email existe déjà' }, { status: 409 });
-    }
     logger.error({ err }, 'Contact create failed');
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
