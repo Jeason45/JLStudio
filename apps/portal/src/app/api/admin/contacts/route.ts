@@ -20,8 +20,12 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const status = searchParams.get('status');
   const search = searchParams.get('search');
+  const trash = searchParams.get('trash'); // "1" → liste la corbeille (soft-deleted)
 
-  const where: Record<string, unknown> = { siteId: site.id, deletedAt: null };
+  const where: Record<string, unknown> = {
+    siteId: site.id,
+    deletedAt: trash ? { not: null } : null,
+  };
   if (status && ['NEW', 'ACTIVE', 'INACTIVE'].includes(status)) where.status = status;
   if (search) {
     where.OR = [
@@ -44,9 +48,9 @@ export async function GET(req: NextRequest) {
       paymentStatus: true, paidAmount: true, paidAt: true,
       address: true, city: true, postalCode: true,
       notes: true, lostReason: true,
-      createdAt: true, updatedAt: true,
+      createdAt: true, updatedAt: true, deletedAt: true,
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: trash ? { updatedAt: 'desc' } : { createdAt: 'desc' },
     take: 500,
   });
   return NextResponse.json(contacts);
@@ -183,16 +187,39 @@ export async function PATCH(req: NextRequest) {
   }
 }
 
-// DELETE — soft delete
+// DELETE — soft delete (corbeille) ou suppression définitive (?permanent=1)
 export async function DELETE(req: NextRequest) {
   const denied = ensureSuperAdmin(req);
   if (denied) return denied;
 
   const { searchParams } = new URL(req.url);
   const id = searchParams.get('id');
+  const permanent = searchParams.get('permanent'); // "1" → hard delete depuis la corbeille
   if (!id) return NextResponse.json({ error: 'id requis' }, { status: 400 });
 
   const site = await getAgencySite();
+
+  if (permanent) {
+    const existing = await prisma.contact.findFirst({
+      where: { id, siteId: site.id },
+      select: { id: true },
+    });
+    if (!existing) return NextResponse.json({ error: 'Contact introuvable' }, { status: 404 });
+
+    // Sécurité comptable : on bloque si des documents (devis/factures) sont liés.
+    const docsCount = await prisma.portalDocument.count({ where: { contactId: id, siteId: site.id } });
+    if (docsCount > 0) {
+      return NextResponse.json(
+        { error: `Suppression définitive impossible : ${docsCount} document(s) (devis/facture) lié(s) à ce contact. Garde-le en corbeille pour préserver l'historique.` },
+        { status: 409 },
+      );
+    }
+
+    await prisma.contact.delete({ where: { id } });
+    return NextResponse.json({ ok: true, permanent: true });
+  }
+
+  // Soft delete par défaut
   const existing = await prisma.contact.findFirst({
     where: { id, siteId: site.id, deletedAt: null },
     select: { id: true },

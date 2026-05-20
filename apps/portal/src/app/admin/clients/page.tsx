@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import Link from 'next/link';
 import { Plus, Search, Trash2, X, UserCheck, Mail, Phone, Building2 } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
 import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
@@ -200,10 +201,16 @@ export default function AdminClientsPage() {
               {stats.total} contact{stats.total > 1 ? 's' : ''} · {stats.active} actif{stats.active > 1 ? 's' : ''} · {stats.new} nouveau{stats.new > 1 ? 'x' : ''}
             </p>
           </div>
-          <button onClick={() => setShowCreate(true)} style={primaryBtn()}>
-            <Plus size={14} />
-            Nouveau client
-          </button>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <Link href="/admin/clients/corbeille" style={secondaryBtn()}>
+              <Trash2 size={14} />
+              Corbeille
+            </Link>
+            <button onClick={() => setShowCreate(true)} style={primaryBtn()}>
+              <Plus size={14} />
+              Nouveau client
+            </button>
+          </div>
         </div>
       </header>
 
