@@ -2,7 +2,15 @@
 
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { ArrowLeft, FileDown, Link2, ChevronUp, ChevronDown, Pencil } from 'lucide-react';
+import { ArrowLeft, FileDown, Link2, Pencil, GripVertical } from 'lucide-react';
+import {
+  DndContext, closestCenter, PointerSensor, useSensor, useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext, verticalListSortingStrategy, useSortable, arrayMove,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { ContactSearchBox } from '../_components/ContactSearchBox';
 import {
   emptyClient, parseAmount,
@@ -110,13 +118,15 @@ function CreateContratContent() {
     setClauseSel((prev) => prev.map((c) => (c.conditionKey === key ? { ...c, included: next[key] } : c)));
   };
 
-  const moveClause = (idx: number, dir: -1 | 1) => {
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+  const handleClauseDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
     setClauseSel((prev) => {
-      const a = [...prev];
-      const j = idx + dir;
-      if (j < 0 || j >= a.length) return prev;
-      [a[idx], a[j]] = [a[j], a[idx]];
-      return a;
+      const oldIndex = prev.findIndex((c) => c.id === active.id);
+      const newIndex = prev.findIndex((c) => c.id === over.id);
+      if (oldIndex < 0 || newIndex < 0) return prev;
+      return arrayMove(prev, oldIndex, newIndex);
     });
   };
   const toggleIncluded = (id: string) => setClauseSel((prev) => prev.map((c) => (c.id === id ? { ...c, included: !c.included } : c)));
@@ -135,9 +145,10 @@ function CreateContratContent() {
       setDevisList(Array.isArray(d) ? d : []);
       const lib: LibClause[] = Array.isArray(cl) ? cl : [];
       setClausesLib(lib);
-      setClauseSel(buildSelection(lib, { has_crm: false, is_refonte: false, is_maintenance: false }));
+      // En édition, la sélection est restaurée par loadExisting (depuis le contenu).
+      if (!editId) setClauseSel(buildSelection(lib, { has_crm: false, is_refonte: false, is_maintenance: false }));
     } catch { /* ignore */ }
-  }, [buildSelection]);
+  }, [buildSelection, editId]);
 
   const fetchNextNumber = useCallback(async () => {
     if (editId) return;
@@ -184,6 +195,14 @@ function CreateContratContent() {
       if (doc.linkedDocumentId) {
         setLinkedDevisId(doc.linkedDocumentId);
         setLinkedDevisNumber(String(data.numero_devis_ref || ''));
+      }
+      // Restaure la sélection exacte des clauses + les options du contrat.
+      if (Array.isArray(data.clauses_state)) {
+        setClauseSel(data.clauses_state as SelClause[]);
+      }
+      if (data.contract_options && typeof data.contract_options === 'object') {
+        const o = data.contract_options as Record<string, boolean>;
+        setOptions({ has_crm: !!o.has_crm, is_refonte: !!o.is_refonte, is_maintenance: !!o.is_maintenance });
       }
     } catch {
       setError('Erreur de chargement du contrat');
@@ -255,6 +274,9 @@ function CreateContratContent() {
         montant_total: new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parseFloat(contratInfo.montant_total) || 0),
         numero_devis_ref: linkedDevisNumber || '',
         clauses: clauseSel.filter((c) => c.included).map((c) => ({ title: c.title, body: c.body })),
+        // état complet pour restaurer la sélection exacte à l'édition
+        clauses_state: clauseSel,
+        contract_options: options,
       };
 
       const totalNum = parseFloat(contratInfo.montant_total) || 0;
@@ -506,25 +528,22 @@ function CreateContratContent() {
               <a href="/admin/documents/clauses" style={{ textDecoration: 'underline', fontWeight: 600 }}>Initialise-la</a> d&apos;abord.
             </p>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {clauseSel.map((c, idx) => (
-                <div key={c.id} style={{ border: '1px solid var(--agency-border)', borderRadius: 10, background: 'var(--agency-surface-2)', opacity: c.included ? 1 : 0.5 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px' }}>
-                    <input type="checkbox" checked={c.included} onChange={() => toggleIncluded(c.id)} />
-                    <span style={{ flex: 1, fontSize: 13, fontWeight: 600, color: 'var(--agency-ink-1)' }}>{c.title}</span>
-                    {c.conditionKey && <span style={{ fontSize: 10, color: '#2F6BFF', background: '#2F6BFF18', padding: '1px 7px', borderRadius: 10 }}>{condBadge(c.conditionKey)}</span>}
-                    <button type="button" onClick={() => moveClause(idx, -1)} disabled={idx === 0} style={ctIconBtn(idx === 0)}><ChevronUp size={14} /></button>
-                    <button type="button" onClick={() => moveClause(idx, 1)} disabled={idx === clauseSel.length - 1} style={ctIconBtn(idx === clauseSel.length - 1)}><ChevronDown size={14} /></button>
-                    <button type="button" onClick={() => setEditingClause(editingClause === c.id ? null : c.id)} style={ctIconBtn(false)} title="Éditer le texte"><Pencil size={14} /></button>
-                  </div>
-                  {editingClause === c.id && (
-                    <div style={{ padding: '0 12px 12px' }}>
-                      <textarea style={{ ...inputStyle(), minHeight: 140, resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.5 }} value={c.body} onChange={(e) => editClauseBody(c.id, e.target.value)} />
-                    </div>
-                  )}
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleClauseDragEnd}>
+              <SortableContext items={clauseSel.map((c) => c.id)} strategy={verticalListSortingStrategy}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {clauseSel.map((c) => (
+                    <SortableClauseRow
+                      key={c.id}
+                      clause={c}
+                      editing={editingClause === c.id}
+                      onToggle={() => toggleIncluded(c.id)}
+                      onEditToggle={() => setEditingClause(editingClause === c.id ? null : c.id)}
+                      onBodyChange={(v) => editClauseBody(c.id, v)}
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </SortableContext>
+            </DndContext>
           )}
         </section>
 
@@ -544,6 +563,43 @@ function CreateContratContent() {
           </button>
         </section>
       </div>
+    </div>
+  );
+}
+
+function SortableClauseRow({ clause, editing, onToggle, onEditToggle, onBodyChange }: {
+  clause: SelClause;
+  editing: boolean;
+  onToggle: () => void;
+  onEditToggle: () => void;
+  onBodyChange: (v: string) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: clause.id });
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    border: '1px solid var(--agency-border)',
+    borderRadius: 10,
+    background: 'var(--agency-surface-2)',
+    opacity: clause.included ? (isDragging ? 0.6 : 1) : 0.5,
+    boxShadow: isDragging ? '0 6px 20px rgba(0,0,0,0.25)' : 'none',
+  };
+  return (
+    <div ref={setNodeRef} style={style}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px' }}>
+        <span {...attributes} {...listeners} style={{ cursor: 'grab', color: 'var(--agency-ink-4)', display: 'inline-flex', touchAction: 'none' }} title="Glisser pour réordonner">
+          <GripVertical size={15} />
+        </span>
+        <input type="checkbox" checked={clause.included} onChange={onToggle} />
+        <span style={{ flex: 1, fontSize: 13, fontWeight: 600, color: 'var(--agency-ink-1)' }}>{clause.title}</span>
+        {clause.conditionKey && <span style={{ fontSize: 10, color: '#2F6BFF', background: '#2F6BFF18', padding: '1px 7px', borderRadius: 10 }}>{condBadge(clause.conditionKey)}</span>}
+        <button type="button" onClick={onEditToggle} style={ctIconBtn(false)} title="Éditer le texte"><Pencil size={14} /></button>
+      </div>
+      {editing && (
+        <div style={{ padding: '0 12px 12px' }}>
+          <textarea style={{ ...inputStyle(), minHeight: 140, resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.5 }} value={clause.body} onChange={(e) => onBodyChange(e.target.value)} />
+        </div>
+      )}
     </div>
   );
 }

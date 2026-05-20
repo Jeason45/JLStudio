@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { ArrowLeft, Plus, Edit3, Trash2, Sparkles } from 'lucide-react';
+import { ArrowLeft, Plus, Edit3, Trash2, Sparkles, FileText, ShieldCheck } from 'lucide-react';
 import { inputStyle, labelStyle, primaryBtnStyle } from '../_components/styles';
 
 interface Clause {
@@ -55,6 +55,8 @@ export default function ClausesLibraryPage() {
   const [clauses, setClauses] = useState<Clause[]>([]);
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
+  const [contacts, setContacts] = useState<{ id: string; name: string; companyName: string | null }[]>([]);
+  const [dpaContact, setDpaContact] = useState('');
   const [modal, setModal] = useState<{ open: boolean; draft: Draft }>({ open: false, draft: emptyDraft() });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -68,6 +70,9 @@ export default function ClausesLibraryPage() {
   }, []);
 
   useEffect(() => { setLoading(true); fetchClauses().finally(() => setLoading(false)); }, [fetchClauses]);
+  useEffect(() => {
+    fetch('/api/admin/contacts').then((r) => (r.ok ? r.json() : [])).then((d) => setContacts(Array.isArray(d) ? d : [])).catch(() => {});
+  }, []);
 
   const handleSeed = async () => {
     setSeeding(true);
@@ -125,6 +130,34 @@ export default function ClausesLibraryPage() {
         </div>
         <button onClick={openCreate} style={primaryBtnStyle(false)}><Plus size={14} /> Nouvelle clause</button>
       </header>
+
+      {/* Documents juridiques autonomes */}
+      <div style={{ marginBottom: 22, padding: '16px 18px', border: '1px solid var(--agency-border)', borderRadius: 12, background: 'var(--agency-surface-1)' }}>
+        <h2 style={{ fontSize: 13, fontWeight: 700, color: 'var(--agency-ink-1)', margin: '0 0 4px' }}>Documents juridiques</h2>
+        <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', margin: '0 0 12px' }}>Génère tes CGV (génériques) ou un DPA (par client) à télécharger / joindre.</p>
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+          <a href="/api/admin/legal-doc?kind=cgv" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 16px', borderRadius: 8, fontSize: 13, fontWeight: 500, border: '1px solid var(--agency-border)', background: 'transparent', color: 'var(--agency-ink-1)' }}>
+            <FileText size={14} /> Télécharger les CGV
+          </a>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
+            <div>
+              <label style={{ ...labelStyle(), display: 'block' }}>DPA pour un client</label>
+              <select style={{ ...inputStyle(), minWidth: 220 }} value={dpaContact} onChange={(e) => setDpaContact(e.target.value)}>
+                <option value="">— Choisir un client —</option>
+                {contacts.map((c) => <option key={c.id} value={c.id}>{c.companyName || c.name}</option>)}
+              </select>
+            </div>
+            <button
+              type="button"
+              disabled={!dpaContact}
+              onClick={() => { if (dpaContact) window.open(`/api/admin/legal-doc?kind=dpa&contactId=${dpaContact}`, '_blank'); }}
+              style={{ ...primaryBtnStyle(!dpaContact) }}
+            >
+              <ShieldCheck size={14} /> Générer le DPA
+            </button>
+          </div>
+        </div>
+      </div>
 
       {loading ? (
         <div style={{ padding: 60, textAlign: 'center', color: 'var(--agency-ink-3)', fontSize: 13 }}>Chargement…</div>
