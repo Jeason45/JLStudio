@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { FileText, Receipt, FileSignature, Search, Trash2, Download, ExternalLink, Mail, Edit3 } from 'lucide-react';
 import { useAgencySidebar } from '@/components/admin/SidebarContext';
 import { PageHeaderRibbon } from '@/components/admin/PageHeaderRibbon';
-import { SendModal, type SendMode } from './_components/SendModal';
+import { SendModal } from './_components/SendModal';
 
 type DocType = 'DEVIS' | 'FACTURE' | 'CONTRAT';
 type DocStatus = 'DRAFT' | 'SENT' | 'SIGNED' | 'ACCEPTED' | 'REJECTED' | 'PAID' | 'CANCELLED';
@@ -57,7 +57,7 @@ export default function AdminDocumentsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
-  const [sendModal, setSendModal] = useState<{ open: boolean; mode: SendMode; doc: Document | null }>({ open: false, mode: 'send', doc: null });
+  const [sendModal, setSendModal] = useState<{ open: boolean; doc: Document | null }>({ open: false, doc: null });
   const [toast, setToast] = useState<string | null>(null);
 
   const fetchDocs = useCallback(async () => {
@@ -245,8 +245,7 @@ export default function AdminDocumentsPage() {
                 onDownload={() => handleDownloadPDF(d)}
                 onDelete={() => handleDelete(d.id, d.documentNumber || d.title)}
                 onStatusChange={(s) => handleStatusChange(d.id, s)}
-                onSend={() => setSendModal({ open: true, mode: 'send', doc: d })}
-                onSignRequest={() => setSendModal({ open: true, mode: 'sign-request', doc: d })}
+                onSend={() => setSendModal({ open: true, doc: d })}
                 onEdit={() => handleEdit(d)}
                 allowedStatuses={STATUS_FILTERS_BY_TYPE[tab]}
               />
@@ -277,8 +276,7 @@ export default function AdminDocumentsPage() {
                   onDownload={() => handleDownloadPDF(d)}
                   onDelete={() => handleDelete(d.id, d.documentNumber || d.title)}
                   onStatusChange={(s) => handleStatusChange(d.id, s)}
-                  onSend={() => setSendModal({ open: true, mode: 'send', doc: d })}
-                  onSignRequest={() => setSendModal({ open: true, mode: 'sign-request', doc: d })}
+                  onSend={() => setSendModal({ open: true, doc: d })}
                   onEdit={() => handleEdit(d)}
                   allowedStatuses={STATUS_FILTERS_BY_TYPE[tab]}
                 />
@@ -290,7 +288,7 @@ export default function AdminDocumentsPage() {
 
       <SendModal
         open={sendModal.open}
-        mode={sendModal.mode}
+        canRequestSignature={sendModal.doc?.type === 'DEVIS' && !sendModal.doc?.signature}
         documentId={sendModal.doc?.id || ''}
         documentNumber={sendModal.doc?.documentNumber || null}
         defaultEmail={sendModal.doc?.contact?.email || ''}
@@ -301,10 +299,9 @@ export default function AdminDocumentsPage() {
               || sendModal.doc.contact.name
             : ''
         }
-        onClose={() => setSendModal({ open: false, mode: 'send', doc: null })}
-        onSuccess={() => {
-          const wasSign = sendModal.mode === 'sign-request';
-          setToast(wasSign ? 'Demande de signature envoyée ✓' : 'Document envoyé par email ✓');
+        onClose={() => setSendModal({ open: false, doc: null })}
+        onSuccess={(didRequestSignature) => {
+          setToast(didRequestSignature ? 'Demande de signature envoyée ✓' : 'Document envoyé par email ✓');
           fetchDocs();
           window.setTimeout(() => setToast(null), 4000);
         }}
@@ -363,14 +360,13 @@ function StatusSelect({
 }
 
 function DesktopRow({
-  doc, onDownload, onDelete, onStatusChange, onSend, onSignRequest, onEdit, allowedStatuses,
+  doc, onDownload, onDelete, onStatusChange, onSend, onEdit, allowedStatuses,
 }: {
   doc: Document;
   onDownload: () => void;
   onDelete: () => void;
   onStatusChange: (s: DocStatus) => void;
   onSend: () => void;
-  onSignRequest: () => void;
   onEdit: () => void;
   allowedStatuses: DocStatus[];
 }) {
@@ -410,14 +406,9 @@ function DesktopRow({
           <button onClick={onDownload} title="Télécharger PDF" style={iconBtn()}>
             <Download size={13} />
           </button>
-          <button onClick={onSend} title="Envoyer par email" style={iconBtn()}>
+          <button onClick={onSend} title="Envoyer par email (option signature)" style={iconBtn()}>
             <Mail size={13} />
           </button>
-          {doc.type === 'DEVIS' && !doc.signature && (
-            <button onClick={onSignRequest} title="Demander la signature" style={iconBtn()}>
-              <FileSignature size={13} />
-            </button>
-          )}
           <button onClick={onDelete} title="Supprimer" style={iconBtn('var(--agency-danger)')}>
             <Trash2 size={13} />
           </button>
@@ -428,14 +419,13 @@ function DesktopRow({
 }
 
 function MobileRow({
-  doc, onDownload, onDelete, onStatusChange, onSend, onSignRequest, onEdit, allowedStatuses,
+  doc, onDownload, onDelete, onStatusChange, onSend, onEdit, allowedStatuses,
 }: {
   doc: Document;
   onDownload: () => void;
   onDelete: () => void;
   onStatusChange: (s: DocStatus) => void;
   onSend: () => void;
-  onSignRequest: () => void;
   onEdit: () => void;
   allowedStatuses: DocStatus[];
 }) {
@@ -465,10 +455,7 @@ function MobileRow({
         <div style={{ display: 'inline-flex', gap: 4 }}>
           <button onClick={onEdit} style={iconBtn()} title="Modifier"><Edit3 size={12} /></button>
           <button onClick={onDownload} style={iconBtn()} title="PDF"><Download size={12} /></button>
-          <button onClick={onSend} style={iconBtn()} title="Envoyer"><Mail size={12} /></button>
-          {doc.type === 'DEVIS' && !doc.signature && (
-            <button onClick={onSignRequest} style={iconBtn()} title="Signature"><FileSignature size={12} /></button>
-          )}
+          <button onClick={onSend} style={iconBtn()} title="Envoyer (option signature)"><Mail size={12} /></button>
           <button onClick={onDelete} style={iconBtn('var(--agency-danger)')} title="Supprimer"><Trash2 size={12} /></button>
         </div>
       </div>

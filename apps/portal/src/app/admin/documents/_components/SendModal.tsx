@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import { X, Send, FileSignature } from 'lucide-react';
 import { inputStyle, labelStyle, primaryBtnStyle } from './styles';
 
+// Conservé pour compat : 'send' = envoi simple. La demande de signature
+// est désormais une case à cocher dans le modal (si canRequestSignature).
 export type SendMode = 'send' | 'sign-request';
 
 export function SendModal({
   open,
-  mode,
+  canRequestSignature = false,
   documentId,
   documentNumber,
   defaultEmail,
@@ -17,17 +19,18 @@ export function SendModal({
   onSuccess,
 }: {
   open: boolean;
-  mode: SendMode;
+  canRequestSignature?: boolean;
   documentId: string;
   documentNumber: string | null;
   defaultEmail?: string;
   defaultName?: string;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (didRequestSignature: boolean) => void;
 }) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
+  const [requestSignature, setRequestSignature] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -36,15 +39,16 @@ export function SendModal({
       setEmail(defaultEmail || '');
       setName(defaultName || '');
       setMessage('');
+      setRequestSignature(false);
       setError('');
     }
   }, [open, defaultEmail, defaultName]);
 
   if (!open) return null;
 
-  const isSign = mode === 'sign-request';
-  const title = isSign ? 'Demander la signature' : 'Envoyer par email';
-  const ctaLabel = isSign ? 'Envoyer la demande' : 'Envoyer';
+  const isSign = canRequestSignature && requestSignature;
+  const title = 'Envoyer par email';
+  const ctaLabel = isSign ? 'Envoyer pour signature' : 'Envoyer';
   const Icon = isSign ? FileSignature : Send;
 
   const handleSubmit = async () => {
@@ -70,7 +74,7 @@ export function SendModal({
         throw new Error(err.error || 'Erreur lors de l\'envoi');
       }
 
-      onSuccess();
+      onSuccess(isSign);
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue');
@@ -196,6 +200,32 @@ export function SendModal({
               }
             />
           </div>
+
+          {canRequestSignature && (
+            <label
+              style={{
+                display: 'flex', alignItems: 'flex-start', gap: 10, padding: 12,
+                background: requestSignature ? 'var(--agency-accent-soft)' : 'var(--agency-surface-2)',
+                border: `1px solid ${requestSignature ? 'var(--agency-accent)' : 'var(--agency-border)'}`,
+                borderRadius: 8, cursor: 'pointer', transition: 'all 0.15s',
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={requestSignature}
+                onChange={(e) => setRequestSignature(e.target.checked)}
+                style={{ accentColor: 'var(--agency-accent)', marginTop: 2 }}
+              />
+              <span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: 'var(--agency-ink-1)' }}>
+                  <FileSignature size={13} /> Demander une signature électronique
+                </span>
+                <span style={{ display: 'block', fontSize: 11, color: 'var(--agency-ink-3)', marginTop: 2 }}>
+                  Le client reçoit un lien pour signer le devis en ligne. Le statut passera à « Signé ».
+                </span>
+              </span>
+            </label>
+          )}
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 20 }}>
