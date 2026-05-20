@@ -1,6 +1,7 @@
 'use client';
 
 import { Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import ImagePicker from '../ImagePicker';
 import type {
   HeroContent, ServiceItem, ProcessStep, PortfolioProject, PortfolioFeature,
   Testimonial, AboutContent, AboutStat, FaqItem, ContactContent, GlobalContent,
@@ -110,7 +111,7 @@ export function HeroEditor({ content, onChange }: { content: HeroContent; onChan
       <Field label="Titre principal" hint="Ligne 1 du hero, mise en avant"><input type="text" value={content.title} onChange={(e) => set({ title: e.target.value })} style={inputStyle} /></Field>
       <Field label="Sous-titre" hint="Ligne 2 du hero"><input type="text" value={content.subtitle} onChange={(e) => set({ subtitle: e.target.value })} style={inputStyle} /></Field>
       <Field label="Description"><textarea value={content.description} onChange={(e) => set({ description: e.target.value })} rows={2} style={{ ...inputStyle, resize: 'vertical', minHeight: 60 }} /></Field>
-      <Field label="Image de fond (URL)" hint="Format paysage, idéal 1920×1080. Fournir une URL publique."><input type="text" value={content.backgroundImage} onChange={(e) => set({ backgroundImage: e.target.value })} placeholder="/images/hero-bg.jpg" style={{ ...inputStyle, fontFamily: 'ui-monospace, SFMono-Regular, monospace' }} /></Field>
+      <Field label="Image de fond"><ImagePicker value={content.backgroundImage} onChange={(url) => set({ backgroundImage: url })} folder="hero" hint="16:9 paysage, idéal 1920×1080" /></Field>
       <Field label="Bouton principal (CTA)">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
           <input type="text" value={content.ctaPrimary.label} onChange={(e) => setCta('ctaPrimary', { label: e.target.value })} placeholder="Texte" style={inputStyle} />
@@ -168,7 +169,7 @@ export function ServicesEditor({ content, onChange }: { content: JlStudioContent
               />
             ))}
           </div>
-          <input type="text" value={it.image} onChange={(e) => update(i, { image: e.target.value })} placeholder="URL image (ex. /images/services-vitrine.jpg)" style={{ ...inputStyle, marginBottom: 6, fontFamily: 'ui-monospace, SFMono-Regular, monospace' }} />
+          <div style={{ marginBottom: 6 }}><ImagePicker value={it.image} onChange={(url) => update(i, { image: url })} folder="services" hint="paysage 16:10" /></div>
           <label style={{ fontSize: 10, color: 'var(--agency-ink-3)', textTransform: 'uppercase', letterSpacing: 0.5, fontWeight: 600 }}>Tarification (laisser tarif vide pour utiliser le fallback)</label>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 4, marginBottom: 6 }}>
             <input type="text" value={it.pricingAmount} onChange={(e) => update(i, { pricingAmount: e.target.value })} placeholder="Ex. 1 500 €" style={inputStyle} />
@@ -246,7 +247,7 @@ export function PortfolioEditor({ content, onChange }: { content: JlStudioConten
             <input type="text" value={p.title} onChange={(e) => update(i, { title: e.target.value })} placeholder="Titre projet" style={inputStyle} />
             <input type="text" value={p.category} onChange={(e) => update(i, { category: e.target.value })} placeholder="Catégorie (ex. Site Vitrine)" style={inputStyle} />
           </div>
-          <input type="text" value={p.image} onChange={(e) => update(i, { image: e.target.value })} placeholder="URL image" style={{ ...inputStyle, marginBottom: 6, fontFamily: 'ui-monospace, SFMono-Regular, monospace' }} />
+          <div style={{ marginBottom: 6 }}><ImagePicker value={p.image} onChange={(url) => update(i, { image: url })} folder="portfolio" hint="paysage 16:10" /></div>
           <input
             type="text"
             value={p.tags?.join(', ') || ''}
@@ -341,7 +342,7 @@ export function AboutEditor({ content, onChange }: { content: AboutContent; onCh
       <Field label="Titre (ligne 1)"><input type="text" value={content.titleLine1} onChange={(e) => set({ titleLine1: e.target.value })} placeholder="Un studio," style={inputStyle} /></Field>
       <Field label="Titre (ligne 2 - accent)"><input type="text" value={content.titleLine2} onChange={(e) => set({ titleLine2: e.target.value })} placeholder="une seule personne" style={inputStyle} /></Field>
       <Field label="Phrase d'accroche (lead)"><textarea value={content.lead} onChange={(e) => set({ lead: e.target.value })} rows={2} style={{ ...inputStyle, resize: 'vertical', minHeight: 60 }} /></Field>
-      <Field label="Photo de profil (URL)"><input type="text" value={content.profileImage} onChange={(e) => set({ profileImage: e.target.value })} placeholder="/images/jeason-profil.jpg" style={{ ...inputStyle, fontFamily: 'ui-monospace, SFMono-Regular, monospace' }} /></Field>
+      <Field label="Photo de profil"><ImagePicker value={content.profileImage} onChange={(url) => set({ profileImage: url })} folder="about" hint="portrait 4:5" /></Field>
 
       <label style={{ ...labelStyle, marginTop: 16 }}>Paragraphes ({paras.length})</label>
       {paras.map((p, i) => (
@@ -416,7 +417,7 @@ export function ContactEditor({ content, onChange }: { content: ContactContent; 
       <Field label="Eyebrow"><input type="text" value={content.eyebrow} onChange={(e) => set({ eyebrow: e.target.value })} style={inputStyle} /></Field>
       <Field label="Titre"><input type="text" value={content.title} onChange={(e) => set({ title: e.target.value })} style={inputStyle} /></Field>
       <Field label="Sous-titre"><input type="text" value={content.subtitle} onChange={(e) => set({ subtitle: e.target.value })} style={inputStyle} /></Field>
-      <Field label="Image (URL)"><input type="text" value={content.image} onChange={(e) => set({ image: e.target.value })} placeholder="/images/contact-bg.jpg" style={{ ...inputStyle, fontFamily: 'ui-monospace, SFMono-Regular, monospace' }} /></Field>
+      <Field label="Image"><ImagePicker value={content.image} onChange={(url) => set({ image: url })} folder="contact" hint="portrait ou paysage" /></Field>
 
       <label style={{ ...labelStyle, marginTop: 16 }}>Types de projets (dropdown du formulaire)</label>
       {types.map((t, i) => (
@@ -471,7 +472,7 @@ export function GlobalEditor({ content, onChange }: { content: GlobalContent; on
   return (
     <>
       <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--agency-ink-2)', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: 0.5 }}>Identité de marque</h3>
-      <Field label="Logo (URL)"><input type="text" value={content.brand.logoUrl} onChange={(e) => setBrand({ logoUrl: e.target.value })} placeholder="/images/logo-jlstudio.png" style={{ ...inputStyle, fontFamily: 'ui-monospace, SFMono-Regular, monospace' }} /></Field>
+      <Field label="Logo"><ImagePicker value={content.brand.logoUrl} onChange={(url) => setBrand({ logoUrl: url })} folder="brand" hint="PNG transparent" /></Field>
       <Field label="Tagline (slogan court)"><input type="text" value={content.brand.tagline} onChange={(e) => setBrand({ tagline: e.target.value })} style={inputStyle} /></Field>
 
       <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--agency-ink-2)', margin: '20px 0 12px', textTransform: 'uppercase', letterSpacing: 0.5 }}>Header — navigation</h3>
