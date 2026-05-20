@@ -73,6 +73,7 @@ model Site {
   activities              Activity[]
   deploys                 Deploy[]
   postCampaigns           PostCampaign[]
+  contractClauses         ContractClause[]
 
   @@index([status])
   @@index([createdAt])
@@ -645,6 +646,40 @@ model PortalDocumentCounter {
   site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
 
   @@unique([siteId, prefix, year])
+}
+
+// Bibliothèque de clauses réutilisables pour l'assemblage de contrats.
+model ContractClause {
+  id           String         @id @default(cuid())
+  siteId       String
+  category     ClauseCategory @default(AUTRE)
+  title        String
+  body         String // texte de la clause, avec variables {{...}}
+  defaultOrder Int            @default(100)
+  autoInclude  Boolean        @default(true) // proposée d'office si condition remplie
+  conditionKey String? // null = toujours ; sinon "has_crm" | "is_refonte" | "is_maintenance"
+  active       Boolean        @default(true)
+  version      Int            @default(1)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, category])
+  @@index([siteId, active])
+}
+
+enum ClauseCategory {
+  OBJET
+  DUREE
+  FINANCIER
+  PROPRIETE_INTELLECTUELLE
+  RGPD
+  MAINTENANCE
+  CONFIDENTIALITE
+  RESILIATION
+  DROIT_APPLICABLE
+  AUTRE
 }
 
 model PortalSignature {

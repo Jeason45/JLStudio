@@ -147,15 +147,27 @@ export default function AdminDocumentsPage() {
               {stats.total} {tabLabel.toLowerCase()} · {stats.pending} en attente · {stats.paid} payé{stats.paid > 1 ? 's' : ''} · {stats.totalAmount.toLocaleString('fr-FR')} €
             </p>
           </div>
-          <a
-            href={createHref}
-            style={{
-              ...primaryBtn(), textDecoration: 'none',
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-            }}
-          >
-            <ExternalLink size={13} /> Créer {tabArticle} {tabSingular}
-          </a>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <a
+              href="/admin/documents/clauses"
+              style={{
+                textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 500,
+                border: '1px solid var(--agency-border)', background: 'transparent', color: 'var(--agency-ink-2)',
+              }}
+            >
+              <FileSignature size={13} /> Bibliothèque de clauses
+            </a>
+            <a
+              href={createHref}
+              style={{
+                ...primaryBtn(), textDecoration: 'none',
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+              }}
+            >
+              <ExternalLink size={13} /> Créer {tabArticle} {tabSingular}
+            </a>
+          </div>
         </div>
       </header>
 
