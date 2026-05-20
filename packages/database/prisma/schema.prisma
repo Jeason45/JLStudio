@@ -617,8 +617,9 @@ model PortalDocument {
   notes            String?
   templateSlug     String? // e.g. "devis-moderne", "facture-moderne"
   linkedDocumentId String? // devis -> facture link (id of source devis)
-  pdfData          Bytes? // generated PDF cached inline
-  signedPdfData    Bytes? // signed PDF cached inline
+  pdfData          Bytes? // generated PDF cached inline (legacy — fallback durant migration R2)
+  pdfKey           String? // clé R2 du PDF (stockage migré, servi côté serveur uniquement)
+  signedPdfData    Bytes? // signed PDF cached inline (orphelin — jamais écrit)
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
 

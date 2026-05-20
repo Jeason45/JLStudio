@@ -6,6 +6,7 @@ import { generateToken } from '@/lib/signatureUtils';
 import { sendSignatureRequestEmail } from '@/lib/signatureEmail';
 import { logActivity } from '@/lib/activity';
 import { logger } from '@/lib/logger';
+import { loadDocumentPdf } from '@/lib/documentPdf';
 
 function ensureSuperAdmin(req: NextRequest): NextResponse | null {
   if (req.headers.get('x-portal-super-admin') !== 'true') {
@@ -51,7 +52,8 @@ export async function POST(
   if (document.signature) {
     return NextResponse.json({ error: 'Ce document a deja ete signe' }, { status: 409 });
   }
-  if (!document.pdfData) {
+  const pdfBuffer = await loadDocumentPdf(document);
+  if (!pdfBuffer) {
     return NextResponse.json({ error: 'PDF non généré — régénère le document avant envoi' }, { status: 400 });
   }
 
@@ -85,7 +87,7 @@ export async function POST(
       documentType: document.type,
       signLink,
       message,
-      pdfBuffer: Buffer.from(document.pdfData),
+      pdfBuffer,
       pdfFilename,
       companyName: company?.companyName ?? undefined,
     });

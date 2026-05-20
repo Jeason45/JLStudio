@@ -5,6 +5,7 @@ import { getAgencySite } from '@/lib/agencySite';
 import { sendDocumentEmail } from '@/lib/email';
 import { logActivity } from '@/lib/activity';
 import { logger } from '@/lib/logger';
+import { loadDocumentPdf } from '@/lib/documentPdf';
 
 function ensureSuperAdmin(req: NextRequest): NextResponse | null {
   if (req.headers.get('x-portal-super-admin') !== 'true') {
@@ -40,14 +41,15 @@ export async function POST(
   const document = await prisma.portalDocument.findFirst({
     where: { id, siteId: site.id },
     select: {
-      id: true, type: true, status: true, documentNumber: true, title: true, pdfData: true,
+      id: true, type: true, status: true, documentNumber: true, title: true, pdfData: true, pdfKey: true,
     },
   });
 
   if (!document) {
     return NextResponse.json({ error: 'Document introuvable' }, { status: 404 });
   }
-  if (!document.pdfData) {
+  const pdfBuffer = await loadDocumentPdf(document);
+  if (!pdfBuffer) {
     return NextResponse.json({ error: 'PDF non généré — régénère le document avant envoi' }, { status: 400 });
   }
 
@@ -64,7 +66,7 @@ export async function POST(
       documentName,
       documentType: document.type,
       message,
-      pdfBuffer: Buffer.from(document.pdfData),
+      pdfBuffer,
       pdfFilename,
       companyName: company?.companyName ?? undefined,
     });

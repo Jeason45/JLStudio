@@ -4,6 +4,7 @@ import { requirePortalAccess } from '@/lib/auth';
 import { logActivity } from '@/lib/activity';
 import { generateDocumentPDF } from '@/lib/pdfGenerator';
 import { sendDocumentEmail } from '@/lib/email';
+import { loadDocumentPdf } from '@/lib/documentPdf';
 import type { DocumentData, CompanySettingsData } from '@/types/portal';
 import { z } from 'zod';
 
@@ -81,10 +82,9 @@ export async function POST(
     logoUrl: company.logoUrl,
   } : null;
 
-  // Prefer cached PDF (Phase F1/F2) — regen on the fly only for legacy docs
-  const pdfBuffer: Buffer = document.pdfData
-    ? Buffer.from(document.pdfData)
-    : Buffer.from(await generateDocumentPDF(docData, companyData));
+  // Prefer cached PDF (R2 si pdfKey, sinon Bytes Postgres) — regen on the fly only for legacy docs
+  const cachedPdf = await loadDocumentPdf(document);
+  const pdfBuffer: Buffer = cachedPdf ?? Buffer.from(await generateDocumentPDF(docData, companyData));
 
   const typePrefix = document.type === 'DEVIS' ? 'Devis' : document.type === 'FACTURE' ? 'Facture' : 'Contrat';
   const pdfFilename = `${typePrefix}_${document.documentNumber || document.id}.pdf`;

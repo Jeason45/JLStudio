@@ -1,6 +1,7 @@
 import {
   S3Client,
   PutObjectCommand,
+  GetObjectCommand,
   DeleteObjectsCommand,
 } from '@aws-sdk/client-s3';
 
@@ -55,6 +56,19 @@ export function publicUrlForKey(key: string): string {
   }
   // MinIO/S3 path-style → /bucket/key
   return `${PUBLIC_URL.replace(/\/$/, '')}/${BUCKET}/${key}`;
+}
+
+/** Lit un objet R2 et retourne son contenu en Buffer (lecture serveur, jamais d'URL publique). */
+export async function getFromStorage(key: string): Promise<Buffer> {
+  const res = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: key }));
+  if (!res.Body) throw new Error(`Objet R2 vide : ${key}`);
+  const bytes = await res.Body.transformToByteArray();
+  return Buffer.from(bytes);
+}
+
+/** Upload un buffer sous une clé donnée (sans retourner d'URL publique — usage privé). */
+export async function putToStorage(key: string, body: Buffer, contentType: string): Promise<void> {
+  await s3.send(new PutObjectCommand({ Bucket: BUCKET, Key: key, Body: body, ContentType: contentType }));
 }
 
 /** Supprime des objets par clé. */

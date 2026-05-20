@@ -3,6 +3,7 @@ import { generatePDFFromTemplate } from '@/lib/mustachePdfGenerator';
 import { prisma } from '@/lib/prisma';
 import { getAgencySite } from '@/lib/agencySite';
 import { logger } from '@/lib/logger';
+import { uploadDocumentPdf } from '@/lib/documentPdf';
 
 /**
  * Generate a PDF from a Mustache template + persist it inline in PortalDocument.
@@ -57,6 +58,16 @@ export async function POST(req: NextRequest) {
     const site = await getAgencySite();
     let savedId = documentId as string | undefined;
 
+    // Dual-write : on tente l'upload R2 (clé non-devinable). En cas d'échec
+    // ou de stockage non configuré, pdfKey reste null et on garde pdfData.
+    let pdfKey: string | null = null;
+    try {
+      pdfKey = await uploadDocumentPdf(site.id, result.buffer);
+    } catch (err) {
+      logger.warn({ err }, 'Upload PDF R2 échoué — fallback pdfData Postgres');
+      pdfKey = null;
+    }
+
     if (documentId) {
       // Update existing
       const existing = await prisma.portalDocument.findFirst({
@@ -79,6 +90,7 @@ export async function POST(req: NextRequest) {
           contactId: contactId ?? undefined,
           linkedDocumentId: linkedDocumentId ?? undefined,
           pdfData: result.buffer,
+          pdfKey,
         },
       });
     } else if (type) {
@@ -119,6 +131,7 @@ export async function POST(req: NextRequest) {
           contactId: contactId || null,
           linkedDocumentId: linkedDocumentId || null,
           pdfData: result.buffer,
+          pdfKey,
         },
         select: { id: true },
       });
