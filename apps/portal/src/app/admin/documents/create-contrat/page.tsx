@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, FileDown, Link2 } from 'lucide-react';
 import { ContactSearchBox } from '../_components/ContactSearchBox';
 import {
-  emptyClient,
+  emptyClient, parseAmount,
   type Contact, type CompanySettings, type ClientInfo,
 } from '../_components/types';
 import { inputStyle, labelStyle, sectionStyle, sectionTitleStyle, primaryBtnStyle, secondaryBtnStyle } from '../_components/styles';
@@ -106,7 +106,7 @@ function CreateContratContent() {
         date_fin: String(data.date_fin || ''),
         objet_contrat: String(data.objet_contrat || doc.title || ''),
         description_prestation: String(data.description_prestation || ''),
-        montant_total: String(data.montant_total || (doc.totalAmount ? doc.totalAmount.toFixed(2) : '')),
+        montant_total: data.montant_total ? parseAmount(data.montant_total) : (doc.totalAmount ? doc.totalAmount.toFixed(2) : ''),
         acompte_pourcentage: String(data.acompte_pourcentage || '30'),
         conditions_paiement: String(data.conditions_paiement || ''),
       });

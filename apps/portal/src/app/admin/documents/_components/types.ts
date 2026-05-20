@@ -72,3 +72,12 @@ export const emptyLigne = (): LigneDocument => ({
   quantite: '1',
   unite: '',
 });
+
+/**
+ * Reconvertit un montant affiché (FR ou anglo) en chaîne parseable par parseFloat.
+ * "1 500,00" / "1 500,00" → "1500.00" ; "1500.00" → "1500.00".
+ * Nécessaire pour recharger un devis/facture en édition ou conversion (le contenu
+ * stocké contient des montants formatés FR depuis le formatage des montants).
+ */
+export const parseAmount = (v: unknown): string =>
+  String(v ?? '').replace(/[\s  ]/g, '').replace(',', '.');

@@ -403,6 +403,15 @@ function DesktopRow({
           <button onClick={onEdit} title="Modifier" style={iconBtn()}>
             <Edit3 size={13} />
           </button>
+          {doc.type === 'DEVIS' && (doc.status === 'SIGNED' || doc.status === 'ACCEPTED') && (
+            <button
+              onClick={() => { window.location.href = `/admin/documents/create-facture?fromDevis=${doc.id}`; }}
+              title="Convertir en facture"
+              style={iconBtn('#22c55e')}
+            >
+              <Receipt size={13} />
+            </button>
+          )}
           <button onClick={onDownload} title="Télécharger PDF" style={iconBtn()}>
             <Download size={13} />
           </button>
@@ -454,6 +463,9 @@ function MobileRow({
         </span>
         <div style={{ display: 'inline-flex', gap: 4 }}>
           <button onClick={onEdit} style={iconBtn()} title="Modifier"><Edit3 size={12} /></button>
+          {doc.type === 'DEVIS' && (doc.status === 'SIGNED' || doc.status === 'ACCEPTED') && (
+            <button onClick={() => { window.location.href = `/admin/documents/create-facture?fromDevis=${doc.id}`; }} style={iconBtn('#22c55e')} title="Convertir en facture"><Receipt size={12} /></button>
+          )}
           <button onClick={onDownload} style={iconBtn()} title="PDF"><Download size={12} /></button>
           <button onClick={onSend} style={iconBtn()} title="Envoyer (option signature)"><Mail size={12} /></button>
           <button onClick={onDelete} style={iconBtn('var(--agency-danger)')} title="Supprimer"><Trash2 size={12} /></button>

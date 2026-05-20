@@ -6,7 +6,7 @@ import { ArrowLeft, FileDown, Link2 } from 'lucide-react';
 import { ContactSearchBox } from '../_components/ContactSearchBox';
 import { LignesEditor } from '../_components/LignesEditor';
 import {
-  emptyClient, emptyDestinataire, emptyLigne,
+  emptyClient, emptyDestinataire, emptyLigne, parseAmount,
   type Contact, type CompanySettings, type LigneDocument, type ClientInfo, type Destinataire,
 } from '../_components/types';
 import { inputStyle, labelStyle, sectionStyle, sectionTitleStyle, primaryBtnStyle, secondaryBtnStyle } from '../_components/styles';
@@ -126,7 +126,7 @@ function CreateFactureContent() {
       if (Array.isArray(data.lignes) && data.lignes.length > 0) {
         setLignes((data.lignes as Array<Record<string, unknown>>).map((l) => ({
           description: String(l.description || ''),
-          prix_unitaire: String(l.prix_unitaire || ''),
+          prix_unitaire: parseAmount(l.prix_unitaire),
           quantite: String(l.quantite || '1'),
           unite: String(l.unite || ''),
         })));
@@ -181,7 +181,7 @@ function CreateFactureContent() {
     if (Array.isArray(data.lignes) && data.lignes.length > 0) {
       const importedLignes = (data.lignes as Array<Record<string, unknown>>).map((l) => ({
         description: String(l.description || ''),
-        prix_unitaire: String(l.prix_unitaire || ''),
+        prix_unitaire: parseAmount(l.prix_unitaire),
         quantite: String(l.quantite || '1'),
         unite: String(l.unite || ''),
       }));
