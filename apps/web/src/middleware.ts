@@ -12,10 +12,12 @@ const CSP_DIRECTIVES = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://analytics.jlstudio.dev",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  // Images externes autorisées (R2 pub-xxx.r2.dev + toute URL HTTPS collée dans l'éditeur)
+  "img-src 'self' data: blob: https:",
   "font-src 'self'",
   "connect-src 'self' https://analytics.jlstudio.dev",
-  "frame-src 'none'",
+  // Autorise l'embed Google Maps de la section Contact
+  "frame-src https://www.google.com https://maps.google.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
