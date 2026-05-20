@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { generateDocumentPDF } from '@/lib/pdfGenerator';
 import { generateSignedPDF } from '@/lib/signedPdfGenerator';
-import { loadDocumentPdf } from '@/lib/documentPdf';
+import { loadDocumentPdf, uploadDocumentPdf } from '@/lib/documentPdf';
+import { logger } from '@/lib/logger';
 import { createSignatureProof, getClientIP, getUserAgent, generateStringHash } from '@/lib/signatureUtils';
 import { sendDocumentEmail } from '@/lib/email';
 import type { DocumentData, CompanySettingsData } from '@/types/portal';
@@ -126,6 +127,16 @@ export async function POST(request: NextRequest) {
     { signerName, signerEmail, signedAt, ipAddress, documentHash }
   );
 
+  // Persiste le PDF SIGNÉ pour que le CRM affiche la version signée (et non plus
+  // l'original). R2 en priorité (clé non-devinable) ; fallback Postgres sinon.
+  let signedPdfKey: string | null = null;
+  try {
+    signedPdfKey = await uploadDocumentPdf(signatureRequest.siteId, signedPdfBuffer);
+  } catch (err) {
+    logger.warn({ err }, 'Upload PDF signé R2 échoué — fallback pdfData Postgres');
+    signedPdfKey = null;
+  }
+
   // Save signature + update request + update document status in transaction
   await prisma.$transaction(async (tx) => {
     await tx.portalSignature.create({
@@ -148,7 +159,12 @@ export async function POST(request: NextRequest) {
 
     await tx.portalDocument.update({
       where: { id: document.id },
-      data: { status: 'SIGNED', signedAt },
+      data: {
+        status: 'SIGNED',
+        signedAt,
+        pdfKey: signedPdfKey,
+        pdfData: signedPdfKey ? null : signedPdfBuffer,
+      },
     });
   });
 
