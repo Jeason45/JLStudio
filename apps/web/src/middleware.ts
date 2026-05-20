@@ -57,6 +57,22 @@ export async function middleware(req: NextRequest) {
 
   // Security headers for all other routes
   const response = NextResponse.next();
+
+  // Route /preview : autorise l'embedding par portal.jlstudio.dev (éditeur CRM)
+  // → on remplace frame-ancestors 'none' par 'self' + portal, et on ne met PAS
+  // X-Frame-Options DENY (qui aurait priorité sur CSP dans certains navigateurs).
+  if (pathname.startsWith('/preview')) {
+    const previewCsp = CSP_DIRECTIVES.replace(
+      "frame-ancestors 'none'",
+      "frame-ancestors 'self' https://portal.jlstudio.dev",
+    );
+    response.headers.set('Content-Security-Policy', previewCsp);
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    return response;
+  }
+
   response.headers.set('Content-Security-Policy', CSP_DIRECTIVES);
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'DENY');
