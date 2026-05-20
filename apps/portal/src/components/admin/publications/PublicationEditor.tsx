@@ -250,7 +250,7 @@ export default function PublicationEditor({ initial, mode }: Props) {
   const selectedPlatforms = new Set(campaign.targets.map((t) => t.platform));
 
   return (
-    <div style={{ maxWidth: 880, margin: '0 auto' }}>
+    <div style={{ width: '100%' }}>
       {/* Métadonnées campagne */}
       <section style={{ marginBottom: 24 }}>
         <label style={labelStyle()}>Titre interne</label>

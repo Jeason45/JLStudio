@@ -184,7 +184,7 @@ function SignPageContent() {
 
   return (
     <div style={pageStyle}>
-      <div style={{ ...cardStyle, maxWidth: '760px' }}>
+      <div style={{ ...cardStyle, maxWidth: '1100px' }}>
         {/* Header */}
         <div style={{ background: 'linear-gradient(135deg, #638BFF, #4a6fd4)', padding: '24px 28px', borderRadius: '16px 16px 0 0', color: '#fff' }}>
           <p style={{ fontSize: '13px', opacity: 0.8, margin: '0 0 4px' }}>{data.siteName}</p>

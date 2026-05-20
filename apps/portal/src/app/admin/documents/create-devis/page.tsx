@@ -223,7 +223,7 @@ function CreateDevisContent() {
   const canGenerate = clientInfo.nom_client && lignes.some((l) => l.description.trim());
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ width: '100%' }}>
       {/* Header */}
       <header style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
         <a

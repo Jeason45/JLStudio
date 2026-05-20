@@ -288,7 +288,7 @@ function CreateFactureContent() {
   const canGenerate = clientInfo.nom_client && lignes.some((l) => l.description.trim());
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ width: '100%' }}>
       <header style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
         <a href="/admin/documents" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 8, color: 'var(--agency-ink-3)', textDecoration: 'none' }}>
           <ArrowLeft size={16} />

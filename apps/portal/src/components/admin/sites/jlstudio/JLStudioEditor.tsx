@@ -323,7 +323,7 @@ export default function JLStudioEditor({ site, initialContent, hasDraft: initial
 
         {/* Zone d'édition */}
         <main style={{ flex: 1, overflowY: 'auto', padding: 24, background: 'var(--agency-surface-0)' }}>
-          <div style={{ maxWidth: 760, margin: '0 auto' }}>
+          <div style={{ width: '100%' }}>
             <SectionHeader sectionKey={selected} status={sectionsCompleteness[selected]} />
             <div style={{
               background: 'var(--agency-surface-1)',
