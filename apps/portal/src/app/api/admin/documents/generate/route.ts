@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { getAgencySite } from '@/lib/agencySite';
 import { logger } from '@/lib/logger';
 import { uploadDocumentPdf } from '@/lib/documentPdf';
+import { applyPrestataireSignature } from '@/lib/prestataireSignature';
 
 /**
  * Generate a PDF from a Mustache template + persist it inline in PortalDocument.
@@ -53,6 +54,20 @@ export async function POST(req: NextRequest) {
         { error: result.error || 'Erreur lors de la génération du PDF' },
         { status: 500 },
       );
+    }
+
+    // Contrat : appose la signature du prestataire (pré-signé), calée en miroir
+    // de la zone e-signature client (dessinée plus tard par signedPdfGenerator).
+    if (type === 'CONTRAT') {
+      try {
+        const dateStr =
+          typeof data?.date_contrat === 'string' && data.date_contrat
+            ? data.date_contrat
+            : new Date().toLocaleDateString('fr-FR');
+        result.buffer = await applyPrestataireSignature(result.buffer, dateStr);
+      } catch (err) {
+        logger.warn({ err }, 'Signature prestataire non apposée');
+      }
     }
 
     const site = await getAgencySite();
