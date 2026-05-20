@@ -28,6 +28,7 @@ function SignPageContent() {
   const [data, setData] = useState<ValidateResponse | null>(null);
   const [signerName, setSignerName] = useState('');
   const [signerEmail, setSignerEmail] = useState('');
+  const [accepted, setAccepted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   // Canvas refs
@@ -102,6 +103,7 @@ function SignPageContent() {
   };
 
   const handleSubmit = async () => {
+    if (!accepted) { setError('Veuillez cocher « Bon pour accord » pour valider le devis'); return; }
     if (!hasDrawn.current) { setError('Veuillez dessiner votre signature'); return; }
     if (!signerName.trim()) { setError('Veuillez saisir votre nom'); return; }
     if (!signerEmail.trim()) { setError('Veuillez saisir votre email'); return; }
@@ -182,7 +184,7 @@ function SignPageContent() {
 
   return (
     <div style={pageStyle}>
-      <div style={{ ...cardStyle, maxWidth: '560px' }}>
+      <div style={{ ...cardStyle, maxWidth: '760px' }}>
         {/* Header */}
         <div style={{ background: 'linear-gradient(135deg, #638BFF, #4a6fd4)', padding: '24px 28px', borderRadius: '16px 16px 0 0', color: '#fff' }}>
           <p style={{ fontSize: '13px', opacity: 0.8, margin: '0 0 4px' }}>{data.siteName}</p>
@@ -191,7 +193,7 @@ function SignPageContent() {
 
         <div style={{ padding: '28px' }}>
           {/* Document info */}
-          <div style={{ background: '#f8fafc', borderLeft: '4px solid #638BFF', padding: '16px 20px', borderRadius: '0 8px 8px 0', marginBottom: '24px' }}>
+          <div style={{ background: '#f8fafc', borderLeft: '4px solid #638BFF', padding: '16px 20px', borderRadius: '0 8px 8px 0', marginBottom: '20px' }}>
             <p style={{ margin: '0 0 4px', fontSize: '14px', fontWeight: 600, color: '#1e293b' }}>
               {typeLabel(doc.type)} {doc.documentNumber || ''}
             </p>
@@ -199,6 +201,21 @@ function SignPageContent() {
             {doc.totalAmount != null && (
               <p style={{ margin: '4px 0 0', fontSize: '15px', fontWeight: 600, color: '#638BFF' }}>{formatCurrency(doc.totalAmount)}</p>
             )}
+          </div>
+
+          {/* Aperçu du document à signer */}
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{ ...labelStyle, marginBottom: '8px' }}>Document à signer</label>
+            <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', overflow: 'hidden', background: '#f8fafc' }}>
+              <iframe
+                src={`/api/sign/pdf?token=${token}`}
+                style={{ width: '100%', height: '520px', border: 'none', display: 'block' }}
+                title="Document à signer"
+              />
+            </div>
+            <p style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px' }}>
+              Vérifiez attentivement le document avant de signer.
+            </p>
           </div>
 
           {/* Signer info */}
@@ -240,6 +257,24 @@ function SignPageContent() {
               Dessinez votre signature avec la souris ou le doigt
             </p>
           </div>
+
+          {/* Bon pour accord */}
+          <label style={{
+            display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '14px 16px',
+            background: accepted ? '#eff4ff' : '#f8fafc',
+            border: `1px solid ${accepted ? '#638BFF' : '#e2e8f0'}`,
+            borderRadius: '10px', marginBottom: '20px', cursor: 'pointer',
+          }}>
+            <input
+              type="checkbox"
+              checked={accepted}
+              onChange={(e) => setAccepted(e.target.checked)}
+              style={{ marginTop: '2px', accentColor: '#638BFF', width: '16px', height: '16px', flexShrink: 0 }}
+            />
+            <span style={{ fontSize: '13px', color: '#1e293b', lineHeight: 1.5 }}>
+              <strong>« Bon pour accord »</strong> — J&apos;ai lu et j&apos;accepte les termes de ce {typeLabel(doc.type).toLowerCase()} et appose ma signature pour validation.
+            </span>
+          </label>
 
           {/* Error */}
           {error && (

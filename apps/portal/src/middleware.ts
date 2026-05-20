@@ -8,6 +8,7 @@ const PUBLIC_PATHS = [
   '/api/auth/logout',
   '/api/auth/accept-invite',
   '/sign',
+  '/api/sign', // page de signature publique (validate/submit/pdf vérifient le token eux-mêmes)
   // Routes machine-to-machine — auth par Bearer token vérifié dans la route elle-même
   '/api/cron',     // CRON_SECRET dans la route
   '/api/n8n',      // N8N_API_KEY dans la route
