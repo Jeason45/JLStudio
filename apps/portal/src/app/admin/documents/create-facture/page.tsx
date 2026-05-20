@@ -211,7 +211,7 @@ function CreateFactureContent() {
     });
   };
 
-  const fmt = (n: number) => n.toFixed(2);
+  const fmt = (n: number) => new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
   const sousTotal = lignes.reduce(
     (s, l) => s + (parseFloat(l.prix_unitaire) || 0) * (parseFloat(l.quantite) || 0),
     0,
@@ -240,6 +240,7 @@ function CreateFactureContent() {
         ...clientInfo,
         ...destinataire,
         ...factureInfo,
+        acompte_verse: factureInfo.acompte_verse ? fmt(parseFloat(factureInfo.acompte_verse) || 0) : '',
         numero_devis_ref: linkedDevisNumber || '',
         lignes: lignes.map((l) => ({
           description: l.description,

@@ -24,7 +24,7 @@ export function LignesEditor({
     setLignes(updated);
   };
 
-  const fmt = (n: number) => n.toFixed(2);
+  const fmt = (n: number) => new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
 
   return (
     <section style={sectionStyle()}>

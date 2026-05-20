@@ -190,6 +190,7 @@ function CreateContratContent() {
         logoUrl: company?.logoUrl || '',
         ...clientInfo,
         ...contratInfo,
+        montant_total: new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parseFloat(contratInfo.montant_total) || 0),
         numero_devis_ref: linkedDevisNumber || '',
       };
 

@@ -146,7 +146,7 @@ function CreateDevisContent() {
     });
   };
 
-  const fmt = (n: number) => n.toFixed(2);
+  const fmt = (n: number) => new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
   const sousTotal = lignes.reduce(
     (s, l) => s + (parseFloat(l.prix_unitaire) || 0) * (parseFloat(l.quantite) || 0),
     0,
