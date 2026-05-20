@@ -41,6 +41,7 @@ function CreateDevisContent() {
     date_devis: new Date().toLocaleDateString('fr-FR'),
     objet_devis: '',
     validite_jours: '30',
+    remise_pourcentage: '',
     acompte_pourcentage: '',
     conditions_reglement: '30 jours net',
     mode_reglement: 'Virement bancaire',
@@ -87,6 +88,7 @@ function CreateDevisContent() {
         date_devis: String(data.date_devis || new Date(doc.createdAt).toLocaleDateString('fr-FR')),
         objet_devis: String(data.objet_devis || doc.title || ''),
         validite_jours: String(data.validite_jours || '30'),
+        remise_pourcentage: String(data.remise_pourcentage || ''),
         acompte_pourcentage: String(data.acompte_pourcentage || ''),
         conditions_reglement: String(data.conditions_reglement || '30 jours net'),
         mode_reglement: String(data.mode_reglement || 'Virement bancaire'),
@@ -151,9 +153,12 @@ function CreateDevisContent() {
     (s, l) => s + (parseFloat(l.prix_unitaire) || 0) * (parseFloat(l.quantite) || 0),
     0,
   );
+  const remisePct = parseFloat(devisInfo.remise_pourcentage) || 0;
+  const remiseMontant = (sousTotal * remisePct) / 100;
+  const totalHT = sousTotal - remiseMontant;
   const taxRate = 20;
-  const taxAmount = (sousTotal * taxRate) / 100;
-  const totalTTC = sousTotal + taxAmount;
+  const taxAmount = (totalHT * taxRate) / 100;
+  const totalTTC = totalHT + taxAmount;
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -179,6 +184,9 @@ function CreateDevisContent() {
           total_ht: fmt((parseFloat(l.prix_unitaire) || 0) * (parseFloat(l.quantite) || 0)),
         })),
         sous_total_ht: fmt(sousTotal),
+        remise_pourcentage: remisePct > 0 ? devisInfo.remise_pourcentage : '',
+        remise_montant: remisePct > 0 ? fmt(remiseMontant) : '',
+        total_ht_final: fmt(totalHT),
       };
 
       const res = await fetch('/api/admin/documents/generate', {
@@ -191,7 +199,7 @@ function CreateDevisContent() {
           title: devisInfo.objet_devis || `Devis ${devisInfo.numero_devis}`,
           data: formData,
           contactId: selectedContactId || undefined,
-          amount: sousTotal,
+          amount: totalHT,
           taxRate,
           taxAmount,
           totalAmount: totalTTC,
@@ -424,7 +432,17 @@ function CreateDevisContent() {
         {/* Conditions */}
         <section style={sectionStyle()}>
           <h2 style={sectionTitleStyle()}>Conditions <span style={{ fontWeight: 400, color: 'var(--agency-ink-4, var(--agency-ink-3))' }}>(optionnel)</span></h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+            <div>
+              <label style={labelStyle()}>Remise (%)</label>
+              <input
+                style={inputStyle()}
+                type="number"
+                placeholder="0"
+                value={devisInfo.remise_pourcentage}
+                onChange={(e) => setDevisInfo({ ...devisInfo, remise_pourcentage: e.target.value })}
+              />
+            </div>
             <div>
               <label style={labelStyle()}>Acompte (%)</label>
               <input
@@ -459,9 +477,13 @@ function CreateDevisContent() {
           <div>
             <div style={{ fontSize: 12, color: 'var(--agency-ink-3)' }}>Sous-total HT</div>
             <div style={{ fontSize: 14, color: 'var(--agency-ink-2)', fontWeight: 500 }}>{fmt(sousTotal)} €</div>
-            <div style={{ fontSize: 11, color: 'var(--agency-ink-3)', marginTop: 6 }}>TVA 20% : {fmt(taxAmount)} €</div>
-            <div style={{ fontSize: 18, color: 'var(--agency-ink-1)', fontWeight: 700, marginTop: 4 }}>
-              Total TTC : {fmt(totalTTC)} €
+            {remisePct > 0 && (
+              <div style={{ fontSize: 12, color: 'var(--agency-ink-3)', marginTop: 6 }}>
+                Remise ({remisePct}%) : -{fmt(remiseMontant)} €
+              </div>
+            )}
+            <div style={{ fontSize: 18, color: 'var(--agency-ink-1)', fontWeight: 700, marginTop: 6 }}>
+              Total HT : {fmt(totalHT)} €
             </div>
           </div>
           <button
