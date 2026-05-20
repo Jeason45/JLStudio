@@ -73,19 +73,30 @@ export async function POST(req: NextRequest) {
 
     if (!contactId && data.newContact) {
       const c = data.newContact;
-      const contact = await prisma.contact.create({
-        data: {
-          siteId: site.id,
-          name: c.name,
-          firstName: c.firstName,
-          lastName: c.lastName,
-          email: c.email || `lead-${Date.now()}@noreply.local`,
-          phone: c.phone,
-          companyName: c.companyName,
-        },
+      const email = c.email || `lead-${Date.now()}@noreply.local`;
+      // Si un contact avec cet email existe déjà pour ce site, on le réutilise
+      // (la contrainte unique siteId+email interdit le doublon) plutôt que de planter.
+      const existingContact = await prisma.contact.findFirst({
+        where: { siteId: site.id, email },
         select: { id: true },
       });
-      contactId = contact.id;
+      if (existingContact) {
+        contactId = existingContact.id;
+      } else {
+        const contact = await prisma.contact.create({
+          data: {
+            siteId: site.id,
+            name: c.name,
+            firstName: c.firstName,
+            lastName: c.lastName,
+            email,
+            phone: c.phone,
+            companyName: c.companyName,
+          },
+          select: { id: true },
+        });
+        contactId = contact.id;
+      }
     } else if (contactId) {
       // Verify contact belongs to agency
       const contact = await prisma.contact.findFirst({
