@@ -8,45 +8,35 @@ import { useIsMobile } from '@/hooks/useMediaQuery';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-const steps = [
-  {
-    number: '01',
-    title: 'Découverte',
-    description:
-      'Échange approfondi pour comprendre vos objectifs, votre marché et vos utilisateurs cibles.',
-    detail: 'Brief complet, analyse concurrentielle, définition des KPI',
-  },
-  {
-    number: '02',
-    title: 'Conception',
-    description:
-      'Wireframes, maquettes et prototype interactif validés avec vous avant le développement.',
-    detail: 'UX research, prototypage Figma, itérations de design',
-  },
-  {
-    number: '03',
-    title: 'Développement',
-    description:
-      "Code propre, performant et testé. Points réguliers pour suivre l'avancement en temps réel.",
-    detail: 'React / Next.js, CI/CD, revues de code hebdomadaires',
-  },
-  {
-    number: '04',
-    title: 'Tests & QA',
-    description:
-      'Tests cross-browser, responsive, accessibilité et performance pour un produit sans compromis.',
-    detail: 'Tests automatisés, audit Lighthouse, compatibilité mobile',
-  },
-  {
-    number: '05',
-    title: 'Lancement',
-    description:
-      'Déploiement, formation et suivi post-lancement. Votre projet entre en production en toute sérénité.',
-    detail: 'Mise en ligne, monitoring, support 30 jours inclus',
-  },
-];
+export interface ProcessStep {
+  number: string;
+  title: string;
+  description: string;
+  detail: string;
+}
 
-export default function ProcessJourney() {
+export interface ProcessContent {
+  eyebrow: string;
+  title: string;
+  steps: ProcessStep[];
+}
+
+export const DEFAULT_PROCESS: ProcessContent = {
+  eyebrow: 'Méthode',
+  title: 'Notre processus',
+  steps: [
+    { number: '01', title: 'Découverte', description: 'Échange approfondi pour comprendre vos objectifs, votre marché et vos utilisateurs cibles.', detail: 'Brief complet, analyse concurrentielle, définition des KPI' },
+    { number: '02', title: 'Conception', description: 'Wireframes, maquettes et prototype interactif validés avec vous avant le développement.', detail: 'UX research, prototypage Figma, itérations de design' },
+    { number: '03', title: 'Développement', description: "Code propre, performant et testé. Points réguliers pour suivre l'avancement en temps réel.", detail: 'React / Next.js, CI/CD, revues de code hebdomadaires' },
+    { number: '04', title: 'Tests & QA', description: 'Tests cross-browser, responsive, accessibilité et performance pour un produit sans compromis.', detail: 'Tests automatisés, audit Lighthouse, compatibilité mobile' },
+    { number: '05', title: 'Lancement', description: 'Déploiement, formation et suivi post-lancement. Votre projet entre en production en toute sérénité.', detail: 'Mise en ligne, monitoring, support 30 jours inclus' },
+  ],
+};
+
+interface ProcessJourneyProps { content?: ProcessContent }
+
+export default function ProcessJourney({ content = DEFAULT_PROCESS }: ProcessJourneyProps = {}) {
+  const steps = content.steps && content.steps.length > 0 ? content.steps : DEFAULT_PROCESS.steps;
   const sectionRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const lineProgressRef = useRef<HTMLDivElement>(null);
@@ -303,9 +293,9 @@ export default function ProcessJourney() {
       </div>
       {/* Section header */}
       <div className="relative z-10 pt-20 pb-12 md:pt-32 md:pb-24 text-center">
-        <p className="text-[#638BFF] text-xs tracking-[0.4em] uppercase mb-4">Méthode</p>
+        <p className="text-[#638BFF] text-xs tracking-[0.4em] uppercase mb-4">{content.eyebrow}</p>
         <h2 className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-5xl font-black text-white">
-          Notre processus
+          {content.title}
         </h2>
       </div>
 

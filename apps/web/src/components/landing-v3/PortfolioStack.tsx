@@ -29,11 +29,11 @@ import type { LucideIcon } from 'lucide-react';
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 interface Feature {
-  icon: LucideIcon;
+  icon: LucideIcon | string; // LucideIcon pour le hardcoded, string (emoji) pour le contenu CRM (non rendu — seul label l'est)
   label: string;
 }
 
-interface Project {
+export interface Project {
   title: string;
   category: string;
   tags: string[];
@@ -45,7 +45,14 @@ interface Project {
   };
 }
 
-const projects: Project[] = [
+export interface PortfolioContent {
+  eyebrow: string;
+  title: string;
+  hint: string;
+  projects: Project[];
+}
+
+const DEFAULT_PROJECTS: Project[] = [
   {
     title: 'Flamme by Caubet',
     category: 'Site Vitrine & CRM',
@@ -127,18 +134,24 @@ const projects: Project[] = [
 const FAN_ROTATIONS = [-16, -8, 0, 8, 16];
 const FAN_Y_OFFSETS = [30, 10, 0, 10, 30];
 const FAN_X_SPREAD = 220;
-const MID = Math.floor(projects.length / 2);
+const MID = Math.floor(DEFAULT_PROJECTS.length / 2);
 
 /** Compute the fan position for a card */
 function getFanPosition(i: number) {
   return {
     x: (i - MID) * FAN_X_SPREAD,
-    y: FAN_Y_OFFSETS[i],
-    rotation: FAN_ROTATIONS[i],
+    y: FAN_Y_OFFSETS[i] ?? 0,
+    rotation: FAN_ROTATIONS[i] ?? 0,
   };
 }
 
-export default function PortfolioStack() {
+interface PortfolioStackProps { content?: PortfolioContent }
+
+export default function PortfolioStack({ content }: PortfolioStackProps = {}) {
+  const projects: Project[] = content?.projects && content.projects.length > 0 ? content.projects : DEFAULT_PROJECTS;
+  const eyebrow = content?.eyebrow || 'Portfolio';
+  const title = content?.title || 'Nos réalisations';
+  const hint = content?.hint || 'Cliquer sur une carte pour en savoir plus';
   const sectionRef = useRef<HTMLElement>(null);
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [fanReady, setFanReady] = useState(false);
@@ -221,9 +234,9 @@ export default function PortfolioStack() {
     return (
       <section id="projets" className="relative bg-[#0a0a0a] py-16 px-4">
         <div className="text-center mb-10">
-          <p className="text-[#638BFF] text-xs tracking-[0.4em] uppercase mb-3">Portfolio</p>
+          <p className="text-[#638BFF] text-xs tracking-[0.4em] uppercase mb-3">{eyebrow}</p>
           <h2 className="font-[family-name:var(--font-outfit)] text-3xl font-black text-white">
-            Nos réalisations
+            {title}
           </h2>
         </div>
         <div className="space-y-6 max-w-lg mx-auto">
@@ -288,7 +301,7 @@ export default function PortfolioStack() {
           data-section-title
           className="font-[family-name:var(--font-outfit)] text-4xl md:text-5xl font-black text-white"
         >
-          Nos réalisations
+          {title}
         </h2>
       </div>
 
@@ -375,7 +388,7 @@ export default function PortfolioStack() {
       {/* Hint */}
       <div className="text-center mt-10 relative z-[5]">
         <p className="text-white/30 text-xs tracking-[0.15em] uppercase">
-          Cliquer sur une carte pour en savoir plus
+          {hint}
         </p>
       </div>
 

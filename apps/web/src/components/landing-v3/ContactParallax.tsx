@@ -9,7 +9,33 @@ import { useIsMobile } from '@/hooks/useMediaQuery';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function ContactParallax() {
+export interface ContactProjectType { value: string; label: string }
+export interface ContactContent {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  projectTypes: ContactProjectType[];
+}
+
+const DEFAULT_CONTACT: ContactContent = {
+  eyebrow: 'Contact',
+  title: 'Votre Projet',
+  subtitle: 'Discutons de votre prochaine réalisation',
+  image: '/images/contact-bg.jpg',
+  projectTypes: [
+    { value: 'site_vitrine', label: 'Site Vitrine' },
+    { value: 'ecommerce', label: 'E-Commerce' },
+    { value: 'application', label: 'Application Web' },
+    { value: 'landing', label: 'Landing Page' },
+    { value: 'refonte', label: 'Refonte' },
+    { value: 'autre', label: 'Autre' },
+  ],
+};
+
+interface ContactParallaxProps { content?: ContactContent }
+
+export default function ContactParallax({ content = DEFAULT_CONTACT }: ContactParallaxProps = {}) {
   const sectionRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const innerImageRef = useRef<HTMLDivElement>(null);
@@ -28,14 +54,7 @@ export default function ContactParallax() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  const projectTypes = [
-    { value: 'site_vitrine', label: 'Site Vitrine' },
-    { value: 'ecommerce', label: 'E-Commerce' },
-    { value: 'application', label: 'Application Web' },
-    { value: 'landing', label: 'Landing Page' },
-    { value: 'refonte', label: 'Refonte' },
-    { value: 'autre', label: 'Autre' },
-  ];
+  const projectTypes = content.projectTypes && content.projectTypes.length > 0 ? content.projectTypes : DEFAULT_CONTACT.projectTypes;
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -163,13 +182,18 @@ export default function ContactParallax() {
         <div className={`relative overflow-hidden ${isMobile ? 'h-[35vh] min-h-[220px]' : 'h-auto'}`}>
           <div ref={imageRef} className="absolute inset-0">
             <div ref={innerImageRef} className="absolute inset-[-15%] will-change-transform">
-              <Image
-                src="/images/contact-bg.jpg"
-                alt=""
-                fill
-                className="object-cover"
-                sizes={isMobile ? '100vw' : '50vw'}
-              />
+              {content.image.startsWith('/') ? (
+                <Image
+                  src={content.image}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes={isMobile ? '100vw' : '50vw'}
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={content.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
+              )}
             </div>
             <div className="absolute inset-0 bg-black/25" />
             <div className={`absolute inset-0 ${isMobile ? 'bg-gradient-to-b from-transparent to-black' : 'bg-gradient-to-r from-transparent via-transparent to-black/80'}`} />
@@ -186,17 +210,17 @@ export default function ContactParallax() {
           <div className={`relative z-10 flex items-end h-full ${isMobile ? 'p-5 pb-6' : 'p-12 lg:p-20'}`}>
             <div>
               <p className="text-[#638BFF] text-xs tracking-[0.4em] uppercase mb-3 sm:mb-4">
-                Contact
+                {content.eyebrow}
               </p>
               <SplitTextReveal
                 tag="h2"
                 type="chars"
                 className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-5xl font-black text-white leading-[0.95]"
               >
-                Votre Projet
+                {content.title}
               </SplitTextReveal>
               <p className="text-white/50 text-xs sm:text-sm mt-3 sm:mt-4 max-w-xs">
-                Discutons de votre prochaine réalisation
+                {content.subtitle}
               </p>
             </div>
           </div>

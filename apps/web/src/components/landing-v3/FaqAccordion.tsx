@@ -13,7 +13,15 @@ interface FaqItem {
   defaultOpen?: boolean;
 }
 
-const faqs: FaqItem[] = [
+// Contenu éditable depuis le CRM (answer en HTML string)
+export interface FaqContentItem { question: string; answer: string }
+export interface FaqContent {
+  eyebrow: string;
+  title: string;
+  items: FaqContentItem[];
+}
+
+const DEFAULT_FAQS: FaqItem[] = [
   {
     q: 'Combien de temps prend un projet ?',
     a: (
@@ -124,7 +132,17 @@ const faqs: FaqItem[] = [
   },
 ];
 
-export default function FaqAccordion() {
+interface FaqAccordionProps { content?: FaqContent }
+
+export default function FaqAccordion({ content }: FaqAccordionProps = {}) {
+  const eyebrow = content?.eyebrow || 'FAQ';
+  const title = content?.title || 'Les questions qu’on me pose souvent.';
+  const faqs: FaqItem[] = content?.items && content.items.length > 0
+    ? content.items.map((it) => ({
+        q: it.question,
+        a: <div dangerouslySetInnerHTML={{ __html: it.answer }} />,
+      }))
+    : DEFAULT_FAQS;
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -170,7 +188,7 @@ export default function FaqAccordion() {
       <div className="relative max-w-3xl mx-auto px-5 sm:px-8">
         {/* Eyebrow */}
         <p className="faq-fade text-[#638BFF] text-xs tracking-[0.4em] uppercase text-center mb-5 sm:mb-6 opacity-0">
-          FAQ
+          {eyebrow}
         </p>
 
         {/* Title */}
@@ -180,7 +198,7 @@ export default function FaqAccordion() {
             type="words"
             className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-[0.98] tracking-tight"
           >
-            Les questions qu&apos;on me pose souvent.
+            {title}
           </SplitTextReveal>
         </div>
 

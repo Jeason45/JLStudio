@@ -1,6 +1,37 @@
 import Image from 'next/image';
 
-export default function FooterMinimal() {
+export interface FooterLink { label: string; href: string }
+export interface FooterContent {
+  logoUrl: string;
+  tagline: string;
+  email: string;
+  phone: string;
+  instagramUrl: string;
+  linkedinUrl: string;
+  legal: FooterLink[];
+  copyrightName: string;
+}
+
+const DEFAULT_FOOTER: FooterContent = {
+  logoUrl: '/images/logo-jlstudio.png',
+  tagline: 'Sites web, e-commerce & applications sur mesure',
+  email: 'contact@jlstudio.dev',
+  phone: '07 67 58 10 61',
+  instagramUrl: 'https://www.instagram.com/jlstudio.dev/',
+  linkedinUrl: 'https://www.linkedin.com/in/jl-studio-64b287396',
+  legal: [
+    { label: 'Mentions légales', href: '/mentions-legales' },
+    { label: 'Confidentialité', href: '/politique-confidentialite' },
+    { label: 'CGV', href: '/conditions-generales-de-vente' },
+  ],
+  copyrightName: 'JL Studio',
+};
+
+interface FooterMinimalProps { content?: FooterContent }
+
+export default function FooterMinimal({ content = DEFAULT_FOOTER }: FooterMinimalProps = {}) {
+  const legal = content.legal && content.legal.length > 0 ? content.legal : DEFAULT_FOOTER.legal;
+  const telHref = `tel:${content.phone.replace(/\s/g, '')}`;
   return (
     <footer className="relative bg-black border-t border-white/[0.04]">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 py-8 sm:py-12">
@@ -8,33 +39,38 @@ export default function FooterMinimal() {
 
           {/* Logo + tagline */}
           <div className="text-center">
-            <Image
-              src="/images/logo-jlstudio.png"
-              alt="JL Studio"
-              width={150}
-              height={60}
-              className="h-12 sm:h-14 w-auto mx-auto"
-            />
+            {content.logoUrl.startsWith('/') ? (
+              <Image
+                src={content.logoUrl}
+                alt={content.copyrightName}
+                width={150}
+                height={60}
+                className="h-12 sm:h-14 w-auto mx-auto"
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={content.logoUrl} alt={content.copyrightName} className="h-12 sm:h-14 w-auto mx-auto" />
+            )}
             <p className="text-xs sm:text-sm text-white/50 mt-1.5 sm:mt-2">
-              Sites web, e-commerce &amp; applications sur mesure
+              {content.tagline}
             </p>
           </div>
 
           {/* Contact row */}
           <div className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-1 text-xs sm:text-sm text-white/50">
-            <a href="mailto:contact@jlstudio.dev" className="hover:text-white/70 transition-colors">
-              contact@jlstudio.dev
+            <a href={`mailto:${content.email}`} className="hover:text-white/70 transition-colors">
+              {content.email}
             </a>
             <span className="w-px h-3 bg-white/10" />
-            <a href="tel:+33767581061" className="hover:text-white/70 transition-colors">
-              07 67 58 10 61
+            <a href={telHref} className="hover:text-white/70 transition-colors">
+              {content.phone}
             </a>
           </div>
 
           {/* Social links */}
           <div className="flex items-center gap-4">
             <a
-              href="https://www.instagram.com/jlstudio.dev/"
+              href={content.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-white/40 hover:text-white/70 transition-colors duration-300"
@@ -45,7 +81,7 @@ export default function FooterMinimal() {
               </svg>
             </a>
             <a
-              href="https://www.linkedin.com/in/jl-studio-64b287396"
+              href={content.linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-white/40 hover:text-white/70 transition-colors duration-300"
@@ -62,16 +98,17 @@ export default function FooterMinimal() {
 
           {/* Legal links */}
           <div className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-1.5 text-[0.65rem] sm:text-xs text-white/50">
-            <a href="/mentions-legales" className="hover:text-white/60 transition-colors">Mentions légales</a>
-            <span className="w-px h-2.5 bg-white/10" />
-            <a href="/politique-confidentialite" className="hover:text-white/60 transition-colors">Confidentialité</a>
-            <span className="w-px h-2.5 bg-white/10" />
-            <a href="/conditions-generales-de-vente" className="hover:text-white/60 transition-colors">CGV</a>
+            {legal.map((l, i) => (
+              <span key={i} className="flex items-center gap-x-4 sm:gap-x-6">
+                {i > 0 && <span className="w-px h-2.5 bg-white/10" />}
+                <a href={l.href} className="hover:text-white/60 transition-colors">{l.label}</a>
+              </span>
+            ))}
           </div>
 
           {/* Copyright */}
           <p className="text-xs text-white/50">
-            &copy; {new Date().getFullYear()} JL Studio
+            &copy; {new Date().getFullYear()} {content.copyrightName}
           </p>
         </div>
       </div>

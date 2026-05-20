@@ -4,7 +4,30 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 
-export default function HeaderV3() {
+export interface HeaderNavLink { label: string; href: string }
+export interface HeaderContent {
+  logoUrl: string;
+  navigation: HeaderNavLink[];
+  headerCta: { label: string; href: string };
+}
+
+const DEFAULT_HEADER: HeaderContent = {
+  logoUrl: '/images/logo-jlstudio.png',
+  navigation: [
+    { label: 'Services', href: '#services' },
+    { label: 'Méthode', href: '#methode' },
+    { label: 'Projets', href: '#projets' },
+    { label: 'Témoignages', href: '#temoignages' },
+    { label: 'À propos', href: '#a-propos' },
+    { label: 'FAQ', href: '#faq' },
+    { label: 'Contact', href: '#contact' },
+  ],
+  headerCta: { label: 'Parlons projet', href: '#contact' },
+};
+
+interface HeaderV3Props { content?: HeaderContent }
+
+export default function HeaderV3({ content = DEFAULT_HEADER }: HeaderV3Props = {}) {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -117,15 +140,7 @@ export default function HeaderV3() {
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
-  const links = [
-    { label: 'Services', href: '#services' },
-    { label: 'Méthode', href: '#methode' },
-    { label: 'Projets', href: '#projets' },
-    { label: 'Témoignages', href: '#temoignages' },
-    { label: 'À propos', href: '#a-propos' },
-    { label: 'FAQ', href: '#faq' },
-    { label: 'Contact', href: '#contact' },
-  ];
+  const links = content.navigation && content.navigation.length > 0 ? content.navigation : DEFAULT_HEADER.navigation;
 
   return (
     <>
@@ -144,14 +159,19 @@ export default function HeaderV3() {
           <div className="flex h-16 md:h-20 items-center justify-between">
             {/* Logo */}
             <a href="#" className="relative z-[61] flex items-center group">
-              <Image
-                src="/images/logo-jlstudio.png"
-                alt="JL Studio"
-                width={120}
-                height={48}
-                className="h-9 sm:h-11 w-auto"
-                priority
-              />
+              {content.logoUrl.startsWith('/') ? (
+                <Image
+                  src={content.logoUrl}
+                  alt="JL Studio"
+                  width={120}
+                  height={48}
+                  className="h-9 sm:h-11 w-auto"
+                  priority
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={content.logoUrl} alt="JL Studio" className="h-9 sm:h-11 w-auto" />
+              )}
             </a>
 
             {/* Desktop Nav */}
@@ -166,10 +186,10 @@ export default function HeaderV3() {
                 </a>
               ))}
               <a
-                href="#contact"
+                href={content.headerCta.href}
                 className="text-sm font-medium text-[#638BFF] border border-[#638BFF]/30 px-5 py-2 rounded-full hover:bg-[#638BFF]/10 transition-all duration-300"
               >
-                Parlons projet
+                {content.headerCta.label}
               </a>
             </nav>
 

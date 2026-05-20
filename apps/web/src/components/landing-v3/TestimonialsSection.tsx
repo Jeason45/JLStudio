@@ -15,13 +15,22 @@ const TRUSTPILOT_URL = 'https://fr.trustpilot.com/review/jlstudio.dev';
 const TRUST_SCORE = 4.1;
 const TOTAL_REVIEWS = 5;
 
-interface Testimonial {
+export interface Testimonial {
   name: string;
   role: string;
   quote: string;
   rating: number;
   date: string;
   verified: boolean;
+}
+
+export interface TestimonialsContent {
+  eyebrow: string;
+  title: string;
+  trustScore: number;
+  trustReviewCount: number;
+  trustpilotUrl: string;
+  items: Testimonial[];
 }
 
 /* ── Real Trustpilot reviews ── */
@@ -160,17 +169,17 @@ function CardStars({ count }: { count: number }) {
 /* ═══════════════════════════════════════════
    TRUSTBOX WIDGET (custom)
    ═══════════════════════════════════════════ */
-function TrustBox() {
+function TrustBox({ url, score, total }: { url: string; score: number; total: number }) {
   return (
     <a
-      href={TRUSTPILOT_URL}
+      href={url}
       target="_blank"
       rel="noopener noreferrer"
       className="inline-flex items-center gap-4 sm:gap-6 bg-white/[0.05] backdrop-blur-md border border-white/[0.1] rounded-2xl px-6 sm:px-8 py-4 sm:py-5 hover:bg-white/[0.08] hover:border-white/[0.15] transition-all duration-500 group"
     >
       {/* Score */}
       <div className="text-center">
-        <p className="text-white font-bold text-2xl sm:text-3xl leading-none">{TRUST_SCORE}</p>
+        <p className="text-white font-bold text-2xl sm:text-3xl leading-none">{score}</p>
         <p className="text-white/40 text-[10px] mt-1">sur 5</p>
       </div>
 
@@ -179,9 +188,9 @@ function TrustBox() {
 
       {/* Stars + info */}
       <div>
-        <TrustpilotStars count={Math.round(TRUST_SCORE)} />
+        <TrustpilotStars count={Math.round(score)} />
         <p className="text-white/50 text-xs mt-1.5">
-          Basé sur <span className="text-white/70 font-medium">{TOTAL_REVIEWS} avis</span>
+          Basé sur <span className="text-white/70 font-medium">{total} avis</span>
         </p>
       </div>
 
@@ -320,7 +329,15 @@ function MarqueeRow({
 /* ═══════════════════════════════════════════
    MAIN SECTION
    ═══════════════════════════════════════════ */
-export default function TestimonialsSection() {
+interface TestimonialsSectionProps { content?: TestimonialsContent }
+
+export default function TestimonialsSection({ content }: TestimonialsSectionProps = {}) {
+  const reviews = content?.items && content.items.length > 0 ? content.items : allReviews;
+  const eyebrow = content?.eyebrow || 'Avis clients';
+  const title = content?.title || 'Ils nous font confiance';
+  const trustUrl = content?.trustpilotUrl || TRUSTPILOT_URL;
+  const trustScore = content?.trustScore ?? TRUST_SCORE;
+  const trustTotal = content?.trustReviewCount ?? TOTAL_REVIEWS;
   const sectionRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
 
@@ -389,25 +406,25 @@ export default function TestimonialsSection() {
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12 px-6">
           <p className="text-[#00b67a]/70 text-xs tracking-[0.4em] uppercase mb-4">
-            Avis clients
+            {eyebrow}
           </p>
           <SplitTextReveal
             tag="h2"
             type="words"
             className="font-[family-name:var(--font-outfit)] text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight"
           >
-            Ils nous font confiance
+            {title}
           </SplitTextReveal>
         </div>
 
         {/* TrustBox widget */}
         <div className="flex justify-center mb-14 sm:mb-20 px-6">
-          <TrustBox />
+          <TrustBox url={trustUrl} score={trustScore} total={trustTotal} />
         </div>
 
         {/* Marquee — single row */}
         <div data-marquee-row>
-          <MarqueeRow items={allReviews} direction="left" speed={50} />
+          <MarqueeRow items={reviews} direction="left" speed={50} />
         </div>
       </div>
 
