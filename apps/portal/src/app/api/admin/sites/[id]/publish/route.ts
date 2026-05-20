@@ -10,6 +10,22 @@ function ensureSuperAdmin(req: NextRequest): NextResponse | null {
   return null;
 }
 
+// Déclenche la revalidation ISR du site public apps/web après publication.
+// Best-effort : on ne bloque pas la réponse si le webhook échoue.
+async function triggerWebRevalidation() {
+  const secret = process.env.INTERNAL_API_SECRET;
+  const webUrl = process.env.WEB_PUBLIC_URL || 'https://jlstudio.dev';
+  if (!secret) return;
+  try {
+    await fetch(`${webUrl}/api/revalidate`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${secret}` },
+    });
+  } catch (err) {
+    logger.warn({ err }, 'Web revalidation webhook failed (non-bloquant)');
+  }
+}
+
 // POST /api/admin/sites/[id]/publish — pousse draftConfig → config, nettoie le brouillon
 export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   const denied = ensureSuperAdmin(req);
@@ -18,7 +34,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
 
   const site = await prisma.site.findUnique({
     where: { id },
-    select: { id: true, draftConfig: true, status: true },
+    select: { id: true, slug: true, draftConfig: true, status: true },
   });
   if (!site) return NextResponse.json({ error: 'Site introuvable' }, { status: 404 });
   if (!site.draftConfig) {
@@ -36,6 +52,12 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
       },
       select: { id: true, config: true, publishedAt: true, status: true },
     });
+
+    // Rafraîchit le site public immédiatement (seulement pour le site jlstudio)
+    if (site.slug === 'jlstudio') {
+      await triggerWebRevalidation();
+    }
+
     return NextResponse.json({ ok: true, ...updated });
   } catch (err) {
     logger.error({ err, id }, 'Site publish failed');
