@@ -9,8 +9,9 @@ const PUBLIC_PATHS = [
   '/api/auth/accept-invite',
   '/sign',
   // Routes machine-to-machine — auth par Bearer token vérifié dans la route elle-même
-  '/api/cron', // CRON_SECRET dans la route
-  '/api/n8n',  // N8N_API_KEY dans la route
+  '/api/cron',     // CRON_SECRET dans la route
+  '/api/n8n',      // N8N_API_KEY dans la route
+  '/api/internal', // INTERNAL_API_SECRET dans la route (consommé par apps/web)
 ];
 
 export async function middleware(req: NextRequest) {

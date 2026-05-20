@@ -249,13 +249,15 @@ export default function JLStudioEditor({ site, initialContent, hasDraft: initial
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
 
         {view === 'preview' ? (
-          /* Aperçu : iframe plein largeur avec rechargement à chaque switch */
+          /* Aperçu : iframe sur jlstudio.dev/preview qui charge le brouillon
+             dans les VRAIS composants landing-v3 (animations, design réel) */
           <div style={{ flex: 1, minHeight: 0, background: '#0f172a', padding: 0 }}>
             <iframe
               key={previewKey}
-              src={`/admin/sites/${site.id}/jlstudio-preview?ts=${previewKey}`}
+              src={`https://jlstudio.dev/preview?ts=${previewKey}`}
               style={{ width: '100%', height: '100%', border: 'none', background: 'white' }}
-              title="Aperçu site JL Studio"
+              title="Aperçu site JL Studio (rendu réel)"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
             />
           </div>
         ) : (

@@ -9,7 +9,29 @@ import { useIsMobile } from '@/hooks/useMediaQuery';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-export default function HeroParallax() {
+export interface HeroContent {
+  title: string;
+  subtitle: string;
+  description: string;
+  ctaPrimary: { label: string; href: string };
+  ctaSecondary: { label: string; href: string };
+  backgroundImage: string;
+  scrollLabel: string;
+}
+
+export const DEFAULT_HERO: HeroContent = {
+  title: 'Votre Vision',
+  subtitle: 'Notre Expertise',
+  description: 'Sites web, e-commerce et applications sur mesure pour propulser votre activité',
+  ctaPrimary: { label: 'Démarrer un projet', href: '#contact' },
+  ctaSecondary: { label: 'Voir nos réalisations', href: '#projets' },
+  backgroundImage: '/images/hero-bg.jpg',
+  scrollLabel: 'Scroll',
+};
+
+interface HeroParallaxProps { content?: HeroContent }
+
+export default function HeroParallax({ content = DEFAULT_HERO }: HeroParallaxProps = {}) {
   const sectionRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const maskRef = useRef<HTMLDivElement>(null);
@@ -280,15 +302,24 @@ export default function HeroParallax() {
           className="absolute will-change-transform"
           style={{ inset: isMobile ? '0' : '-10%' }}
         >
-          <Image
-            src="/images/hero-bg.jpg"
-            alt=""
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 120vw"
-            quality={55}
-            priority
-          />
+          {content.backgroundImage.startsWith('/') ? (
+            <Image
+              src={content.backgroundImage}
+              alt=""
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 120vw"
+              quality={55}
+              priority
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={content.backgroundImage}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
           {/* Color grading — warm shadows, cool highlights */}
           <div
             className="absolute inset-0"
@@ -355,36 +386,35 @@ export default function HeroParallax() {
               ref={h1Ref}
               className="font-[family-name:var(--font-outfit)] text-[clamp(2.4rem,10vw,3rem)] sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-black text-white leading-[0.95] tracking-tight mb-4 whitespace-nowrap"
             >
-              Votre Vision
+              {content.title}
             </h1>
             <h2
               ref={h2Ref}
               className="font-[family-name:var(--font-outfit)] text-[clamp(2.4rem,10vw,3rem)] sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-black leading-[0.95] tracking-tight mb-6 sm:mb-8 text-[#638BFF] whitespace-nowrap"
             >
-              Notre Expertise
+              {content.subtitle}
             </h2>
             <p
               ref={paraRef}
               className="text-base sm:text-lg md:text-xl lg:text-xl text-white/60 max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed"
             >
-              Sites web, e-commerce et applications sur mesure pour propulser
-              votre activité
+              {content.description}
             </p>
             <div
               ref={ctaRef}
               className="flex flex-row items-center justify-center gap-3 md:gap-5"
             >
               <a
-                href="#contact"
+                href={content.ctaPrimary.href}
                 className="group relative bg-[#638BFF] text-white font-semibold px-[clamp(0.9rem,4vw,1.5rem)] py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-[clamp(0.65rem,2.8vw,0.8rem)] sm:text-sm md:text-base overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(99,139,255,0.3)]"
               >
-                <span className="relative z-10">Démarrer un projet</span>
+                <span className="relative z-10">{content.ctaPrimary.label}</span>
               </a>
               <a
-                href="#projets"
+                href={content.ctaSecondary.href}
                 className="border border-white/20 text-white/80 font-medium px-[clamp(0.9rem,4vw,1.5rem)] py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 rounded-full text-[clamp(0.65rem,2.8vw,0.8rem)] sm:text-sm md:text-base hover:border-white/40 hover:text-white transition-all duration-300"
               >
-                Voir nos réalisations
+                {content.ctaSecondary.label}
               </a>
             </div>
           </div>
@@ -396,7 +426,7 @@ export default function HeroParallax() {
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[15] flex flex-col items-center gap-2"
         >
           <span className="text-[0.65rem] sm:text-xs tracking-[0.3em] uppercase text-white/50">
-            Scroll
+            {content.scrollLabel}
           </span>
           <div className="w-[1px] h-10 bg-gradient-to-b from-white/30 to-transparent animate-pulse" />
         </div>

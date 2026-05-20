@@ -9,13 +9,13 @@ import { useIsMobile } from '@/hooks/useMediaQuery';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-interface ServicePricing {
+export interface ServicePricing {
   amount?: string; // ex. "1 500 €" — undefined si "sur devis"
   delivery?: string; // ex. "2 semaines" — undefined si "selon prestation"
   fallbackLabel?: string; // ex. "Tarif et délais selon prestation"
 }
 
-const services: Array<{
+export interface ServiceItem {
   title: string;
   subtitle: string;
   description: string;
@@ -23,7 +23,13 @@ const services: Array<{
   image: string;
   number: string;
   pricing: ServicePricing;
-}> = [
+}
+
+export interface ServicesContent {
+  items: ServiceItem[];
+}
+
+export const DEFAULT_SERVICES: ServiceItem[] = [
   {
     title: 'Site Vitrine',
     subtitle: 'Votre identité en ligne',
@@ -66,7 +72,10 @@ const services: Array<{
   },
 ];
 
-export default function ServicesScrollPin() {
+interface ServicesScrollPinProps { content?: ServicesContent }
+
+export default function ServicesScrollPin({ content }: ServicesScrollPinProps = {}) {
+  const services: ServiceItem[] = content?.items && content.items.length > 0 ? content.items : DEFAULT_SERVICES;
   const sectionRef = useRef<HTMLElement>(null);
   const isMobile = useIsMobile();
 
@@ -298,14 +307,23 @@ export default function ServicesScrollPin() {
           {/* Full-screen background image with parallax */}
           <div className="absolute inset-0 overflow-hidden">
             <div data-inner-image className="absolute inset-[-15%] will-change-transform">
-              <Image
-                src={service.image}
-                alt={service.title}
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority={i === 0}
-              />
+              {service.image.startsWith('/') ? (
+                <Image
+                  src={service.image}
+                  alt={service.title}
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                  priority={i === 0}
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              )}
             </div>
           </div>
 
