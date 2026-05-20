@@ -58,8 +58,9 @@ export async function POST(req: NextRequest) {
     const site = await getAgencySite();
     let savedId = documentId as string | undefined;
 
-    // Dual-write : on tente l'upload R2 (clé non-devinable). En cas d'échec
-    // ou de stockage non configuré, pdfKey reste null et on garde pdfData.
+    // R2-only : on tente l'upload R2 (clé non-devinable). Si ça réussit, on ne
+    // stocke PAS le PDF en Postgres (DB légère). Si R2 échoue ou n'est pas
+    // configuré, on garde le PDF en Postgres comme filet de sécurité.
     let pdfKey: string | null = null;
     try {
       pdfKey = await uploadDocumentPdf(site.id, result.buffer);
@@ -67,6 +68,8 @@ export async function POST(req: NextRequest) {
       logger.warn({ err }, 'Upload PDF R2 échoué — fallback pdfData Postgres');
       pdfKey = null;
     }
+    // null = pas de duplication Postgres quand R2 a réussi
+    const pdfDataValue: Buffer | null = pdfKey ? null : result.buffer;
 
     if (documentId) {
       // Update existing
@@ -89,7 +92,7 @@ export async function POST(req: NextRequest) {
           totalAmount: totalAmount != null ? Number(totalAmount) : undefined,
           contactId: contactId ?? undefined,
           linkedDocumentId: linkedDocumentId ?? undefined,
-          pdfData: result.buffer,
+          pdfData: pdfDataValue,
           pdfKey,
         },
       });
@@ -130,7 +133,7 @@ export async function POST(req: NextRequest) {
           totalAmount: totalAmount != null ? Number(totalAmount) : null,
           contactId: contactId || null,
           linkedDocumentId: linkedDocumentId || null,
-          pdfData: result.buffer,
+          pdfData: pdfDataValue,
           pdfKey,
         },
         select: { id: true },
