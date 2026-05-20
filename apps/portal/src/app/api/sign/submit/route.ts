@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { generateDocumentPDF } from '@/lib/pdfGenerator';
 import { generateSignedPDF } from '@/lib/signedPdfGenerator';
+import { loadDocumentPdf } from '@/lib/documentPdf';
 import { createSignatureProof, getClientIP, getUserAgent, generateStringHash } from '@/lib/signatureUtils';
 import { sendDocumentEmail } from '@/lib/email';
 import type { DocumentData, CompanySettingsData } from '@/types/portal';
@@ -96,8 +97,11 @@ export async function POST(request: NextRequest) {
     bic: company.bic, logoUrl: company.logoUrl,
   } : null;
 
-  const originalPdfBytes = await generateDocumentPDF(docData, companyData);
-  const originalPdfBuffer = Buffer.from(originalPdfBytes);
+  // On signe le VRAI PDF stocké (beau template mustache sur R2), pas une
+  // régénération basique. Fallback régénération uniquement si aucun PDF stocké.
+  const originalPdfBuffer =
+    (await loadDocumentPdf(document))
+    ?? Buffer.from(await generateDocumentPDF(docData, companyData));
   const documentHash = generateStringHash(originalPdfBuffer.toString('base64'));
 
   // Create signature proof
