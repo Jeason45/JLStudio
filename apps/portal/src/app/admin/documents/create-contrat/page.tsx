@@ -2,13 +2,33 @@
 
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { ArrowLeft, FileDown, Link2 } from 'lucide-react';
+import { ArrowLeft, FileDown, Link2, ChevronUp, ChevronDown, Pencil } from 'lucide-react';
 import { ContactSearchBox } from '../_components/ContactSearchBox';
 import {
   emptyClient, parseAmount,
   type Contact, type CompanySettings, type ClientInfo,
 } from '../_components/types';
 import { inputStyle, labelStyle, sectionStyle, sectionTitleStyle, primaryBtnStyle, secondaryBtnStyle } from '../_components/styles';
+
+interface LibClause {
+  id: string;
+  category: string;
+  title: string;
+  body: string;
+  defaultOrder: number;
+  autoInclude: boolean;
+  conditionKey: string | null;
+  active: boolean;
+}
+
+// Élément de la sélection de clauses pour ce contrat (ordonné).
+interface SelClause {
+  id: string;          // id de la clause source
+  title: string;
+  body: string;        // texte (éventuellement modifié pour ce contrat)
+  conditionKey: string | null;
+  included: boolean;
+}
 
 interface DevisDoc {
   id: string;
@@ -64,18 +84,60 @@ function CreateContratContent() {
     conditions_paiement: 'Acompte à la signature, solde à la livraison',
   });
 
+  // Éditeur de clauses (Lot B)
+  const [clausesLib, setClausesLib] = useState<LibClause[]>([]);
+  const [options, setOptions] = useState({ has_crm: false, is_refonte: false, is_maintenance: false });
+  const [clauseSel, setClauseSel] = useState<SelClause[]>([]);
+  const [editingClause, setEditingClause] = useState<string | null>(null);
+
+  // (Re)construit la sélection à partir de la bibliothèque + des options.
+  const buildSelection = useCallback((lib: LibClause[], opts: typeof options) => {
+    const condOk = (k: string | null) => !k || (opts as Record<string, boolean>)[k] === true;
+    return lib
+      .filter((c) => c.active)
+      .slice()
+      .sort((a, b) => a.defaultOrder - b.defaultOrder)
+      .map((c) => ({
+        id: c.id, title: c.title, body: c.body, conditionKey: c.conditionKey,
+        included: c.autoInclude && condOk(c.conditionKey),
+      }));
+  }, []);
+
+  const toggleOption = (key: 'has_crm' | 'is_refonte' | 'is_maintenance') => {
+    const next = { ...options, [key]: !options[key] };
+    setOptions(next);
+    // Inclut/exclut les clauses liées à cette option, sans toucher au reste.
+    setClauseSel((prev) => prev.map((c) => (c.conditionKey === key ? { ...c, included: next[key] } : c)));
+  };
+
+  const moveClause = (idx: number, dir: -1 | 1) => {
+    setClauseSel((prev) => {
+      const a = [...prev];
+      const j = idx + dir;
+      if (j < 0 || j >= a.length) return prev;
+      [a[idx], a[j]] = [a[j], a[idx]];
+      return a;
+    });
+  };
+  const toggleIncluded = (id: string) => setClauseSel((prev) => prev.map((c) => (c.id === id ? { ...c, included: !c.included } : c)));
+  const editClauseBody = (id: string, body: string) => setClauseSel((prev) => prev.map((c) => (c.id === id ? { ...c, body } : c)));
+
   const fetchAll = useCallback(async () => {
     try {
-      const [c, s, d] = await Promise.all([
+      const [c, s, d, cl] = await Promise.all([
         fetch('/api/admin/contacts').then((r) => (r.ok ? r.json() : [])),
         fetch('/api/admin/settings').then((r) => (r.ok ? r.json() : null)),
         fetch('/api/admin/documents?type=DEVIS').then((r) => (r.ok ? r.json() : [])),
+        fetch('/api/admin/contract-clauses').then((r) => (r.ok ? r.json() : [])),
       ]);
       setContacts(c);
       setCompany(s);
       setDevisList(Array.isArray(d) ? d : []);
+      const lib: LibClause[] = Array.isArray(cl) ? cl : [];
+      setClausesLib(lib);
+      setClauseSel(buildSelection(lib, { has_crm: false, is_refonte: false, is_maintenance: false }));
     } catch { /* ignore */ }
-  }, []);
+  }, [buildSelection]);
 
   const fetchNextNumber = useCallback(async () => {
     if (editId) return;
@@ -192,6 +254,7 @@ function CreateContratContent() {
         ...contratInfo,
         montant_total: new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parseFloat(contratInfo.montant_total) || 0),
         numero_devis_ref: linkedDevisNumber || '',
+        clauses: clauseSel.filter((c) => c.included).map((c) => ({ title: c.title, body: c.body })),
       };
 
       const totalNum = parseFloat(contratInfo.montant_total) || 0;
@@ -421,10 +484,54 @@ function CreateContratContent() {
           </div>
         </section>
 
+        {/* Type de prestation */}
+        <section style={sectionStyle()}>
+          <h2 style={sectionTitleStyle()}>Type de prestation</h2>
+          <p style={{ fontSize: 12, color: 'var(--agency-ink-3)', margin: '0 0 12px' }}>Coche les options : les clauses correspondantes sont ajoutées automatiquement.</p>
+          <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
+            {([['has_crm', 'Inclut un CRM (→ annexe RGPD)'], ['is_refonte', 'Refonte d\'un site existant'], ['is_maintenance', 'Maintenance / TMA']] as const).map(([k, label]) => (
+              <label key={k} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--agency-ink-1)', cursor: 'pointer' }}>
+                <input type="checkbox" checked={options[k]} onChange={() => toggleOption(k)} /> {label}
+              </label>
+            ))}
+          </div>
+        </section>
+
+        {/* Clauses du contrat */}
+        <section style={sectionStyle()}>
+          <h2 style={sectionTitleStyle()}>Clauses du contrat</h2>
+          {clausesLib.length === 0 ? (
+            <p style={{ fontSize: 13, color: 'var(--agency-ink-3)' }}>
+              Aucune clause dans la bibliothèque.{' '}
+              <a href="/admin/documents/clauses" style={{ textDecoration: 'underline', fontWeight: 600 }}>Initialise-la</a> d&apos;abord.
+            </p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {clauseSel.map((c, idx) => (
+                <div key={c.id} style={{ border: '1px solid var(--agency-border)', borderRadius: 10, background: 'var(--agency-surface-2)', opacity: c.included ? 1 : 0.5 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px' }}>
+                    <input type="checkbox" checked={c.included} onChange={() => toggleIncluded(c.id)} />
+                    <span style={{ flex: 1, fontSize: 13, fontWeight: 600, color: 'var(--agency-ink-1)' }}>{c.title}</span>
+                    {c.conditionKey && <span style={{ fontSize: 10, color: '#2F6BFF', background: '#2F6BFF18', padding: '1px 7px', borderRadius: 10 }}>{condBadge(c.conditionKey)}</span>}
+                    <button type="button" onClick={() => moveClause(idx, -1)} disabled={idx === 0} style={ctIconBtn(idx === 0)}><ChevronUp size={14} /></button>
+                    <button type="button" onClick={() => moveClause(idx, 1)} disabled={idx === clauseSel.length - 1} style={ctIconBtn(idx === clauseSel.length - 1)}><ChevronDown size={14} /></button>
+                    <button type="button" onClick={() => setEditingClause(editingClause === c.id ? null : c.id)} style={ctIconBtn(false)} title="Éditer le texte"><Pencil size={14} /></button>
+                  </div>
+                  {editingClause === c.id && (
+                    <div style={{ padding: '0 12px 12px' }}>
+                      <textarea style={{ ...inputStyle(), minHeight: 140, resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.5 }} value={c.body} onChange={(e) => editClauseBody(c.id, e.target.value)} />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
         {/* Action */}
         <section style={{ ...sectionStyle(), display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div style={{ fontSize: 12, color: 'var(--agency-ink-3)' }}>
-            Le contrat sera généré avec les <strong style={{ color: 'var(--agency-ink-2)' }}>7 articles standards</strong> (objet, durée, conditions financières, livrables &amp; PI, confidentialité, résiliation, droit applicable).
+            Le contrat sera généré avec <strong style={{ color: 'var(--agency-ink-2)' }}>{clauseSel.filter((c) => c.included).length} clause(s)</strong> sélectionnée(s).
           </div>
           <button
             type="button"
@@ -439,4 +546,16 @@ function CreateContratContent() {
       </div>
     </div>
   );
+}
+
+function condBadge(key: string): string {
+  return key === 'has_crm' ? 'Si CRM' : key === 'is_refonte' ? 'Si refonte' : key === 'is_maintenance' ? 'Si maintenance' : '';
+}
+
+function ctIconBtn(disabled: boolean): React.CSSProperties {
+  return {
+    width: 28, height: 28, borderRadius: 6, border: 'none', background: 'transparent',
+    color: 'var(--agency-ink-3)', cursor: disabled ? 'default' : 'pointer',
+    opacity: disabled ? 0.35 : 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+  };
 }

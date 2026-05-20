@@ -90,6 +90,19 @@ export async function generatePDFFromTemplate(
     if (fallback) dataWithLogo.logoUrl = fallback;
   }
 
+  // Assemblage de clauses (éditeur de contrat) : chaque clause a un corps avec
+  // variables {{...}} → on le pré-rend (Mustache) et on convertit les sauts de
+  // ligne en HTML, puis on l'injecte via {{{body_html}}} dans la coquille.
+  if (Array.isArray(dataWithLogo.clauses)) {
+    dataWithLogo.clauses = (dataWithLogo.clauses as Array<Record<string, unknown>>).map((c, i) => {
+      const rawBody = String(c.body ?? '');
+      let rendered: string;
+      try { rendered = Mustache.render(rawBody, dataWithLogo); } catch { rendered = rawBody; }
+      const body_html = '<p>' + rendered.trim().replace(/\r?\n\r?\n+/g, '</p><p>').replace(/\r?\n/g, '<br>') + '</p>';
+      return { ...c, num: i + 1, body_html };
+    });
+  }
+
   let renderedHtml: string;
   try {
     renderedHtml = Mustache.render(tpl.content, dataWithLogo);
