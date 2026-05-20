@@ -58,6 +58,7 @@ export default function AdminDocumentsPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [sendModal, setSendModal] = useState<{ open: boolean; mode: SendMode; doc: Document | null }>({ open: false, mode: 'send', doc: null });
+  const [toast, setToast] = useState<string | null>(null);
 
   const fetchDocs = useCallback(async () => {
     try {
@@ -301,8 +302,31 @@ export default function AdminDocumentsPage() {
             : ''
         }
         onClose={() => setSendModal({ open: false, mode: 'send', doc: null })}
-        onSuccess={() => fetchDocs()}
+        onSuccess={() => {
+          const wasSign = sendModal.mode === 'sign-request';
+          setToast(wasSign ? 'Demande de signature envoyée ✓' : 'Document envoyé par email ✓');
+          fetchDocs();
+          window.setTimeout(() => setToast(null), 4000);
+        }}
       />
+
+      {toast && (
+        <div
+          role="status"
+          style={{
+            position: 'fixed', top: 20, right: 20, zIndex: 1100,
+            padding: '12px 16px',
+            background: 'rgba(34, 197, 94, 0.15)',
+            border: '1px solid rgba(34, 197, 94, 0.5)',
+            borderRadius: 8, color: '#86efac',
+            fontSize: 13, fontWeight: 600,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          {toast}
+        </div>
+      )}
     </div>
   );
 }
