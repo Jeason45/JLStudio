@@ -57,9 +57,9 @@ let _defaultLogoDataUrlCache: string | null = null;
 function getDefaultLogoDataUrl(): string | null {
   if (_defaultLogoDataUrlCache !== null) return _defaultLogoDataUrlCache;
   // Le template a un bandeau header navy (#0B1E3F) → on a besoin du logo blanc.
-  // logo-pdf-on-dark.png = D13 variante blanche, à n'utiliser que sur fond sombre.
+  // logo-dark.png = wordmark "jl.studio" blanc épuré (sans cornières).
   for (const dir of BRAND_DIR_CANDIDATES) {
-    const fullPath = path.join(dir, 'logo-pdf-on-dark.png');
+    const fullPath = path.join(dir, 'logo-dark.png');
     if (fs.existsSync(fullPath)) {
       try {
         const bytes = fs.readFileSync(fullPath);
@@ -115,10 +115,17 @@ export async function generatePDFFromTemplate(
     await page.setViewport({ width: 1240, height: 1754 });
     await page.setContent(renderedHtml, { waitUntil: 'networkidle0' });
 
+    // Le devis "moderne" a un bandeau + footer pleine largeur (full-bleed) :
+    // marges latérales/haute à 0 (le template gère son propre padding interne),
+    // marge basse conservée (~18mm) pour laisser la place à la bande de
+    // signature eIDAS dessinée par pdf-lib (0–51pts ≈ 18mm) sur le PDF signé.
+    const fullBleed = templateSlug === 'devis-moderne' || templateSlug === 'facture-moderne';
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,
-      margin: { top: '5mm', right: '10mm', bottom: '15mm', left: '10mm' },
+      margin: fullBleed
+        ? { top: '0mm', right: '0mm', bottom: '18mm', left: '0mm' }
+        : { top: '5mm', right: '10mm', bottom: '15mm', left: '10mm' },
     });
 
     return { success: true, buffer: Buffer.from(pdfBuffer) };
